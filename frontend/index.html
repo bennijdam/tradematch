@@ -155,25 +155,23 @@
             margin-left: 20px;
         }
         
-        .vendor-btn {
-            background: linear-gradient(135deg, #00B4D8 0%, #00A8C8 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
+        .login-btn {
+            background: transparent;
+            color: var(--dark);
+            border: 2px solid var(--primary);
         }
         
-        .vendor-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.3);
+        .login-btn:hover {
+            background: var(--light);
+            transform: translateY(-1px);
+        }
+        
+        .signup-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 100%);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 14px;
         }
         
         .dropdown-arrow {
@@ -1013,14 +1011,9 @@
                 
                 <!-- Authentication Buttons -->
                 <div class="auth-buttons" id="authButtons">
-                    <button class="btn btn-outline" onclick="openAuthModal('login')">👤 Login</button>
-                    <button class="btn btn-primary" onclick="openAuthModal('register')">🔗 Sign Up</button>
+                    <button class="btn btn-outline login-btn" onclick="openAuthModal('login')">Login</button>
+                    <button class="btn btn-primary signup-btn" onclick="openAuthModal('register')">Sign Up</button>
                 </div>
-                
-                <!-- Vendor Dashboard Button -->
-                <button class="btn btn-outline vendor-btn" onclick="window.location.href='vendor-dashboard.html'">
-                    🛠️ For Tradespeople
-                </button>
             </div>
                 
                 <!-- Quick Quote Dropdown in Nav -->
