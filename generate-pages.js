@@ -72,45 +72,261 @@ const services = {
         keywords: ['plumbing quotes', 'plumber near me', 'emergency plumber', 'plumbing repairs', 'heating engineer'],
         serviceType: 'plumbing',
         icon: '🔧'
+    },
+    'flooring': {
+        title: 'Flooring Installation Quotes | Find Flooring Specialists Near You',
+        h1: 'Flooring Installation Quotes',
+        h2: 'Compare Flooring Costs & Reviews',
+        description: 'Find professional flooring specialists for installation and fitting. Get quotes for hardwood, laminate, vinyl, carpet, and tile flooring.',
+        keywords: ['flooring quotes', 'flooring installation', 'hardwood flooring', 'laminate flooring', 'carpet fitting'],
+        serviceType: 'flooring',
+        icon: '🏠'
+    },
+    'painting': {
+        title: 'Painting & Decorating Quotes | Find Painters Near You',
+        h1: 'Painting & Decorating Quotes',
+        h2: 'Compare Painting Costs & Reviews',
+        description: 'Find professional painters and decorators for interior and exterior painting. Get quotes for residential and commercial painting projects.',
+        keywords: ['painting quotes', 'painter near me', 'decorating services', 'interior painting', 'exterior painting'],
+        serviceType: 'painting',
+        icon: '🎨'
+    },
+    'landscaping': {
+        title: 'Landscaping Quotes | Find Landscapers Near You',
+        h1: 'Landscaping Quotes',
+        h2: 'Compare Landscaping Costs & Reviews',
+        description: 'Find professional landscapers for garden design and maintenance. Get quotes for lawn care, patios, decking, fencing, and garden renovations.',
+        keywords: ['landscaping quotes', 'landscaper near me', 'garden design', 'patio installation', 'decking services'],
+        serviceType: 'landscaping',
+        icon: '🌳'
+    },
+    'carpentry': {
+        title: 'Carpentry & Woodwork Quotes | Find Carpenters Near You',
+        h1: 'Carpentry & Woodwork Quotes',
+        h2: 'Compare Carpentry Costs & Reviews',
+        description: 'Find professional carpenters for bespoke furniture, cabinets, and architectural features. Get quotes for custom woodworking and timber construction.',
+        keywords: ['carpentry quotes', 'carpenter near me', 'bespoke furniture', 'custom cabinets', 'timber construction'],
+        serviceType: 'carpentry',
+        icon: '🔨'
+    },
+    'hvac': {
+        title: 'HVAC Installation Quotes | Find HVAC Specialists Near You',
+        h1: 'HVAC Installation Quotes',
+        h2: 'Compare HVAC Costs & Reviews',
+        description: 'Find certified HVAC technicians for heating, ventilation, and air conditioning. Get quotes for system installation, maintenance, and energy efficiency upgrades.',
+        keywords: ['HVAC quotes', 'heating engineer', 'air conditioning', 'ventilation systems', 'energy efficiency'],
+        serviceType: 'hvac',
+        icon: '🌡'
+    },
+    'insulation': {
+        title: 'Insulation Installation Quotes | Find Insulation Specialists Near You',
+        h1: 'Insulation Installation Quotes',
+        h2: 'Compare Insulation Costs & Reviews',
+        description: 'Find professional insulation specialists for cavity wall, loft, and external wall insulation. Get quotes for improved energy efficiency and comfort.',
+        keywords: ['insulation quotes', 'insulation installation', 'cavity wall insulation', 'loft insulation', 'energy efficiency'],
+        serviceType: 'insulation',
+        icon: '🏠'
+    },
+    'windows': {
+        title: 'Window Installation Quotes | Find Window Specialists Near You',
+        h1: 'Window Installation Quotes',
+        h2: 'Compare Window Costs & Reviews',
+        description: 'Find professional window installers for double glazing, replacement, and new installations. Get quotes for uPVC, aluminum, and timber windows.',
+        keywords: ['window quotes', 'window installation', 'double glazing', 'window replacement', 'uPVC windows'],
+        serviceType: 'windows',
+        icon: '🪟'
+    },
+    'electrical': {
+        title: 'Electrical Work Quotes | Find Electricians Near You',
+        h1: 'Electrical Work Quotes',
+        h2: 'Compare Electrician Costs & Reviews',
+        description: 'Find certified electricians for all electrical work. Get quotes for rewiring, installations, testing, and emergency repairs.',
+        keywords: ['electrical work', 'electrician quotes', 'certified electrician', 'electrical installation', 'electrical repairs'],
+        serviceType: 'electrical',
+        icon: '⚡'
+    },
+    'roofing': {
+        title: 'Roofing Quotes | Find Roofers & Roofing Specialists Near You',
+        h1: 'Roofing Quotes',
+        h2: 'Compare Roofing Costs & Reviews',
+        description: 'Find professional roofers for repairs, replacements, and new installations. Get quotes for flat roofs, pitched roofs, and emergency repairs.',
+        keywords: ['roofing quotes', 'roof repairs', 'roofer near me', 'roofing specialist', 'flat roofing'],
+        serviceType: 'roofing',
+        icon: '🏚️'
+    },
+    'kitchen': {
+        title: 'Kitchen Installation Quotes | Find Kitchen Fitters Near You',
+        h1: 'Kitchen Installation Quotes',
+        h2: 'Compare Kitchen Fitting Costs & Reviews',
+        description: 'Find trusted kitchen fitters and installers for complete kitchen renovations. Get quotes for cabinets, worktops, appliances, and plumbing.',
+        keywords: ['kitchen fitting', 'kitchen installation', 'kitchen quotes', 'kitchen fitter', 'kitchen renovation'],
+        serviceType: 'kitchen',
+        icon: '🍳'
+    },
+    'bathroom': {
+        title: 'Bathroom Installation Quotes | Find Bathroom Specialists Near You',
+        h1: 'Bathroom Installation Quotes',
+        h2: 'Compare Bathroom Fitting Costs & Reviews',
+        description: 'Connect with certified bathroom installers and plumbers. Get quotes for full bathroom renovations, suites, tiling, and plumbing work.',
+        keywords: ['bathroom installation', 'bathroom quotes', 'bathroom fitter', 'bathroom renovation', 'plumbing bathroom'],
+        serviceType: 'bathroom',
+        icon: '🚿'
+    },
+    'extension': {
+        title: 'House Extension Quotes | Get Extension Quotes Near You',
+        h1: 'House Extension Quotes',
+        h2: 'Compare House Extension Costs & Quotes',
+        description: 'Get free quotes from vetted house extension specialists in your area. Compare costs, reviews, and availability for single and double storey extensions.',
+        keywords: ['house extension', 'extension quotes', 'home extension cost', 'extension builder', 'extension specialist'],
+        serviceType: 'extension',
+        icon: '🏗️'
+    },
+    'loft': {
+        title: 'Loft Conversion Quotes | Find Loft Specialists Near You',
+        h1: 'Loft Conversion Quotes',
+        h2: 'Compare Loft Conversion Costs & Reviews',
+        description: 'Connect with professional loft conversion companies. Get quotes for Velux windows, insulation, and full loft renovations across the UK.',
+        keywords: ['loft conversion', 'loft quotes', 'loft insulation', 'loft specialist', 'Velux windows'],
+        serviceType: 'loft',
+        icon: '🏠'
     }
 };
 
-// UK locations with counties and major cities
+// UK locations with counties and major cities - Comprehensive UK Coverage
 const locations = {
+    // London Boroughs and Areas
     'london': {
         title: 'London | Trade Quotes - London Tradespeople',
         description: 'Find vetted tradespeople across London. Get competitive quotes for any home improvement project in London.',
         keywords: ['London tradespeople', 'tradesperson London', 'builder London', 'plumber London', 'electrician London'],
         counties: ['Greater London'],
-        majorCities: ['Central London', 'Westminster', 'Camden', 'Islington', 'Kensington', 'Chelsea', 'Richmond', 'Wimbledon']
+        majorCities: ['Central London', 'Westminster', 'Camden', 'Islington', 'Kensington', 'Chelsea', 'Richmond', 'Wimbledon', 'Barnet', 'Brent', 'Ealing', 'Enfield', 'Greenwich', 'Hackney', 'Hammersmith', 'Haringey', 'Harrow', 'Havering', 'Hillingdon', 'Hounslow', 'Kensington', 'Lambeth', 'Lewisham', 'Merton', 'Newham', 'Redbridge', 'Southwark', 'Sutton', 'Tower Hamlets', 'Waltham Forest', 'Wandsworth', 'Westminster']
     },
+    
+    // Greater Manchester
     'manchester': {
         title: 'Manchester | Trade Quotes - Manchester Tradespeople',
         description: 'Connect with professional tradespeople in Manchester. Get quotes from vetted builders, plumbers, electricians, and more.',
         keywords: ['Manchester tradespeople', 'tradesperson Manchester', 'builder Manchester', 'plumber Manchester'],
         counties: ['Greater Manchester'],
-        majorCities: ['City Centre', 'Salford', 'Oldham', 'Bolton', 'Stockport', 'Wigan', 'Rochdale']
+        majorCities: ['City Centre', 'Salford', 'Oldham', 'Bolton', 'Stockport', 'Wigan', 'Rochdale', 'Bury', 'Trafford', 'Tameside']
     },
+    
+    // West Midlands
     'birmingham': {
         title: 'Birmingham | Trade Quotes - Birmingham Tradespeople',
         description: 'Find trusted tradespeople in Birmingham and West Midlands. Get competitive quotes for your home improvement projects.',
         keywords: ['Birmingham tradespeople', 'tradesperson Birmingham', 'builder Birmingham', 'plumber Birmingham'],
         counties: ['West Midlands'],
-        majorCities: ['City Centre', 'Edgbaston', 'Sutton Coldfield', 'Solihull', 'Wolverhampton']
+        majorCities: ['City Centre', 'Edgbaston', 'Sutton Coldfield', 'Solihull', 'Wolverhampton', 'Coventry', 'Dudley', 'Walsall', 'Sandwell', 'West Bromwich']
     },
+    
+    // West Yorkshire
     'leeds': {
         title: 'Leeds | Trade Quotes - Leeds Tradespeople',
         description: 'Discover professional tradespeople in Leeds and West Yorkshire. Get quotes from vetted builders, plumbers, and electricians.',
         keywords: ['Leeds tradespeople', 'tradesperson Leeds', 'builder Leeds', 'plumber Leeds'],
         counties: ['West Yorkshire'],
-        majorCities: ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Alwoodley', 'Pudsey']
+        majorCities: ['City Centre', 'Headingley', 'Chapel Allerton', 'Roundhay', 'Alwoodley', 'Pudsey', 'Otley', 'Garforth', 'Morley', 'Farsley', 'Horsforth', 'Pudsey', 'Yeadon', 'Guiseley', 'Rawdon', 'Castleford', 'Normanton', 'Wakefield', 'Baildon', 'Keighley', 'Bradford', 'Shipley', 'Bingley', 'Cleckheaton', 'Dewsbury', 'Barnsley', 'Rotherham', 'Doncaster', 'Mexborough', 'Thorne', 'Selby', 'Goole']
     },
+    
+    // Scotland
     'glasgow': {
         title: 'Glasgow | Trade Quotes - Glasgow Tradespeople',
         description: 'Find skilled tradespeople in Glasgow and Central Scotland. Get quotes from vetted professionals for any project.',
         keywords: ['Glasgow tradespeople', 'tradesperson Glasgow', 'builder Glasgow', 'plumber Glasgow'],
         counties: ['Greater Glasgow', 'Lanarkshire'],
-        majorCities: ['City Centre', 'West End', 'South Side', 'East End', 'North Glasgow']
+        majorCities: ['City Centre', 'West End', 'South Side', 'East End', 'North Glasgow', 'East Kilbride', 'Paisley', 'Hamilton', 'Motherwell', 'Cumbernauld', 'Stirling', 'Falkirk', 'Livingston', 'Dundee', 'Perth', 'Aberdeen', 'Inverness']
+    },
+    
+    // South East England
+    'brighton': {
+        title: 'Brighton | Trade Quotes - Brighton Tradespeople',
+        description: 'Find professional tradespeople in Brighton and Sussex. Get quotes for home improvement projects from vetted specialists.',
+        keywords: ['Brighton tradespeople', 'tradesperson Brighton', 'builder Brighton', 'plumber Brighton'],
+        counties: ['East Sussex', 'West Sussex'],
+        majorCities: ['Brighton', 'Hove', 'Worthing', 'Chichester', 'Crawley', 'Horsham', 'Eastbourne', 'Hastings', 'Bognor Regis', 'Littlehampton', 'Portsmouth', 'Gosport', 'Fareham', 'Southampton', 'Winchester', 'Andover', 'Salisbury', 'Ringwood', 'New Milton']
+    },
+    
+    // South West England
+    'bristol': {
+        title: 'Bristol | Trade Quotes - Bristol Tradespeople',
+        description: 'Connect with professional tradespeople in Bristol and South West England. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Bristol tradespeople', 'tradesperson Bristol', 'builder Bristol', 'plumber Bristol'],
+        counties: ['Bristol', 'Somerset', 'Gloucestershire', 'Wiltshire', 'Dorset', 'Devon', 'Cornwall'],
+        majorCities: ['Bristol', 'Bath', 'Weston-super-Mare', 'Taunton', 'Yeovil', 'Frome', 'Wells', 'Glastonbury', 'Trowbridge', 'Exeter', 'Plymouth', 'Torquay', 'Paignton', 'Newton Abbot', 'Bideford', 'Barnstaple', 'Ilfracombe', 'Truro', 'Falmouth', 'St Ives', 'Penzance']
+    },
+    
+    // East Midlands
+    'nottingham': {
+        title: 'Nottingham | Trade Quotes - Nottingham Tradespeople',
+        description: 'Find trusted tradespeople in Nottingham and East Midlands. Get competitive quotes for your home improvement projects.',
+        keywords: ['Nottingham tradespeople', 'tradesperson Nottingham', 'builder Nottingham', 'plumber Nottingham'],
+        counties: ['Nottinghamshire', 'Derbyshire', 'Leicestershire', 'Lincolnshire', 'Rutland'],
+        majorCities: ['Nottingham', 'Derby', 'Leicester', 'Lincoln', 'Northampton', 'Mansfield', 'Chesterfield', 'Worksop', 'Grantham', 'Boston', 'Skegness', 'Louth', 'Scunthorpe', 'Grimsby', 'Cleethorpes']
+    },
+    
+    // North West England
+    'liverpool': {
+        title: 'Liverpool | Trade Quotes - Liverpool Tradespeople',
+        description: 'Find professional tradespeople in Liverpool and Merseyside. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Liverpool tradespeople', 'tradesperson Liverpool', 'builder Liverpool', 'plumber Liverpool'],
+        counties: ['Merseyside', 'Lancashire', 'Cheshire'],
+        majorCities: ['Liverpool', 'Birkenhead', 'Wallasey', 'Sefton', 'Knowsley', 'St Helens', 'Wigan', 'Warrington', 'Chester', 'Crewe', 'Nantwich', 'Ellesmere Port', 'Widnes', 'Runcorn', 'Southport', 'Blackpool', 'Preston', 'Chorley', 'Leyland', 'Ormskirk']
+    },
+    
+    // North East England
+    'newcastle': {
+        title: 'Newcastle | Trade Quotes - Newcastle Tradespeople',
+        description: 'Find skilled tradespeople in Newcastle and North East England. Get quotes from vetted professionals for any project.',
+        keywords: ['Newcastle tradespeople', 'tradesperson Newcastle', 'builder Newcastle', 'plumber Newcastle'],
+        counties: ['Tyne and Wear', 'Northumberland', 'Durham'],
+        majorCities: ['Newcastle', 'Sunderland', 'Gateshead', 'South Shields', 'North Shields', 'Durham', 'Darlington', 'Stockton-on-Tees', 'Middlesbrough', 'Hartlepool', 'Redcar', 'Whitby', 'Hexham', 'Alnwick', 'Berwick-upon-Tweed']
+    },
+    
+    // East Anglia
+    'cambridge': {
+        title: 'Cambridge | Trade Quotes - Cambridge Tradespeople',
+        description: 'Find professional tradespeople in Cambridge and East Anglia. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Cambridge tradespeople', 'tradesperson Cambridge', 'builder Cambridge', 'plumber Cambridge'],
+        counties: ['Cambridgeshire', 'Suffolk', 'Norfolk', 'Essex', 'Bedfordshire', 'Hertfordshire'],
+        majorCities: ['Cambridge', 'Peterborough', 'Ipswich', 'Norwich', 'Colchester', 'Chelmsford', 'Basildon', 'Southend-on-Sea', 'Harlow', 'Stevenage', 'Watford', 'St Albans', 'Luton', 'Slough', 'Windsor', 'Maidenhead', 'Reading', 'Bracknell', 'Wokingham', 'Reigate', 'Dorking', 'Epsom', 'Woking', 'Farnham', 'Guildford', 'Crawley', 'Horsham']
+    },
+    
+    // South Central England
+    'reading': {
+        title: 'Reading | Trade Quotes - Reading Tradespeople',
+        description: 'Find trusted tradespeople in Reading and Thames Valley. Get competitive quotes for your home improvement projects.',
+        keywords: ['Reading tradespeople', 'tradesperson Reading', 'builder Reading', 'plumber Reading'],
+        counties: ['Berkshire', 'Oxfordshire', 'Buckinghamshire', 'Hampshire'],
+        majorCities: ['Reading', 'Slough', 'Windsor', 'Maidenhead', 'Bracknell', 'Wokingham', 'Reading', 'Newbury', 'Thatcham', 'Abingdon', 'Wantage', 'Didcot', 'Henley-on-Thames', 'Marlow', 'High Wycombe', 'Amersham', 'Chesham', 'Beaconsfield', 'Burnham', 'Farnham', 'Godalming', 'Guildford', 'Woking', 'Camberley', 'Egham', 'Staines', 'Ashford', 'Tonbridge', 'Tunbridge Wells']
+    },
+    
+    // South Central England (continued)
+    'southampton': {
+        title: 'Southampton | Trade Quotes - Southampton Tradespeople',
+        description: 'Find professional tradespeople in Southampton and Hampshire. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Southampton tradespeople', 'tradesperson Southampton', 'builder Southampton', 'plumber Southampton'],
+        counties: ['Hampshire', 'Isle of Wight', 'West Sussex'],
+        majorCities: ['Southampton', 'Portsmouth', 'Gosport', 'Fareham', 'Eastleigh', 'Winchester', 'Andover', 'Basingstoke', 'Farnborough', 'Aldershot', 'Guildford', 'Woking', 'Farnham', 'Crawley', 'Horsham', 'Chichester', 'Littlehampton', 'Bognor Regis', 'Selsey', 'Emsworth', 'Hayling Island', 'Isle of Wight']
+    },
+    
+    // Wales
+    'cardiff': {
+        title: 'Cardiff | Trade Quotes - Cardiff Tradespeople',
+        description: 'Find professional tradespeople in Cardiff and South Wales. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Cardiff tradespeople', 'tradesperson Cardiff', 'builder Cardiff', 'plumber Cardiff'],
+        counties: ['Cardiff', 'Vale of Glamorgan', 'Newport', 'Monmouthshire', 'Bridgend', 'Rhondda', 'Cynon Valley', 'Merthyr Tydfil', 'Caerphilly', 'Blaenau Gwent', 'Torfaen', 'Powys', 'Pembrokeshire', 'Ceredigion', 'Carmarthenshire', 'Neath Port Talbot', 'Swansea'],
+        majorCities: ['Cardiff', 'Newport', 'Swansea', 'Barry', 'Bridgend', 'Pontypridd', 'Merthyr Tydfil', 'Caerphilly', 'Ebbw Vale', 'Abergavenny', 'Monmouth', 'Chepstow', 'Llanelli', 'Aberystwyth', 'Fishguard', 'Haverfordwest', 'Pembroke', 'Tenby', 'St Davids']
+    },
+    
+    // Northern Ireland
+    'belfast': {
+        title: 'Belfast | Trade Quotes - Belfast Tradespeople',
+        description: 'Find professional tradespeople in Belfast and Northern Ireland. Get quotes from vetted builders, plumbers, and electricians.',
+        keywords: ['Belfast tradespeople', 'tradesperson Belfast', 'builder Belfast', 'plumber Belfast'],
+        counties: ['Antrim', 'Armagh', 'Down', 'Fermanagh', 'Londonderry', 'Tyrone'],
+        majorCities: ['Belfast', 'Lisburn', 'Newtownabbey', 'Bangor', 'Dundonald', 'Holywood', 'Carrickfergus', 'Larne', 'Newry', 'Armagh', 'Craigavon', 'Dungannon', 'Enniskillen', 'Omagh', 'Coleraine', 'Ballymena', 'Londonderry', 'Derry']
     }
 };
 
