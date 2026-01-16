@@ -387,12 +387,12 @@
         <div class="form-section" id="serviceSection">
             <h3>What service do you need?</h3>
             <div class="service-cards">
-                <div class="service-card" onclick="selectService('extension')">
+                <div class="service-card" onclick="selectService('extension')" data-service="extension">
                     <div class="service-icon">🏗️</div>
                     <div class="service-name">House Extension</div>
                     <div class="service-desc">Single & double storey</div>
                 </div>
-                <div class="service-card" onclick="selectService('loft')">
+                <div class="service-card" onclick="selectService('loft')" data-service="loft">
                     <div class="service-icon">🏠</div>
                     <div class="service-name">Loft Conversion</div>
                     <div class="service-desc">Transform your attic</div>
@@ -407,15 +407,30 @@
                     <div class="service-name">Bathroom</div>
                     <div class="service-desc">Installation & renovation</div>
                 </div>
-                <div class="service-card" onclick="selectService('roofing')">
+                <div class="service-card" onclick="selectService('roofing')" data-service="roofing">
                     <div class="service-icon">🏚️</div>
                     <div class="service-name">Roofing</div>
                     <div class="service-desc">Repairs & replacement</div>
                 </div>
-                <div class="service-card" onclick="selectService('electrical')">
+                <div class="service-card" onclick="selectService('electrical')" data-service="electrical">
                     <div class="service-icon">⚡</div>
                     <div class="service-name">Electrical</div>
                     <div class="service-desc">Certified electricians</div>
+                </div>
+                <div class="service-card" onclick="selectService('plumbing')" data-service="plumbing">
+                    <div class="service-icon">🔧</div>
+                    <div class="service-name">Plumbing</div>
+                    <div class="service-desc">Boilers & heating</div>
+                </div>
+                <div class="service-card" onclick="selectService('flooring')" data-service="flooring">
+                    <div class="service-icon">🏠</div>
+                    <div class="service-name">Flooring</div>
+                    <div class="service-desc">Hardwood & laminate</div>
+                </div>
+                <div class="service-card" onclick="selectService('painting')" data-service="painting">
+                    <div class="service-icon">🎨</div>
+                    <div class="service-name">Painting & Decorating</div>
+                    <div class="service-desc">Interior & exterior</div>
                 </div>
             </div>
         </div>
@@ -426,9 +441,6 @@
             <div class="form-group">
                 <label class="form-label">Your Postcode</label>
                 <input type="text" class="form-input" id="postcode" placeholder="e.g., SW1A 1AA" required>
-                <button type="button" class="btn btn-outline" onclick="generateWithAI()" style="margin-left: 10px; padding: 12px 20px; font-size: 14px;">
-                    🤖 Generate with AI
-                </button>
             </div>
             <div class="form-group">
                 <label class="form-label">Project Title</label>
@@ -445,6 +457,41 @@
                     <option value="1-3months">1-3 months</option>
                     <option value="3-6months">3-6 months</option>
                     <option value="planning">Just planning</option>
+                </select>
+            </div>
+            
+            <!-- Contact Information (optional for vendor registration) -->
+            <div class="form-group">
+                <label class="form-label">Phone Number (Optional)</label>
+                <input type="tel" class="form-input" id="phone" placeholder="07xxx xxx xxx">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Company Name (Optional)</label>
+                <input type="text" class="form-input" id="company" placeholder="Your company name">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Website (Optional)</label>
+                <input type="url" class="form-input" id="website" placeholder="https://yourwebsite.com">
+            </div>
+            
+            <!-- Professional Information (optional for vendor registration) -->
+            <div class="form-group">
+                <label class="form-label">Trade Category (Optional)</label>
+                <select class="form-select" id="tradeCategory">
+                    <option value="">Select your trade (for tradespeople)</option>
+                    <option value="builder">Builder/Extension Specialist</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="roofer">Roofer</option>
+                    <option value="kitchen-fitter">Kitchen Fitter</option>
+                    <option value="bathroom-fitter">Bathroom Installer</option>
+                    <option value="painter">Painter & Decorator</option>
+                    <option value="landscaper">Landscaper</option>
+                    <option value="flooring">Flooring Specialist</option>
+                    <option value="hvac">HVAC Technician</option>
+                    <option value="carpentry">Carpenter & Woodwork</option>
+                    <option value="insulation">Insulation Specialist</option>
+                    <option value="windows">Window & Door Specialist</option>
                 </select>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -514,7 +561,12 @@
             description: '',
             urgency: 'asap',
             budget: '',
-            propertyType: 'house'
+            propertyType: 'house',
+            tradeCategory: '' // For vendor registration
+            experience: '' // For vendor registration
+            company: '', // For vendor registration
+            website: '' // For vendor registration
+            phone: '' // For vendor registration
         };
         
         let currentStep = 1;
@@ -579,6 +631,7 @@
                 quoteData.urgency = document.getElementById('urgency').value;
                 quoteData.budget = document.getElementById('budget').value;
                 quoteData.propertyType = document.getElementById('propertyType').value;
+                quoteData.tradeCategory = document.getElementById('tradeCategory').value;
                 
                 if (!quoteData.postcode || !quoteData.title) {
                     alert('Please fill in postcode and project title');
@@ -645,8 +698,12 @@
                     <div><strong>Timeline:</strong> ${quoteData.urgency}</div>
                     ${quoteData.budget ? `<div><strong>Budget:</strong> ${quoteData.budget}</div>` : ''}
                     <div><strong>Property:</strong> ${quoteData.propertyType}</div>
+                    ${quoteData.tradeCategory ? `<div><strong>Trade:</strong> ${quoteData.tradeCategory}</div>` : ''}
+                    ${quoteData.description ? `<div style="margin-top: 15px;"><strong>Description:</strong><br>${quoteData.description}</div>` : ''}
+                    ${quoteData.phone ? `<div><strong>Phone:</strong> ${quoteData.phone}</div>` : ''}
+                    ${quoteData.company ? `<div><strong>Company:</strong> ${quoteData.company}</div>` : ''}
+                    ${quoteData.website ? `<div><strong>Website:</strong> ${quoteData.website}</div>` : ''}
                 </div>
-                ${quoteData.description ? `<div style="margin-top: 15px;"><strong>Description:</strong><br>${quoteData.description}</div>` : ''}
             `;
         }
         
@@ -700,6 +757,7 @@
                 nextStep();
             }
         }, 500);
+        }, 500);
         
         // AI Quote Generation
         function generateWithAI() {
@@ -714,6 +772,20 @@
             // AI-generated descriptions based on service type
             const aiDescriptions = {
                 'extension': 'I need a single storey extension to create additional living space at the rear of my property. The extension should be approximately 4m x 3m with proper foundations and connecting to existing utilities.',
+                'loft': 'Looking to convert my loft space into a usable bedroom or home office. Need proper insulation, windows, and staircase installation. Must comply with building regulations.',
+                'kitchen': 'Complete kitchen renovation required including new cabinets, worktops, appliances installation, plumbing, and electrical work. Open-plan design preferred with island unit.',
+                'bathroom': 'Full bathroom renovation needed including removal of old fittings, new suite installation, tiling, and plumbing work. Need proper ventilation and waterproofing.',
+                'roofing': 'Roof replacement or repair needed. Looking for complete re-roofing with proper insulation and new guttering system. Current roof has multiple leaks.',
+                'electrical': 'Electrical rewiring required for 3-bedroom house. Need new consumer unit, socket installations, and full testing. Must be Part P certified.',
+                'plumbing': 'Complete bathroom and kitchen plumbing installation. Need new pipes, fixtures, and water heater installation. Current system is old and inefficient.',
+                'flooring': 'Hardwood flooring installation throughout ground floor. Looking for oak or similar quality wood with proper underlay and finishing.',
+                'painting': 'Interior painting required for 4-bedroom house. Need walls, ceilings, and woodwork preparation with high-quality paint.',
+                'landscaping': 'Complete garden redesign including new lawn, planting scheme, patio area, and irrigation system. Current garden is overgrown.',
+                'carpentry': 'Custom carpentry and woodworking services for bespoke furniture, cabinets, and architectural features. Need skilled craftsmen for precision work.',
+                'hvac': 'Heating, ventilation, and air conditioning installation and maintenance. Need certified HVAC technicians for proper system design and energy efficiency.',
+                'insulation': 'Professional insulation services including cavity wall, loft, and external wall insulation for improved energy efficiency and comfort.',
+                'windows': 'Window and door installation and replacement services. Need double glazing, proper fitting, and weatherproofing for optimal performance.'
+            };
                 'loft': 'Looking to convert my loft space into a usable bedroom or home office. Need proper insulation, windows, and staircase installation. Must comply with building regulations.',
                 'kitchen': 'Complete kitchen renovation required including new cabinets, worktops, appliances installation, plumbing, and electrical work. Open-plan design preferred with island unit.',
                 'bathroom': 'Full bathroom renovation needed including removal of old fittings, new suite installation, tiling, plumbing, and electrical work. Need proper ventilation and waterproofing.',
@@ -736,7 +808,11 @@
                 'plumbing': 'Plumbing Installation Quote Request',
                 'flooring': 'Flooring Installation Quote Request',
                 'painting': 'Interior Painting Quote Request',
-                'landscaping': 'Landscaping Quote Request'
+                'landscaping': 'Landscaping Quote Request',
+                'carpentry': 'Carpentry & Woodwork Quote Request',
+                'hvac': 'HVAC Installation Quote Request',
+                'insulation': 'Insulation Installation Quote Request',
+                'windows': 'Window Installation Quote Request'
             };
             
             // Auto-fill the form with AI-generated content
