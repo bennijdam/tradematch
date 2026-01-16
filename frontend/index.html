@@ -823,6 +823,275 @@
             background: #E0E0E0;
         }
         
+        /* Authentication Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .auth-modal.active {
+            display: block;
+        }
+        
+        .auth-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .auth-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .auth-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #F0F0F0;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .auth-modal-close:hover {
+            background: #E0E0E0;
+            transform: scale(1.1);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: #F0F0F0;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .auth-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-form h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .auth-form input,
+        .auth-form select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        
+        .auth-form input:focus,
+        .auth-form select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.1);
+        }
+        
+        .auth-message {
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .auth-message.success {
+            background: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+        
+        .auth-message.error {
+            background: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+        
+        .auth-message.loading {
+            background: #E2E3E5;
+            color: #383D41;
+            border: 1px solid #D6D8DB;
+        }
+        
+        .auth-form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .auth-form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* User Menu */
+        .user-menu {
+            position: relative;
+            margin-left: 20px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(255, 56, 92, 0.3);
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 16px);
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .user-info {
+            padding: 20px;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .user-type {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .user-menu-items {
+            padding: 10px;
+        }
+        
+        .user-menu-items a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        
+        .user-menu-items a:hover {
+            background: #F9F9F9;
+        }
+        
+        .quote-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        
+        .quote-message.success {
+            background: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+        
+        .quote-message.error {
+            background: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+        
+        .quote-message.loading {
+            background: #E2E3E5;
+            color: #383D41;
+            border: 1px solid #D6D8DB;
+        }
+        
         /* CTA Section */
         .cta-section {
             padding: 100px 80px;
@@ -1348,6 +1617,11 @@
         </div>
     </footer>
     
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/quotes.js"></script>
+    
     <!-- Social Proof Notification -->
     <div class="social-proof" id="socialProof">
         <div class="social-proof-avatar" id="proofAvatar">EW</div>
@@ -1392,7 +1666,7 @@
             if (e.key === 'Escape') closeNavDropdown();
         });
         
-        // Nav Quote Form
+        // Nav Quote Form - Enhanced with API integration
         document.getElementById('navQuoteForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const service = document.getElementById('navService').value;
@@ -1404,7 +1678,27 @@
                 return;
             }
             
-            window.location.href = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcode)}&urgency=${urgency}`;
+            // Check if user is authenticated
+            if (window.api && window.api.isAuthenticated()) {
+                // User is logged in, submit quote via API
+                if (window.quoteEngine) {
+                    window.quoteEngine.submitQuote({
+                        serviceType: service,
+                        postcode: postcode,
+                        urgency: urgency,
+                        source: 'navigation'
+                    });
+                }
+            } else {
+                // User not logged in, store data and show auth modal
+                if (window.quoteEngine) {
+                    window.quoteEngine.storePendingQuote({ service, postcode, urgency });
+                    openAuthModal('register');
+                } else {
+                    // Fallback to old behavior
+                    window.location.href = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcode)}&urgency=${urgency}`;
+                }
+            }
         });
         
         // Service Selection in Hero Search
@@ -1433,7 +1727,28 @@
                 alert('Please select a service');
                 return;
             }
-            window.location.href = `quote-engine.html?service=${selectedService}`;
+            
+            // Check if user is authenticated
+            if (window.api && window.api.isAuthenticated()) {
+                // User is logged in, we need postcode from user or show prompt
+                const postcode = prompt('Please enter your postcode:');
+                if (postcode && window.quoteEngine) {
+                    window.quoteEngine.submitQuote({
+                        serviceType: selectedService,
+                        postcode: postcode,
+                        source: 'hero'
+                    });
+                }
+            } else {
+                // User not logged in, store service and show auth modal
+                if (window.quoteEngine) {
+                    window.quoteEngine.storePendingQuote({ service: selectedService });
+                    openAuthModal('register');
+                } else {
+                    // Fallback to old behavior
+                    window.location.href = `quote-engine.html?service=${selectedService}`;
+                }
+            }
         }
         
         // Quick Service Selection from Cards

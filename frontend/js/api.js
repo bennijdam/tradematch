@@ -9,7 +9,7 @@ const API_CONFIG = {
     // Production: your Render URL
     BASE_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:3001' 
-        : 'https://tradematch-api.onrender.com', // <-- UPDATE THIS WITH YOUR RENDER URL
+        : 'https://tradematch.onrender.com/', // <-- UPDATE THIS WITH YOUR RENDER URL
     
     ENDPOINTS: {
         // Authentication
@@ -84,16 +84,51 @@ class TradeMatchAPI {
             console.log(`🔗 API Request: ${config.method || 'GET'} ${url}`);
             
             const response = await fetch(url, config);
-            const data = await response.json();
+            
+            // Handle network errors
+            if (!response) {
+                throw new Error('Network error - please check your connection');
+            }
 
+            // Parse JSON response
+            let data;
+            try {
+                data = await response.json();
+            } catch (parseError) {
+                throw new Error(`Invalid response from server: ${parseError.message}`);
+            }
+
+            // Handle HTTP errors
             if (!response.ok) {
-                throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+                const errorMessage = data.error || data.message || `HTTP ${response.status}: ${response.statusText}`;
+                
+                // Handle specific error cases
+                if (response.status === 401) {
+                    this.setToken(null); // Clear invalid token
+                    throw new Error('Session expired - please log in again');
+                } else if (response.status === 403) {
+                    throw new Error('Access denied - insufficient permissions');
+                } else if (response.status === 404) {
+                    throw new Error('Resource not found');
+                } else if (response.status >= 500) {
+                    throw new Error('Server error - please try again later');
+                } else {
+                    throw new Error(errorMessage);
+                }
             }
 
             console.log(`✅ API Response:`, data);
             return data;
         } catch (error) {
             console.error(`❌ API Error:`, error);
+            
+            // Enhance error message for common cases
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Cannot connect to server - please check your internet connection');
+            } else if (error.name === 'AbortError') {
+                throw new Error('Request timeout - please try again');
+            }
+            
             throw error;
         }
     }
@@ -240,6 +275,41 @@ class TradeMatchAPI {
             console.error('Health check failed:', error);
             throw error;
         }
+    }
+
+    /**
+     * Check API availability
+     */
+    async isAPIAvailable() {
+        try {
+            await this.healthCheck();
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * Retry failed request with exponential backoff
+     */
+    async retryRequest(endpoint, options = {}, maxRetries = 3) {
+        let lastError;
+        
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                return await this.request(endpoint, options);
+            } catch (error) {
+                lastError = error;
+                
+                if (attempt < maxRetries) {
+                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+                    console.log(`Retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+        
+        throw lastError;
     }
 }
 
