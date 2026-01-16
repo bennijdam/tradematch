@@ -51,7 +51,19 @@ app.get("/", (req, res) => {
     message: "🚀 TradeMatch API is running",
     version: "1.0.0",
     endpoints: {
-      health: "/api/health"
+      health: "/api/health",
+      auth: {
+        register: "POST /api/auth/register",
+        login: "POST /api/auth/login",
+        me: "GET /api/auth/me"
+      },
+      quotes: {
+        create: "POST /api/quotes",
+        list: "GET /api/quotes",
+        get: "GET /api/quotes/:id",
+        update: "PUT /api/quotes/:id",
+        delete: "DELETE /api/quotes/:id"
+      }
     }
   });
 });
