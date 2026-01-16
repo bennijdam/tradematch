@@ -9,7 +9,7 @@ const API_CONFIG = {
     // Production: your Render URL
     BASE_URL: window.location.hostname === 'localhost' 
         ? 'http://localhost:3001' 
-        : 'https://your-app.onrender.com', // <-- UPDATE THIS WITH YOUR RENDER URL
+        : 'https://tradematch-api.onrender.com', // <-- UPDATE THIS WITH YOUR RENDER URL
     
     ENDPOINTS: {
         // Authentication
