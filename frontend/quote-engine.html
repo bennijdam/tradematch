@@ -441,6 +441,9 @@
             <div class="form-group">
                 <label class="form-label">Your Postcode</label>
                 <input type="text" class="form-input" id="postcode" placeholder="e.g., SW1A 1AA" required>
+                <button type="button" class="btn btn-outline" onclick="getCurrentLocation()" style="margin-left: 10px; padding: 12px 20px; font-size: 14px;">
+                    📍 Get Location
+                </button>
             </div>
             <div class="form-group">
                 <label class="form-label">Project Title</label>
@@ -757,6 +760,100 @@
                 nextStep();
             }
         }, 500);
+        
+        // Google Maps Location Services
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Use Google Maps Geocoding API
+                        const geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({
+                            location: {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            },
+                            }, (results, status) => {
+                                if (status === 'OK') {
+                                    const location = results[0];
+                                    document.getElementById('postcode').value = location.formatted_address || '';
+                                    
+                                    // Extract postcode from formatted address
+                                    const postcode = location.address_components.postcode || location.formatted_address;
+                                    if (postcode) {
+                                        document.getElementById('postcode').value = postcode;
+                                    }
+                                    
+                                    // Show success message
+                                    const btn = event.target;
+                                    const originalText = btn.textContent;
+                                    btn.textContent = '✅ Location Found!';
+                                    btn.style.background = '#D4EDDA';
+                                    btn.style.color = '#155724';
+                                    
+                                    setTimeout(() => {
+                                        btn.textContent = originalText;
+                                        btn.style.background = '';
+                                        btn.style.color = '';
+                                    }, 2000);
+                                } else {
+                                    alert('Unable to get your location. Please enter postcode manually.');
+                                }
+                            },
+                            (error) => {
+                                console.error('Geocoding failed:', error);
+                                alert('Location services unavailable. Please enter postcode manually.');
+                            }
+                        );
+                    } else {
+                        // Fallback to manual entry
+                        alert('Location services unavailable. Please enter postcode manually.');
+                    }
+                } else {
+                    // Fallback to manual entry
+                    alert('Location services unavailable. Please enter postcode manually.');
+                }
+            } else {
+                // Fallback to manual entry
+                alert('Location services unavailable. Please enter postcode manually.');
+            }
+        }
+        
+        // Enhanced postcode validation
+        function validatePostcode(postcode) {
+            // UK postcode validation
+            const postcodeRegex = /^[A-Z]{1,2}[A-Z]{1,2}[A-Z]{1,2}[A-Z]{1,2}\s*[A-Z]{1,2}$/i;
+            return postcodeRegex.test(postcode);
+        }
+        
+        // Auto-fill location when service is selected
+        function autoFillLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({
+                            location: {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            },
+                            (results, status) => {
+                                if (status === 'OK') {
+                                    const location = results[0];
+                                    const postcode = location.address_components.postcode || location.formatted_address || '';
+                                    if (postcode) {
+                                        document.getElementById('postcode').value = postcode;
+                                    }
+                                }
+                            }
+                        },
+                        (error) => {
+                            console.log('Geocoding failed:', error);
+                        }
+                    );
+                }
+            }
+        }
         }, 500);
         
         // AI Quote Generation
