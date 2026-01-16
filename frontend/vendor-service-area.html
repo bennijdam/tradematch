@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Area Settings | TradeMatch Vendor Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF385C;
+            --secondary: #00B4D8;
+            --success: #10B981;
+            --dark: #1A1A1A;
+            --gray: #717171;
+            --light: #F7F7F7;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #FAFAFA;
+            color: var(--dark);
+        }
+        
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E5E5;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #D50027;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        
+        .card-header {
+            margin-bottom: 24px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .card-subtitle {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Map Styles */
+        #map {
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #E5E5E5;
+        }
+        
+        .map-controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            border: 2px solid #E5E5E5;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .control-btn:hover {
+            border-color: var(--primary);
+            background: #FFF5F7;
+        }
+        
+        .control-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E5E5;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.1);
+        }
+        
+        /* Postcode List */
+        .postcode-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .postcode-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .postcode-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #F5F5F5;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .postcode-tag.active {
+            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+            color: var(--success);
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: var(--dark);
+        }
+        
+        /* Zone List */
+        .zone-list {
+            margin-top: 20px;
+        }
+        
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #F9F9F9;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .zone-info {
+            flex: 1;
+        }
+        
+        .zone-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .zone-details {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .zone-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #FFF5F7, #F0F9FF);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 600;
+        }
+        
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #F9F9F9;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #E5E5E5;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--success);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            left: 26px;
+        }
+        
+        .toggle-label {
+            flex: 1;
+        }
+        
+        .toggle-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .toggle-description {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+            color: var(--success);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        /* Mobile */
+        @media (max-width: 968px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="page-title">Service Area Settings</h1>
+            <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="success-message" id="successMessage">
+            ✓ Service area settings saved successfully!
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="areaSize">0</div>
+                <div class="stat-label">Square Miles Covered</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="postcodeCount">0</div>
+                <div class="stat-label">Postcodes Added</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="potentialJobs">0</div>
+                <div class="stat-label">Potential Jobs/Month</div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Interactive Map Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📍 Draw Your Service Area</h2>
+                    <p class="card-subtitle">Use the map tools to define zones where you want to receive jobs</p>
+                </div>
+                
+                <div class="map-controls">
+                    <button class="control-btn" onclick="activateCircle()">
+                        🔵 Draw Circle
+                    </button>
+                    <button class="control-btn" onclick="activatePolygon()">
+                        ⬢ Draw Polygon
+                    </button>
+                    <button class="control-btn" onclick="activateRectangle()">
+                        ▭ Draw Rectangle
+                    </button>
+                    <button class="control-btn" onclick="clearAllZones()">
+                        🗑️ Clear All
+                    </button>
+                </div>
+                
+                <div id="map"></div>
+                
+                <div class="zone-list">
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">Drawn Zones</h3>
+                    <div id="zonesList">
+                        <p style="color: var(--gray); font-size: 14px;">No zones drawn yet. Use the tools above to draw your service area.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Postcode Management Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📮 Add Postcodes Manually</h2>
+                    <p class="card-subtitle">Enter specific postcodes where you want to work</p>
+                </div>
+                
+                <div class="toggle-group">
+                    <div class="toggle-switch" id="postcodeToggle" onclick="togglePostcodes()"></div>
+                    <div class="toggle-label">
+                        <div class="toggle-title">Accept Jobs by Postcode</div>
+                        <div class="toggle-description">Receive jobs from specific postcodes only</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Add Postcode</label>
+                    <div class="postcode-input-group">
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="postcodeInput" 
+                            placeholder="e.g., E6, SW15, W1A"
+                            onkeypress="handlePostcodeEnter(event)"
+                        >
+                        <button class="btn btn-primary" onclick="addPostcode()">Add</button>
+                    </div>
+                    <p style="font-size: 13px; color: var(--gray); margin-top: 8px;">
+                        💡 Tip: You can add full postcodes (SW15 2BX) or partial postcodes (SW15, E6)
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Your Postcodes (<span id="postcodeCounter">0</span>)</label>
+                    <div class="postcode-list" id="postcodeList">
+                        <p style="color: var(--gray); font-size: 14px;">No postcodes added yet</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bulk Import Postcodes</label>
+                    <textarea 
+                        class="form-input" 
+                        id="bulkPostcodes" 
+                        rows="5" 
+                        placeholder="Paste multiple postcodes (one per line or comma-separated)
+E6 1AA
+SW15 2BX, W1A 1AA
+E15, E16, E20"
+                    ></textarea>
+                    <button class="btn btn-primary" onclick="importBulkpostcodes()" style="margin-top: 12px;">
+                        Import Postcodes
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Maximum Travel Distance</label>
+                    <input 
+                        type="range" 
+                        id="radiusSlider" 
+                        min="5" 
+                        max="50" 
+                        value="10" 
+                        oninput="updateRadius(this.value)"
+                        style="width: 100%;"
+                    >
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px;">
+                        <span>5 miles</span>
+                        <span id="radiusValue" style="font-weight: 700; color: var(--primary);">10 miles</span>
+                        <span>50 miles</span>
+                    </div>
+                </div>
+                
+                <div class="toggle-group">
+                    <div class="toggle-switch active" id="autoAcceptToggle" onclick="toggleAutoAccept()"></div>
+                    <div class="toggle-label">
+                        <div class="toggle-title">Auto-Accept Jobs in Service Area</div>
+                        <div class="toggle-description">Automatically receive job notifications for your defined areas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map
+        let map;
+        let drawnItems;
+        let drawControl;
+        let zones = [];
+        let postcodes = new Set();
+        let postcodeMode = false;
+        let autoAccept = true;
+        let maxRadius = 10;
+        
+        // Initialize Leaflet map
+        function initMap() {
+            // Center on London
+            map = L.map('map').setView([51.5074, -0.1278], 10);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+            
+            // Initialize drawing layer
+            drawnItems = new L.FeatureGroup();
+            map.addLayer(drawnItems);
+            
+            // Add draw control
+            drawControl = new L.Control.Draw({
+                draw: {
+                    polyline: false,
+                    marker: false,
+                    circlemarker: false
+                },
+                edit: {
+                    featureGroup: drawnItems,
+                    remove: true
+                }
+            });
+            map.addControl(drawControl);
+            
+            // Handle drawn shapes
+            map.on(L.Draw.Event.CREATED, function (e) {
+                const layer = e.layer;
+                drawnItems.addLayer(layer);
+                addZone(e.layerType, layer);
+                updateStats();
+            });
+            
+            map.on(L.Draw.Event.DELETED, function (e) {
+                e.layers.eachLayer(function (layer) {
+                    removeZone(layer._leaflet_id);
+                });
+                updateStats();
+            });
+        }
+        
+        // Draw controls
+        function activateCircle() {
+            new L.Draw.Circle(map, drawControl.options.draw.circle).enable();
+        }
+        
+        function activatePolygon() {
+            new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable();
+        }
+        
+        function activateRectangle() {
+            new L.Draw.Rectangle(map, drawControl.options.draw.rectangle).enable();
+        }
+        
+        function clearAllZones() {
+            drawnItems.clearLayers();
+            zones = [];
+            updateZonesList();
+            updateStats();
+        }
+        
+        // Zone management
+        function addZone(type, layer) {
+            const zone = {
+                id: layer._leaflet_id,
+                type: type,
+                layer: layer,
+                area: calculateArea(layer),
+                center: layer.getLatLng ? layer.getLatLng() : layer.getBounds().getCenter()
+            };
+            zones.push(zone);
+            updateZonesList();
+        }
+        
+        function removeZone(id) {
+            zones = zones.filter(z => z.id !== id);
+            updateZonesList();
+        }
+        
+        function calculateArea(layer) {
+            if (layer instanceof L.Circle) {
+                const radius = layer.getRadius();
+                return Math.PI * radius * radius / 1000000; // Convert to sq km
+            } else if (layer instanceof L.Polygon) {
+                return L.GeometryUtil.geodesicArea(layer.getLatLngs()[0]) / 1000000;
+            }
+            return 0;
+        }
+        
+        function updateZonesList() {
+            const container = document.getElementById('zonesList');
+            
+            if (zones.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray); font-size: 14px;">No zones drawn yet. Use the tools above to draw your service area.</p>';
+                return;
+            }
+            
+            container.innerHTML = zones.map(zone => `
+                <div class="zone-item">
+                    <div class="zone-info">
+                        <div class="zone-name">${zone.type.charAt(0).toUpperCase() + zone.type.slice(1)} Zone</div>
+                        <div class="zone-details">
+                            ${zone.area.toFixed(2)} sq miles • 
+                            Center: ${zone.center.lat.toFixed(4)}, ${zone.center.lng.toFixed(4)}
+                        </div>
+                    </div>
+                    <div class="zone-actions">
+                        <button class="control-btn" onclick="zoomToZone(${zone.id})">📍 View</button>
+                        <button class="control-btn" onclick="deleteZone(${zone.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function zoomToZone(id) {
+            const zone = zones.find(z => z.id === id);
+            if (zone) {
+                if (zone.layer.getBounds) {
+                    map.fitBounds(zone.layer.getBounds());
+                } else {
+                    map.setView(zone.center, 13);
+                }
+            }
+        }
+        
+        function deleteZone(id) {
+            const zone = zones.find(z => z.id === id);
+            if (zone) {
+                drawnItems.removeLayer(zone.layer);
+                removeZone(id);
+                updateStats();
+            }
+        }
+        
+        // Postcode management
+        function addPostcode() {
+            const input = document.getElementById('postcodeInput');
+            const postcode = input.value.trim().toUpperCase();
+            
+            if (postcode && validatePostcode(postcode)) {
+                postcodes.add(postcode);
+                input.value = '';
+                updatePostcodeList();
+                updateStats();
+            } else {
+                alert('Please enter a valid UK postcode');
+            }
+        }
+        
+        function validatePostcode(postcode) {
+            // Basic UK postcode validation
+            const regex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}$|^[A-Z]{1,2}[0-9]{1,2}$/i;
+            return regex.test(postcode);
+        }
+        
+        function removePostcode(postcode) {
+            postcodes.delete(postcode);
+            updatePostcodeList();
+            updateStats();
+        }
+        
+        function updatePostcodeList() {
+            const container = document.getElementById('postcodeList');
+            const counter = document.getElementById('postcodeCounter');
+            
+            counter.textContent = postcodes.size;
+            
+            if (postcodes.size === 0) {
+                container.innerHTML = '<p style="color: var(--gray); font-size: 14px;">No postcodes added yet</p>';
+                return;
+            }
+            
+            container.innerHTML = Array.from(postcodes).map(postcode => `
+                <div class="postcode-tag ${postcodeMode ? 'active' : ''}">
+                    ${postcode}
+                    <button class="remove-btn" onclick="removePostcode('${postcode}')">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function importBulkPostcodes() {
+            const textarea = document.getElementById('bulkPostcodes');
+            const text = textarea.value;
+            
+            // Split by newlines and commas
+            const postcodeList = text.split(/[\n,]+/).map(p => p.trim().toUpperCase()).filter(p => p);
+            
+            let added = 0;
+            postcodeList.forEach(postcode => {
+                if (validatePostcode(postcode)) {
+                    postcodes.add(postcode);
+                    added++;
+                }
+            });
+            
+            textarea.value = '';
+            updatePostcodeList();
+            updateStats();
+            alert(`Successfully imported ${added} postcodes`);
+        }
+        
+        function handlePostcodeEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addPostcode();
+            }
+        }
+        
+        // Toggles
+        function togglePostcodes() {
+            postcodeMode = !postcodeMode;
+            const toggle = document.getElementById('postcodeToggle');
+            toggle.classList.toggle('active');
+            updatePostcodeList();
+        }
+        
+        function toggleAutoAccept() {
+            autoAccept = !autoAccept;
+            const toggle = document.getElementById('autoAcceptToggle');
+            toggle.classList.toggle('active');
+        }
+        
+        function updateRadius(value) {
+            maxRadius = parseInt(value);
+            document.getElementById('radiusValue').textContent = value + ' miles';
+            updateStats();
+        }
+        
+        // Stats
+        function updateStats() {
+            const totalArea = zones.reduce((sum, zone) => sum + zone.area, 0);
+            document.getElementById('areaSize').textContent = totalArea.toFixed(1);
+            document.getElementById('postcodeCount').textContent = postcodes.size;
+            
+            // Estimate potential jobs based on area and postcodes
+            const areaJobs = totalArea * 2; // 2 jobs per sq mile per month
+            const postcodeJobs = postcodes.size * 5; // 5 jobs per postcode per month
+            const potentialJobs = Math.round(areaJobs + postcodeJobs);
+            document.getElementById('potentialJobs').textContent = potentialJobs;
+        }
+        
+        // Save settings
+        function saveSettings() {
+            const settings = {
+                zones: zones.map(z => ({
+                    type: z.type,
+                    area: z.area,
+                    coordinates: z.layer.toGeoJSON()
+                })),
+                postcodes: Array.from(postcodes),
+                postcodeMode: postcodeMode,
+                autoAccept: autoAccept,
+                maxRadius: maxRadius
+            };
+            
+            // In production, send to API
+            console.log('Saving settings:', settings);
+            
+            // Show success message
+            const message = document.getElementById('successMessage');
+            message.classList.add('show');
+            setTimeout(() => message.classList.remove('show'), 3000);
+            
+            // Simulate API call
+            fetch('/api/vendor/service-area', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(settings)
+            }).then(response => {
+                console.log('Settings saved successfully');
+            }).catch(error => {
+                console.error('Error saving settings:', error);
+            });
+        }
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            updateStats();
+            
+            // Load saved settings
+            // In production, fetch from API
+            const savedSettings = {
+                postcodes: ['E6', 'E15', 'E16'],
+                maxRadius: 10
+            };
+            
+            savedSettings.postcodes.forEach(p => postcodes.add(p));
+            updatePostcodeList();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
