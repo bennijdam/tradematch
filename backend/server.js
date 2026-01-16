@@ -18,7 +18,7 @@ const app = express();
  * MIDDLEWARE
  * ===============================
  */
-app.set("trust proxy", 1); // Required for Render / reverse proxy
+app.set("trust proxy", 1);
 
 app.use(
   cors({
@@ -39,7 +39,7 @@ app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // Required for Neon
+    rejectUnauthorized: false,
   },
 });
 
@@ -57,16 +57,46 @@ const pool = new Pool({
 
 /**
  * ===============================
+ * IMPORT ROUTES
+ * ===============================
+ */
+const authRoutes = require('./routes/auth');
+const quoteRoutes = require('./routes/quotes');
+
+// Pass pool to routes
+authRoutes.setPool(pool);
+quoteRoutes.setPool(pool);
+
+/**
+ * ===============================
  * ROUTES
  * ===============================
  */
 
-// ✅ ROOT ROUTE (IMPORTANT FOR RENDER)
+// Root route
 app.get("/", (req, res) => {
-  res.send("🚀 TradeMatch Backend API is running");
+  res.json({
+    message: "🚀 TradeMatch API is running",
+    version: "1.0.0",
+    endpoints: {
+      health: "/api/health",
+      auth: {
+        register: "POST /api/auth/register",
+        login: "POST /api/auth/login",
+        me: "GET /api/auth/me"
+      },
+      quotes: {
+        create: "POST /api/quotes",
+        list: "GET /api/quotes",
+        get: "GET /api/quotes/:id",
+        update: "PUT /api/quotes/:id",
+        delete: "DELETE /api/quotes/:id"
+      }
+    }
+  });
 });
 
-// ✅ HEALTH CHECK
+// Health check
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -84,7 +114,11 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
-// 404 fallback (optional but clean)
+// Mount routes
+app.use('/api/auth', authRoutes);
+app.use('/api/quotes', quoteRoutes);
+
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
@@ -99,7 +133,7 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("╔═══════════════════════════════════════╗");
   console.log("║   🚀 TradeMatch API Server Running   ║");
-  console.log(`║   Port: ${PORT}                      ║`);
+  console.log(`║   Port: ${PORT.toString().padEnd(27)} ║`);
   console.log("║   Database: Connected ✅            ║");
   console.log("╚═══════════════════════════════════════╝");
 });
