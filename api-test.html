@@ -297,7 +297,7 @@
         async function testGetMyQuotes() {
             showResult('quoteResult', 'Getting my quotes...', 'info');
             try {
-                const response = await api.getQuotes({ customer_id: 'current' });
+                const response = await api.getQuotes();
                 showResult('quoteResult', JSON.stringify(response, null, 2), 'success');
             } catch (error) {
                 showResult('quoteResult', `Error: ${error.message}`, 'error');
