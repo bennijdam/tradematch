@@ -155,6 +155,27 @@
             margin-left: 20px;
         }
         
+        .vendor-btn {
+            background: linear-gradient(135deg, #00B4D8 0%, #00A8C8 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        
+        .vendor-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.3);
+        }
+        
         .dropdown-arrow {
             transition: transform 0.3s;
             font-size: 10px;
@@ -989,13 +1010,18 @@
                 <a href="#how-it-works">How it Works</a>
                 <a href="#services">Services</a>
                 <a href="#reviews">Reviews</a>
-                <a href="/vendor-dashboard.html">For Tradespeople</a>
                 
                 <!-- Authentication Buttons -->
                 <div class="auth-buttons" id="authButtons">
                     <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
                     <button class="btn btn-primary" onclick="openAuthModal('register')">Sign Up</button>
                 </div>
+                
+                <!-- Vendor Dashboard Button -->
+                <button class="btn btn-outline vendor-btn" onclick="window.location.href='vendor-dashboard.html'">
+                    🛠️ For Tradespeople
+                </button>
+            </div>
                 
                 <!-- Quick Quote Dropdown in Nav -->
                 <div class="quick-quote-wrapper">
