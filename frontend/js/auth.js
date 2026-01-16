@@ -182,12 +182,6 @@ class AuthManager {
                 setTimeout(() => {
                     this.closeAuthModal();
                     this.updateUIForAuthenticatedUser();
-                    // Process any pending quotes after successful login
-                    if (window.quoteEngine) {
-                        setTimeout(() => {
-                            window.quoteEngine.processPendingQuote();
-                        }, 500);
-                    }
                 }, 1000);
             } else {
                 this.showAuthMessage(response.error || 'Login failed', 'error');
@@ -233,12 +227,6 @@ class AuthManager {
                 setTimeout(() => {
                     this.closeAuthModal();
                     this.updateUIForAuthenticatedUser();
-                    // Process any pending quotes after successful registration
-                    if (window.quoteEngine) {
-                        setTimeout(() => {
-                            window.quoteEngine.processPendingQuote();
-                        }, 500);
-                    }
                 }, 1000);
             } else {
                 this.showAuthMessage(response.error || 'Registration failed', 'error');
@@ -254,9 +242,9 @@ class AuthManager {
     updateUIForAuthenticatedUser() {
         if (!this.currentUser) return;
 
-        // Update navigation - look for auth-buttons specifically in TradeMatch nav
-        const authButtons = document.getElementById('authButtons');
-        if (authButtons) {
+        // Update navigation
+        const navAuth = document.querySelector('.nav-auth') || document.querySelector('.navbar .container');
+        if (navAuth) {
             // Add user menu
             const userMenuHTML = `
                 <div class="user-menu">
@@ -278,7 +266,10 @@ class AuthManager {
             `;
             
             // Replace login/register buttons with user menu
-            authButtons.innerHTML = userMenuHTML;
+            const authButtons = navAuth.querySelector('.auth-buttons') || navAuth.querySelector('.nav-right');
+            if (authButtons) {
+                authButtons.innerHTML = userMenuHTML;
+            }
         }
 
         // Update quote forms to require authentication

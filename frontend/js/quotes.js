@@ -123,12 +123,6 @@ class QuoteEngine {
         try {
             this.showQuoteMessage('Submitting your quote request...', 'loading');
 
-            // Check API availability first
-            const isAvailable = await this.api.isAPIAvailable();
-            if (!isAvailable) {
-                throw new Error('Service temporarily unavailable - please try again in a few minutes');
-            }
-
             // Prepare quote data for API
             const apiQuoteData = {
                 serviceType: quoteData.serviceType,

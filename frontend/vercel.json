@@ -1,19 +1,19 @@
 {
   "version": 2,
+  "buildCommand": "echo 'No build needed'",
+  "outputDirectory": "frontend",
+  "installCommand": "echo 'No dependencies to install'",
+  "framework": null,
   "builds": [
     {
-      "src": "**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif}",
+      "src": "frontend/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api-test.html",
-      "dest": "/api-test.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/frontend/$1"
     }
   ]
 }

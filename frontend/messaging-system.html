@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | TradeMatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF385C;
+            --primary-dark: #D50027;
+            --secondary: #00B4D8;
+            --success: #10B981;
+            --dark: #1A1A1A;
+            --gray: #717171;
+            --light: #F7F7F7;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background: #FAFAFA;
+            overflow: hidden;
+        }
+        
+        /* Layout */
+        .messaging-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar */
+        .conversations-sidebar {
+            width: 380px;
+            background: white;
+            border-right: 1px solid #E5E5E5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+        
+        .sidebar-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid #E5E5E5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: var(--gray);
+        }
+        
+        /* Conversation List */
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .conversation-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #F5F5F5;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .conversation-item:hover {
+            background: #F9F9F9;
+        }
+        
+        .conversation-item.active {
+            background: linear-gradient(135deg, #FFF5F7, #F0F9FF);
+        }
+        
+        .conversation-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 4px;
+        }
+        
+        .conversation-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .conversation-time {
+            font-size: 12px;
+            color: var(--gray);
+            white-space: nowrap;
+        }
+        
+        .conversation-preview {
+            font-size: 14px;
+            color: var(--gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .conversation-item.unread .conversation-preview {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .unread-badge {
+            display: inline-block;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 20px;
+            margin-left: 8px;
+        }
+        
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        .chat-header {
+            padding: 20px 32px;
+            border-bottom: 1px solid #E5E5E5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .chat-user-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .chat-user-status {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #E5E5E5;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-icon:hover {
+            border-color: var(--primary);
+            background: #FFF5F7;
+        }
+        
+        .btn-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--dark);
+        }
+        
+        /* Messages Area */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            background: #FAFAFA;
+        }
+        
+        .message-date-divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+        
+        .message-date-divider span {
+            background: #FAFAFA;
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .message-date-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #E5E5E5;
+        }
+        
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            max-width: 70%;
+        }
+        
+        .message.sent {
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), #0891B2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .message.sent .message-avatar {
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-bubble {
+            background: white;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+            margin-bottom: 4px;
+        }
+        
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+            color: white;
+        }
+        
+        .message-text {
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        
+        .message-meta {
+            font-size: 12px;
+            color: var(--gray);
+            padding: 0 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .message.sent .message-meta {
+            justify-content: flex-end;
+        }
+        
+        .message-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .message-status svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--success);
+        }
+        
+        /* Quote Card in Chat */
+        .quote-card-inline {
+            background: #F5F5F5;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .quote-card-inline h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .quote-card-inline p {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 4px;
+        }
+        
+        .quote-card-inline .btn {
+            margin-top: 12px;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+        }
+        
+        .typing-indicator.active {
+            display: flex;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            background: white;
+            border-radius: 16px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+        
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gray);
+            animation: typing 1.4s ease-in-out infinite;
+        }
+        
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        /* Input Area */
+        .input-area {
+            padding: 20px 32px;
+            border-top: 1px solid #E5E5E5;
+            background: white;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-attach {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: #F5F5F5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-attach:hover {
+            background: #E5E5E5;
+        }
+        
+        .btn-attach svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--dark);
+        }
+        
+        .message-input-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .message-input {
+            width: 100%;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 12px 16px;
+            border: 2px solid #E5E5E5;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'DM Sans', sans-serif;
+            resize: none;
+            transition: all 0.2s;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.1);
+        }
+        
+        .btn-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), #FF6B6B);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(255, 56, 92, 0.3);
+        }
+        
+        .btn-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.4);
+        }
+        
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-send svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #F5F5F5, #E5E5E5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .empty-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: var(--gray);
+        }
+        
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            color: var(--gray);
+            font-size: 16px;
+        }
+        
+        /* Shared Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 100%);
+            color: var(--white);
+        }
+        
+        .btn-secondary {
+            background: white;
+            border: 2px solid #E5E5E5;
+            color: var(--dark);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .conversations-sidebar {
+                width: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                z-index: 10;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .conversations-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+        
+        /* Scrollbar Styling */
+        .conversations-list::-webkit-scrollbar,
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .conversations-list::-webkit-scrollbar-track,
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .conversations-list::-webkit-scrollbar-thumb,
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #E5E5E5;
+            border-radius: 3px;
+        }
+        
+        .conversations-list::-webkit-scrollbar-thumb:hover,
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: #D5D5D5;
+        }
+    </style>
+</head>
+<body>
+    <div class="messaging-container">
+        <!-- Conversations Sidebar -->
+        <div class="conversations-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Messages</h2>
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search conversations..." id="searchInput">
+                </div>
+            </div>
+            
+            <div class="conversations-list" id="conversationsList">
+                <div class="conversation-item active unread" data-conversation-id="1">
+                    <div class="conversation-avatar">JD</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">John Doe</span>
+                            <span class="conversation-time">2m ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            When can you start the rewiring work?
+                            <span class="unread-badge">3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="2">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #0891B2, #06B6D4);">SM</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Sarah Miller</span>
+                            <span class="conversation-time">1h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Thanks for the quote! One question about...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="3">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">RJ</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Robert Johnson</span>
+                            <span class="conversation-time">3h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Perfect! I'll have the materials ready by then.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item unread" data-conversation-id="4">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">EW</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Emma Wilson</span>
+                            <span class="conversation-time">5h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Do you offer a warranty on the work?
+                            <span class="unread-badge">1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="5">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #8B5CF6, #A78BFA);">MT</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Michael Taylor</span>
+                            <span class="conversation-time">Yesterday</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Great! Looking forward to working with you.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">JD</div>
+                    <div class="chat-user-info">
+                        <h3>John Doe</h3>
+                        <div class="chat-user-status">
+                            <span class="online-indicator"></span>
+                            Online
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn-icon" title="View Quote">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" title="Call">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" title="More Options">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="messages-area" id="messagesArea">
+                <div class="message-date-divider">
+                    <span>Today</span>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Hi! I saw your quote for the full house rewiring. I have a few questions before we proceed.
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Of course! I'd be happy to answer any questions you have. What would you like to know?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:32 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                How long will the work take? And will I need to move out during the rewiring?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:35 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Great questions! For a 3-bedroom house like yours, the full rewiring typically takes 5-7 working days. You won't need to move out, but there will be some disruption - power cuts at certain times, dust from chasing walls, etc.
+                            </div>
+                        </div>
+                        <div class="message-bubble" style="margin-top: 4px;">
+                            <div class="message-text">
+                                We work room by room to minimize inconvenience, and we'll make sure you have power for essential appliances during the evening.
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:37 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                That sounds reasonable. One more thing - do you include the consumer unit upgrade in your quote?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:40 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Yes, absolutely! The consumer unit upgrade is included. Here's what's covered in the quote:
+                            </div>
+                            <div class="quote-card-inline">
+                                <h4>Full House Rewiring - Quote Breakdown</h4>
+                                <p>✓ Complete rewiring of all circuits</p>
+                                <p>✓ Consumer unit upgrade (17th edition)</p>
+                                <p>✓ Additional sockets as discussed</p>
+                                <p>✓ Testing and certification</p>
+                                <p>✓ 12-month warranty</p>
+                                <p style="font-weight: 600; color: var(--dark); margin-top: 12px;">Total: £4,500</p>
+                                <button class="btn btn-primary">
+                                    Accept Quote
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:42 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Perfect! When can you start the work?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:45 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="typing-indicator active">
+                    <div class="message-avatar">JD</div>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <div class="input-actions">
+                        <button class="btn-attach" title="Attach file">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                        <button class="btn-attach" title="Send photo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="message-input-container">
+                        <textarea 
+                            class="message-input" 
+                            placeholder="Type a message..."
+                            id="messageInput"
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button class="btn-send" id="sendButton">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message
+        const sendButton = document.getElementById('sendButton');
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const messagesArea = document.getElementById('messagesArea');
+            const messageHTML = `
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">${text}</div>
+                        </div>
+                        <div class="message-meta">
+                            <span>${getCurrentTime()}</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const typingIndicator = document.querySelector('.typing-indicator');
+            messagesArea.insertBefore(
+                createElementFromHTML(messageHTML),
+                typingIndicator
+            );
+
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+
+            // In production, send to WebSocket/API
+            sendToBackend(text);
+        }
+
+        function createElementFromHTML(htmlString) {
+            const div = document.createElement('div');
+            div.innerHTML = htmlString.trim();
+            return div.firstChild;
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        // Conversation switching
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.conversation-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                this.classList.remove('unread');
+                const badge = this.querySelector('.unread-badge');
+                if (badge) badge.remove();
+
+                // Load conversation (in production, fetch from API)
+                loadConversation(this.dataset.conversationId);
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                const name = item.querySelector('.conversation-name').textContent.toLowerCase();
+                const preview = item.querySelector('.conversation-preview').textContent.toLowerCase();
+                if (name.includes(searchTerm) || preview.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Simulate WebSocket connection
+        function initializeWebSocket() {
+            // In production:
+            // const ws = new WebSocket('wss://api.tradematch.com/ws');
+            // ws.onmessage = handleIncomingMessage;
+            console.log('WebSocket initialized (demo mode)');
+        }
+
+        function sendToBackend(message) {
+            // In production:
+            // ws.send(JSON.stringify({ type: 'message', text: message }));
+            console.log('Sending message:', message);
+        }
+
+        function loadConversation(conversationId) {
+            // In production: fetch(`/api/messages/${conversationId}`)
+            console.log('Loading conversation:', conversationId);
+        }
+
+        // Scroll to bottom on load
+        window.addEventListener('DOMContentLoaded', function() {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+            initializeWebSocket();
+        });
+    </script>
+</body>
+</html>
