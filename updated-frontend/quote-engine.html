@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Quotes | TradeMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #FF6B8A;
+            --primary-dark: #FF385C;
+            --secondary: #4FC3F7;
+            --success: #66BB6A;
+            --bg-white: #FFFFFF;
+            --bg-light: #FAFBFC;
+            --bg-lighter: #F5F7FA;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --border-light: #E8ECEF;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-lighter);
+            color: var(--text-primary);
+        }
+        
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #FAFBFC 0%, #F0F4F8 100%);
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .hero p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        /* Quote Form Container */
+        .quote-form-container {
+            max-width: 800px;
+            margin: -40px auto 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+        
+        /* Progress Steps */
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 12%;
+            right: 12%;
+            height: 2px;
+            background: var(--border-light);
+            z-index: 0;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-lighter);
+            border: 2px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            margin-bottom: 8px;
+        }
+        
+        .step-circle.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .step-circle.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        /* Form Sections */
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Service Selection */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .service-card {
+            padding: 24px 16px;
+            background: var(--bg-lighter);
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(255, 107, 138, 0.15);
+            border-color: var(--primary);
+        }
+        
+        .service-card.selected {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(255, 107, 138, 0.2);
+        }
+        
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .service-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 138, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Budget Slider */
+        .budget-slider-container {
+            margin: 32px 0;
+            padding: 24px;
+            background: var(--bg-lighter);
+            border-radius: 12px;
+        }
+        
+        .budget-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .budget-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .budget-values {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .budget-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .budget-separator {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* Dual Range Slider */
+        .range-slider-container {
+            position: relative;
+            height: 6px;
+            background: var(--border-light);
+            border-radius: 3px;
+            margin: 32px 0 16px;
+        }
+        
+        .range-slider-track {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 3px;
+        }
+        
+        .range-slider {
+            position: relative;
+            width: 100%;
+        }
+        
+        .range-input {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+            margin-top: -3px;
+        }
+        
+        .range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 2px 8px rgba(255, 107, 138, 0.3);
+            transition: all 0.2s;
+        }
+        
+        .range-input::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(255, 107, 138, 0.4);
+        }
+        
+        .range-input::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary);
+            cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 2px 8px rgba(255, 107, 138, 0.3);
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 138, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            border: 1.5px solid var(--border-light);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-lighter);
+        }
+        
+        /* Review Section */
+        .review-content {
+            padding: 24px;
+            background: var(--bg-lighter);
+            border-radius: 12px;
+            line-height: 1.8;
+        }
+        
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .review-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quote-form-container {
+                margin: -20px 16px 20px;
+                padding: 24px;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">TradeMatch</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Get Free Quotes</h1>
+        <p>Tell us about your project and receive quotes from verified tradespeople</p>
+    </section>
+
+    <!-- Quote Form -->
+    <div class="quote-form-container">
+        <!-- Progress Steps -->
+        <div class="form-progress">
+            <div class="progress-step">
+                <div class="step-circle active" id="step1">1</div>
+                <div class="step-label">Service</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle" id="step2">2</div>
+                <div class="step-label">Details</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle" id="step3">3</div>
+                <div class="step-label">Review</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Service Selection -->
+        <div id="serviceSection" class="form-section active">
+            <h3 style="margin-bottom: 24px; font-size: 20px;">What service do you need?</h3>
+            
+            <div class="services-grid">
+                <div class="service-card" onclick="selectService('extension')">
+                    <div class="service-icon"><i class="fas fa-home"></i></div>
+                    <div class="service-name">Extension</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('loft')">
+                    <div class="service-icon"><i class="fas fa-warehouse"></i></div>
+                    <div class="service-name">Loft</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('kitchen')">
+                    <div class="service-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="service-name">Kitchen</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('bathroom')">
+                    <div class="service-icon"><i class="fas fa-bath"></i></div>
+                    <div class="service-name">Bathroom</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('roofing')">
+                    <div class="service-icon"><i class="fas fa-building"></i></div>
+                    <div class="service-name">Roofing</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('electrical')">
+                    <div class="service-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="service-name">Electrical</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('plumbing')">
+                    <div class="service-icon"><i class="fas fa-wrench"></i></div>
+                    <div class="service-name">Plumbing</div>
+                </div>
+                
+                <div class="service-card" onclick="selectService('landscaping')">
+                    <div class="service-icon"><i class="fas fa-tree"></i></div>
+                    <div class="service-name">Landscaping</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Details -->
+        <div id="detailsSection" class="form-section">
+            <h3 style="margin-bottom: 24px; font-size: 20px;">Tell us about your project</h3>
+            
+            <div class="form-group">
+                <label>Postcode *</label>
+                <input type="text" id="postcode" placeholder="e.g. SW1A 1AA" required />
+            </div>
+            
+            <div class="form-group">
+                <label>Project Title *</label>
+                <input type="text" id="title" placeholder="e.g. Kitchen renovation" required />
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" placeholder="Describe your project in detail..."></textarea>
+            </div>
+            
+            <!-- Budget Slider -->
+            <div class="budget-slider-container">
+                <div class="budget-display">
+                    <span class="budget-label">Budget Range</span>
+                    <div class="budget-values">
+                        <span class="budget-value" id="budgetMin">£0</span>
+                        <span class="budget-separator">to</span>
+                        <span class="budget-value" id="budgetMax">£50,000</span>
+                    </div>
+                </div>
+                
+                <div class="range-slider">
+                    <div class="range-slider-container">
+                        <div class="range-slider-track" id="sliderTrack"></div>
+                    </div>
+                    <input 
+                        type="range" 
+                        class="range-input" 
+                        id="budgetMinSlider" 
+                        min="0" 
+                        max="100000" 
+                        value="0" 
+                        step="1000"
+                    />
+                    <input 
+                        type="range" 
+                        class="range-input" 
+                        id="budgetMaxSlider" 
+                        min="0" 
+                        max="100000" 
+                        value="50000" 
+                        step="1000"
+                    />
+                </div>
+                
+                <div class="range-labels">
+                    <span>£0</span>
+                    <span>£100,000+</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Timeline</label>
+                <select id="urgency">
+                    <option value="asap">As soon as possible</option>
+                    <option value="1-2-weeks">1-2 weeks</option>
+                    <option value="1-month">Within 1 month</option>
+                    <option value="flexible">Flexible</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Property Type</label>
+                <select id="propertyType">
+                    <option value="house">House</option>
+                    <option value="flat">Flat</option>
+                    <option value="bungalow">Bungalow</option>
+                    <option value="commercial">Commercial</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div id="reviewSection" class="form-section">
+            <h3 style="margin-bottom: 24px; font-size: 20px;">Review Your Quote Request</h3>
+            
+            <div class="review-content" id="reviewContent">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button class="btn btn-secondary" id="backBtn" onclick="prevStep()" style="display:none;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn btn-primary" id="submitBtn" onclick="submitQuote()" style="display:none;">
+                <i class="fas fa-paper-plane"></i> Submit Quote Request
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://tradematch.onrender.com';
+        let currentStep = 1;
+        let quoteData = {
+            service: '',
+            postcode: '',
+            title: '',
+            description: '',
+            budgetMin: 0,
+            budgetMax: 50000,
+            urgency: 'asap',
+            propertyType: 'house'
+        };
+        
+        // Initialize budget slider
+        const minSlider = document.getElementById('budgetMinSlider');
+        const maxSlider = document.getElementById('budgetMaxSlider');
+        const minValue = document.getElementById('budgetMin');
+        const maxValue = document.getElementById('budgetMax');
+        const sliderTrack = document.getElementById('sliderTrack');
+        
+        function updateSlider() {
+            const min = parseInt(minSlider.value);
+            const max = parseInt(maxSlider.value);
+            
+            const minPercent = (min / 100000) * 100;
+            const maxPercent = (max / 100000) * 100;
+            
+            sliderTrack.style.left = minPercent + '%';
+            sliderTrack.style.width = (maxPercent - minPercent) + '%';
+            
+            minValue.textContent = min >= 100000 ? '£100k+' : '£' + min.toLocaleString();
+            maxValue.textContent = max >= 100000 ? '£100k+' : '£' + max.toLocaleString();
+            
+            quoteData.budgetMin = min;
+            quoteData.budgetMax = max;
+        }
+        
+        minSlider.addEventListener('input', () => {
+            const min = parseInt(minSlider.value);
+            const max = parseInt(maxSlider.value);
+            if (min >= max - 5000) {
+                minSlider.value = max - 5000;
+            }
+            updateSlider();
+        });
+        
+        maxSlider.addEventListener('input', () => {
+            const min = parseInt(minSlider.value);
+            const max = parseInt(maxSlider.value);
+            if (max <= min + 5000) {
+                maxSlider.value = min + 5000;
+            }
+            updateSlider();
+        });
+        
+        // Initialize
+        updateSlider();
+        
+        // Service selection
+        function selectService(service) {
+            quoteData.service = service;
+            
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            setTimeout(() => nextStep(), 500);
+        }
+        
+        // Navigation
+        function nextStep() {
+            if (currentStep === 1 && !quoteData.service) {
+                alert('Please select a service');
+                return;
+            }
+            
+            if (currentStep === 2) {
+                quoteData.postcode = document.getElementById('postcode').value;
+                quoteData.title = document.getElementById('title').value;
+                quoteData.description = document.getElementById('description').value;
+                quoteData.urgency = document.getElementById('urgency').value;
+                quoteData.propertyType = document.getElementById('propertyType').value;
+                
+                if (!quoteData.postcode || !quoteData.title) {
+                    alert('Please fill in postcode and project title');
+                    return;
+                }
+            }
+            
+            updateProgress(currentStep + 1);
+        }
+        
+        function prevStep() {
+            updateProgress(currentStep - 1);
+        }
+        
+        function updateProgress(step) {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current section
+            if (step === 1) {
+                document.getElementById('serviceSection').classList.add('active');
+            } else if (step === 2) {
+                document.getElementById('detailsSection').classList.add('active');
+            } else if (step === 3) {
+                document.getElementById('reviewSection').classList.add('active');
+                populateReview();
+            }
+            
+            // Update step circles
+            for (let i = 1; i <= 3; i++) {
+                const stepCircle = document.getElementById(`step${i}`);
+                if (i < step) {
+                    stepCircle.classList.add('completed');
+                    stepCircle.classList.remove('active');
+                    stepCircle.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (i === step) {
+                    stepCircle.classList.add('active');
+                    stepCircle.classList.remove('completed');
+                    stepCircle.textContent = i;
+                } else {
+                    stepCircle.classList.remove('active', 'completed');
+                    stepCircle.textContent = i;
+                }
+            }
+            
+            // Update buttons
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (step === 1) {
+                backBtn.style.display = 'none';
+                nextBtn.style.display = 'flex';
+                submitBtn.style.display = 'none';
+            } else if (step === 2) {
+                backBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+                submitBtn.style.display = 'none';
+            } else if (step === 3) {
+                backBtn.style.display = 'flex';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'flex';
+            }
+            
+            currentStep = step;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function populateReview() {
+            const content = document.getElementById('reviewContent');
+            content.innerHTML = `
+                <div class="review-item">
+                    <span class="review-label">Service:</span>
+                    <span class="review-value">${quoteData.service.charAt(0).toUpperCase() + quoteData.service.slice(1)}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Postcode:</span>
+                    <span class="review-value">${quoteData.postcode}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Project:</span>
+                    <span class="review-value">${quoteData.title}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Budget:</span>
+                    <span class="review-value">£${quoteData.budgetMin.toLocaleString()} - £${quoteData.budgetMax.toLocaleString()}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Timeline:</span>
+                    <span class="review-value">${quoteData.urgency}</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">Property:</span>
+                    <span class="review-value">${quoteData.propertyType}</span>
+                </div>
+                ${quoteData.description ? `
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+                    <span class="review-label">Description:</span>
+                    <p style="margin-top: 8px; color: var(--text-primary);">${quoteData.description}</p>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        async function submitQuote() {
+            try {
+                const response = await fetch(`${API_URL}/api/quotes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify(quoteData)
+                });
+                
+                if (response.ok) {
+                    alert('Quote submitted successfully! Vendors will contact you soon.');
+                    window.location.href = 'customer-dashboard.html';
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to submit quote');
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+        
+        // Check for pre-filled data from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('service')) {
+            quoteData.service = urlParams.get('service');
+        }
+        if (urlParams.get('postcode')) {
+            quoteData.postcode = urlParams.get('postcode');
+            document.getElementById('postcode').value = quoteData.postcode;
+        }
+    </script>
+</body>
+</html>
