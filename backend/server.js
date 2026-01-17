@@ -84,14 +84,12 @@ try {
   const aiRoutes = require('./routes/ai');
   const analyticsRoutes = require('./routes/analytics');
   const proposalRoutes = require('./routes/proposals');
-  const milestoneRoutes = require('./routes/milestones');
   
   paymentRoutes.setPool(pool);
   reviewRoutes.setPool(pool);
   aiRoutes.setPool(pool);
   analyticsRoutes.setPool(pool);
   proposalRoutes.setPool(pool);
-  milestoneRoutes.setPool(pool);
   
   app.use('/api/payments', paymentRoutes);
   app.use('/api/reviews', reviewRoutes);

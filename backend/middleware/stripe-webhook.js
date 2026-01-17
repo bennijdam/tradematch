@@ -1,60 +1,37 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const StripeService = require('../services/stripe.service');
+const stripeService = new StripeService();
 
-// Stripe webhook middleware
+/**
+ * Stripe Webhook Middleware
+ * Verifies and processes incoming Stripe webhooks
+ */
 const stripeWebhook = async (req, res, next) => {
-    const sig = req.headers['stripe-signature'];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    
-    let event;
-    
-    try {
-        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } catch (err) {
-        console.log(`Webhook signature verification failed:`, err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
+    const signature = req.headers['stripe-signature'];
+    const payload = req.body;
+
+    if (!signature) {
+        return res.status(400).json({ error: 'Stripe signature is required' });
     }
-    
-    // Handle the event
+
     try {
-        switch (event.type) {
-            case 'payment_intent.succeeded':
-                await handlePaymentSucceeded(event.data.object);
-                break;
-            case 'payment_intent.payment_failed':
-                await handlePaymentFailed(event.data.object);
-                break;
-            case 'payment_intent.canceled':
-                await handlePaymentCanceled(event.data.object);
-                break;
-            case 'transfer.created':
-                await handleTransferCreated(event.data.object);
-                break;
-            case 'transfer.paid':
-                await handleTransferPaid(event.data.object);
-                break;
-            case 'transfer.failed':
-                await handleTransferFailed(event.data.object);
-                break;
-            case 'account.updated':
-                await handleAccountUpdated(event.data.object);
-                break;
-            case 'payout.created':
-                await handlePayoutCreated(event.data.object);
-                break;
-            case 'payout.paid':
-                await handlePayoutPaid(event.data.object);
-                break;
-            case 'payout.failed':
-                await handlePayoutFailed(event.data.object);
-                break;
-            default:
-                console.log(`Unhandled event type: ${event.type}`);
-        }
+        // Verify webhook signature
+        const verificationResult = await stripeService.verifyWebhook(payload, signature);
         
-        res.json({ received: true });
+        if (!verificationResult.success) {
+            return res.status(400).json({ error: 'Invalid webhook signature' });
+        }
+
+        const event = verificationResult.event;
+        
+        // Attach event to request for further processing
+        req.stripeEvent = event;
+        
+        console.log(`Webhook received: ${event.type}`);
+        
+        next();
     } catch (error) {
         console.error('Webhook processing error:', error);
-        res.status(500).send('Webhook processing failed');
+        return res.status(400).json({ error: 'Webhook processing failed' });
     }
 };
 

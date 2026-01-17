@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone Manager | TradeMatch</title>
+    <style>
+        .milestone-manager {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .milestone-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .milestone-timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E0E0E0;
+        }
+        
+        .milestone-item {
+            position: relative;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .milestone-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 35px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #E0E0E0;
+        }
+        
+        .milestone-item.completed::before {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .milestone-item.active::before {
+            background: #FFB800;
+            border-color: #FFB800;
+        }
+        
+        .milestone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .milestone-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .milestone-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF385C;
+        }
+        
+        .milestone-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .milestone-status.pending {
+            background: #FFF4E5;
+            color: #FFB800;
+        }
+        
+        .milestone-status.in-progress {
+            background: #E3F2FD;
+            color: #2196F3;
+        }
+        
+        .milestone-status.review {
+            background: #F3E5F5;
+            color: #9C27B0;
+        }
+        
+        .milestone-status.completed {
+            background: #E8F5E9;
+            color: #4CAF50;
+        }
+        
+        .milestone-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #FF385C;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #D50027;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #F7F7F7;
+            color: #1A1A1A;
+        }
+        
+        .evidence-upload {
+            margin-top: 20px;
+            padding: 20px;
+            background: #F7F7F7;
+            border-radius: 12px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="milestone-manager">
+        <h1>Milestone Payment Manager</h1>
+        
+        <div id="projectInfo" class="project-info">
+            <!-- Project details -->
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="milestone-timeline" id="milestoneTimeline">
+            <!-- Milestones populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://tradematch-backend.onrender.com';
+        const token = localStorage.getItem('authToken');
+        
+        // Get quoteId from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const quoteId = urlParams.get('quoteId');
+        
+        async function loadMilestones() {
+            try {
+                const response = await fetch(`${API_URL}/api/payments/milestones/${quoteId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMilestones(data.milestones);
+                    updateProgress(data.milestones);
+                }
+                
+            } catch (error) {
+                console.error('Load milestones error:', error);
+            }
+        }
+        
+        function displayMilestones(milestones) {
+            const container = document.getElementById('milestoneTimeline');
+            
+            container.innerHTML = milestones.map((milestone, index) => `
+                <div class="milestone-item ${milestone.status}" data-id="${milestone.id}">
+                    <div class="milestone-header">
+                        <div>
+                            <h3 class="milestone-title">${milestone.title}</h3>
+                            <span class="milestone-status ${milestone.status}">${milestone.status}</span>
+                        </div>
+                        <div class="milestone-amount">£${parseFloat(milestone.amount).toFixed(2)}</div>
+                    </div>
+                    
+                    <p>${milestone.description}</p>
+                    
+                    ${milestone.due_date ? `<p><strong>Due:</strong> ${new Date(milestone.due_date).toLocaleDateString()}</p>` : ''}
+                    
+                    ${milestone.status === 'in-progress' ? `
+                        <div class="evidence-upload">
+                            <h4>Upload Completion Evidence</h4>
+                            <input type="file" multiple accept="image/*" onchange="uploadEvidence('${milestone.id}', this.files)">
+                            <button class="btn btn-primary" onclick="markComplete('${milestone.id}')">
+                                Mark as Complete
+                            </button>
+                        </div>
+                    ` : ''}
+                    
+                    ${milestone.status === 'review' ? `
+                        <div class="milestone-actions">
+                            <button class="btn btn-primary" onclick="approveMilestone('${milestone.id}')">
+                                Approve & Release Payment
+                            </button>
+                            <button class="btn btn-secondary" onclick="requestRevision('${milestone.id}')">
+                                Request Revision
+                            </button>
+                        </div>
+                    ` : ''}
+                    
+                    ${milestone.completion_evidence ? `
+                        <div class="evidence-gallery">
+                            ${JSON.parse(milestone.completion_evidence).photos.map(photo => 
+                                `<img src="${photo}" alt="Evidence" style="max-width: 200px; margin: 10px;">`
+                            ).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+        
+        function updateProgress(milestones) {
+            const completed = milestones.filter(m => m.status === 'completed').length;
+            const total = milestones.length;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+        
+        async function markComplete(milestoneId) {
+            try {
+                const response = await fetch(`${API_URL}/api/payments/milestones/${milestoneId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        status: 'review',
+                        completionEvidence: {
+                            photos: [], // Would be populated from uploaded files
+                            notes: 'Work completed as per specification'
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('Milestone submitted for review!');
+                    loadMilestones();
+                }
+                
+            } catch (error) {
+                console.error('Mark complete error:', error);
+            }
+        }
+        
+        async function approveMilestone(milestoneId) {
+            if (!confirm('Approve this milestone and release payment?')) return;
+            
+            try {
+                // First, update milestone status
+                await fetch(`${API_URL}/api/payments/milestones/${milestoneId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: 'approved' })
+                });
+                
+                // Then, release escrow funds
+                const paymentId = 'pay_xxx'; // Get from milestone data
+                
+                await fetch(`${API_URL}/api/payments/release-escrow`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        paymentId,
+                        milestoneId,
+                        amount: 1000, // Get from milestone
+                        reason: 'Milestone completed successfully'
+                    })
+                });
+                
+                alert('Payment released to vendor!');
+                loadMilestones();
+                
+            } catch (error) {
+                console.error('Approve milestone error:', error);
+            }
+        }
+        
+        // Load milestones on page load
+        loadMilestones();
+    </script>
+</body>
+</html>

@@ -1,236 +1,261 @@
 const PDFDocument = require('pdfkit');
+const fs = require('fs');
+const path = require('path');
 
-class PDFService {
-    // Generate proposal PDF
-    async generateProposalPDF(proposal) {
-        return new Promise((resolve, reject) => {
-            try {
-                const doc = new PDFDocument();
-                const chunks = [];
-                
-                // Collect PDF data
-                doc.on('data', chunk => chunks.push(chunk));
-                doc.on('end', () => {
-                    const pdfData = Buffer.concat(chunks);
-                    resolve(pdfData);
-                });
-                doc.on('error', reject);
-                
-                // Add content to PDF
-                this.addProposalContent(doc, proposal);
-                
-                // Finalize PDF
-                doc.end();
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-    
-    // Add proposal content to PDF
-    addProposalContent(doc, proposal) {
-        const { data } = proposal;
-        const proposalData = JSON.parse(data || '{}');
-        
-        // Set up document
-        doc.fontSize(20).text('PROJECT PROPOSAL', { align: 'center' });
-        doc.moveDown();
-        
-        // Proposal details
-        doc.fontSize(12).text(`Proposal Number: ${proposal.proposal_number}`);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`);
-        doc.text(`Status: ${proposal.status.toUpperCase()}`);
-        doc.moveDown();
-        
-        // Vendor information
-        doc.fontSize(14).text('VENDOR INFORMATION', { underline: true });
-        doc.fontSize(11).text(`Name: ${proposal.vendor_name}`);
-        doc.text(`Email: ${proposal.vendor_email}`);
-        doc.text(`Phone: ${proposal.vendor_phone}`);
-        doc.moveDown();
-        
-        // Customer information
-        doc.fontSize(14).text('CUSTOMER INFORMATION', { underline: true });
-        doc.fontSize(11).text(`Name: ${proposal.customer_name}`);
-        doc.moveDown();
-        
-        // Project details
-        doc.fontSize(14).text('PROJECT DETAILS', { underline: true });
-        doc.fontSize(11).text(`Project Title: ${proposal.project_title}`);
-        doc.text(`Description: ${proposal.project_description}`);
-        doc.moveDown();
-        
-        // Pricing
-        doc.fontSize(14).text('PRICING', { underline: true });
-        doc.fontSize(11).text(`Total Amount: £${proposal.total_amount}`);
-        
-        if (proposalData.milestones && proposalData.milestones.length > 0) {
-            doc.moveDown();
-            doc.fontSize(12).text('Payment Milestones:');
+/**
+ * Generate Professional Proposal PDF
+ */
+async function generateProposal(proposalData, outputPath) {
+    return new Promise((resolve, reject) => {
+        try {
+            const doc = new PDFDocument({
+                size: 'A4',
+                margins: {
+                    top: 50,
+                    bottom: 50,
+                    left: 50,
+                    right: 50
+                }
+            });
             
-            proposalData.milestones.forEach((milestone, index) => {
-                doc.text(`${index + 1}. ${milestone.title} - £${milestone.amount}`);
-                doc.text(`   ${milestone.description}`);
+            const stream = fs.createWriteStream(outputPath);
+            doc.pipe(stream);
+            
+            // Header
+            doc.fontSize(24)
+               .fillColor('#FF385C')
+               .text('PROJECT PROPOSAL', { align: 'center' });
+            
+            doc.moveDown();
+            doc.fontSize(10)
+               .fillColor('#666')
+               .text(`Proposal #${proposalData.proposalNumber}`, { align: 'center' });
+            
+            doc.moveDown(2);
+            
+            // Company Details
+            doc.fontSize(14)
+               .fillColor('#1A1A1A')
+               .text('From:', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(11)
+               .text(proposalData.vendor.companyName);
+            doc.fontSize(10)
+               .fillColor('#666')
+               .text(proposalData.vendor.address)
+               .text(`Email: ${proposalData.vendor.email}`)
+               .text(`Phone: ${proposalData.vendor.phone}`);
+            
+            doc.moveDown(1.5);
+            
+            // Client Details
+            doc.fontSize(14)
+               .fillColor('#1A1A1A')
+               .text('To:', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(11)
+               .text(proposalData.customer.name);
+            doc.fontSize(10)
+               .fillColor('#666')
+               .text(proposalData.customer.address)
+               .text(`Email: ${proposalData.customer.email}`);
+            
+            doc.moveDown(2);
+            
+            // Project Overview
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Project Overview', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(12)
+               .fillColor('#1A1A1A')
+               .text(proposalData.projectTitle, { bold: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(10)
+               .fillColor('#333')
+               .text(proposalData.projectDescription, {
+                   align: 'justify',
+                   lineGap: 2
+               });
+            
+            doc.moveDown(2);
+            
+            // Scope of Work
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Scope of Work', { underline: true });
+            
+            doc.moveDown(0.5);
+            proposalData.scopeItems.forEach((item, index) => {
+                doc.fontSize(11)
+                   .fillColor('#1A1A1A')
+                   .text(`${index + 1}. ${item.title}`, { bold: true });
+                
+                doc.fontSize(10)
+                   .fillColor('#666')
+                   .text(`   ${item.description}`, { indent: 20 });
+                
                 doc.moveDown(0.5);
             });
-        }
-        
-        // Terms and conditions
-        if (proposalData.terms) {
+            
+            doc.moveDown(1);
+            
+            // Timeline
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Project Timeline', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(10)
+               .fillColor('#333')
+               .text(`Start Date: ${proposalData.timeline.startDate}`)
+               .text(`Completion Date: ${proposalData.timeline.endDate}`)
+               .text(`Duration: ${proposalData.timeline.duration}`);
+            
+            doc.moveDown(2);
+            
+            // Pricing Table
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Pricing Breakdown', { underline: true });
+            
+            doc.moveDown(0.5);
+            
+            const tableTop = doc.y;
+            const itemX = 50;
+            const descX = 200;
+            const priceX = 450;
+            
+            // Table Header
+            doc.fontSize(10)
+               .fillColor('#FFFFFF')
+               .rect(itemX, tableTop, 495, 25)
+               .fill('#FF385C');
+            
+            doc.fillColor('#FFFFFF')
+               .text('Item', itemX + 10, tableTop + 8)
+               .text('Description', descX + 10, tableTop + 8)
+               .text('Amount', priceX + 10, tableTop + 8);
+            
+            let currentY = tableTop + 30;
+            
+            proposalData.priceItems.forEach((item, index) => {
+                const bgColor = index % 2 === 0 ? '#F7F7F7' : '#FFFFFF';
+                
+                doc.rect(itemX, currentY, 495, 30)
+                   .fill(bgColor);
+                
+                doc.fillColor('#1A1A1A')
+                   .fontSize(10)
+                   .text(item.name, itemX + 10, currentY + 10, { width: 140 })
+                   .text(item.description, descX + 10, currentY + 10, { width: 240 })
+                   .text(`£${item.amount.toFixed(2)}`, priceX + 10, currentY + 10);
+                
+                currentY += 30;
+            });
+            
+            // Total
+            doc.rect(itemX, currentY, 495, 35)
+               .fill('#1A1A1A');
+            
+            doc.fillColor('#FFFFFF')
+               .fontSize(12)
+               .text('TOTAL', itemX + 10, currentY + 10, { bold: true })
+               .text(`£${proposalData.totalAmount.toFixed(2)}`, priceX + 10, currentY + 10, { bold: true });
+            
+            doc.moveDown(3);
+            currentY += 50;
+            
+            // Payment Terms
+            doc.y = currentY;
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Payment Terms', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(10)
+               .fillColor('#333')
+               .text(proposalData.paymentTerms, {
+                   align: 'justify',
+                   lineGap: 2
+               });
+            
+            doc.moveDown(2);
+            
+            // Terms & Conditions
             doc.addPage();
-            doc.fontSize(14).text('TERMS AND CONDITIONS', { underline: true });
-            doc.fontSize(11).text(proposalData.terms);
-        }
-        
-        // Footer
-        doc.fontSize(10).text(
-            `Generated on ${new Date().toLocaleDateString()} by TradeMatch Platform`,
-            { align: 'center' }
-        );
-    }
-    
-    // Generate invoice PDF
-    async generateInvoicePDF(invoice) {
-        return new Promise((resolve, reject) => {
-            try {
-                const doc = new PDFDocument();
-                const chunks = [];
-                
-                doc.on('data', chunk => chunks.push(chunk));
-                doc.on('end', () => {
-                    const pdfData = Buffer.concat(chunks);
-                    resolve(pdfData);
-                });
-                doc.on('error', reject);
-                
-                this.addInvoiceContent(doc, invoice);
-                doc.end();
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-    
-    // Add invoice content to PDF
-    addInvoiceContent(doc, invoice) {
-        // Set up document
-        doc.fontSize(20).text('INVOICE', { align: 'center' });
-        doc.moveDown();
-        
-        // Invoice details
-        doc.fontSize(12).text(`Invoice Number: ${invoice.invoice_number}`);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`);
-        doc.text(`Due Date: ${invoice.due_date}`);
-        doc.text(`Status: ${invoice.status}`);
-        doc.moveDown();
-        
-        // Customer information
-        doc.fontSize(14).text('BILL TO:', { underline: true });
-        doc.fontSize(11).text(invoice.customer_name);
-        doc.text(invoice.customer_address);
-        doc.moveDown();
-        
-        // Invoice items
-        doc.fontSize(14).text('INVOICE ITEMS', { underline: true });
-        
-        let totalAmount = 0;
-        invoice.items.forEach(item => {
-            doc.fontSize(11).text(`${item.description} - £${item.amount}`);
-            totalAmount += parseFloat(item.amount);
-        });
-        
-        doc.moveDown();
-        doc.fontSize(12).text(`Total Amount: £${totalAmount.toFixed(2)}`);
-        
-        // Footer
-        doc.fontSize(10).text(
-            `Generated on ${new Date().toLocaleDateString()} by TradeMatch Platform`,
-            { align: 'center' }
-        );
-    }
-    
-    // Generate contract PDF
-    async generateContractPDF(contract) {
-        return new Promise((resolve, reject) => {
-            try {
-                const doc = new PDFDocument();
-                const chunks = [];
-                
-                doc.on('data', chunk => chunks.push(chunk));
-                doc.on('end', () => {
-                    const pdfData = Buffer.concat(chunks);
-                    resolve(pdfData);
-                });
-                doc.on('error', reject);
-                
-                this.addContractContent(doc, contract);
-                doc.end();
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-    
-    // Add contract content to PDF
-    addContractContent(doc, contract) {
-        // Set up document
-        doc.fontSize(20).text('SERVICE CONTRACT', { align: 'center' });
-        doc.moveDown();
-        
-        // Contract details
-        doc.fontSize(12).text(`Contract Number: ${contract.contract_number}`);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`);
-        doc.moveDown();
-        
-        // Parties
-        doc.fontSize(14).text('PARTIES', { underline: true });
-        doc.fontSize(11).text(`Customer: ${contract.customer_name}`);
-        doc.text(`Vendor: ${contract.vendor_name}`);
-        doc.moveDown();
-        
-        // Project scope
-        doc.fontSize(14).text('PROJECT SCOPE', { underline: true });
-        doc.fontSize(11).text(contract.project_description);
-        doc.moveDown();
-        
-        // Payment terms
-        doc.fontSize(14).text('PAYMENT TERMS', { underline: true });
-        doc.fontSize(11).text(`Total Contract Value: £${contract.total_amount}`);
-        doc.text(`Payment Schedule: ${contract.payment_schedule}`);
-        doc.moveDown();
-        
-        // Signatures
-        doc.fontSize(14).text('SIGNATURES', { underline: true });
-        doc.fontSize(11).text('Customer Signature: ___________________ Date: _______');
-        doc.text('Vendor Signature: ___________________ Date: _______');
-        
-        // Footer
-        doc.fontSize(10).text(
-            `Generated on ${new Date().toLocaleDateString()} by TradeMatch Platform`,
-            { align: 'center' }
-        );
-    }
-    
-    // Save PDF to file
-    async savePDF(pdfBuffer, filePath) {
-        const fs = require('fs').promises;
-        try {
-            await fs.writeFile(filePath, pdfBuffer);
-            return filePath;
+            doc.fontSize(16)
+               .fillColor('#1A1A1A')
+               .text('Terms & Conditions', { underline: true });
+            
+            doc.moveDown(0.5);
+            doc.fontSize(10)
+               .fillColor('#333')
+               .text(proposalData.termsAndConditions, {
+                   align: 'justify',
+                   lineGap: 2
+               });
+            
+            doc.moveDown(3);
+            
+            // Signature Section
+            doc.fontSize(12)
+               .fillColor('#1A1A1A')
+               .text('Acceptance', { underline: true });
+            
+            doc.moveDown(1);
+            doc.fontSize(10)
+               .text('By signing below, you agree to terms outlined in this proposal.');
+            
+            doc.moveDown(2);
+            
+            const signatureY = doc.y;
+            
+            // Client Signature
+            doc.text('Client Signature:', 50, signatureY);
+            doc.moveTo(150, signatureY + 15)
+               .lineTo(300, signatureY + 15)
+               .stroke();
+            doc.text('Date:', 50, signatureY + 25);
+            doc.moveTo(150, signatureY + 40)
+               .lineTo(300, signatureY + 40)
+               .stroke();
+            
+            // Vendor Signature
+            doc.text('Vendor Signature:', 320, signatureY);
+            doc.moveTo(420, signatureY + 15)
+               .lineTo(570, signatureY + 15)
+               .stroke();
+            doc.text('Date:', 320, signatureY + 25);
+            doc.moveTo(420, signatureY + 40)
+               .lineTo(570, signatureY + 40)
+               .stroke();
+            
+            // Footer
+            doc.fontSize(8)
+               .fillColor('#999')
+               .text(
+                   'This proposal is valid for 30 days from date of issue.',
+                   50,
+                   doc.page.height - 50,
+                   { align: 'center' }
+               );
+            
+            doc.end();
+            
+            stream.on('finish', () => resolve(outputPath));
+            stream.on('error', reject);
+            
         } catch (error) {
-            console.error('Save PDF error:', error);
-            throw error;
+            reject(error);
         }
-    }
-    
-    // Get PDF info
-    getPDFInfo(pdfBuffer) {
-        return {
-            size: pdfBuffer.length,
-            pages: 1, // Basic implementation
-            created: new Date(),
-        };
-    }
+    });
 }
 
-module.exports = new PDFService();
+module.exports = {
+    generateProposal
+};
