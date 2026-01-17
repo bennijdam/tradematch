@@ -172,32 +172,72 @@ git push origin main
 
 ## ⚙️ **EMAIL CONFIGURATION GUIDE**
 
-### **Gmail Setup (Recommended)**
+### **Resend Setup (Recommended)**
 
-1. **Enable 2-Factor Authentication:**
-   - Go to https://myaccount.google.com/security
-   - Enable 2-Step Verification
+**Why Resend?**
+- ✅ Simple API (no SMTP config)
+- ✅ Professional sender addresses
+- ✅ 99%+ deliverability
+- ✅ 3,000 free emails/month
+- ✅ Built for transactional emails
 
-2. **Create App Password:**
-   - Go to https://myaccount.google.com/apppasswords
-   - Select "Mail" and "Other (Custom name)"
-   - Name it "TradeMatch"
-   - Copy the 16-character password
+**Your API Key:**
+```
+re_ZghKkgim_NN9oFCSHTNKP5MzPwECceGWY
+```
 
-3. **Add to .env:**
+### **Setup Steps:**
+
+1. **Install Resend:**
+```bash
+cd backend
+npm install resend
+```
+
+2. **Use Resend Email Route:**
+```bash
+copy complete-fix\backend\email-resend.js routes\email.js
+```
+
+3. **Add to .env (local testing):**
 ```env
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=abcd efgh ijkl mnop  ← Your app password
+RESEND_API_KEY=re_ZghKkgim_NN9oFCSHTNKP5MzPwECceGWY
+FRONTEND_URL=http://localhost:3000
 ```
 
 4. **Deploy to Render:**
    - Go to Render Dashboard
    - Select your backend service
    - Click "Environment" tab
-   - Add the SMTP variables
+   - Add these 2 variables:
+   ```
+   RESEND_API_KEY = re_ZghKkgim_NN9oFCSHTNKP5MzPwECceGWY
+   FRONTEND_URL = https://your-domain.vercel.app
+   ```
    - Click "Save Changes" (auto-redeploys)
+
+5. **Test:**
+```bash
+curl -X POST https://your-backend.onrender.com/api/email/welcome \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TOKEN" \
+  -d '{
+    "email": "bennijdam@protonmail.com",
+    "name": "Test User",
+    "userType": "customer"
+  }'
+```
+
+**Expected Response:**
+```json
+{
+  "success": true,
+  "message": "Welcome email sent",
+  "emailId": "re_..."
+}
+```
+
+**Check Your Inbox:** Email should arrive within seconds! ✉️
 
 ---
 

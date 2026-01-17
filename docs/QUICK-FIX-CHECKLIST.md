@@ -112,54 +112,69 @@ git push origin main
 
 ---
 
-## 🎯 **Priority 4: Configure Email System (5 minutes)**
+## 🎯 **Priority 4: Configure Email System (3 minutes)**
 
 ### **What You Need:**
-- Gmail account
-- App password (not regular password)
+- Resend API key: `re_ZghKkgim_NN9oFCSHTNKP5MzPwECceGWY`
 
 ### **Steps:**
 
-**A. Create Gmail App Password:**
-1. Go to https://myaccount.google.com/security
-2. Enable 2-Step Verification (if not already)
-3. Go to https://myaccount.google.com/apppasswords
-4. Select "Mail" and "Other (Custom name)"
-5. Name it "TradeMatch"
-6. Copy the 16-character password (e.g., `abcd efgh ijkl mnop`)
+**A. Install Resend Package:**
+```bash
+cd backend
+npm install resend
+```
 
-**B. Add to Render:**
+**B. Use Resend Email Route:**
+```bash
+# Copy email.js with Resend integration
+copy complete-fix\backend\email-resend.js routes\email.js
+```
+
+**C. Add to Render:**
 1. Go to https://dashboard.render.com
 2. Select your backend service
 3. Click "Environment" tab
 4. Click "Add Environment Variable"
-5. Add these 4 variables:
+5. Add these 2 variables:
 
 ```
-SMTP_HOST = smtp.gmail.com
-SMTP_PORT = 587
-SMTP_USER = your-email@gmail.com
-SMTP_PASS = abcdefghijklmnop
+RESEND_API_KEY = re_ZghKkgim_NN9oFCSHTNKP5MzPwECceGWY
+FRONTEND_URL = https://your-domain.vercel.app
 ```
 
 6. Click "Save Changes" (auto-redeploys)
 
-**C. Test:**
+**D. Deploy:**
+```bash
+git add backend/routes/email.js backend/package.json
+git commit -m "Add: Resend email integration"
+git push origin main
+```
+
+**E. Test:**
 ```bash
 curl -X POST https://your-backend.onrender.com/api/email/welcome \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
-    "email": "test@example.com",
+    "email": "bennijdam@protonmail.com",
     "name": "Test User",
     "userType": "customer"
   }'
 ```
 
 ### **Expected Result:**
-✅ Email received
-✅ HTML formatting looks good
+✅ Email received in seconds
+✅ Professional HTML design
+✅ From: TradeMatch <noreply@tradematch.co.uk>
 ✅ No errors in Render logs
+
+**Why Resend?**
+- ✅ Simpler than Gmail (no SMTP config)
+- ✅ Higher deliverability (99%+)
+- ✅ 3,000 free emails/month
+- ✅ Professional sender address
 
 ---
 

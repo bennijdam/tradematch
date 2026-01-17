@@ -50,62 +50,80 @@
     </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
     
+    
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --slate: #1A2332;
+            --slate-light: #2D3B4E;
+            --emerald: #16A34A;
+            --emerald-dark: #15803D;
+            --gray-50: #F8FAFB;
+            --gray-100: #F3F4F6;
+            --gray-600: #4B5563;
+            --white: #FFFFFF;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        :root {
-            --primary: #FF385C;
-            --primary-dark: #D50027;
-            --secondary: #00B4D8;
-            --success: #10B981;
-            --dark: #1A1A1A;
-            --gray: #717171;
-            --light: #F7F7F7;
-            --white: #FFFFFF;
-        }
-        
         body {
-            font-family: 'DM Sans', sans-serif;
-            color: var(--dark);
+            font-family: 'Manrope', sans-serif;
+            color: var(--slate);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
         
-        /* Navigation */
-        nav {
-            position: fixed;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Glassmorphism Header */
+        header, nav {
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
+            z-index: 100;
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
         
         .nav-container {
-            max-width: 1440px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 80px;
+            padding: 16px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            font-family: 'Outfit', sans-serif;
-            font-size: 26px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Source Serif 4', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--slate);
             text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span {
+            color: var(--emerald);
         }
         
         .nav-links {
@@ -115,7 +133,7 @@
         }
         
         .nav-links a {
-            color: var(--dark);
+            color: var(--gray-600);
             text-decoration: none;
             font-weight: 500;
             font-size: 15px;
@@ -123,805 +141,325 @@
         }
         
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--slate);
         }
         
         .btn {
             padding: 12px 28px;
-            border-radius: 100px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 15px;
             text-decoration: none;
             transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            display: inline-block;
             border: none;
             cursor: pointer;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 100%);
+            background: var(--emerald);
             color: var(--white);
-            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
+            box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 56, 92, 0.4);
+            background: var(--emerald-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
         }
         
-        /* Hero Section with Image */
+        /* Hero Section */
         .hero {
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80') center/cover;
+            padding: 120px 24px;
+            text-align: center;
+            color: var(--white);
             position: relative;
-            padding: 140px 80px 100px;
-            min-height: 700px;
             overflow: hidden;
         }
         
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-        }
-        
-        .hero-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.15;
-        }
-        
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(255, 245, 247, 0.95) 0%, 
-                rgba(240, 249, 255, 0.95) 50%,
-                rgba(255, 245, 247, 0.9) 100%);
-        }
-        
-        .hero-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 60px;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-content h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 58px;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -1.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .location-highlight {
-            color: var(--primary);
-            position: relative;
-        }
-        
-        .location-highlight::after {
+        .hero::before {
             content: '';
             position: absolute;
-            bottom: 8px;
-            left: 0;
-            right: 0;
-            height: 12px;
-            background: rgba(255, 56, 92, 0.15);
-            z-index: -1;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
         }
         
-        .hero-content p {
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+        
+        .hero h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            position: relative;
+        }
+        
+        .hero h2 {
             font-size: 20px;
-            color: var(--gray);
-            margin-bottom: 32px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .hero-cta {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .postcode-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 16px;
+            font-family: 'Manrope', sans-serif;
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 14px 32px;
+            background: var(--emerald);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .search-btn:hover {
+            background: var(--emerald-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 100px 24px;
+            background: var(--white);
+        }
+        
+        .content-section.alt {
+            background: var(--gray-50);
+        }
+        
+        .section-title {
+            font-family: 'Source Serif 4', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--slate);
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-subtitle {
+            font-size: 19px;
+            color: var(--gray-600);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+        
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            background: #E8F5E9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--emerald);
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--slate);
+        }
+        
+        .feature-desc {
+            color: var(--gray-600);
+            font-size: 15px;
             line-height: 1.7;
         }
         
-        .hero-stats {
+        /* Steps */
+        .steps-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--white);
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.25);
+        }
+        
+        .step h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--slate);
+        }
+        
+        .step p {
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+        
+        /* Trust Stats */
+        .trust-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-top: 60px;
         }
         
         .stat-item {
             text-align: center;
-            padding: 24px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-        }
-        
-        .stat-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         }
         
         .stat-number {
             font-size: 36px;
             font-weight: 800;
-            color: var(--primary);
+            color: var(--emerald);
+            display: block;
             margin-bottom: 4px;
-            font-family: 'Outfit', sans-serif;
         }
         
         .stat-label {
-            font-size: 13px;
-            color: var(--gray);
-            font-weight: 600;
-        }
-        
-        /* Breadcrumbs */
-        .breadcrumbs {
-            background: white;
-            padding: 16px 80px;
-            border-bottom: 1px solid #E5E5E5;
-            margin-top: 84px;
-        }
-        
-        .breadcrumbs-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             font-size: 14px;
-        }
-        
-        .breadcrumbs a {
-            color: var(--gray);
-            text-decoration: none;
-        }
-        
-        .breadcrumbs a:hover {
-            color: var(--primary);
-        }
-        
-        .breadcrumbs span {
-            color: var(--dark);
-            font-weight: 600;
-        }
-        
-        /* Quick Booking Form */
-        .booking-card {
-            background: white;
-            border-radius: 24px;
-            padding: 36px;
-            box-shadow: 0 12px 48px rgba(0,0,0,0.12);
-            border: 2px solid rgba(255, 56, 92, 0.1);
-        }
-        
-        .booking-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-        
-        .booking-subtitle {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 28px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        
-        .form-input,
-        .form-select {
-            width: 100%;
-            padding: 16px 18px;
-            border: 2px solid #E5E5E5;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'DM Sans', sans-serif;
-            transition: all 0.2s;
-        }
-        
-        .form-input:focus,
-        .form-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(255, 56, 92, 0.1);
-        }
-        
-        .trust-badges {
-            display: flex;
-            justify-content: space-around;
-            padding: 24px 0;
-            border-top: 1px solid #E5E5E5;
-            margin-top: 28px;
-        }
-        
-        .trust-badge {
-            text-align: center;
-        }
-        
-        .trust-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-        
-        .trust-text {
-            font-size: 12px;
-            color: var(--gray);
-            font-weight: 600;
-        }
-        
-        /* Gallery Section */
-        .gallery-section {
-            padding: 80px 80px;
-            background: white;
-        }
-        
-        .section-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 44px;
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-        
-        .section-subtitle {
-            font-size: 18px;
-            color: var(--gray);
-        }
-        
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-        
-        .gallery-item {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            aspect-ratio: 4/3;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .gallery-item:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 24px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-        
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-        
-        .gallery-caption {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        
-        .gallery-description {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        
-        /* Price Guide Section */
-        .price-guide {
-            padding: 80px 80px;
-            background: var(--light);
-        }
-        
-        .price-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 28px;
-        }
-        
-        .price-card {
-            background: white;
-            border-radius: 20px;
-            padding: 36px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .price-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), #FF6B6B);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-        
-        .price-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .price-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-        }
-        
-        .price-card-header {
-            margin-bottom: 24px;
-        }
-        
-        .price-card-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .price-range {
-            font-family: 'Outfit', sans-serif;
-            font-size: 38px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 16px;
-        }
-        
-        .price-details {
-            list-style: none;
-        }
-        
-        .price-details li {
-            padding: 10px 0;
-            font-size: 15px;
-            color: var(--dark);
-            display: flex;
-            align-items: start;
-            gap: 12px;
-        }
-        
-        .price-details li::before {
-            content: "✓";
-            color: var(--success);
-            font-weight: 700;
-            font-size: 18px;
-        }
-        
-        /* Local Specialists */
-        .specialists {
-            padding: 80px 80px;
-            background: white;
-        }
-        
-        .specialist-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-        
-        .specialist-card {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        
-        .specialist-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
-            border-color: var(--primary);
-        }
-        
-        .specialist-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        
-        .specialist-avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), #FF6B6B);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 800;
-            font-size: 26px;
-            font-family: 'Outfit', sans-serif;
-            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
-        }
-        
-        .specialist-info h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        
-        .specialist-rating {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        
-        .stars {
-            color: #FBBF24;
-            font-size: 16px;
-        }
-        
-        .specialist-details {
-            margin-bottom: 20px;
-        }
-        
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 0;
-            font-size: 14px;
-            color: var(--gray);
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 6px 14px;
-            background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
-            color: var(--success);
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-right: 8px;
-        }
-        
-        /* Before/After Slider */
-        .before-after-section {
-            padding: 80px 80px;
-            background: linear-gradient(135deg, #FFF5F7, #F0F9FF);
-        }
-        
-        .before-after-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-        }
-        
-        .before-after-wrapper {
-            position: relative;
-            aspect-ratio: 16/9;
-            overflow: hidden;
-        }
-        
-        .before-image,
-        .after-image {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .after-image {
-            clip-path: inset(0 50% 0 0);
-        }
-        
-        .slider-handle {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: white;
-            cursor: ew-resize;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-        }
-        
-        .slider-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-        
-        /* FAQ Section */
-        .faq {
-            padding: 80px 80px;
-            background: white;
-        }
-        
-        .faq-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        .faq-item {
-            background: #F9F9F9;
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        
-        .faq-item:hover {
-            background: #F5F5F5;
-            border-color: rgba(255, 56, 92, 0.2);
-        }
-        
-        .faq-item.active {
-            background: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(255, 56, 92, 0.1);
-        }
-        
-        .faq-question {
-            font-family: 'Outfit', sans-serif;
-            font-size: 19px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .faq-answer {
-            margin-top: 16px;
-            color: var(--gray);
-            line-height: 1.8;
-            display: none;
-            font-size: 15px;
-        }
-        
-        .faq-item.active .faq-answer {
-            display: block;
-        }
-        
-        .faq-icon {
-            font-size: 24px;
-            transition: transform 0.3s;
-            color: var(--primary);
-        }
-        
-        .faq-item.active .faq-icon {
-            transform: rotate(180deg);
-        }
-        
-        /* Nearby Locations */
-        .nearby-locations {
-            padding: 80px 80px;
-            background: var(--light);
-        }
-        
-        .location-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-        
-        .location-link {
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            text-align: center;
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 600;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-        }
-        
-        .location-link:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
-        }
-        
-        /* CTA Section */
-        .cta-section {
-            padding: 120px 80px;
-            background: linear-gradient(135deg, var(--primary) 0%, #FF6B6B 100%);
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        }
-        
-        .cta-section h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 52px;
-            font-weight: 900;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .cta-section p {
-            font-size: 22px;
-            margin-bottom: 40px;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .btn-white {
-            background: white;
-            color: var(--primary);
-            font-size: 18px;
-            padding: 18px 48px;
-        }
-        
-        .btn-white:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            color: var(--gray-600);
         }
         
         /* Footer */
         footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 80px 40px;
+            background: var(--slate);
+            color: rgba(255,255,255,0.8);
+            padding: 60px 24px 30px;
         }
         
-        .footer-grid {
-            max-width: 1440px;
-            margin: 0 auto;
+        .footer-content {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 60px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto 48px;
+        }
+        
+        .footer-brand h3 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 24px;
+            color: var(--white);
+            margin-bottom: 16px;
         }
         
         .footer-column h4 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 18px;
+            color: var(--white);
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         
-        .footer-links {
+        .footer-column ul {
             list-style: none;
         }
         
-        .footer-links li {
-            margin-bottom: 14px;
+        .footer-column ul li {
+            margin-bottom: 12px;
         }
         
-        .footer-links a {
+        .footer-column a {
             color: rgba(255,255,255,0.7);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 15px;
             transition: color 0.2s;
         }
         
-        .footer-links a:hover {
-            color: white;
+        .footer-column a:hover {
+            color: var(--emerald);
         }
         
         .footer-bottom {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding-top: 40px;
             border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
             text-align: center;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.6);
             font-size: 14px;
         }
         
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .nav-container,
-            .hero,
-            .gallery-section,
-            .price-guide,
-            .specialists,
-            .faq,
-            .nearby-locations,
-            .cta-section,
-            footer {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-            
-            .breadcrumbs {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-            
-            .hero-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero-content h1 {
-                font-size: 36px;
-            }
-            
-            .gallery-grid,
-            .price-cards,
-            .specialist-grid,
-            .location-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .section-title { font-size: 36px; }
+            .nav-links { display: none; }
+            .hero { padding: 80px 24px; }
+            .content-section { padding: 60px 24px; }
         }
     </style>
 </head>
@@ -936,18 +474,21 @@
     </div>
 
     <!-- Navigation -->
-    <nav>
+    
+    
+    <header>
         <div class="nav-container">
-            <a href="/" class="logo">TradeMatch</a>
+            <a href="/index.html" class="logo">Trade<span>Match</span></a>
             <div class="nav-links">
-                <a href="/how-it-works">How It Works</a>
-                <a href="/services">Services</a>
-                <a href="/locations">Locations</a>
-                <a href="/login">Login</a>
-                <a href="/get-quotes" class="btn btn-primary">Get Free Quotes</a>
+                <a href="/how-it-works.html">How It Works</a>
+                <a href="/find-tradespeople.html">Find Trades</a>
+                <a href="/about.html">About</a>
+                <a href="/customer-login.html" class="btn btn-primary">Sign In</a>
             </div>
         </div>
-    </nav>
+    </header>
+
+
     
     <!-- Hero Section with Background Image -->
     <section class="hero">
@@ -1158,53 +699,51 @@
     </section>
     
     <!-- Footer -->
+    
     <footer>
-        <div class="footer-grid">
-            <div class="footer-column">
-                <h4>TradeMatch</h4>
-                <ul class="footer-links">
-                    <li><a href="/about">About Us</a></li>
-                    <li><a href="/how-it-works">How It Works</a></li>
-                    <li><a href="/pricing">Pricing</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>TradeMatch</h3>
+                    <p>Connecting homeowners with trusted local tradespeople across the UK.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Customers</h4>
+                    <ul>
+                        <li><a href="/how-it-works.html">How It Works</a></li>
+                        <li><a href="/quote-engine.html">Post a Job</a></li>
+                        <li><a href="/find-tradespeople.html">Find Trades</a></li>
+                        <li><a href="/help.html">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Tradespeople</h4>
+                    <ul>
+                        <li><a href="/vendor-register.html">Join as a Trade</a></li>
+                        <li><a href="/vendor-login.html">Trade Login</a></li>
+                        <li><a href="/vendor-dashboard.html">Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                        <li><a href="/terms.html">Terms</a></li>
+                        <li><a href="/privacy.html">Privacy</a></li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="footer-column">
-                <h4>For Customers</h4>
-                <ul class="footer-links">
-                    <li><a href="/get-quotes">Get Quotes</a></li>
-                    <li><a href="/services">All Services</a></li>
-                    <li><a href="/guides">Guides & Tips</a></li>
-                    <li><a href="/reviews">Reviews</a></li>
-                </ul>
+            <div class="footer-bottom">
+                © 2026 TradeMatch. All rights reserved.
             </div>
-            
-            <div class="footer-column">
-                <h4>For Tradespeople</h4>
-                <ul class="footer-links">
-                    <li><a href="/join">Join TradeMatch</a></li>
-                    <li><a href="/vendor-login">Vendor Login</a></li>
-                    <li><a href="/success-stories">Success Stories</a></li>
-                    <li><a href="/help">Help Center</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h4>Legal</h4>
-                <ul class="footer-links">
-                    <li><a href="/terms">Terms & Conditions</a></li>
-                    <li><a href="/privacy">Privacy Policy</a></li>
-                    <li><a href="/cookies">Cookie Policy</a></li>
-                    <li><a href="/complaints">Complaints</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2026 TradeMatch Ltd. All rights reserved. Company No. 12345678 | VAT No. GB123456789</p>
         </div>
     </footer>
+
 
     <script>
         // PAGE DATA
