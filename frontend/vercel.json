@@ -2,7 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif}",
+      "src": "frontend/**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "seo-pages/**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "index.html",
       "use": "@vercel/static"
     }
   ],
@@ -10,6 +18,10 @@
     {
       "src": "/seo-pages/(.*)",
       "dest": "/seo-pages/$1"
+    },
+    {
+      "src": "/frontend/(.*)",
+      "dest": "/frontend/$1"
     },
     {
       "src": "/(.*)",
