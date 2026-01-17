@@ -601,27 +601,38 @@
                 return;
             }
             
+            const submitBtn = e.target.querySelector('.btn-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
             try {
-                // Show loading state
-                const submitBtn = e.target.querySelector('.btn-submit');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Creating Account...';
-                submitBtn.disabled = true;
+                const API_URL = 'https://tradematch.onrender.com';
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
                 
-                // Register via API
-                const response = await window.api.register(userData);
+                const result = await response.json();
                 
-                if (response.success) {
-                    alert('Account created successfully! You can now login and start receiving leads.');
-                    window.location.href = '/vendor-login.html';
+                if (response.ok && result.success) {
+                    // Store authentication
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    alert('Registration successful!');
+                    window.location.href = 'vendor-dashboard.html';
                 } else {
-                    alert(response.error || 'Registration failed. Please try again.');
+                    alert(result.error || 'Registration failed. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
                 }
             } catch (error) {
-                alert('Registration failed: ' + error.message);
-            } finally {
-                submitBtn.textContent = originalText;
+                console.error('Registration error:', error);
+                alert('Network error. Please check your connection and try again.');
                 submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
         });
     </script>

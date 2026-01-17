@@ -1140,11 +1140,14 @@
                     
                     <div class="divider"></div>
                     
-                    <div class="search-dropdown">
-                        <button class="dropdown-button" id="locationBtn">
-                            <span class="dropdown-label">Location</span>
-                            <span class="dropdown-value" id="locationValue">Your postcode</span>
-                        </button>
+                    <div class="postcode-input-container" style="flex: 1; padding: 16px 24px; display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 12px; font-weight: 600; color: #1A1A1A;">Location</label>
+                        <input 
+                            type="text" 
+                            id="heroPostcode" 
+                            placeholder="e.g. SW1A 1AA"
+                            style="width: 100%; border: none; background: transparent; font-size: 15px; outline: none;"
+                        />
                     </div>
                     
                     <button class="btn-search" onclick="submitSearch()">
@@ -1455,11 +1458,27 @@
         }
         
         function submitSearch() {
-            if (!selectedService) {
+            const service = selectedService;
+            const postcode = document.getElementById('heroPostcode').value.trim().toUpperCase();
+            
+            if (!service) {
                 alert('Please select a service');
                 return;
             }
-            window.location.href = `quote-engine.html?service=${selectedService}`;
+            
+            if (!postcode) {
+                alert('Please enter your postcode');
+                return;
+            }
+            
+            // Validate UK postcode
+            const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}$/;
+            if (!postcodeRegex.test(postcode)) {
+                alert('Please enter a valid UK postcode (e.g. SW1A 1AA)');
+                return;
+            }
+            
+            window.location.href = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcode)}&urgency=normal`;
         }
         
         // Quick Service Selection from Cards

@@ -72,13 +72,16 @@ app.get("/", (req, res) => {
 try {
     const authRoutes = require('./routes/auth');
     const quoteRoutes = require('./routes/quotes');
+    const bidRoutes = require('./routes/bids');
 
     authRoutes.setPool(pool);
     quoteRoutes.setPool(pool);
+    bidRoutes.setPool(pool);
 
     app.use('/api/auth', authRoutes);
     app.use('/api/quotes', quoteRoutes);
-    console.log('✅ Auth and Quotes routes mounted');
+    app.use('/api/bids', bidRoutes);
+    console.log('✅ Auth, Quotes, and Bids routes mounted');
 } catch (error) {
     console.error('❌ Route mounting error:', error.message);
 }
