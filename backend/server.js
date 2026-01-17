@@ -129,10 +129,34 @@ try {
   app.use('/api/auth', authRoutes);
   app.use('/api/quotes', quoteRoutes);
   app.use('/api/bids', bidRoutes);
-
+  
   console.log('✅ Core routes mounted');
 } catch (error) {
   console.error('❌ Core route mounting error:', error.message);
+}
+
+// Import and setup customer & vendor routes
+try {
+  const customerRoutes = require('./routes/customer');
+  const vendorRoutes = require('./routes/vendor');
+  const emailRoutes = require('./routes/email');
+  
+  customerRoutes.setPool(pool);
+  vendorRoutes.setPool(pool);
+  emailRoutes.setPool(pool);
+  
+  // Apply authentication to customer routes
+  app.use('/api/customer', customerRoutes);
+  
+  // Apply authentication to vendor routes  
+  app.use('/api/vendor', vendorRoutes);
+  
+  // Apply authentication to email routes
+  app.use('/api/email', emailRoutes);
+  
+  console.log('✅ Customer, Vendor, and Email routes mounted');
+} catch (error) {
+  console.error('❌ Customer/Vendor route mounting error:', error.message);
 }
 
 // Import and setup Phase 7 routes
