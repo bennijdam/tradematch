@@ -33,11 +33,14 @@
         
         /* Navigation */
         nav {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
         }
         
         .nav-container {
@@ -98,9 +101,8 @@
         }
         
         .form-progress {
-            display: flex;
-            justify-content: center;
             margin-bottom: 40px;
+            position: relative;
         }
         
         .progress-step {
@@ -154,14 +156,16 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
         
         .form-label {
             display: block;
-            font-weight: 600;
             margin-bottom: 8px;
-            color: var(--dark);
+            font-weight: 600;
+            color: var(--neu-light);
+            text-shadow: 1px 1px 2px var(--neu-shadow-2);
         }
         
         .form-input,
@@ -189,59 +193,6 @@
             resize: vertical;
         }
         
-        .form-slider {
-            width: 100%;
-            height: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            outline: none;
-            margin: 10px 0;
-        }
-        
-        .form-slider::-webkit-slider-track {
-            width: 100%;
-            height: 6px;
-            background: #E8E8E8;
-            border-radius: 3px;
-        }
-        
-        .form-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .form-slider::-moz-range-track {
-            width: 100%;
-            height: 6px;
-            background: #E8E8E8;
-            border-radius: 3px;
-        }
-        
-        .form-slider::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 5px;
-        }
-        
         .service-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -250,17 +201,56 @@
         }
         
         .service-card {
-            border: 2px solid #E8E8E8;
-            border-radius: 12px;
             padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 70%, transparent 70%);
+            border-radius: 12px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border: 1px solid var(--primary);
+        }
+        
+        .service-card.selected {
             border-color: var(--primary);
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
         }
         
         .service-card.selected {
@@ -269,18 +259,27 @@
         }
         
         .service-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
         
         .service-name {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            position: relative;
+            z-index: 1;
         }
         
         .service-desc {
             font-size: 14px;
-            color: var(--gray);
+            color: var(--neu-shadow-2);
+            margin-top: 5px;
+            line-height: 1.4;
+            opacity: 0.9;
         }
         
         .btn {
@@ -322,28 +321,28 @@
         /* Success Modal */
         .success-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
         }
         
         .success-modal.active {
             display: flex;
+            animation: modalFadeIn 0.3s ease-out;
         }
         
         .success-content {
-            background: white;
-            border-radius: 20px;
             padding: 40px;
             text-align: center;
-            max-width: 500px;
-            margin: 20px;
+            animation: slideInUp 0.5s ease-out;
         }
         
         .success-icon {
@@ -365,19 +364,160 @@
         }
         
         .success-actions {
+            margin-top: 30px;
             display: flex;
             gap: 15px;
             justify-content: center;
         }
         
+        .btn-outline {
+            background: var(--neu-light);
+            color: var(--neu-dark);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--neu-shadow-1);
+        }
+        
+        .btn-full {
+            background: var(--gradient-1);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--neu-shadow-2);
+        }
+        
         .quote-id {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            background: var(--dark);
+            color: var(--primary-light);
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+        
+        /* Budget Slider Styles */
+        .budget-slider-container {
             margin: 20px 0;
-            border: 2px solid var(--primary);
+        }
+
+        .budget-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .budget-separator {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .dual-range-slider {
+            position: relative;
+            height: 6px;
+            background: linear-gradient(90deg, #E0E0E0 0%, var(--primary) 100%);
+            border-radius: 3px;
+            margin: 30px 10px;
+        }
+
+        .dual-range-slider input[type="range"] {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            top: -2px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+        }
+
+        .dual-range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            pointer-events: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(255, 56, 92, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dual-range-slider input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(255, 56, 92, 0.5);
+        }
+
+        .dual-range-slider input[type="range"]::-moz-range-thumb {
+            pointer-events: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(255, 56, 92, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dual-range-slider input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(255, 56, 92, 0.5);
+        }
+
+        .budget-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+
+        /* Postcode Validation */
+        .postcode-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .postcode-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .postcode-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .postcode-suggestion:hover {
+            background: #F7F7F7;
+            color: var(--primary);
         }
         
         /* Responsive */
@@ -422,9 +562,9 @@
     <!-- Quote Form -->
     <div class="quote-form-container">
         <!-- Progress Steps -->
-        <div class="form-progress">
+<div class="form-progress">
             <div class="progress-step">
-                <div class="step-circle active" id="step1">1</div>
+                <div class="step-circle" id="step1">1</div>
                 <div class="step-line" id="line1"></div>
             </div>
             <div class="progress-step">
@@ -436,11 +576,11 @@
             </div>
         </div>
         
-        <!-- Step 1: Service Selection -->
+        <!-- Step 2: Budget Range -->
         <div class="form-section" id="serviceSection">
             <h3>What service do you need?</h3>
             <div class="service-cards">
-                <div class="service-card" onclick="selectService('extension')" data-service="extension">
+                <div class="service-card" onclick="selectService('extension', '🏗️', 'Extensions')" data-service="extension">
                     <div class="service-icon">🏗️</div>
                     <div class="service-name">House Extension</div>
                     <div class="service-desc">Single & double storey</div>
@@ -488,15 +628,27 @@
             </div>
         </div>
         
-        <!-- Step 2: Location & Details -->
+<!-- Step 2: Budget Range -->
         <div class="form-section" id="detailsSection" style="display: none;">
             <h3>Tell us more about your project</h3>
             <div class="form-group">
                 <label class="form-label">Your Postcode</label>
-                <input type="text" class="form-input" id="postcode" placeholder="e.g., SW1A 1AA" required>
-                <button type="button" class="btn btn-outline" onclick="getCurrentLocation()" style="margin-left: 10px; padding: 12px 20px; font-size: 14px;">
-                    📍 Get Location
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="postcode" 
+                        placeholder="e.g., SW1A 1AA" 
+                        oninput="validatePostcode(this)"
+                        required
+                        style="flex: 1;"
+                    />
+                    <button type="button" class="btn btn-outline" onclick="getCurrentLocation()" style="padding: 12px 20px; font-size: 14px;">
+                        📍 Get Location
+                    </button>
+                </div>
+                <div id="postcodeValidation" class="validation-message"></div>
+                <div id="postcodesuggestions" class="postcode-suggestions"></div>
             </div>
             <div class="form-group">
                 <label class="form-label">Project Title</label>
@@ -598,7 +750,36 @@
             </div>
         </div>
         
-        <!-- Step 3: Review & Submit -->
+        <!-- Step 2: Budget Range -->
+            <div class="form-section" id="reviewSection" style="display: none;">
+                <h3>Review Your Quote Request</h3>
+                <div id="reviewContent" style="background: var(--light); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <!-- Review content will be populated by JavaScript -->
+                </div>
+                <button type="button" class="btn btn-full" id="submitBtn" onclick="submitQuote()">
+                    Submit Quote Request →
+                </button>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-outline" onclick="prevStep()">
+                    ← Previous Step
+                </button>
+                <button type="button" class="btn btn-outline" id="nextBtnStep3" style="display: none;" onclick="nextStep()">
+                    Continue →
+                </button>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-outline" onclick="prevStep()">
+                    ← Previous Step
+                </button>
+                <button type="button" class="btn btn-outline" id="nextBtnStep3" style="display: none;" onclick="nextStep()">
+                    Continue →
+                </button>
+            </div>
         <div class="form-section" id="reviewSection" style="display: none;">
             <h3>Review Your Quote Request</h3>
             <div id="reviewContent" style="background: var(--light); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
@@ -672,29 +853,44 @@
         });
         
         // Service Selection
-        function selectService(service) {
-            // Remove previous selection
+        function selectService(serviceValue, icon, name) {
+            quoteData.service = serviceValue;
+            
+            // Visual feedback with glassmorphism
             document.querySelectorAll('.service-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Add selection to clicked card
-            const selectedCard = document.querySelector(`[data-service="${service}"]`);
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
-            }
+            const selectedCard = event.target.closest('.service-card');
+            selectedCard.classList.add('selected');
             
-            quoteData.service = service;
+            // Add ripple effect
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            selectedCard.appendChild(ripple);
             
-            // Auto-advance to step 2 if service is selected
             setTimeout(() => {
-                goToStep(2);
-            }, 500);
+                ripple.style.transform = 'scale(4)';
+                ripple.style.opacity = '0';
+            }, 600);
+            
+            // Show next button
+            document.getElementById('nextBtnStep1').style.display = 'block';
+            
+            // Auto-advance to step 2 after service selection with enhanced animation
+            setTimeout(() => nextStep(), 800);
+            
+            quoteData.service = serviceValue;
+            quoteData.icon = icon;
+            quoteData.name = name;
         }
         
         // Navigation Functions
         function nextStep() {
-            // Always allow navigation between steps 1-3
             if (currentStep === 1 && !quoteData.service) {
                 alert('Please select a service');
                 return;
@@ -719,75 +915,6 @@
             // Update progress
             updateProgress(currentStep + 1);
         }
-        
-        // Make step circles clickable for navigation
-        function goToStep(step) {
-            // Always allow navigation between steps 1-3
-            if (step >= 1 && step <= 3) {
-                if (step === 1 && !quoteData.service) {
-                    alert('Please select a service first');
-                    return;
-                }
-                if (step === 2) {
-                    // Validate required fields for step 2
-                    const postcode = document.getElementById('postcode').value;
-                    const title = document.getElementById('title').value;
-                    if (!postcode || !title) {
-                        alert('Please fill in postcode and project title');
-                        return;
-                    }
-                }
-                updateProgress(step);
-            }
-        }
-        
-        // Make step circles clickable for navigation
-        function goToStep(step) {
-            if (step >= 1 && step <= 3) {
-                if (step === 1 && !quoteData.service) {
-                    alert('Please select a service first');
-                    return;
-                }
-                if (step === 2) {
-                    // Validate required fields before going to step 2
-                    const postcode = document.getElementById('postcode').value;
-                    const title = document.getElementById('title').value;
-                    if (!postcode || !title) {
-                        alert('Please fill in postcode and project title');
-                        return;
-                    }
-                }
-                updateProgress(step);
-            }
-        }
-        
-        // Update budget value display
-        function updateBudgetValue(value) {
-            document.getElementById('budgetValue').textContent = parseInt(value).toLocaleString();
-        }
-        
-        // Add click handlers to step circles
-        document.addEventListener('DOMContentLoaded', () => {
-            // Make step circles clickable for navigation
-            setTimeout(() => {
-                const step1Circle = document.getElementById('step1');
-                const step2Circle = document.getElementById('step2');
-                const step3Circle = document.getElementById('step3');
-                
-                if (step1Circle) {
-                    step1Circle.style.cursor = 'pointer';
-                    step1Circle.addEventListener('click', () => goToStep(1));
-                }
-                if (step2Circle) {
-                    step2Circle.style.cursor = 'pointer';
-                    step2Circle.addEventListener('click', () => goToStep(2));
-                }
-                if (step3Circle) {
-                    step3Circle.style.cursor = 'pointer';
-                    step3Circle.addEventListener('click', () => goToStep(3));
-                }
-            }, 1000);
-        });
         
         function prevStep() {
             updateProgress(currentStep - 1);
@@ -830,19 +957,70 @@
             
             currentStep = step;
             
+            // Auto-advance after service selection
+            if (step === 1 && quoteData.service) {
+                setTimeout(() => nextStep(), 1000);
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+            // Hide all sections
+            document.getElementById('serviceSection').style.display = 'none';
+            document.getElementById('detailsSection').style.display = 'none';
+            document.getElementById('reviewSection').style.display = 'none';
+            
+            // Show relevant section
+            if (step === 1) {
+                document.getElementById('serviceSection').style.display = 'block';
+            } else if (step === 2) {
+                document.getElementById('detailsSection').style.display = 'block';
+            } else if (step === 3) {
+                document.getElementById('reviewSection').style.display = 'block';
+                populateReview();
+            }
+            
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const stepCircle = document.getElementById(`step${i}`);
+                const stepLine = i < 3 ? document.getElementById(`line${i}`) : null;
+                
+                if (i < step) {
+                    stepCircle.classList.add('completed');
+                    stepCircle.classList.remove('active');
+                    if (stepLine) stepLine.classList.add('completed');
+                } else if (i === step) {
+                    stepCircle.classList.add('active');
+                    stepCircle.classList.remove('completed');
+                    if (stepLine) stepLine.classList.remove('completed');
+                } else {
+                    stepCircle.classList.remove('active', 'completed');
+                    if (stepLine) stepLine.classList.remove('completed');
+                }
+            }
+            
+            currentStep = step;
+            
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function populateReview() {
             const reviewContent = document.getElementById('reviewContent');
+            const minBudget = document.getElementById('budgetMinSlider').value;
+            const maxBudget = document.getElementById('budgetMaxSlider').value;
+            const budgetText = minBudget === '0' && maxBudget === '100000' ? 'Any budget' : 
+                              minBudget === '0' ? `Up to ${maxBudget >= 100000 ? '£100k+' : '£' + parseInt(maxBudget).toLocaleString()}` :
+                              maxBudget >= 100000 ? `£${parseInt(minBudget).toLocaleString()}+` :
+                              `£${parseInt(minBudget).toLocaleString()} - £${parseInt(maxBudget).toLocaleString()}`;
+            
             reviewContent.innerHTML = `
                 <div style="display: grid; gap: 10px;">
                     <div><strong>Service:</strong> ${quoteData.service}</div>
                     <div><strong>Location:</strong> ${quoteData.postcode}</div>
                     <div><strong>Project:</strong> ${quoteData.title}</div>
                     <div><strong>Timeline:</strong> ${quoteData.urgency}</div>
-                    ${quoteData.budget ? `<div><strong>Budget:</strong> ${quoteData.budget}</div>` : ''}
+                    <div><strong>Budget:</strong> ${budgetText}</div>
                     <div><strong>Property:</strong> ${quoteData.propertyType}</div>
                     ${quoteData.tradeCategory ? `<div><strong>Trade:</strong> ${quoteData.tradeCategory}</div>` : ''}
                     ${quoteData.description ? `<div style="margin-top: 15px;"><strong>Description:</strong><br>${quoteData.description}</div>` : ''}
@@ -904,6 +1082,123 @@
             }
         }, 500);
         
+        // Budget Range Slider Functions
+        function updateBudgetMin(value) {
+            const min = parseInt(value);
+            const max = parseInt(document.getElementById('budgetMaxSlider').value);
+            
+            if (min >= max) {
+                document.getElementById('budgetMinSlider').value = max - 1000;
+                return;
+            }
+            
+            document.getElementById('budgetMin').textContent = 
+                '£' + min.toLocaleString();
+            quoteData.budgetMin = min;
+        }
+
+        function updateBudgetMax(value) {
+            const max = parseInt(value);
+            const min = parseInt(document.getElementById('budgetMinSlider').value);
+            
+            if (max <= min) {
+                document.getElementById('budgetMaxSlider').value = min + 1000;
+                return;
+            }
+            
+            document.getElementById('budgetMax').textContent = 
+                max >= 100000 ? '£100k+' : '£' + max.toLocaleString();
+            quoteData.budgetMax = max;
+        }
+
+        // UK Postcode Database (Top 200 UK Postcodes)
+        const ukPostcodes = [
+            'SW1A 1AA', 'SW1A 2AA', 'SW1A 0AA', 'SW1A 1BB', 'EC1A 1BB',
+            'W1A 0AX', 'W1A 1AA', 'M1 1AE', 'M1 1AA', 'M2 3AA',
+            'B1 1AA', 'B1 1BB', 'B2 4AA', 'B3 1AA', 'BS1 1AA',
+            'LS1 1UR', 'LS1 2UR', 'LS1 3AA', 'LS2 7EA', 'LS9 8AJ',
+            'G1 1AA', 'G2 1AA', 'G3 6AA', 'G4 0AA', 'G5 0AA',
+            'EH1 1YZ', 'EH1 2YY', 'EH2 2AA', 'EH3 6SS', 'EH8 9AB',
+            'CF10 1EP', 'CF10 2DD', 'CF10 3AA', 'CF11 0AZ', 'CF23 9AD',
+            'BT1 1AA', 'BT2 7AA', 'BT7 1EE', 'BT9 5FY', 'BT15 1DD',
+            'AB10 1AB', 'AB11 6QE', 'AB12 3FG', 'AB15 6YQ', 'AB21 7BW',
+            'NE1 1AA', 'NE2 1AE', 'NE3 1AA', 'NE4 5JB', 'NE6 1DA',
+            'S1 1AA', 'S2 4AA', 'S3 7AA', 'S6 1BR', 'S9 3WF',
+            'NG1 1AA', 'NG1 2AA', 'NG2 1AA', 'NG3 1AA', 'NG5 1AA',
+            'CV1 1AA', 'CV2 2AA', 'CV3 1AA', 'CV4 7AA', 'CV5 6BB',
+            'PL1 1AA', 'PL2 2AA', 'PL3 5AA', 'PL4 8AA', 'PL6 5TL',
+            'SO14 0AA', 'SO15 1NQ', 'SO16 0AY', 'SO17 1BJ', 'SO18 1FT',
+            'PO1 1AA', 'PO2 7AA', 'PO3 5AA', 'PO4 8AA', 'PO5 3LP',
+            'BN1 1AA', 'BN2 5AA', 'BN3 1AA', 'BN41 1AP', 'BN43 6PB',
+            'BR1 1AA', 'BR2 6AA', 'BR3 1AA', 'BR7 6AA', 'BR8 7AE',
+            'CR0 1AA', 'CR2 6AA', 'CR3 1AA', 'CR4 1AA', 'CR5 2AA',
+            'DA1 1AA', 'DA5 1AA', 'DA6 7AA', 'DA7 4AA', 'DA8 1AA',
+            'E1 1AA', 'E1 2AN', 'E1 4SA', 'E1 6AN', 'E1 7BX',
+            'EC1A 1BB', 'EC1M 3BB', 'EC2A 1DX', 'EC2M 3RR', 'EC3N 4AB',
+            'EN1 1AA', 'EN2 6AA', 'EN3 4AA', 'EN4 8AA', 'EN5 1AA',
+            'GU1 1AA', 'GU2 7AA', 'GU16 7AA', 'GU21 6AA', 'GU22 7AA',
+            'HA1 1AA', 'HA2 0AA', 'HA3 5AA', 'HA4 6AA', 'HA5 1AA',
+            'HP1 1AA', 'HP2 6AA', 'HP3 9AA', 'HP4 1AA', 'HP5 1AA',
+            'IG1 1AA', 'IG2 6AA', 'IG3 9AA', 'IG4 5AA', 'IG6 1AA',
+            'KT1 1AA', 'KT2 5AA', 'KT3 4AA', 'KT4 8AA', 'KT5 8AA',
+            'N1 1AA', 'N2 0AA', 'N3 1AA', 'N4 1AA', 'N5 1AA',
+            'NW1 1AA', 'NW2 1AA', 'NW3 1AA', 'NW4 1AA', 'NW5 1AA',
+            'RM1 1AA', 'RM2 6AA', 'RM3 0AA', 'RM6 4AA', 'RM7 0AA',
+            'SE1 1AA', 'SE2 9AA', 'SE3 8AA', 'SE4 1AA', 'SE5 7AA',
+            'SG1 1AA', 'SG2 7AA', 'SG3 6AA', 'SG4 0AA', 'SG5 1AA',
+            'SL1 1AA', 'SL2 5AA', 'SL3 7AA', 'SL4 5AA', 'SL6 2AA',
+            'SM1 1AA', 'SM2 5AA', 'SM3 8AA', 'SM4 5AA', 'SM5 2AA',
+            'SW1A 0AA', 'SW2 1AA', 'SW3 2AA', 'SW4 6AA', 'SW5 0TP',
+            'TW1 1AA', 'TW2 5AA', 'TW3 1AA', 'TW4 5AA', 'TW5 9QR',
+            'UB1 1AA', 'UB2 4AA', 'UB3 1AA', 'UB4 8AA', 'UB5 5AA',
+            'W1A 0AX', 'W1K 1AA', 'W1S 1AA', 'W1U 1AA', 'W1W 6AA',
+            'WD1 1AA', 'WD2 4AA', 'WD3 3AA', 'WD4 4AA', 'WD5 0AA',
+            'WC1A 0AA', 'WC1B 3BA', 'WC1E 6BT', 'WC1H 9EQ', 'WC2A 2AA'
+        ];
+
+        // UK Postcode Validation and Autocomplete
+        function validatePostcode(input) {
+            const value = input.toUpperCase().trim();
+            const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\s?(\d[A-Z]{2})$/i;
+            const validationDiv = document.getElementById('postcodeValidation');
+            const suggestionsDiv = document.getElementById('postcodesuggestions');
+            
+            if (value.length < 2) {
+                validationDiv.innerHTML = '';
+                suggestionsDiv.innerHTML = '';
+                return;
+            }
+            
+            // Check if valid format
+            if (postcodeRegex.test(value)) {
+                validationDiv.innerHTML = '<span style="color: green;">✓ Valid UK postcode</span>';
+                suggestionsDiv.innerHTML = '';
+            } else if (value.length >= 3) {
+                validationDiv.innerHTML = '<span style="color: orange;">⚠ Please enter a valid UK postcode</span>';
+                
+                // Show suggestions from our database
+                const matches = ukPostcodes.filter(pc => 
+                    pc.startsWith(value.substring(0, 3))
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    suggestionsDiv.innerHTML = matches.map(pc => 
+                        `<div class="postcode-suggestion" onclick="selectPostcode('${pc}')">
+                            ${pc}
+                        </div>`
+                    ).join('');
+                } else {
+                    suggestionsDiv.innerHTML = '';
+                }
+            }
+        }
+
+        function selectPostcode(postcode) {
+            document.getElementById('postcode').value = postcode;
+            validatePostcode(document.getElementById('postcode'));
+            document.getElementById('postcodesuggestions').innerHTML = '';
+        }
+
         // Google Maps Location Services
         function getCurrentLocation() {
             if (navigator.geolocation) {
