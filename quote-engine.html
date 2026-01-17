@@ -33,11 +33,14 @@
         
         /* Navigation */
         nav {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
         }
         
         .nav-container {
@@ -98,9 +101,8 @@
         }
         
         .form-progress {
-            display: flex;
-            justify-content: center;
             margin-bottom: 40px;
+            position: relative;
         }
         
         .progress-step {
@@ -154,14 +156,16 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
         
         .form-label {
             display: block;
-            font-weight: 600;
             margin-bottom: 8px;
-            color: var(--dark);
+            font-weight: 600;
+            color: var(--neu-light);
+            text-shadow: 1px 1px 2px var(--neu-shadow-2);
         }
         
         .form-input,
@@ -197,17 +201,56 @@
         }
         
         .service-card {
-            border: 2px solid #E8E8E8;
-            border-radius: 12px;
             padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 70%, transparent 70%);
+            border-radius: 12px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border: 1px solid var(--primary);
+        }
+        
+        .service-card.selected {
             border-color: var(--primary);
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
         }
         
         .service-card.selected {
@@ -216,18 +259,27 @@
         }
         
         .service-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
         
         .service-name {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            position: relative;
+            z-index: 1;
         }
         
         .service-desc {
             font-size: 14px;
-            color: var(--gray);
+            color: var(--neu-shadow-2);
+            margin-top: 5px;
+            line-height: 1.4;
+            opacity: 0.9;
         }
         
         .btn {
@@ -269,28 +321,28 @@
         /* Success Modal */
         .success-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
         }
         
         .success-modal.active {
             display: flex;
+            animation: modalFadeIn 0.3s ease-out;
         }
         
         .success-content {
-            background: white;
-            border-radius: 20px;
             padding: 40px;
             text-align: center;
-            max-width: 500px;
-            margin: 20px;
+            animation: slideInUp 0.5s ease-out;
         }
         
         .success-icon {
@@ -312,19 +364,48 @@
         }
         
         .success-actions {
+            margin-top: 30px;
             display: flex;
             gap: 15px;
             justify-content: center;
         }
         
+        .btn-outline {
+            background: var(--neu-light);
+            color: var(--neu-dark);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--neu-shadow-1);
+        }
+        
+        .btn-full {
+            background: var(--gradient-1);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--neu-shadow-2);
+        }
+        
         .quote-id {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 18px;
-            margin: 20px 0;
-            border: 2px solid var(--primary);
+            font-family: 'Courier New', monospace;
+            background: var(--dark);
+            color: var(--primary-light);
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+            letter-spacing: 1px;
         }
         
         /* Responsive */
@@ -369,9 +450,9 @@
     <!-- Quote Form -->
     <div class="quote-form-container">
         <!-- Progress Steps -->
-        <div class="form-progress">
+<div class="form-progress">
             <div class="progress-step">
-                <div class="step-circle active" id="step1">1</div>
+                <div class="step-circle" id="step1">1</div>
                 <div class="step-line" id="line1"></div>
             </div>
             <div class="progress-step">
@@ -383,11 +464,11 @@
             </div>
         </div>
         
-        <!-- Step 1: Service Selection -->
+        <!-- Step 2: Budget Range -->
         <div class="form-section" id="serviceSection">
             <h3>What service do you need?</h3>
             <div class="service-cards">
-                <div class="service-card" onclick="selectService('extension')" data-service="extension">
+                <div class="service-card" onclick="selectService('extension', '🏗️', 'Extensions')" data-service="extension">
                     <div class="service-icon">🏗️</div>
                     <div class="service-name">House Extension</div>
                     <div class="service-desc">Single & double storey</div>
@@ -435,7 +516,7 @@
             </div>
         </div>
         
-        <!-- Step 2: Location & Details -->
+<!-- Step 2: Budget Range -->
         <div class="form-section" id="detailsSection" style="display: none;">
             <h3>Tell us more about your project</h3>
             <div class="form-group">
@@ -520,7 +601,36 @@
             </div>
         </div>
         
-        <!-- Step 3: Review & Submit -->
+        <!-- Step 2: Budget Range -->
+            <div class="form-section" id="reviewSection" style="display: none;">
+                <h3>Review Your Quote Request</h3>
+                <div id="reviewContent" style="background: var(--light); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <!-- Review content will be populated by JavaScript -->
+                </div>
+                <button type="button" class="btn btn-full" id="submitBtn" onclick="submitQuote()">
+                    Submit Quote Request →
+                </button>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-outline" onclick="prevStep()">
+                    ← Previous Step
+                </button>
+                <button type="button" class="btn btn-outline" id="nextBtnStep3" style="display: none;" onclick="nextStep()">
+                    Continue →
+                </button>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button type="button" class="btn btn-outline" onclick="prevStep()">
+                    ← Previous Step
+                </button>
+                <button type="button" class="btn btn-outline" id="nextBtnStep3" style="display: none;" onclick="nextStep()">
+                    Continue →
+                </button>
+            </div>
         <div class="form-section" id="reviewSection" style="display: none;">
             <h3>Review Your Quote Request</h3>
             <div id="reviewContent" style="background: var(--light); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
@@ -594,29 +704,40 @@
         });
         
         // Service Selection
-        function selectService(service) {
-            // Remove previous selection
+        function selectService(serviceValue, icon, name) {
+            quoteData.service = serviceValue;
+            
+            // Visual feedback with glassmorphism
             document.querySelectorAll('.service-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
-            // Add selection to clicked card
-            event.currentTarget.classList.add('selected');
+            const selectedCard = event.target.closest('.service-card');
+            selectedCard.classList.add('selected');
             
-            quoteData.service = service;
+            // Add ripple effect
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s ease-out';
+            selectedCard.appendChild(ripple);
             
-            // Auto-generate title based on service
-            const titles = {
-                'extension': 'House Extension Quote Request',
-                'loft': 'Loft Conversion Quote Request',
-                'kitchen': 'Kitchen Fitting Quote Request',
-                'bathroom': 'Bathroom Installation Quote Request',
-                'roofing': 'Roofing Quote Request',
-                'electrical': 'Electrical Work Quote Request'
-            };
+            setTimeout(() => {
+                ripple.style.transform = 'scale(4)';
+                ripple.style.opacity = '0';
+            }, 600);
             
-            document.getElementById('title').value = titles[service] || 'Home Improvement Quote Request';
-            quoteData.title = titles[service] || 'Home Improvement Quote Request';
+            // Show next button
+            document.getElementById('nextBtnStep1').style.display = 'block';
+            
+            // Auto-advance to step 2 after service selection with enhanced animation
+            setTimeout(() => nextStep(), 800);
+            
+            quoteData.service = serviceValue;
+            quoteData.icon = icon;
+            quoteData.name = name;
         }
         
         // Navigation Functions
@@ -651,6 +772,50 @@
         }
         
         function updateProgress(step) {
+            // Hide all sections
+            document.getElementById('serviceSection').style.display = 'none';
+            document.getElementById('detailsSection').style.display = 'none';
+            document.getElementById('reviewSection').style.display = 'none';
+            
+            // Show relevant section
+            if (step === 1) {
+                document.getElementById('serviceSection').style.display = 'block';
+            } else if (step === 2) {
+                document.getElementById('detailsSection').style.display = 'block';
+            } else if (step === 3) {
+                document.getElementById('reviewSection').style.display = 'block';
+                populateReview();
+            }
+            
+            // Update step indicators
+            for (let i = 1; i <= 3; i++) {
+                const stepCircle = document.getElementById(`step${i}`);
+                const stepLine = i < 3 ? document.getElementById(`line${i}`) : null;
+                
+                if (i < step) {
+                    stepCircle.classList.add('completed');
+                    stepCircle.classList.remove('active');
+                    if (stepLine) stepLine.classList.add('completed');
+                } else if (i === step) {
+                    stepCircle.classList.add('active');
+                    stepCircle.classList.remove('completed');
+                    if (stepLine) stepLine.classList.remove('completed');
+                } else {
+                    stepCircle.classList.remove('active', 'completed');
+                    if (stepLine) stepLine.classList.remove('completed');
+                }
+            }
+            
+            currentStep = step;
+            
+            // Auto-advance after service selection
+            if (step === 1 && quoteData.service) {
+                setTimeout(() => nextStep(), 1000);
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
             // Hide all sections
             document.getElementById('serviceSection').style.display = 'none';
             document.getElementById('detailsSection').style.display = 'none';
