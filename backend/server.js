@@ -79,10 +79,7 @@ try {
 
 // Import Phase 7 routes
 try {
-  // Import middleware
-  const { authenticate, requireVendor, requireCustomer, optionalAuth } = require('./middleware/auth');
-  const { apiLimiter, authLimiter, registerLimiter, quoteLimiter, aiLimiter, paymentLimiter, emailLimiter } = require('./middleware/rate-limit');
-  
+  // Import Phase 7 routes
   const paymentRoutes = require('./routes/payments');
   const reviewRoutes = require('./routes/reviews');
   const aiRoutes = require('./routes/ai');
@@ -97,47 +94,16 @@ try {
   proposalRoutes.setPool(pool);
   milestoneRoutes.setPool(pool);
   
-  // Global API rate limiting
-  app.use('/api', apiLimiter);
+  app.use('/api/payments', paymentRoutes);
+  app.use('/api/reviews', reviewRoutes);
+  app.use('/api/ai', aiRoutes);
+  app.use('/api/analytics', analyticsRoutes);
+  app.use('/api/proposals', proposalRoutes);
+  app.use('/api/milestones', milestoneRoutes);
   
-  // Authentication routes with rate limiting
-  app.post('/api/auth/login', authLimiter, require('./routes/auth'));
-  app.post('/api/auth/register', registerLimiter, require('./routes/auth'));
-  app.post('/api/auth/logout', optionalAuth, require('./routes/auth'));
-  app.post('/api/auth/refresh', authLimiter, require('./routes/auth'));
-  app.post('/api/auth/forgot-password', emailLimiter, require('./routes/auth'));
-  
-  // Protected API routes
-  app.use('/api/payments', authenticate, paymentLimiter, paymentRoutes);
-  app.use('/api/reviews', authenticate, reviewRoutes);
-  app.use('/api/ai', authenticate, aiLimiter, aiRoutes);
-  app.use('/api/analytics', authenticate, analyticsRoutes);
-  app.use('/api/proposals', authenticate, proposalRoutes);
-  app.use('/api/milestones', authenticate, milestoneRoutes);
-  
-  // Quote routes with optional auth (public quotes + rate limiting)
-  app.get('/api/quotes', optionalAuth, quoteLimiter, require('./routes/quotes'));
-  app.post('/api/quotes', authenticate, quoteLimiter, require('./routes/quotes'));
-  app.get('/api/quotes/public', quoteLimiter, require('./routes/quotes'));
-  
-  // Customer-only routes
-  app.use('/api/customer', authenticate, requireCustomer, require('./routes/customer'));
-  app.use('/api/customer/dashboard', authenticate, requireCustomer, require('./routes/customer'));
-  
-  // Vendor-only routes
-  app.use('/api/vendor', authenticate, requireVendor, require('./routes/vendor'));
-  app.use('/api/vendor/bids', authenticate, requireVendor, require('./routes/vendor'));
-  app.use('/api/vendor/analytics', authenticate, requireVendor, analyticsRoutes);
-  app.use('/api/vendor/dashboard', authenticate, requireVendor, require('./routes/vendor'));
-  
-  // Email routes with rate limiting
-  app.post('/api/send-email', authenticate, emailLimiter, require('./routes/email'));
-  
-  console.log('✅ Complete authentication and rate limiting system implemented');
-  console.log('✅ Phase 7 routes mounted with proper protection');
+  console.log('✅ Phase 7 routes mounted');
 } catch (error) {
-  console.error('❌ Route mounting error:', error.message);
-  console.error('Stack:', error.stack);
+  console.error('❌ Phase 7 route mounting error:', error.message);
 }
 
 // 404 handler (LAST)
