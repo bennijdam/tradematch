@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeMatch | Find Trusted Local Tradespeople in Minutes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="description" content="Connect with verified tradespeople in the UK. Get free quotes for extensions, renovations, plumbing, electrical work and more. 50,000+ trusted professionals.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
@@ -14,122 +17,72 @@
         }
         
         :root {
-            /* 2027 Color System */
-            --primary: #FF385C;
-            --primary-glow: rgba(255, 56, 92, 0.4);
-            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            /* Lighter Color Palette */
+            --primary: #FF6B8A;
+            --primary-dark: #FF385C;
+            --secondary: #4FC3F7;
+            --accent: #FFB800;
+            --success: #66BB6A;
             
-            /* Glass Effects */
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            /* Light backgrounds */
+            --bg-white: #FFFFFF;
+            --bg-light: #FAFBFC;
+            --bg-lighter: #F5F7FA;
             
-            /* Dark Theme */
-            --bg-dark: #0a0e27;
-            --surface: #1a1f3a;
-            --text-primary: #ffffff;
-            --text-secondary: #a8b2d1;
+            /* Text colors */
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --text-light: #95A5A6;
+            
+            /* Borders */
+            --border-light: #E8ECEF;
+            --border-medium: #DFE4E8;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-primary);
+            line-height: 1.6;
+            background: var(--bg-light);
             overflow-x: hidden;
         }
         
-        /* Animated Background */
-        .hero-background {
+        /* ===== NAVIGATION WITH BOOKING ENGINE ===== */
+        nav {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2a2f4a 100%);
-            z-index: -1;
-        }
-        
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            animation: float 20s infinite ease-in-out;
-        }
-        
-        .orb-1 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
-            top: -200px;
-            left: -200px;
-            animation-delay: 0s;
-        }
-        
-        .orb-2 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(245, 87, 108, 0.3) 0%, transparent 70%);
-            top: 50%;
-            right: -150px;
-            animation-delay: -10s;
-        }
-        
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(67, 233, 123, 0.3) 0%, transparent 70%);
-            bottom: -100px;
-            left: 30%;
-            animation-delay: -5s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        
-        /* Glassmorphic Navigation */
-        nav {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 0;
             z-index: 1000;
-            width: 90%;
-            max-width: 1400px;
-            padding: 16px 30px;
-            background: var(--glass-bg);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 100px;
-            box-shadow: var(--glass-shadow);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-top {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        nav:hover {
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+            border-bottom: 1px solid var(--border-light);
         }
         
         .logo {
+            font-family: 'Inter', sans-serif;
             font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff 0%, #FF385C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
         }
         
         .nav-links {
             display: flex;
-            gap: 40px;
+            gap: 32px;
             align-items: center;
         }
         
@@ -138,353 +91,438 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 14px;
-            transition: all 0.3s;
-            position: relative;
+            transition: all 0.2s;
         }
         
         .nav-links a:hover {
-            color: var(--text-primary);
+            color: var(--primary);
         }
         
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-accent);
-            transition: width 0.3s;
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .btn-nav {
+        .btn-primary {
             padding: 10px 24px;
-            border-radius: 50px;
-            background: var(--gradient-accent);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            text-decoration: none;
+            display: inline-block;
         }
         
-        .btn-nav:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px var(--primary-glow);
+            box-shadow: 0 8px 20px rgba(255, 107, 138, 0.3);
         }
         
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
+        /* Booking Engine in Header */
+        .booking-engine {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            gap: 12px;
             align-items: center;
-            text-align: center;
-            padding: 120px 20px 80px;
+        }
+        
+        .booking-field {
+            flex: 1;
             position: relative;
+        }
+        
+        .booking-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        
+        .booking-field select,
+        .booking-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            background: white;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .booking-field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237F8C8D' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+        
+        .booking-field select:focus,
+        .booking-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 138, 0.1);
+        }
+        
+        .search-btn {
+            padding: 0 32px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(255, 107, 138, 0.4);
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 180px 40px 80px;
+            background: linear-gradient(135deg, #FAFBFC 0%, #F0F4F8 100%);
+            text-align: center;
         }
         
         .hero-content {
             max-width: 900px;
-            z-index: 1;
+            margin: 0 auto;
         }
         
         .hero-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 8px 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            background: white;
+            border: 1.5px solid var(--border-light);
             border-radius: 50px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease-out;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
         }
         
         .hero h1 {
-            font-size: clamp(48px, 8vw, 80px);
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #fff 0%, #a8b2d1 100%);
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
         
         .hero-subtitle {
-            font-size: 20px;
+            font-size: 18px;
             color: var(--text-secondary);
-            margin-bottom: 50px;
-            line-height: 1.6;
-            animation: fadeInUp 0.8s ease-out 0.4s backwards;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Glassmorphic Search Bar */
-        .hero-search {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto 50px;
-            padding: 12px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 100px;
-            box-shadow: var(--glass-shadow);
-            display: flex;
-            gap: 10px;
-            animation: fadeInUp 0.8s ease-out 0.6s backwards;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 20px 30px;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 16px;
-            outline: none;
-        }
-        
-        .search-input::placeholder {
-            color: var(--text-secondary);
-        }
-        
-        .search-btn {
-            padding: 18px 40px;
-            background: var(--gradient-accent);
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px var(--primary-glow);
-        }
-        
-        .search-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 30px var(--primary-glow);
+            margin-bottom: 32px;
+            line-height: 1.7;
         }
         
         /* Trust Stats */
         .trust-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 60px;
-            animation: fadeInUp 0.8s ease-out 0.8s backwards;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 60px auto 0;
         }
         
         .stat-card {
-            padding: 30px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            padding: 24px;
+            background: white;
+            border: 1.5px solid var(--border-light);
+            border-radius: 12px;
             transition: all 0.3s;
         }
         
         .stat-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
         }
         
         .stat-number {
-            font-size: 48px;
-            font-weight: 900;
-            background: var(--gradient-accent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
         
         .stat-label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 600;
         }
         
-        /* Services Grid */
+        /* ===== SERVICES GRID ===== */
         .services-section {
-            padding: 120px 20px;
-            position: relative;
+            padding: 80px 40px;
+            background: white;
         }
         
         .section-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 48px;
         }
         
         .section-title {
-            font-size: 48px;
-            font-weight: 900;
-            margin-bottom: 16px;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
         }
         
         .section-subtitle {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
         }
         
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
             max-width: 1400px;
             margin: 0 auto;
         }
         
         .service-card {
-            padding: 40px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            padding: 32px 24px;
+            background: var(--bg-lighter);
+            border: 1.5px solid var(--border-light);
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-accent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-        
-        .service-card:hover::before {
-            opacity: 0.1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
         }
         
         .service-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(255, 56, 92, 0.3);
-            border-color: rgba(255, 56, 92, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(255, 107, 138, 0.15);
+            background: white;
+            border-color: var(--primary);
         }
         
         .service-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-            display: block;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
         }
         
         .service-name {
-            font-size: 24px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 10px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
         
         .service-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 80px 40px;
+            background: var(--bg-lighter);
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .step-card {
+            padding: 40px 32px;
+            background: white;
+            border: 1.5px solid var(--border-light);
+            border-radius: 16px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .step-desc {
             font-size: 14px;
             color: var(--text-secondary);
             line-height: 1.6;
         }
         
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 10px 40px var(--primary-glow);
-            cursor: pointer;
-            z-index: 999;
-            transition: all 0.3s;
-            animation: pulse 2s infinite;
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 60px 40px 20px;
         }
         
-        .fab:hover {
-            transform: scale(1.1) rotate(90deg);
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
         
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 10px 40px var(--primary-glow); }
-            50% { box-shadow: 0 10px 60px rgba(255, 56, 92, 0.6); }
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        /* Responsive */
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+        
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            nav {
-                width: 95%;
+            .nav-top {
                 padding: 12px 20px;
-                flex-direction: column;
-                gap: 15px;
             }
             
             .nav-links {
+                display: none;
+            }
+            
+            .booking-engine {
                 flex-direction: column;
-                gap: 15px;
+                padding: 16px 20px;
             }
             
-            .hero h1 {
-                font-size: 42px;
+            .search-btn {
+                width: 100%;
+                justify-content: center;
             }
             
-            .hero-search {
-                flex-direction: column;
-            }
-            
-            .trust-stats {
-                grid-template-columns: 1fr;
-                gap: 20px;
+            .hero {
+                padding: 140px 20px 60px;
             }
             
             .services-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="hero-background">
-        <div class="bg-orb orb-1"></div>
-        <div class="bg-orb orb-2"></div>
-        <div class="bg-orb orb-3"></div>
-    </div>
-
-    <!-- Glassmorphic Navigation -->
+    <!-- Navigation -->
     <nav>
-        <a href="/" class="logo">TradeMatch</a>
-        <div class="nav-links">
-            <a href="how-it-works.html">How It Works</a>
-            <a href="find-tradespeople.html">Find Trades</a>
-            <a href="about.html">About</a>
-            <button class="btn-nav" onclick="location.href='customer-register.html'">Get Started</button>
+        <div class="nav-top">
+            <a href="/" class="logo">TradeMatch</a>
+            <div class="nav-links">
+                <a href="how-it-works.html">How It Works</a>
+                <a href="find-tradespeople.html">Find Trades</a>
+                <a href="about.html">About</a>
+                <a href="customer-register.html" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+        
+        <!-- Booking Engine in Header -->
+        <div class="booking-engine">
+            <div class="booking-field">
+                <label>Service Type</label>
+                <select id="serviceType">
+                    <option value="">Select a service</option>
+                    <option value="extension">Extension</option>
+                    <option value="loft">Loft Conversion</option>
+                    <option value="kitchen">Kitchen Fitting</option>
+                    <option value="bathroom">Bathroom</option>
+                    <option value="roofing">Roofing</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="landscaping">Landscaping</option>
+                </select>
+            </div>
+            
+            <div class="booking-field">
+                <label>Your Postcode</label>
+                <input type="text" id="postcode" placeholder="e.g. SW1A 1AA" />
+            </div>
+            
+            <button class="search-btn" onclick="searchService()">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
         </div>
     </nav>
 
@@ -492,28 +530,18 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-badge">
-                ✨ Trusted by 50,000+ Homeowners
+                <i class="fas fa-shield-alt"></i>
+                Trusted by 50,000+ Homeowners
             </div>
             
-            <h1>Find Trusted Tradespeople in Minutes</h1>
+            <h1>
+                Find <span class="gradient-text">Trusted Tradespeople</span><br>in Minutes
+            </h1>
             
             <p class="hero-subtitle">
-                Connect with verified professionals. Get free quotes. Hire with confidence. 
+                Connect with verified professionals. Get free quotes. Hire with confidence.<br>
                 All backed by our buyer protection guarantee.
             </p>
-            
-            <!-- Glassmorphic Search -->
-            <div class="hero-search">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    id="heroServiceInput"
-                    placeholder="What service do you need? (e.g., Kitchen fitting, Roofing)"
-                />
-                <button class="search-btn" onclick="searchService()">
-                    Search →
-                </button>
-            </div>
             
             <!-- Trust Stats -->
             <div class="trust-stats">
@@ -542,97 +570,170 @@
         
         <div class="services-grid">
             <div class="service-card" onclick="selectService('extension')">
-                <span class="service-icon">🏗️</span>
+                <div class="service-icon"><i class="fas fa-home"></i></div>
                 <div class="service-name">Extensions</div>
-                <div class="service-desc">Single & double storey extensions, side returns, wrap-arounds</div>
+                <div class="service-desc">Single & double storey, side returns</div>
             </div>
             
             <div class="service-card" onclick="selectService('loft')">
-                <span class="service-icon">🏠</span>
+                <div class="service-icon"><i class="fas fa-warehouse"></i></div>
                 <div class="service-name">Loft Conversion</div>
-                <div class="service-desc">Transform your attic into a bedroom, office, or living space</div>
+                <div class="service-desc">Transform your attic space</div>
             </div>
             
             <div class="service-card" onclick="selectService('kitchen')">
-                <span class="service-icon">🍳</span>
+                <div class="service-icon"><i class="fas fa-utensils"></i></div>
                 <div class="service-name">Kitchen Fitting</div>
-                <div class="service-desc">Complete kitchen installation, units, worktops, appliances</div>
+                <div class="service-desc">Complete kitchen installation</div>
             </div>
             
             <div class="service-card" onclick="selectService('bathroom')">
-                <span class="service-icon">🚿</span>
+                <div class="service-icon"><i class="fas fa-bath"></i></div>
                 <div class="service-name">Bathroom</div>
-                <div class="service-desc">Full bathroom renovation, shower rooms, wet rooms</div>
+                <div class="service-desc">Full renovation, wet rooms</div>
             </div>
             
             <div class="service-card" onclick="selectService('roofing')">
-                <span class="service-icon">🏚️</span>
+                <div class="service-icon"><i class="fas fa-building"></i></div>
                 <div class="service-name">Roofing</div>
-                <div class="service-desc">Repairs, replacements, flat roofs, pitched roofs, guttering</div>
+                <div class="service-desc">Repairs, replacements, guttering</div>
             </div>
             
             <div class="service-card" onclick="selectService('electrical')">
-                <span class="service-icon">⚡</span>
+                <div class="service-icon"><i class="fas fa-bolt"></i></div>
                 <div class="service-name">Electrical</div>
-                <div class="service-desc">Rewiring, consumer units, lighting, EV charger installation</div>
+                <div class="service-desc">Rewiring, lighting, EV chargers</div>
             </div>
             
             <div class="service-card" onclick="selectService('plumbing')">
-                <span class="service-icon">🔧</span>
+                <div class="service-icon"><i class="fas fa-wrench"></i></div>
                 <div class="service-name">Plumbing</div>
-                <div class="service-desc">Boiler installation, heating, leaks, pipe work</div>
+                <div class="service-desc">Boilers, heating, pipe work</div>
             </div>
             
             <div class="service-card" onclick="selectService('landscaping')">
-                <span class="service-icon">🌳</span>
+                <div class="service-icon"><i class="fas fa-tree"></i></div>
                 <div class="service-name">Landscaping</div>
-                <div class="service-desc">Garden design, patios, decking, fencing, turfing</div>
+                <div class="service-desc">Patios, decking, fencing</div>
             </div>
         </div>
     </section>
 
-    <!-- Floating Action Button -->
-    <div class="fab" onclick="location.href='quote-engine.html'">
-        ✚
-    </div>
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get matched with trusted tradespeople in 3 simple steps</p>
+        </div>
+        
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="step-title">Post Your Job</h3>
+                <p class="step-desc">Tell us what you need doing. Upload photos and describe your project in detail.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="step-title">Get Free Quotes</h3>
+                <p class="step-desc">Receive competitive quotes from verified tradespeople in your area within 24 hours.</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="step-title">Hire with Confidence</h3>
+                <p class="step-desc">Review ratings, check credentials, and hire the perfect tradesperson for your job.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>For Customers</h4>
+                <ul>
+                    <li><a href="how-it-works.html">How It Works</a></li>
+                    <li><a href="find-tradespeople.html">Find Tradespeople</a></li>
+                    <li><a href="quote-engine.html">Post a Job</a></li>
+                    <li><a href="help.html">Help Center</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>For Tradespeople</h4>
+                <ul>
+                    <li><a href="vendor-register.html">Join as a Tradesperson</a></li>
+                    <li><a href="vendor-login.html">Tradesperson Login</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="cookies.html">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            © 2026 TradeMatch. All rights reserved.
+        </div>
+    </footer>
 
     <script>
         const API_URL = 'https://tradematch.onrender.com';
         
         function searchService() {
-            const service = document.getElementById('heroServiceInput').value;
-            if (service) {
-                location.href = `quote-engine.html?service=${encodeURIComponent(service)}`;
-            } else {
-                alert('Please enter a service');
+            const service = document.getElementById('serviceType').value;
+            const postcode = document.getElementById('postcode').value;
+            
+            if (!service) {
+                alert('Please select a service');
+                return;
             }
+            
+            if (!postcode) {
+                alert('Please enter your postcode');
+                return;
+            }
+            
+            // Validate UK postcode
+            const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
+            if (!postcodeRegex.test(postcode)) {
+                alert('Please enter a valid UK postcode');
+                return;
+            }
+            
+            // Redirect to quote engine
+            window.location.href = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcode)}`;
         }
         
         function selectService(service) {
-            location.href = `quote-engine.html?service=${service}`;
+            document.getElementById('serviceType').value = service;
+            // Optionally scroll to booking engine
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        // Smooth scroll on nav hover
-        document.addEventListener('scroll', () => {
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');
-            if (window.scrollY > 100) {
-                nav.style.top = '10px';
-                nav.style.width = '85%';
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
             } else {
-                nav.style.top = '20px';
-                nav.style.width = '90%';
+                nav.classList.remove('scrolled');
             }
-        });
-        
-        // Parallax effect for orbs
-        document.addEventListener('mousemove', (e) => {
-            const orbs = document.querySelectorAll('.bg-orb');
-            orbs.forEach((orb, index) => {
-                const speed = (index + 1) * 0.02;
-                const x = (window.innerWidth - e.pageX * speed) / 100;
-                const y = (window.innerHeight - e.pageY * speed) / 100;
-                orb.style.transform = `translate(${x}px, ${y}px) scale(${1 + index * 0.05})`;
-            });
         });
     </script>
 </body>
