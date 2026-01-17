@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Analytics | TradeMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .stat-number { font-size: 32px; font-weight: 700; color: #FF385C; margin-bottom: 5px; }
+        .stat-label { color: #666; font-size: 14px; }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .chart-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .chart-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #333; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .error { color: #dc3545; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vendor Analytics Dashboard</h1>
+            <p>Track your performance and business insights</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRevenue">£0</div>
+                <div class="stat-label">Total Revenue (30 days)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalJobs">0</div>
+                <div class="stat-label">Completed Jobs (30 days)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgJobValue">£0</div>
+                <div class="stat-label">Average Job Value</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="conversionRate">0%</div>
+                <div class="stat-label">Conversion Rate</div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Revenue Trends</h3>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Service Performance</h3>
+                <canvas id="serviceChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-card" style="margin-bottom: 20px;">
+            <h3 class="chart-title">Customer Satisfaction</h3>
+            <canvas id="satisfactionChart"></canvas>
+        </div>
+        
+        <div id="loadingMessage" class="loading">Loading analytics data...</div>
+        <div id="errorMessage" class="error" style="display: none;">Failed to load analytics. Please try again.</div>
+    </div>
+    
+    <script>
+        // Mock vendor ID (in real app, this would come from authentication)
+        const vendorId = 'test_vendor_123';
+        
+        // Fetch analytics data
+        async function loadAnalytics() {
+            try {
+                const response = await fetch(`https://tradematch.onrender.com/api/analytics/dashboard/${vendorId}?period=30`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAnalytics(data);
+                } else {
+                    throw new Error(data.error || 'Failed to load analytics');
+                }
+            } catch (error) {
+                console.error('Analytics loading error:', error);
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+        
+        // Display analytics data
+        function displayAnalytics(data) {
+            // Update stats
+            document.getElementById('totalRevenue').textContent = `£${data.revenue.total_revenue || 0}`;
+            document.getElementById('totalJobs').textContent = data.revenue.total_jobs || 0;
+            document.getElementById('avgJobValue').textContent = `£${(data.revenue.avg_job_value || 0).toFixed(0)}`;
+            document.getElementById('conversionRate').textContent = `${(data.conversion.conversion_rate || 0).toFixed(1)}%`;
+            
+            // Hide loading message
+            document.getElementById('loadingMessage').style.display = 'none';
+            
+            // Create revenue trend chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: data.trends.map(t => new Date(t.month).toLocaleDateString()),
+                    datasets: [{
+                        label: 'Monthly Revenue',
+                        data: data.trends.map(t => t.revenue || 0),
+                        borderColor: '#FF385C',
+                        backgroundColor: 'rgba(255, 56, 92, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '£' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Create service performance chart
+            const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+            new Chart(serviceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.categories.map(c => c.service_type),
+                    datasets: [{
+                        data: data.categories.map(c => c.total_revenue || 0),
+                        backgroundColor: [
+                            '#FF385C',
+                            '#00B4D8',
+                            '#FFA500',
+                            '#32CD32',
+                            '#FFD700'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Create satisfaction chart
+            const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+            new Chart(satisfactionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Rating'],
+                    datasets: [{
+                        label: 'Average Rating',
+                        data: [data.reviews.avg_rating || 0],
+                        backgroundColor: '#FF385C'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load analytics when page loads
+        window.addEventListener('DOMContentLoaded', loadAnalytics);
+    </script>
+</body>
+</html>

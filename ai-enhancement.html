@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Quote Enhancement | TradeMatch</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #FF385C; margin-bottom: 10px; }
+        .form-group { margin: 20px 0; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 6px; 
+            font-size: 16px;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .btn { 
+            background: #FF385C; 
+            color: white; 
+            padding: 15px 30px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #D50027; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .result { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #FF385C; }
+        .enhancement { margin: 15px 0; }
+        .enhancement h4 { color: #FF385C; margin-bottom: 10px; }
+        .enhancement ul { margin-left: 20px; }
+        .enhancement li { margin: 8px 0; }
+        .loading { text-align: center; padding: 20px; color: #666; }
+        .error { color: #dc3545; text-align: center; padding: 15px; background: #f8d7da; border-radius: 6px; margin: 10px 0; }
+        .success { color: #155724; text-align: center; padding: 15px; background: #d4edda; border-radius: 6px; margin: 10px 0; }
+        .cost { background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .cost strong { color: #FF385C; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>AI Quote Enhancement</h1>
+                <p>Get AI-powered insights for your project quote</p>
+            </div>
+            
+            <form id="enhancementForm">
+                <div class="form-group">
+                    <label>Service Type</label>
+                    <select id="serviceType" required>
+                        <option value="">Select service type...</option>
+                        <option value="house-extension">House Extension</option>
+                        <option value="loft-conversion">Loft Conversion</option>
+                        <option value="kitchen-fitting">Kitchen Fitting</option>
+                        <option value="bathroom">Bathroom Installation</option>
+                        <option value="roofing">Roofing</option>
+                        <option value="electrical">Electrical Work</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="flooring">Flooring</option>
+                        <option value="painting">Painting & Decorating</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Project Description</label>
+                    <textarea id="description" placeholder="Describe your project..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Budget</label>
+                    <input type="number" id="budget" placeholder="e.g. 15000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="location" placeholder="e.g. London, UK" required>
+                </div>
+                
+                <button type="submit" class="btn" id="enhanceBtn">
+                    🤖 Enhance with AI
+                </button>
+                
+                <div id="message"></div>
+            </form>
+        </div>
+        
+        <div id="results" style="display: none;">
+            <div class="card">
+                <h3>AI Enhancement Results</h3>
+                <div id="enhancementResults"></div>
+                <div class="cost">
+                    <strong>AI Processing Cost:</strong> £<span id="aiCost">0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'https://tradematch.onrender.com';
+        
+        document.getElementById('enhancementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const enhanceBtn = document.getElementById('enhanceBtn');
+            const messageDiv = document.getElementById('message');
+            const resultsDiv = document.getElementById('results');
+            
+            // Get form data
+            const data = {
+                serviceType: document.getElementById('serviceType').value,
+                description: document.getElementById('description').value,
+                budget: document.getElementById('budget').value,
+                location: document.getElementById('location').value
+            };
+            
+            // Validate
+            if (!data.serviceType || !data.description || !data.budget || !data.location) {
+                messageDiv.innerHTML = '<div class="error">Please fill in all fields</div>';
+                return;
+            }
+            
+            // Show loading
+            enhanceBtn.disabled = true;
+            enhanceBtn.textContent = '🤖 Processing...';
+            messageDiv.innerHTML = '<div class="loading">AI is analyzing your requirements...</div>';
+            resultsDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/api/ai/enhance-quote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result, data);
+                    messageDiv.innerHTML = '<div class="success">Enhancement completed successfully!</div>';
+                } else {
+                    throw new Error(result.error || 'AI enhancement failed');
+                }
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="error">${error.message}</div>`;
+                console.error('AI enhancement error:', error);
+            } finally {
+                enhanceBtn.disabled = false;
+                enhanceBtn.textContent = '🤖 Enhance with AI';
+            }
+        });
+        
+        function displayResults(result, originalData) {
+            const resultsDiv = document.getElementById('enhancementResults');
+            let enhancement;
+            
+            try {
+                enhancement = JSON.parse(result.enhancement);
+            } catch (error) {
+                enhancement = {
+                    enhancedDescription: result.enhancement,
+                    keyConsiderations: ['Analysis completed'],
+                    timelineEstimate: '2-4 weeks',
+                    importantQuestions: ['Get detailed quotes'],
+                    costSavingTips: ['Compare multiple vendors']
+                };
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="enhancement">
+                    <h4>📝 Enhanced Description</h4>
+                    <p>${enhancement.enhancedDescription || 'No enhancement available'}</p>
+                </div>
+                
+                <div class="enhancement">
+                    <h4>🔑 Key Considerations</h4>
+                    <ul>
+                        ${Array.isArray(enhancement.keyConsiderations) ? 
+                            enhancement.keyConsiderations.map(item => `<li>${item}</li>`).join('') :
+                            `<li>${enhancement.keyConsiderations || 'No considerations available'}</li>`
+                        }
+                    </ul>
+                </div>
+                
+                <div class="enhancement">
+                    <h4>⏱️ Timeline Estimate</h4>
+                    <p>${enhancement.timelineEstimate || 'Timeline not available'}</p>
+                </div>
+                
+                <div class="enhancement">
+                    <h4>❓ Important Questions</h4>
+                    <ul>
+                        ${Array.isArray(enhancement.importantQuestions) ? 
+                            enhancement.importantQuestions.map(item => `<li>${item}</li>`).join('') :
+                            `<li>${enhancement.importantQuestions || 'No questions available'}</li>`
+                        }
+                    </ul>
+                </div>
+                
+                <div class="enhancement">
+                    <h4>💡 Cost Saving Tips</h4>
+                    <ul>
+                        ${Array.isArray(enhancement.costSavingTips) ? 
+                            enhancement.costSavingTips.map(item => `<li>${item}</li>`).join('') :
+                            `<li>${enhancement.costSavingTips || 'No tips available'}</li>`
+                        }
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('aiCost').textContent = result.cost || '0.00';
+            document.getElementById('results').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
