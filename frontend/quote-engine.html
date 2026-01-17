@@ -552,11 +552,39 @@
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="form-group">
-                    <label class="form-label">Budget: £<span id="budgetValue">25,000</span></label>
-                    <input type="range" class="form-slider" id="budget" min="0" max="100000" step="1000" value="25000" oninput="updateBudgetValue(this.value)">
-                    <div class="slider-labels">
-                        <span>£0</span>
-                        <span>£100,000+</span>
+                    <label class="form-label">Budget Range (Optional)</label>
+                    <div class="budget-slider-container">
+                        <div class="budget-display">
+                            <span id="budgetMin">£0</span>
+                            <span class="budget-separator">to</span>
+                            <span id="budgetMax">£50,000</span>
+                        </div>
+                        
+                        <div class="dual-range-slider">
+                            <input 
+                                type="range" 
+                                id="budgetMinSlider" 
+                                min="0" 
+                                max="100000" 
+                                value="0" 
+                                step="500"
+                                oninput="updateBudgetMin(this.value)"
+                            />
+                            <input 
+                                type="range" 
+                                id="budgetMaxSlider" 
+                                min="0" 
+                                max="100000" 
+                                value="50000" 
+                                step="500"
+                                oninput="updateBudgetMax(this.value)"
+                            />
+                        </div>
+                        
+                        <div class="budget-labels">
+                            <span>£0</span>
+                            <span>£100k+</span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

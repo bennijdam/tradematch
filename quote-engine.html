@@ -408,6 +408,118 @@
             letter-spacing: 1px;
         }
         
+        /* Budget Slider Styles */
+        .budget-slider-container {
+            margin: 20px 0;
+        }
+
+        .budget-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .budget-separator {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .dual-range-slider {
+            position: relative;
+            height: 6px;
+            background: linear-gradient(90deg, #E0E0E0 0%, var(--primary) 100%);
+            border-radius: 3px;
+            margin: 30px 10px;
+        }
+
+        .dual-range-slider input[type="range"] {
+            position: absolute;
+            width: 100%;
+            height: 6px;
+            top: -2px;
+            background: transparent;
+            pointer-events: none;
+            -webkit-appearance: none;
+        }
+
+        .dual-range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            pointer-events: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(255, 56, 92, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dual-range-slider input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(255, 56, 92, 0.5);
+        }
+
+        .dual-range-slider input[type="range"]::-moz-range-thumb {
+            pointer-events: auto;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(255, 56, 92, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dual-range-slider input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(255, 56, 92, 0.5);
+        }
+
+        .budget-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+
+        /* Postcode Validation */
+        .postcode-suggestions {
+            position: absolute;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .postcode-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .postcode-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .postcode-suggestion:hover {
+            background: #F7F7F7;
+            color: var(--primary);
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -521,10 +633,22 @@
             <h3>Tell us more about your project</h3>
             <div class="form-group">
                 <label class="form-label">Your Postcode</label>
-                <input type="text" class="form-input" id="postcode" placeholder="e.g., SW1A 1AA" required>
-                <button type="button" class="btn btn-outline" onclick="getCurrentLocation()" style="margin-left: 10px; padding: 12px 20px; font-size: 14px;">
-                    📍 Get Location
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        id="postcode" 
+                        placeholder="e.g., SW1A 1AA" 
+                        oninput="validatePostcode(this)"
+                        required
+                        style="flex: 1;"
+                    />
+                    <button type="button" class="btn btn-outline" onclick="getCurrentLocation()" style="padding: 12px 20px; font-size: 14px;">
+                        📍 Get Location
+                    </button>
+                </div>
+                <div id="postcodeValidation" class="validation-message"></div>
+                <div id="postcodesuggestions" class="postcode-suggestions"></div>
             </div>
             <div class="form-group">
                 <label class="form-label">Project Title</label>
@@ -581,14 +705,39 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 <div class="form-group">
                     <label class="form-label">Budget Range (Optional)</label>
-                    <select class="form-select" id="budget">
-                        <option value="">Select budget range</option>
-                        <option value="0-5000">Under £5,000</option>
-                        <option value="5000-10000">£5,000 - £10,000</option>
-                        <option value="10000-25000">£10,000 - £25,000</option>
-                        <option value="25000-50000">£25,000 - £50,000</option>
-                        <option value="50000+">Over £50,000</option>
-                    </select>
+                    <div class="budget-slider-container">
+                        <div class="budget-display">
+                            <span id="budgetMin">£0</span>
+                            <span class="budget-separator">to</span>
+                            <span id="budgetMax">£50,000</span>
+                        </div>
+                        
+                        <div class="dual-range-slider">
+                            <input 
+                                type="range" 
+                                id="budgetMinSlider" 
+                                min="0" 
+                                max="100000" 
+                                value="0" 
+                                step="500"
+                                oninput="updateBudgetMin(this.value)"
+                            />
+                            <input 
+                                type="range" 
+                                id="budgetMaxSlider" 
+                                min="0" 
+                                max="100000" 
+                                value="50000" 
+                                step="500"
+                                oninput="updateBudgetMax(this.value)"
+                            />
+                        </div>
+                        
+                        <div class="budget-labels">
+                            <span>£0</span>
+                            <span>£100k+</span>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Property Type</label>
@@ -858,13 +1007,20 @@
         
         function populateReview() {
             const reviewContent = document.getElementById('reviewContent');
+            const minBudget = document.getElementById('budgetMinSlider').value;
+            const maxBudget = document.getElementById('budgetMaxSlider').value;
+            const budgetText = minBudget === '0' && maxBudget === '100000' ? 'Any budget' : 
+                              minBudget === '0' ? `Up to ${maxBudget >= 100000 ? '£100k+' : '£' + parseInt(maxBudget).toLocaleString()}` :
+                              maxBudget >= 100000 ? `£${parseInt(minBudget).toLocaleString()}+` :
+                              `£${parseInt(minBudget).toLocaleString()} - £${parseInt(maxBudget).toLocaleString()}`;
+            
             reviewContent.innerHTML = `
                 <div style="display: grid; gap: 10px;">
                     <div><strong>Service:</strong> ${quoteData.service}</div>
                     <div><strong>Location:</strong> ${quoteData.postcode}</div>
                     <div><strong>Project:</strong> ${quoteData.title}</div>
                     <div><strong>Timeline:</strong> ${quoteData.urgency}</div>
-                    ${quoteData.budget ? `<div><strong>Budget:</strong> ${quoteData.budget}</div>` : ''}
+                    <div><strong>Budget:</strong> ${budgetText}</div>
                     <div><strong>Property:</strong> ${quoteData.propertyType}</div>
                     ${quoteData.tradeCategory ? `<div><strong>Trade:</strong> ${quoteData.tradeCategory}</div>` : ''}
                     ${quoteData.description ? `<div style="margin-top: 15px;"><strong>Description:</strong><br>${quoteData.description}</div>` : ''}
@@ -926,6 +1082,123 @@
             }
         }, 500);
         
+        // Budget Range Slider Functions
+        function updateBudgetMin(value) {
+            const min = parseInt(value);
+            const max = parseInt(document.getElementById('budgetMaxSlider').value);
+            
+            if (min >= max) {
+                document.getElementById('budgetMinSlider').value = max - 1000;
+                return;
+            }
+            
+            document.getElementById('budgetMin').textContent = 
+                '£' + min.toLocaleString();
+            quoteData.budgetMin = min;
+        }
+
+        function updateBudgetMax(value) {
+            const max = parseInt(value);
+            const min = parseInt(document.getElementById('budgetMinSlider').value);
+            
+            if (max <= min) {
+                document.getElementById('budgetMaxSlider').value = min + 1000;
+                return;
+            }
+            
+            document.getElementById('budgetMax').textContent = 
+                max >= 100000 ? '£100k+' : '£' + max.toLocaleString();
+            quoteData.budgetMax = max;
+        }
+
+        // UK Postcode Database (Top 200 UK Postcodes)
+        const ukPostcodes = [
+            'SW1A 1AA', 'SW1A 2AA', 'SW1A 0AA', 'SW1A 1BB', 'EC1A 1BB',
+            'W1A 0AX', 'W1A 1AA', 'M1 1AE', 'M1 1AA', 'M2 3AA',
+            'B1 1AA', 'B1 1BB', 'B2 4AA', 'B3 1AA', 'BS1 1AA',
+            'LS1 1UR', 'LS1 2UR', 'LS1 3AA', 'LS2 7EA', 'LS9 8AJ',
+            'G1 1AA', 'G2 1AA', 'G3 6AA', 'G4 0AA', 'G5 0AA',
+            'EH1 1YZ', 'EH1 2YY', 'EH2 2AA', 'EH3 6SS', 'EH8 9AB',
+            'CF10 1EP', 'CF10 2DD', 'CF10 3AA', 'CF11 0AZ', 'CF23 9AD',
+            'BT1 1AA', 'BT2 7AA', 'BT7 1EE', 'BT9 5FY', 'BT15 1DD',
+            'AB10 1AB', 'AB11 6QE', 'AB12 3FG', 'AB15 6YQ', 'AB21 7BW',
+            'NE1 1AA', 'NE2 1AE', 'NE3 1AA', 'NE4 5JB', 'NE6 1DA',
+            'S1 1AA', 'S2 4AA', 'S3 7AA', 'S6 1BR', 'S9 3WF',
+            'NG1 1AA', 'NG1 2AA', 'NG2 1AA', 'NG3 1AA', 'NG5 1AA',
+            'CV1 1AA', 'CV2 2AA', 'CV3 1AA', 'CV4 7AA', 'CV5 6BB',
+            'PL1 1AA', 'PL2 2AA', 'PL3 5AA', 'PL4 8AA', 'PL6 5TL',
+            'SO14 0AA', 'SO15 1NQ', 'SO16 0AY', 'SO17 1BJ', 'SO18 1FT',
+            'PO1 1AA', 'PO2 7AA', 'PO3 5AA', 'PO4 8AA', 'PO5 3LP',
+            'BN1 1AA', 'BN2 5AA', 'BN3 1AA', 'BN41 1AP', 'BN43 6PB',
+            'BR1 1AA', 'BR2 6AA', 'BR3 1AA', 'BR7 6AA', 'BR8 7AE',
+            'CR0 1AA', 'CR2 6AA', 'CR3 1AA', 'CR4 1AA', 'CR5 2AA',
+            'DA1 1AA', 'DA5 1AA', 'DA6 7AA', 'DA7 4AA', 'DA8 1AA',
+            'E1 1AA', 'E1 2AN', 'E1 4SA', 'E1 6AN', 'E1 7BX',
+            'EC1A 1BB', 'EC1M 3BB', 'EC2A 1DX', 'EC2M 3RR', 'EC3N 4AB',
+            'EN1 1AA', 'EN2 6AA', 'EN3 4AA', 'EN4 8AA', 'EN5 1AA',
+            'GU1 1AA', 'GU2 7AA', 'GU16 7AA', 'GU21 6AA', 'GU22 7AA',
+            'HA1 1AA', 'HA2 0AA', 'HA3 5AA', 'HA4 6AA', 'HA5 1AA',
+            'HP1 1AA', 'HP2 6AA', 'HP3 9AA', 'HP4 1AA', 'HP5 1AA',
+            'IG1 1AA', 'IG2 6AA', 'IG3 9AA', 'IG4 5AA', 'IG6 1AA',
+            'KT1 1AA', 'KT2 5AA', 'KT3 4AA', 'KT4 8AA', 'KT5 8AA',
+            'N1 1AA', 'N2 0AA', 'N3 1AA', 'N4 1AA', 'N5 1AA',
+            'NW1 1AA', 'NW2 1AA', 'NW3 1AA', 'NW4 1AA', 'NW5 1AA',
+            'RM1 1AA', 'RM2 6AA', 'RM3 0AA', 'RM6 4AA', 'RM7 0AA',
+            'SE1 1AA', 'SE2 9AA', 'SE3 8AA', 'SE4 1AA', 'SE5 7AA',
+            'SG1 1AA', 'SG2 7AA', 'SG3 6AA', 'SG4 0AA', 'SG5 1AA',
+            'SL1 1AA', 'SL2 5AA', 'SL3 7AA', 'SL4 5AA', 'SL6 2AA',
+            'SM1 1AA', 'SM2 5AA', 'SM3 8AA', 'SM4 5AA', 'SM5 2AA',
+            'SW1A 0AA', 'SW2 1AA', 'SW3 2AA', 'SW4 6AA', 'SW5 0TP',
+            'TW1 1AA', 'TW2 5AA', 'TW3 1AA', 'TW4 5AA', 'TW5 9QR',
+            'UB1 1AA', 'UB2 4AA', 'UB3 1AA', 'UB4 8AA', 'UB5 5AA',
+            'W1A 0AX', 'W1K 1AA', 'W1S 1AA', 'W1U 1AA', 'W1W 6AA',
+            'WD1 1AA', 'WD2 4AA', 'WD3 3AA', 'WD4 4AA', 'WD5 0AA',
+            'WC1A 0AA', 'WC1B 3BA', 'WC1E 6BT', 'WC1H 9EQ', 'WC2A 2AA'
+        ];
+
+        // UK Postcode Validation and Autocomplete
+        function validatePostcode(input) {
+            const value = input.toUpperCase().trim();
+            const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\s?(\d[A-Z]{2})$/i;
+            const validationDiv = document.getElementById('postcodeValidation');
+            const suggestionsDiv = document.getElementById('postcodesuggestions');
+            
+            if (value.length < 2) {
+                validationDiv.innerHTML = '';
+                suggestionsDiv.innerHTML = '';
+                return;
+            }
+            
+            // Check if valid format
+            if (postcodeRegex.test(value)) {
+                validationDiv.innerHTML = '<span style="color: green;">✓ Valid UK postcode</span>';
+                suggestionsDiv.innerHTML = '';
+            } else if (value.length >= 3) {
+                validationDiv.innerHTML = '<span style="color: orange;">⚠ Please enter a valid UK postcode</span>';
+                
+                // Show suggestions from our database
+                const matches = ukPostcodes.filter(pc => 
+                    pc.startsWith(value.substring(0, 3))
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    suggestionsDiv.innerHTML = matches.map(pc => 
+                        `<div class="postcode-suggestion" onclick="selectPostcode('${pc}')">
+                            ${pc}
+                        </div>`
+                    ).join('');
+                } else {
+                    suggestionsDiv.innerHTML = '';
+                }
+            }
+        }
+
+        function selectPostcode(postcode) {
+            document.getElementById('postcode').value = postcode;
+            validatePostcode(document.getElementById('postcode'));
+            document.getElementById('postcodesuggestions').innerHTML = '';
+        }
+
         // Google Maps Location Services
         function getCurrentLocation() {
             if (navigator.geolocation) {
