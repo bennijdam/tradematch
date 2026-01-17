@@ -73,15 +73,36 @@ try {
     const authRoutes = require('./routes/auth');
     const quoteRoutes = require('./routes/quotes');
     const bidRoutes = require('./routes/bids');
+    const paymentRoutes = require('./routes/payments');
+    const reviewRoutes = require('./routes/reviews');
+    const aiRoutes = require('./routes/ai');
+    const proposalRoutes = require('./routes/proposals');
+    const analyticsRoutes = require('./routes/analytics');
+    const milestoneRoutes = require('./routes/milestones');
+    const webhookRoutes = require('./webhooks/stripe');
 
     authRoutes.setPool(pool);
     quoteRoutes.setPool(pool);
     bidRoutes.setPool(pool);
+    paymentRoutes.setPool(pool);
+    reviewRoutes.setPool(pool);
+    aiRoutes.setPool(pool);
+    proposalRoutes.setPool(pool);
+    analyticsRoutes.setPool(pool);
+    milestoneRoutes.setPool(pool);
 
     app.use('/api/auth', authRoutes);
     app.use('/api/quotes', quoteRoutes);
     app.use('/api/bids', bidRoutes);
-    console.log('✅ Auth, Quotes, and Bids routes mounted');
+    app.use('/api/payments', paymentRoutes);
+    app.use('/api/reviews', reviewRoutes);
+    app.use('/api/ai', aiRoutes);
+    app.use('/api/proposals', proposalRoutes);
+    app.use('/api/analytics', analyticsRoutes);
+    app.use('/api/milestones', milestoneRoutes);
+    app.use('/api/webhooks', webhookRoutes);
+    
+    console.log('✅ All Phase 7 routes mounted');
 } catch (error) {
     console.error('❌ Route mounting error:', error.message);
 }
