@@ -666,6 +666,7 @@
         
         // Navigation Functions
         function nextStep() {
+            // Always allow navigation between steps 1-3
             if (currentStep === 1 && !quoteData.service) {
                 alert('Please select a service');
                 return;
@@ -689,6 +690,27 @@
             
             // Update progress
             updateProgress(currentStep + 1);
+        }
+        
+        // Make step circles clickable for navigation
+        function goToStep(step) {
+            // Always allow navigation between steps 1-3
+            if (step >= 1 && step <= 3) {
+                if (step === 1 && !quoteData.service) {
+                    alert('Please select a service first');
+                    return;
+                }
+                if (step === 2) {
+                    // Validate required fields for step 2
+                    const postcode = document.getElementById('postcode').value;
+                    const title = document.getElementById('title').value;
+                    if (!postcode || !title) {
+                        alert('Please fill in postcode and project title');
+                        return;
+                    }
+                }
+                updateProgress(step);
+            }
         }
         
         // Make step circles clickable for navigation
