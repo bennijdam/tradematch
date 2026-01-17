@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "echo 'No build step required - static HTML files'",
   "builds": [
     {
       "src": "frontend/**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif,woff,woff2}",
@@ -9,8 +10,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1",
-      "check": false
+      "dest": "/frontend/$1"
     },
     {
       "src": "/",
