@@ -91,6 +91,7 @@
         .nav-links a:hover {
             color: var(--slate);
         }
+
         
         .btn {
             padding: 12px 28px;
@@ -116,7 +117,18 @@
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
         }
         
-        /* Hero Section */
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Hero Section with Background Image */
         .hero {
             background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%),
                         url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80') center/cover;
@@ -167,7 +179,7 @@
             line-height: 1.7;
         }
         
-        /* Custom Dropdown Search Box */
+        /* Quick Quote Section (Glassmorphism) */
         .quick-quote-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -191,163 +203,34 @@
             margin-bottom: 24px;
         }
         
-        .search-box-container {
-            display: flex;
-            gap: 12px;
-            align-items: stretch;
+        /* Quote Form (Horizontal Layout) */
+        .quote-form {
+            margin-bottom: 24px;
         }
         
-        /* Custom Dropdown */
-        .custom-dropdown {
-            flex: 1;
-            position: relative;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 16px;
+            align-items: flex-end;
         }
         
-        .dropdown-button {
-            width: 100%;
-            background: white;
-            border: 1.5px solid var(--gray-100);
-            border-radius: 8px;
-            padding: 14px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-        }
-        
-        .dropdown-button:hover {
-            border-color: var(--emerald);
-        }
-        
-        .dropdown-button.active {
-            border-color: var(--emerald);
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-        }
-        
-        .dropdown-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gray-600);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        
-        .dropdown-value {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--slate);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .dropdown-icon {
-            font-size: 18px;
-        }
-        
-        /* Dropdown Menu - Scrollable */
-        .dropdown-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            padding: 8px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 100;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        /* Custom Scrollbar */
-        .dropdown-menu::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .dropdown-menu::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .dropdown-menu::-webkit-scrollbar-thumb {
-            background: var(--emerald);
-            border-radius: 10px;
-        }
-        
-        .dropdown-menu::-webkit-scrollbar-thumb:hover {
-            background: var(--emerald-dark);
-        }
-        
-        .dropdown-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        
-        .dropdown-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .dropdown-item:hover {
-            background: #F9F9F9;
-        }
-        
-        .dropdown-item-icon {
-            font-size: 24px;
-            min-width: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .dropdown-item-text {
-            flex: 1;
-        }
-        
-        .dropdown-item-title {
-            font-weight: 600;
-            font-size: 15px;
-            margin-bottom: 2px;
-            color: var(--slate);
-        }
-        
-        .dropdown-item-desc {
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-        
-        /* Postcode Input */
-        .postcode-input-wrapper {
-            flex: 1;
+        .form-field {
             display: flex;
             flex-direction: column;
         }
         
-        .postcode-input-wrapper label {
+        .form-field label {
             font-size: 11px;
             font-weight: 700;
             color: var(--gray-600);
-            text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .postcode-input {
-            width: 100%;
+        .form-field select,
+        .form-field input {
             padding: 14px 16px;
             border: 1.5px solid var(--gray-100);
             border-radius: 8px;
@@ -358,14 +241,18 @@
             transition: all 0.2s;
         }
         
-        .postcode-input:focus {
+        .form-field select {
+            cursor: pointer;
+        }
+        
+        .form-field select:focus,
+        .form-field input:focus {
             outline: none;
             border-color: var(--emerald);
             box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
         }
         
-        /* Search Button */
-        .btn-search {
+        .get-quotes-btn {
             padding: 14px 32px;
             background: var(--emerald);
             color: white;
@@ -376,10 +263,10 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
-            align-self: flex-end;
+            height: fit-content;
         }
         
-        .btn-search:hover {
+        .get-quotes-btn:hover {
             background: var(--emerald-dark);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
@@ -574,7 +461,7 @@
             line-height: 1.7;
         }
         
-        /* Services Section */
+        /* Services Section with Images */
         .services-section {
             padding: 100px 0;
             background: var(--gray-50);
@@ -758,12 +645,8 @@
                 grid-template-columns: 1fr;
             }
             
-            .search-box-container {
-                flex-direction: column;
-            }
-            
-            .btn-search {
-                align-self: stretch;
+            .form-row {
+                grid-template-columns: 1fr;
             }
             
             .nav-links {
@@ -773,7 +656,7 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header with Glass Effect -->
     <header>
         <div class="container">
             <nav>
@@ -788,6 +671,8 @@
         </div>
     </header>
 
+
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -796,92 +681,38 @@
                     <h1>Find trusted local tradespeople in minutes</h1>
                     <p>Post your job and receive competitive quotes from verified professionals. Compare, review, and hire with confidence.</p>
                     
-                    <!-- Custom Dropdown Search Box -->
+                    <!-- Get Started Section with Dropdown -->
                     <div class="quick-quote-card">
                         <h3>Get Started - It's Free</h3>
                         <p>Choose your service and we'll connect you with the right professionals</p>
                         
-                        <div class="search-box-container">
-                            <!-- Service Dropdown -->
-                            <div class="custom-dropdown">
-                                <button class="dropdown-button" id="serviceBtn" type="button">
-                                    <span class="dropdown-label">Service</span>
-                                    <span class="dropdown-value" id="serviceValue">
-                                        <span class="dropdown-icon">🏗️</span>
-                                        <span>Extension</span>
-                                    </span>
-                                </button>
-                                <div class="dropdown-menu" id="serviceMenu">
-                                    <div class="dropdown-item" data-value="extension" data-icon="🏗️" data-title="Extension">
-                                        <span class="dropdown-item-icon">🏗️</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">House Extension</div>
-                                            <div class="dropdown-item-desc">Single & double storey</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="loft" data-icon="🏠" data-title="Loft Conversion">
-                                        <span class="dropdown-item-icon">🏠</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Loft Conversion</div>
-                                            <div class="dropdown-item-desc">Transform your attic</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="kitchen" data-icon="🍳" data-title="Kitchen Fitting">
-                                        <span class="dropdown-item-icon">🍳</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Kitchen Fitting</div>
-                                            <div class="dropdown-item-desc">Complete installation</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="bathroom" data-icon="🚿" data-title="Bathroom">
-                                        <span class="dropdown-item-icon">🚿</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Bathroom</div>
-                                            <div class="dropdown-item-desc">Installation & renovation</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="roofing" data-icon="🏚️" data-title="Roofing">
-                                        <span class="dropdown-item-icon">🏚️</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Roofing</div>
-                                            <div class="dropdown-item-desc">Repairs & replacement</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="electrical" data-icon="⚡" data-title="Electrical">
-                                        <span class="dropdown-item-icon">⚡</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Electrical Work</div>
-                                            <div class="dropdown-item-desc">Certified electricians</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="plumbing" data-icon="🔧" data-title="Plumbing">
-                                        <span class="dropdown-item-icon">🔧</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Plumbing</div>
-                                            <div class="dropdown-item-desc">Pipes & heating</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item" data-value="landscaping" data-icon="🌳" data-title="Landscaping">
-                                        <span class="dropdown-item-icon">🌳</span>
-                                        <div class="dropdown-item-text">
-                                            <div class="dropdown-item-title">Landscaping</div>
-                                            <div class="dropdown-item-desc">Gardens & patios</div>
-                                        </div>
-                                    </div>
+                        <form class="quote-form" onsubmit="handleQuickSearch(event)">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label>WHAT DO YOU NEED?</label>
+                                    <select id="serviceType" required>
+                                        <option value="">Select a service</option>
+                                        <option value="extension">🏠 Extension</option>
+                                        <option value="loft">🏢 Loft Conversion</option>
+                                        <option value="kitchen">🍴 Kitchen Fitting</option>
+                                        <option value="bathroom">🛁 Bathroom</option>
+                                        <option value="roofing">🏗️ Roofing</option>
+                                        <option value="electrical">⚡ Electrical</option>
+                                        <option value="plumbing">🔧 Plumbing</option>
+                                        <option value="landscaping">🌳 Landscaping</option>
+                                    </select>
                                 </div>
+                                
+                                <div class="form-field">
+                                    <label>YOUR POSTCODE</label>
+                                    <input type="text" id="postcode" placeholder="e.g. SW1A 1AA" required />
+                                </div>
+                                
+                                <button type="submit" class="get-quotes-btn">
+                                    <i class="fas fa-search"></i> Get Quotes
+                                </button>
                             </div>
-                            
-                            <!-- Postcode Input -->
-                            <div class="postcode-input-wrapper">
-                                <label>LOCATION</label>
-                                <input type="text" class="postcode-input" id="postcodeInput" placeholder="Your postcode" />
-                            </div>
-                            
-                            <!-- Search Button -->
-                            <button class="btn-search" onclick="submitSearch()">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
+                        </form>
                     </div>
                     
                     <div class="hero-stats">
@@ -901,6 +732,7 @@
                 </div>
                 
                 <div class="hero-image">
+                    <!-- Glass Card 1 -->
                     <div class="hero-card card-1">
                         <div class="card-icon">
                             <i class="fas fa-hammer"></i>
@@ -914,6 +746,7 @@
                         </div>
                     </div>
                     
+                    <!-- Glass Card 2 -->
                     <div class="hero-card card-2">
                         <div class="card-icon">
                             <i class="fas fa-star"></i>
@@ -962,7 +795,7 @@
         </div>
     </section>
 
-    <!-- Services Section -->
+    <!-- Services Section with Sample Images -->
     <section class="services-section">
         <div class="container">
             <div class="section-header">
@@ -1131,59 +964,14 @@
     <script>
         const API_URL = 'https://tradematch.onrender.com';
         
-        // Custom Dropdown Functionality
-        const serviceBtn = document.getElementById('serviceBtn');
-        const serviceMenu = document.getElementById('serviceMenu');
-        const serviceValue = document.getElementById('serviceValue');
-        const postcodeInput = document.getElementById('postcodeInput');
-        
-        let selectedService = 'extension';
-        let selectedIcon = '🏗️';
-        let selectedTitle = 'Extension';
-        
-        // Toggle dropdown
-        serviceBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            serviceMenu.classList.toggle('active');
-            serviceBtn.classList.toggle('active');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!serviceBtn.contains(e.target) && !serviceMenu.contains(e.target)) {
-                serviceMenu.classList.remove('active');
-                serviceBtn.classList.remove('active');
-            }
-        });
-        
-        // Select service from dropdown
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', () => {
-                selectedService = item.dataset.value;
-                selectedIcon = item.dataset.icon;
-                selectedTitle = item.dataset.title;
-                
-                serviceValue.innerHTML = `
-                    <span class="dropdown-icon">${selectedIcon}</span>
-                    <span>${selectedTitle}</span>
-                `;
-                
-                serviceMenu.classList.remove('active');
-                serviceBtn.classList.remove('active');
-                
-                // Focus postcode input
-                postcodeInput.focus();
-            });
-        });
-        
-        // Submit search
-        function submitSearch() {
-            const postcode = postcodeInput.value.trim();
+        // Handle quote form submission
+        function handleQuickSearch(event) {
+            event.preventDefault();
+            const service = document.getElementById('serviceType').value;
+            const postcode = document.getElementById('postcode').value;
             
-            if (!postcode) {
-                alert('Please enter your postcode');
-                postcodeInput.focus();
+            if (!service || !postcode) {
+                alert('Please select a service and enter your postcode');
                 return;
             }
             
@@ -1191,20 +979,12 @@
             const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
             if (!postcodeRegex.test(postcode)) {
                 alert('Please enter a valid UK postcode');
-                postcodeInput.focus();
                 return;
             }
             
-            // Redirect to quote engine
-            window.location.href = `quote-engine.html?service=${selectedService}&postcode=${encodeURIComponent(postcode)}`;
+            // Redirect to quote engine with pre-filled data
+            window.location.href = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcode)}`;
         }
-        
-        // Allow Enter key to submit
-        postcodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitSearch();
-            }
-        });
         
         // Scroll effect for header
         let lastScroll = 0;
