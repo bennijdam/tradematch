@@ -1,375 +1,566 @@
 const express = require('express');
 const router = express.Router();
-const nodemailer = require('nodemailer');
-const { authenticate } = require('../middleware/auth');
-const { emailLimiter } = require('../middleware/rate-limit');
+const { Resend } = require('resend');
 
-// Email transporter configuration
-const transporter = nodemailer.createTransporter({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: process.env.SMTP_PORT || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
+// Initialize Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Verify transporter configuration
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ Email transporter error:', error.message);
-  } else {
-    console.log('✅ Email server ready to send messages');
-  }
-});
+let pool;
+router.setPool = (p) => { pool = p; };
 
-/**
- * POST /api/email/send
- * Send general email (authenticated)
- */
-router.post('/send', authenticate, emailLimiter, async (req, res) => {
-  try {
-    const { to, subject, html, text } = req.body;
-    
-    if (!to || !subject || (!html && !text)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Missing required fields: to, subject, and html or text' 
-      });
-    }
-    
-    const info = await transporter.sendMail({
-      from: `"TradeMatch" <${process.env.SMTP_USER}>`,
-      to,
-      subject,
-      text: text || '',
-      html: html || text
-    });
-    
-    res.json({
-      success: true,
-      messageId: info.messageId,
-      message: 'Email sent successfully'
-    });
-    
-  } catch (error) {
-    console.error('Send email error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send email' 
-    });
-  }
-});
+// Rate limiter for email endpoints (already applied in server.js)
+// 10 emails per hour per user
 
-/**
- * POST /api/email/new-quote-notification
- * Notify vendors of new quote in their area
- */
-router.post('/new-quote-notification', async (req, res) => {
-  try {
-    const { quoteId, quoteTitle, serviceType, postcode, budget } = req.body;
-    
-    // Get vendors in the area (internal use only, no auth needed)
-    let pool = req.app.get('pool');
-    if (!pool) {
-      const poolModule = require('pg');
-      pool = new poolModule.Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-      });
-    }
-    
-    const postcodePrefix = postcode.substring(0, 2);
-    
-    const vendors = await pool.query(
-      `SELECT email, company_name FROM vendors 
-       WHERE postcode LIKE $1 
-       AND services @> $2::jsonb 
-       AND notifications_enabled = true`,
-      [`${postcodePrefix}%`, JSON.stringify([serviceType])]
-    );
-    
-    // Send emails to matching vendors
-    const emailPromises = vendors.rows.map(vendor => {
-      const html = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #FF385C;">New Quote Available! 🎯</h2>
-          <p>Hi ${vendor.company_name},</p>
-          <p>A new quote has been posted in your area:</p>
-          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0;">${quoteTitle}</h3>
-            <p><strong>Service:</strong> ${serviceType}</p>
-            <p><strong>Location:</strong> ${postcode}</p>
-            <p><strong>Budget:</strong> £${budget}</p>
+// =====================================
+// EMAIL TEMPLATES
+// =====================================
+
+const emailTemplates = {
+  welcome: {
+    customer: (name) => ({
+      subject: '🎉 Welcome to TradeMatch!',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Welcome to TradeMatch!</h1>
+            </div>
+            <div class="content">
+              <h2>Hi ${name}! 👋</h2>
+              <p>Thanks for joining TradeMatch - the UK's most trusted platform for finding local tradespeople.</p>
+              <p><strong>You can now:</strong></p>
+              <ul>
+                <li>Post jobs and get multiple quotes</li>
+                <li>Compare prices from verified professionals</li>
+                <li>Read reviews from real customers</li>
+                <li>Pay securely with buyer protection</li>
+              </ul>
+              <a href="${process.env.FRONTEND_URL}/customer-dashboard.html" class="button">Go to Your Dashboard →</a>
+              <p>Need help getting started? Check out our <a href="${process.env.FRONTEND_URL}/how-it-works.html">How It Works</a> guide.</p>
+            </div>
+            <div class="footer">
+              <p>TradeMatch Ltd • Connecting homeowners with trusted tradespeople</p>
+              <p><a href="${process.env.FRONTEND_URL}/help.html">Help Center</a> | <a href="${process.env.FRONTEND_URL}/contact.html">Contact Us</a></p>
+            </div>
           </div>
-          <p>
-            <a href="https://tradematch.vercel.app/vendor-dashboard.html" 
-               style="display: inline-block; background: #FF385C; color: white; 
-                      padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-              View Quote & Submit Bid
-            </a>
-          </p>
-          <p style="color: #666; font-size: 14px; margin-top: 30px;">
-            You're receiving this email because you're registered as a ${serviceType} tradesperson in the ${postcodePrefix} area.
-          </p>
-        </div>
-      `;
-      
-      return transporter.sendMail({
-        from: `"TradeMatch" <${process.env.SMTP_USER}>`,
-        to: vendor.email,
-        subject: `New ${serviceType} Quote Available in ${postcode}`,
-        html
-      });
-    });
-    
-    await Promise.all(emailPromises);
-    
-    res.json({
-      success: true,
-      message: `Notification sent to ${vendors.rows.length} vendors`
-    });
-    
-  } catch (error) {
-    console.error('Quote notification error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send notifications' 
-    });
-  }
-});
+        </body>
+        </html>
+      `
+    }),
+    vendor: (companyName) => ({
+      subject: '🚀 Welcome to TradeMatch - Start Winning Jobs!',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Welcome ${companyName}!</h1>
+            </div>
+            <div class="content">
+              <h2>You're all set! 🎉</h2>
+              <p>Your TradeMatch business profile is now live. Start browsing available jobs and win more work!</p>
+              <p><strong>Next steps:</strong></p>
+              <ul>
+                <li>Complete your profile with photos and certifications</li>
+                <li>Browse available quotes in your area</li>
+                <li>Submit competitive bids to win jobs</li>
+                <li>Build your reputation with 5-star reviews</li>
+              </ul>
+              <a href="${process.env.FRONTEND_URL}/vendor-dashboard.html" class="button">View Available Jobs →</a>
+              <p><strong>Pro Tip:</strong> Respond to quotes within 24 hours for the best chance of winning!</p>
+            </div>
+            <div class="footer">
+              <p>TradeMatch Ltd • Helping tradespeople grow their business</p>
+              <p><a href="${process.env.FRONTEND_URL}/help.html">Help Center</a> | <a href="${process.env.FRONTEND_URL}/contact.html">Contact Us</a></p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    })
+  },
 
-/**
- * POST /api/email/new-bid-notification
- * Notify customer of new bid on their quote
- */
-router.post('/new-bid-notification', async (req, res) => {
-  try {
-    const { customerEmail, customerName, quoteTitle, vendorName, bidAmount } = req.body;
-    
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #FF385C;">You Have a New Bid! 💼</h2>
-        <p>Hi ${customerName},</p>
-        <p>Great news! A tradesperson has submitted a bid for your quote:</p>
-        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin-top: 0;">${quoteTitle}</h3>
-          <p><strong>Tradesperson:</strong> ${vendorName}</p>
-          <p><strong>Bid Amount:</strong> £${bidAmount}</p>
+  newBid: (customerName, vendorName, bidAmount, quoteTitle, quoteId) => ({
+    subject: `💰 New Bid Received - £${bidAmount.toLocaleString()}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .bid-box { background: white; border-left: 4px solid #16A34A; padding: 20px; margin: 20px 0; border-radius: 5px; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>You've Got a New Bid! 🎉</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${customerName},</h2>
+            <p>Great news! <strong>${vendorName}</strong> has submitted a bid for your job:</p>
+            <div class="bid-box">
+              <h3>${quoteTitle}</h3>
+              <p style="font-size: 24px; color: #16A34A; font-weight: bold;">£${bidAmount.toLocaleString()}</p>
+            </div>
+            <p>Check out their full proposal, portfolio, and reviews:</p>
+            <a href="${process.env.FRONTEND_URL}/customer-dashboard.html?quote=${quoteId}" class="button">View Bid Details →</a>
+            <p><strong>What's Next?</strong></p>
+            <ul>
+              <li>Review the proposal and timeline</li>
+              <li>Check their portfolio and past reviews</li>
+              <li>Compare with other bids you receive</li>
+              <li>Message them with any questions</li>
+            </ul>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • Your jobs, your choice</p>
+          </div>
         </div>
-        <p>
-          <a href="https://tradematch.vercel.app/customer-dashboard.html" 
-             style="display: inline-block; background: #FF385C; color: white; 
-                    padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-            View Bid Details
-          </a>
-        </p>
-        <p style="color: #666; font-size: 14px; margin-top: 30px;">
-          Review their profile, compare with other bids, and choose the best tradesperson for your job.
-        </p>
-      </div>
-    `;
-    
-    await transporter.sendMail({
-      from: `"TradeMatch" <${process.env.SMTP_USER}>`,
-      to: customerEmail,
-      subject: `New Bid Received for "${quoteTitle}"`,
-      html
-    });
-    
-    res.json({
-      success: true,
-      message: 'Bid notification sent'
-    });
-    
-  } catch (error) {
-    console.error('Bid notification error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send notification' 
-    });
-  }
-});
+      </body>
+      </html>
+    `
+  }),
 
-/**
- * POST /api/email/welcome
- * Send welcome email to new user
- */
+  quoteNotification: (postcode, service, quoteId) => ({
+    subject: `🔔 New ${service} Job in ${postcode}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .quote-box { background: white; border-left: 4px solid #16A34A; padding: 20px; margin: 20px 0; border-radius: 5px; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>New Job Available! 💼</h1>
+          </div>
+          <div class="content">
+            <h2>A customer near you needs a tradesperson!</h2>
+            <div class="quote-box">
+              <p><strong>Service:</strong> ${service}</p>
+              <p><strong>Location:</strong> ${postcode} area</p>
+              <p><strong>Status:</strong> Accepting bids now</p>
+            </div>
+            <p>This job matches your service area and expertise. Be the first to submit a competitive bid!</p>
+            <a href="${process.env.FRONTEND_URL}/vendor-dashboard.html?quote=${quoteId}" class="button">View Job & Submit Bid →</a>
+            <p><strong>Pro Tips:</strong></p>
+            <ul>
+              <li>Respond quickly - early bids have higher acceptance rates</li>
+              <li>Include photos of similar past work</li>
+              <li>Provide a detailed breakdown of costs</li>
+              <li>Be clear about timeline and availability</li>
+            </ul>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • More jobs, more opportunities</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
+  paymentConfirmation: (customerName, amount, reference, vendorName) => ({
+    subject: `✅ Payment Confirmed - £${amount.toLocaleString()}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .payment-box { background: white; border: 2px solid #16A34A; padding: 20px; margin: 20px 0; border-radius: 5px; text-align: center; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Payment Successful! ✅</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${customerName},</h2>
+            <p>Your payment has been processed successfully and is being held securely in escrow.</p>
+            <div class="payment-box">
+              <p style="font-size: 32px; color: #16A34A; font-weight: bold; margin: 0;">£${amount.toLocaleString()}</p>
+              <p style="color: #666; margin: 10px 0 0 0;">Payment Reference: ${reference}</p>
+            </div>
+            <p><strong>Payment Details:</strong></p>
+            <ul>
+              <li><strong>Recipient:</strong> ${vendorName}</li>
+              <li><strong>Amount:</strong> £${amount.toLocaleString()}</li>
+              <li><strong>Status:</strong> Held in secure escrow</li>
+              <li><strong>Release:</strong> When work is completed to your satisfaction</li>
+            </ul>
+            <a href="${process.env.FRONTEND_URL}/customer-dashboard.html" class="button">View Payment Details →</a>
+            <p><strong>What Happens Next?</strong></p>
+            <p>The tradesperson will start work as agreed. Funds will be released from escrow once you confirm the job is complete. Your money is protected throughout!</p>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • Secure payments, peace of mind</p>
+            <p>Questions? <a href="${process.env.FRONTEND_URL}/help.html">Visit Help Center</a></p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
+  reviewReminder: (customerName, vendorName, quoteId) => ({
+    subject: '⭐ How was your experience?',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>We'd Love Your Feedback! ⭐</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${customerName},</h2>
+            <p>Your recent job with <strong>${vendorName}</strong> has been completed.</p>
+            <p>Could you take 2 minutes to leave a review? Your feedback helps other homeowners make informed decisions.</p>
+            <a href="${process.env.FRONTEND_URL}/customer-dashboard.html?review=${quoteId}" class="button">Leave a Review →</a>
+            <p><strong>Your review helps:</strong></p>
+            <ul>
+              <li>Other customers find great tradespeople</li>
+              <li>Quality professionals build their reputation</li>
+              <li>Improve the TradeMatch platform</li>
+            </ul>
+            <p>Thank you for using TradeMatch!</p>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • Building trust through transparency</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  })
+};
+
+// =====================================
+// EMAIL SENDING ENDPOINTS
+// =====================================
+
+// Send welcome email
 router.post('/welcome', async (req, res) => {
   try {
     const { email, name, userType } = req.body;
-    
-    const isVendor = userType === 'vendor';
-    
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #FF385C;">Welcome to TradeMatch! 🎉</h2>
-        <p>Hi ${name},</p>
-        <p>Thank you for joining TradeMatch, the UK's leading platform connecting ${isVendor ? 'tradespeople with customers' : 'homeowners with trusted tradespeople'}.</p>
-        
-        ${isVendor ? `
-        <h3>Getting Started as a Tradesperson:</h3>
-        <ol>
-          <li>Complete your profile with your services and areas</li>
-          <li>Upload photos of your previous work</li>
-          <li>Browse available quotes in your area</li>
-          <li>Submit competitive bids</li>
-          <li>Win jobs and build your reputation!</li>
-        </ol>
-        ` : `
-        <h3>Getting Started as a Customer:</h3>
-        <ol>
-          <li>Post a quote describing your project</li>
-          <li>Receive bids from verified tradespeople</li>
-          <li>Compare profiles and ratings</li>
-          <li>Choose the best tradesperson</li>
-          <li>Leave a review when complete!</li>
-        </ol>
-        `}
-        
-        <p>
-          <a href="https://tradematch.vercel.app/${isVendor ? 'vendor' : 'customer'}-dashboard.html" 
-             style="display: inline-block; background: #FF385C; color: white; 
-                    padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-            Go to Dashboard
-          </a>
-        </p>
-        
-        <p style="color: #666; font-size: 14px; margin-top: 30px;">
-          Need help? Visit our <a href="https://tradematch.vercel.app/help.html">Help Center</a> or reply to this email.
-        </p>
-      </div>
-    `;
-    
-    await transporter.sendMail({
-      from: `"TradeMatch" <${process.env.SMTP_USER}>`,
+
+    if (!email || !name || !userType) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: email, name, userType' 
+      });
+    }
+
+    const template = userType === 'customer' 
+      ? emailTemplates.welcome.customer(name)
+      : emailTemplates.welcome.vendor(name);
+
+    const { data, error } = await resend.emails.send({
+      from: 'TradeMatch <noreply@tradematch.co.uk>',
       to: email,
-      subject: 'Welcome to TradeMatch!',
-      html
+      subject: template.subject,
+      html: template.html
     });
-    
-    res.json({
-      success: true,
-      message: 'Welcome email sent'
+
+    if (error) {
+      console.error('Resend error:', error);
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Welcome email sent',
+      emailId: data.id 
     });
-    
-  } catch (error) {
-    console.error('Welcome email error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send welcome email' 
-    });
+
+  } catch (err) {
+    console.error('Welcome email error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
-/**
- * POST /api/email/payment-confirmation
- * Send payment confirmation email
- */
+// Notify vendors of new quote in their area
+router.post('/new-quote-notification', async (req, res) => {
+  try {
+    const { quoteId, postcode, service } = req.body;
+
+    if (!quoteId || !postcode || !service) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: quoteId, postcode, service' 
+      });
+    }
+
+    // Get vendors who service this area and offer this service type
+    const postcodePrefix = postcode.substring(0, postcode.indexOf(' ') || 3);
+    
+    const vendorsQuery = await pool.query(
+      `SELECT DISTINCT u.email, u.name 
+       FROM users u
+       WHERE u.user_type = 'vendor' 
+       AND u.postcode LIKE $1
+       AND EXISTS (
+         SELECT 1 FROM unnest(string_to_array(u.services, ',')) s
+         WHERE LOWER(TRIM(s)) = LOWER($2)
+       )`,
+      [`${postcodePrefix}%`, service]
+    );
+
+    const template = emailTemplates.quoteNotification(postcode, service, quoteId);
+    const emailsSent = [];
+
+    // Send email to each matching vendor
+    for (const vendor of vendorsQuery.rows) {
+      try {
+        const { data, error } = await resend.emails.send({
+          from: 'TradeMatch <jobs@tradematch.co.uk>',
+          to: vendor.email,
+          subject: template.subject,
+          html: template.html
+        });
+
+        if (!error) {
+          emailsSent.push({ email: vendor.email, id: data.id });
+        }
+      } catch (err) {
+        console.error(`Failed to send to ${vendor.email}:`, err);
+      }
+    }
+
+    res.json({ 
+      success: true, 
+      message: `Notified ${emailsSent.length} vendors`,
+      emailsSent 
+    });
+
+  } catch (err) {
+    console.error('Quote notification error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Notify customer of new bid
+router.post('/new-bid-notification', async (req, res) => {
+  try {
+    const { customerId, quoteId, bidAmount, vendorName } = req.body;
+
+    if (!customerId || !quoteId || !bidAmount || !vendorName) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: customerId, quoteId, bidAmount, vendorName' 
+      });
+    }
+
+    // Get customer details and quote title
+    const customerQuery = await pool.query(
+      'SELECT u.email, u.name, q.title FROM users u JOIN quotes q ON q.user_id = u.id WHERE u.id = $1 AND q.id = $2',
+      [customerId, quoteId]
+    );
+
+    if (customerQuery.rows.length === 0) {
+      return res.status(404).json({ error: 'Customer or quote not found' });
+    }
+
+    const { email, name, title } = customerQuery.rows[0];
+    const template = emailTemplates.newBid(name, vendorName, bidAmount, title, quoteId);
+
+    const { data, error } = await resend.emails.send({
+      from: 'TradeMatch <notifications@tradematch.co.uk>',
+      to: email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Bid notification sent',
+      emailId: data.id 
+    });
+
+  } catch (err) {
+    console.error('Bid notification error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Send payment confirmation
 router.post('/payment-confirmation', async (req, res) => {
   try {
-    const { customerEmail, customerName, vendorName, amount, quoteTitle, receiptUrl } = req.body;
-    
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #66BB6A;">Payment Confirmed! ✅</h2>
-        <p>Hi ${customerName},</p>
-        <p>Your payment has been successfully processed and is being held in escrow.</p>
-        
-        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="margin-top: 0;">Payment Details</h3>
-          <p><strong>Amount:</strong> £${amount}</p>
-          <p><strong>Project:</strong> ${quoteTitle}</p>
-          <p><strong>Tradesperson:</strong> ${vendorName}</p>
-        </div>
-        
-        <p>The funds will be released to ${vendorName} once you confirm the work is completed to your satisfaction.</p>
-        
-        ${receiptUrl ? `
-        <p>
-          <a href="${receiptUrl}" 
-             style="display: inline-block; background: #FF385C; color: white; 
-                    padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-            Download Receipt
-          </a>
-        </p>
-        ` : ''}
-        
-        <p style="color: #666; font-size: 14px; margin-top: 30px;">
-          This is an automated confirmation. Please keep this for your records.
-        </p>
-      </div>
-    `;
-    
-    await transporter.sendMail({
-      from: `"TradeMatch" <${process.env.SMTP_USER}>`,
-      to: customerEmail,
-      subject: 'Payment Confirmed - TradeMatch',
-      html
+    const { customerId, amount, reference, vendorName } = req.body;
+
+    if (!customerId || !amount || !reference) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: customerId, amount, reference' 
+      });
+    }
+
+    const customerQuery = await pool.query(
+      'SELECT email, name FROM users WHERE id = $1',
+      [customerId]
+    );
+
+    if (customerQuery.rows.length === 0) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    const { email, name } = customerQuery.rows[0];
+    const template = emailTemplates.paymentConfirmation(name, amount, reference, vendorName);
+
+    const { data, error } = await resend.emails.send({
+      from: 'TradeMatch <payments@tradematch.co.uk>',
+      to: email,
+      subject: template.subject,
+      html: template.html
     });
-    
-    res.json({
-      success: true,
-      message: 'Payment confirmation sent'
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Payment confirmation sent',
+      emailId: data.id 
     });
-    
-  } catch (error) {
-    console.error('Payment confirmation error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send confirmation' 
-    });
+
+  } catch (err) {
+    console.error('Payment confirmation error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
-/**
- * POST /api/email/review-reminder
- * Remind customer to leave a review
- */
+// Send review reminder
 router.post('/review-reminder', async (req, res) => {
   try {
-    const { customerEmail, customerName, vendorName, quoteId } = req.body;
-    
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #FF385C;">How Did It Go? ⭐</h2>
-        <p>Hi ${customerName},</p>
-        <p>We hope your project with ${vendorName} was completed to your satisfaction!</p>
-        <p>Your feedback helps other customers make informed decisions and helps tradespeople improve their service.</p>
-        
-        <p>
-          <a href="https://tradematch.vercel.app/customer-dashboard.html?review=${quoteId}" 
-             style="display: inline-block; background: #FF385C; color: white; 
-                    padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-            Leave a Review
-          </a>
-        </p>
-        
-        <p style="color: #666; font-size: 14px; margin-top: 30px;">
-          Takes less than 2 minutes. Your review will be posted publicly on ${vendorName}'s profile.
-        </p>
-      </div>
-    `;
-    
-    await transporter.sendMail({
-      from: `"TradeMatch" <${process.env.SMTP_USER}>`,
-      to: customerEmail,
-      subject: `How was your experience with ${vendorName}?`,
+    const { customerId, vendorName, quoteId } = req.body;
+
+    if (!customerId || !vendorName || !quoteId) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: customerId, vendorName, quoteId' 
+      });
+    }
+
+    const customerQuery = await pool.query(
+      'SELECT email, name FROM users WHERE id = $1',
+      [customerId]
+    );
+
+    if (customerQuery.rows.length === 0) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    const { email, name } = customerQuery.rows[0];
+    const template = emailTemplates.reviewReminder(name, vendorName, quoteId);
+
+    const { data, error } = await resend.emails.send({
+      from: 'TradeMatch <reviews@tradematch.co.uk>',
+      to: email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Review reminder sent',
+      emailId: data.id 
+    });
+
+  } catch (err) {
+    console.error('Review reminder error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// General send email endpoint
+router.post('/send', async (req, res) => {
+  try {
+    const { to, subject, html } = req.body;
+
+    if (!to || !subject || !html) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: to, subject, html' 
+      });
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: 'TradeMatch <noreply@tradematch.co.uk>',
+      to,
+      subject,
       html
     });
-    
-    res.json({
-      success: true,
-      message: 'Review reminder sent'
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Email sent',
+      emailId: data.id 
     });
-    
-  } catch (error) {
-    console.error('Review reminder error:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to send reminder' 
-    });
+
+  } catch (err) {
+    console.error('Send email error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 
