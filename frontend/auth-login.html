@@ -731,9 +731,41 @@
                             ? 'customer-dashboard.html' 
                             : 'vendor-dashboard.html';
                     }, 1500);
-                } else {
-                    throw new Error(data.error || 'Login failed');
+                } else if (data.error) {
+                    if (data.error.includes('Email already registered')) {
+                        // Show enhanced error modal with multiple options
+                        showNotification(
+                            'This email is already registered.', 
+                            'error'
+                        );
+                        
+                        const actionsHtml = `
+                            <h3>Account Already Exists</h3>
+                            <p>This email address is already registered. What would you like to do?</p>
+                            <div class="error-actions">
+                                <button onclick="window.location.href='auth-login.html'" class="btn btn-secondary">
+                                    <i class="fas fa-sign-in-alt"></i> Try Different Email
+                                </button>
+                                <button onclick="window.location.href='forgot-password.html'" class="btn btn-secondary">
+                                    <i class="fas fa-key"></i> Reset Password
+                                </button>
+                                <button onclick="window.location.href='auth-register.html'" class="btn btn-primary">
+                                    <i class="fas fa-user-plus"></i> Create New Account
+                                </button>
+                            </div>
+                        `;
+                        
+                        document.getElementById('errorModalContent').innerHTML = actionsHtml;
+                        document.getElementById('errorModal').style.display = 'block';
+                        return;
+                    }
+                    
+                    // For other login errors
+                    showNotification(data.error || 'Login failed. Please try again.', 'error');
                 }
+                
+                throw new Error(data.error || 'Login failed');
+            }
                     
                     if (remember) {
                         localStorage.setItem('rememberMe', 'true');
@@ -769,8 +801,23 @@
             // window.location.href = `/api/auth/${provider}`;
         }
 
-        // Check if already logged in
+        // Check if already logged in and pre-fill email
         window.addEventListener('load', () => {
+            const lastEmail = localStorage.getItem('lastEmail');
+            const emailInput = document.getElementById('email');
+            
+            if (lastEmail && emailInput) {
+                emailInput.value = lastEmail;
+                emailInput.style.backgroundColor = '#e8f5ea';
+                emailInput.style.border = '1px solid #16a34a';
+                
+                // Add small hint
+                const emailHint = document.createElement('small');
+                emailHint.textContent = 'Last email used: ' + lastEmail;
+                emailHint.style.cssText = 'color: #6b7280; font-size: 12px; margin-top: 5px;';
+                emailInput.parentNode.appendChild(emailHint);
+            }
+        });
             const token = localStorage.getItem('token');
             const user = localStorage.getItem('user');
             
