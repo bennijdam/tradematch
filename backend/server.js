@@ -210,7 +210,7 @@ app.use((req, res) => {
     availableRoutes: {
       health: 'GET /api/health',
       auth: 'POST /api/auth/register, POST /api/auth/login',
-      quotes: 'GET /api/quotes, POST /api/quotes',
+      quotes: 'GET /api/quotes, POST /api/quotes, POST /api/quotes/public',
       bids: 'GET /api/bids/my-bids, POST /api/bids'
     }
   });

@@ -10,6 +10,51 @@ router.setPool = (p) => {
 };
 
 // ==========================================
+// PUBLIC QUOTE ENDPOINT (No Auth Required)
+// ==========================================
+router.post('/public', [
+  body('serviceType').notEmpty().withMessage('Service type is required'),
+  body('title').notEmpty().withMessage('Title is required'),
+  body('description').notEmpty().withMessage('Description is required'),
+  body('postcode').notEmpty().withMessage('Postcode is required')
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const {
+    serviceType,
+    title,
+    description,
+    postcode,
+    budgetMin,
+    budgetMax,
+    urgency,
+    additionalDetails,
+    photos
+  } = req.body;
+
+  try {
+    const quoteId = `quote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    const result = await pool.query(
+      'INSERT INTO quotes (id, customer_id, service_type, title, description, location, postcode, budget_min, budget_max, urgency, status, additional_details, created_at) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+      [quoteId, null, serviceType, title, description, null, postcode, budgetMin, budgetMax, urgency]
+    );
+
+    res.json({
+      success: true,
+      message: 'Quote request received. We will match you with tradespeople.',
+      quote: { id: quoteId, ...req.body }
+    });
+  } catch (error) {
+    console.error('Create public quote error:', error);
+    res.status(500).json({ error: 'Failed to create quote', details: error.message });
+  }
+});
+
+// ==========================================
 // MIDDLEWARE: Authenticate User
 // ==========================================
 const authenticate = (req, res, next) => {
