@@ -10,6 +10,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Initialize analytics
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            'anonymize_ip': true,
+            'cookie_domain': 'tradematch-fixed.vercel.app'
+        });
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -1457,7 +1471,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
             document.querySelectorAll('.form-step').forEach((step, index) => {
                 step.classList.toggle('active', index + 1 === currentStep);
             });
-
+            
             // Update progress
             document.querySelectorAll('.progress-step').forEach((step, index) => {
                 if (index + 1 < currentStep) {
@@ -1470,6 +1484,15 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     step.classList.remove('active', 'completed');
                 }
             });
+            
+            // Save progress to localStorage
+            const progress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            localStorage.setItem('quoteProgress', JSON.stringify({
+                step: currentStep,
+                timestamp: Date.now(),
+                formData: progress.formData || {},
+                quoteId: progress.quoteId || ''
+            }));
 
             // Update progress bar
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
@@ -1548,6 +1571,13 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value
             };
+            
+            // Save progress to localStorage
+            localStorage.setItem('quoteProgress', JSON.stringify({
+                step: 2,
+                timestamp: Date.now(),
+                formData: finalData
+            }));
 
             // Disable submit button
             submitBtn.disabled = true;
@@ -1572,7 +1602,13 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 document.getElementById('successModal').classList.add('active');
                 
                 // Store in localStorage for demo
-                localStorage.setItem('lastQuote', JSON.stringify({...finalData, id: quoteId, status: 'pending'}));
+                // Save progress to localStorage
+                localStorage.setItem('quoteProgress', JSON.stringify({
+                    step: 2,
+                    timestamp: Date.now(),
+                    formData: finalData,
+                    quoteId: quoteId
+                }));
                 
             } catch (error) {
                 alert('Failed to submit quote request. Please try again.');
