@@ -28,17 +28,90 @@
             --slate-200: #e2e8f0;
         }
 
+        /* Navigation */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .navbar .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .navbar .logo span {
+            color: var(--emerald-500);
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .navbar .btn-secondary {
+            padding: 0.625rem 1.25rem;
+            background: transparent;
+            color: var(--slate-700);
+            border: 1px solid var(--slate-300);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .navbar .btn-secondary:hover {
+            background: var(--slate-50);
+            border-color: var(--slate-400);
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
             color: var(--slate-900);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            position: relative;
-            overflow: hidden;
         }
 
         /* Background Image with Overlay */
@@ -499,12 +572,16 @@
                 display: none;
             }
 
-            body {
+            .auth-container {
                 padding: 1rem;
             }
 
             .right-side {
                 padding: 3rem 2rem;
+            }
+
+            .navbar .nav-links {
+                display: none;
             }
         }
 
@@ -524,7 +601,21 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Trade<span>Match</span></a>
+            <ul class="nav-links">
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="auth-register.html" class="btn btn-secondary">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="container">
         <!-- Left Side - Branding -->
         <div class="left-side">
             <div>
@@ -659,6 +750,7 @@
     <!-- Notification Toast -->
     <div class="notification" id="notification">
         <span id="notificationText"></span>
+    </div>
     </div>
 
     <script>
@@ -837,5 +929,12 @@
             }
         });
     </script>
+
+    <!-- Footer -->
+    <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
+        </div>
+    </footer>
 </body>
 </html>

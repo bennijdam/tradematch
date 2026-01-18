@@ -1,12 +1,38 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const nodemailer = require('nodemailer');
 const router = express.Router();
 
 let pool;
+let emailTransporter;
 
 router.setPool = (p) => {
   pool = p;
+};
+
+router.setEmailTransporter = (transporter) => {
+  emailTransporter = transporter;
+};
+
+const sendEmailNotification = async (to, subject, html, text) => {
+  if (!emailTransporter) {
+    console.warn('Email transporter not configured - skipping email notification');
+    return;
+  }
+
+  try {
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_FROM || 'noreply@tradematch.co.uk',
+      to,
+      subject,
+      html,
+      text
+    });
+    console.log(`Email sent successfully to ${to}`);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+  }
 };
 
 // ==========================================
@@ -48,6 +74,22 @@ router.post('/public', [
       message: 'Quote request received. We will match you with tradespeople.',
       quote: { id: quoteId, ...req.body }
     });
+
+    sendEmailNotification(
+      'admin@tradematch.co.uk',
+      'New Quote Request Received',
+      `<h2>New Quote Request</h2>
+       <p><strong>Quote ID:</strong> ${quoteId}</p>
+       <p><strong>Service Type:</strong> ${serviceType}</p>
+       <p><strong>Title:</strong> ${title}</p>
+       <p><strong>Description:</strong> ${description}</p>
+       <p><strong>Postcode:</strong> ${postcode}</p>
+       <p><strong>Budget:</strong> £${budgetMin || 'N/A'} - £${budgetMax || 'N/A'}</p>
+       <p><strong>Urgency:</strong> ${urgency || 'N/A'}</p>
+       ${additionalDetails ? `<p><strong>Additional Details:</strong> ${additionalDetails}</p>` : ''}
+       <p>This quote was submitted by a guest user.</p>`,
+      `New Quote Request - ID: ${quoteId}\nService: ${serviceType}\nTitle: ${title}\nPostcode: ${postcode}`
+    );
   } catch (error) {
     console.error('Create public quote error:', error);
     res.status(500).json({ error: 'Failed to create quote', details: error.message });
@@ -127,6 +169,35 @@ router.post('/', authenticate, [
       message: 'Quote created successfully',
       quoteId
     });
+
+    const customerEmail = req.user.email;
+    sendEmailNotification(
+      customerEmail,
+      'Your Quote Request Has Been Received',
+      `<h2>Quote Received</h2>
+       <p>Thank you for submitting your quote request. Our team will review it and match you with qualified tradespeople.</p>
+       <p><strong>Quote ID:</strong> ${quoteId}</p>
+       <p><strong>Service Type:</strong> ${serviceType}</p>
+       <p><strong>Title:</strong> ${title}</p>
+       <p>You will receive notifications when tradespeople respond to your request.</p>`,
+      `Your quote request (${quoteId}) has been received and will be processed shortly.`
+    );
+
+    sendEmailNotification(
+      'admin@tradematch.co.uk',
+      'New Quote Request - Registered User',
+      `<h2>New Quote Request from Registered User</h2>
+       <p><strong>Quote ID:</strong> ${quoteId}</p>
+       <p><strong>Customer:</strong> ${customerEmail}</p>
+       <p><strong>Service Type:</strong> ${serviceType}</p>
+       <p><strong>Title:</strong> ${title}</p>
+       <p><strong>Description:</strong> ${description}</p>
+       <p><strong>Postcode:</strong> ${postcode}</p>
+       <p><strong>Budget:</strong> £${budgetMin || 'N/A'} - £${budgetMax || 'N/A'}</p>
+       <p><strong>Urgency:</strong> ${urgency || 'N/A'}</p>
+       ${additionalDetails ? `<p><strong>Additional Details:</strong> ${additionalDetails}</p>` : ''}`,
+      `New Quote from Registered User - ID: ${quoteId}\nCustomer: ${customerEmail}\nService: ${serviceType}`
+    );
   } catch (error) {
     console.error('Create quote error:', error);
     res.status(500).json({ error: 'Failed to create quote', details: error.message });

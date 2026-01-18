@@ -2,9 +2,33 @@ const express = require('express');
 const router = express.Router();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { authenticate } = require('../middleware/auth');
+const nodemailer = require('nodemailer');
 
 let pool;
+let emailTransporter;
+
 router.setPool = (p) => { pool = p; };
+router.setEmailTransporter = (transporter) => { emailTransporter = transporter; };
+
+const sendPaymentEmail = async (to, subject, html, text) => {
+  if (!emailTransporter) {
+    console.warn('Email transporter not configured - skipping payment email');
+    return;
+  }
+
+  try {
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_FROM || 'noreply@tradematch.co.uk',
+      to,
+      subject,
+      html,
+      text
+    });
+    console.log(`Payment email sent to ${to}`);
+  } catch (error) {
+    console.error('Failed to send payment email:', error);
+  }
+};
 
 /**
  * Create Payment Intent (Stripe)
@@ -59,6 +83,26 @@ router.post('/create-intent', authenticate, async (req, res) => {
             paymentId,
             paymentIntentId: paymentIntent.id
         });
+
+        // Send payment initiation email
+        const customerResult = await pool.query(
+            'SELECT email, name FROM users WHERE id = $1',
+            [customerId]
+        );
+
+        if (customerResult.rows.length > 0) {
+            const customer = customerResult.rows[0];
+            sendPaymentEmail(
+                customer.email,
+                'Payment Initiated for TradeMatch Service',
+                `<h2>Payment Initiated</h2>
+                 <p>Your payment of £${amount} has been initiated for the service.</p>
+                 <p><strong>Payment ID:</strong> ${paymentId}</p>
+                 <p><strong>Quote ID:</strong> ${quoteId}</p>
+                 <p>Your payment is securely held in escrow until the work is completed to your satisfaction.</p>`,
+                `Payment of £${amount} initiated for your TradeMatch service. Payment ID: ${paymentId}`
+            );
+        }
         
     } catch (error) {
         console.error('Payment intent creation error:', error);

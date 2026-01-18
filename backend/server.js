@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { Pool } = require('pg');
+const nodemailer = require('nodemailer');
 
 dotenv.config();
 
@@ -27,6 +28,17 @@ const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
+});
+
+// Email transporter setup
+const emailTransporter = nodemailer.createTransporter({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: process.env.EMAIL_PORT || 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 // Test database connection
@@ -103,6 +115,9 @@ app.get('/', (req, res) => {
         earnings: 'GET /api/vendor/earnings',
         reviews: 'GET /api/vendor/reviews',
         profile: 'PUT /api/vendor/profile'
+},
+      contact: {
+        submit: 'POST /api/contact'
       },
       email: {
         welcome: 'POST /api/email/welcome',
@@ -116,20 +131,28 @@ app.get('/', (req, res) => {
 
 // Import and configure core routes
 try {
-  // Import route modules
+// Import route modules
   const authRoutes = require('./routes/auth');
   const quoteRoutes = require('./routes/quotes');
   const bidRoutes = require('./routes/bids');
+  const contactRoutes = require('./routes/contact');
   
   // Set pool for routes that need it
   if (authRoutes.setPool) authRoutes.setPool(pool);
   if (quoteRoutes.setPool) quoteRoutes.setPool(pool);
   if (bidRoutes.setPool) bidRoutes.setPool(pool);
+  if (contactRoutes.setPool) contactRoutes.setPool(pool);
+  
+  // Set email transporter for routes that need it
+  if (quoteRoutes.setEmailTransporter) quoteRoutes.setEmailTransporter(emailTransporter);
+  if (bidRoutes.setEmailTransporter) bidRoutes.setEmailTransporter(emailTransporter);
+  if (contactRoutes.setEmailTransporter) contactRoutes.setEmailTransporter(emailTransporter);
 
-  // Mount core routes
+// Mount core routes
   app.use('/api/auth', authRoutes);
   app.use('/api/quotes', quoteRoutes);
   app.use('/api/bids', bidRoutes);
+  app.use('/api/contact', contactRoutes);
 
   console.log('✅ Core routes mounted');
 } catch (error) {

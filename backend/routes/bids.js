@@ -1,8 +1,32 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
 const router = express.Router();
 
 let pool;
+let emailTransporter;
+
 router.setPool = (p) => { pool = p; };
+router.setEmailTransporter = (transporter) => { emailTransporter = transporter; };
+
+const sendEmailNotification = async (to, subject, html, text) => {
+  if (!emailTransporter) {
+    console.warn('Email transporter not configured - skipping email notification');
+    return;
+  }
+
+  try {
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_FROM || 'noreply@tradematch.co.uk',
+      to,
+      subject,
+      html,
+      text
+    });
+    console.log(`Email sent successfully to ${to}`);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+  }
+};
 
 // Middleware to authenticate
 const authenticate = (req, res, next) => {
@@ -34,6 +58,47 @@ router.post('/', authenticate, async (req, res) => {
         );
         
         res.json({ success: true, bidId });
+
+        // Get quote and customer details for notification
+        const quoteResult = await pool.query(
+            `SELECT q.*, u.email as customer_email, u.name as customer_name 
+             FROM quotes q 
+             JOIN users u ON q.customer_id = u.id 
+             WHERE q.id = $1`,
+            [quoteId]
+        );
+
+        if (quoteResult.rows.length > 0) {
+            const quote = quoteResult.rows[0];
+            
+            // Notify customer about new bid
+            sendEmailNotification(
+                quote.customer_email,
+                'New Bid Received for Your Quote Request',
+                `<h2>New Bid Received</h2>
+                 <p>Great news! A tradesperson has submitted a bid for your quote request.</p>
+                 <p><strong>Quote Title:</strong> ${quote.title}</p>
+                 <p><strong>Bid Price:</strong> £${price}</p>
+                 <p><strong>Estimated Duration:</strong> ${estimatedDuration || 'Not specified'}</p>
+                 <p><strong>Availability:</strong> ${availability || 'Not specified'}</p>
+                 <p><strong>Message:</strong> ${message || 'No message provided'}</p>
+                 <p>Log in to your account to view this bid and communicate with the tradesperson.</p>`,
+                `New bid received for your quote "${quote.title}". Price: £${price}. Log in to view details.`
+            );
+
+            // Notify admin about new bid
+            sendEmailNotification(
+                'admin@tradematch.co.uk',
+                'New Bid Submitted',
+                `<h2>New Bid Activity</h2>
+                 <p><strong>Quote ID:</strong> ${quoteId}</p>
+                 <p><strong>Customer:</strong> ${quote.customer_name} (${quote.customer_email})</p>
+                 <p><strong>Quote Title:</strong> ${quote.title}</p>
+                 <p><strong>Bid Price:</strong> £${price}</p>
+                 <p><strong>Vendor ID:</strong> ${vendorId}</p>`,
+                `New bid submitted for quote ${quoteId} by vendor ${vendorId}. Price: £${price}.`
+            );
+        }
     } catch (error) {
         console.error('Create bid error:', error);
         res.status(500).json({ error: 'Failed to create bid' });
