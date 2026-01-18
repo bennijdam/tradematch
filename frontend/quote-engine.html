@@ -1170,12 +1170,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         const preSelectedService = urlParams.get('service');
         
-        // Service Selection
+// Service Selection
         document.querySelectorAll('.service-option').forEach(option => {
             option.addEventListener('click', () => {
                 document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
-
                 option.classList.add('selected');
+                
+                // Store service data
+                formData.service = option.dataset.service;
+                formData.serviceName = option.querySelector('.service-name').textContent;
+                document.getElementById('serviceInput').value = option.dataset.service;
             });
         });
         
@@ -1188,7 +1192,12 @@
                 }
             }, 500);
         }
-        });
+                const targetOption = document.querySelector(`[data-service="${preSelectedService}"]`);
+                if (targetOption) {
+                    targetOption.click();
+                }
+            }, 500);
+        }
 
         // Timeline Selection
         document.querySelectorAll('.timeline-option').forEach(option => {
