@@ -147,6 +147,7 @@ try {
   if (quoteRoutes.setEmailTransporter) quoteRoutes.setEmailTransporter(emailTransporter);
   if (bidRoutes.setEmailTransporter) bidRoutes.setEmailTransporter(emailTransporter);
   if (contactRoutes.setEmailTransporter) contactRoutes.setEmailTransporter(emailTransporter);
+  if (paymentRoutes.setEmailTransporter) paymentRoutes.setEmailTransporter(emailTransporter);
 
 // Mount core routes
   app.use('/api/auth', authRoutes);
@@ -204,6 +205,10 @@ try {
   const milestoneRoutes = require('./routes/milestones');
   
   if (paymentRoutes.setPool) paymentRoutes.setPool(pool);
+  
+  // Set webhook pool
+  const { setPool: setWebhookPool } = require('./webhooks/stripe');
+  setWebhookPool(pool);
   if (reviewRoutes.setPool) reviewRoutes.setPool(pool);
   if (aiRoutes.setPool) aiRoutes.setPool(pool);
   if (analyticsRoutes.setPool) analyticsRoutes.setPool(pool);
@@ -224,6 +229,31 @@ try {
   console.log('ℹ️ Phase 7 routes not available (optional features)');
 }
 
+// Stripe Webhook Endpoint
+app.post('/webhooks/stripe', express.raw({type: 'application/json'}), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET not configured');
+    return res.status(500).json({ error: 'Webhook secret not configured' });
+  }
+
+  try {
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    const event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    
+    // Import webhook handler
+    const { handleWebhookEvent } = require('./webhooks/stripe');
+    await handleWebhookEvent(event);
+    
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Webhook signature verification failed:', error);
+    return res.status(400).json({ error: 'Webhook signature verification failed' });
+  }
+});
+
 // 404 handler - MUST BE LAST
 app.use((req, res) => {
   res.status(404).json({ 
@@ -234,7 +264,9 @@ app.use((req, res) => {
       health: 'GET /api/health',
       auth: 'POST /api/auth/register, POST /api/auth/login',
       quotes: 'GET /api/quotes, POST /api/quotes, POST /api/quotes/public',
-      bids: 'GET /api/bids/my-bids, POST /api/bids'
+      bids: 'GET /api/bids/my-bids, POST /api/bids',
+      payments: 'POST /api/payments/create-intent',
+      webhooks: 'POST /webhooks/stripe'
     }
   });
 });
