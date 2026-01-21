@@ -27,6 +27,16 @@ pool.connect().then(() => {
     console.error("❌ Database connection failed:", err.message);
 });
 
+// Email service (Resend) - ADD ROUTES
+try {
+    const emailRouter = require('./email-resend');
+    if (typeof emailRouter.setPool === 'function') emailRouter.setPool(pool);
+    app.use('/api/email', emailRouter);
+    console.log("✉️  Email service routes mounted at /api/email");
+} catch (e) {
+    console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
+}
+
 // Health check
 app.get("/api/health", async (req, res) => {
   try {
