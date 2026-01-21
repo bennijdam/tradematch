@@ -65,8 +65,12 @@ function runMigrations() {
 
 function startServer() {
     console.log('🚀 Starting TradeMatch API Server...\n');
-    const serverEntry = process.env.NODE_ENV === 'production' ? 'server-production.js' : 'server.js';
-    console.log(`📦 Entry: ${serverEntry} (NODE_ENV=${process.env.NODE_ENV || 'development'})`);
+    // Always use production server in production to get Helmet and email routes
+    const isProd = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+    const serverEntry = isProd ? 'server-production.js' : 'server.js';
+    console.log(`📦 Entry: ${serverEntry}`);
+    console.log(`   NODE_ENV=${process.env.NODE_ENV || 'development'}`);
+    console.log(`   RENDER=${process.env.RENDER || 'false'}\n`);
 
     // Start the server as a child process
     const serverProcess = spawn('node', [serverEntry], {
