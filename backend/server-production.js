@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const passport = require('passport');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
+const { emailLimiter } = require('./middleware/rate-limit');
 
 dotenv.config();
 
@@ -364,6 +365,16 @@ if (typeof microsoftAuthRouter.setPool === 'function') microsoftAuthRouter.setPo
 
 app.use('/auth', googleAuthRouter);
 app.use('/auth', microsoftAuthRouter);
+
+// Email service (Resend) routes
+try {
+    const emailRouter = require('./email-resend');
+    if (typeof emailRouter.setPool === 'function') emailRouter.setPool(pool);
+    app.use('/api/email', emailLimiter, emailRouter);
+    logger.info('Email service routes mounted at /api/email');
+} catch (e) {
+    logger.warn('Email service not available', { error: e && e.message ? e.message : String(e) });
+}
 
 // Debug endpoint (disable in production)
 if (process.env.NODE_ENV !== 'production') {

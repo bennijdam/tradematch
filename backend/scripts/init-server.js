@@ -65,9 +65,11 @@ function runMigrations() {
 
 function startServer() {
     console.log('🚀 Starting TradeMatch API Server...\n');
-    
+    const serverEntry = process.env.NODE_ENV === 'production' ? 'server-production.js' : 'server.js';
+    console.log(`📦 Entry: ${serverEntry} (NODE_ENV=${process.env.NODE_ENV || 'development'})`);
+
     // Start the server as a child process
-    const serverProcess = spawn('node', ['server.js'], {
+    const serverProcess = spawn('node', [serverEntry], {
         stdio: 'inherit',
         env: process.env
     });

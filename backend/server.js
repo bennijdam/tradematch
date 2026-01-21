@@ -5,6 +5,7 @@ const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const passport = require('passport');
+const { emailLimiter } = require('./middleware/rate-limit');
 
 dotenv.config();
 
@@ -257,6 +258,16 @@ if (typeof microsoftAuthRouter.setPool === 'function') microsoftAuthRouter.setPo
 
 app.use('/auth', googleAuthRouter);
 app.use('/auth', microsoftAuthRouter);
+
+// Email service (Resend)
+try {
+    const emailRouter = require('./email-resend');
+    if (typeof emailRouter.setPool === 'function') emailRouter.setPool(pool);
+    app.use('/api/email', emailLimiter, emailRouter);
+    console.log('✉️  Email service routes mounted at /api/email');
+} catch (e) {
+    console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
+}
 
 // Debug endpoint
 app.get("/api/auth/debug", (req, res) => {

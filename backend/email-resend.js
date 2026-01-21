@@ -5,6 +5,13 @@ const { Resend } = require('resend');
 // Initialize Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Resolve from-addresses via environment (fallbacks to EMAIL_FROM or sane default)
+const FROM_DEFAULT = process.env.EMAIL_FROM || 'noreply@tradematch.uk';
+const FROM_JOBS = process.env.EMAIL_FROM_JOBS || FROM_DEFAULT;
+const FROM_NOTIFICATIONS = process.env.EMAIL_FROM_NOTIFICATIONS || FROM_DEFAULT;
+const FROM_PAYMENTS = process.env.EMAIL_FROM_PAYMENTS || FROM_DEFAULT;
+const FROM_REVIEWS = process.env.EMAIL_FROM_REVIEWS || FROM_DEFAULT;
+
 let pool;
 router.setPool = (p) => { pool = p; };
 
@@ -309,7 +316,7 @@ router.post('/welcome', async (req, res) => {
       : emailTemplates.welcome.vendor(name);
 
     const { data, error } = await resend.emails.send({
-      from: 'TradeMatch <noreply@tradematch.co.uk>',
+      from: `TradeMatch <${FROM_DEFAULT}>`,
       to: email,
       subject: template.subject,
       html: template.html
@@ -365,7 +372,7 @@ router.post('/new-quote-notification', async (req, res) => {
     for (const vendor of vendorsQuery.rows) {
       try {
         const { data, error } = await resend.emails.send({
-          from: 'TradeMatch <jobs@tradematch.co.uk>',
+          from: `TradeMatch <${FROM_JOBS}>`,
           to: vendor.email,
           subject: template.subject,
           html: template.html
@@ -416,7 +423,7 @@ router.post('/new-bid-notification', async (req, res) => {
     const template = emailTemplates.newBid(name, vendorName, bidAmount, title, quoteId);
 
     const { data, error } = await resend.emails.send({
-      from: 'TradeMatch <notifications@tradematch.co.uk>',
+      from: `TradeMatch <${FROM_NOTIFICATIONS}>`,
       to: email,
       subject: template.subject,
       html: template.html
@@ -462,7 +469,7 @@ router.post('/payment-confirmation', async (req, res) => {
     const template = emailTemplates.paymentConfirmation(name, amount, reference, vendorName);
 
     const { data, error } = await resend.emails.send({
-      from: 'TradeMatch <payments@tradematch.co.uk>',
+      from: `TradeMatch <${FROM_PAYMENTS}>`,
       to: email,
       subject: template.subject,
       html: template.html
@@ -508,7 +515,7 @@ router.post('/review-reminder', async (req, res) => {
     const template = emailTemplates.reviewReminder(name, vendorName, quoteId);
 
     const { data, error } = await resend.emails.send({
-      from: 'TradeMatch <reviews@tradematch.co.uk>',
+      from: `TradeMatch <${FROM_REVIEWS}>`,
       to: email,
       subject: template.subject,
       html: template.html
@@ -542,7 +549,7 @@ router.post('/send', async (req, res) => {
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'TradeMatch <noreply@tradematch.co.uk>',
+      from: `TradeMatch <${FROM_DEFAULT}>`,
       to,
       subject,
       html
