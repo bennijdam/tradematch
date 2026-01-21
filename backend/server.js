@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const passport = require('passport');
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(passport.initialize());
 
 // Database connection
 const pool = new Pool({
@@ -245,79 +247,16 @@ app.get("/api/auth/me", async (req, res) => {
     }
 });
 
-// OAuth Routes (Google)
-app.get("/auth/google", (req, res) => {
-    console.log('🔧 Google OAuth route called');
-    const googleAuth = require('./config/google-oauth');
-    res.redirect(googleAuth.getAuthUrl());
-});
+// Mount OAuth routers (use the routers that already configure passport strategies)
+const googleAuthRouter = require('./routes/google-auth');
+const microsoftAuthRouter = require('./routes/microsoft-auth');
 
-app.get("/auth/google/callback", async (req, res) => {
-    console.log('🔧 Google OAuth callback called');
-    const googleAuth = require('./config/google-oauth');
-    
-    googleAuth.authenticate(req, res, async (err, user) => {
-        if (err) {
-            console.error('Google OAuth error:', err);
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-login?error=oauth_failed&provider=google`);
-        }
+// Provide DB pool to routers if they accept it
+if (typeof googleAuthRouter.setPool === 'function') googleAuthRouter.setPool(pool);
+if (typeof microsoftAuthRouter.setPool === 'function') microsoftAuthRouter.setPool(pool);
 
-        if (!user) {
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-login?error=no_user&provider=google`);
-        }
-
-        // Create or update user
-        const token = jwt.sign(
-            { userId: user.id, email: user.email },
-            process.env.JWT_SECRET || 'fallback-secret',
-            { expiresIn: '7d' }
-        );
-
-        // Redirect to dashboard
-        const redirectUrl = user.user_type === 'customer' 
-            ? `${process.env.FRONTEND_URL || 'http://localhost:8080'}/customer-dashboard.html?token=${token}&source=google`
-            : `${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-select-role.html?token=${token}&source=google`;
-
-        res.redirect(redirectUrl);
-    });
-});
-
-// OAuth Routes (Microsoft)
-app.get("/auth/microsoft", (req, res) => {
-    console.log('🔧 Microsoft OAuth route called');
-    const microsoftAuth = require('./config/microsoft-oauth');
-    res.redirect(microsoftAuth.getAuthUrl());
-});
-
-app.get("/auth/microsoft/callback", async (req, res) => {
-    console.log('🔧 Microsoft OAuth callback called');
-    const microsoftAuth = require('./config/microsoft-oauth');
-    
-    microsoftAuth.authenticate(req, res, async (err, user) => {
-        if (err) {
-            console.error('Microsoft OAuth error:', err);
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-login?error=oauth_failed&provider=microsoft`);
-        }
-
-        if (!user) {
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-login?error=no_user&provider=microsoft`);
-        }
-
-        // Create or update user
-        const token = jwt.sign(
-            { userId: user.id, email: user.email },
-            process.env.JWT_SECRET || 'fallback-secret',
-            { expiresIn: '7d' }
-        );
-
-        // Redirect to dashboard
-        const redirectUrl = user.user_type === 'customer' 
-            ? `${process.env.FRONTEND_URL || 'http://localhost:8080'}/customer-dashboard.html?token=${token}&source=microsoft`
-            : `${process.env.FRONTEND_URL || 'http://localhost:8080'}/auth-select-role.html?token=${token}&source=microsoft`;
-
-        res.redirect(redirectUrl);
-    });
-});
+app.use('/auth', googleAuthRouter);
+app.use('/auth', microsoftAuthRouter);
 
 // Debug endpoint
 app.get("/api/auth/debug", (req, res) => {
