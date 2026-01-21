@@ -87,6 +87,12 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
+// Mount Google OAuth routes (public)
+app.use('/auth', require('./routes/google-auth'));
+
+// Mount Microsoft OAuth routes (public)
+app.use('/auth', require('./routes/microsoft-auth'));
+
 // Login route - FIXED PATH
 app.post("/api/auth/login", async (req, res) => {
   try {
