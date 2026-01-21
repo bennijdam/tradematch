@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Free Quotes - Compare Local Tradespeople | TradeMatch UK</title>
+    <meta name="description" content="Get free quotes from verified local tradespeople. Compare prices for bathroom installations, kitchen fitting, extensions, and more. No obligation. 2 minute form.">
+    <meta name="keywords" content="free quotes, tradesperson quotes UK, compare tradespeople prices, local builders quotes, home improvement quotes">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-400: #34d399;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--slate-50);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.875rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald-500);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            min-height: 300px;
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            padding: 4rem 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--emerald-500) 0%, transparent 70%);
+            opacity: 0.15;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
+            margin: -50px auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--slate-200);
+            z-index: -1;
+        }
+
+        .progress-step.active:not(:last-child)::after {
+            background: var(--emerald-500);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            color: var(--slate-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-number,
+        .progress-step.completed .step-number {
+            background: var(--emerald-500);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--emerald-600);
+        }
+
+        .progress-bar-fill {
+            width: 100%;
+            height: 8px;
+            background: var(--slate-200);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-500) 0%, var(--emerald-400) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 0 0 24px 24px;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-description {
+            color: var(--slate-600);
+            margin-bottom: 2.5rem;
+            font-size: 1.0625rem;
+        }
+
+        /* Service Selection Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-option {
+            aspect-ratio: 1;
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            padding: 1rem;
+        }
+
+        .service-option:hover {
+            border-color: var(--emerald-500);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .service-option.selected {
+            border-color: var(--emerald-500);
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+        }
+
+        .service-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            text-align: center;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 0.625rem;
+            font-size: 0.9375rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            color: var(--slate-900);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%23475569'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Budget Range Slider */
+        .budget-display {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--emerald-600);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: var(--slate-200);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Timeline Options */
+        .timeline-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .timeline-option {
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .timeline-option:hover {
+            border-color: var(--emerald-500);
+            transform: translateY(-2px);
+        }
+
+        .timeline-option.selected {
+            border-color: var(--emerald-500);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .timeline-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-label {
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        /* Review Section */
+        .review-section {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-weight: 600;
+            color: var(--slate-600);
+        }
+
+        .review-value {
+            color: var(--slate-900);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--emerald-500);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--slate-700);
+            border: 2px solid var(--slate-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--slate-400);
+        }
+
+        /* Success Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .quote-id {
+            background: var(--slate-50);
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--emerald-600);
+            margin-bottom: 2rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row,
+            .timeline-options {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Trade<span>Match</span></a>
+            <ul class="nav-links">
+                <li><a href="how-it-works.html">How It Works</a></li>
+                <li><a href="find-tradespeople.html">Find Trades</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="auth-login.html">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Get Free Quotes from Local Tradespeople</h1>
+            <p>Tell us about your project and receive competitive quotes from verified professionals within 24 hours</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Service</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Timeline</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+            <div class="progress-bar-fill">
+                <div class="progress-bar-inner" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="quoteForm">
+                <!-- Step 1: Service Selection -->
+                <div class="form-step active" data-step="1">
+                    <h2 class="step-title">What service do you need?</h2>
+                    <p class="step-description">Select the type of work you need done</p>
+                    
+                    <div class="service-grid">
+                        <div class="service-option" data-service="bathroom">
+                            <div class="service-icon">🛁</div>
+                            <div class="service-name">Bathroom</div>
+                        </div>
+                        <div class="service-option" data-service="kitchen">
+                            <div class="service-icon">🍳</div>
+                            <div class="service-name">Kitchen</div>
+                        </div>
+                        <div class="service-option" data-service="extension">
+                            <div class="service-icon">🏠</div>
+                            <div class="service-name">Extension</div>
+                        </div>
+                        <div class="service-option" data-service="loft">
+                            <div class="service-icon">🏚️</div>
+                            <div class="service-name">Loft</div>
+                        </div>
+                        <div class="service-option" data-service="electrical">
+                            <div class="service-icon">⚡</div>
+                            <div class="service-name">Electrical</div>
+                        </div>
+                        <div class="service-option" data-service="plumbing">
+                            <div class="service-icon">🚰</div>
+                            <div class="service-name">Plumbing</div>
+                        </div>
+                        <div class="service-option" data-service="roofing">
+                            <div class="service-icon">🏗️</div>
+                            <div class="service-name">Roofing</div>
+                        </div>
+                        <div class="service-option" data-service="landscaping">
+                            <div class="service-icon">🌳</div>
+                            <div class="service-name">Landscaping</div>
+                        </div>
+                        <div class="service-option" data-service="carpentry">
+                            <div class="service-icon">🔨</div>
+                            <div class="service-name">Carpentry</div>
+                        </div>
+                        <div class="service-option" data-service="flooring">
+                            <div class="service-icon">📐</div>
+                            <div class="service-name">Flooring</div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="serviceInput" name="service" required>
+                </div>
+
+                <!-- Step 2: Project Details -->
+                <div class="form-step" data-step="2">
+                    <h2 class="step-title">Tell us about your project</h2>
+                    <p class="step-description">Provide details so tradespeople can give accurate quotes</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="postcode">Your Postcode *</label>
+                            <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required pattern="[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}">
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyType">Property Type</label>
+                            <select id="propertyType" name="propertyType" class="form-control">
+                                <option value="house">House</option>
+                                <option value="flat">Flat/Apartment</option>
+                                <option value="bungalow">Bungalow</option>
+                                <option value="commercial">Commercial</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Project Description *</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="Describe your project in detail. Include any specific requirements, materials, or preferences..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">Your Budget</label>
+                        <div class="budget-display" id="budgetDisplay">£5,000 - £10,000</div>
+                        <input type="range" id="budgetSlider" min="500" max="100000" step="500" value="7500">
+                    </div>
+                </div>
+
+                <!-- Step 3: Timeline -->
+                <div class="form-step" data-step="3">
+                    <h2 class="step-title">When do you need this done?</h2>
+                    <p class="step-description">Select your preferred timeline</p>
+                    
+                    <div class="timeline-options">
+                        <div class="timeline-option" data-urgency="urgent">
+                            <div class="timeline-icon">🔥</div>
+                            <div class="timeline-label">ASAP / Urgent</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="soon">
+                            <div class="timeline-icon">📅</div>
+                            <div class="timeline-label">Within 1 Month</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="flexible">
+                            <div class="timeline-icon">🗓️</div>
+                            <div class="timeline-label">1-3 Months</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="planning">
+                            <div class="timeline-icon">💭</div>
+                            <div class="timeline-label">Just Planning</div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="urgencyInput" name="urgency" required>
+
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label for="contactPreference">Preferred Contact Method</label>
+                        <select id="contactPreference" name="contactPreference" class="form-control">
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="both">Both Email and Phone</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review -->
+                <div class="form-step" data-step="4">
+                    <h2 class="step-title">Review your quote request</h2>
+                    <p class="step-description">Check your details before submitting</p>
+                    
+                    <div class="review-section">
+                        <div class="review-item">
+                            <span class="review-label">Service:</span>
+                            <span class="review-value" id="reviewService">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Postcode:</span>
+                            <span class="review-value" id="reviewPostcode">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Property:</span>
+                            <span class="review-value" id="reviewProperty">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Budget:</span>
+                            <span class="review-value" id="reviewBudget">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Timeline:</span>
+                            <span class="review-value" id="reviewUrgency">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Description:</span>
+                            <span class="review-value" id="reviewDescription">-</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Your Phone *</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="07700 900000" required>
+                    </div>
+
+                    <p style="color: var(--slate-600); font-size: 0.875rem; margin-top: 1.5rem;">
+                        By submitting this form, you agree to be contacted by up to 4 verified tradespeople to provide quotes for your project. 
+                        Your details will not be shared with any other parties.
+                    </p>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Submit Quote Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h2>Quote Request Submitted!</h2>
+            <p>We've received your quote request and will match you with verified tradespeople in your area.</p>
+            <div class="quote-id">Quote ID: <span id="quoteIdDisplay">LOADING...</span></div>
+            <p style="font-size: 0.9375rem;">You'll receive quotes within 24 hours via email and SMS.</p>
+            <button class="btn btn-primary" onclick="window.location.href='customer-dashboard.html'">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Form State
+        let currentStep = 1;
+        const totalSteps = 4;
+        const formData = {};
+
+        // Service Selection
+        document.querySelectorAll('.service-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                const service = option.dataset.service;
+                document.getElementById('serviceInput').value = service;
+                formData.service = service;
+                formData.serviceName = option.querySelector('.service-name').textContent;
+            });
+        });
+
+        // Timeline Selection
+        document.querySelectorAll('.timeline-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.timeline-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                const urgency = option.dataset.urgency;
+                document.getElementById('urgencyInput').value = urgency;
+                formData.urgency = urgency;
+                formData.urgencyLabel = option.querySelector('.timeline-label').textContent;
+            });
+        });
+
+        // Budget Slider
+        const budgetSlider = document.getElementById('budgetSlider');
+        const budgetDisplay = document.getElementById('budgetDisplay');
+        
+        budgetSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            const min = value;
+            const max = Math.min(value * 2, 100000);
+            const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
+            budgetDisplay.textContent = display;
+            formData.budget = display;
+        });
+
+        // Navigation
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStep();
+                }
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        });
+
+        function updateStep() {
+            // Update form steps
+            document.querySelectorAll('.form-step').forEach((step, index) => {
+                step.classList.toggle('active', index + 1 === currentStep);
+            });
+
+            // Update progress
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update progress bar
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Update buttons
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+            submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+
+            // Update review if on last step
+            if (currentStep === totalSteps) {
+                updateReview();
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    if (!formData.service) {
+                        alert('Please select a service');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    const postcode = document.getElementById('postcode').value.trim().toUpperCase();
+                    const description = document.getElementById('description').value.trim();
+                    
+                    if (!postcode || !description) {
+                        alert('Please fill in all required fields');
+                        return false;
+                    }
+                    
+                    // UK postcode validation
+                    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
+                    if (!postcodeRegex.test(postcode)) {
+                        alert('Please enter a valid UK postcode');
+                        return false;
+                    }
+                    
+                    formData.postcode = postcode;
+                    formData.propertyType = document.getElementById('propertyType').value;
+                    formData.description = description;
+                    break;
+                case 3:
+                    if (!formData.urgency) {
+                        alert('Please select a timeline');
+                        return false;
+                    }
+                    formData.contactPreference = document.getElementById('contactPreference').value;
+                    break;
+            }
+            return true;
+        }
+
+        function updateReview() {
+            document.getElementById('reviewService').textContent = formData.serviceName || '-';
+            document.getElementById('reviewPostcode').textContent = formData.postcode || '-';
+            document.getElementById('reviewProperty').textContent = formData.propertyType || '-';
+            document.getElementById('reviewBudget').textContent = formData.budget || '-';
+            document.getElementById('reviewUrgency').textContent = formData.urgencyLabel || '-';
+            document.getElementById('reviewDescription').textContent = formData.description || '-';
+        }
+
+        // Form Submission
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get all form data
+            const finalData = {
+                ...formData,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                // TODO: Replace with actual API call
+                // const response = await fetch('/api/quotes', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(finalData)
+                // });
+                // const data = await response.json();
+
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const quoteId = 'QT' + Date.now();
+                document.getElementById('quoteIdDisplay').textContent = quoteId;
+                
+                // Show success modal
+                document.getElementById('successModal').classList.add('active');
+                
+                // Store in localStorage for demo
+                localStorage.setItem('lastQuote', JSON.stringify({...finalData, id: quoteId, status: 'pending'}));
+                
+            } catch (error) {
+                alert('Failed to submit quote request. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quote Request';
+            }
+        });
+
+        // Auto-uppercase postcode
+        document.getElementById('postcode').addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Initialize
+        updateStep();
+    </script>
+
+    <!-- Footer -->
+    <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
+        </div>
+    </footer>
+</body>
+</html>
