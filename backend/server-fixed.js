@@ -184,7 +184,7 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-    console.log("🚀 TradeMatch API Server - FIXED VERSION");
+    console.log("🚀 TradeMatch API Server - FIXED VERSION (email fixed)");
     console.log(`Port: ${PORT}`);
     console.log(`Health: http://localhost:${PORT}/api/health`);
     console.log(`Working endpoints: POST /api/auth/register, POST /api/auth/login`);
