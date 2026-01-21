@@ -3,6 +3,7 @@ const router = express.Router();
 const { Resend } = require('resend');
 
 // Initialize Resend
+// VERSION: 2.1 - Fixed email from field format (removed TradeMatch wrapper)
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Resolve from-addresses via environment (fallbacks to EMAIL_FROM or sane default)
