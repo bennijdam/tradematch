@@ -161,12 +161,13 @@ app.use((req, res) => {
     error: "Route not found",
     path: req.path,
     method: req.method,
-    available_endpoints: [
+available_endpoints: [
       "GET /",
       "GET /api/health",
       "POST /api/auth/register",
       "POST /api/auth/login",
-      "GET /debug/routes"
+      "GET /debug/routes",
+      "GET /api/auth/debug-oauth"
     ]
   });
 });
