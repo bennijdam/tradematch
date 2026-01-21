@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get trusted local tradespeople for home improvements across the UK. Compare quotes from verified professionals in minutes. TradeMatch connects homeowners with reliable, background-checked tradespeople for plumbing, electrical, roofing, and more.">
     <title>TradeMatch - Get Trusted Trade Quotes Fast</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google tag (gtag.js) -->
@@ -12,8 +16,29 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-G06GFRVJPL');
+      
+      // Enhanced tracking for marketplace
+      function trackQuoteRequest(service) {
+        gtag('event', 'quote_request', {
+          service_category: service,
+          location: window.location.pathname
+        });
+      }
+      
+      function trackLogin(method) {
+        gtag('event', 'login', {
+          method: method,
+          location: 'auth'
+        });
+      }
+      
+      function trackRegistration() {
+        gtag('event', 'registration', {
+          method: 'oauth',
+          location: 'auth'
+        });
+      }
     </script>
     <link rel="sitemap" type="application/xml" href="https://www.tradematch.uk/sitemap.xml">
     <style>
