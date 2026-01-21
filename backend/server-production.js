@@ -10,39 +10,8 @@ const passport = require('passport');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const { emailLimiter } = require('./middleware/rate-limit');
-const { spawn } = require('child_process');
 
 dotenv.config();
-
-// Run migrations non-blockingly before starting server
-async function runMigrations() {
-    if (!process.env.DATABASE_URL) {
-        logger.info('DATABASE_URL not set, skipping migrations');
-        return;
-    }
-
-    logger.info('Attempting to run migrations...');
-    return new Promise((resolve) => {
-        const migrate = spawn('npm', ['run', 'migrate:up'], {
-            stdio: ['inherit', 'inherit', 'inherit'],
-            timeout: 30000
-        });
-
-        migrate.on('close', (code) => {
-            if (code === 0) {
-                logger.info('Migrations completed successfully');
-            } else {
-                logger.warn('Migrations completed with warnings (non-critical)');
-            }
-            resolve();
-        });
-
-        migrate.on('error', (err) => {
-            logger.warn('Migration error (non-blocking)', { error: err.message });
-            resolve();
-        });
-    });
-}
 
 const app = express();
 
@@ -496,30 +465,35 @@ const gracefulShutdown = async () => {
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
 
-// Wrap server startup to run migrations first
-async function startup() {
-    if (process.env.DATABASE_URL) {
-        await runMigrations();
-    }
+// Start server
+const PORT = process.env.PORT || 3001;
+const server = app.listen(PORT, () => {
+    logger.info('TradeMatch API Server Started', {
+        port: PORT,
+        environment: process.env.NODE_ENV || 'development',
+        nodeVersion: process.version
+    });
+    console.log('🚀 TradeMatch API Server Started (Production)');
+    console.log(`📍 Port: ${PORT}`);
+    console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+});
 
-    // Start server
-    const PORT = process.env.PORT || 3001;
-    const server = app.listen(PORT, () => {
-        logger.info('TradeMatch API Server Started', {
-            port: PORT,
-            environment: process.env.NODE_ENV || 'development',
-            nodeVersion: process.version
-        });
-        console.log('🚀 TradeMatch API Server Started');
-        console.log(`📍 Port: ${PORT}`);
-        console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
-        console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+// Attempt migrations in the background (non-blocking)
+if (process.env.DATABASE_URL) {
+    setImmediate(async () => {
+        try {
+            const { spawn } = require('child_process');
+            const migrate = spawn('npm', ['run', 'migrate:up'], {
+                stdio: ['ignore', 'ignore', 'ignore'],
+                timeout: 30000,
+                detached: false
+            });
+            migrate.unref(); // Don't wait for this process
+        } catch (err) {
+            logger.warn('Background migration attempt skipped', { error: err.message });
+        }
     });
 }
-
-startup().catch(err => {
-    logger.error('Fatal startup error', { error: err.message });
-    process.exit(1);
-});
 
 module.exports = app;
