@@ -316,7 +316,7 @@ router.post('/welcome', async (req, res) => {
       : emailTemplates.welcome.vendor(name);
 
     const { data, error } = await resend.emails.send({
-      from: `TradeMatch <${FROM_DEFAULT}>`,
+      from: FROM_DEFAULT,
       to: email,
       subject: template.subject,
       html: template.html
@@ -372,7 +372,7 @@ router.post('/new-quote-notification', async (req, res) => {
     for (const vendor of vendorsQuery.rows) {
       try {
         const { data, error } = await resend.emails.send({
-          from: `TradeMatch <${FROM_JOBS}>`,
+          from: FROM_JOBS,
           to: vendor.email,
           subject: template.subject,
           html: template.html
@@ -423,7 +423,7 @@ router.post('/new-bid-notification', async (req, res) => {
     const template = emailTemplates.newBid(name, vendorName, bidAmount, title, quoteId);
 
     const { data, error } = await resend.emails.send({
-      from: `TradeMatch <${FROM_NOTIFICATIONS}>`,
+      from: FROM_NOTIFICATIONS,
       to: email,
       subject: template.subject,
       html: template.html
@@ -469,7 +469,7 @@ router.post('/payment-confirmation', async (req, res) => {
     const template = emailTemplates.paymentConfirmation(name, amount, reference, vendorName);
 
     const { data, error } = await resend.emails.send({
-      from: `TradeMatch <${FROM_PAYMENTS}>`,
+      from: FROM_PAYMENTS,
       to: email,
       subject: template.subject,
       html: template.html
@@ -515,7 +515,7 @@ router.post('/review-reminder', async (req, res) => {
     const template = emailTemplates.reviewReminder(name, vendorName, quoteId);
 
     const { data, error } = await resend.emails.send({
-      from: `TradeMatch <${FROM_REVIEWS}>`,
+      from: FROM_REVIEWS,
       to: email,
       subject: template.subject,
       html: template.html
@@ -549,7 +549,7 @@ router.post('/send', async (req, res) => {
     }
 
     const { data, error } = await resend.emails.send({
-      from: `TradeMatch <${FROM_DEFAULT}>`,
+      from: FROM_DEFAULT,
       to,
       subject,
       html
