@@ -1170,8 +1170,6 @@
         const totalSteps = 4;
         const formData = {};
         
-        console.log('Quote engine script starting...');
-        
         // Auto-fill from homepage parameters
         const urlParams = new URLSearchParams(window.location.search);
         const preSelectedService = urlParams.get('service');
@@ -1179,23 +1177,16 @@
         const preSelectedDistrict = urlParams.get('district');
         const preSelectedRegion = urlParams.get('region');
         
-        console.log('URL params:', { preSelectedService, preSelectedPostcode });
-        
         // Service Selection - Using event delegation for better reliability
         const serviceGrid = document.querySelector('.service-grid');
-        console.log('Service grid found:', !!serviceGrid);
         
         if (serviceGrid) {
             serviceGrid.addEventListener('click', function(e) {
-                console.log('Service grid clicked', e.target);
                 const serviceOption = e.target.closest('.service-option');
-                console.log('Service option found:', !!serviceOption);
                 
                 if (serviceOption) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    console.log('Service selected:', serviceOption.dataset.service);
                     
                     // Remove selected from all
                     document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
@@ -1215,12 +1206,10 @@
         
         // Also attach direct click handlers as fallback
         const serviceOptions = document.querySelectorAll('.service-option');
-        console.log('Found', serviceOptions.length, 'service options');
         
         serviceOptions.forEach((option, index) => {
             option.style.cursor = 'pointer';
             option.addEventListener('click', function(e) {
-                console.log('Direct click on service option:', index, this.dataset.service);
                 e.preventDefault();
                 e.stopPropagation();
                 
@@ -1236,7 +1225,6 @@
         
         // Auto-select service from homepage and fill postcode
         if (preSelectedService) {
-            console.log('Auto-selecting service:', preSelectedService);
             const targetOption = document.querySelector(`[data-service="${preSelectedService}"]`);
             if (targetOption) {
                 targetOption.click();
