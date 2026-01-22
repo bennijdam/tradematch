@@ -144,12 +144,15 @@ app.post("/api/auth/register", async (req, res) => {
     // Hash password with bcrypt (10 rounds)
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate unique user ID
+    const userId = crypto.randomBytes(8).toString('hex');
+
     // Insert user with email_verified = false
     const userResult = await pool.query(
-      `INSERT INTO users (user_type, name, email, phone, password_hash, postcode, email_verified) 
-       VALUES ($1, $2, $3, $4, $5, $6, false) 
+      `INSERT INTO users (id, user_type, name, email, phone, password_hash, postcode, email_verified) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, false) 
        RETURNING id, user_type, name, email, phone, postcode, email_verified`,
-      [userType, fullName, email, phone, hashedPassword, postcode]
+      [userId, userType, fullName, email, phone, hashedPassword, postcode]
     );
 
     const newUser = userResult.rows[0];
