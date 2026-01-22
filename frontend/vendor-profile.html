@@ -631,8 +631,11 @@
         }
 
         function contactVendor() {
-            // TODO: Implement messaging system
-            alert('Messaging system coming soon!');
+            // Navigate to messages page with vendor pre-selected
+            const urlParams = new URLSearchParams(window.location.search);
+            const vendorId = urlParams.get('id');
+            sessionStorage.setItem('openConversationWithId', vendorId);
+            window.location.href = '/messages.html';
         }
 
         // Load profile on page load

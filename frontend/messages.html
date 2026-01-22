@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - TradeMatch</title>
+    <style>
+        :root {
+            --slate: #1a2332;
+            --emerald: #16a34a;
+            --emerald-dark: #15803d;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--slate);
+            background: var(--gray-50);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--slate);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate);
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--emerald);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-dark);
+        }
+
+        /* Main Container */
+        .messages-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            height: calc(100vh - 100px);
+        }
+
+        /* Conversations List */
+        .conversations-panel {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .conversations-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+
+        .conversations-header h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: var(--gray-50);
+        }
+
+        .conversation-item.active {
+            background: var(--emerald);
+            color: white;
+            border-bottom-color: var(--emerald-dark);
+        }
+
+        .conversation-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .conversation-item.active .conversation-avatar {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-preview {
+            font-size: 13px;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .conversation-item.active .unread-badge {
+            background: rgba(255, 255, 255, 0.5);
+            color: white;
+        }
+
+        .no-conversations {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--gray-600);
+        }
+
+        /* Chat Panel */
+        .chat-panel {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 12px;
+            color: var(--slate);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-100);
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .chat-header-name {
+            font-weight: 600;
+        }
+
+        .chat-header-status {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        /* Messages Area */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            align-items: flex-end;
+        }
+
+        .message-group.sent {
+            justify-content: flex-end;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .message.received {
+            background: var(--gray-100);
+            color: var(--slate);
+        }
+
+        .message.sent {
+            background: var(--emerald);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.sent .message-time {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Message Input */
+        .chat-input-area {
+            padding: 16px;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            gap: 12px;
+        }
+
+        .message-input-box {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+
+        .message-input-box input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .message-input-box input:focus {
+            outline: none;
+            border-color: var(--emerald);
+        }
+
+        .btn-send {
+            padding: 12px 28px;
+            background: var(--emerald);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-send:hover {
+            background: var(--emerald-dark);
+        }
+
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading */
+        .loading {
+            padding: 20px;
+            text-align: center;
+            color: var(--gray-600);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--slate);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 40px 24px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-column h4 {
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .footer-column a:hover {
+            color: var(--emerald);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .conversations-panel {
+                display: none;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/index.html" class="logo">Trade<span>Match</span></a>
+            <div class="nav-links">
+                <a href="/how-it-works.html">How It Works</a>
+                <a href="/find-tradespeople.html">Find Trades</a>
+                <a href="/about.html">About</a>
+                <a href="/customer-dashboard.html">Dashboard</a>
+                <a href="/vendor-dashboard.html">Vendor Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="messages-container">
+        <!-- Conversations List -->
+        <div class="conversations-panel">
+            <div class="conversations-header">
+                <h2>Messages</h2>
+                <input type="text" class="search-input" placeholder="Search conversations..." id="searchInput">
+            </div>
+            <div class="conversations-list" id="conversationsList">
+                <div class="loading">Loading conversations...</div>
+            </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div class="chat-panel">
+            <div id="emptyChat" class="empty-state">
+                <div>
+                    <h3>Select a conversation</h3>
+                    <p>Choose a person from the list to start messaging</p>
+                </div>
+            </div>
+
+            <div id="chatContent" style="display: none; flex: 1; display: flex; flex-direction: column;">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar" id="chatAvatar"></div>
+                        <div>
+                            <div class="chat-header-name" id="chatName"></div>
+                            <div class="chat-header-status">Active now</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div class="messages-area" id="messagesArea"></div>
+
+                <!-- Input -->
+                <div class="chat-input-area">
+                    <div class="message-input-box">
+                        <input type="text" placeholder="Type a message..." id="messageInput">
+                        <button class="btn-send" id="sendBtn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>For Customers</h4>
+                <ul>
+                    <li><a href="/how-it-works.html">How It Works</a></li>
+                    <li><a href="/quote-engine.html">Post a Job</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>For Tradespeople</h4>
+                <ul>
+                    <li><a href="/vendor-register.html">Join as a Trade</a></li>
+                    <li><a href="/vendor-dashboard.html">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/terms.html">Terms</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 TradeMatch. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'https://tradematch.onrender.com';
+        let currentConversationUserId = null;
+        let allConversations = [];
+
+        // Get auth token
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        // Check authentication
+        function checkAuth() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/customer-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load conversations on page load
+        async function loadConversations() {
+            try {
+                const response = await fetch(`${API_URL}/api/messages/conversations`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showConversationsError('Failed to load conversations');
+                    return;
+                }
+
+                allConversations = data.data;
+                displayConversations(data.data);
+            } catch (error) {
+                console.error('Load conversations error:', error);
+                showConversationsError('Connection error');
+            }
+        }
+
+        function displayConversations(conversations) {
+            const list = document.getElementById('conversationsList');
+
+            if (!conversations || conversations.length === 0) {
+                list.innerHTML = '<div class="no-conversations"><p>No conversations yet</p></div>';
+                return;
+            }
+
+            list.innerHTML = conversations.map(conv => {
+                const initials = conv.name
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .slice(0, 2);
+
+                const unreadBadge = conv.unread_count > 0 ? 
+                    `<div class="unread-badge">${conv.unread_count}</div>` : '';
+
+                return `
+                    <div class="conversation-item" onclick="selectConversation(${conv.other_user_id}, '${conv.name.replace(/'/g, "\\'")}')">
+                        <div class="conversation-avatar">${initials}</div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">${conv.name}</div>
+                            <div class="conversation-preview">${conv.last_message || 'No messages yet'}</div>
+                        </div>
+                        ${unreadBadge}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showConversationsError(message) {
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = `<div class="no-conversations"><p>${message}</p></div>`;
+        }
+
+        // Select a conversation
+        async function selectConversation(userId, userName) {
+            currentConversationUserId = userId;
+
+            // Update UI
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Show chat
+            document.getElementById('emptyChat').style.display = 'none';
+            document.getElementById('chatContent').style.display = 'flex';
+
+            // Set chat header
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('chatAvatar').textContent = initials;
+            document.getElementById('chatName').textContent = userName;
+
+            // Load messages
+            await loadMessages(userId);
+
+            // Focus input
+            document.getElementById('messageInput').focus();
+        }
+
+        // Load messages
+        async function loadMessages(userId) {
+            try {
+                const response = await fetch(`${API_URL}/api/messages/conversation/${userId}`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    displayMessagesError('Failed to load messages');
+                    return;
+                }
+
+                displayMessages(data.data);
+            } catch (error) {
+                console.error('Load messages error:', error);
+                displayMessagesError('Connection error');
+            }
+        }
+
+        function displayMessages(messages) {
+            const area = document.getElementById('messagesArea');
+
+            if (!messages || messages.length === 0) {
+                area.innerHTML = '<div style="text-align: center; color: var(--gray-600); margin: auto;">No messages yet. Start the conversation!</div>';
+                return;
+            }
+
+            area.innerHTML = messages.map(msg => {
+                const time = new Date(msg.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                const isOwn = msg.direction === 'sent';
+                
+                return `
+                    <div class="message-group ${isOwn ? 'sent' : ''}">
+                        <div>
+                            <div class="message ${isOwn ? 'sent' : 'received'}">${msg.message_text}</div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Scroll to bottom
+            area.scrollTop = area.scrollHeight;
+        }
+
+        function displayMessagesError(message) {
+            const area = document.getElementById('messagesArea');
+            area.innerHTML = `<div style="text-align: center; color: #ef4444;">${message}</div>`;
+        }
+
+        // Send message
+        async function sendMessage() {
+            if (!currentConversationUserId) return;
+
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_URL}/api/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({
+                        recipient_id: currentConversationUserId,
+                        message_text: message
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert('Failed to send message');
+                    return;
+                }
+
+                input.value = '';
+                await loadMessages(currentConversationUserId);
+            } catch (error) {
+                console.error('Send message error:', error);
+                alert('Failed to send message');
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        // Enter key to send
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) return;
+
+            document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = allConversations.filter(conv => 
+                    conv.name.toLowerCase().includes(query)
+                );
+                displayConversations(filtered);
+            });
+
+            // Load conversations
+            loadConversations().then(() => {
+                // Check if we should auto-open a conversation
+                const conversationId = sessionStorage.getItem('openConversationWithId');
+                if (conversationId && allConversations.length > 0) {
+                    const conversation = allConversations.find(c => c.other_user_id == conversationId);
+                    if (conversation) {
+                        sessionStorage.removeItem('openConversationWithId');
+                        selectConversation(conversation.other_user_id, conversation.name);
+                    }
+                }
+            });
+
+            // Refresh conversations every 10 seconds
+            setInterval(loadConversations, 10000);
+        });
+    </script>
+
+</body>
+</html>

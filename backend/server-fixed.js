@@ -1235,6 +1235,170 @@ app.get("/api/vendors/:id", async (req, res) => {
   }
 });
 
+// ===== MESSAGING API =====
+
+// Send a message
+app.post("/api/messages", authenticateToken, async (req, res) => {
+  try {
+    const { recipient_id, message_text } = req.body;
+    const sender_id = req.user.id;
+
+    if (!recipient_id || !message_text) {
+      return res.status(400).json({ error: 'recipient_id and message_text are required' });
+    }
+
+    // Create messages table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        sender_id INTEGER NOT NULL REFERENCES users(id),
+        recipient_id INTEGER NOT NULL REFERENCES users(id),
+        message_text TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Insert message
+    const result = await pool.query(
+      `INSERT INTO messages (sender_id, recipient_id, message_text, created_at)
+       VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+       RETURNING *`,
+      [sender_id, recipient_id, message_text]
+    );
+
+    const message = result.rows[0];
+
+    console.log(`✅ Message sent from user ${sender_id} to user ${recipient_id}`);
+
+    return res.json({
+      success: true,
+      data: {
+        id: message.id,
+        sender_id: message.sender_id,
+        recipient_id: message.recipient_id,
+        message_text: message.message_text,
+        is_read: message.is_read,
+        created_at: message.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Message send error:', error);
+    res.status(500).json({ 
+      error: 'Failed to send message: ' + error.message 
+    });
+  }
+});
+
+// Get messages with a specific user (conversation)
+app.get("/api/messages/conversation/:otherId", authenticateToken, async (req, res) => {
+  try {
+    const { otherId } = req.params;
+    const userId = req.user.id;
+
+    // Ensure messages table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        sender_id INTEGER NOT NULL REFERENCES users(id),
+        recipient_id INTEGER NOT NULL REFERENCES users(id),
+        message_text TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Get all messages between the two users
+    const result = await pool.query(
+      `SELECT m.*, 
+              CASE WHEN m.sender_id = $1 THEN 'sent' ELSE 'received' END as direction,
+              u.name as sender_name
+       FROM messages m
+       JOIN users u ON m.sender_id = u.id
+       WHERE (m.sender_id = $1 AND m.recipient_id = $2)
+          OR (m.sender_id = $2 AND m.recipient_id = $1)
+       ORDER BY m.created_at ASC`,
+      [userId, otherId]
+    );
+
+    // Mark unread messages as read
+    await pool.query(
+      `UPDATE messages 
+       SET is_read = TRUE
+       WHERE recipient_id = $1 AND sender_id = $2 AND is_read = FALSE`,
+      [userId, otherId]
+    );
+
+    return res.json({
+      success: true,
+      data: result.rows
+    });
+
+  } catch (error) {
+    console.error('❌ Get conversation error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch conversation: ' + error.message 
+    });
+  }
+});
+
+// Get list of conversations (users you've messaged)
+app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Ensure messages table exists
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        sender_id INTEGER NOT NULL REFERENCES users(id),
+        recipient_id INTEGER NOT NULL REFERENCES users(id),
+        message_text TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Get unique conversations with last message and unread count
+    const result = await pool.query(
+      `WITH conversations AS (
+         SELECT 
+           CASE WHEN sender_id = $1 THEN recipient_id ELSE sender_id END as other_user_id,
+           MAX(created_at) as last_message_time,
+           ARRAY_AGG(DISTINCT id ORDER BY id DESC) as message_ids
+         FROM messages
+         WHERE sender_id = $1 OR recipient_id = $1
+         GROUP BY other_user_id
+       )
+       SELECT 
+         c.other_user_id,
+         u.name,
+         u.email,
+         c.last_message_time,
+         COUNT(CASE WHEN m.recipient_id = $1 AND m.is_read = FALSE THEN 1 END) as unread_count,
+         m.message_text as last_message
+       FROM conversations c
+       JOIN users u ON c.other_user_id = u.id
+       LEFT JOIN messages m ON m.id = (c.message_ids[1])
+       GROUP BY c.other_user_id, u.name, u.email, c.last_message_time, m.message_text
+       ORDER BY c.last_message_time DESC`,
+      [userId]
+    );
+
+    return res.json({
+      success: true,
+      data: result.rows
+    });
+
+  } catch (error) {
+    console.error('❌ Get conversations error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch conversations: ' + error.message 
+    });
+  }
+});
+
 // Debug routes
 app.get("/debug/routes", (req, res) => {
   res.json({
