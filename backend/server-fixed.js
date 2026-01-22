@@ -37,6 +37,16 @@ try {
     console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
 }
 
+// Stripe Webhooks
+try {
+    const webhooksRouter = require('./routes/webhooks');
+    if (typeof webhooksRouter.setPool === 'function') webhooksRouter.setPool(pool);
+    app.use('/api/webhooks', webhooksRouter);
+    console.log("💳 Stripe webhook routes mounted at /api/webhooks/stripe");
+} catch (e) {
+    console.warn('⚠️ Stripe webhooks not available:', e && e.message ? e.message : e);
+}
+
 // Health check
 app.get("/api/health", async (req, res) => {
   try {
