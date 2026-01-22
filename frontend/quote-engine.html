@@ -312,6 +312,10 @@
             transition: all 0.3s;
             background: white;
             padding: 1rem;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .service-option:hover {
@@ -1173,16 +1177,46 @@
         const preSelectedDistrict = urlParams.get('district');
         const preSelectedRegion = urlParams.get('region');
         
-// Service Selection
-        document.querySelectorAll('.service-option').forEach(option => {
-            option.addEventListener('click', () => {
+        // Service Selection - Using event delegation for better reliability
+        const serviceGrid = document.querySelector('.service-grid');
+        if (serviceGrid) {
+            serviceGrid.addEventListener('click', function(e) {
+                const serviceOption = e.target.closest('.service-option');
+                if (serviceOption) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Remove selected from all
+                    document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                    // Add selected to clicked
+                    serviceOption.classList.add('selected');
+                    
+                    // Store service data
+                    formData.service = serviceOption.dataset.service;
+                    formData.serviceName = serviceOption.querySelector('.service-name').textContent;
+                    const serviceInput = document.getElementById('serviceInput');
+                    if (serviceInput) {
+                        serviceInput.value = serviceOption.dataset.service;
+                    }
+                }
+            });
+        }
+        
+        // Also attach direct click handlers as fallback
+        const serviceOptions = document.querySelectorAll('.service-option');
+        serviceOptions.forEach(option => {
+            option.style.cursor = 'pointer';
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
-                option.classList.add('selected');
+                this.classList.add('selected');
                 
                 // Store service data
-                formData.service = option.dataset.service;
-                formData.serviceName = option.querySelector('.service-name').textContent;
-                document.getElementById('serviceInput').value = option.dataset.service;
+                formData.service = this.dataset.service;
+                formData.serviceName = this.querySelector('.service-name').textContent;
+                document.getElementById('serviceInput').value = this.dataset.service;
             });
         });
         
