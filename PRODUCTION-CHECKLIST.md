@@ -150,25 +150,25 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 - [ ] Test domain resolution
 - [ ] Set up redirect from tradematch.uk → www.tradematch.uk
 
-### 8. Testing Checklist (20-30 minutes)
+### 8. Testing Checklist ✅ PARTIAL (API verified)
 
-**Backend API:**
-- [x] Health check: GET `/api/health` ✓ (database connected)
-- [x] Email service: POST `/api/email/welcome` ✓ (tested successfully)
-- [ ] Registration: POST `/api/auth/register`
-- [ ] Login: POST `/api/auth/login`
-- [ ] Get user: GET `/api/auth/me`
-- [ ] Google OAuth: GET `/auth/google`
-- [ ] Microsoft OAuth: GET `/auth/microsoft`
+**Backend API (tested via PowerShell on Jan 22, 2026):**
+- [x] Health check: GET `/api/health` ✓ (200 OK, db connected)
+- [x] Email service: POST `/api/email/welcome` ✓ (previously tested successfully)
+- [x] Registration: POST `/api/auth/register` ✓ (200 OK, mock user/token)
+- [x] Login: POST `/api/auth/login` ✓ (200 OK, mock user/token)
+- [ ] Get user: GET `/api/auth/me` (endpoint not implemented in server-fixed.js)
+- [ ] Google OAuth: GET `/auth/google` (deferred - routes not implemented)
+- [ ] Microsoft OAuth: GET `/auth/microsoft` (deferred - routes not implemented)
 
 **Frontend:**
-- [ ] Homepage loads
-- [ ] Registration form works
-- [ ] Login form works
-- [ ] OAuth buttons work
-- [ ] Navigation works
-- [ ] Mobile responsive
-- [ ] Cross-browser test (Chrome, Firefox, Safari)
+- [x] Homepage loads ✓ (`https://www.tradematch.uk` 200 OK)
+- [ ] Registration form works (manual UI test pending)
+- [ ] Login form works (manual UI test pending)
+- [ ] OAuth buttons work (blocked until OAuth implemented)
+- [ ] Navigation works (manual UI test pending)
+- [ ] Mobile responsive (manual UI test pending)
+- [ ] Cross-browser test (Chrome, Firefox, Safari) pending
 
 **Payment Flow (if enabled):**
 - [ ] Create payment intent
