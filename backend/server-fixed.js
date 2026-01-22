@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const { Pool } = require("pg");
+const crypto = require("crypto");
+const axios = require("axios");
 
 dotenv.config();
 
@@ -84,7 +86,7 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
-// Registration route - FIXED PATH
+// Registration route - WITH ACTIVATION EMAIL
 app.post("/api/auth/register", async (req, res) => {
   try {
     console.log('🔧 Registration attempt:', JSON.stringify(req.body));
@@ -101,22 +103,65 @@ app.post("/api/auth/register", async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields', received: { email: !!email, password: !!password, fullName: !!fullName } });
     }
 
-    // Mock user creation (skip database for now)
-    const mockUserId = 'user_' + Date.now();
-    const mockToken = 'token_' + Date.now();
+    // Check if email already exists
+    const existingUser = await pool.query(
+      'SELECT id FROM users WHERE email = $1',
+      [email]
+    );
 
-    console.log('✅ User created successfully:', { email, userId: mockUserId });
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Insert user with email_verified = false
+    const userResult = await pool.query(
+      `INSERT INTO users (user_type, full_name, email, phone, password, postcode, email_verified, active) 
+       VALUES ($1, $2, $3, $4, $5, $6, false, true) 
+       RETURNING id, user_type, full_name, email, phone, postcode, email_verified`,
+      [userType, fullName, email, phone, password, postcode]
+    );
+
+    const newUser = userResult.rows[0];
+    console.log('✅ User created in DB:', { email, userId: newUser.id });
+
+    // Generate activation token (32 bytes = 64 hex chars)
+    const activationToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Store activation token
+    await pool.query(
+      `INSERT INTO activation_tokens (user_id, token, token_type, expires_at, used) 
+       VALUES ($1, $2, 'email_verification', $3, false)`,
+      [newUser.id, activationToken, expiresAt]
+    );
+
+    console.log('✅ Activation token created');
+
+    // Send activation email
+    try {
+      const baseUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+      await axios.post(`${baseUrl}/api/email/activation`, {
+        email: newUser.email,
+        fullName: newUser.full_name,
+        token: activationToken
+      });
+      console.log('✅ Activation email sent');
+    } catch (emailError) {
+      console.error('⚠️ Failed to send activation email:', emailError.message);
+      // Don't fail registration if email fails - user can resend
+    }
 
     return res.json({
-      message: 'User registered successfully',
-      token: mockToken,
+      message: 'Registration successful! Please check your email to activate your account.',
+      requiresActivation: true,
       user: {
-        id: mockUserId,
-        userType: userType || 'customer',
-        fullName: fullName,
-        email: email,
-        phone: phone,
-        postcode: postcode
+        id: newUser.id,
+        userType: newUser.user_type,
+        fullName: newUser.full_name,
+        email: newUser.email,
+        phone: newUser.phone,
+        postcode: newUser.postcode,
+        emailVerified: false
       }
     });
 
@@ -128,7 +173,66 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-// Login route - FIXED PATH
+// Activation endpoint
+app.get("/api/auth/activate", async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).json({ error: 'Activation token required' });
+    }
+
+    // Look up token
+    const tokenResult = await pool.query(
+      `SELECT user_id, expires_at, used FROM activation_tokens 
+       WHERE token = $1 AND token_type = 'email_verification'`,
+      [token]
+    );
+
+    if (tokenResult.rows.length === 0) {
+      return res.status(400).json({ error: 'Invalid activation token' });
+    }
+
+    const tokenData = tokenResult.rows[0];
+
+    // Check if already used
+    if (tokenData.used) {
+      return res.status(400).json({ error: 'This activation link has already been used' });
+    }
+
+    // Check if expired
+    if (new Date(tokenData.expires_at) < new Date()) {
+      return res.status(400).json({ error: 'Activation link has expired. Please request a new one.' });
+    }
+
+    // Mark user as verified
+    await pool.query(
+      'UPDATE users SET email_verified = true WHERE id = $1',
+      [tokenData.user_id]
+    );
+
+    // Mark token as used
+    await pool.query(
+      'UPDATE activation_tokens SET used = true, used_at = NOW() WHERE token = $1',
+      [token]
+    );
+
+    console.log('✅ User activated:', tokenData.user_id);
+
+    return res.json({
+      success: true,
+      message: 'Account activated successfully! You can now log in.'
+    });
+
+  } catch (error) {
+    console.error('❌ Activation error:', error);
+    res.status(500).json({ 
+      error: 'Activation failed: ' + error.message 
+    });
+  }
+});
+
+// Login route - WITH EMAIL VERIFICATION CHECK
 app.post("/api/auth/login", async (req, res) => {
   try {
     console.log('🔧 Login attempt:', JSON.stringify(req.body));
@@ -142,22 +246,51 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({ error: 'Email and password required' });
     }
 
-    // Mock user lookup and login
-    const mockUserId = 'user_' + Date.now();
-    const mockToken = 'token_' + Date.now();
+    // Look up user in database
+    const userResult = await pool.query(
+      'SELECT id, user_type, full_name, email, phone, postcode, email_verified, password FROM users WHERE email = $1',
+      [email]
+    );
 
-    console.log('✅ User logged in successfully:', { email, userId: mockUserId });
+    if (userResult.rows.length === 0) {
+      console.log('❌ User not found:', email);
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Check password (for now, plain text comparison - should use bcrypt in production)
+    if (user.password !== password) {
+      console.log('❌ Invalid password');
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Check if email is verified
+    if (!user.email_verified) {
+      console.log('❌ Email not verified:', email);
+      return res.status(403).json({ 
+        error: 'Please activate your account. Check your email for the activation link.',
+        requiresActivation: true,
+        email: user.email
+      });
+    }
+
+    // Generate session token (in production, use JWT)
+    const sessionToken = 'token_' + Date.now() + '_' + crypto.randomBytes(16).toString('hex');
+
+    console.log('✅ User logged in successfully:', { email, userId: user.id });
 
     return res.json({
+      success: true,
       message: 'Login successful',
-      token: mockToken,
+      token: sessionToken,
       user: {
-        id: mockUserId,
-        userType: 'customer',
-        fullName: 'Test User',
-        email: email,
-        phone: '07123456789',
-        postcode: 'SW1A 1AA'
+        id: user.id,
+        userType: user.user_type,
+        fullName: user.full_name,
+        email: user.email,
+        phone: user.phone,
+        postcode: user.postcode
       }
     });
 
