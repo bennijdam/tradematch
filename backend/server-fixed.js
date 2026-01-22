@@ -71,9 +71,12 @@ app.post("/api/auth/register", async (req, res) => {
   try {
     console.log('🔧 Registration attempt:', JSON.stringify(req.body));
     
-    const { userType, fullName, email, phone, password, postcode, terms } = req.body;
+    // Allow both fullName and name from frontend, default userType to customer
+    const fullName = req.body.fullName || req.body.name;
+    const userType = req.body.userType || req.body.type || 'customer';
+    const { email, phone, password, postcode, terms } = req.body;
     
-    console.log('🔧 Parsed data:', { userType, fullName, email, phone, postcode: !!terms });
+    console.log('🔧 Parsed data:', { userType, fullName, email, phone, postcode, terms: !!terms });
     
     if (!email || !password || !fullName) {
       console.log('❌ Missing fields:', { email: !!email, password: !!password, fullName: !!fullName });
