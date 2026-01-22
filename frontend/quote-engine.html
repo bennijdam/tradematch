@@ -1616,12 +1616,12 @@ I'm happy to discuss the project in more detail and answer any questions to help
             });
             
             // Save progress to localStorage
-            const progress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
             localStorage.setItem('quoteProgress', JSON.stringify({
                 step: currentStep,
                 timestamp: Date.now(),
-                formData: progress.formData || {},
-                quoteId: progress.quoteId || ''
+                formData: savedProgress.formData || {},
+                quoteId: savedProgress.quoteId || ''
             }));
 
             // Update progress bar
