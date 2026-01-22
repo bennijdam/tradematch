@@ -1159,6 +1159,82 @@ app.get("/api/vendors/search", async (req, res) => {
   }
 });
 
+// Get vendor profile details by ID
+app.get("/api/vendors/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fetch vendor details with stats and reviews
+    const vendorResult = await pool.query(
+      `SELECT u.id, u.name, u.email, u.phone, u.created_at,
+              COUNT(DISTINCT b.id) as bids_submitted,
+              COUNT(DISTINCT CASE WHEN b.status = 'accepted' THEN b.id END) as jobs_completed,
+              ROUND(AVG(CASE WHEN r.rating IS NOT NULL THEN r.rating ELSE NULL END), 1) as average_rating,
+              COUNT(DISTINCT r.id) as total_reviews
+       FROM users u
+       LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted')
+       LEFT JOIN reviews r ON u.id = r.vendor_id
+       WHERE u.id = $1 AND u.role = 'vendor'
+       GROUP BY u.id, u.name, u.email, u.phone, u.created_at`,
+      [id]
+    );
+
+    if (!vendorResult.rows[0]) {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    const vendor = vendorResult.rows[0];
+
+    // Fetch reviews for this vendor
+    const reviewsResult = await pool.query(
+      `SELECT r.id, r.rating, r.comment, r.created_at, c.name as customer_name
+       FROM reviews r
+       JOIN users c ON r.customer_id = c.id
+       WHERE r.vendor_id = $1
+       ORDER BY r.created_at DESC`,
+      [id]
+    );
+
+    const vendorData = {
+      id: vendor.id,
+      name: vendor.name,
+      email: vendor.email,
+      phone: vendor.phone,
+      bids_submitted: parseInt(vendor.bids_submitted),
+      jobs_completed: parseInt(vendor.jobs_completed),
+      average_rating: vendor.average_rating ? parseFloat(vendor.average_rating) : null,
+      total_reviews: parseInt(vendor.total_reviews),
+      member_since: new Date(vendor.created_at).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      reviews: reviewsResult.rows.map(r => ({
+        id: r.id,
+        rating: r.rating,
+        comment: r.comment,
+        customer_name: r.customer_name,
+        date: new Date(r.created_at).toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      }))
+    };
+
+    return res.json({
+      success: true,
+      data: vendorData
+    });
+
+  } catch (error) {
+    console.error('❌ Vendor profile error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch vendor profile: ' + error.message 
+    });
+  }
+});
+
 // Debug routes
 app.get("/debug/routes", (req, res) => {
   res.json({
