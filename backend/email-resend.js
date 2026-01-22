@@ -254,6 +254,43 @@ const emailTemplates = {
     `
   }),
 
+  activation: (fullName, activationLink) => ({
+    subject: 'Activate your TradeMatch account',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #0f172a; }
+          .container { max-width: 640px; margin: 0 auto; padding: 24px; background: #f8fafc; }
+          .card { background: #ffffff; border-radius: 12px; padding: 28px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); }
+          .btn { display: inline-block; background: #16A34A; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; margin: 18px 0; }
+          .muted { color: #475569; font-size: 14px; }
+          .footer { color: #94a3b8; font-size: 12px; margin-top: 20px; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="card">
+            <h1 style="margin-top: 0; color: #0f172a;">Activate your account</h1>
+            <p>Hi ${fullName || 'there'},</p>
+            <p>Thanks for joining TradeMatch. Please confirm your email to secure your account and start using your dashboard.</p>
+            <p style="text-align: center;">
+              <a class="btn" href="${activationLink}">Activate account</a>
+            </p>
+            <p class="muted">If the button does not work, copy and paste this link into your browser:</p>
+            <p class="muted" style="word-break: break-all;">${activationLink}</p>
+            <p class="muted">This link expires in 24 hours. If you did not create this account, you can ignore this email.</p>
+          </div>
+          <div class="footer">
+            TradeMatch • Secure sign-in and verification
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
   reviewReminder: (customerName, vendorName, quoteId) => ({
     subject: '⭐ How was your experience?',
     html: `
@@ -336,6 +373,46 @@ router.post('/welcome', async (req, res) => {
 
   } catch (err) {
     console.error('Welcome email error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Send activation email
+router.post('/activation', async (req, res) => {
+  try {
+    const { email, fullName, token } = req.body;
+    const frontendUrl = process.env.FRONTEND_URL || 'https://www.tradematch.uk';
+
+    if (!email || !fullName || !token) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: email, fullName, token' 
+      });
+    }
+
+    const activationLink = `${frontendUrl}/activate?token=${encodeURIComponent(token)}`;
+    const template = emailTemplates.activation(fullName, activationLink);
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_DEFAULT,
+      to: email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return res.status(500).json({ error: 'Failed to send activation email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Activation email sent',
+      activationLink,
+      emailId: data.id 
+    });
+
+  } catch (err) {
+    console.error('Activation email error:', err);
     res.status(500).json({ error: err.message });
   }
 });
