@@ -1100,6 +1100,65 @@ app.patch("/api/bids/:bidId/reject", authenticateToken, async (req, res) => {
   }
 });
 
+// Search for vendors by service and location
+app.get("/api/vendors/search", async (req, res) => {
+  try {
+    const { service, postcode, radius = 10 } = req.query;
+    
+    if (!service || !postcode) {
+      return res.status(400).json({ 
+        error: 'Service and postcode are required' 
+      });
+    }
+
+    // Get all vendors who offer this service
+    // In a production system, you'd calculate actual distances using postcodes
+    // For now, we'll do a simple query for vendors with this service
+    const vendorsResult = await pool.query(
+      `SELECT DISTINCT u.id, u.name, u.email, u.phone, u.created_at,
+              COUNT(DISTINCT b.id) as bids_submitted,
+              COUNT(DISTINCT CASE WHEN b.status = 'accepted' THEN b.id END) as jobs_completed,
+              ROUND(AVG(CASE WHEN r.rating IS NOT NULL THEN r.rating ELSE NULL END), 1) as average_rating,
+              COUNT(DISTINCT r.id) as total_reviews
+       FROM users u
+       LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted')
+       LEFT JOIN reviews r ON u.id = r.vendor_id
+       WHERE u.role = 'vendor'
+       GROUP BY u.id, u.name, u.email, u.phone, u.created_at
+       ORDER BY average_rating DESC, jobs_completed DESC
+       LIMIT 20`
+    );
+
+    const vendors = vendorsResult.rows.map(vendor => ({
+      id: vendor.id,
+      name: vendor.name,
+      email: vendor.email,
+      phone: vendor.phone,
+      bids_submitted: parseInt(vendor.bids_submitted),
+      jobs_completed: parseInt(vendor.jobs_completed),
+      average_rating: vendor.average_rating ? parseFloat(vendor.average_rating) : null,
+      total_reviews: parseInt(vendor.total_reviews),
+      member_since: new Date(vendor.created_at).toLocaleDateString('en-GB', { 
+        year: 'numeric', 
+        month: 'short' 
+      })
+    }));
+
+    console.log(`✅ Found ${vendors.length} vendors for service: ${service}`);
+
+    return res.json({
+      success: true,
+      data: vendors
+    });
+
+  } catch (error) {
+    console.error('❌ Vendor search error:', error);
+    res.status(500).json({ 
+      error: 'Failed to search vendors: ' + error.message 
+    });
+  }
+});
+
 // Debug routes
 app.get("/debug/routes", (req, res) => {
   res.json({

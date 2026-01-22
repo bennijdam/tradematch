@@ -350,6 +350,138 @@
             color: var(--gray-600);
         }
         
+        /* Vendor Grid */
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
+        }
+
+        .vendor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--gray-100);
+        }
+
+        .vendor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-color: var(--emerald);
+        }
+
+        .vendor-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .vendor-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .vendor-info h3 {
+            margin: 0;
+            color: var(--slate);
+            font-size: 18px;
+        }
+
+        .vendor-info p {
+            margin: 4px 0 0 0;
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        .vendor-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .vendor-stars {
+            color: #FFB800;
+            font-size: 14px;
+        }
+
+        .vendor-reviews {
+            color: var(--gray-600);
+            font-size: 13px;
+        }
+
+        .vendor-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--emerald);
+            font-size: 18px;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .vendor-member {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+        }
+
+        .vendor-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--emerald);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vendor-btn:hover {
+            background: var(--emerald-dark);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-600);
+        }
+
+        .no-results h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
         /* Footer */
         footer {
             background: var(--slate);
@@ -437,8 +569,24 @@
         <p>Browse our directory of verified professionals across the UK.</p>
         
         <div class="search-section">
-            <input type="text" placeholder="Search by trade or location..." id="searchInput">
-            <button onclick="searchTradespeople()">Search</button>
+            <select id="serviceSelect">
+                <option value="">Select a service...</option>
+                <option value="Builders">Builders</option>
+                <option value="Electricians">Electricians</option>
+                <option value="Plumbers">Plumbers</option>
+                <option value="Roofers">Roofers</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Painting">Painting</option>
+                <option value="HVAC">HVAC</option>
+                <option value="Masonry">Masonry</option>
+            </select>
+            <input type="text" placeholder="Enter postcode..." id="postcodeInput">
+            <button onclick="searchTradespeople()">Search Tradespeople</button>
+        </div>
+
+        <div id="vendorResults" style="display: none; margin-top: 40px;">
+            <h2 id="resultsTitle">Search Results</h2>
+            <div id="vendorGrid" class="vendor-grid"></div>
         </div>
         
         <div class="categories">
@@ -507,6 +655,135 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const API_URL = 'https://tradematch.onrender.com';
+
+        async function searchTradespeople() {
+            const service = document.getElementById('serviceSelect').value;
+            const postcode = document.getElementById('postcodeInput').value;
+
+            if (!service) {
+                alert('Please select a service');
+                return;
+            }
+
+            if (!postcode) {
+                alert('Please enter a postcode');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/vendors/search?service=${encodeURIComponent(service)}&postcode=${encodeURIComponent(postcode)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayVendors(data.data, service);
+                } else {
+                    showNoResults('No tradespeople found matching your search.');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showNoResults('An error occurred while searching. Please try again.');
+            }
+        }
+
+        function displayVendors(vendors, service) {
+            const vendorResults = document.getElementById('vendorResults');
+            const vendorGrid = document.getElementById('vendorGrid');
+            const resultsTitle = document.getElementById('resultsTitle');
+
+            if (!vendors || vendors.length === 0) {
+                showNoResults(`No ${service} tradespeople found in this area.`);
+                return;
+            }
+
+            resultsTitle.textContent = `Found ${vendors.length} ${service} Tradespeople`;
+            vendorGrid.innerHTML = '';
+
+            vendors.forEach(vendor => {
+                const card = createVendorCard(vendor);
+                vendorGrid.appendChild(card);
+            });
+
+            vendorResults.style.display = 'block';
+            vendorResults.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createVendorCard(vendor) {
+            const card = document.createElement('div');
+            card.className = 'vendor-card';
+
+            const initials = vendor.name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+
+            const rating = vendor.average_rating || 0;
+            const ratingStars = '⭐'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+
+            const memberSince = new Date(vendor.member_since).toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short'
+            });
+
+            card.innerHTML = `
+                <div class="vendor-header">
+                    <div class="vendor-avatar">${initials}</div>
+                    <div class="vendor-info">
+                        <h3>${vendor.name}</h3>
+                        <p>${vendor.service_type || 'Tradesperson'}</p>
+                    </div>
+                </div>
+
+                <div class="vendor-rating">
+                    <div class="vendor-stars">${ratingStars || 'New'}</div>
+                    <div class="vendor-reviews">(${vendor.total_reviews || 0} reviews)</div>
+                </div>
+
+                <div class="vendor-stats">
+                    <div class="stat">
+                        <div class="stat-value">${vendor.jobs_completed || 0}</div>
+                        <div class="stat-label">Jobs Done</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">${vendor.bids_submitted || 0}</div>
+                        <div class="stat-label">Bids Sent</div>
+                    </div>
+                </div>
+
+                <div class="vendor-member">Member since ${memberSince}</div>
+
+                <button class="vendor-btn" onclick="viewVendorProfile(${vendor.id}, '${vendor.name.replace(/'/g, "\\'")}')">
+                    View Profile & Request Quote
+                </button>
+            `;
+
+            return card;
+        }
+
+        function showNoResults(message) {
+            const vendorResults = document.getElementById('vendorResults');
+            const vendorGrid = document.getElementById('vendorGrid');
+
+            vendorGrid.innerHTML = `
+                <div class="no-results" style="grid-column: 1 / -1;">
+                    <h3>No Results Found</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+
+            vendorResults.style.display = 'block';
+            vendorResults.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function viewVendorProfile(vendorId, vendorName) {
+            // TODO: Implement vendor profile page
+            alert(`View profile for ${vendorName} (ID: ${vendorId})`);
+        }
+    </script>
 
 </body>
 </html>
