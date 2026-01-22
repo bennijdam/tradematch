@@ -1169,6 +1169,9 @@
         // Auto-fill from homepage parameters
         const urlParams = new URLSearchParams(window.location.search);
         const preSelectedService = urlParams.get('service');
+        const preSelectedPostcode = urlParams.get('postcode');
+        const preSelectedDistrict = urlParams.get('district');
+        const preSelectedRegion = urlParams.get('region');
         
 // Service Selection
         document.querySelectorAll('.service-option').forEach(option => {
@@ -1183,14 +1186,20 @@
             });
         });
         
-        // Auto-select service from homepage
+        // Auto-select service from homepage and fill postcode
         if (preSelectedService) {
-            setTimeout(() => {
-                const targetOption = document.querySelector(`[data-service="${preSelectedService}"]`);
-                if (targetOption) {
-                    targetOption.click();
-                }
-            }, 500);
+            const targetOption = document.querySelector(`[data-service="${preSelectedService}"]`);
+            if (targetOption) {
+                targetOption.click();
+            }
+        }
+        
+        // Auto-fill postcode from homepage
+        if (preSelectedPostcode) {
+            document.getElementById('postcode').value = decodeURIComponent(preSelectedPostcode);
+            formData.postcode = decodeURIComponent(preSelectedPostcode);
+            formData.district = preSelectedDistrict ? decodeURIComponent(preSelectedDistrict) : '';
+            formData.region = preSelectedRegion ? decodeURIComponent(preSelectedRegion) : '';
         }
 
         // Timeline Selection
