@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "sk_test_dummy");
 
 dotenv.config();
 
@@ -1395,6 +1396,224 @@ app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
     console.error('❌ Get conversations error:', error);
     res.status(500).json({ 
       error: 'Failed to fetch conversations: ' + error.message 
+    });
+  }
+});
+
+// ===== PAYMENT API =====
+
+// Create Stripe Payment Intent
+app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
+  try {
+    const { bid_id, quote_id, amount } = req.body;
+    const customer_id = req.user.id;
+
+    if (!bid_id || !quote_id || !amount) {
+      return res.status(400).json({ error: 'bid_id, quote_id, and amount are required' });
+    }
+
+    if (amount < 1) {
+      return res.status(400).json({ error: 'Amount must be at least $1' });
+    }
+
+    // Create payments table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS payments (
+        id SERIAL PRIMARY KEY,
+        quote_id INTEGER NOT NULL REFERENCES quotes(id),
+        bid_id INTEGER NOT NULL REFERENCES bids(id),
+        customer_id INTEGER NOT NULL REFERENCES users(id),
+        vendor_id INTEGER NOT NULL REFERENCES users(id),
+        amount INTEGER NOT NULL,
+        currency VARCHAR(3) DEFAULT 'USD',
+        stripe_payment_intent_id VARCHAR(255),
+        status VARCHAR(50) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Get bid details to find vendor
+    const bidResult = await pool.query(
+      'SELECT vendor_id FROM bids WHERE id = $1 AND status = $2',
+      [bid_id, 'accepted']
+    );
+
+    if (!bidResult.rows[0]) {
+      return res.status(400).json({ error: 'Accepted bid not found' });
+    }
+
+    const vendor_id = bidResult.rows[0].vendor_id;
+
+    // Create Stripe PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount * 100), // Convert to cents
+      currency: 'usd',
+      metadata: {
+        bid_id: bid_id.toString(),
+        quote_id: quote_id.toString(),
+        customer_id: customer_id.toString(),
+        vendor_id: vendor_id.toString()
+      },
+      automatic_payment_methods: {
+        enabled: true
+      }
+    });
+
+    // Store payment record in database
+    const paymentResult = await pool.query(
+      `INSERT INTO payments (quote_id, bid_id, customer_id, vendor_id, amount, stripe_payment_intent_id, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'pending')
+       RETURNING *`,
+      [quote_id, bid_id, customer_id, vendor_id, Math.round(amount * 100), paymentIntent.id]
+    );
+
+    const payment = paymentResult.rows[0];
+
+    console.log(`✅ Payment intent created: ${paymentIntent.id} for bid ${bid_id}`);
+
+    return res.json({
+      success: true,
+      data: {
+        payment_id: payment.id,
+        stripe_intent_id: paymentIntent.id,
+        client_secret: paymentIntent.client_secret,
+        amount: amount,
+        currency: 'USD'
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Payment intent error:', error);
+    res.status(500).json({ 
+      error: 'Failed to create payment intent: ' + error.message 
+    });
+  }
+});
+
+// Get payment status
+app.get("/api/payments/:paymentId", authenticateToken, async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const userId = req.user.id;
+
+    // Get payment from database
+    const result = await pool.query(
+      `SELECT * FROM payments WHERE id = $1 AND (customer_id = $2 OR vendor_id = $2)`,
+      [paymentId, userId]
+    );
+
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+
+    const payment = result.rows[0];
+
+    // Check status with Stripe
+    if (payment.stripe_payment_intent_id) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(payment.stripe_payment_intent_id);
+      
+      // Update local status if changed
+      if (paymentIntent.status !== payment.status) {
+        await pool.query(
+          'UPDATE payments SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+          [paymentIntent.status, paymentId]
+        );
+      }
+
+      return res.json({
+        success: true,
+        data: {
+          payment_id: payment.id,
+          amount: payment.amount / 100,
+          status: paymentIntent.status,
+          created_at: payment.created_at
+        }
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: {
+        payment_id: payment.id,
+        amount: payment.amount / 100,
+        status: payment.status,
+        created_at: payment.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Get payment error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch payment: ' + error.message 
+    });
+  }
+});
+
+// Get payment by Stripe Intent ID (for webhook confirmation)
+app.post("/api/payments/confirm", authenticateToken, async (req, res) => {
+  try {
+    const { stripe_intent_id } = req.body;
+
+    if (!stripe_intent_id) {
+      return res.status(400).json({ error: 'stripe_intent_id is required' });
+    }
+
+    // Get payment from database
+    const result = await pool.query(
+      'SELECT * FROM payments WHERE stripe_payment_intent_id = $1',
+      [stripe_intent_id]
+    );
+
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+
+    const payment = result.rows[0];
+
+    // Check Stripe status
+    const paymentIntent = await stripe.paymentIntents.retrieve(stripe_intent_id);
+
+    if (paymentIntent.status === 'succeeded') {
+      // Update payment status
+      await pool.query(
+        'UPDATE payments SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [paymentIntent.status, payment.id]
+      );
+
+      // Update bid status to 'paid'
+      await pool.query(
+        'UPDATE bids SET status = $1 WHERE id = $2',
+        ['paid', payment.bid_id]
+      );
+
+      // Update quote status to 'in_progress'
+      await pool.query(
+        'UPDATE quotes SET status = $1 WHERE id = $2',
+        ['in_progress', payment.quote_id]
+      );
+
+      console.log(`✅ Payment confirmed for bid ${payment.bid_id}`);
+
+      return res.json({
+        success: true,
+        data: {
+          payment_id: payment.id,
+          status: 'confirmed',
+          amount: payment.amount / 100
+        }
+      });
+    }
+
+    return res.json({
+      success: false,
+      data: { status: paymentIntent.status }
+    });
+
+  } catch (error) {
+    console.error('❌ Confirm payment error:', error);
+    res.status(500).json({ 
+      error: 'Failed to confirm payment: ' + error.message 
     });
   }
 });

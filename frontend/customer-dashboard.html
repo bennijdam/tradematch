@@ -1195,8 +1195,13 @@
                                 <button class="btn-reject-bid" onclick="rejectBid('${bid.id}')">Reject</button>
                             </div>
                         ` : `
-                            <div style="padding: 1rem; background: var(--emerald-100); border-radius: 6px; text-align: center; color: var(--emerald-700); font-weight: 600;">
-                                This bid has been accepted. Contact the vendor to proceed.
+                            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                                <button class="btn-accept-bid" onclick="initiatePayment('${bid.id}', '${quoteId}', '${bid.price}')" style="flex: 1;">
+                                    💳 Pay Now
+                                </button>
+                                <button class="btn-secondary" onclick="contactVendor('${bid.vendor_id}')" style="flex: 1; background: #f3f4f6; color: var(--slate-900); border: 1px solid var(--slate-300);">
+                                    💬 Message Vendor
+                                </button>
                             </div>
                         `}
                     </div>
@@ -1417,6 +1422,137 @@
         });
     </script>
 
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Payment variables
+        let stripe = null;
+        let elements = null;
+        let cardElement = null;
+        let currentPaymentData = null;
+
+        // Initialize Stripe
+        async function initializeStripe() {
+            stripe = Stripe('pk_test_51OUYfxEIIpLHx3b0C2tVvIRjJ9pLyK6lf0r4FZPw8K3bN5sQxLhLnPwCxTh7BYZrIL9PbOx4U7wBp6O5VO5z00hS1ZXgLr');
+            elements = stripe.elements();
+            cardElement = elements.create('card');
+            
+            const cardContainer = document.getElementById('card-element');
+            if (cardContainer) {
+                cardElement.mount('#card-element');
+                cardElement.addEventListener('change', function(event) {
+                    const displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+            }
+        }
+
+        function initiatePayment(bidId, quoteId, price) {
+            currentPaymentData = { bidId, quoteId, price };
+            document.getElementById('paymentAmount').textContent = price;
+            document.getElementById('paymentModal').style.display = 'flex';
+            
+            // Initialize Stripe if not already done
+            if (!stripe) {
+                initializeStripe();
+            }
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            if (cardElement) {
+                cardElement.clear();
+            }
+        }
+
+        async function processPayment() {
+            if (!currentPaymentData) return;
+            
+            const payBtn = document.getElementById('payBtn');
+            payBtn.disabled = true;
+            payBtn.textContent = 'Processing...';
+
+            try {
+                const token = localStorage.getItem('token');
+                
+                // Create payment intent
+                const intentResponse = await fetch('https://tradematch.onrender.com/api/payments/create-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        bid_id: parseInt(currentPaymentData.bidId),
+                        quote_id: parseInt(currentPaymentData.quoteId),
+                        amount: parseFloat(currentPaymentData.price)
+                    })
+                });
+
+                if (!intentResponse.ok) {
+                    throw new Error('Failed to create payment intent');
+                }
+
+                const intentData = await intentResponse.json();
+
+                // Confirm payment with Stripe
+                const { paymentIntent, error } = await stripe.confirmCardPayment(
+                    intentData.data.client_secret,
+                    {
+                        payment_method: {
+                            card: cardElement,
+                            billing_details: {
+                                email: JSON.parse(localStorage.getItem('user')).email
+                            }
+                        }
+                    }
+                );
+
+                if (error) {
+                    document.getElementById('card-errors').textContent = error.message;
+                    payBtn.disabled = false;
+                    payBtn.textContent = 'Complete Payment';
+                    return;
+                }
+
+                if (paymentIntent && paymentIntent.status === 'succeeded') {
+                    // Confirm payment with backend
+                    const confirmResponse = await fetch('https://tradematch.onrender.com/api/payments/confirm', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        },
+                        body: JSON.stringify({
+                            stripe_intent_id: paymentIntent.id
+                        })
+                    });
+
+                    if (confirmResponse.ok) {
+                        alert('✅ Payment successful! The bid has been accepted and work can now begin.');
+                        closePaymentModal();
+                        loadDashboard();
+                    }
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                document.getElementById('card-errors').textContent = error.message;
+            } finally {
+                payBtn.disabled = false;
+                payBtn.textContent = 'Complete Payment';
+            }
+        }
+
+        function contactVendor(vendorId) {
+            sessionStorage.setItem('openConversationWithId', vendorId);
+            window.location.href = '/messages.html';
+        }
+    </script>
+
     <!-- Bids Modal -->
     <div class="bids-modal" id="bidsModal">
         <div class="bids-modal-content">
@@ -1425,6 +1561,42 @@
                 <button class="btn-close-modal" onclick="closeBidsModal()">&times;</button>
             </div>
             <div id="bidsModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="bids-modal" id="paymentModal" style="display: none;">
+        <div class="bids-modal-content" style="max-width: 500px;">
+            <div class="bids-modal-header">
+                <h2 class="bids-modal-title">Secure Payment</h2>
+                <button class="btn-close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <p style="color: var(--gray-600); margin-bottom: 0.5rem;">Amount to pay:</p>
+                    <p style="font-size: 2rem; font-weight: 800; color: var(--emerald-600);">£<span id="paymentAmount">0</span></p>
+                    <p style="color: var(--gray-600); font-size: 0.9rem;">Using Stripe Secure Checkout</p>
+                </div>
+
+                <form id="paymentForm" style="margin-bottom: 1rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--slate-700);">Card Details</label>
+                        <div id="card-element" style="border: 1px solid var(--gray-300); padding: 1rem; border-radius: 8px; background: white;"></div>
+                        <div id="card-errors" style="color: #ef4444; margin-top: 0.5rem; font-size: 0.9rem;"></div>
+                    </div>
+                </form>
+
+                <button id="payBtn" class="btn-accept-bid" onclick="processPayment()" style="width: 100%; padding: 1rem;">
+                    Complete Payment
+                </button>
+                <button type="button" onclick="closePaymentModal()" class="btn-secondary" style="width: 100%; padding: 1rem; margin-top: 0.5rem; background: white; color: var(--slate-700); border: 1px solid var(--gray-300);">
+                    Cancel
+                </button>
+
+                <p style="color: var(--gray-600); font-size: 0.85rem; margin-top: 1rem; text-align: center;">
+                    Secured by Stripe. Test card: 4242 4242 4242 4242
+                </p>
+            </div>
         </div>
     </div>
 
