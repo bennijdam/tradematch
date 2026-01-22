@@ -762,9 +762,12 @@
 
         // Update User Info
         function updateUserInfo(user) {
-            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            // Handle both fullName and name properties
+            const userName = user.fullName || user.name || 'User';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            
             document.getElementById('userAvatar').textContent = initials;
-            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userName').textContent = userName;
         }
 
         // Load Dashboard

@@ -768,11 +768,14 @@
 
         // Update User Info
         function updateUserInfo(user) {
-            const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            // Handle both fullName and name properties
+            const userName = user.fullName || user.name || 'User';
+            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            
             document.getElementById('userAvatar').textContent = initials;
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('welcomeName').textContent = user.name.split(' ')[0];
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userEmail').textContent = user.email || 'No email';
+            document.getElementById('welcomeName').textContent = userName.split(' ')[0];
         }
 
         // Load Dashboard Data
