@@ -146,9 +146,9 @@ app.post("/api/auth/register", async (req, res) => {
 
     // Insert user with email_verified = false
     const userResult = await pool.query(
-      `INSERT INTO users (user_type, full_name, email, phone, password, postcode, email_verified, active) 
-       VALUES ($1, $2, $3, $4, $5, $6, false, true) 
-       RETURNING id, user_type, full_name, email, phone, postcode, email_verified`,
+      `INSERT INTO users (user_type, name, email, phone, password_hash, postcode, email_verified) 
+       VALUES ($1, $2, $3, $4, $5, $6, false) 
+       RETURNING id, user_type, name, email, phone, postcode, email_verified`,
       [userType, fullName, email, phone, hashedPassword, postcode]
     );
 
@@ -173,7 +173,7 @@ app.post("/api/auth/register", async (req, res) => {
       const baseUrl = process.env.BACKEND_URL || 'http://localhost:3001';
       await axios.post(`${baseUrl}/api/email/activation`, {
         email: newUser.email,
-        fullName: newUser.full_name,
+        fullName: newUser.name,
         token: activationToken
       });
       console.log('✅ Activation email sent');
@@ -188,7 +188,7 @@ app.post("/api/auth/register", async (req, res) => {
       user: {
         id: newUser.id,
         userType: newUser.user_type,
-        fullName: newUser.full_name,
+        fullName: newUser.name,
         email: newUser.email,
         phone: newUser.phone,
         postcode: newUser.postcode,
@@ -312,7 +312,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
     try {
       await axios.post('https://tradematch.onrender.com/api/email/activation', {
         email: user.email,
-        fullName: user.full_name,
+        fullName: user.name,
         token: activationToken
       });
 
@@ -354,7 +354,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     // Look up user in database
     const userResult = await pool.query(
-      'SELECT id, user_type, full_name, email, phone, postcode, email_verified, password FROM users WHERE email = $1',
+      'SELECT id, user_type, name, email, phone, postcode, email_verified, password_hash FROM users WHERE email = $1',
       [email]
     );
 
@@ -366,7 +366,7 @@ app.post("/api/auth/login", async (req, res) => {
     const user = userResult.rows[0];
 
     // Verify password with bcrypt
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
       console.log('❌ Invalid password');
       return res.status(401).json({ error: 'Invalid email or password' });
@@ -408,7 +408,7 @@ app.post("/api/auth/login", async (req, res) => {
       user: {
         id: user.id,
         userType: user.user_type,
-        fullName: user.full_name,
+        fullName: user.name,
         email: user.email,
         phone: user.phone,
         postcode: user.postcode
@@ -428,7 +428,7 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
   try {
     // req.user contains decoded JWT payload (userId, email, userType)
     const userResult = await pool.query(
-      'SELECT id, user_type, full_name, email, phone, postcode, email_verified FROM users WHERE id = $1',
+      'SELECT id, user_type, name, email, phone, postcode, email_verified FROM users WHERE id = $1',
       [req.user.userId]
     );
 
@@ -443,7 +443,7 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
       user: {
         id: user.id,
         userType: user.user_type,
-        fullName: user.full_name,
+        fullName: user.name,
         email: user.email,
         phone: user.phone,
         postcode: user.postcode,
