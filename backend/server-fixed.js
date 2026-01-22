@@ -263,6 +263,81 @@ app.get("/api/auth/activate", async (req, res) => {
   }
 });
 
+// Resend activation email
+app.post("/api/auth/resend-activation", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    console.log('📧 Resend activation request for:', email);
+
+    // Find user by email
+    const userResult = await pool.query(
+      'SELECT id, full_name, email, email_verified FROM users WHERE LOWER(email) = LOWER($1)',
+      [email]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'No account found with this email' });
+    }
+
+    const user = userResult.rows[0];
+
+    // Check if already verified
+    if (user.email_verified) {
+      return res.status(400).json({ 
+        error: 'Account is already activated. Please try logging in.' 
+      });
+    }
+
+    // Invalidate any existing activation tokens for this user
+    await pool.query(
+      'UPDATE activation_tokens SET used = true WHERE user_id = $1 AND token_type = $2 AND used = false',
+      [user.id, 'activation']
+    );
+
+    // Generate new activation token
+    const activationToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    await pool.query(
+      'INSERT INTO activation_tokens (user_id, token, token_type, expires_at) VALUES ($1, $2, $3, $4)',
+      [user.id, activationToken, 'activation', expiresAt]
+    );
+
+    // Send activation email
+    try {
+      await axios.post('https://tradematch.onrender.com/api/email/activation', {
+        email: user.email,
+        fullName: user.full_name,
+        token: activationToken
+      });
+
+      console.log('✅ Activation email resent to:', email);
+      
+      return res.json({
+        success: true,
+        message: 'Activation email sent! Please check your inbox.'
+      });
+
+    } catch (emailError) {
+      console.error('❌ Email sending failed:', emailError);
+      return res.status(500).json({ 
+        error: 'Failed to send activation email. Please try again later.' 
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ Resend activation error:', error);
+    res.status(500).json({ 
+      error: 'Failed to resend activation email: ' + error.message 
+    });
+  }
+});
+
 // Login route - WITH EMAIL VERIFICATION CHECK
 app.post("/api/auth/login", async (req, res) => {
   try {
