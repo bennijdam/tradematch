@@ -9,19 +9,27 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-// CORS with allowlist and per-origin reflection (avoids multi-value header)
-const corsAllowlist = (process.env.CORS_ORIGINS || "").split(',').map(o => o.trim()).filter(Boolean);
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow same-origin / curl
-    if (corsAllowlist.length === 0) return callback(null, true); // default allow all
-    if (corsAllowlist.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  optionsSuccessStatus: 200,
-}));
+// CORS with allowlist - single origin reflection (no multi-value header)
+const allowedOrigins = process.env.CORS_ORIGINS 
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
+    : ['https://www.tradematch.uk', 'https://tradematch.uk'];
 
+app.use(cors({
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
+        
+        // Check if origin is in allowlist
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.warn('⚠️ CORS blocked origin:', origin);
+            callback(null, false); // Reject but don't throw error
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 app.use(express.json());
 
 const pool = new Pool({
