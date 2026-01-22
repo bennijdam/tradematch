@@ -140,11 +140,34 @@ class TradeMatchAPI {
      * Register new user
      */
     async register(userData) {
-        const response = await this.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, userData);
+        // Map frontend fields to backend expectations
+        const payload = {
+            fullName: userData.fullName || userData.name,
+            email: userData.email,
+            password: userData.password,
+            userType: userData.userType || userData.type,
+            phone: userData.phone,
+            postcode: userData.postcode,
+            terms: true
+        };
+
+        const response = await this.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, payload);
+
+        // Normalize user object and success flag for UI
+        const normalizedUser = response.user ? {
+            ...response.user,
+            name: response.user.fullName || response.user.name
+        } : null;
+
         if (response.token) {
             this.setToken(response.token);
         }
-        return response;
+
+        return {
+            success: true,
+            ...response,
+            user: normalizedUser
+        };
     }
 
     /**
@@ -156,11 +179,20 @@ class TradeMatchAPI {
             password
         });
         
+        const normalizedUser = response.user ? {
+            ...response.user,
+            name: response.user.fullName || response.user.name
+        } : null;
+
         if (response.token) {
             this.setToken(response.token);
         }
         
-        return response;
+        return {
+            success: true,
+            ...response,
+            user: normalizedUser
+        };
     }
 
     /**
