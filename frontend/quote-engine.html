@@ -1327,83 +1327,8 @@ async function generateAIDescription(prompt) {
             const service = formData.serviceName || 'home improvement';
             const propertyType = document.getElementById('propertyType').value;
             
-            // Create detailed prompt for AI
-            const fullPrompt = `Create a detailed project description for a ${service} project. 
-            
-User's brief description: "${prompt}"
-Property type: ${propertyType}
-
-Generate a professional, detailed description (150-250 words) that includes:
-1. What work needs to be done
-2. Current state/problems
-3. Desired outcome
-4. Any specific requirements
-5. Materials or quality level (if relevant)
-
-Write in first person as if homeowner is describing it. Be specific and detailed to help tradespeople provide accurate quotes.`;
-
-            // Use Claude API for real AI generation
-            try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': process.env.CLAUDE_API_KEY || '',
-                        'anthropic-version': '2023-06-01'
-                    },
-                    body: JSON.stringify({
-                        model: "claude-3-5-sonnet-20241022",
-                        max_tokens: 1000,
-                        messages: [{
-                            role: "user",
-                            content: fullPrompt
-                        }]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Claude API request failed');
-                }
-
-                const data = await response.json();
-                
-                if (data.content && data.content[0]) {
-                    const aiDescription = data.content[0].text;
-                    
-                    // Ensure description is within reasonable length
-                    if (aiDescription.length > 500) {
-                        aiDescription = aiDescription.substring(0, 500) + '...[truncated due to length limit]';
-                    }
-                    
-                    return aiDescription.trim();
-                } else {
-                    throw new Error('No valid response from Claude API');
-                }
-                
-            } catch (error) {
-                console.error('Claude API error:', error);
-                // Fallback to template-based generation
-                const fullPrompt = `Create a detailed project description for a ${service} project. 
-                
-User's brief description: "${prompt}"
-Property type: ${propertyType}
-
-Generate a professional, detailed description (150-250 words) that includes:
-1. What work needs to be done
-2. Current state/problems
-3. Desired outcome
-4. Any specific requirements
-5. Materials or quality level (if relevant)
-
-Write in first person as if homeowner is describing it. Be specific and detailed to help tradespeople provide accurate quotes.`;
-
-            // Simulate API call - REPLACE WITH REAL API
-            // Option 1: Use Claude API (if available)
-            // Option 2: Use your backend endpoint
-            // For now, using smart template-based generation
-            
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-            
+            // For now, return a template-based description
+            // TODO: Integrate with Claude API when ready
             return generateSmartDescription(prompt, service, propertyType);
         }
 
