@@ -40,7 +40,7 @@ const API_CONFIG = {
 class TradeMatchAPI {
     constructor() {
         this.baseURL = API_CONFIG.BASE_URL;
-        this.token = localStorage.getItem('tradematch_token');
+        this.token = localStorage.getItem('token');
     }
 
     /**
@@ -49,9 +49,9 @@ class TradeMatchAPI {
     setToken(token) {
         this.token = token;
         if (token) {
-            localStorage.setItem('tradematch_token', token);
+            localStorage.setItem('token', token);
         } else {
-            localStorage.removeItem('tradematch_token');
+            localStorage.removeItem('token');
         }
     }
 

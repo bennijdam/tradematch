@@ -739,6 +739,13 @@
     <script>
         // Authentication Check
         function checkAuth() {
+            // Migrate any legacy token key to the current one
+            const legacyToken = localStorage.getItem('tradematch_token');
+            if (!localStorage.getItem('token') && legacyToken) {
+                localStorage.setItem('token', legacyToken);
+                localStorage.removeItem('tradematch_token');
+            }
+
             const token = localStorage.getItem('token');
             const user = localStorage.getItem('user');
             
