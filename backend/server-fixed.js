@@ -462,6 +462,320 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
   }
 });
 
+// ==========================================
+// QUOTES API ROUTES
+// ==========================================
+
+// Create new quote (protected - requires authentication)
+app.post("/api/quotes", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const {
+      service,
+      serviceName,
+      postcode,
+      propertyType,
+      budget,
+      urgency,
+      urgencyLabel,
+      description,
+      name,
+      email,
+      phone,
+      contactPreference
+    } = req.body;
+
+    // Validate required fields
+    if (!service || !postcode || !description) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: service, postcode, description' 
+      });
+    }
+
+    // Generate unique quote ID
+    const quoteId = 'QT' + crypto.randomBytes(6).toString('hex');
+
+    // Parse budget range
+    let budgetMin = null;
+    let budgetMax = null;
+    if (budget) {
+      const budgetMatch = budget.match(/£([\d,]+)\s*-\s*£([\d,]+)/);
+      if (budgetMatch) {
+        budgetMin = parseFloat(budgetMatch[1].replace(/,/g, ''));
+        budgetMax = parseFloat(budgetMatch[2].replace(/,/g, ''));
+      }
+    }
+
+    // Insert quote into database
+    const quoteResult = await pool.query(
+      `INSERT INTO quotes 
+       (id, customer_id, service_type, title, description, postcode, budget_min, budget_max, urgency, status, additional_details) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', $10) 
+       RETURNING *`,
+      [
+        quoteId,
+        userId,
+        service,
+        serviceName || service,
+        description,
+        postcode,
+        budgetMin,
+        budgetMax,
+        urgency || 'asap',
+        JSON.stringify({
+          propertyType,
+          urgencyLabel,
+          contactPreference,
+          contactName: name,
+          contactEmail: email,
+          contactPhone: phone
+        })
+      ]
+    );
+
+    const quote = quoteResult.rows[0];
+
+    console.log('✅ Quote created:', quoteId);
+
+    return res.json({
+      success: true,
+      message: 'Quote created successfully',
+      quote: {
+        id: quote.id,
+        serviceType: quote.service_type,
+        title: quote.title,
+        description: quote.description,
+        postcode: quote.postcode,
+        budgetMin: quote.budget_min,
+        budgetMax: quote.budget_max,
+        urgency: quote.urgency,
+        status: quote.status,
+        createdAt: quote.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Create quote error:', error);
+    res.status(500).json({ 
+      error: 'Failed to create quote: ' + error.message 
+    });
+  }
+});
+
+// Get all quotes for a customer (protected)
+app.get("/api/quotes/customer/:customerId", authenticateToken, async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    // Verify user can only access their own quotes
+    if (req.user.userId !== customerId) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const quotesResult = await pool.query(
+      `SELECT q.*, 
+              COUNT(DISTINCT b.id) as bid_count
+       FROM quotes q
+       LEFT JOIN bids b ON q.id = b.quote_id
+       WHERE q.customer_id = $1
+       GROUP BY q.id
+       ORDER BY q.created_at DESC`,
+      [customerId]
+    );
+
+    const quotes = quotesResult.rows.map(q => ({
+      id: q.id,
+      serviceType: q.service_type,
+      title: q.title,
+      description: q.description,
+      postcode: q.postcode,
+      budgetMin: q.budget_min,
+      budgetMax: q.budget_max,
+      urgency: q.urgency,
+      status: q.status,
+      bidCount: parseInt(q.bid_count) || 0,
+      createdAt: q.created_at,
+      updatedAt: q.updated_at
+    }));
+
+    return res.json({
+      success: true,
+      quotes
+    });
+
+  } catch (error) {
+    console.error('❌ Get customer quotes error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get quotes: ' + error.message 
+    });
+  }
+});
+
+// Get single quote details (protected)
+app.get("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId } = req.params;
+
+    const quoteResult = await pool.query(
+      `SELECT q.*, u.name as customer_name, u.email as customer_email
+       FROM quotes q
+       JOIN users u ON q.customer_id = u.id
+       WHERE q.id = $1`,
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    const quote = quoteResult.rows[0];
+
+    // Verify user has access (customer who created it, or any vendor)
+    const isCustomer = req.user.userId === quote.customer_id;
+    const isVendor = req.user.userType === 'vendor';
+
+    if (!isCustomer && !isVendor) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    return res.json({
+      success: true,
+      quote: {
+        id: quote.id,
+        customerId: quote.customer_id,
+        customerName: quote.customer_name,
+        customerEmail: isCustomer || isVendor ? quote.customer_email : null,
+        serviceType: quote.service_type,
+        title: quote.title,
+        description: quote.description,
+        postcode: quote.postcode,
+        budgetMin: quote.budget_min,
+        budgetMax: quote.budget_max,
+        urgency: quote.urgency,
+        status: quote.status,
+        additionalDetails: quote.additional_details,
+        createdAt: quote.created_at,
+        updatedAt: quote.updated_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Get quote error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get quote: ' + error.message 
+    });
+  }
+});
+
+// Get all open quotes (for vendors to browse)
+app.get("/api/quotes/browse/open", authenticateToken, async (req, res) => {
+  try {
+    // Only vendors can browse quotes
+    if (req.user.userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can browse quotes' });
+    }
+
+    const { service, postcode, limit = 50 } = req.query;
+
+    let query = `
+      SELECT q.*, 
+             COUNT(DISTINCT b.id) as bid_count
+      FROM quotes q
+      LEFT JOIN bids b ON q.id = b.quote_id
+      WHERE q.status = 'open'
+    `;
+    const params = [];
+
+    if (service) {
+      params.push(service);
+      query += ` AND q.service_type = $${params.length}`;
+    }
+
+    if (postcode) {
+      params.push(postcode);
+      query += ` AND q.postcode ILIKE $${params.length}`;
+    }
+
+    query += ` GROUP BY q.id ORDER BY q.created_at DESC LIMIT $${params.length + 1}`;
+    params.push(limit);
+
+    const quotesResult = await pool.query(query, params);
+
+    const quotes = quotesResult.rows.map(q => ({
+      id: q.id,
+      serviceType: q.service_type,
+      title: q.title,
+      description: q.description,
+      postcode: q.postcode,
+      budgetMin: q.budget_min,
+      budgetMax: q.budget_max,
+      urgency: q.urgency,
+      bidCount: parseInt(q.bid_count) || 0,
+      createdAt: q.created_at
+    }));
+
+    return res.json({
+      success: true,
+      quotes
+    });
+
+  } catch (error) {
+    console.error('❌ Browse quotes error:', error);
+    res.status(500).json({ 
+      error: 'Failed to browse quotes: ' + error.message 
+    });
+  }
+});
+
+// Update quote status (protected - customer only)
+app.patch("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId } = req.params;
+    const { status } = req.body;
+
+    // Validate status
+    const validStatuses = ['open', 'closed', 'cancelled', 'in_progress'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ 
+        error: 'Invalid status. Must be one of: ' + validStatuses.join(', ') 
+      });
+    }
+
+    // Verify quote exists and user owns it
+    const quoteResult = await pool.query(
+      'SELECT customer_id FROM quotes WHERE id = $1',
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    if (quoteResult.rows[0].customer_id !== req.user.userId) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Update quote status
+    await pool.query(
+      'UPDATE quotes SET status = $1, updated_at = NOW() WHERE id = $2',
+      [status, quoteId]
+    );
+
+    console.log('✅ Quote updated:', quoteId, 'Status:', status);
+
+    return res.json({
+      success: true,
+      message: 'Quote status updated successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Update quote error:', error);
+    res.status(500).json({ 
+      error: 'Failed to update quote: ' + error.message 
+    });
+  }
+});
+
 // Root route
 app.get("/", (req, res) => {
   res.json({

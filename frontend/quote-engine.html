@@ -1656,34 +1656,41 @@ I'm happy to discuss the project in more detail and answer any questions to help
             submitBtn.textContent = 'Submitting...';
 
             try {
-                const response = await fetch('https://tradematch.onrender.com/api/quotes/public', {
+                // Get auth token
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('Please login to submit a quote request.');
+                    window.location.href = 'auth-login.html?redirect=quote-engine.html';
+                    return;
+                }
+
+                const response = await fetch('https://tradematch.onrender.com/api/quotes', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
-                        'Authorization': localStorage.getItem('tradematch_auth_token') ? 
-                            'Bearer ' + localStorage.getItem('tradematch_auth_token') : ''
+                        'Authorization': 'Bearer ' + token
                     },
                     body: JSON.stringify(finalData)
                 });
+                
                 const data = await response.json();
                 
-                const quoteId = 'QT' + Date.now();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit quote');
+                }
+                
+                const quoteId = data.quote.id;
                 document.getElementById('quoteIdDisplay').textContent = quoteId;
                 
                 // Show success modal
                 document.getElementById('successModal').classList.add('active');
                 
-                // Store in localStorage for demo
-                // Save progress to localStorage
-                localStorage.setItem('quoteProgress', JSON.stringify({
-                    step: 2,
-                    timestamp: Date.now(),
-                    formData: finalData,
-                    quoteId: quoteId
-                }));
+                // Clear form data from localStorage
+                localStorage.removeItem('quoteProgress');
                 
             } catch (error) {
-                alert('Failed to submit quote request. Please try again.');
+                console.error('Quote submission error:', error);
+                alert(error.message || 'Failed to submit quote request. Please try again.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Quote Request';
             }
