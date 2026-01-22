@@ -4,6 +4,8 @@ const dotenv = require("dotenv");
 const { Pool } = require("pg");
 const crypto = require("crypto");
 const axios = require("axios");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
@@ -46,6 +48,32 @@ pool.connect().then(() => {
 }).catch(err => {
     console.error("❌ Database connection failed:", err.message);
 });
+
+// JWT Authentication Middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
+
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    console.error('❌ JWT_SECRET not configured');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    if (err) {
+      console.log('❌ Invalid token:', err.message);
+      return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+
+    req.user = decoded; // Attach decoded user info to request
+    next();
+  });
+};
 
 // Email service (Resend) - ADD ROUTES
 try {
@@ -113,12 +141,15 @@ app.post("/api/auth/register", async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
     }
 
+    // Hash password with bcrypt (10 rounds)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Insert user with email_verified = false
     const userResult = await pool.query(
       `INSERT INTO users (user_type, full_name, email, phone, password, postcode, email_verified, active) 
        VALUES ($1, $2, $3, $4, $5, $6, false, true) 
        RETURNING id, user_type, full_name, email, phone, postcode, email_verified`,
-      [userType, fullName, email, phone, password, postcode]
+      [userType, fullName, email, phone, hashedPassword, postcode]
     );
 
     const newUser = userResult.rows[0];
@@ -259,8 +290,9 @@ app.post("/api/auth/login", async (req, res) => {
 
     const user = userResult.rows[0];
 
-    // Check password (for now, plain text comparison - should use bcrypt in production)
-    if (user.password !== password) {
+    // Verify password with bcrypt
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
       console.log('❌ Invalid password');
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -275,15 +307,29 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
-    // Generate session token (in production, use JWT)
-    const sessionToken = 'token_' + Date.now() + '_' + crypto.randomBytes(16).toString('hex');
+    // Generate JWT token
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      console.error('❌ JWT_SECRET not configured');
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        userType: user.user_type
+      },
+      jwtSecret,
+      { expiresIn: '7d' } // Token expires in 7 days
+    );
 
     console.log('✅ User logged in successfully:', { email, userId: user.id });
 
     return res.json({
       success: true,
       message: 'Login successful',
-      token: sessionToken,
+      token: token,
       user: {
         id: user.id,
         userType: user.user_type,
@@ -298,6 +344,42 @@ app.post("/api/auth/login", async (req, res) => {
     console.error('❌ Login error:', error);
     res.status(500).json({ 
       error: 'Login failed: ' + error.message 
+    });
+  }
+});
+
+// Get current user info (protected route)
+app.get("/api/auth/me", authenticateToken, async (req, res) => {
+  try {
+    // req.user contains decoded JWT payload (userId, email, userType)
+    const userResult = await pool.query(
+      'SELECT id, user_type, full_name, email, phone, postcode, email_verified FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    return res.json({
+      success: true,
+      user: {
+        id: user.id,
+        userType: user.user_type,
+        fullName: user.full_name,
+        email: user.email,
+        phone: user.phone,
+        postcode: user.postcode,
+        emailVerified: user.email_verified
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Get user error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get user: ' + error.message 
     });
   }
 });
