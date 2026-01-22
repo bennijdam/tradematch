@@ -9,9 +9,17 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+// CORS with allowlist and per-origin reflection (avoids multi-value header)
+const corsAllowlist = (process.env.CORS_ORIGINS || "").split(',').map(o => o.trim()).filter(Boolean);
 app.use(cors({
-    origin: process.env.CORS_ORIGINS || "*",
-    credentials: true,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow same-origin / curl
+    if (corsAllowlist.length === 0) return callback(null, true); // default allow all
+    if (corsAllowlist.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
 }));
 
 app.use(express.json());
