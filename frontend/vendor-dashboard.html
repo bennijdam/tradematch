@@ -689,8 +689,12 @@
     <div class="modal" id="bidModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Submit Your Bid</h2>
+                <h2 id="bidModalTitle">Submit Your Bid</h2>
                 <button class="modal-close" onclick="closeBidModal()">&times;</button>
+            </div>
+
+            <div style="padding: 0 20px 10px; color: #666;">
+                <p id="bidModalBudget" style="margin: 0; font-size: 14px;"></p>
             </div>
 
             <form id="bidForm" onsubmit="submitBid(event)">
@@ -705,6 +709,11 @@
                         <label for="bidTimeline">Estimated Timeline *</label>
                         <input type="text" id="bidTimeline" name="timeline" class="form-control" placeholder="2-3 weeks" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bidStartDate">Earliest Start Date</label>
+                    <input type="date" id="bidStartDate" name="startDate" class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -778,23 +787,43 @@
             updateUserInfo(user);
             
             try {
-                // TODO: Replace with actual API call
-                // const response = await fetch('/api/vendor/dashboard', {
-                //     headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
-                // });
-const data = await response.json();
+                const token = localStorage.getItem('token');
+                
+                // Fetch available quotes and vendor's bids in parallel
+                const [quotesResponse, bidsResponse] = await Promise.all([
+                    fetch('https://tradematch.onrender.com/api/quotes/browse/open?limit=50', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    }),
+                    fetch(`https://tradematch.onrender.com/api/bids/vendor/${user.id}`, {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    })
+                ]);
+                
+                if (!quotesResponse.ok || !bidsResponse.ok) {
+                    throw new Error('Failed to load dashboard data');
+                }
+                
+                const quotesData = await quotesResponse.json();
+                const bidsData = await bidsResponse.json();
+                
+                const availableQuotes = quotesData.quotes || [];
+                const myBids = bidsData.bids || [];
+                
+                // Calculate stats
+                const activeJobs = myBids.filter(b => b.status === 'accepted').length;
+                const pendingBids = myBids.filter(b => b.status === 'pending').length;
                 
                 // Update stats
-                document.getElementById('statAvailableQuotes').textContent = data.stats.availableQuotes;
-                document.getElementById('statMyBids').textContent = data.stats.myBids;
-                document.getElementById('statActiveJobs').textContent = data.stats.activeJobs;
-                document.getElementById('statRating').textContent = data.stats.rating;
+                document.getElementById('statAvailableQuotes').textContent = availableQuotes.length;
+                document.getElementById('statMyBids').textContent = pendingBids;
+                document.getElementById('statActiveJobs').textContent = activeJobs;
+                document.getElementById('statRating').textContent = '4.8'; // TODO: Get from reviews
                 
                 // Check email status
                 updateEmailStatus();
                 
                 // Render quotes
-                renderQuotes(data.quotes);
+                renderQuotes(availableQuotes, myBids);
                 
                 document.getElementById('loader').classList.remove('active');
                 
@@ -858,7 +887,7 @@ const data = await response.json();
         }
 
         // Render Quotes
-        function renderQuotes(quotes) {
+        function renderQuotes(quotes, myBids = []) {
             const container = document.getElementById('quotesContainer');
             const emptyState = document.getElementById('emptyState');
             
@@ -871,18 +900,40 @@ const data = await response.json();
             container.style.display = 'grid';
             emptyState.style.display = 'none';
             
-            container.innerHTML = quotes.map(quote => `
-                <div class="quote-card" data-service="${quote.service}" data-location="${quote.postcode}">
+            // Create a map of quote IDs to bids for quick lookup
+            const bidsByQuote = {};
+            myBids.forEach(bid => {
+                bidsByQuote[bid.quoteId] = bid;
+            });
+            
+            container.innerHTML = quotes.map(quote => {
+                const myBid = bidsByQuote[quote.id];
+                const hasBid = !!myBid;
+                
+                const budgetDisplay = quote.budgetMin && quote.budgetMax 
+                    ? `£${quote.budgetMin.toLocaleString()} - £${quote.budgetMax.toLocaleString()}`
+                    : 'Budget not specified';
+                
+                const urgencyMap = {
+                    'asap': 'ASAP',
+                    '1-3months': '1-3 Months',
+                    '3-6months': '3-6 Months',
+                    'planning': 'Just Planning'
+                };
+                const urgencyDisplay = urgencyMap[quote.urgency] || quote.urgency || 'Not specified';
+                
+                return `
+                <div class="quote-card" data-service="${quote.serviceType}" data-location="${quote.postcode}">
                     <div class="quote-header">
                         <div>
-                            <h3 class="quote-title">${quote.serviceName}</h3>
+                            <h3 class="quote-title">${quote.title || quote.serviceType}</h3>
                             <div class="quote-meta">
-                                <span>📍 ${quote.location}</span>
-                                <span>🕒 Posted ${formatDate(quote.postedDate)}</span>
-                                <span>📬 ${quote.bidsCount} bid${quote.bidsCount !== 1 ? 's' : ''}</span>
+                                <span>📍 ${quote.postcode}</span>
+                                <span>🕒 Posted ${formatDate(quote.createdAt)}</span>
+                                <span>📬 ${quote.bidCount || 0} bid${quote.bidCount !== 1 ? 's' : ''}</span>
                             </div>
                         </div>
-                        <div class="budget-badge">${quote.budget}</div>
+                        <div class="budget-badge">${budgetDisplay}</div>
                     </div>
                     
                     <p class="quote-description">${quote.description}</p>
@@ -890,15 +941,11 @@ const data = await response.json();
                     <div class="quote-details">
                         <div class="detail-item">
                             <span class="detail-label">Timeline</span>
-                            <span class="detail-value">${quote.urgency}</span>
+                            <span class="detail-value">${urgencyDisplay}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Property</span>
-                            <span class="detail-value">${quote.propertyType}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Postcode</span>
-                            <span class="detail-value">${quote.postcode}</span>
+                            <span class="detail-label">Service</span>
+                            <span class="detail-value">${quote.serviceType}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Quote ID</span>
@@ -907,15 +954,22 @@ const data = await response.json();
                     </div>
                     
                     <div class="quote-actions">
-                        <button class="btn btn-primary" onclick="openBidModal('${quote.id}', '${quote.serviceName}')">
-                            Submit Bid
-                        </button>
+                        ${hasBid ? `
+                            <button class="btn btn-success" disabled>
+                                ✓ Bid Submitted (${myBid.status})
+                            </button>
+                        ` : `
+                            <button class="btn btn-primary" onclick="openBidModal('${quote.id}', '${quote.title || quote.serviceType}', '${budgetDisplay}')">
+                                Submit Bid
+                            </button>
+                        `}
                         <button class="btn btn-secondary" onclick="viewQuoteDetails('${quote.id}')">
                             View Details
                         </button>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Format Date
@@ -959,8 +1013,10 @@ const data = await response.json();
         }
 
         // Open Bid Modal
-        function openBidModal(quoteId, serviceName) {
+        function openBidModal(quoteId, serviceName, budget) {
             document.getElementById('quoteId').value = quoteId;
+            document.getElementById('bidModalTitle').textContent = `Submit Bid for: ${serviceName}`;
+            document.getElementById('bidModalBudget').textContent = `Customer Budget: ${budget}`;
             document.getElementById('bidModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -981,21 +1037,21 @@ const data = await response.json();
             
             const bidData = {
                 quoteId: document.getElementById('quoteId').value,
-                amount: document.getElementById('bidAmount').value,
+                price: parseFloat(document.getElementById('bidAmount').value),
                 timeline: document.getElementById('bidTimeline').value,
                 message: document.getElementById('bidMessage').value,
-                experience: document.getElementById('bidExperience').value || 0
+                startDate: document.getElementById('bidStartDate')?.value || null
             };
             
             try {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; display: inline-block;"></span> Submitting...';
                 
-                // Real API call to backend
+                const token = localStorage.getItem('token');
                 const response = await fetch('https://tradematch.onrender.com/api/bids', {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(bidData)
@@ -1003,26 +1059,17 @@ const data = await response.json();
                 
                 const data = await response.json();
                 
-                if (data.success) {
-                    showNotification('Bid submitted successfully! The customer will review your offer.', 'success');
-                    closeBidModal();
-                    
-                    // Update stats
-                    const currentBids = parseInt(document.getElementById('statMyBids').textContent);
-                    document.getElementById('statMyBids').textContent = currentBids + 1;
-                    
-                    // Render quotes
-                    renderQuotes(data.quotes);
-                    
-                    document.getElementById('loader').classList.add('active');
-                    
-                    setTimeout(() => {
-                        document.getElementById('loader').classList.remove('active');
-                    }, 1000);
-                    
-                    // Show success button
-                    const submitBtn = document.getElementById('submitBidBtn');
-                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Submit Another Bid';
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit bid');
+                }
+                
+                showNotification('Bid submitted successfully! The customer will review your offer.', 'success');
+                closeBidModal();
+                
+                // Reload dashboard to show updated data
+                setTimeout(() => {
+                    loadDashboard();
+                }, 1000);
                 } else {
                     throw new Error(data.error);
                     alert('Failed to submit bid. Please try again.');

@@ -790,6 +790,316 @@ app.get("/", (req, res) => {
   });
 });
 
+// ==========================================
+// BIDS API ROUTES
+// ==========================================
+
+// Submit a bid on a quote (vendors only)
+app.post("/api/bids", authenticateToken, async (req, res) => {
+  try {
+    // Only vendors can submit bids
+    if (req.user.userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can submit bids' });
+    }
+
+    const vendorId = req.user.userId;
+    const {
+      quoteId,
+      price,
+      message,
+      timeline,
+      startDate
+    } = req.body;
+
+    // Validate required fields
+    if (!quoteId || !price) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: quoteId, price' 
+      });
+    }
+
+    // Verify quote exists and is open
+    const quoteResult = await pool.query(
+      'SELECT id, status, customer_id FROM quotes WHERE id = $1',
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    const quote = quoteResult.rows[0];
+
+    if (quote.status !== 'open') {
+      return res.status(400).json({ error: 'This quote is no longer accepting bids' });
+    }
+
+    // Check if vendor already bid on this quote
+    const existingBid = await pool.query(
+      'SELECT id FROM bids WHERE quote_id = $1 AND vendor_id = $2',
+      [quoteId, vendorId]
+    );
+
+    if (existingBid.rows.length > 0) {
+      return res.status(400).json({ error: 'You have already submitted a bid for this quote' });
+    }
+
+    // Generate unique bid ID
+    const bidId = 'BID' + crypto.randomBytes(6).toString('hex');
+
+    // Insert bid
+    const bidResult = await pool.query(
+      `INSERT INTO bids 
+       (id, quote_id, vendor_id, price, message, timeline, start_date, status) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending') 
+       RETURNING *`,
+      [bidId, quoteId, vendorId, price, message, timeline, startDate]
+    );
+
+    const bid = bidResult.rows[0];
+
+    console.log('✅ Bid submitted:', bidId, 'Quote:', quoteId);
+
+    return res.json({
+      success: true,
+      message: 'Bid submitted successfully',
+      bid: {
+        id: bid.id,
+        quoteId: bid.quote_id,
+        price: bid.price,
+        message: bid.message,
+        timeline: bid.timeline,
+        status: bid.status,
+        createdAt: bid.created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Submit bid error:', error);
+    res.status(500).json({ 
+      error: 'Failed to submit bid: ' + error.message 
+    });
+  }
+});
+
+// Get all bids for a quote (customer and bidding vendors)
+app.get("/api/bids/quote/:quoteId", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId } = req.params;
+
+    // Verify quote exists
+    const quoteResult = await pool.query(
+      'SELECT customer_id FROM quotes WHERE id = $1',
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    const quote = quoteResult.rows[0];
+
+    // Only quote owner can see all bids
+    if (req.user.userId !== quote.customer_id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Get all bids with vendor info
+    const bidsResult = await pool.query(
+      `SELECT b.*, u.name as vendor_name, u.email as vendor_email, u.phone as vendor_phone
+       FROM bids b
+       JOIN users u ON b.vendor_id = u.id
+       WHERE b.quote_id = $1
+       ORDER BY b.created_at DESC`,
+      [quoteId]
+    );
+
+    const bids = bidsResult.rows.map(b => ({
+      id: b.id,
+      vendorId: b.vendor_id,
+      vendorName: b.vendor_name,
+      vendorEmail: b.vendor_email,
+      vendorPhone: b.vendor_phone,
+      price: b.price,
+      message: b.message,
+      timeline: b.timeline,
+      startDate: b.start_date,
+      status: b.status,
+      createdAt: b.created_at
+    }));
+
+    return res.json({
+      success: true,
+      bids
+    });
+
+  } catch (error) {
+    console.error('❌ Get quote bids error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get bids: ' + error.message 
+    });
+  }
+});
+
+// Get vendor's bids (vendor only)
+app.get("/api/bids/vendor/:vendorId", authenticateToken, async (req, res) => {
+  try {
+    const { vendorId } = req.params;
+
+    // Verify user can only access their own bids
+    if (req.user.userId !== vendorId || req.user.userType !== 'vendor') {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const bidsResult = await pool.query(
+      `SELECT b.*, q.title, q.service_type, q.postcode, q.status as quote_status
+       FROM bids b
+       JOIN quotes q ON b.quote_id = q.id
+       WHERE b.vendor_id = $1
+       ORDER BY b.created_at DESC`,
+      [vendorId]
+    );
+
+    const bids = bidsResult.rows.map(b => ({
+      id: b.id,
+      quoteId: b.quote_id,
+      quoteTitle: b.title,
+      serviceType: b.service_type,
+      postcode: b.postcode,
+      quoteStatus: b.quote_status,
+      price: b.price,
+      message: b.message,
+      timeline: b.timeline,
+      startDate: b.start_date,
+      status: b.status,
+      createdAt: b.created_at
+    }));
+
+    return res.json({
+      success: true,
+      bids
+    });
+
+  } catch (error) {
+    console.error('❌ Get vendor bids error:', error);
+    res.status(500).json({ 
+      error: 'Failed to get bids: ' + error.message 
+    });
+  }
+});
+
+// Accept a bid (customer only)
+app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
+  try {
+    const { bidId } = req.params;
+
+    // Get bid and quote info
+    const bidResult = await pool.query(
+      `SELECT b.*, q.customer_id, q.id as quote_id
+       FROM bids b
+       JOIN quotes q ON b.quote_id = q.id
+       WHERE b.id = $1`,
+      [bidId]
+    );
+
+    if (bidResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Bid not found' });
+    }
+
+    const bid = bidResult.rows[0];
+
+    // Verify user is the quote owner
+    if (req.user.userId !== bid.customer_id) {
+      return res.status(403).json({ error: 'Only the quote owner can accept bids' });
+    }
+
+    if (bid.status !== 'pending') {
+      return res.status(400).json({ error: 'This bid has already been processed' });
+    }
+
+    // Accept the bid
+    await pool.query(
+      'UPDATE bids SET status = $1, updated_at = NOW() WHERE id = $2',
+      ['accepted', bidId]
+    );
+
+    // Reject all other bids for this quote
+    await pool.query(
+      'UPDATE bids SET status = $1, updated_at = NOW() WHERE quote_id = $2 AND id != $3 AND status = $4',
+      ['rejected', bid.quote_id, bidId, 'pending']
+    );
+
+    // Update quote status to in_progress
+    await pool.query(
+      'UPDATE quotes SET status = $1, updated_at = NOW() WHERE id = $2',
+      ['in_progress', bid.quote_id]
+    );
+
+    console.log('✅ Bid accepted:', bidId);
+
+    return res.json({
+      success: true,
+      message: 'Bid accepted successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Accept bid error:', error);
+    res.status(500).json({ 
+      error: 'Failed to accept bid: ' + error.message 
+    });
+  }
+});
+
+// Reject a bid (customer only)
+app.patch("/api/bids/:bidId/reject", authenticateToken, async (req, res) => {
+  try {
+    const { bidId } = req.params;
+
+    // Get bid and quote info
+    const bidResult = await pool.query(
+      `SELECT b.*, q.customer_id
+       FROM bids b
+       JOIN quotes q ON b.quote_id = q.id
+       WHERE b.id = $1`,
+      [bidId]
+    );
+
+    if (bidResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Bid not found' });
+    }
+
+    const bid = bidResult.rows[0];
+
+    // Verify user is the quote owner
+    if (req.user.userId !== bid.customer_id) {
+      return res.status(403).json({ error: 'Only the quote owner can reject bids' });
+    }
+
+    if (bid.status !== 'pending') {
+      return res.status(400).json({ error: 'This bid has already been processed' });
+    }
+
+    // Reject the bid
+    await pool.query(
+      'UPDATE bids SET status = $1, updated_at = NOW() WHERE id = $2',
+      ['rejected', bidId]
+    );
+
+    console.log('✅ Bid rejected:', bidId);
+
+    return res.json({
+      success: true,
+      message: 'Bid rejected successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Reject bid error:', error);
+    res.status(500).json({ 
+      error: 'Failed to reject bid: ' + error.message 
+    });
+  }
+});
+
 // Debug routes
 app.get("/debug/routes", (req, res) => {
   res.json({
