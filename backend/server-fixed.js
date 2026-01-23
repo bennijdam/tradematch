@@ -1151,15 +1151,10 @@ app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
       const vendorResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.vendor_id]);
       const customerResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.customer_id]);
       const quoteResult = await pool.query('SELECT title FROM quotes WHERE id = $1', [bid.quote_id]);
-      // Email notifications: notify vendor their bid was accepted and customer confirmation
-      try {
-        const vendorResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.vendor_id]);
-        const customerResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.customer_id]);
-        const quoteResult = await pool.query('SELECT title FROM quotes WHERE id = $1', [bid.quote_id]);
 
-        const vendorName = vendorResult.rows[0]?.name || 'Vendor';
-        const customerName = customerResult.rows[0]?.name || 'Customer';
-        const quoteTitle = quoteResult.rows[0]?.title || 'Your job';
+      const vendorName = vendorResult.rows[0]?.name || 'Vendor';
+      const customerName = customerResult.rows[0]?.name || 'Customer';
+      const quoteTitle = quoteResult.rows[0]?.title || 'Your job';
 
         const apiUrl = process.env.API_URL || 'http://localhost:5001';
         // Notify vendor: bid accepted
