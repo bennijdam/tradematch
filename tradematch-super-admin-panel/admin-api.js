@@ -225,6 +225,61 @@ class AdminAPI {
             body: JSON.stringify({ action, reason })
         });
     }
+
+    // ============================================================
+    // AUDIT LOG
+    // ============================================================
+
+    async getAuditLog(filters = {}) {
+        const params = new URLSearchParams();
+        if (filters.days) params.append('days', filters.days);
+        if (filters.action) params.append('action', filters.action);
+        if (filters.target_type) params.append('target_type', filters.target_type);
+        if (filters.page) params.append('page', filters.page);
+        if (filters.limit) params.append('limit', filters.limit);
+        
+        const endpoint = `/api/admin/audit?${params.toString()}`;
+        return await this.request(endpoint);
+    }
+
+    // ============================================================
+    // ADMIN MANAGEMENT
+    // ============================================================
+
+    async getAdmins() {
+        return await this.request('/api/admin/admins');
+    }
+
+    async createAdmin(fullName, email, temporaryPassword) {
+        return await this.request('/api/admin/admins', {
+            method: 'POST',
+            body: JSON.stringify({
+                full_name: fullName,
+                email: email,
+                temporary_password: temporaryPassword
+            })
+        });
+    }
+
+    async removeAdmin(adminId) {
+        return await this.request(`/api/admin/admins/${adminId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // ============================================================
+    // PASSWORD MANAGEMENT
+    // ============================================================
+
+    async changePassword(currentPassword, newPassword) {
+        return await this.request('/api/admin/change-password', {
+            method: 'POST',
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+        });
+    }
 }
 
 // ============================================================

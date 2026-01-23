@@ -509,4 +509,225 @@ router.patch('/reviews/:reviewId/moderate', async (req, res) => {
     }
 });
 
+// ============================================================
+// AUDIT LOG
+// ============================================================
+
+/**
+ * GET /api/admin/audit
+ * Get audit log with filters
+ */
+router.get('/audit', async (req, res) => {
+    try {
+        const { days = 30, action, target_type, page = 1, limit = 20 } = req.query;
+        
+        const offset = (page - 1) * limit;
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - parseInt(days));
+        
+        let query = `SELECT a.*, u.email as admin_email 
+                     FROM admin_audit_log a
+                     LEFT JOIN users u ON a.admin_id = u.id
+                     WHERE a.created_at >= $1`;
+        const params = [startDate];
+        
+        let paramIndex = 2;
+        
+        if (action) {
+            query += ` AND a.action = $${paramIndex}`;
+            params.push(action);
+            paramIndex++;
+        }
+        
+        if (target_type) {
+            query += ` AND a.target_type = $${paramIndex}`;
+            params.push(target_type);
+            paramIndex++;
+        }
+        
+        query += ` ORDER BY a.created_at DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+        params.push(limit, offset);
+        
+        const result = await pool.query(query, params);
+        
+        const countResult = await pool.query(
+            `SELECT COUNT(*) as total FROM admin_audit_log 
+             WHERE created_at >= $1${action ? ` AND action = $2` : ''}${target_type ? ` AND target_type = $${action ? 3 : 2}` : ''}`,
+            action ? (target_type ? [startDate, action, target_type] : [startDate, action]) : [startDate]
+        );
+        
+        res.json({ 
+            success: true, 
+            logs: result.rows,
+            total: parseInt(countResult.rows[0].total),
+            page: parseInt(page),
+            limit: parseInt(limit)
+        });
+        
+    } catch (error) {
+        console.error('Audit log fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch audit log' });
+    }
+});
+
+// ============================================================
+// ADMIN MANAGEMENT
+// ============================================================
+
+/**
+ * GET /api/admin/admins
+ * Get all admin users
+ */
+router.get('/admins', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, full_name, email, role, status, created_at
+             FROM users
+             WHERE role IN ('admin', 'super_admin')
+             ORDER BY created_at DESC`
+        );
+        
+        res.json({ success: true, admins: result.rows });
+        
+    } catch (error) {
+        console.error('Fetch admins error:', error);
+        res.status(500).json({ error: 'Failed to fetch admins' });
+    }
+});
+
+/**
+ * POST /api/admin/admins
+ * Create new admin user
+ */
+router.post('/admins', async (req, res) => {
+    try {
+        const { full_name, email, temporary_password } = req.body;
+        
+        if (!full_name || !email || !temporary_password) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        // Check if email already exists
+        const existingUser = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ error: 'Email already in use' });
+        }
+        
+        const bcrypt = require('bcryptjs');
+        const hashedPassword = await bcrypt.hash(temporary_password, 10);
+        const userId = require('crypto').randomUUID();
+        
+        await pool.query(
+            `INSERT INTO users (id, full_name, email, password_hash, role, user_type, status, email_verified, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
+            [userId, full_name, email, hashedPassword, 'admin', 'admin', 'active', true]
+        );
+        
+        // Log admin action
+        await pool.query(
+            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
+             VALUES ($1, $2, $3, $4, $5, NOW())`,
+            [req.user.userId, 'admin_created', 'admin', userId, JSON.stringify({ full_name, email })]
+        );
+        
+        res.json({ success: true, message: 'Admin account created successfully', admin_id: userId });
+        
+    } catch (error) {
+        console.error('Create admin error:', error);
+        res.status(500).json({ error: 'Failed to create admin account' });
+    }
+});
+
+/**
+ * DELETE /api/admin/admins/:adminId
+ * Remove admin user
+ */
+router.delete('/admins/:adminId', async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        
+        // Prevent removing yourself
+        if (adminId === req.user.userId) {
+            return res.status(400).json({ error: 'Cannot remove your own admin account' });
+        }
+        
+        // Update user to remove admin role
+        await pool.query(
+            `UPDATE users SET role = 'customer', user_type = 'customer' WHERE id = $1`,
+            [adminId]
+        );
+        
+        // Log admin action
+        await pool.query(
+            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
+             VALUES ($1, $2, $3, $4, $5, NOW())`,
+            [req.user.userId, 'admin_removed', 'admin', adminId, JSON.stringify({ removed_by: req.user.userId })]
+        );
+        
+        res.json({ success: true, message: 'Admin account removed successfully' });
+        
+    } catch (error) {
+        console.error('Remove admin error:', error);
+        res.status(500).json({ error: 'Failed to remove admin account' });
+    }
+});
+
+// ============================================================
+// ADMIN PASSWORD CHANGE
+// ============================================================
+
+/**
+ * POST /api/admin/change-password
+ * Change admin password
+ */
+router.post('/change-password', async (req, res) => {
+    try {
+        const { current_password, new_password } = req.body;
+        
+        if (!current_password || !new_password) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        if (new_password.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        }
+        
+        // Get current user
+        const userResult = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.userId]);
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        // Verify current password
+        const bcrypt = require('bcryptjs');
+        const isValidPassword = await bcrypt.compare(current_password, userResult.rows[0].password_hash);
+        if (!isValidPassword) {
+            return res.status(401).json({ error: 'Current password is incorrect' });
+        }
+        
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        
+        // Update password
+        await pool.query(
+            'UPDATE users SET password_hash = $1 WHERE id = $2',
+            [hashedPassword, req.user.userId]
+        );
+        
+        // Log admin action
+        await pool.query(
+            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
+             VALUES ($1, $2, $3, $4, $5, NOW())`,
+            [req.user.userId, 'password_changed', 'admin', req.user.userId, JSON.stringify({ changed_at: new Date() })]
+        );
+        
+        res.json({ success: true, message: 'Password changed successfully' });
+        
+    } catch (error) {
+        console.error('Password change error:', error);
+        res.status(500).json({ error: 'Failed to change password' });
+    }
+});
+
 module.exports = router;
+

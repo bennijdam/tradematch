@@ -1179,9 +1179,12 @@ app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
         }, { timeout: 5000 }).catch(err => console.error('Customer confirmation email failed:', err.message));
       } catch (emailErr) {
         console.error('Email notify on bid accept failed:', emailErr.message);
-      success: true,
-      message: 'Bid accepted successfully'
-    });
+      }
+
+      res.json({
+        success: true,
+        message: 'Bid accepted successfully'
+      });
 
   } catch (error) {
     console.error('❌ Accept bid error:', error);
