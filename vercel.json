@@ -14,46 +14,46 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/admin-login(.html)?",
-      "dest": "/frontend/admin-login.html"
+      "source": "/admin-login",
+      "destination": "/frontend/admin-login.html"
     },
     {
-      "src": "/admin-dashboard(.html)?",
-      "dest": "/frontend/admin-dashboard.html"
+      "source": "/admin-dashboard",
+      "destination": "/frontend/admin-dashboard.html"
     },
     {
-      "src": "/admin-users(.html)?",
-      "dest": "/frontend/admin-users.html"
+      "source": "/admin-users",
+      "destination": "/frontend/admin-users.html"
     },
     {
-      "src": "/admin-vendors(.html)?",
-      "dest": "/frontend/admin-vendors.html"
+      "source": "/admin-vendors",
+      "destination": "/frontend/admin-vendors.html"
     },
     {
-      "src": "/admin-reviews(.html)?",
-      "dest": "/frontend/admin-reviews.html"
+      "source": "/admin-reviews",
+      "destination": "/frontend/admin-reviews.html"
     },
     {
-      "src": "/admin-audit(.html)?",
-      "dest": "/frontend/admin-audit.html"
+      "source": "/admin-audit",
+      "destination": "/frontend/admin-audit.html"
     },
     {
-      "src": "/admin-admins(.html)?",
-      "dest": "/frontend/admin-admins.html"
+      "source": "/admin-admins",
+      "destination": "/frontend/admin-admins.html"
     },
     {
-      "src": "/admin-password-change(.html)?",
-      "dest": "/frontend/admin-password-change.html"
+      "source": "/admin-password-change",
+      "destination": "/frontend/admin-password-change.html"
     },
     {
-      "src": "/admin-api.js",
-      "dest": "/frontend/admin-api.js"
+      "source": "/admin-api.js",
+      "destination": "/frontend/admin-api.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "source": "/:path*",
+      "destination": "/frontend/:path*"
     }
   ],
   "trailingSlash": false,
