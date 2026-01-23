@@ -284,7 +284,7 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
 
         // Find user
         const result = await pool.query(
-            'SELECT id, email, password, full_name, user_type, phone, postcode, oauth_provider, active FROM users WHERE email = $1',
+            'SELECT id, email, password_hash, full_name, user_type, phone, postcode, oauth_provider, status FROM users WHERE email = $1',
             [email.toLowerCase()]
         );
 
@@ -295,14 +295,14 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
 
         const user = result.rows[0];
         
-        // Check if account is active
-        if (!user.active) {
-            logger.warn('Login failed: Account inactive', { email });
+        // Check if account is active/confirmed (status should be 'active' or 'confirmed')
+        if (user.status && user.status !== 'active' && user.status !== 'confirmed') {
+            logger.warn('Login failed: Account not active', { email, status: user.status });
             return res.status(403).json({ error: 'Account is inactive. Please contact support.' });
         }
 
         // Check password
-        const validPassword = await bcrypt.compare(password, user.password || '');
+        const validPassword = await bcrypt.compare(password, user.password_hash || '');
 
         if (!validPassword) {
             logger.warn('Login failed: Invalid password', { email });
