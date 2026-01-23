@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Log - TradeMatch Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header-info {
+            text-align: right;
+        }
+
+        .header-info .user-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .header-info .user-email {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            flex: 1;
+            padding: 16px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            border-right: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-menu a:last-child {
+            border-right: none;
+        }
+
+        .nav-menu a:hover {
+            background: #e8e9eb;
+            color: #667eea;
+        }
+
+        .nav-menu a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-user {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-vendor {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-review {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-payment {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .action-badge {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .timestamp {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .details-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .details-btn:hover {
+            background: #5568d3;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .pagination button:hover {
+            background: #f0f0f0;
+        }
+
+        .pagination button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .detail-row {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .json-block {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            float: right;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>📋 Audit Log</h1>
+            </div>
+            <div class="header-info">
+                <div class="user-name"><span id="userName">Admin</span></div>
+                <div class="user-email"><span id="userEmail"></span></div>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="admin-users.html">Users</a>
+            <a href="admin-vendors.html">Vendors</a>
+            <a href="admin-reviews.html">Reviews</a>
+            <a href="admin-admins.html">Admins</a>
+            <a href="admin-audit.html" class="active">Audit Log</a>
+        </div>
+
+        <div class="content">
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Action Type</label>
+                    <select id="actionFilter">
+                        <option value="">All Actions</option>
+                        <option value="user_suspended">User Suspended</option>
+                        <option value="user_activated">User Activated</option>
+                        <option value="vendor_approved">Vendor Approved</option>
+                        <option value="vendor_rejected">Vendor Rejected</option>
+                        <option value="review_moderated">Review Moderated</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Target Type</label>
+                    <select id="targetFilter">
+                        <option value="">All Types</option>
+                        <option value="user">User</option>
+                        <option value="vendor">Vendor</option>
+                        <option value="review">Review</option>
+                        <option value="payment">Payment</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Days</label>
+                    <select id="daysFilter">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="365">Last Year</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Admin</th>
+                            <th>Action</th>
+                            <th>Target</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">Loading audit logs...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="paginationContainer"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDetailsModal()">✕</button>
+            <div class="modal-title">Action Details</div>
+            <div id="detailsContent"></div>
+        </div>
+    </div>
+
+    <script src="admin-api.js"></script>
+    <script>
+        let api;
+        let currentPage = 1;
+        let allLogs = [];
+
+        async function init() {
+            api = new AdminAPI();
+            
+            if (!await api.checkAuth()) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            await api.initUserInfo('userName', 'userEmail');
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                api.handleLogout();
+            });
+
+            document.getElementById('actionFilter').addEventListener('change', loadAuditLogs);
+            document.getElementById('targetFilter').addEventListener('change', loadAuditLogs);
+            document.getElementById('daysFilter').addEventListener('change', loadAuditLogs);
+
+            loadAuditLogs();
+        }
+
+        async function loadAuditLogs() {
+            try {
+                // Mock data - in production this would come from /api/admin/audit
+                const days = parseInt(document.getElementById('daysFilter').value);
+                const actionFilter = document.getElementById('actionFilter').value;
+                const targetFilter = document.getElementById('targetFilter').value;
+
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+
+                // Generate sample audit logs
+                allLogs = generateAuditLogs(100, startDate, actionFilter, targetFilter);
+                displayAuditLogs(allLogs.slice(0, 20));
+                updatePagination(allLogs.length);
+            } catch (error) {
+                console.error('Failed to load audit logs:', error);
+            }
+        }
+
+        function generateAuditLogs(count, startDate, actionFilter, targetFilter) {
+            const actions = [
+                { type: 'user_suspended', description: 'Suspended User', target: 'user', icon: '🚫' },
+                { type: 'user_activated', description: 'Activated User', target: 'user', icon: '✅' },
+                { type: 'vendor_approved', description: 'Approved Vendor', target: 'vendor', icon: '✔️' },
+                { type: 'vendor_rejected', description: 'Rejected Vendor', target: 'vendor', icon: '✕' },
+                { type: 'review_moderated', description: 'Moderated Review', target: 'review', icon: '⭐' }
+            ];
+
+            const logs = [];
+            const adminName = 'admin@tradematch.com';
+
+            for (let i = 0; i < count; i++) {
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                
+                if (actionFilter && action.type !== actionFilter) continue;
+                if (targetFilter && action.target !== targetFilter) continue;
+
+                const date = new Date(startDate);
+                date.setHours(date.getHours() + Math.floor(Math.random() * (days * 24)));
+
+                logs.push({
+                    id: `audit_${i}`,
+                    admin_id: 'admin_001',
+                    admin_name: adminName,
+                    action: action.type,
+                    action_description: action.description,
+                    action_icon: action.icon,
+                    target_type: action.target,
+                    target_id: `${action.target}_${Math.floor(Math.random() * 10000)}`,
+                    details: JSON.stringify({
+                        reason: ['Policy violation', 'Spam', 'Duplicate account', 'Suspicious activity'][Math.floor(Math.random() * 4)],
+                        notes: 'Admin took action on this item'
+                    }),
+                    created_at: date.toISOString()
+                });
+            }
+
+            return logs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
+
+        function displayAuditLogs(logs) {
+            const tbody = document.getElementById('auditTable');
+
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No audit logs found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(log => `
+                <tr>
+                    <td class="timestamp">${formatDate(log.created_at)}</td>
+                    <td>${log.admin_name}</td>
+                    <td>
+                        <span class="badge action-badge">${log.action_icon} ${log.action_description}</span>
+                    </td>
+                    <td>
+                        <span class="badge ${getTargetBadgeClass(log.target_type)}">
+                            ${capitalizeFirst(log.target_type)}
+                        </span>
+                        <br>
+                        <small style="color: #999;">${log.target_id}</small>
+                    </td>
+                    <td>
+                        <button class="details-btn" onclick="showDetails(${JSON.stringify(log).replace(/"/g, '&quot;')})">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getTargetBadgeClass(targetType) {
+            const classes = {
+                'user': 'badge-user',
+                'vendor': 'badge-vendor',
+                'review': 'badge-review',
+                'payment': 'badge-payment'
+            };
+            return classes[targetType] || 'badge-user';
+        }
+
+        function showDetails(log) {
+            const detailsContent = document.getElementById('detailsContent');
+            const details = JSON.parse(log.details);
+
+            detailsContent.innerHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Timestamp</div>
+                    <div class="detail-value">${formatDate(log.created_at)}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Admin</div>
+                    <div class="detail-value">${log.admin_name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Action</div>
+                    <div class="detail-value">${log.action_description} (${log.action})</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Target Type</div>
+                    <div class="detail-value">${capitalizeFirst(log.target_type)}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Target ID</div>
+                    <div class="detail-value">${log.target_id}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Details</div>
+                    <div class="detail-value">
+                        <div class="json-block">${JSON.stringify(details, null, 2)}</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailsModal').classList.add('active');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        function updatePagination(total) {
+            const itemsPerPage = 20;
+            const pageCount = Math.ceil(total / itemsPerPage);
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            let html = '';
+            for (let i = 1; i <= pageCount; i++) {
+                html += `<button onclick="changePage(${i})" class="page-btn ${i === currentPage ? 'active' : ''}">${i}</button>`;
+            }
+
+            paginationContainer.innerHTML = html;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            const start = (page - 1) * 20;
+            const end = start + 20;
+            displayAuditLogs(allLogs.slice(start, end));
+            updatePagination(allLogs.length);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function capitalizeFirst(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        document.getElementById('detailsModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailsModal') {
+                closeDetailsModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
