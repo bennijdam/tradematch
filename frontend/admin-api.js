@@ -4,9 +4,7 @@
  */
 
 const API_CONFIG = {
-    BASE_URL: window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'https://tradematch.onrender.com',
+    BASE_URL: 'https://tradematch.onrender.com',
     ENDPOINTS: {
         // Stats
         STATS: '/api/admin/stats',
