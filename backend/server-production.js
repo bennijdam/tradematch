@@ -88,15 +88,23 @@ const pool = new Pool({
     connectionTimeoutMillis: 10000,
 });
 
+// Handle pool errors gracefully
+pool.on('error', (err, client) => {
+    logger.error('Unexpected error on idle client', { error: err.message });
+    // Don't exit - let the connection pool recover
+});
+
 // Test database connection with logging
 pool.connect()
-    .then(() => {
+    .then((client) => {
+        client.release();
         logger.info("✅ Database connected successfully");
     })
     .catch(err => {
         logger.error("❌ Database connection failed", { error: err.message });
         if (process.env.NODE_ENV === 'production') {
-            process.exit(1); // Exit in production if DB is unavailable
+            // Don't exit immediately - allow server to start and serve health checks
+            logger.warn("⚠️  Server continuing despite DB connection error - will retry on next request");
         }
     });
 
