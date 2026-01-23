@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - TradeMatch Admin</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-400: #34d399;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-200: #e2e8f0;
+            --red-500: #ef4444;
+            --amber-500: #f59e0b;
+            --blue-500: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.2;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--emerald-500);
+            top: -200px;
+            right: -200px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--blue-500);
+            bottom: -150px;
+            left: -150px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald-500);
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+        }
+
+        .nav-section-title {
+            padding: 0.5rem 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            padding: 0.875rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-left-color: var(--emerald-500);
+        }
+
+        .nav-item.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-400);
+            border-left-color: var(--emerald-500);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, white, var(--emerald-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-top: 0.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+
+        /* Search and Filters */
+        .controls-bar {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+        }
+
+        .filter-select {
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-select:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn {
+            padding: 1rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Users Table */
+        .table-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        th {
+            padding: 1.25rem 2rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tbody tr {
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        td {
+            padding: 1.5rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .type-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .type-customer {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--blue-500);
+        }
+
+        .type-vendor {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-400);
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-400);
+        }
+
+        .status-suspended {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red-500);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--amber-500);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.625rem 1.125rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--red-500);
+        }
+
+        /* Pagination */
+        .pagination {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .page-btn {
+            padding: 0.625rem 1.125rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .page-btn.active {
+            background: var(--emerald-500);
+            border-color: var(--emerald-500);
+        }
+
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">Trade<span>Match</span></a>
+            <div class="admin-badge">⚡ SUPER ADMIN</div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section-title">Overview</div>
+            <a href="admin-dashboard.html" class="nav-item">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <div class="nav-section-title">Management</div>
+            <a href="admin-users.html" class="nav-item active">
+                <span>👥</span>
+                <span>Users</span>
+            </a>
+            <a href="admin-vendors.html" class="nav-item">
+                <span>🔧</span>
+                <span>Tradespeople</span>
+            </a>
+            <a href="admin-quotes.html" class="nav-item">
+                <span>📋</span>
+                <span>Quotes</span>
+            </a>
+
+            <div class="nav-section-title">Moderation</div>
+            <a href="admin-reviews.html" class="nav-item">
+                <span>⭐</span>
+                <span>Reviews</span>
+            </a>
+
+            <div class="nav-section-title">System</div>
+            <a href="admin-admins.html" class="nav-item">
+                <span>👨‍💼</span>
+                <span>Admins</span>
+            </a>
+            <a href="admin-audit.html" class="nav-item">
+                <span>📋</span>
+                <span>Audit Log</span>
+            </a>
+            <a href="admin-password-change.html" class="nav-item">
+                <span>🔐</span>
+                <span>Change Password</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">User Management</h1>
+            <div class="breadcrumb">
+                <span>Admin</span>
+                <span>→</span>
+                <span>Users</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search users by name, email, or ID..." id="searchInput">
+            </div>
+            <select class="filter-select" id="typeFilter">
+                <option value="">All Types</option>
+                <option value="customer">Customers</option>
+                <option value="vendor">Vendors</option>
+            </select>
+            <select class="filter-select" id="statusFilter">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="suspended">Suspended</option>
+            </select>
+            <button class="btn btn-primary" onclick="exportUsersCSV()">
+                <span>📥</span>
+                <span>Export CSV</span>
+            </button>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <div class="table-title">All Users (10,547)</div>
+                <div class="table-actions">
+                    <button class="btn btn-primary">
+                        <span>➕</span>
+                        <span>Add User</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Phone</th>
+                            <th>Verified</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" style="text-align: center;">Loading users...</td></tr>
+                    </tbody>
+                                        <div class="user-email">john@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="type-badge type-customer">Customer</span></td>
+                            <td>London, SW1A</td>
+                            <td>Jan 20, 2026</td>
+                            <td>3 quotes posted</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Edit</button>
+                                    <button class="action-btn danger">Suspend</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">BP</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Bob's Plumbing</div>
+                                        <div class="user-email">bob@plumbing.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="type-badge type-vendor">Vendor</span></td>
+                            <td>Manchester, M1</td>
+                            <td>Jan 18, 2026</td>
+                            <td>15 bids submitted</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Edit</button>
+                                    <button class="action-btn danger">Suspend</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">EJ</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Emily Johnson</div>
+                                        <div class="user-email">emily@test.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="type-badge type-customer">Customer</span></td>
+                            <td>Birmingham, B1</td>
+                            <td>Jan 15, 2026</td>
+                            <td>1 quote posted</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Edit</button>
+                                    <button class="action-btn danger">Suspend</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">TC</div>
+                                    <div class="user-info">
+                                        <div class="user-name">Tom's Carpentry</div>
+                                        <div class="user-email">tom@carpentry.co.uk</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="type-badge type-vendor">Vendor</span></td>
+                            <td>Leeds, LS1</td>
+                            <td>Jan 12, 2026</td>
+                            <td>Awaiting approval</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn">Approve</button>
+                                    <button class="action-btn danger">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <div class="pagination-info" id="paginationInfo">
+                    Loading...
+                </div>
+                <div class="pagination-controls" id="paginationControls">
+                    <button class="page-btn" id="prevBtn">Previous</button>
+                    <span id="pageNumbers"></span>
+                    <button class="page-btn" id="nextBtn">Next</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load API Client -->
+    <script src="admin-api.js"></script>
+    
+    <script>
+        let api;
+        let currentPage = 1;
+        let totalPages = 1;
+        const limit = 50;
+        let currentFilters = {};
+
+        // Initialize page
+        async function init() {
+            api = await checkAuth();
+            if (!api) return;
+            
+            initUserInfo(api);
+            await loadUsers();
+            
+            // Setup event listeners
+            document.getElementById('searchInput').addEventListener('keyup', debounce(handleSearch, 500));
+            document.getElementById('typeFilter').addEventListener('change', handleFilterChange);
+            document.getElementById('statusFilter').addEventListener('change', handleFilterChange);
+            document.getElementById('prevBtn').addEventListener('click', () => changePage(currentPage - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => changePage(currentPage + 1));
+        }
+
+        // Load users with filters
+        async function loadUsers() {
+            try {
+                const params = {
+                    page: currentPage,
+                    limit: limit,
+                    ...currentFilters
+                };
+                
+                const response = await api.getUsers(params);
+                
+                if (response.success) {
+                    displayUsers(response.users);
+                    updatePagination(response.total, response.page, response.limit);
+                }
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                showToast('Failed to load users', 'error');
+            }
+        }
+
+        // Display users in table
+        function displayUsers(users) {
+            const tbody = document.querySelector('#usersTable tbody');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No users found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => {
+                const initials = getInitials(user.full_name || user.email);
+                const statusClass = getStatusClass(user.status);
+                const roleClass = getRoleClass(user.role);
+                
+                return `
+                    <tr data-user-id="${user.id}">
+                        <td>
+                            <div class="user-cell">
+                                <span class="avatar">${initials}</span>
+                                <div>
+                                    <div class="user-name">${user.full_name || 'N/A'}</div>
+                                    <div class="user-email">${user.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="type-badge ${roleClass}">${capitalizeFirst(user.role)}</span></td>
+                        <td><span class="status-badge ${statusClass}">${capitalizeFirst(user.status)}</span></td>
+                        <td>${user.phone || '-'}</td>
+                        <td>${user.email_verified ? '✅' : '❌'}</td>
+                        <td>${formatDate(user.created_at, 'short')}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" onclick="viewUser('${user.id}')">View</button>
+                                <button class="action-btn" onclick="editUser('${user.id}')">Edit</button>
+                                ${user.status === 'active' ? 
+                                    `<button class="action-btn danger" onclick="suspendUser('${user.id}')">Suspend</button>` :
+                                    `<button class="action-btn" onclick="activateUser('${user.id}')">Activate</button>`
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update pagination controls
+        function updatePagination(total, page, pageLimit) {
+            totalPages = Math.ceil(total / pageLimit);
+            currentPage = page;
+            
+            document.getElementById('paginationInfo').textContent = 
+                `Showing ${(page - 1) * pageLimit + 1}-${Math.min(page * pageLimit, total)} of ${total.toLocaleString()} users`;
+            
+            document.getElementById('prevBtn').disabled = page === 1;
+            document.getElementById('nextBtn').disabled = page === totalPages;
+            
+            // Page numbers
+            const pageNumbers = [];
+            for (let i = Math.max(1, page - 2); i <= Math.min(totalPages, page + 2); i++) {
+                pageNumbers.push(`
+                    <button class="page-btn ${i === page ? 'active' : ''}" onclick="changePage(${i})">${i}</button>
+                `);
+            }
+            document.getElementById('pageNumbers').innerHTML = pageNumbers.join('');
+        }
+
+        // Handle search
+        function handleSearch(e) {
+            currentFilters.search = e.target.value;
+            currentPage = 1;
+            loadUsers();
+        }
+
+        // Handle filter change
+        function handleFilterChange() {
+            const role = document.getElementById('typeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            currentFilters = {};
+            if (role) currentFilters.role = role;
+            if (status) currentFilters.status = status;
+            
+            currentPage = 1;
+            loadUsers();
+        }
+
+        // Change page
+        function changePage(page) {
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            loadUsers();
+        }
+
+        // User actions
+        async function suspendUser(userId) {
+            if (!confirm('Are you sure you want to suspend this user?')) return;
+            
+            const reason = prompt('Reason for suspension:');
+            if (!reason) return;
+            
+            try {
+                await api.updateUserStatus(userId, 'suspended', reason);
+                showToast('User suspended successfully', 'success');
+                await loadUsers();
+            } catch (error) {
+                showToast('Failed to suspend user', 'error');
+            }
+        }
+
+        async function activateUser(userId) {
+            try {
+                await api.updateUserStatus(userId, 'active', 'Reactivated by admin');
+                showToast('User activated successfully', 'success');
+                await loadUsers();
+            } catch (error) {
+                showToast('Failed to activate user', 'error');
+            }
+        }
+
+        function viewUser(userId) {
+            window.location.href = `admin-users.html?id=${userId}`;
+        }
+
+        function editUser(userId) {
+            // Future implementation
+            alert(`Edit user: ${userId}`);
+        }
+
+        // Export users to CSV
+        async function exportUsersCSV() {
+            try {
+                const response = await api.getUsers({ page: 1, limit: 10000 });
+                if (!response.success || !response.users) {
+                    showToast('Failed to export users', 'error');
+                    return;
+                }
+
+                const users = response.users;
+                const headers = ['ID', 'Name', 'Email', 'Phone', 'Type', 'Status', 'Verified', 'Joined'];
+                
+                const rows = users.map(user => [
+                    user.id,
+                    user.full_name || '',
+                    user.email,
+                    user.phone || '',
+                    capitalizeFirst(user.role),
+                    capitalizeFirst(user.status),
+                    user.email_verified ? 'Yes' : 'No',
+                    new Date(user.created_at).toLocaleDateString('en-GB')
+                ]);
+
+                downloadCSV(headers, rows, 'users.csv');
+                showToast(`Exported ${users.length} users`, 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Export failed', 'error');
+            }
+        }
+
+        function downloadCSV(headers, rows, filename) {
+            const csv = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Helper functions
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'active': 'status-active',
+                'pending': 'status-pending',
+                'suspended': 'status-suspended',
+                'banned': 'status-suspended'
+            };
+            return classes[status] || 'status-pending';
+        }
+
+        function getRoleClass(role) {
+            const classes = {
+                'customer': '',
+                'vendor': 'vendor',
+                'admin': 'admin',
+                'super_admin': 'admin'
+            };
+            return classes[role] || '';
+        }
+
+        function capitalizeFirst(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

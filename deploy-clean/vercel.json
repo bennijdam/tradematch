@@ -2,15 +2,43 @@
   "version": 2,
   "builds": [
     {
-      "src": "**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif}",
+      "src": "**/*.{html,js,css,json,ico,png,jpg,jpeg,svg,gif,woff,woff2}",
       "use": "@vercel/static"
     }
   ],
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "source": "/admin-login",
+      "destination": "/admin-login.html"
+    },
+    {
+      "source": "/admin-dashboard",
+      "destination": "/admin-dashboard.html"
+    },
+    {
+      "source": "/admin-users",
+      "destination": "/admin-users.html"
+    },
+    {
+      "source": "/admin-vendors",
+      "destination": "/admin-vendors.html"
+    },
+    {
+      "source": "/admin-reviews",
+      "destination": "/admin-reviews.html"
+    },
+    {
+      "source": "/admin-audit",
+      "destination": "/admin-audit.html"
+    },
+    {
+      "source": "/admin-admins",
+      "destination": "/admin-admins.html"
+    },
+    {
+      "source": "/admin-password-change",
+      "destination": "/admin-password-change.html"
     }
   ]
 }
