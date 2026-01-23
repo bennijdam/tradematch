@@ -327,9 +327,8 @@
     </div>
 
     <script>
-        const API_BASE = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3001' 
-            : 'https://tradematch.onrender.com';
+        // Force API to use Render backend for production
+        const API_BASE = 'https://tradematch.onrender.com';
 
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
