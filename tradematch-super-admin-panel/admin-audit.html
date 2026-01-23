@@ -461,62 +461,73 @@
 
         async function loadAuditLogs() {
             try {
-                // Mock data - in production this would come from /api/admin/audit
                 const days = parseInt(document.getElementById('daysFilter').value);
                 const actionFilter = document.getElementById('actionFilter').value;
                 const targetFilter = document.getElementById('targetFilter').value;
 
-                const startDate = new Date();
-                startDate.setDate(startDate.getDate() - days);
+                // Call real API with filters
+                const filters = {
+                    days: days,
+                    action: actionFilter || undefined,
+                    target_type: targetFilter || undefined,
+                    page: 1,
+                    limit: 100
+                };
 
-                // Generate sample audit logs
-                allLogs = generateAuditLogs(100, startDate, actionFilter, targetFilter);
-                displayAuditLogs(allLogs.slice(0, 20));
-                updatePagination(allLogs.length);
+                const response = await api.getAuditLog(filters);
+                
+                // Format API response with action descriptions
+                allLogs = (response.logs || []).map(log => ({
+                    ...log,
+                    action_description: getActionDescription(log.action),
+                    action_icon: getActionIcon(log.action),
+                    admin_name: log.admin_email || 'System'
+                }));
+                
+                if (allLogs.length > 0) {
+                    displayAuditLogs(allLogs.slice(0, 20));
+                    updatePagination(response.total || allLogs.length);
+                } else {
+                    displayAuditLogs([]);
+                    updatePagination(0);
+                }
             } catch (error) {
                 console.error('Failed to load audit logs:', error);
+                showToast('Failed to load audit logs: ' + error.message, 'error');
+                displayAuditLogs([]);
             }
         }
 
-        function generateAuditLogs(count, startDate, actionFilter, targetFilter) {
-            const actions = [
-                { type: 'user_suspended', description: 'Suspended User', target: 'user', icon: '🚫' },
-                { type: 'user_activated', description: 'Activated User', target: 'user', icon: '✅' },
-                { type: 'vendor_approved', description: 'Approved Vendor', target: 'vendor', icon: '✔️' },
-                { type: 'vendor_rejected', description: 'Rejected Vendor', target: 'vendor', icon: '✕' },
-                { type: 'review_moderated', description: 'Moderated Review', target: 'review', icon: '⭐' }
-            ];
+        function getActionDescription(action) {
+            const descriptions = {
+                'user_suspended': 'Suspended User',
+                'user_activated': 'Activated User',
+                'vendor_approved': 'Approved Vendor',
+                'vendor_rejected': 'Rejected Vendor',
+                'review_approved': 'Approved Review',
+                'review_hidden': 'Hidden Review',
+                'review_removed': 'Removed Review',
+                'admin_created': 'Created Admin',
+                'admin_removed': 'Removed Admin',
+                'password_changed': 'Changed Password'
+            };
+            return descriptions[action] || action;
+        }
 
-            const logs = [];
-            const adminName = 'admin@tradematch.com';
-
-            for (let i = 0; i < count; i++) {
-                const action = actions[Math.floor(Math.random() * actions.length)];
-                
-                if (actionFilter && action.type !== actionFilter) continue;
-                if (targetFilter && action.target !== targetFilter) continue;
-
-                const date = new Date(startDate);
-                date.setHours(date.getHours() + Math.floor(Math.random() * (days * 24)));
-
-                logs.push({
-                    id: `audit_${i}`,
-                    admin_id: 'admin_001',
-                    admin_name: adminName,
-                    action: action.type,
-                    action_description: action.description,
-                    action_icon: action.icon,
-                    target_type: action.target,
-                    target_id: `${action.target}_${Math.floor(Math.random() * 10000)}`,
-                    details: JSON.stringify({
-                        reason: ['Policy violation', 'Spam', 'Duplicate account', 'Suspicious activity'][Math.floor(Math.random() * 4)],
-                        notes: 'Admin took action on this item'
-                    }),
-                    created_at: date.toISOString()
-                });
-            }
-
-            return logs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        function getActionIcon(action) {
+            const icons = {
+                'user_suspended': '🚫',
+                'user_activated': '✅',
+                'vendor_approved': '✔️',
+                'vendor_rejected': '✕',
+                'review_approved': '⭐',
+                'review_hidden': '👁️‍🗨️',
+                'review_removed': '🗑️',
+                'admin_created': '👤',
+                'admin_removed': '👥',
+                'password_changed': '🔐'
+            };
+            return icons[action] || '📝';
         }
 
         function displayAuditLogs(logs) {

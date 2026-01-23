@@ -412,40 +412,15 @@
 
         async function loadAdmins() {
             try {
-                // Load mock admin data
-                const admins = [
-                    {
-                        id: 'admin_001',
-                        full_name: 'Super Admin',
-                        email: 'admin@tradematch.com',
-                        role: 'super_admin',
-                        status: 'active',
-                        created_at: '2024-01-01T10:00:00Z',
-                        is_current: true
-                    },
-                    {
-                        id: 'admin_002',
-                        full_name: 'John Manager',
-                        email: 'john@tradematch.com',
-                        role: 'admin',
-                        status: 'active',
-                        created_at: '2024-06-15T14:30:00Z',
-                        is_current: false
-                    },
-                    {
-                        id: 'admin_003',
-                        full_name: 'Sarah Reviews',
-                        email: 'sarah@tradematch.com',
-                        role: 'admin',
-                        status: 'active',
-                        created_at: '2024-08-20T09:00:00Z',
-                        is_current: false
-                    }
-                ];
+                // Call real API to get all admins
+                const response = await api.getAdmins();
+                const admins = response || [];
 
                 displayAdmins(admins);
             } catch (error) {
                 console.error('Failed to load admins:', error);
+                showToast('Failed to load admins: ' + error.message, 'error');
+                displayAdmins([]);
             }
         }
 
@@ -508,8 +483,14 @@
                     return;
                 }
 
-                // In production, this would call the API
-                // await api.createAdmin(name, email, password);
+                // Validate email format
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+
+                // Call real API to create admin
+                await api.createAdmin(name, email, password);
 
                 showToast('Admin account created successfully. Credentials sent to email.', 'success');
                 closeCreateModal();
@@ -517,7 +498,7 @@
                 loadAdmins();
             } catch (error) {
                 console.error('Create admin error:', error);
-                showToast('Failed to create admin account', 'error');
+                showToast('Failed to create admin account: ' + error.message, 'error');
             }
         }
 
@@ -527,14 +508,14 @@
             }
 
             try {
-                // In production, this would call the API
-                // await api.removeAdmin(adminId);
+                // Call real API to remove admin
+                await api.removeAdmin(adminId);
 
                 showToast(`${adminName} has been removed as admin`, 'success');
                 loadAdmins();
             } catch (error) {
                 console.error('Remove admin error:', error);
-                showToast('Failed to remove admin', 'error');
+                showToast('Failed to remove admin: ' + error.message, 'error');
             }
         }
 
