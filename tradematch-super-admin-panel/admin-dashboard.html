@@ -585,6 +585,43 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        /* Loading States */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--emerald-500);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .spinner-small {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stat-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 1280px) {
             .stats-grid {
@@ -961,6 +998,10 @@
         // Load dashboard statistics
         async function loadStats() {
             try {
+                // Show loading state on stats cards
+                const statsElements = document.querySelectorAll('.stat-card');
+                statsElements.forEach(el => el.classList.add('stat-loading'));
+
                 const response = await api.getStats('30d');
                 
                 if (response.success && response.stats) {
@@ -989,21 +1030,28 @@
                         formatCurrency(stats.revenue.period);
                     document.getElementById('revenueGrowth').textContent = 
                         `${stats.revenue.growth > 0 ? '+' : ''}${stats.revenue.growth}%`;
+
+                    // Remove loading state
+                    statsElements.forEach(el => el.classList.remove('stat-loading'));
                 }
             } catch (error) {
                 console.error('Failed to load stats:', error);
                 showToast('Failed to load statistics', 'error');
+                // Remove loading state even on error
+                document.querySelectorAll('.stat-card').forEach(el => el.classList.remove('stat-loading'));
             }
         }
 
         // Load recent activity
         async function loadActivity() {
             try {
+                const activityList = document.getElementById('activityList');
+                // Show loading state
+                activityList.innerHTML = '<div class="activity-item"><span class="spinner spinner-small"></span> Loading activity...</div>';
+
                 const response = await api.getActivity(10);
                 
                 if (response.success && response.activity) {
-                    const activityList = document.getElementById('activityList');
-                    
                     if (response.activity.length === 0) {
                         activityList.innerHTML = '<div class="activity-item">No recent activity</div>';
                         return;
@@ -1032,11 +1080,13 @@
         // Load recent users
         async function loadRecentUsers() {
             try {
+                const tbody = document.querySelector('.table-container tbody');
+                // Show loading state
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;"><span class="spinner"></span> Loading users...</td></tr>';
+
                 const response = await api.getUsers({ page: 1, limit: 5 });
                 
                 if (response.success && response.users) {
-                    const tbody = document.querySelector('.table-container tbody');
-                    
                     if (response.users.length === 0) {
                         tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
                         return;
@@ -1068,6 +1118,9 @@
                 }
             } catch (error) {
                 console.error('Failed to load users:', error);
+                // Show error state
+                const tbody = document.querySelector('.table-container tbody');
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Failed to load users</td></tr>';
             }
         }
 
