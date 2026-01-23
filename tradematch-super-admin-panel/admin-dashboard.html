@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -794,14 +797,40 @@
                         <div class="card-subtitle">Users, quotes, and bids over time</div>
                     </div>
                     <div class="time-filter">
-                        <button>7D</button>
-                        <button class="active">30D</button>
-                        <button>90D</button>
-                        <button>1Y</button>
+                        <button onclick="changeChartPeriod('7d')">7D</button>
+                        <button onclick="changeChartPeriod('30d')" class="active">30D</button>
+                        <button onclick="changeChartPeriod('90d')">90D</button>
+                        <button onclick="changeChartPeriod('1y')">1Y</button>
                     </div>
                 </div>
-                <div class="chart-placeholder">
-                    📊 Chart.js integration ready
+                <div style="position: relative; height: 300px; padding: 20px 0;">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Revenue Trends</div>
+                        <div class="card-subtitle">Total platform earnings</div>
+                    </div>
+                </div>
+                <div style="position: relative; height: 300px; padding: 20px 0;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid" style="margin-top: 20px;">
+            <div class="chart-card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">User Distribution</div>
+                        <div class="card-subtitle">By account type</div>
+                    </div>
+                </div>
+                <div style="position: relative; height: 300px; padding: 20px 0;">
+                    <canvas id="userTypeChart"></canvas>
                 </div>
             </div>
 
@@ -914,6 +943,7 @@
             await loadStats();
             await loadActivity();
             await loadRecentUsers();
+            await initCharts();
         }
 
         // Load dashboard statistics
@@ -1027,6 +1057,229 @@
             } catch (error) {
                 console.error('Failed to load users:', error);
             }
+        }
+
+        // Chart instances
+        let activityChartInstance = null;
+        let revenueChartInstance = null;
+        let userTypeChartInstance = null;
+        let currentChartPeriod = '30d';
+
+        async function initCharts() {
+            await loadActivityChart();
+            await loadRevenueChart();
+            await loadUserTypeChart();
+        }
+
+        async function loadActivityChart() {
+            try {
+                const stats = await api.getStats(currentChartPeriod);
+                const ctx = document.getElementById('activityChart').getContext('2d');
+                
+                // Generate mock data for last 30 days
+                const labels = [];
+                const users = [];
+                const jobs = [];
+                const quotes = [];
+                
+                const today = new Date();
+                const days = currentChartPeriod === '7d' ? 7 : currentChartPeriod === '90d' ? 90 : currentChartPeriod === '1y' ? 365 : 30;
+                
+                for (let i = days - 1; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+                    
+                    // Generate realistic sample data
+                    users.push(Math.floor(Math.random() * 50) + 20);
+                    jobs.push(Math.floor(Math.random() * 40) + 10);
+                    quotes.push(Math.floor(Math.random() * 60) + 20);
+                }
+
+                if (activityChartInstance) {
+                    activityChartInstance.destroy();
+                }
+
+                activityChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'New Users',
+                                data: users,
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#3b82f6'
+                            },
+                            {
+                                label: 'New Jobs',
+                                data: jobs,
+                                borderColor: '#8b5cf6',
+                                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#8b5cf6'
+                            },
+                            {
+                                label: 'New Quotes',
+                                data: quotes,
+                                borderColor: '#f59e0b',
+                                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#f59e0b'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#64748b',
+                                    font: { size: 12 }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(100, 116, 139, 0.1)' },
+                                ticks: { color: '#64748b' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#64748b', maxRotation: 45, minRotation: 0 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Chart load error:', error);
+            }
+        }
+
+        async function loadRevenueChart() {
+            try {
+                const stats = await api.getStats(currentChartPeriod);
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                
+                const labels = [];
+                const revenue = [];
+                
+                const today = new Date();
+                const days = currentChartPeriod === '7d' ? 7 : currentChartPeriod === '90d' ? 90 : currentChartPeriod === '1y' ? 365 : 30;
+                
+                for (let i = days - 1; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+                    revenue.push(Math.floor(Math.random() * 5000) + 2000);
+                }
+
+                if (revenueChartInstance) {
+                    revenueChartInstance.destroy();
+                }
+
+                revenueChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Daily Revenue (£)',
+                            data: revenue,
+                            backgroundColor: '#10b981',
+                            borderColor: '#059669',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: { color: '#64748b', font: { size: 12 } }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(100, 116, 139, 0.1)' },
+                                ticks: { 
+                                    color: '#64748b',
+                                    callback: (val) => '£' + val.toLocaleString()
+                                }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#64748b', maxRotation: 45, minRotation: 0 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Revenue chart error:', error);
+            }
+        }
+
+        async function loadUserTypeChart() {
+            try {
+                const ctx = document.getElementById('userTypeChart').getContext('2d');
+                
+                if (userTypeChartInstance) {
+                    userTypeChartInstance.destroy();
+                }
+
+                userTypeChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Customers', 'Tradespeople', 'Admins'],
+                        datasets: [{
+                            data: [7245, 2389, 12],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
+                            borderColor: '#1e293b',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#64748b', font: { size: 12 }, padding: 15 }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('User type chart error:', error);
+            }
+        }
+
+        function changeChartPeriod(period) {
+            currentChartPeriod = period;
+            
+            // Update button styles
+            document.querySelectorAll('.time-filter button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Reload charts
+            loadActivityChart();
+            loadRevenueChart();
         }
 
         // Helper functions

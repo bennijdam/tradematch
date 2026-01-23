@@ -417,7 +417,7 @@
                     <span>⏳ Pending Approvals</span>
                     <span class="count-badge">47</span>
                 </div>
-                <button class="btn btn-view">View All</button>
+                <button class="btn btn-view" onclick="exportVendorsCSV()">📥 Export CSV</button>
             </div>
 
             <div class="vendor-grid" class="vendors-grid">
@@ -535,6 +535,55 @@
         function getInitials(name) {
             if (!name) return '?';
             return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        }
+
+        // Export vendors to CSV
+        async function exportVendorsCSV() {
+            try {
+                const response = await api.getPendingVendors();
+                if (!response || !Array.isArray(response)) {
+                    showToast('Failed to export vendors', 'error');
+                    return;
+                }
+
+                const vendors = response;
+                const headers = ['ID', 'Name', 'Email', 'Phone', 'Services', 'Applied', 'Status'];
+                
+                const rows = vendors.map(vendor => [
+                    vendor.id,
+                    vendor.full_name || vendor.name || '',
+                    vendor.email,
+                    vendor.phone || '',
+                    Array.isArray(vendor.metadata?.services) ? vendor.metadata.services.join('; ') : '',
+                    new Date(vendor.created_at).toLocaleDateString('en-GB'),
+                    vendor.status || 'pending'
+                ]);
+
+                downloadCSV(headers, rows, 'vendors-pending.csv');
+                showToast(`Exported ${vendors.length} vendors`, 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Export failed', 'error');
+            }
+        }
+
+        function downloadCSV(headers, rows, filename) {
+            const csv = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         document.addEventListener('DOMContentLoaded', init);

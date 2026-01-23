@@ -546,7 +546,7 @@
                 <option value="pending">Pending</option>
                 <option value="suspended">Suspended</option>
             </select>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="exportUsersCSV()">
                 <span>📥</span>
                 <span>Export CSV</span>
             </button>
@@ -855,6 +855,56 @@
         function editUser(userId) {
             // Future implementation
             alert(`Edit user: ${userId}`);
+        }
+
+        // Export users to CSV
+        async function exportUsersCSV() {
+            try {
+                const response = await api.getUsers({ page: 1, limit: 10000 });
+                if (!response.success || !response.users) {
+                    showToast('Failed to export users', 'error');
+                    return;
+                }
+
+                const users = response.users;
+                const headers = ['ID', 'Name', 'Email', 'Phone', 'Type', 'Status', 'Verified', 'Joined'];
+                
+                const rows = users.map(user => [
+                    user.id,
+                    user.full_name || '',
+                    user.email,
+                    user.phone || '',
+                    capitalizeFirst(user.role),
+                    capitalizeFirst(user.status),
+                    user.email_verified ? 'Yes' : 'No',
+                    new Date(user.created_at).toLocaleDateString('en-GB')
+                ]);
+
+                downloadCSV(headers, rows, 'users.csv');
+                showToast(`Exported ${users.length} users`, 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Export failed', 'error');
+            }
+        }
+
+        function downloadCSV(headers, rows, filename) {
+            const csv = [
+                headers.join(','),
+                ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            ].join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // Helper functions
