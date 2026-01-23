@@ -1,15 +1,5 @@
 // API Rate Limiting Middleware
-let rateLimit, ipKeyGenerator;
-
-try {
-  rateLimit = require('express-rate-limit');
-  ipKeyGenerator = require('express-rate-limit');
-} catch (error) {
-  console.log('⚠️ express-rate-limit not available, using fallback');
-  // Fallback simple rate limiter
-  rateLimit = (options) => (req, res, next) => next();
-  ipKeyGenerator = {};
-}
+const rateLimit = require('express-rate-limit');
 
 /**
  * General API rate limiter
@@ -65,10 +55,6 @@ const quoteLimiter = rateLimit({
         code: 'QUOTE_RATE_LIMIT_EXCEEDED',
         retryAfter: '1 hour'
     },
-    keyGenerator: (req) => {
-        // Rate limit per user ID if authenticated, otherwise per IP
-        return req.user ? `user_${req.user.id}` : req.ip;
-    },
     skipSuccessfulRequests: true,
 });
 
@@ -82,9 +68,6 @@ const aiLimiter = rateLimit({
         error: 'AI enhancement limit exceeded',
         code: 'AI_RATE_LIMIT_EXCEEDED',
         retryAfter: '1 hour'
-    },
-    keyGenerator: (req) => {
-        return req.user ? `user_${req.user.id}` : req.ip;
     },
     skipSuccessfulRequests: true,
 });
@@ -100,9 +83,6 @@ const paymentLimiter = rateLimit({
         code: 'PAYMENT_RATE_LIMIT_EXCEEDED',
         retryAfter: '1 hour'
     },
-    keyGenerator: (req) => {
-        return req.user ? `user_${req.user.id}` : req.ip;
-    },
     skipSuccessfulRequests: true,
 });
 
@@ -117,9 +97,6 @@ const emailLimiter = rateLimit({
         code: 'EMAIL_RATE_LIMIT_EXCEEDED',
         retryAfter: '15 minutes'
     },
-    keyGenerator: (req) => {
-        return req.user ? `user_${req.user.id}` : req.ip;
-    },
     skipSuccessfulRequests: true,
 });
 
@@ -133,9 +110,6 @@ const uploadLimiter = rateLimit({
         error: 'File upload limit exceeded',
         code: 'UPLOAD_RATE_LIMIT_EXCEEDED',
         retryAfter: '1 hour'
-    },
-    keyGenerator: (req) => {
-        return req.user ? `user_${req.user.id}` : req.ip;
     },
     skipSuccessfulRequests: true,
 });

@@ -815,38 +815,226 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2rem;
+            .nav-container {
+                padding: 0.75rem 1rem;
             }
 
-            .service-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .form-row,
-            .timeline-options {
-                grid-template-columns: 1fr;
-            }
-
-            .form-card {
-                padding: 2rem 1.5rem;
+            .logo {
+                font-size: 1.5rem;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .hero {
+                min-height: 300px;
+                padding: 6rem 1rem 4rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.75rem;
+                line-height: 1.3;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                margin: -30px auto 2rem;
+                padding: 0 1rem;
+            }
+
+            .progress-container {
+                padding: 1.5rem 1rem;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .progress-steps {
+                margin-bottom: 1rem;
+            }
+
+            .step-number {
+                width: 32px;
+                height: 32px;
+                font-size: 0.875rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+                display: none;
+            }
+
+            .progress-step.active .step-label {
+                display: block;
+            }
+
+            .progress-bar-fill {
+                height: 6px;
+            }
+
+            .form-card {
+                padding: 1.5rem 1rem;
+                border-radius: 0 0 16px 16px;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+
+            .step-description {
+                font-size: 0.9375rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .service-option {
+                padding: 0.75rem;
+            }
+
+            .service-icon {
+                font-size: 2rem;
+            }
+
+            .service-name {
+                font-size: 0.8125rem;
+            }
+
+            .form-row,
+            .timeline-options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-control {
+                padding: 0.875rem 1rem;
+                font-size: 0.9375rem;
+            }
+
+            textarea.form-control {
+                min-height: 100px;
+            }
+
+            .ai-generator-section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .ai-title {
+                font-size: 1rem;
+            }
+
+            .ai-subtitle {
+                font-size: 0.8125rem;
+            }
+
             .quick-prompts {
                 flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .quick-prompt {
+                padding: 0.625rem 1rem;
+                font-size: 0.8125rem;
             }
 
             .ai-input-group {
                 flex-direction: column;
+                gap: 0.75rem;
             }
 
             .btn-ai-generate {
                 width: 100%;
                 justify-content: center;
+                padding: 0.875rem;
+                font-size: 0.9375rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9375rem;
+            }
+
+            .review-section {
+                padding: 1.25rem;
+            }
+
+            .review-item {
+                padding: 1rem;
+            }
+
+            .review-label {
+                font-size: 0.8125rem;
+            }
+
+            .review-value {
+                font-size: 0.9375rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .quote-id {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 0 0.75rem;
+            }
+
+            .form-card {
+                padding: 1.25rem 0.875rem;
+            }
+
+            .step-title {
+                font-size: 1.25rem;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .service-option {
+                padding: 0.5rem;
+            }
+
+            .service-icon {
+                font-size: 1.75rem;
+            }
+
+            .service-name {
+                font-size: 0.75rem;
+            }
+
+            .progress-container {
+                padding: 1rem 0.75rem;
             }
         }
     </style>
@@ -1164,11 +1352,28 @@
         </div>
     </div>
 
+    <!-- Auth Prompt Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom:0.5rem;">Save your job</h2>
+            <p style="color: var(--slate-600); margin-bottom:1rem;">Log in or create an account to keep this request and track bids. We saved your form.</p>
+            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.75rem;">
+                <button class="btn btn-primary" onclick="goLogin()">Login & Continue</button>
+                <button class="btn btn-secondary" style="background:white; border:1px solid var(--slate-200); color:var(--slate-700);" onclick="goRegister()">Create Account & Continue</button>
+            </div>
+            <div style="text-align:center; margin-top:0.75rem;">
+                <button class="btn btn-secondary" style="background:#f8fafc; color:var(--slate-700); border:1px solid var(--slate-200);" onclick="submitGuest(pendingSubmissionData)">Post as Guest</button>
+            </div>
+            <button class="btn btn-secondary" style="margin-top:1rem; background:white; color:var(--slate-600); border:1px solid var(--slate-200); width:100%;" onclick="closeAuthModal()">Close</button>
+        </div>
+    </div>
+
     <script>
         // Form State
         let currentStep = 1;
         const totalSteps = 4;
         const formData = {};
+        let pendingSubmissionData = null;
         
         // Auto-fill from homepage parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -1176,6 +1381,59 @@
         const preSelectedPostcode = urlParams.get('postcode');
         const preSelectedDistrict = urlParams.get('district');
         const preSelectedRegion = urlParams.get('region');
+        const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+
+        function restoreProgress() {
+            if (!savedProgress.formData) return;
+            const data = savedProgress.formData;
+
+            // Service
+            if (data.service) {
+                const targetOption = document.querySelector(`[data-service="${data.service}"]`);
+                if (targetOption) targetOption.click();
+            }
+
+            // Postcode and property type
+            if (data.postcode) {
+                document.getElementById('postcode').value = data.postcode;
+                formData.postcode = data.postcode;
+            }
+            if (data.propertyType) {
+                document.getElementById('propertyType').value = data.propertyType;
+                formData.propertyType = data.propertyType;
+            }
+
+            // Description
+            if (data.description) {
+                document.getElementById('description').value = data.description;
+                formData.description = data.description;
+            }
+
+            // Urgency
+            if (data.urgency) {
+                const targetUrgency = document.querySelector(`.timeline-option[data-urgency="${data.urgency}"]`);
+                if (targetUrgency) targetUrgency.click();
+            }
+
+            // Budget
+            if (data.budgetMin) {
+                budgetSlider.value = data.budgetMin;
+                budgetSlider.dispatchEvent(new Event('input'));
+            }
+
+            // Contact prefs
+            if (data.contactPreference) {
+                document.getElementById('contactPreference').value = data.contactPreference;
+                formData.contactPreference = data.contactPreference;
+            }
+            if (data.name) document.getElementById('name').value = data.name;
+            if (data.email) document.getElementById('email').value = data.email;
+            if (data.phone) document.getElementById('phone').value = data.phone;
+
+            if (savedProgress.step) {
+                currentStep = savedProgress.step;
+            }
+        }
         
         // Service Selection - Using event delegation for better reliability
         const serviceGrid = document.querySelector('.service-grid');
@@ -1262,6 +1520,8 @@
             const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
             budgetDisplay.textContent = display;
             formData.budget = display;
+            formData.budgetMin = min;
+            formData.budgetMax = max;
         });
 
         // AI Generator Functions
@@ -1528,7 +1788,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 }
             });
             
-            // Save progress to localStorage
+            // Save progress shell to localStorage
             const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
             localStorage.setItem('quoteProgress', JSON.stringify({
                 step: currentStep,
@@ -1598,41 +1858,46 @@ I'm happy to discuss the project in more detail and answer any questions to help
             document.getElementById('reviewService').textContent = formData.serviceName || '-';
             document.getElementById('reviewPostcode').textContent = formData.postcode || '-';
             document.getElementById('reviewProperty').textContent = formData.propertyType || '-';
-            document.getElementById('reviewBudget').textContent = formData.budget || '-';
+            const budgetText = formData.budget || (formData.budgetMin ? `£${formData.budgetMin.toLocaleString()} - £${formData.budgetMax?.toLocaleString() || ''}` : '-');
+            document.getElementById('reviewBudget').textContent = budgetText;
             document.getElementById('reviewUrgency').textContent = formData.urgencyLabel || '-';
             document.getElementById('reviewDescription').textContent = formData.description || '-';
         }
 
-        // Form Submission
-        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Get all form data
-            const finalData = {
-                ...formData,
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value
-            };
-            
-            // Save progress to localStorage
+        function persistProgress(snapshot) {
             localStorage.setItem('quoteProgress', JSON.stringify({
-                step: 2,
+                step: currentStep,
                 timestamp: Date.now(),
-                formData: finalData
+                formData: snapshot
             }));
+        }
 
-            // Disable submit button
+        function openAuthModal() {
+            document.getElementById('authModal').classList.add('active');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function goLogin() {
+            persistProgress(pendingSubmissionData || {});
+            window.location.href = 'auth-login.html?redirect=quote-engine.html';
+        }
+
+        function goRegister() {
+            persistProgress(pendingSubmissionData || {});
+            window.location.href = 'auth-register.html?redirect=quote-engine.html';
+        }
+
+        async function submitAuthenticated(finalData) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
             try {
-                // Get auth token
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    alert('Please login to submit a quote request.');
-                    window.location.href = 'auth-login.html?redirect=quote-engine.html';
-                    return;
+                    throw new Error('Missing token');
                 }
 
                 const response = await fetch('https://tradematch.onrender.com/api/quotes', {
@@ -1652,19 +1917,87 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 
                 const quoteId = data.quote.id;
                 document.getElementById('quoteIdDisplay').textContent = quoteId;
-                
-                // Show success modal
                 document.getElementById('successModal').classList.add('active');
-                
-                // Clear form data from localStorage
                 localStorage.removeItem('quoteProgress');
-                
             } catch (error) {
                 console.error('Quote submission error:', error);
                 alert(error.message || 'Failed to submit quote request. Please try again.');
+            } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Quote Request';
             }
+        }
+
+        async function submitGuest(finalData) {
+            if (!finalData) {
+                alert('Please complete the form before posting as a guest.');
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch('https://tradematch.onrender.com/api/quotes/public', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceType: finalData.service,
+                        title: finalData.serviceName || 'Home project',
+                        description: finalData.description,
+                        postcode: finalData.postcode,
+                        budgetMin: finalData.budgetMin || null,
+                        budgetMax: finalData.budgetMax || null,
+                        urgency: finalData.urgency || null,
+                        additionalDetails: {
+                            propertyType: finalData.propertyType,
+                            contactPreference: finalData.contactPreference,
+                            name: finalData.name,
+                            email: finalData.email,
+                            phone: finalData.phone
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit quote');
+                }
+
+                const quoteId = data.quote?.id || 'GUEST';
+                document.getElementById('quoteIdDisplay').textContent = quoteId;
+                document.getElementById('successModal').classList.add('active');
+                localStorage.removeItem('quoteProgress');
+            } catch (error) {
+                console.error('Guest quote submission error:', error);
+                alert(error.message || 'Failed to submit quote request. Please try again.');
+            } finally {
+                closeAuthModal();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quote Request';
+            }
+        }
+
+        // Form Submission
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const finalData = {
+                ...formData,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            pendingSubmissionData = finalData;
+            persistProgress(finalData);
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                openAuthModal();
+                return;
+            }
+
+            await submitAuthenticated(finalData);
         });
 
         // Auto-uppercase postcode
@@ -1673,6 +2006,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
         });
 
         // Initialize
+        restoreProgress();
         updateStep();
     </script>
 

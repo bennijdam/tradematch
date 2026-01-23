@@ -269,6 +269,39 @@ try {
     console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
 }
 
+// Lead system routes
+try {
+    const quotesRouter = require('./routes/quotes')(pool);
+    app.use('/api/quotes', quotesRouter);
+    console.log('📋 Quotes routes mounted at /api/quotes');
+} catch (e) {
+    console.warn('⚠️ Quotes routes not available:', e && e.message ? e.message : e);
+}
+
+try {
+    const vendorCreditsRouter = require('./routes/vendor-credits')(pool);
+    app.use('/api/vendor-credits', vendorCreditsRouter);
+    console.log('💳 Vendor credits routes mounted at /api/vendor-credits');
+} catch (e) {
+    console.warn('⚠️ Vendor credits routes not available:', e && e.message ? e.message : e);
+}
+
+try {
+    const leadsRouter = require('./routes/leads')(pool);
+    app.use('/api/leads', leadsRouter);
+    console.log('🎯 Leads routes mounted at /api/leads');
+} catch (e) {
+    console.warn('⚠️ Leads routes not available:', e && e.message ? e.message : e);
+}
+
+try {
+    const creditsRouter = require('./routes/credits')(pool);
+    app.use('/api/credits', creditsRouter);
+    console.log('💰 Credits routes mounted at /api/credits');
+} catch (e) {
+    console.warn('⚠️ Credits routes not available:', e && e.message ? e.message : e);
+}
+
 // Debug endpoint
 app.get("/api/auth/debug", (req, res) => {
     res.json({

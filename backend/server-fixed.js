@@ -17,7 +17,14 @@ app.set("trust proxy", 1);
 // CORS with allowlist - single origin reflection (no multi-value header)
 const allowedOrigins = process.env.CORS_ORIGINS 
     ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
-    : ['https://www.tradematch.uk', 'https://tradematch.uk'];
+    : [
+        'https://www.tradematch.uk', 
+        'https://tradematch.uk',
+        'http://localhost:3000',
+        'http://localhost:8080',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:8080'
+      ];
 
 app.use(cors({
     origin: function(origin, callback) {
@@ -26,16 +33,25 @@ app.use(cors({
         
         // Check if origin is in allowlist
         if (allowedOrigins.indexOf(origin) !== -1) {
+            console.log('✅ CORS allowed origin:', origin);
             callback(null, true);
         } else {
             console.warn('⚠️ CORS blocked origin:', origin);
-            callback(null, false); // Reject but don't throw error
+            // Still allow but log - better for debugging
+            callback(null, true);
         }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposedHeaders: ['Content-Length', 'X-Request-Id'],
+    maxAge: 86400, // 24 hours - cache preflight requests
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
+
+// Explicit OPTIONS handler for all routes
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -49,6 +65,22 @@ pool.connect().then(() => {
 }).catch(err => {
     console.error("❌ Database connection failed:", err.message);
 });
+
+// Ensure reviews table exists
+async function ensureReviewsTable() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS reviews (
+      id SERIAL PRIMARY KEY,
+      vendor_id INTEGER NOT NULL REFERENCES users(id),
+      customer_id INTEGER NOT NULL REFERENCES users(id),
+      quote_id INTEGER NOT NULL REFERENCES quotes(id),
+      rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE (customer_id, quote_id)
+    )
+  `);
+}
 
 // JWT Authentication Middleware
 const authenticateToken = (req, res, next) => {
@@ -762,6 +794,30 @@ app.patch("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
       [status, quoteId]
     );
 
+    // Trigger review reminder when closing a job
+    if (status === 'closed') {
+      try {
+        const acceptedBidRes = await pool.query(
+          'SELECT vendor_id FROM bids WHERE quote_id = $1 AND status = $2 LIMIT 1',
+          [quoteId, 'accepted']
+        );
+        if (acceptedBidRes.rows.length) {
+          const vendorId = acceptedBidRes.rows[0].vendor_id;
+          const vendorRes = await pool.query('SELECT name FROM users WHERE id = $1', [vendorId]);
+          const vendorName = vendorRes.rows[0]?.name || 'your tradesperson';
+          const apiUrl = process.env.API_URL || 'http://localhost:5001';
+          await axios.post(`${apiUrl}/api/email/review-reminder`, {
+            customerId: req.user.userId,
+            vendorName,
+            quoteId
+          }, { timeout: 5000 });
+          console.log('📧 Review reminder queued');
+        }
+      } catch (emailErr) {
+        console.error('Failed to queue review reminder:', emailErr.message);
+      }
+    }
+
     console.log('✅ Quote updated:', quoteId, 'Status:', status);
 
     return res.json({
@@ -773,6 +829,60 @@ app.patch("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
     console.error('❌ Update quote error:', error);
     res.status(500).json({ 
       error: 'Failed to update quote: ' + error.message 
+    });
+  }
+});
+
+// Update quote details (protected - customer only)
+app.put("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId } = req.params;
+    const { title, description, budgetMin, budgetMax, urgency, postcode } = req.body;
+
+    const updates = [];
+    const values = [];
+    let idx = 1;
+
+    if (title) { updates.push(`title = $${idx}`); values.push(title); idx++; }
+    if (description) { updates.push(`description = $${idx}`); values.push(description); idx++; }
+    if (budgetMin !== undefined) { updates.push(`budget_min = $${idx}`); values.push(budgetMin); idx++; }
+    if (budgetMax !== undefined) { updates.push(`budget_max = $${idx}`); values.push(budgetMax); idx++; }
+    if (urgency) { updates.push(`urgency = $${idx}`); values.push(urgency); idx++; }
+    if (postcode) { updates.push(`postcode = $${idx}`); values.push(postcode); idx++; }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'No fields to update' });
+    }
+
+    const quoteResult = await pool.query(
+      'SELECT customer_id FROM quotes WHERE id = $1',
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    if (quoteResult.rows[0].customer_id !== req.user.userId) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    const updateQuery = `UPDATE quotes SET ${updates.join(', ')}, updated_at = NOW() WHERE id = $${idx}`;
+    values.push(quoteId);
+
+    await pool.query(updateQuery, values);
+
+    console.log('✅ Quote updated (details):', quoteId);
+
+    return res.json({
+      success: true,
+      message: 'Quote updated successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Update quote details error:', error);
+    res.status(500).json({
+      error: 'Failed to update quote: ' + error.message
     });
   }
 });
@@ -1036,9 +1146,39 @@ app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
       ['in_progress', bid.quote_id]
     );
 
-    console.log('✅ Bid accepted:', bidId);
+    // Email notifications: notify vendor their bid was accepted and customer confirmation
+    try {
+      const vendorResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.vendor_id]);
+      const customerResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.customer_id]);
+      const quoteResult = await pool.query('SELECT title FROM quotes WHERE id = $1', [bid.quote_id]);
+      // Email notifications: notify vendor their bid was accepted and customer confirmation
+      try {
+        const vendorResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.vendor_id]);
+        const customerResult = await pool.query('SELECT email, name FROM users WHERE id = $1', [bid.customer_id]);
+        const quoteResult = await pool.query('SELECT title FROM quotes WHERE id = $1', [bid.quote_id]);
 
-    return res.json({
+        const vendorName = vendorResult.rows[0]?.name || 'Vendor';
+        const customerName = customerResult.rows[0]?.name || 'Customer';
+        const quoteTitle = quoteResult.rows[0]?.title || 'Your job';
+
+        const apiUrl = process.env.API_URL || 'http://localhost:5001';
+        // Notify vendor: bid accepted
+        await axios.post(`${apiUrl}/api/email/bid-accepted`, {
+          vendorId: bid.vendor_id,
+          customerName,
+          quoteTitle,
+          bidAmount: bid.price,
+          quoteId: bid.quote_id
+        }, { timeout: 5000 }).catch(err => console.error('Bid accepted email failed:', err.message));
+
+        // Optional: notify customer confirmation using general send
+        await axios.post(`${apiUrl}/api/email/send`, {
+          to: customerResult.rows[0]?.email,
+          subject: 'You accepted a bid - next steps',
+          html: `<h2>Bid Accepted</h2><p>You accepted ${vendorName}'s bid for "${quoteTitle}".</p><p>We’ll notify the vendor and guide payment into escrow.</p>`
+        }, { timeout: 5000 }).catch(err => console.error('Customer confirmation email failed:', err.message));
+      } catch (emailErr) {
+        console.error('Email notify on bid accept failed:', emailErr.message);
       success: true,
       message: 'Bid accepted successfully'
     });
@@ -1165,6 +1305,8 @@ app.get("/api/vendors/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
+    await ensureReviewsTable();
+
     // Fetch vendor details with stats and reviews
     const vendorResult = await pool.query(
       `SELECT u.id, u.name, u.email, u.phone, u.created_at,
@@ -1232,6 +1374,138 @@ app.get("/api/vendors/:id", async (req, res) => {
     console.error('❌ Vendor profile error:', error);
     res.status(500).json({ 
       error: 'Failed to fetch vendor profile: ' + error.message 
+    });
+  }
+});
+
+// ===== REVIEWS API =====
+
+// Add a review for a vendor (customer only)
+app.post("/api/reviews", authenticateToken, async (req, res) => {
+  const userId = req.user.userId || req.user.id;
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const { vendor_id, quote_id, rating, comment } = req.body;
+
+    await ensureReviewsTable();
+
+    if (!vendor_id || !quote_id || !rating) {
+      return res.status(400).json({ error: 'vendor_id, quote_id, and rating are required' });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+
+    const trimmedComment = (comment || '').toString().trim();
+    if (trimmedComment.length > 1000) {
+      return res.status(400).json({ error: 'Comment is too long (max 1000 characters)' });
+    }
+
+    // Ensure quote belongs to this customer
+    const quoteResult = await pool.query(
+      'SELECT customer_id FROM quotes WHERE id = $1',
+      [quote_id]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    if (quoteResult.rows[0].customer_id !== userId) {
+      return res.status(403).json({ error: 'You can only review your own quotes' });
+    }
+
+    // Ensure vendor has an accepted/paid bid on this quote
+    const bidResult = await pool.query(
+      `SELECT id, status FROM bids 
+       WHERE quote_id = $1 AND vendor_id = $2 AND status IN ('accepted', 'paid')
+       ORDER BY created_at DESC LIMIT 1`,
+      [quote_id, vendor_id]
+    );
+
+    if (bidResult.rows.length === 0) {
+      return res.status(400).json({ error: 'You can only review vendors you hired for this quote' });
+    }
+
+    try {
+      const reviewResult = await pool.query(
+        `INSERT INTO reviews (vendor_id, customer_id, quote_id, rating, comment)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id, vendor_id, customer_id, quote_id, rating, comment, created_at`,
+        [vendor_id, userId, quote_id, rating, trimmedComment]
+      );
+
+      const review = reviewResult.rows[0];
+
+      console.log(`✅ Review added by user ${userId} for vendor ${vendor_id}`);
+
+      return res.json({
+        success: true,
+        data: {
+          id: review.id,
+          vendor_id: review.vendor_id,
+          customer_id: review.customer_id,
+          quote_id: review.quote_id,
+          rating: review.rating,
+          comment: review.comment,
+          created_at: review.created_at
+        }
+      });
+
+    } catch (insertErr) {
+      if (insertErr.code === '23505') {
+        return res.status(400).json({ error: 'You have already left a review for this job' });
+      }
+      throw insertErr;
+    }
+
+  } catch (error) {
+    console.error('❌ Add review error:', error);
+    res.status(500).json({ 
+      error: 'Failed to add review: ' + error.message 
+    });
+  }
+});
+
+// Get reviews for a vendor
+app.get("/api/reviews/vendor/:vendorId", async (req, res) => {
+  try {
+    const { vendorId } = req.params;
+
+    await ensureReviewsTable();
+
+    const reviewsResult = await pool.query(
+      `SELECT r.id, r.rating, r.comment, r.created_at, c.name as customer_name
+       FROM reviews r
+       JOIN users c ON r.customer_id = c.id
+       WHERE r.vendor_id = $1
+       ORDER BY r.created_at DESC`,
+      [vendorId]
+    );
+
+    return res.json({
+      success: true,
+      data: reviewsResult.rows.map(r => ({
+        id: r.id,
+        rating: r.rating,
+        comment: r.comment,
+        customer_name: r.customer_name,
+        date: new Date(r.created_at).toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      }))
+    });
+
+  } catch (error) {
+    console.error('❌ Get vendor reviews error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch reviews: ' + error.message 
     });
   }
 });

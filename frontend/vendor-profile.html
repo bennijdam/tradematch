@@ -527,11 +527,13 @@
 
     <script>
         const API_URL = 'https://tradematch.onrender.com';
+        let currentVendorId = null;
 
         async function loadVendorProfile() {
             // Get vendor ID from URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const vendorId = urlParams.get('id');
+            currentVendorId = vendorId;
 
             if (!vendorId) {
                 showError('Vendor ID not found');
@@ -550,6 +552,7 @@
                 }
 
                 displayVendorProfile(data.data);
+                refreshVendorReviews(vendorId);
             } catch (error) {
                 console.error('Profile load error:', error);
                 showError('Failed to load vendor profile. Please try again.');
@@ -589,7 +592,7 @@
             document.getElementById('avgRating').textContent = rating.toFixed(1);
             document.getElementById('totalReviews').textContent = vendor.total_reviews;
 
-            // Display reviews
+            // Display initial reviews
             displayReviews(vendor.reviews);
 
             // Show profile
@@ -614,6 +617,34 @@
                     <div class="review-text">${review.comment}</div>
                 </div>
             `).join('');
+        }
+
+        async function refreshVendorReviews(vendorId) {
+            try {
+                const response = await fetch(`${API_URL}/api/reviews/vendor/${vendorId}`);
+                if (!response.ok) return;
+                const data = await response.json();
+                const reviews = data.data || [];
+
+                displayReviews(reviews);
+
+                const avg = reviews.length ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length : 0;
+                const avgRounded = avg.toFixed(1);
+
+                const ratingStars = avg > 0
+                    ? '⭐'.repeat(Math.floor(avg)) + ((avg % 1) >= 0.5 ? '½' : '')
+                    : '✨ New Vendor';
+
+                document.getElementById('vendorRating').textContent = ratingStars;
+                document.getElementById('ratingText').textContent = reviews.length
+                    ? `${avgRounded} rating (${reviews.length} reviews)`
+                    : 'No reviews yet';
+
+                document.getElementById('avgRating').textContent = avgRounded;
+                document.getElementById('totalReviews').textContent = reviews.length;
+            } catch (error) {
+                console.error('Refresh reviews error:', error);
+            }
         }
 
         function showError(message) {

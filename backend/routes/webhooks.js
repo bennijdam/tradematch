@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const logger = require('../config/logger');
 
@@ -107,10 +108,30 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
                 paymentId: payment.id,
                 quoteId: payment.quote_id
             });
+            // Send payment confirmation email to customer
+            try {
+                const apiUrl = process.env.API_URL || 'http://localhost:5001';
+                // Lookup vendor name
+                const vendorRes = await pool.query('SELECT name FROM users WHERE id = $1', [payment.vendor_id]);
+                const vendorName = vendorRes.rows[0]?.name || 'Tradesperson';
+                const amountPounds = (payment.amount || 0) / 100;
 
-            // TODO: Send email notifications to customer and vendor
-            // TODO: Update quote status
-            // TODO: Trigger any post-payment workflows
+                await axios.post(`${apiUrl}/api/email/payment-confirmation`, {
+                    customerId: payment.customer_id,
+                    amount: amountPounds,
+                    reference: paymentIntent.id,
+                    vendorName
+                }, { timeout: 5000 });
+                logger.info('Payment confirmation email queued');
+            } catch (emailErr) {
+                logger.error('Failed to queue payment confirmation email', { error: emailErr.message });
+            }
+
+            // Optionally update quote status
+            await pool.query(
+                'UPDATE quotes SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+                ['in_progress', payment.quote_id]
+            );
             
         } else {
             logger.warn('Payment record not found for payment intent', {

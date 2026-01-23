@@ -436,4 +436,432 @@ router.post('/update-availability', async (req, res) => {
   }
 });
 
+// ============================================
+// NEW: ENHANCED VENDOR DASHBOARD ENDPOINTS
+// ============================================
+
+/**
+ * GET /api/vendor/overview
+ * Dashboard overview statistics
+ */
+router.get('/overview', async (req, res) => {
+    const vendorId = req.user.userId;
+
+    try {
+        // Get offered leads count
+        const offeredLeadsQuery = await pool.query(
+            `SELECT COUNT(*) as count 
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND lead_state = 'offered' 
+             AND expires_at > NOW()`,
+            [vendorId]
+        );
+
+        // Get active jobs count
+        const activeJobsQuery = await pool.query(
+            `SELECT COUNT(*) as count 
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND lead_state = 'accepted' 
+             AND (job_status IS NULL OR job_status NOT IN ('completed', 'lost'))`,
+            [vendorId]
+        );
+
+        // Get monthly spend
+        const monthlySpendQuery = await pool.query(
+            `SELECT COALESCE(SUM(credits_charged), 0) as total 
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND payment_charged = TRUE 
+             AND DATE_TRUNC('month', accepted_at) = DATE_TRUNC('month', CURRENT_DATE)`,
+            [vendorId]
+        );
+
+        // Get conversion rate (accepted / offered in last 30 days)
+        const conversionQuery = await pool.query(
+            `SELECT 
+                COUNT(*) FILTER (WHERE lead_state = 'offered') as offered,
+                COUNT(*) FILTER (WHERE lead_state = 'accepted') as accepted
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND distributed_at > NOW() - INTERVAL '30 days'`,
+            [vendorId]
+        );
+
+        const offered = parseInt(conversionQuery.rows[0].offered) || 0;
+        const accepted = parseInt(conversionQuery.rows[0].accepted) || 0;
+        const conversionRate = offered > 0 ? Math.round((accepted / offered) * 100) : 0;
+
+        // Get average match score
+        const matchScoreQuery = await pool.query(
+            `SELECT ROUND(AVG(match_score)) as avg_score 
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND distributed_at > NOW() - INTERVAL '30 days'`,
+            [vendorId]
+        );
+
+        // Get average response time (hours)
+        const responseTimeQuery = await pool.query(
+            `SELECT ROUND(AVG(EXTRACT(EPOCH FROM (accepted_at - distributed_at)) / 3600)) as avg_hours
+             FROM lead_distributions 
+             WHERE vendor_id = $1 
+             AND accepted_at IS NOT NULL
+             AND distributed_at > NOW() - INTERVAL '30 days'`,
+            [vendorId]
+        );
+
+        // Get wallet balance
+        const walletQuery = await pool.query(
+            `SELECT balance FROM vendor_credits WHERE vendor_id = $1`,
+            [vendorId]
+        );
+
+        res.json({
+            offeredLeads: parseInt(offeredLeadsQuery.rows[0].count) || 0,
+            activeJobs: parseInt(activeJobsQuery.rows[0].count) || 0,
+            totalSpendMonth: parseFloat(monthlySpendQuery.rows[0].total) || 0,
+            conversionRate,
+            avgMatchScore: parseInt(matchScoreQuery.rows[0].avg_score) || 0,
+            avgResponseTime: parseInt(responseTimeQuery.rows[0].avg_hours) || 0,
+            walletBalance: parseFloat(walletQuery.rows[0]?.balance) || 0
+        });
+
+    } catch (err) {
+        console.error('Error fetching vendor overview:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * GET /api/vendor/leads/accepted
+ * Get all accepted leads with full customer details
+ */
+router.get('/leads/accepted', async (req, res) => {
+    const vendorId = req.user.userId;
+
+    try {
+        const result = await pool.query(
+            `SELECT 
+                q.id as quote_id,
+                q.category,
+                q.service,
+                q.description,
+                q.budget,
+                q.timeframe,
+                q.postcode,
+                q.created_at,
+                u.name as customer_name,
+                u.email as customer_email,
+                u.phone as customer_phone,
+                ld.accepted_at,
+                ld.credits_charged as lead_price,
+                ld.payment_transaction_id,
+                ld.job_status,
+                ld.match_score,
+                ld.distance_miles
+             FROM lead_distributions ld
+             JOIN quotes q ON q.id = ld.quote_id
+             JOIN users u ON u.id = q.user_id
+             WHERE ld.vendor_id = $1
+             AND ld.lead_state = 'accepted'
+             AND ld.payment_charged = TRUE
+             ORDER BY ld.accepted_at DESC`,
+            [vendorId]
+        );
+
+        const jobs = result.rows.map(row => ({
+            quoteId: row.quote_id,
+            category: row.category || row.service,
+            description: row.description,
+            budgetRange: row.budget ? `£${row.budget}` : 'Not specified',
+            timeframe: row.timeframe || 'Flexible',
+            postcode: row.postcode,
+            customerName: row.customer_name,
+            customerEmail: row.customer_email,
+            customerPhone: row.customer_phone,
+            acceptedAt: row.accepted_at,
+            leadPrice: parseFloat(row.lead_price),
+            paymentTransactionId: row.payment_transaction_id,
+            status: row.job_status || 'contacted',
+            matchScore: row.match_score,
+            distanceMiles: row.distance_miles
+        }));
+
+        res.json(jobs);
+
+    } catch (err) {
+        console.error('Error fetching accepted leads:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * PATCH /api/vendor/jobs/:quoteId/status
+ * Update job status
+ */
+router.patch('/jobs/:quoteId/status', async (req, res) => {
+    const { quoteId } = req.params;
+    const { status } = req.body;
+    const vendorId = req.user.userId;
+
+    const validStatuses = ['contacted', 'quote_sent', 'quote_accepted', 'in_progress', 'completed', 'lost'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+    }
+
+    try {
+        const result = await pool.query(
+            `UPDATE lead_distributions 
+             SET job_status = $1,
+                 updated_at = NOW()
+             WHERE quote_id = $2 
+             AND vendor_id = $3 
+             AND lead_state = 'accepted'
+             RETURNING *`,
+            [status, quoteId, vendorId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Job not found or not accepted by you' });
+        }
+
+        // Log status change
+        await pool.query(
+            `INSERT INTO lead_acceptance_log 
+             (quote_id, vendor_id, action, details)
+             VALUES ($1, $2, $3, $4)`,
+            [
+                quoteId,
+                vendorId,
+                'job_status_updated',
+                JSON.stringify({ newStatus: status })
+            ]
+        );
+
+        res.json({ 
+            success: true, 
+            message: `Job status updated to: ${status}`,
+            job: result.rows[0]
+        });
+
+    } catch (err) {
+        console.error('Error updating job status:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * POST /api/vendor/jobs/:quoteId/notes
+ * Add private internal note to job
+ */
+router.post('/jobs/:quoteId/notes', async (req, res) => {
+    const { quoteId } = req.params;
+    const { note } = req.body;
+    const vendorId = req.user.userId;
+
+    if (!note || note.trim().length === 0) {
+        return res.status(400).json({ error: 'Note cannot be empty' });
+    }
+
+    try {
+        // Verify vendor owns this job
+        const jobCheck = await pool.query(
+            `SELECT 1 FROM lead_distributions 
+             WHERE quote_id = $1 AND vendor_id = $2 AND lead_state = 'accepted'`,
+            [quoteId, vendorId]
+        );
+
+        if (jobCheck.rows.length === 0) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        // Create notes table if doesn't exist
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS vendor_job_notes (
+                id SERIAL PRIMARY KEY,
+                quote_id INTEGER NOT NULL,
+                vendor_id INTEGER NOT NULL,
+                note TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Insert note
+        const result = await pool.query(
+            `INSERT INTO vendor_job_notes (quote_id, vendor_id, note)
+             VALUES ($1, $2, $3)
+             RETURNING *`,
+            [quoteId, vendorId, note.trim()]
+        );
+
+        res.json({ 
+            success: true, 
+            message: 'Note added',
+            note: result.rows[0]
+        });
+
+    } catch (err) {
+        console.error('Error adding note:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * GET /api/vendor/auto-accept-rules
+ * Get auto-accept settings
+ */
+router.get('/auto-accept-rules', async (req, res) => {
+    const vendorId = req.user.userId;
+
+    try {
+        const result = await pool.query(
+            `SELECT * FROM vendor_auto_accept_rules WHERE vendor_id = $1`,
+            [vendorId]
+        );
+
+        if (result.rows.length === 0) {
+            // Return defaults
+            return res.json({
+                enabled: false,
+                minMatchScore: 70,
+                maxLeadFee: 10.00,
+                maxDistance: 15,
+                jobTimeframe: 'any',
+                minJobBudget: 0,
+                maxJobBudget: 10000,
+                categories: [],
+                dailyLeadLimit: 5,
+                weeklyLeadLimit: 20,
+                dailySpendCap: 50.00,
+                weeklySpendCap: 200.00
+            });
+        }
+
+        const settings = result.rows[0];
+        res.json({
+            enabled: settings.enabled,
+            minMatchScore: settings.min_match_score,
+            maxLeadFee: parseFloat(settings.max_lead_price),
+            maxDistance: settings.max_distance_miles,
+            jobTimeframe: settings.job_timeframe || 'any',
+            minJobBudget: settings.min_job_budget || 0,
+            maxJobBudget: settings.max_job_budget || 10000,
+            categories: settings.service_categories || [],
+            dailyLeadLimit: settings.daily_lead_limit || 5,
+            weeklyLeadLimit: settings.weekly_lead_limit || 20,
+            dailySpendCap: settings.daily_spend_cap || 50,
+            weeklySpendCap: settings.weekly_spend_cap || 200
+        });
+
+    } catch (err) {
+        console.error('Error fetching auto-accept rules:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/**
+ * POST /api/vendor/auto-accept-rules
+ * Save/update auto-accept settings
+ */
+router.post('/auto-accept-rules', async (req, res) => {
+    const vendorId = req.user.userId;
+    const {
+        enabled,
+        minMatchScore,
+        maxLeadFee,
+        maxDistance,
+        jobTimeframe,
+        minJobBudget,
+        maxJobBudget,
+        categories,
+        dailyLeadLimit,
+        weeklyLeadLimit,
+        dailySpendCap,
+        weeklySpendCap
+    } = req.body;
+
+    // Validation
+    if (minMatchScore < 0 || minMatchScore > 100) {
+        return res.status(400).json({ error: 'Match score must be 0-100' });
+    }
+    if (maxLeadFee < 0) {
+        return res.status(400).json({ error: 'Lead fee must be positive' });
+    }
+    if (dailySpendCap > weeklySpendCap) {
+        return res.status(400).json({ error: 'Daily cap cannot exceed weekly cap' });
+    }
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO vendor_auto_accept_rules (
+                vendor_id, enabled, min_match_score, max_lead_price, max_distance_miles,
+                job_timeframe, min_job_budget, max_job_budget, service_categories,
+                daily_lead_limit, weekly_lead_limit, updated_at
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
+            ON CONFLICT (vendor_id) DO UPDATE SET
+                enabled = $2,
+                min_match_score = $3,
+                max_lead_price = $4,
+                max_distance_miles = $5,
+                job_timeframe = $6,
+                min_job_budget = $7,
+                max_job_budget = $8,
+                service_categories = $9,
+                daily_lead_limit = $10,
+                weekly_lead_limit = $11,
+                updated_at = NOW()
+            RETURNING *`,
+            [
+                vendorId,
+                enabled,
+                minMatchScore,
+                maxLeadFee,
+                maxDistance,
+                jobTimeframe || 'any',
+                minJobBudget || 0,
+                maxJobBudget || 10000,
+                categories || [],
+                dailyLeadLimit || 5,
+                weeklyLeadLimit || 20
+            ]
+        );
+
+        // Update spend limits table
+        await pool.query(
+            `INSERT INTO vendor_spend_limits (
+                vendor_id, daily_cap, weekly_cap, monthly_cap
+            ) VALUES ($1, $2, $3, $4)
+            ON CONFLICT (vendor_id) DO UPDATE SET
+                daily_cap = $2,
+                weekly_cap = $3,
+                updated_at = NOW()`,
+            [vendorId, dailySpendCap, weeklySpendCap, weeklySpendCap * 4]
+        );
+
+        // Log the change
+        await pool.query(
+            `INSERT INTO lead_acceptance_log 
+             (vendor_id, action, details)
+             VALUES ($1, $2, $3)`,
+            [
+                vendorId,
+                'auto_accept_settings_updated',
+                JSON.stringify({ enabled, rules: req.body })
+            ]
+        );
+
+        res.json({ 
+            success: true, 
+            message: 'Auto-accept settings saved',
+            settings: result.rows[0]
+        });
+
+    } catch (err) {
+        console.error('Error saving auto-accept rules:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

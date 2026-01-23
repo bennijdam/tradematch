@@ -1,6 +1,7 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const EmailService = require('../services/email.service');
+const axios = require('axios');
 const router = express.Router();
 
 let pool;
@@ -60,45 +61,37 @@ router.post('/', authenticate, async (req, res) => {
         
         res.json({ success: true, bidId });
 
-        // Get quote and customer details for notification
-        const quoteResult = await pool.query(
-            `SELECT q.*, u.email as customer_email, u.name as customer_name 
-             FROM quotes q 
-             JOIN users u ON q.customer_id = u.id 
-             WHERE q.id = $1`,
-            [quoteId]
-        );
-
-        if (quoteResult.rows.length > 0) {
-            const quote = quoteResult.rows[0];
-            
-            // Notify customer about new bid
-            sendEmailNotification(
-                quote.customer_email,
-                'New Bid Received for Your Quote Request',
-                `<h2>New Bid Received</h2>
-                 <p>Great news! A tradesperson has submitted a bid for your quote request.</p>
-                 <p><strong>Quote Title:</strong> ${quote.title}</p>
-                 <p><strong>Bid Price:</strong> £${price}</p>
-                 <p><strong>Estimated Duration:</strong> ${estimatedDuration || 'Not specified'}</p>
-                 <p><strong>Availability:</strong> ${availability || 'Not specified'}</p>
-                 <p><strong>Message:</strong> ${message || 'No message provided'}</p>
-                 <p>Log in to your account to view this bid and communicate with the tradesperson.</p>`,
-                `New bid received for your quote "${quote.title}". Price: £${price}. Log in to view details.`
+        // Trigger customer notification email about new bid
+        try {
+            const quoteResult = await pool.query(
+                `SELECT q.customer_id, q.title FROM quotes q WHERE q.id = $1`,
+                [quoteId]
             );
 
-            // Notify admin about new bid
-            sendEmailNotification(
-                'admin@tradematch.co.uk',
-                'New Bid Submitted',
-                `<h2>New Bid Activity</h2>
-                 <p><strong>Quote ID:</strong> ${quoteId}</p>
-                 <p><strong>Customer:</strong> ${quote.customer_name} (${quote.customer_email})</p>
-                 <p><strong>Quote Title:</strong> ${quote.title}</p>
-                 <p><strong>Bid Price:</strong> £${price}</p>
-                 <p><strong>Vendor ID:</strong> ${vendorId}</p>`,
-                `New bid submitted for quote ${quoteId} by vendor ${vendorId}. Price: £${price}.`
-            );
+            if (quoteResult.rows.length > 0) {
+                const quote = quoteResult.rows[0];
+                
+                // Get vendor name
+                const vendorResult = await pool.query(
+                    'SELECT name FROM users WHERE id = $1',
+                    [vendorId]
+                );
+                const vendorName = vendorResult.rows[0]?.name || 'A tradesperson';
+                
+                const apiUrl = process.env.API_URL || 'http://localhost:5001';
+                await axios.post(`${apiUrl}/api/email/new-bid-notification`, {
+                    customerId: quote.customer_id,
+                    quoteId,
+                    bidAmount: price,
+                    vendorName
+                }, {
+                    timeout: 5000
+                });
+                console.log('Customer bid notification email queued');
+            }
+        } catch (emailError) {
+            console.error('Failed to trigger customer email:', emailError.message);
+            // Don't fail bid creation if email fails
         }
     } catch (error) {
         console.error('Create bid error:', error);

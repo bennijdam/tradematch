@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 const EmailService = require('../services/email.service');
+const LeadSystemIntegrationService = require('../services/lead-system-integration.service');
+const axios = require('axios');
 const router = express.Router();
 
 let pool;
@@ -65,9 +67,23 @@ router.post('/public', [
   try {
     const quoteId = `quote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    const result = await pool.query(
-      'INSERT INTO quotes (id, customer_id, service_type, title, description, location, postcode, budget_min, budget_max, urgency, status, additional_details, created_at) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
-      [quoteId, null, serviceType, title, description, null, postcode, budgetMin, budgetMax, urgency]
+    await pool.query(
+      `INSERT INTO quotes (
+        id, customer_id, service_type, title, description, postcode,
+        budget_min, budget_max, urgency, additional_details, photos, status
+      ) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'open')`,
+      [
+        quoteId,
+        serviceType,
+        title,
+        description,
+        postcode,
+        budgetMin || null,
+        budgetMax || null,
+        urgency || null,
+        additionalDetails ? JSON.stringify(additionalDetails) : null,
+        photos ? JSON.stringify(photos) : null
+      ]
     );
 
     res.json({
@@ -76,21 +92,44 @@ router.post('/public', [
       quote: { id: quoteId, ...req.body }
     });
 
-    sendEmailNotification(
-      'admin@tradematch.co.uk',
-      'New Quote Request Received',
-      `<h2>New Quote Request</h2>
-       <p><strong>Quote ID:</strong> ${quoteId}</p>
-       <p><strong>Service Type:</strong> ${serviceType}</p>
-       <p><strong>Title:</strong> ${title}</p>
-       <p><strong>Description:</strong> ${description}</p>
-       <p><strong>Postcode:</strong> ${postcode}</p>
-       <p><strong>Budget:</strong> £${budgetMin || 'N/A'} - £${budgetMax || 'N/A'}</p>
-       <p><strong>Urgency:</strong> ${urgency || 'N/A'}</p>
-       ${additionalDetails ? `<p><strong>Additional Details:</strong> ${additionalDetails}</p>` : ''}
-       <p>This quote was submitted by a guest user.</p>`,
-      `New Quote Request - ID: ${quoteId}\nService: ${serviceType}\nTitle: ${title}\nPostcode: ${postcode}`
-    );
+    // ==========================================
+    // LEAD SYSTEM: Auto-process public quotes
+    // ==========================================
+    (async () => {
+      try {
+        // Build guest customer profile (minimal verification)
+        const guestCustomer = {
+          id: null,
+          email_verified: false,
+          phone_verified: false,
+          account_age_days: 0
+        };
+
+        // Build quote object
+        const quoteData = {
+          id: quoteId,
+          serviceType,
+          title,
+          description,
+          postcode,
+          budgetMin,
+          budgetMax,
+          urgency,
+          photos,
+          additionalDetails
+        };
+
+        // Process through lead system (qualify → price → distribute → notify)
+        const leadService = new LeadSystemIntegrationService(pool, null);
+        await leadService.processNewLead(quoteData, guestCustomer);
+
+        console.log(`✅ Public quote ${quoteId} processed successfully through lead system`);
+
+      } catch (leadError) {
+        console.error('Lead system processing error:', leadError);
+        // Don't fail quote creation if lead processing fails
+      }
+    })();
   } catch (error) {
     console.error('Create public quote error:', error);
     res.status(500).json({ error: 'Failed to create quote', details: error.message });
@@ -165,121 +204,50 @@ router.post('/', authenticate, [
       ]
     );
 
-    // Send email notifications
-    try {
-      const customerEmail = req.user.email;
-      
-      // Get customer info
-      const customerResult = await pool.query('SELECT name FROM users WHERE id = $1', [req.user.userId]);
-      const customerName = customerResult.rows[0]?.name || 'Customer';
-      
-      // Find vendors who match this service type and location
-      const vendorsResult = await pool.query(`
-        SELECT u.name, u.email 
-        FROM users u 
-        WHERE u.user_type = 'vendor' 
-        AND u.status = 'active'
-        AND (u.service_areas IS NULL OR $1 = ANY(u.service_areas))
-        LIMIT 10
-      `, [serviceType]);
-      
-      // Send confirmation to customer
-      const emailService = new EmailService();
-      if (emailService) {
-        await emailService.sendEmail({
-          to: customerEmail,
-          subject: 'Your Quote Request is Live - TradeMatch',
-          html: `
-            <h2>📋 Your Quote is Posted!</h2>
-            <p>Hi ${customerName},</p>
-            <p>Your quote request for "${title}" has been posted to our network of verified tradespeople.</p>
-            
-            <div style="background: #e8f5ea; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3>🎯 What Happens Next:</h3>
-              <ul>
-                <li>You'll receive multiple quotes from qualified professionals</li>
-                <li>Compare bids and choose best fit for your project</li>
-                <li>Communicate with tradespeople through our messaging system</li>
-                <li>Complete your project with secure payments through our platform</li>
-              </ul>
-            </div>
-            
-            <p><strong>Quote ID:</strong> ${quoteId}</p>
-            <p>Log in to your dashboard to track progress and manage your project.</p>
-            <p>Best regards,<br>The TradeMatch Team</p>
-          `,
-          text: `Your quote "${title}" has been posted to our network. Quote ID: ${quoteId}`
-        });
-        
-        // Send notifications to matching vendors
-        for (const vendor of vendorsResult.rows) {
-          await emailService.sendEmail({
-            to: vendor.email,
-            subject: `New Quote Request: ${title} - TradeMatch`,
-            html: `
-              <h2>🎉 New Quote Request Received!</h2>
-              <p>Hi ${vendor.name},</p>
-              <p>Great news! A customer has posted a quote request that matches your expertise:</p>
-              
-              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3>${title}</h3>
-                <p><strong>Service:</strong> ${serviceType}</p>
-                <p><strong>Customer:</strong> ${customerName} (${customerEmail})</p>
-                <p><strong>Quote ID:</strong> ${quoteId}</p>
-                <p><strong>Posted:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-              
-              <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3>💡 Next Steps:</h3>
-                <ol>
-                  <li>Review customer's requirements carefully</li>
-                  <li>Submit your competitive bid with detailed breakdown</li>
-                  <li>Include timeline and availability in your response</li>
-                  <li>Communicate professionally to secure project</li>
-                  <li>Use TradeMatch messaging system for all communications</li>
-                </ol>
-              </div>
-              
-              <p><strong>💼 Pro Tip:</strong> Quick, detailed responses with clear pricing help win more jobs. Average response time is under 4 hours!</p>
-              
-              <p>Log in to your TradeMatch dashboard to view and respond to this opportunity.</p>
-              <p>Best of luck!</p>
-              <p>The TradeMatch Team</p>
-            `,
-            text: `New quote request received: ${title}. Please check your dashboard.`
-          });
-        }
-        
-        console.log(`📧 Quote notifications sent to ${vendorsResult.rows.length} vendors and customer`);
-      }
-      
-      // Send admin notification using existing method
-      sendEmailNotification(
-        'admin@tradematch.co.uk',
-        'New Quote Request - Registered User',
-        `<h2>New Quote Request from Registered User</h2>
-         <p><strong>Quote ID:</strong> ${quoteId}</p>
-         <p><strong>Customer:</strong> ${customerEmail}</p>
-         <p><strong>Service Type:</strong> ${serviceType}</p>
-         <p><strong>Title:</strong> ${title}</p>
-         <p><strong>Description:</strong> ${description}</p>
-         <p><strong>Postcode:</strong> ${postcode}</p>
-         <p><strong>Budget:</strong> £${budgetMin || 'N/A'} - £${budgetMax || 'N/A'}</p>
-         <p><strong>Urgency:</strong> ${urgency || 'N/A'}</p>
-         ${additionalDetails ? `<p><strong>Additional Details:</strong> ${additionalDetails}</p>` : ''}`,
-        `New Quote from Registered User - ID: ${quoteId}\nCustomer: ${customerEmail}\nService: ${serviceType}`
-      );
-      
-    } catch (emailError) {
-      console.error('Quote notification email error:', emailError);
-      // Continue with quote creation even if email fails
-    }
-
     res.status(201).json({
       success: true,
       message: 'Quote created successfully',
       quoteId
     });
+
+    // ==========================================
+    // LEAD SYSTEM: Auto-process through pipeline
+    // ==========================================
+    (async () => {
+      try {
+        // Get customer details
+        const customerResult = await pool.query(
+          'SELECT * FROM users WHERE id = $1',
+          [req.user.userId]
+        );
+        const customer = customerResult.rows[0];
+
+        // Build quote object
+        const quoteData = {
+          id: quoteId,
+          serviceType,
+          title,
+          description,
+          postcode,
+          budgetMin,
+          budgetMax,
+          urgency,
+          photos,
+          additionalDetails
+        };
+
+        // Process through lead system (qualify → price → distribute → notify)
+        const leadService = new LeadSystemIntegrationService(pool, null);
+        await leadService.processNewLead(quoteData, customer);
+
+        console.log(`✅ Quote ${quoteId} processed successfully through lead system`);
+
+      } catch (leadError) {
+        console.error('Lead system processing error:', leadError);
+        // Don't fail quote creation if lead processing fails
+      }
+    })();
+
   } catch (error) {
     console.error('Create quote error:', error);
     res.status(500).json({ error: 'Failed to create quote', details: error.message });

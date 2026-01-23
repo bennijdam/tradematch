@@ -592,6 +592,7 @@
                 <ul class="nav-links">
                     <li><a href="vendor-dashboard.html">Browse Quotes</a></li>
                     <li><a href="messages.html">Messages</a></li>
+                    <li><a href="email-preferences.html">Email Preferences</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                     <li><a href="help.html">Help</a></li>
@@ -772,8 +773,14 @@
         // Update User Info
         function updateUserInfo(user) {
             // Handle both fullName and name properties
-            const userName = user.fullName || user.name || 'User';
-            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
+            const userName = user.fullName || user.name || user.email || 'Vendor';
+            console.log('Updating user info:', { user, userName });
+            
+            // Get initials from name
+            const nameParts = userName.split(' ');
+            const initials = nameParts.length > 1 
+                ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+                : userName.substring(0, 2).toUpperCase();
             
             document.getElementById('userAvatar').textContent = initials;
             document.getElementById('userName').textContent = userName;
@@ -784,6 +791,7 @@
             const user = checkAuth();
             if (!user) return;
             
+            console.log('Loading dashboard for user:', user);
             updateUserInfo(user);
             
             try {

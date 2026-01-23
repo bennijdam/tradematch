@@ -4,6 +4,18 @@ const pool = require('../database/postgres-connection');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+// Normalise user payload so downstream code can rely on both id and userId
+function buildUserPayload(decoded) {
+    return {
+        id: decoded.userId,
+        userId: decoded.userId,
+        email: decoded.email,
+        role: decoded.role,
+        vendorId: decoded.vendorId,
+        customerId: decoded.customerId
+    };
+}
+
 /**
  * Verify JWT token and attach user to request
  */
@@ -32,13 +44,7 @@ function authenticate(req, res, next) {
         const decoded = jwt.verify(token, JWT_SECRET);
         
         // Attach user info to request
-        req.user = {
-            id: decoded.userId,
-            email: decoded.email,
-            role: decoded.role,
-            vendorId: decoded.vendorId,
-            customerId: decoded.customerId
-        };
+        req.user = buildUserPayload(decoded);
 
         next();
         
@@ -87,10 +93,24 @@ function requireCustomer(req, res, next) {
  * Require admin role
  */
 function requireAdmin(req, res, next) {
-    if (!req.user || req.user.role !== 'admin') {
+    const adminRoles = ['admin', 'super_admin'];
+    if (!req.user || !adminRoles.includes(req.user.role)) {
         return res.status(403).json({ 
             error: 'Admin access required',
             code: 'ADMIN_REQUIRED'
+        });
+    }
+    next();
+}
+
+/**
+ * Require super admin role
+ */
+function requireSuperAdmin(req, res, next) {
+    if (!req.user || req.user.role !== 'super_admin') {
+        return res.status(403).json({ 
+            error: 'Super admin access required',
+            code: 'SUPER_ADMIN_REQUIRED'
         });
     }
     next();
@@ -115,13 +135,7 @@ function optionalAuth(req, res, next) {
 
         const decoded = jwt.verify(token, JWT_SECRET);
         
-        req.user = {
-            id: decoded.userId,
-            email: decoded.email,
-            role: decoded.role,
-            vendorId: decoded.vendorId,
-            customerId: decoded.customerId
-        };
+        req.user = buildUserPayload(decoded);
 
         next();
         
@@ -173,9 +187,11 @@ function refreshToken(req, res, next) {
 
 module.exports = {
     authenticate,
+    authenticateToken: authenticate,
     requireVendor,
     requireCustomer,
     requireAdmin,
+    requireSuperAdmin,
     optionalAuth,
     refreshToken
 };

@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const EmailService = require('../services/email.service');
+// Import auth middlewares for protected customer routes
+const { authenticate, requireCustomer } = require('../middleware/auth');
 
 let pool;
 router.setPool = (p) => { pool = p; };
 
-// Apply authentication to all customer routes
+// Apply authentication and role check to all customer routes
+// Business Rule: Customer-only endpoints. Vendors/Admins are blocked.
 router.use(authenticate);
 router.use(requireCustomer);
 

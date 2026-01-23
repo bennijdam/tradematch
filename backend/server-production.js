@@ -10,6 +10,8 @@ const passport = require('passport');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const { emailLimiter } = require('./middleware/rate-limit');
+const { TradeMatchEventBroker, NotificationDispatcher } = require('./services/event-broker.service');
+const connectionLayerRouter = require('./routes/connection-layer');
 
 dotenv.config();
 
@@ -98,17 +100,31 @@ pool.connect()
         }
     });
 
+// Connection layer: event broker + notification dispatcher
+const eventBroker = new TradeMatchEventBroker(pool);
+const notificationDispatcher = new NotificationDispatcher(pool);
+
+if (process.env.ENABLE_NOTIFICATIONS !== 'false') {
+    notificationDispatcher.startProcessing(5000);
+    logger.info('Notification processor started (5s interval)');
+}
+
 // Health check endpoint
 app.get("/api/health", async (req, res) => {
     try {
         await pool.query("SELECT 1");
+        let notification = null;
+        if (notificationDispatcher && typeof notificationDispatcher.getStats === 'function') {
+            notification = await notificationDispatcher.getStats();
+        }
         res.json({
             status: "ok",
             database: "connected",
             uptime: process.uptime(),
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development',
-            version: require('./package.json').version
+            version: require('./package.json').version,
+            notification
         });
     } catch (err) {
         logger.error("Health check failed", { error: err.message });
@@ -356,6 +372,19 @@ app.get("/api/auth/me", async (req, res) => {
     }
 });
 
+// Connection Layer API (Customer↔Vendor sync)
+try {
+    if (typeof connectionLayerRouter.setPool === 'function') connectionLayerRouter.setPool(pool);
+    if (typeof connectionLayerRouter.setEventBroker === 'function') connectionLayerRouter.setEventBroker(eventBroker);
+    app.use('/api/connection', (req, res, next) => {
+        req.eventBroker = eventBroker;
+        next();
+    }, connectionLayerRouter);
+    logger.info('Connection layer routes mounted at /api/connection');
+} catch (e) {
+    logger.warn('Connection layer routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
 // Mount OAuth routers
 const googleAuthRouter = require('./routes/google-auth');
 const microsoftAuthRouter = require('./routes/microsoft-auth');
@@ -374,6 +403,65 @@ try {
     logger.info('Email service routes mounted at /api/email');
 } catch (e) {
     logger.warn('Email service not available', { error: e && e.message ? e.message : String(e) });
+}
+
+// Mount core application routers (Quotes, Bids, Customer)
+try {
+    const quotesRouter = require('./routes/quotes');
+    if (typeof quotesRouter.setPool === 'function') quotesRouter.setPool(pool);
+    app.use('/api/quotes', quotesRouter);
+    logger.info('Quotes routes mounted at /api/quotes');
+} catch (e) {
+    logger.warn('Quotes routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+try {
+    const bidsRouter = require('./routes/bids');
+    if (typeof bidsRouter.setPool === 'function') bidsRouter.setPool(pool);
+    app.use('/api/bids', bidsRouter);
+    logger.info('Bids routes mounted at /api/bids');
+} catch (e) {
+    logger.warn('Bids routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+try {
+    const customerRouter = require('./routes/customer');
+    if (typeof customerRouter.setPool === 'function') customerRouter.setPool(pool);
+    app.use('/api/customer', customerRouter);
+    logger.info('Customer routes mounted at /api/customer');
+} catch (e) {
+    logger.warn('Customer routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+// Payments and milestones routes
+try {
+    const paymentsRouter = require('./routes/payments');
+    if (typeof paymentsRouter.setPool === 'function') paymentsRouter.setPool(pool);
+    if (typeof paymentsRouter.setEventBroker === 'function') paymentsRouter.setEventBroker(eventBroker);
+    app.use('/api/payments', paymentsRouter);
+    logger.info('Payments routes mounted at /api/payments');
+} catch (e) {
+    logger.warn('Payments routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+try {
+    const milestonesRouter = require('./routes/milestones');
+    if (typeof milestonesRouter.setPool === 'function') milestonesRouter.setPool(pool);
+    if (typeof milestonesRouter.setEventBroker === 'function') milestonesRouter.setEventBroker(eventBroker);
+    app.use('/api/milestones', milestonesRouter);
+    logger.info('Milestones routes mounted at /api/milestones');
+} catch (e) {
+    logger.warn('Milestones routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+try {
+    const adminRouter = require('./routes/admin');
+    if (typeof adminRouter.setPool === 'function') adminRouter.setPool(pool);
+    if (typeof adminRouter.setEventBroker === 'function') adminRouter.setEventBroker(eventBroker);
+    app.use('/api/admin', adminRouter);
+    logger.info('Super Admin routes mounted at /api/admin');
+} catch (e) {
+    logger.warn('Admin routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
 // Debug endpoint (disable in production)
@@ -453,6 +541,9 @@ app.use((err, req, res, next) => {
 const gracefulShutdown = async () => {
     logger.info('Shutting down gracefully...');
     try {
+        if (notificationDispatcher && typeof notificationDispatcher.stopProcessing === 'function') {
+            notificationDispatcher.stopProcessing();
+        }
         await pool.end();
         logger.info('Database connections closed');
         process.exit(0);
@@ -480,15 +571,17 @@ const server = app.listen(PORT, () => {
 });
 
 // Attempt migrations in the background (non-blocking)
-if (process.env.DATABASE_URL) {
+// Disabled by default to avoid spawn errors on constrained environments.
+if (process.env.DATABASE_URL && process.env.RUN_BG_MIGRATIONS === 'true') {
     setImmediate(async () => {
         try {
             const { spawn } = require('child_process');
-            const migrate = spawn('npm', ['run', 'migrate:up'], {
+            const migrate = spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'migrate:up'], {
                 stdio: ['ignore', 'ignore', 'ignore'],
                 timeout: 30000,
                 detached: false
             });
+            migrate.on('error', (e) => logger.warn('Background migration spawn error', { error: e.message }));
             migrate.unref(); // Don't wait for this process
         } catch (err) {
             logger.warn('Background migration attempt skipped', { error: err.message });

@@ -778,6 +778,26 @@
             margin-top: 1rem;
         }
 
+        .rating-stars {
+            display: flex;
+            gap: 8px;
+            margin: 0.75rem 0 1rem 0;
+        }
+
+        .rating-star {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #e5e7eb;
+            transition: transform 0.1s, color 0.1s;
+        }
+
+        .rating-star.active,
+        .rating-star:hover,
+        .rating-star:hover ~ .rating-star {
+            color: #f59e0b;
+            transform: scale(1.05);
+        }
+
         .btn-view-bids:hover {
             background: var(--emerald-600);
         }
@@ -808,6 +828,7 @@
                 <ul class="nav-links">
                     <li><a href="quote-engine.html">New Quote</a></li>
                     <li><a href="messages.html">Messages</a></li>
+                    <li><a href="email-preferences.html">Email Preferences</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
                     <li><a href="help.html">Help</a></li>
@@ -905,7 +926,59 @@
     </div>
 
     <script>
+        /**
+         * TradeMatch UK – Customer Dashboard (Homeowners)
+         *
+         * Component Layout & Structure:
+         * - Overview: Stats for active quotes, bids received, projects in progress, completed jobs
+         * - Jobs: List of customer quotes with status (draft/live/in_progress/completed/cancelled)
+         * - Matches & Responses: Vendor bids per quote with vendor profile summary
+         * - Messaging: In-platform messaging for accepted leads and active projects
+         * - Quotes & Hiring: Compare bids, accept one bid → auto-update project status to in_progress
+         * - Reviews: Post-completion review flow (rating + feedback + recommendation)
+         * - Trust & Safety: Display verification badges, insurance, platform guarantees
+         * - Notifications: Manage email/push/message alerts and job updates
+         * - Privacy Controls: Contact visibility, data export, deletion, close account
+         *
+         * State Management Approach:
+         * - Auth: JWT stored in localStorage (`token`) and user in `user`
+         * - Data: `dashboardQuotes[]` cached with embedded `bids[]` for render and comparisons
+         * - UI: Section filtering via simple tab state; loaders and error messages per view
+         * - Network: `fetch()` with Authorization header; endpoints on https://tradematch.onrender.com
+         * - Transitions: Business rules drive status changes; e.g., bid acceptance → job in_progress
+         *
+         * Example API Endpoints (Customer scope):
+         * - GET /api/quotes/customer/:customerId         → List quotes for overview and management
+         * - GET /api/bids/quote/:quoteId                 → Bids for a quote (matches & responses)
+         * - PATCH /api/bids/:bidId/accept                → Accept a bid (hiring flow)
+         * - PATCH /api/bids/:bidId/reject                → Decline a bid (optionally ask feedback)
+         * - POST /api/payments/create-intent             → Stripe intent (escrow/payment setup)
+         * - POST /api/payments/confirm                   → Confirm payment when needed
+         * - POST /api/reviews                            → Submit review after job completion
+         * - (Additional) GET/PUT /api/customer/profile   → Manage customer profile & preferences
+         *
+         * Required Data Models (simplified):
+         * - Quote: { id, title, description, serviceType, postcode, status, budgetMin, budgetMax, createdAt }
+         * - Bid: { id, quoteId, vendorId, price, message, estimatedDuration, availability, status }
+         * - Vendor: { id, company_name, logoUrl, rating, reviews_count, distance, verified, insured }
+         * - Message: { id, quoteId, fromUserId, toUserId, body, createdAt, readAt, attachments[] }
+         * - Review: { id, quoteId, vendorId, customerId, rating, feedback, wouldRecommend, createdAt }
+         *
+         * UX & Business Rules (key points):
+         * - Budget & timeframe are mandatory when creating a job; drafts are never distributed until confirmed live.
+         * - Customer never sees vendor lead prices; only vendor bid info.
+         * - Vendors’ messages are private to the customer; vendors cannot see other vendors’ conversations.
+         * - Messaging unlocks when a vendor accepts the lead or is selected (protects privacy until engagement).
+         * - Accepting a bid updates job status → in_progress; completing the job prompts for a review.
+         * - Reviews are moderated; vendors may post public responses.
+         * - Trust signals (verification, insurance) are displayed prominently; customers can report/block vendors.
+         * - Notifications are opt-in/managed; privacy controls allow data download/deletion and account closure.
+         */
+        let dashboardQuotes = [];
+        let currentEditQuoteId = null;
+
         // Authentication Check
+        // UX Rule: If not logged in, redirect to login; preserves redirect target.
         function checkAuth() {
             // Migrate any legacy token key to the current one
             const legacyToken = localStorage.getItem('tradematch_token');
@@ -947,6 +1020,7 @@
         }
 
         // Load Dashboard Data
+        // Business Rule: Only confirmed/live quotes are surfaced to vendors; drafts remain private.
         async function loadDashboard() {
             const user = checkAuth();
             if (!user) return;
@@ -997,6 +1071,9 @@
                     })
                 );
                 
+                // Cache quotes for editing/canceling
+                dashboardQuotes = quotesWithBids;
+
                 // Calculate stats from quotes
                 const totalBids = quotesWithBids.reduce((sum, q) => sum + (q.bidCount || 0), 0);
                 const activeProjects = quotesWithBids.filter(q => q.status === 'in_progress').length;
@@ -1116,6 +1193,12 @@
                 };
                 const urgencyDisplay = urgencyMap[quote.urgency] || quote.urgency || 'Not specified';
                 
+                // Debug logging
+                console.log('Quote status check:', quote.id, 'status:', quote.status, 'type:', typeof quote.status);
+                
+                const isEditable = quote.status === 'open';
+                const isCancelable = quote.status === 'open';
+
                 return `
                 <div class="quote-card" data-status="${quote.status}">
                     <div class="quote-header">
@@ -1152,8 +1235,15 @@
                             <div class="bids-header">
                                 <span class="bids-count">${quote.bidCount} Bid${quote.bidCount !== 1 ? 's' : ''} Received</span>
                             </div>
-                            <button class="btn-view-bids" onclick="openBidsModal('${quote.id}', '${quote.serviceType}', '${JSON.stringify(quote.bids || []).replace(/'/g, '&apos;')}')">View Bids →</button>
+                            <button class="btn-view-bids" onclick="openBidsModal('${quote.id}', '${quote.serviceType}', '${quote.status}', '${JSON.stringify(quote.bids || []).replace(/'/g, '&apos;')}')">View Bids →</button>
                         </div>
+                    ` : ''}
+
+                    ${isEditable || isCancelable ? `
+                    <div class="quote-actions" style="display:flex; gap:0.75rem; margin-top:1rem; flex-wrap: wrap;">
+                        ${isEditable ? `<button class="btn-secondary" style="padding:0.6rem 1.2rem; border:1px solid var(--slate-200); cursor: pointer;" onclick="openEditQuoteModal('${quote.id}')">✏️ Edit Job</button>` : ''}
+                        ${isCancelable ? `<button class="btn-secondary" style="padding:0.6rem 1.2rem; border:1px solid #fecaca; background:#fff1f2; color:#b91c1c; cursor: pointer;" onclick="cancelQuote('${quote.id}')">🛑 Cancel Job</button>` : ''}
+                    </div>
                     ` : ''}
                 </div>
                 `;
@@ -1161,7 +1251,7 @@
         }
 
         // Bid Management Functions
-        function openBidsModal(quoteId, serviceType, bidsJson) {
+        function openBidsModal(quoteId, serviceType, quoteStatus, bidsJson) {
             const bids = JSON.parse(bidsJson);
             const modal = document.getElementById('bidsModal');
             const body = document.getElementById('bidsModalBody');
@@ -1172,7 +1262,11 @@
             if (!bids || bids.length === 0) {
                 body.innerHTML = '<p style="color: #667eea;">No bids received yet.</p>';
             } else {
-                body.innerHTML = bids.map(bid => `
+                body.innerHTML = bids.map(bid => {
+                    const vendorId = bid.vendorId || bid.vendor_id;
+                    const showReview = bid.status === 'accepted' && (quoteStatus === 'in_progress' || quoteStatus === 'closed');
+
+                    return `
                     <div class="bid-item ${bid.status === 'accepted' ? 'bid-accepted' : ''}">
                         <div class="bid-vendor-info">
                             <div>
@@ -1195,17 +1289,25 @@
                                 <button class="btn-reject-bid" onclick="rejectBid('${bid.id}')">Reject</button>
                             </div>
                         ` : `
-                            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                                <button class="btn-accept-bid" onclick="initiatePayment('${bid.id}', '${quoteId}', '${bid.price}')" style="flex: 1;">
-                                    💳 Pay Now
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                                <div style="display: flex; gap: 0.75rem;">
+                                    <button class="btn-accept-bid" onclick="initiatePayment('${bid.id}', '${quoteId}', '${bid.price}')" style="flex: 1;">
+                                        💳 Pay Now
+                                    </button>
+                                    <button class="btn-secondary" onclick="contactVendor('${vendorId}')" style="flex: 1; background: #f3f4f6; color: var(--slate-900); border: 1px solid var(--slate-300);">
+                                        💬 Message Vendor
+                                    </button>
+                                </div>
+                                ${showReview ? `
+                                <button class="btn-secondary" style="width: 100%; background: #fff7ed; color: var(--slate-900); border: 1px solid #fed7aa;" onclick="openReviewModal('${vendorId}', '${quoteId}', '${bid.id}')">
+                                    ⭐ Leave a Review
                                 </button>
-                                <button class="btn-secondary" onclick="contactVendor('${bid.vendor_id}')" style="flex: 1; background: #f3f4f6; color: var(--slate-900); border: 1px solid var(--slate-300);">
-                                    💬 Message Vendor
-                                </button>
+                                ` : ''}
                             </div>
                         `}
                     </div>
-                `).join('');
+                    `;
+                }).join('');
             }
             
             modal.classList.add('active');
@@ -1430,6 +1532,7 @@
         let elements = null;
         let cardElement = null;
         let currentPaymentData = null;
+        let currentReviewData = { vendorId: null, quoteId: null, bidId: null, rating: null };
 
         // Initialize Stripe
         async function initializeStripe() {
@@ -1551,7 +1654,285 @@
             sessionStorage.setItem('openConversationWithId', vendorId);
             window.location.href = '/messages.html';
         }
+
+        function openEditQuoteModal(quoteId) {
+            const quote = dashboardQuotes.find(q => q.id === quoteId);
+            if (!quote) {
+                alert('Could not find this job. Please refresh and try again.');
+                return;
+            }
+
+            currentEditQuoteId = quoteId;
+
+            document.getElementById('editTitle').value = quote.title || '';
+            document.getElementById('editDescription').value = quote.description || '';
+            document.getElementById('editBudgetMin').value = quote.budgetMin || '';
+            document.getElementById('editBudgetMax').value = quote.budgetMax || '';
+            document.getElementById('editUrgency').value = quote.urgency || '';
+            document.getElementById('editPostcode').value = quote.postcode || '';
+            document.getElementById('editError').textContent = '';
+
+            document.getElementById('editQuoteModal').style.display = 'flex';
+        }
+
+        function closeEditQuoteModal() {
+            document.getElementById('editQuoteModal').style.display = 'none';
+            currentEditQuoteId = null;
+        }
+
+        async function submitQuoteEdit() {
+            if (!currentEditQuoteId) {
+                document.getElementById('editError').textContent = 'No job selected. Please reopen the editor.';
+                return;
+            }
+
+            const title = document.getElementById('editTitle').value.trim();
+            const description = document.getElementById('editDescription').value.trim();
+            const budgetMinRaw = document.getElementById('editBudgetMin').value.trim();
+            const budgetMaxRaw = document.getElementById('editBudgetMax').value.trim();
+            const urgency = document.getElementById('editUrgency').value;
+            const postcode = document.getElementById('editPostcode').value.trim();
+
+            const payload = {};
+            if (title) payload.title = title;
+            if (description) payload.description = description;
+
+            if (budgetMinRaw !== '') {
+                const num = parseFloat(budgetMinRaw);
+                if (isNaN(num)) {
+                    document.getElementById('editError').textContent = 'Budget min must be a number.';
+                    return;
+                }
+                payload.budgetMin = num;
+            }
+
+            if (budgetMaxRaw !== '') {
+                const num = parseFloat(budgetMaxRaw);
+                if (isNaN(num)) {
+                    document.getElementById('editError').textContent = 'Budget max must be a number.';
+                    return;
+                }
+                payload.budgetMax = num;
+            }
+
+            if (urgency) payload.urgency = urgency;
+            if (postcode) payload.postcode = postcode;
+
+            if (Object.keys(payload).length === 0) {
+                document.getElementById('editError').textContent = 'No changes to save.';
+                return;
+            }
+
+            const btn = document.getElementById('saveQuoteBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            document.getElementById('editError').textContent = '';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`https://tradematch.onrender.com/api/quotes/${currentEditQuoteId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to update job');
+                }
+
+                alert('✅ Job updated');
+                closeEditQuoteModal();
+                loadDashboard();
+            } catch (error) {
+                console.error('Edit quote error:', error);
+                document.getElementById('editError').textContent = error.message || 'Could not save changes.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            }
+        }
+
+        async function cancelQuote(quoteId) {
+            if (!confirm('Cancel this job? Vendors will be notified that the job is closed.')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`https://tradematch.onrender.com/api/quotes/${quoteId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ status: 'cancelled' })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to cancel job');
+                }
+
+                alert('Job cancelled.');
+                loadDashboard();
+            } catch (error) {
+                console.error('Cancel quote error:', error);
+                alert(error.message || 'Could not cancel job.');
+            }
+        }
+
+        // Review helpers
+        function setReviewStars(rating) {
+            const stars = document.querySelectorAll('#reviewStars .rating-star');
+            stars.forEach(star => {
+                const value = parseInt(star.dataset.value);
+                star.classList.toggle('active', rating ? value <= rating : false);
+            });
+        }
+
+        function initReviewStars() {
+            const stars = document.querySelectorAll('#reviewStars .rating-star');
+            if (!stars.length) return;
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.dataset.value);
+                    currentReviewData.rating = value;
+                    setReviewStars(value);
+                });
+            });
+
+            setReviewStars(currentReviewData.rating || 0);
+        }
+
+        function openReviewModal(vendorId, quoteId, bidId) {
+            currentReviewData = { vendorId, quoteId, bidId, rating: null };
+            document.getElementById('reviewComment').value = '';
+            document.getElementById('reviewError').textContent = '';
+            setReviewStars(0);
+            document.getElementById('reviewModal').style.display = 'flex';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        async function submitReview() {
+            if (!currentReviewData.vendorId || !currentReviewData.quoteId) {
+                document.getElementById('reviewError').textContent = 'Missing review context. Please reopen the modal and try again.';
+                return;
+            }
+
+            if (!currentReviewData.rating) {
+                document.getElementById('reviewError').textContent = 'Please select a rating before submitting.';
+                return;
+            }
+
+            const comment = document.getElementById('reviewComment').value.trim();
+
+            if (comment.length > 1000) {
+                document.getElementById('reviewError').textContent = 'Comment is too long (max 1000 characters).';
+                return;
+            }
+            const errorEl = document.getElementById('reviewError');
+            const submitBtn = document.getElementById('submitReviewBtn');
+
+            errorEl.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('https://tradematch.onrender.com/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        vendor_id: currentReviewData.vendorId,
+                        quote_id: currentReviewData.quoteId,
+                        rating: currentReviewData.rating,
+                        comment
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Failed to submit review');
+                }
+
+                alert('✅ Review submitted! Thank you for your feedback.');
+                closeReviewModal();
+                closeBidsModal();
+                loadDashboard();
+            } catch (error) {
+                console.error('Review submit error:', error);
+                errorEl.textContent = error.message || 'Could not submit review. Please try again.';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+            }
+        }
+
+        // Initialize review star listeners when page loads
+        window.addEventListener('DOMContentLoaded', initReviewStars);
     </script>
+
+    <!-- Edit Quote Modal -->
+    <div class="bids-modal" id="editQuoteModal" style="display: none;">
+        <div class="bids-modal-content" style="max-width: 640px;">
+            <div class="bids-modal-header">
+                <h2 class="bids-modal-title">Edit Job</h2>
+                <button class="btn-close-modal" onclick="closeEditQuoteModal()">&times;</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div>
+                    <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Title</label>
+                    <input id="editTitle" type="text" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;">
+                </div>
+                <div>
+                    <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Description</label>
+                    <textarea id="editDescription" rows="4" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;"></textarea>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <div style="flex:1;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Budget Min (£)</label>
+                        <input id="editBudgetMin" type="number" min="0" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Budget Max (£)</label>
+                        <input id="editBudgetMax" type="number" min="0" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;">
+                    </div>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <div style="flex:1;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Urgency</label>
+                        <select id="editUrgency" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;">
+                            <option value="">Select...</option>
+                            <option value="asap">ASAP</option>
+                            <option value="1-3months">1-3 Months</option>
+                            <option value="3-6months">3-6 Months</option>
+                            <option value="planning">Just Planning</option>
+                        </select>
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block; font-weight: 600; margin-bottom: 0.25rem;">Postcode</label>
+                        <input id="editPostcode" type="text" style="width:100%; padding:0.65rem; border:1px solid var(--slate-200); border-radius:8px;">
+                    </div>
+                </div>
+
+                <div id="editError" style="color:#ef4444; min-height:1.25rem;"></div>
+
+                <button id="saveQuoteBtn" class="btn-accept-bid" style="width:100%;" onclick="submitQuoteEdit()">Save Changes</button>
+                <button type="button" class="btn-secondary" style="width:100%; background:white; border:1px solid var(--slate-200); color:var(--slate-700);" onclick="closeEditQuoteModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Bids Modal -->
     <div class="bids-modal" id="bidsModal">
@@ -1596,6 +1977,33 @@
                 <p style="color: var(--gray-600); font-size: 0.85rem; margin-top: 1rem; text-align: center;">
                     Secured by Stripe. Test card: 4242 4242 4242 4242
                 </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="bids-modal" id="reviewModal" style="display: none;">
+        <div class="bids-modal-content" style="max-width: 500px;">
+            <div class="bids-modal-header">
+                <h2 class="bids-modal-title">Leave a Review</h2>
+                <button class="btn-close-modal" onclick="closeReviewModal()">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <p style="color: var(--slate-700); margin-bottom: 0.5rem;">Rate your experience with this vendor:</p>
+                <div class="rating-stars" id="reviewStars">
+                    <span class="rating-star" data-value="1">★</span>
+                    <span class="rating-star" data-value="2">★</span>
+                    <span class="rating-star" data-value="3">★</span>
+                    <span class="rating-star" data-value="4">★</span>
+                    <span class="rating-star" data-value="5">★</span>
+                </div>
+
+                <label for="reviewComment" style="display: block; font-weight: 600; color: var(--slate-800); margin-bottom: 0.5rem;">Comments</label>
+                <textarea id="reviewComment" rows="4" style="width: 100%; border: 1px solid var(--slate-200); border-radius: 8px; padding: 0.75rem; resize: vertical; font-family: 'Manrope', sans-serif;" placeholder="What went well? Would you recommend this vendor?"></textarea>
+                <div id="reviewError" style="color: #ef4444; margin-top: 0.5rem; min-height: 1.2rem;"></div>
+
+                <button id="submitReviewBtn" class="btn-accept-bid" style="width: 100%; margin-top: 0.75rem;" onclick="submitReview()">Submit Review</button>
+                <button type="button" class="btn-secondary" style="width: 100%; margin-top: 0.5rem; background: white; color: var(--slate-700); border: 1px solid var(--gray-300);" onclick="closeReviewModal()">Cancel</button>
             </div>
         </div>
     </div>

@@ -2,6 +2,14 @@
 
 ## 📅 Date: January 21, 2026
 
+### 🔄 Updates (January 22, 2026)
+- **Reviews & Ratings**: Added reviews table helper and endpoints: `POST /api/reviews` (customer-only, requires accepted/paid bid on the quote, one review per job) and `GET /api/reviews/vendor/:vendorId`.
+- **Customer Dashboard**: Review modal now requires a star rating, enforces 1000 char comment limit, and blocks submit without context; success refreshes dashboard. Added edit/cancel job buttons for open quotes.
+- **Vendor Profile**: Fetches live reviews via the new endpoint and recalculates averages/counts on load.
+- **Quote Engine**: Added auth/login/register prompt modal when submitting without login; form data is saved and restored after auth; includes "Post as Guest" option for public quotes.
+- **CORS Fix**: Fixed registration failures caused by CORS policy blocking preflight requests - added PATCH method, Accept header, explicit OPTIONS handler, 24h preflight cache, and better origin logging. Should resolve intermittent "Failed to fetch" errors during registration.
+- Happy-path test to run: accept bid → pay with Stripe test card → open bids modal → leave a review (verify rating required + comment limit) → check vendor profile shows the new review and updated averages → attempt duplicate review should return 400.
+
 ## ✅ All Critical Items Completed
 
 ### Critical Blockers (100% Complete)

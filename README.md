@@ -104,6 +104,29 @@ tradematch-fixed/
 - ⭐ Graceful shutdown handling
 - ✅ Error tracking and logging
 
+### 🔗 Connection Layer (NEW ⭐)
+**Complete two-sided marketplace synchronization between Customer & Vendor dashboards**
+
+- ✅ **Shared Data Model**: 11 core tables (jobs, leads, conversations, messages, quotes, milestones, escrow, reviews, events, notifications)
+- ✅ **RBAC & Privacy**: Strict role-based access control, customer details masked until vendor acceptance, vendor pricing hidden from customers
+- ✅ **Messaging System**: Disabled by default, enabled post-lead-acceptance, immutable history, auto-read tracking
+- ✅ **Event System**: 20 event types, immutable audit trail, idempotency keys prevent duplicates
+- ✅ **State Machines**: Job (draft→live→in_progress→completed), Lead (offered→accepted→quote_sent), Quote (pending→accepted), Milestone (pending→approved→paid)
+- ✅ **Transactional Safety**: ACID transactions, concurrent locking, graceful rollback
+- ✅ **API Endpoints**: 6 core endpoints (job creation/publish, lead viewing/acceptance, messaging)
+
+**Documentation**:
+- [CONNECTION-LAYER-COMPLETE.md](CONNECTION-LAYER-COMPLETE.md) - Complete overview & status
+- [CONNECTION-LAYER-ARCHITECTURE.md](CONNECTION-LAYER-ARCHITECTURE.md) - System design & data flow
+- [CONNECTION-LAYER-INTEGRATION.md](CONNECTION-LAYER-INTEGRATION.md) - Developer integration guide
+- [CONNECTION-LAYER-TESTING.md](CONNECTION-LAYER-TESTING.md) - Test scenarios & benchmarks
+
+**Code**:
+- [backend/database/schema-connection-layer.sql](backend/database/schema-connection-layer.sql) - Database schema (650+ lines)
+- [backend/middleware/rbac.js](backend/middleware/rbac.js) - Access control (350+ lines)
+- [backend/services/event-broker.service.js](backend/services/event-broker.service.js) - Event system (450+ lines)
+- [backend/routes/connection-layer.js](backend/routes/connection-layer.js) - API routes (500+ lines)
+
 ## 🗄️ Database Schema
 
 ### Tables
