@@ -817,6 +817,7 @@
             font-weight: 600;
         }
     </style>
+    <link rel="stylesheet" href="/frontend/profile-menu.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -1019,6 +1020,8 @@
             document.getElementById('welcomeName').textContent = userName.split(' ')[0];
         }
 
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+
         // Load Dashboard Data
         // Business Rule: Only confirmed/live quotes are surfaced to vendors; drafts remain private.
         async function loadDashboard() {
@@ -1031,7 +1034,7 @@
                 const token = localStorage.getItem('token');
                 
                 // Fetch real quotes from API
-                const response = await fetch(`https://tradematch.onrender.com/api/quotes/customer/${user.id}`, {
+                const response = await fetch(`${API_BASE}/api/quotes/customer/${user.id}`, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
@@ -1048,7 +1051,7 @@
                 const quotesWithBids = await Promise.all(
                     quotes.map(async (quote) => {
                         try {
-                            const bidsResponse = await fetch(`https://tradematch.onrender.com/api/bids/quote/${quote.id}`, {
+                            const bidsResponse = await fetch(`${API_BASE}/api/bids/quote/${quote.id}`, {
                                 headers: {
                                     'Authorization': 'Bearer ' + token
                                 }
@@ -1324,7 +1327,7 @@
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`https://tradematch.onrender.com/api/bids/${bidId}/accept`, {
+                const response = await fetch(`${API_BASE}/api/bids/${bidId}/accept`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1353,7 +1356,7 @@
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`https://tradematch.onrender.com/api/bids/${bidId}/reject`, {
+                const response = await fetch(`${API_BASE}/api/bids/${bidId}/reject`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1426,8 +1429,18 @@
             const emailStatusText = document.getElementById('emailStatus');
             
             // Check if user has consented to email notifications
-            const emailConsent = localStorage.getItem('emailConsent');
-            const notificationPreference = localStorage.getItem('emailNotificationPreference') || 'all';
+            let emailConsent = localStorage.getItem('emailConsent');
+            let notificationPreference = localStorage.getItem('emailNotificationPreference') || 'all';
+
+            if (!emailConsent) {
+                emailConsent = 'granted';
+                localStorage.setItem('emailConsent', emailConsent);
+            }
+
+            if (!notificationPreference) {
+                notificationPreference = 'all';
+                localStorage.setItem('emailNotificationPreference', notificationPreference);
+            }
             
             if (emailConsent === 'granted' && notificationPreference !== 'none') {
                 emailIcon.textContent = '✅';
@@ -1583,7 +1596,7 @@
                 const token = localStorage.getItem('token');
                 
                 // Create payment intent
-                const intentResponse = await fetch('https://tradematch.onrender.com/api/payments/create-intent', {
+                const intentResponse = await fetch(`${API_BASE}/api/payments/create-intent`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1624,7 +1637,7 @@
 
                 if (paymentIntent && paymentIntent.status === 'succeeded') {
                     // Confirm payment with backend
-                    const confirmResponse = await fetch('https://tradematch.onrender.com/api/payments/confirm', {
+                    const confirmResponse = await fetch(`${API_BASE}/api/payments/confirm`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1730,7 +1743,7 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`https://tradematch.onrender.com/api/quotes/${currentEditQuoteId}`, {
+                const response = await fetch(`${API_BASE}/api/quotes/${currentEditQuoteId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1763,7 +1776,7 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`https://tradematch.onrender.com/api/quotes/${quoteId}`, {
+                const response = await fetch(`${API_BASE}/api/quotes/${quoteId}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1847,7 +1860,7 @@
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('https://tradematch.onrender.com/api/reviews', {
+                const response = await fetch(`${API_BASE}/api/reviews`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2014,5 +2027,6 @@
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

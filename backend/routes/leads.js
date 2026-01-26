@@ -197,12 +197,12 @@ module.exports = (pool) => {
 
       // Get vendor's current credit balance
       const balanceResult = await pool.query(
-        'SELECT balance FROM vendor_credits WHERE vendor_id = $1',
+        'SELECT current_balance FROM vendor_credit_summary WHERE vendor_id = $1',
         [vendorId]
       );
 
       const currentBalance = balanceResult.rows.length > 0 
-        ? parseFloat(balanceResult.rows[0].balance)
+        ? parseFloat(balanceResult.rows[0].current_balance)
         : 0;
 
       // Format leads with access affordability
@@ -286,12 +286,12 @@ module.exports = (pool) => {
 
       // Check vendor credit balance
       const balanceResult = await pool.query(
-        'SELECT balance FROM vendor_credits WHERE vendor_id = $1',
+        'SELECT current_balance FROM vendor_credit_summary WHERE vendor_id = $1',
         [vendorId]
       );
 
       const currentBalance = balanceResult.rows.length > 0 
-        ? parseFloat(balanceResult.rows[0].balance)
+        ? parseFloat(balanceResult.rows[0].current_balance)
         : 0;
 
       const leadCost = parseFloat(distribution.lead_cost);

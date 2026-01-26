@@ -29,7 +29,7 @@ COMMENT ON COLUMN lead_pricing_rules.region IS 'UK region (London, Manchester, e
 -- 2. Vendor credits table
 CREATE TABLE IF NOT EXISTS vendor_credits (
     id SERIAL PRIMARY KEY,
-    vendor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vendor_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     available_credits INTEGER NOT NULL DEFAULT 0,
     total_purchased_credits INTEGER NOT NULL DEFAULT 0,
     total_spent_credits INTEGER NOT NULL DEFAULT 0,
@@ -48,7 +48,7 @@ COMMENT ON COLUMN vendor_credits.expires_at IS 'Date when credits expire (if app
 -- 3. Lead qualification scores table
 CREATE TABLE IF NOT EXISTS lead_qualification_scores (
     id SERIAL PRIMARY KEY,
-    quote_id INTEGER NOT NULL UNIQUE REFERENCES quotes(id) ON DELETE CASCADE,
+    quote_id VARCHAR(50) NOT NULL UNIQUE REFERENCES quotes(id) ON DELETE CASCADE,
     budget_score INTEGER DEFAULT 50,
     details_score INTEGER DEFAULT 50,
     urgency_score INTEGER DEFAULT 50,
@@ -73,8 +73,8 @@ COMMENT ON COLUMN lead_qualification_scores.qualification_level IS 'standard, qu
 -- 4. Lead distributions table (tracks which vendors got access to which leads)
 CREATE TABLE IF NOT EXISTS lead_distributions (
     id SERIAL PRIMARY KEY,
-    quote_id INTEGER NOT NULL REFERENCES quotes(id) ON DELETE CASCADE,
-    vendor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    quote_id VARCHAR(50) NOT NULL REFERENCES quotes(id) ON DELETE CASCADE,
+    vendor_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     match_score INTEGER NOT NULL,
     distance_miles NUMERIC(5,2),
     distribution_order INTEGER NOT NULL,
@@ -97,7 +97,7 @@ COMMENT ON COLUMN lead_distributions.view_count IS 'How many times vendor viewed
 -- 5. Lead purchase history table
 CREATE TABLE IF NOT EXISTS credit_purchases (
     id SERIAL PRIMARY KEY,
-    vendor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vendor_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     credits_purchased INTEGER NOT NULL,
     amount_paid NUMERIC(10,2) NOT NULL,
     price_per_credit NUMERIC(10,2) NOT NULL,
@@ -124,7 +124,7 @@ COMMENT ON COLUMN credit_purchases.expires_at IS 'When these credits expire (if 
 -- 6. Lead analytics snapshot (daily aggregation for performance)
 CREATE TABLE IF NOT EXISTS lead_analytics_daily (
     id SERIAL PRIMARY KEY,
-    vendor_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vendor_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     analytics_date DATE NOT NULL,
     leads_offered INTEGER DEFAULT 0,
     leads_viewed INTEGER DEFAULT 0,

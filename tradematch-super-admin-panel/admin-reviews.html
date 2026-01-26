@@ -393,11 +393,23 @@
 
         <div class="nav-menu">
             <a href="admin-dashboard.html">Dashboard</a>
+            <a href="admin-analytics.html">Analytics</a>
             <a href="admin-users.html">Users</a>
             <a href="admin-vendors.html">Vendors</a>
+            <a href="admin-contracts.html">Contracts</a>
+            <a href="admin-disputes.html">Disputes</a>
+            <a href="admin-quotes.html">Quotes</a>
+            <a href="admin-bids.html">Bids</a>
             <a href="admin-reviews.html" class="active">Reviews</a>
+            <a href="admin-reports.html">Reports</a>
+            <a href="admin-finance.html">Finance</a>
+            <a href="admin-payments.html">Payments</a>
+            <a href="admin-revenue.html">Revenue</a>
+            <a href="admin-seo.html">SEO</a>
+            <a href="admin-content.html">Content</a>
             <a href="admin-admins.html">Admins</a>
             <a href="admin-audit.html">Audit Log</a>
+            <a href="admin-settings.html">Settings</a>
             <a href="admin-password-change.html">Change Password</a>
         </div>
 
@@ -448,6 +460,11 @@
             // Check authentication
             if (!await api.checkAuth()) {
                 window.location.href = 'admin-login.html';
+                return;
+            }
+
+            if (api.user && api.user.role === 'finance_admin') {
+                window.location.href = 'admin-finance.html';
                 return;
             }
 

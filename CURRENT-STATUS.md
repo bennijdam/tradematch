@@ -18,6 +18,16 @@
   - Latest: commit 7a31420 with email routes in server-fixed.js
   - server.js also has email routes mounted
 
+## ✅ Local Validation (January 24, 2026)
+
+- User registration + quote creation: PASS
+- E2E customer → vendor lead acceptance: PASS
+- Credits deduction + acceptance log: PASS
+- Finance ledger entry on lead acceptance: PASS
+- Admin + finance endpoints: PASS
+
+Scripts for these checks are documented in backend/scripts/README.md.
+
 ## 🔴 NEEDS COMPLETION
 
 ### 1. Email Service Setup (Priority: HIGH)

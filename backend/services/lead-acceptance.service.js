@@ -9,6 +9,8 @@
  * - Lead lifecycle management (OFFERED → ACCEPTED/DECLINED/EXPIRED)
  */
 
+const crypto = require('crypto');
+
 class LeadAcceptanceService {
     constructor(pool) {
         this.pool = pool;
@@ -168,17 +170,57 @@ class LeadAcceptanceService {
                 WHERE vendor_id = $2
             `, [distribution.credits_charged, vendorId]);
 
+            // 5b. Record finance ledger entry if schema exists
+            try {
+                const ledgerCheck = await client.query(
+                    `SELECT to_regclass('public.finance_ledger_entries') AS table_exists`
+                );
+                if (ledgerCheck.rows[0]?.table_exists) {
+                    const ledgerId = crypto.randomUUID();
+                    const idempotencyKey = `lead_acceptance:${quoteId}:${vendorId}`;
+                    await client.query(
+                        `INSERT INTO finance_ledger_entries
+                            (id, related_stripe_object, user_id, amount_cents, currency, entry_type, reason_code, created_by, idempotency_key, metadata)
+                         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+                        [
+                            ledgerId,
+                            null,
+                            vendorId,
+                            Math.round(parseFloat(distribution.credits_charged) * 100) * -1,
+                            'GBP',
+                            'credit_consumed',
+                            'lead_acceptance',
+                            vendorId,
+                            idempotencyKey,
+                            JSON.stringify({ quoteId, vendorId })
+                        ]
+                    );
+                }
+            } catch (ledgerError) {
+                console.warn('Finance ledger entry skipped:', ledgerError.message);
+            }
+
             // 6. Update spend limits
-            await client.query(`
-                INSERT INTO vendor_spend_limits (vendor_id, daily_spent, weekly_spent, monthly_spent)
-                VALUES ($1, $2, $2, $2)
-                ON CONFLICT (vendor_id)
-                DO UPDATE SET 
-                    daily_spent = vendor_spend_limits.daily_spent + $2,
-                    weekly_spent = vendor_spend_limits.weekly_spent + $2,
-                    monthly_spent = vendor_spend_limits.monthly_spent + $2,
-                    updated_at = CURRENT_TIMESTAMP
-            `, [vendorId, distribution.credits_charged]);
+            const existingLimits = await client.query(
+                'SELECT 1 FROM vendor_spend_limits WHERE vendor_id = $1',
+                [vendorId]
+            );
+
+            if (existingLimits.rows.length > 0) {
+                await client.query(`
+                    UPDATE vendor_spend_limits
+                    SET daily_spent = daily_spent + $2,
+                        weekly_spent = weekly_spent + $2,
+                        monthly_spent = monthly_spent + $2,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE vendor_id = $1
+                `, [vendorId, distribution.credits_charged]);
+            } else {
+                await client.query(`
+                    INSERT INTO vendor_spend_limits (vendor_id, daily_spent, weekly_spent, monthly_spent)
+                    VALUES ($1, $2, $2, $2)
+                `, [vendorId, distribution.credits_charged]);
+            }
 
             // 7. Update lead distribution to ACCEPTED
             await client.query(`

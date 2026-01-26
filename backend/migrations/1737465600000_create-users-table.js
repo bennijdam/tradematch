@@ -59,6 +59,9 @@ exports.up = pgm => {
         ifNotExists: true
     });
 
+    pgm.sql("ALTER TABLE users ADD COLUMN IF NOT EXISTS oauth_provider varchar(50) DEFAULT 'local'");
+    pgm.sql("ALTER TABLE users ADD COLUMN IF NOT EXISTS oauth_id varchar(255)");
+
     // Create index on email for faster lookups
     pgm.createIndex('users', 'email', { ifNotExists: true });
     pgm.createIndex('users', 'oauth_id', { ifNotExists: true });

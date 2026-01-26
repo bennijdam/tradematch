@@ -710,6 +710,11 @@
         async function init() {
             api = await checkAuth();
             if (!api) return;
+
+            if (api.user && api.user.role === 'finance_admin') {
+                window.location.href = 'admin-finance.html';
+                return;
+            }
             
             initUserInfo(api);
             await loadUsers();
@@ -967,5 +972,6 @@
         // Initialize on load
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

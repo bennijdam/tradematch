@@ -327,8 +327,12 @@
     </div>
 
     <script>
-        const API_BASE = window.location.hostname === 'localhost' 
-            ? 'http://localhost:3001' 
+        const host = window.location.hostname;
+        const isLocal = window.location.protocol === 'file:' ||
+            !['tradematch.onrender.com', 'tradematch.uk', 'api.tradematch.uk'].includes(host);
+
+        const API_BASE = isLocal
+            ? 'http://localhost:3001'
             : 'https://tradematch.onrender.com';
 
         const loginForm = document.getElementById('loginForm');
@@ -403,6 +407,12 @@
                     name: data.name,
                     role: data.role
                 }));
+
+                if (rememberMe) {
+                    localStorage.setItem('admin_remember', '1');
+                } else {
+                    localStorage.removeItem('admin_remember');
+                }
 
                 // Redirect to dashboard
                 window.location.href = 'admin-dashboard.html';

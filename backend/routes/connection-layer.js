@@ -491,18 +491,22 @@ router.get(
             
             // Get messages
             const result = await client.query(
-                `SELECT id, sender_id, sender_role, message_type, body, attachment_url,
-                        is_read, created_at
-                 FROM messages
-                 WHERE conversation_id = $1
-                 ORDER BY created_at ASC`,
+                `SELECT m.id, m.sender_id, m.sender_role, m.message_type, m.body, m.metadata,
+                        m.is_deleted, m.edited_at, m.created_at,
+                        COALESCE((SELECT array_agg(ma.*) FROM message_attachments ma WHERE ma.message_id = m.id), '{}') AS attachments
+                 FROM messages m
+                 WHERE m.conversation_id = $1
+                 ORDER BY m.created_at ASC`,
                 [conversationId]
             );
             
             // Mark unread messages as read
             await client.query(
-                `UPDATE messages SET is_read = true, read_at = NOW()
-                 WHERE conversation_id = $1 AND sender_id != $2 AND is_read = false`,
+                `INSERT INTO message_reads (message_id, user_id)
+                 SELECT m.id, $2
+                 FROM messages m
+                 WHERE m.conversation_id = $1 AND m.sender_id != $2 AND m.is_deleted = false
+                 ON CONFLICT (message_id, user_id) DO NOTHING`,
                 [conversationId, userId]
             );
             
@@ -546,7 +550,7 @@ router.post(
         const client = await pool.connect();
         try {
             const { conversationId } = req.params;
-            const { body, message_type = 'text' } = req.body;
+            const { body, message_type = 'text', metadata = {} } = req.body;
             const userId = req.user.userId;
             const userRole = req.user.role;
             
@@ -561,11 +565,11 @@ router.post(
             // Insert message
             const msgResult = await client.query(
                 `INSERT INTO messages (
-                    id, conversation_id, sender_id, sender_role, message_type, body, created_at
+                    id, conversation_id, sender_id, sender_role, message_type, body, metadata, created_at
                 ) VALUES (
-                    $1, $2, $3, $4, $5, $6, NOW()
+                    $1, $2, $3, $4, $5, $6, $7, NOW()
                 ) RETURNING *`,
-                [messageId, conversationId, userId, userRole, message_type, body]
+                [messageId, conversationId, userId, userRole, message_type, body, JSON.stringify(metadata)]
             );
             
             // Get conversation for context

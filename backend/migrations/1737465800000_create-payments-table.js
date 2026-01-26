@@ -74,6 +74,16 @@ exports.up = pgm => {
         ifNotExists: true
     });
 
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS currency varchar(3) DEFAULT 'GBP'");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS status varchar(50) DEFAULT 'pending'");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS stripe_payment_intent_id varchar(255)");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS stripe_charge_id varchar(255)");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS escrow_status varchar(50) DEFAULT 'held'");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS paid_at timestamp");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS released_at timestamp");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}'::jsonb");
+    pgm.sql("ALTER TABLE payments ADD COLUMN IF NOT EXISTS updated_at timestamp DEFAULT current_timestamp");
+
     // Create indexes
     pgm.createIndex('payments', 'customer_id', { ifNotExists: true });
     pgm.createIndex('payments', 'vendor_id', { ifNotExists: true });

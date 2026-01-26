@@ -44,6 +44,46 @@ async function migrate() {
         `);
         console.log('✅ Updated users role constraint');
 
+        // 2.5. Ensure full_name column exists (admin dashboard expects it)
+        const fullNameExists = await client.query(`
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'users' AND column_name = 'full_name'
+        `);
+
+        if (fullNameExists.rows.length === 0) {
+            await client.query(`ALTER TABLE users ADD COLUMN full_name VARCHAR(255);`);
+            console.log('✅ Added full_name column to users');
+
+            // Backfill from name column if it exists
+            const nameExists = await client.query(`
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = 'users' AND column_name = 'name'
+            `);
+
+            if (nameExists.rows.length > 0) {
+                await client.query(`UPDATE users SET full_name = name WHERE full_name IS NULL;`);
+                console.log('✅ Backfilled full_name from name');
+            }
+        } else {
+            console.log('✅ full_name column already exists');
+        }
+
+        // 2.6. Ensure phone_verified column exists
+        const phoneVerifiedExists = await client.query(`
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'users' AND column_name = 'phone_verified'
+        `);
+
+        if (phoneVerifiedExists.rows.length === 0) {
+            await client.query(`ALTER TABLE users ADD COLUMN phone_verified BOOLEAN DEFAULT FALSE;`);
+            console.log('✅ Added phone_verified column to users');
+        } else {
+            console.log('✅ phone_verified column already exists');
+        }
+
         // 3. Create admin_audit_log table
         try {
             await client.query(`DROP TABLE IF EXISTS admin_audit_log CASCADE;`);
@@ -55,10 +95,10 @@ async function migrate() {
             await client.query(`
                 CREATE TABLE admin_audit_log (
                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                    admin_id UUID REFERENCES users(id) ON DELETE SET NULL,
+                    admin_id VARCHAR(50) REFERENCES users(id) ON DELETE SET NULL,
                     action VARCHAR(100) NOT NULL,
                     target_type VARCHAR(50),
-                    target_id UUID,
+                    target_id VARCHAR(50),
                     details JSONB,
                     ip_address INET,
                     user_agent TEXT,
@@ -130,6 +170,20 @@ async function migrate() {
             await client.query(`CREATE INDEX idx_users_status ON users(status);`);
             await client.query(`CREATE INDEX idx_users_role_status ON users(role, status);`);
             console.log('✅ Added status fields to users');
+        }
+
+        // Ensure last_login_at exists even if status column already existed
+        const lastLoginExists = await client.query(`
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_name = 'users' AND column_name = 'last_login_at'
+        `);
+
+        if (lastLoginExists.rows.length === 0) {
+            await client.query(`ALTER TABLE users ADD COLUMN last_login_at TIMESTAMP;`);
+            console.log('✅ Added last_login_at column to users');
+        } else {
+            console.log('✅ last_login_at column already exists');
         }
 
         // 7. Add metadata to users

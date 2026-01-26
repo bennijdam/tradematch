@@ -581,6 +581,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/frontend/profile-menu.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -786,6 +787,8 @@
             document.getElementById('userName').textContent = userName;
         }
 
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+
         // Load Dashboard
         async function loadDashboard() {
             const user = checkAuth();
@@ -799,10 +802,10 @@
                 
                 // Fetch available quotes and vendor's bids in parallel
                 const [quotesResponse, bidsResponse] = await Promise.all([
-                    fetch('https://tradematch.onrender.com/api/quotes/browse/open?limit=50', {
+                    fetch(`${API_BASE}/api/quotes/browse/open?limit=50`, {
                         headers: { 'Authorization': 'Bearer ' + token }
                     }),
-                    fetch(`https://tradematch.onrender.com/api/bids/vendor/${user.id}`, {
+                    fetch(`${API_BASE}/api/bids/vendor/${user.id}`, {
                         headers: { 'Authorization': 'Bearer ' + token }
                     })
                 ]);
@@ -1054,9 +1057,9 @@
             try {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="spinner" style="width: 20px; height: 20px; display: inline-block;"></span> Submitting...';
-                
+
                 const token = localStorage.getItem('token');
-                const response = await fetch('https://tradematch.onrender.com/api/bids', {
+                const response = await fetch(`${API_BASE}/api/bids`, {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1064,50 +1067,21 @@
                     },
                     body: JSON.stringify(bidData)
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(data.error || 'Failed to submit bid');
                 }
-                
+
                 showNotification('Bid submitted successfully! The customer will review your offer.', 'success');
                 closeBidModal();
-                
-                // Reload dashboard to show updated data
+
                 setTimeout(() => {
                     loadDashboard();
                 }, 1000);
-                } else {
-                    throw new Error(data.error);
-                    alert('Failed to submit bid. Please try again.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
             } catch (error) {
                 console.error('Bid submission error:', error);
-                alert('Failed to submit bid. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }
-                //     method: 'POST',
-                //     headers: {
-                //         'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify(bidData)
-                // });
-
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                alert('Bid submitted successfully! The customer will review your offer.');
-                closeBidModal();
-                
-                // Update stats
-                const currentBids = parseInt(document.getElementById('statMyBids').textContent);
-                document.getElementById('statMyBids').textContent = currentBids + 1;
-                
-            } catch (error) {
                 alert('Failed to submit bid. Please try again.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
@@ -1250,5 +1224,6 @@
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

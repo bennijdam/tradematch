@@ -69,7 +69,7 @@ exports.up = pgm => {
             primaryKey: true
         },
         vendor_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             references: 'users(id)',
             onDelete: 'CASCADE'
@@ -94,7 +94,7 @@ exports.up = pgm => {
         },
         credit_balance_history: {
             type: 'jsonb',
-            default: '[]'::jsonb,
+            default: pgm.func("'[]'::jsonb"),
             comment: 'Array of credit transactions for audit trail'
         },
         expires_at: {
@@ -119,7 +119,7 @@ exports.up = pgm => {
             primaryKey: true
         },
         quote_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             unique: true,
             references: 'quotes(id)',
@@ -183,13 +183,13 @@ exports.up = pgm => {
             primaryKey: true
         },
         quote_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             references: 'quotes(id)',
             onDelete: 'CASCADE'
         },
         vendor_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             references: 'users(id)',
             onDelete: 'CASCADE'
@@ -250,7 +250,7 @@ exports.up = pgm => {
             primaryKey: true
         },
         vendor_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             references: 'users(id)',
             onDelete: 'CASCADE'
@@ -315,7 +315,7 @@ exports.up = pgm => {
             primaryKey: true
         },
         vendor_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             notNull: true,
             references: 'users(id)',
             onDelete: 'CASCADE'

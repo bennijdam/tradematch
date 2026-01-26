@@ -236,40 +236,35 @@ class LeadQualificationService {
      */
     async saveQualificationScore(quoteId, scoreData) {
         try {
+            await this.pool.query(
+                'DELETE FROM lead_qualification_scores WHERE quote_id = $1',
+                [quoteId]
+            );
+
+            const mediaScore = scoreData.metadata.hasPhotos ? 5 : 0;
+
             const result = await this.pool.query(
                 `INSERT INTO lead_qualification_scores (
-                    quote_id, overall_score, budget_score, detail_score, 
-                    urgency_score, customer_score, location_score,
-                    has_budget, has_photos, description_length, 
-                    customer_verified, quality_tier
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-                ON CONFLICT (quote_id) 
-                DO UPDATE SET
-                    overall_score = EXCLUDED.overall_score,
-                    budget_score = EXCLUDED.budget_score,
-                    detail_score = EXCLUDED.detail_score,
-                    urgency_score = EXCLUDED.urgency_score,
-                    customer_score = EXCLUDED.customer_score,
-                    location_score = EXCLUDED.location_score,
-                    has_budget = EXCLUDED.has_budget,
-                    has_photos = EXCLUDED.has_photos,
-                    description_length = EXCLUDED.description_length,
-                    customer_verified = EXCLUDED.customer_verified,
-                    quality_tier = EXCLUDED.quality_tier,
-                    updated_at = CURRENT_TIMESTAMP
+                    quote_id,
+                    budget_score,
+                    details_score,
+                    urgency_score,
+                    customer_verification_score,
+                    media_score,
+                    location_clarity_score,
+                    overall_quality_score,
+                    qualification_level
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 RETURNING *`,
                 [
                     quoteId,
-                    scoreData.overall,
                     scoreData.budget,
                     scoreData.detail,
                     scoreData.urgency,
                     scoreData.customer,
+                    mediaScore,
                     scoreData.location,
-                    scoreData.metadata.hasBudget,
-                    scoreData.metadata.hasPhotos,
-                    scoreData.metadata.descriptionLength,
-                    scoreData.metadata.customerVerified,
+                    scoreData.overall,
                     scoreData.tier
                 ]
             );

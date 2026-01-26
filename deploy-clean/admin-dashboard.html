@@ -1129,6 +1129,8 @@
         let revenueChartInstance = null;
         let userTypeChartInstance = null;
         let currentChartPeriod = '30d';
+        let chartDataCache = null;
+        let chartDataPeriod = null;
 
         async function initCharts() {
             await loadActivityChart();
@@ -1136,30 +1138,30 @@
             await loadUserTypeChart();
         }
 
+        async function getChartData() {
+            if (chartDataCache && chartDataPeriod === currentChartPeriod) {
+                return chartDataCache;
+            }
+
+            const response = await api.getCharts(currentChartPeriod);
+            if (response && response.success && response.charts) {
+                chartDataCache = response.charts;
+                chartDataPeriod = currentChartPeriod;
+                return chartDataCache;
+            }
+
+            return null;
+        }
+
         async function loadActivityChart() {
             try {
-                const stats = await api.getStats(currentChartPeriod);
+                const charts = await getChartData();
                 const ctx = document.getElementById('activityChart').getContext('2d');
-                
-                // Generate mock data for last 30 days
-                const labels = [];
-                const users = [];
-                const jobs = [];
-                const quotes = [];
-                
-                const today = new Date();
-                const days = currentChartPeriod === '7d' ? 7 : currentChartPeriod === '90d' ? 90 : currentChartPeriod === '1y' ? 365 : 30;
-                
-                for (let i = days - 1; i >= 0; i--) {
-                    const date = new Date(today);
-                    date.setDate(date.getDate() - i);
-                    labels.push(date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
-                    
-                    // Generate realistic sample data
-                    users.push(Math.floor(Math.random() * 50) + 20);
-                    jobs.push(Math.floor(Math.random() * 40) + 10);
-                    quotes.push(Math.floor(Math.random() * 60) + 20);
-                }
+
+                const labels = (charts && charts.labels) || [];
+                const users = (charts && charts.users) || [];
+                const jobs = (charts && charts.jobs) || [];
+                const quotes = (charts && charts.quotes) || [];
 
                 if (activityChartInstance) {
                     activityChartInstance.destroy();
@@ -1235,21 +1237,11 @@
 
         async function loadRevenueChart() {
             try {
-                const stats = await api.getStats(currentChartPeriod);
+                const charts = await getChartData();
                 const ctx = document.getElementById('revenueChart').getContext('2d');
-                
-                const labels = [];
-                const revenue = [];
-                
-                const today = new Date();
-                const days = currentChartPeriod === '7d' ? 7 : currentChartPeriod === '90d' ? 90 : currentChartPeriod === '1y' ? 365 : 30;
-                
-                for (let i = days - 1; i >= 0; i--) {
-                    const date = new Date(today);
-                    date.setDate(date.getDate() - i);
-                    labels.push(date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
-                    revenue.push(Math.floor(Math.random() * 5000) + 2000);
-                }
+
+                const labels = (charts && charts.labels) || [];
+                const revenue = (charts && charts.revenue) || [];
 
                 if (revenueChartInstance) {
                     revenueChartInstance.destroy();
@@ -1260,7 +1252,7 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Daily Revenue (£)',
+                            label: 'Daily Revenue',
                             data: revenue,
                             backgroundColor: '#10b981',
                             borderColor: '#059669',
@@ -1283,7 +1275,7 @@
                                 grid: { color: 'rgba(100, 116, 139, 0.1)' },
                                 ticks: { 
                                     color: '#64748b',
-                                    callback: (val) => '£' + val.toLocaleString()
+                                    callback: (val) => formatCurrency(val)
                                 }
                             },
                             x: {
@@ -1300,8 +1292,11 @@
 
         async function loadUserTypeChart() {
             try {
+                const charts = await getChartData();
                 const ctx = document.getElementById('userTypeChart').getContext('2d');
-                
+
+                const userTypes = (charts && charts.userTypes) || { customers: 0, vendors: 0, admins: 0 };
+
                 if (userTypeChartInstance) {
                     userTypeChartInstance.destroy();
                 }
@@ -1311,7 +1306,7 @@
                     data: {
                         labels: ['Customers', 'Tradespeople', 'Admins'],
                         datasets: [{
-                            data: [7245, 2389, 12],
+                            data: [userTypes.customers || 0, userTypes.vendors || 0, userTypes.admins || 0],
                             backgroundColor: ['#3b82f6', '#10b981', '#f59e0b'],
                             borderColor: '#1e293b',
                             borderWidth: 2
@@ -1335,6 +1330,8 @@
 
         function changeChartPeriod(period) {
             currentChartPeriod = period;
+            chartDataCache = null;
+            chartDataPeriod = null;
             
             // Update button styles
             document.querySelectorAll('.time-filter button').forEach(btn => {
@@ -1373,6 +1370,7 @@
         }
 
         function formatEventType(eventType) {
+            if (!eventType) return 'Activity';
             return eventType.split('_').map(word => 
                 word.charAt(0) + word.slice(1).toLowerCase()
             ).join(' ');

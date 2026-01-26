@@ -9,11 +9,27 @@ const jwt = require("jsonwebtoken");
 const passport = require('passport');
 const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
+const path = require('path');
+const crypto = require('crypto');
 const { emailLimiter } = require('./middleware/rate-limit');
 const { TradeMatchEventBroker, NotificationDispatcher } = require('./services/event-broker.service');
 const connectionLayerRouter = require('./routes/connection-layer');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+function sanitizeDatabaseUrl(rawUrl) {
+    if (!rawUrl) return rawUrl;
+    try {
+        const url = new URL(rawUrl);
+        url.searchParams.delete('channel_binding');
+        if (url.hostname.includes('-pooler')) {
+            url.hostname = url.hostname.replace('-pooler', '');
+        }
+        return url.toString();
+    } catch (error) {
+        return rawUrl;
+    }
+}
 
 const app = express();
 
@@ -30,6 +46,9 @@ app.use(helmet({
             imgSrc: ["'self'", "data:", "https:"],
         }
     },
+    referrerPolicy: { policy: 'no-referrer' },
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'same-site' },
     hsts: {
         maxAge: 31536000,
         includeSubDomains: true,
@@ -81,11 +100,12 @@ app.use('/api/', generalLimiter);
 
 // Database connection with retry logic
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: sanitizeDatabaseUrl(process.env.DATABASE_URL),
     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 60000,
+    connectionTimeoutMillis: 15000,
+    keepAlive: true,
 });
 
 // Handle pool errors gracefully
@@ -136,10 +156,14 @@ app.get("/api/health", async (req, res) => {
         });
     } catch (err) {
         logger.error("Health check failed", { error: err.message });
-        res.status(500).json({
-            status: "error",
+        res.status(200).json({
+            status: "degraded",
             database: "not connected",
-            error: err.message
+            error: err.message,
+            uptime: process.uptime(),
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV || 'development',
+            version: require('./package.json').version
         });
     }
 });
@@ -230,9 +254,19 @@ app.post("/api/auth/register", authLimiter, async (req, res) => {
 
         // Create user in database
         const result = await pool.query(
-            `INSERT INTO users (user_type, full_name, email, phone, password, postcode, oauth_provider, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id, user_type, full_name, email, phone, postcode, oauth_provider`,
-            [userType, fullName, email.toLowerCase(), phone, hashedPassword, postcode, authProvider]
+            `INSERT INTO users (id, user_type, full_name, name, email, phone, password_hash, postcode, oauth_provider, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW()) RETURNING id, user_type, full_name, email, phone, postcode, oauth_provider`,
+            [
+                crypto.randomUUID(),
+                userType,
+                fullName,
+                fullName,
+                email.toLowerCase(),
+                phone,
+                hashedPassword,
+                postcode,
+                authProvider
+            ]
         );
 
         // Create JWT token
@@ -284,7 +318,7 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
 
         // Find user
         const result = await pool.query(
-            'SELECT id, email, password_hash, full_name, user_type, phone, postcode, oauth_provider, status FROM users WHERE email = $1',
+            'SELECT id, email, password_hash, full_name, user_type, role, phone, postcode, oauth_provider, status FROM users WHERE email = $1',
             [email.toLowerCase()]
         );
 
@@ -310,8 +344,11 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
         }
 
         // Create JWT token
+        const role = user.role || user.user_type;
+        const displayName = user.full_name || user.email;
+
         const token = jwt.sign(
-            { userId: user.id, email: email.toLowerCase() },
+            { userId: user.id, email: email.toLowerCase(), role },
             process.env.JWT_SECRET || 'fallback-secret',
             { expiresIn: '7d' }
         );
@@ -324,6 +361,10 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
         return res.json({
             message: 'Login successful',
             token,
+            userId: user.id,
+            email: user.email,
+            name: displayName,
+            role,
             user: {
                 id: user.id,
                 userType: user.user_type,
@@ -331,7 +372,8 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
                 email: user.email,
                 phone: user.phone,
                 postcode: user.postcode,
-                oauth_provider: user.oauth_provider
+                oauth_provider: user.oauth_provider,
+                role
             }
         });
 
@@ -380,6 +422,49 @@ app.get("/api/auth/me", async (req, res) => {
     }
 });
 
+// Verify token (used by admin portal)
+app.get("/api/auth/verify", async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+
+        const result = await pool.query(
+            'SELECT id, email, full_name, user_type, role, status FROM users WHERE id = $1',
+            [decoded.userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const user = result.rows[0];
+        const role = user.role || user.user_type;
+
+        return res.json({
+            userId: user.id,
+            email: user.email,
+            name: user.full_name || user.email,
+            role,
+            status: user.status
+        });
+
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token expired' });
+        }
+        logger.error('Verify token error', { error: error.message });
+        res.status(500).json({ error: 'Failed to verify token' });
+    }
+});
+
 // Connection Layer API (Customer↔Vendor sync)
 try {
     if (typeof connectionLayerRouter.setPool === 'function') connectionLayerRouter.setPool(pool);
@@ -411,6 +496,16 @@ try {
     logger.info('Email service routes mounted at /api/email');
 } catch (e) {
     logger.warn('Email service not available', { error: e && e.message ? e.message : String(e) });
+}
+
+// Messaging routes
+try {
+    const messagingRouter = require('./routes/messaging');
+    if (typeof messagingRouter.setPool === 'function') messagingRouter.setPool(pool);
+    app.use('/api/messaging', messagingRouter);
+    logger.info('Messaging routes mounted at /api/messaging');
+} catch (e) {
+    logger.warn('Messaging routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
 // Mount core application routers (Quotes, Bids, Customer)

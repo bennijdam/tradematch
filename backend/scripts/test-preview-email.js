@@ -7,12 +7,49 @@
 
 const axios = require('axios');
 
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
 
-// Test data
-const testData = {
-  vendorId: 1, // Must exist in your database
-  vendorEmail: 'test.vendor@example.com', // Change to your test email
+const vendorPassword = process.env.VENDOR_PASSWORD || 'VendorPass123!';
+
+async function ensureVendor() {
+  if (process.env.VENDOR_ID && process.env.VENDOR_EMAIL) {
+    return { id: process.env.VENDOR_ID, email: process.env.VENDOR_EMAIL };
+  }
+
+  const rand = Math.floor(Math.random() * 1e9);
+  const email = process.env.VENDOR_EMAIL || `vendor_preview_${rand}@example.com`;
+
+  try {
+    const registerRes = await axios.post(
+      `${BACKEND_URL}/api/auth/register`,
+      {
+        email,
+        password: vendorPassword,
+        fullName: 'Preview Vendor',
+        userType: 'vendor',
+        postcode: 'SW1A 1AA'
+      },
+      { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+    );
+
+    return { id: registerRes.data.user.id, email };
+  } catch (error) {
+    const status = error.response?.status;
+    if (status && status !== 409 && status !== 400) {
+      throw error;
+    }
+
+    const loginRes = await axios.post(
+      `${BACKEND_URL}/api/auth/login`,
+      { email, password: vendorPassword },
+      { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+    );
+
+    return { id: loginRes.data.userId, email };
+  }
+}
+
+const previewPayload = {
   quoteId: 999,
   leadPrice: 3.50,
   matchScore: 82,
@@ -30,6 +67,13 @@ async function testPreviewEmail() {
   console.log('🧪 Testing Lead Preview Email System...\n');
   
   try {
+    const vendor = await ensureVendor();
+    const testData = {
+      vendorId: vendor.id,
+      vendorEmail: vendor.email,
+      ...previewPayload
+    };
+
     console.log('📤 Sending request to:', `${BACKEND_URL}/api/email/lead-preview-notification`);
     console.log('📋 Test data:', JSON.stringify(testData, null, 2));
     

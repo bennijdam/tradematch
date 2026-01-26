@@ -10,7 +10,7 @@ exports.up = pgm => {
             primaryKey: true
         },
         user_id: {
-            type: 'integer',
+            type: 'varchar(50)',
             references: 'users',
             onDelete: 'SET NULL'
         },

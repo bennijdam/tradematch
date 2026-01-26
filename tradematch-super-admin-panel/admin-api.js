@@ -3,14 +3,19 @@
  * Handles all API calls and authentication for the admin panel
  */
 
+const host = window.location.hostname;
+const isLocal = window.location.protocol === 'file:' ||
+    !['tradematch.onrender.com', 'tradematch.uk', 'api.tradematch.uk'].includes(host);
+
 const API_CONFIG = {
-    BASE_URL: window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'https://www.tradematch.uk',
+    BASE_URL: isLocal
+        ? 'http://localhost:3001'
+        : 'https://tradematch.onrender.com',
     ENDPOINTS: {
         // Stats
         STATS: '/api/admin/stats',
         ACTIVITY: '/api/admin/activity',
+        CHARTS: '/api/admin/charts',
         
         // Users
         USERS: '/api/admin/users',
@@ -25,6 +30,33 @@ const API_CONFIG = {
         // Reviews
         REVIEWS_PENDING: '/api/admin/reviews/pending',
         REVIEW_MODERATE: '/api/admin/reviews/:id/moderate',
+
+        // Quotes
+        QUOTES: '/api/quotes',
+
+        // Bids
+        BIDS_ADMIN: '/api/admin/bids',
+
+        // Finance
+        FINANCE_REASONS: '/api/admin/finance/reason-codes',
+        FINANCE_REFUNDS: '/api/admin/finance/refunds',
+        FINANCE_CREDITS: '/api/admin/finance/credits',
+        FINANCE_LEDGER: '/api/admin/finance/ledger',
+        FINANCE_RECONCILIATION: '/api/admin/finance/reconciliation',
+        FINANCE_RECONCILIATION_STRIPE: '/api/admin/finance/reconciliation/stripe',
+        FINANCE_RECONCILIATION_EXPORT: '/api/admin/finance/reconciliation/export',
+        FINANCE_CREDITS_EXPIRE: '/api/admin/finance/credits/expire',
+        FINANCE_CREDITS_CONSUME: '/api/admin/finance/credits/consume',
+        FINANCE_RECONCILIATION_REPORT: '/api/admin/finance/reconciliation/report',
+        FINANCE_RECONCILIATION_TX_EXPORT: '/api/admin/finance/reconciliation/transactions/export',
+        FINANCE_RECONCILIATION_PAYMENTS: '/api/admin/finance/reconciliation/payments',
+        FINANCE_RECONCILIATION_PAYMENTS_EXPORT: '/api/admin/finance/reconciliation/payments/export',
+
+        // Contracts & Disputes
+        CONTRACTS_ADMIN: '/api/contracts/admin/contracts',
+        DISPUTES_ADMIN: '/api/contracts/admin/disputes',
+        CONTRACT_DETAIL: '/api/contracts/:id',
+        DISPUTE_RESOLVE: '/api/disputes/:id/resolve',
         
         // Auth
         LOGIN: '/api/auth/login',
@@ -118,8 +150,8 @@ class AdminAPI {
             body: JSON.stringify({ email, password })
         });
 
-        if (data.role !== 'super_admin') {
-            throw new Error('Super admin access required');
+        if (!['super_admin', 'finance_admin'].includes(data.role)) {
+            throw new Error('Admin access required');
         }
 
         this.token = data.token;
@@ -134,6 +166,77 @@ class AdminAPI {
         localStorage.setItem('admin_user', JSON.stringify(this.user));
 
         return data;
+    }
+
+    // ============================================================
+    // FINANCE
+    // ============================================================
+
+    async getFinanceReasonCodes() {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_REASONS);
+    }
+
+    async createRefund(payload) {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_REFUNDS, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+    }
+
+    async issueVendorCredit(payload) {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_CREDITS, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+    }
+
+    async consumeVendorCredit(payload) {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_CREDITS_CONSUME, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+    }
+
+    async getLedger(params = {}) {
+        const query = new URLSearchParams(params).toString();
+        const endpoint = query
+            ? `${API_CONFIG.ENDPOINTS.FINANCE_LEDGER}?${query}`
+            : API_CONFIG.ENDPOINTS.FINANCE_LEDGER;
+        return await this.request(endpoint);
+    }
+
+    async getReconciliation(params = {}) {
+        const query = new URLSearchParams(params).toString();
+        const endpoint = query
+            ? `${API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION}?${query}`
+            : API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION;
+        return await this.request(endpoint);
+    }
+
+    async getReconciliationReport(params = {}) {
+        const query = new URLSearchParams(params).toString();
+        const endpoint = query
+            ? `${API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION_REPORT}?${query}`
+            : API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION_REPORT;
+        return await this.request(endpoint);
+    }
+
+    async getPaymentReconciliation() {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION_PAYMENTS);
+    }
+
+    async getStripeReconciliation(params = {}) {
+        const query = new URLSearchParams(params).toString();
+        const endpoint = query
+            ? `${API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION_STRIPE}?${query}`
+            : API_CONFIG.ENDPOINTS.FINANCE_RECONCILIATION_STRIPE;
+        return await this.request(endpoint);
+    }
+
+    async expireCredits() {
+        return await this.request(API_CONFIG.ENDPOINTS.FINANCE_CREDITS_EXPIRE, {
+            method: 'POST'
+        });
     }
 
     async verifyToken() {
@@ -162,6 +265,10 @@ class AdminAPI {
 
     async getActivity(limit = 20) {
         return await this.request(`${API_CONFIG.ENDPOINTS.ACTIVITY}?limit=${limit}`);
+    }
+
+    async getCharts(period = '30d') {
+        return await this.request(`${API_CONFIG.ENDPOINTS.CHARTS}?period=${period}`);
     }
 
     // ============================================================
@@ -227,6 +334,30 @@ class AdminAPI {
     }
 
     // ============================================================
+    // QUOTES
+    // ============================================================
+
+    async getQuotes(filters = {}) {
+        const params = new URLSearchParams(filters).toString();
+        const endpoint = params
+            ? `${API_CONFIG.ENDPOINTS.QUOTES}?${params}`
+            : API_CONFIG.ENDPOINTS.QUOTES;
+        return await this.request(endpoint);
+    }
+
+    // ============================================================
+    // BIDS
+    // ============================================================
+
+    async getAdminBids(filters = {}) {
+        const params = new URLSearchParams(filters).toString();
+        const endpoint = params
+            ? `${API_CONFIG.ENDPOINTS.BIDS_ADMIN}?${params}`
+            : API_CONFIG.ENDPOINTS.BIDS_ADMIN;
+        return await this.request(endpoint);
+    }
+
+    // ============================================================
     // AUDIT LOG
     // ============================================================
 
@@ -278,6 +409,41 @@ class AdminAPI {
                 current_password: currentPassword,
                 new_password: newPassword
             })
+        });
+    }
+
+    // ============================================================
+    // CONTRACTS & DISPUTES
+    // ============================================================
+
+    async getAdminContracts(status = '') {
+        const params = new URLSearchParams();
+        if (status) params.append('status', status);
+        const endpoint = params.toString()
+            ? `${API_CONFIG.ENDPOINTS.CONTRACTS_ADMIN}?${params.toString()}`
+            : API_CONFIG.ENDPOINTS.CONTRACTS_ADMIN;
+        return await this.request(endpoint);
+    }
+
+    async getAdminDisputes(status = '') {
+        const params = new URLSearchParams();
+        if (status) params.append('status', status);
+        const endpoint = params.toString()
+            ? `${API_CONFIG.ENDPOINTS.DISPUTES_ADMIN}?${params.toString()}`
+            : API_CONFIG.ENDPOINTS.DISPUTES_ADMIN;
+        return await this.request(endpoint);
+    }
+
+    async getContractDetail(contractId) {
+        const endpoint = this.buildEndpoint(API_CONFIG.ENDPOINTS.CONTRACT_DETAIL, { id: contractId });
+        return await this.request(endpoint);
+    }
+
+    async resolveDispute(disputeId, payload) {
+        const endpoint = this.buildEndpoint(API_CONFIG.ENDPOINTS.DISPUTE_RESOLVE, { id: disputeId });
+        return await this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(payload)
         });
     }
 }

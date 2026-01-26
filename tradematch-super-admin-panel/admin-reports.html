@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - TradeMatch Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: white;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+        }
+        aside { background: rgba(15, 23, 42, 0.85); padding: 24px; border-right: 1px solid rgba(255,255,255,0.08); }
+        .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+        .logo-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600)); display: grid; place-items: center; font-weight: 800; }
+        .nav-section { margin-bottom: 24px; }
+        .nav-section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; color: white; text-decoration: none; opacity: 0.85; }
+        .nav-item.active, .nav-item:hover { background: rgba(16, 185, 129, 0.15); opacity: 1; }
+        main { padding: 32px 36px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .page-title { font-size: 28px; font-weight: 800; }
+        .badge { background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.4); padding: 6px 12px; border-radius: 999px; font-size: 12px; }
+        .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
+        label { display: block; font-size: 13px; color: rgba(255,255,255,0.7); margin: 10px 0 6px; }
+        input, select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.5); color: white; }
+        button { background: linear-gradient(135deg, var(--emerald-500), var(--emerald-600)); border: none; color: white; padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
+        .muted { color: rgba(255,255,255,0.6); }
+    </style>
+</head>
+<body>
+    <aside>
+        <div class="logo">
+            <div class="logo-icon">T</div>
+            <div>
+                <div style="font-weight:800">TradeMatch</div>
+                <div class="muted" style="font-size:12px">Admin • Reports</div>
+            </div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a class="nav-item" href="admin-dashboard.html">📊 Dashboard</a>
+            <a class="nav-item" href="admin-analytics.html">📈 Analytics</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Management</div>
+            <a class="nav-item" href="admin-users.html">👥 Users</a>
+            <a class="nav-item" href="admin-vendors.html">🔧 Tradespeople</a>
+            <a class="nav-item" href="admin-contracts.html">📄 Contracts</a>
+            <a class="nav-item" href="admin-disputes.html">⚖️ Disputes</a>
+            <a class="nav-item" href="admin-quotes.html">📋 Quotes</a>
+            <a class="nav-item" href="admin-bids.html">💼 Bids</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Moderation</div>
+            <a class="nav-item" href="admin-reviews.html">⭐ Reviews</a>
+            <a class="nav-item active" href="admin-reports.html">🚨 Reports</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Finance</div>
+            <a class="nav-item" href="admin-finance.html">🏦 Finance Control</a>
+            <a class="nav-item" href="admin-payments.html">💳 Payments</a>
+            <a class="nav-item" href="admin-revenue.html">💰 Revenue</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">SEO & Growth</div>
+            <a class="nav-item" href="admin-seo.html">🔍 SEO Manager</a>
+            <a class="nav-item" href="admin-content.html">📝 Content</a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">System</div>
+            <a class="nav-item" href="admin-admins.html">👨‍💼 Admins</a>
+            <a class="nav-item" href="admin-audit.html">📋 Audit Log</a>
+            <a class="nav-item" href="admin-settings.html">⚙️ Settings</a>
+            <a class="nav-item" href="admin-password-change.html">🔐 Change Password</a>
+        </div>
+    </aside>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <div class="page-title">Reports</div>
+                <div class="muted">Audit-driven reports and oversight.</div>
+            </div>
+            <div class="badge" id="roleBadge">Role: loading...</div>
+        </div>
+
+        <div class="card">
+            <h3>Recent Audit Events</h3>
+            <div class="muted" style="margin-top:6px;">Use filters to review activity. Full detail lives in Audit Log.</div>
+            <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:12px;">
+                <div>
+                    <label>Days</label>
+                    <select id="daysFilter">
+                        <option value="1">Last 1 day</option>
+                        <option value="7" selected>Last 7 days</option>
+                        <option value="30">Last 30 days</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Action</label>
+                    <input id="actionFilter" placeholder="e.g. contract_accept" />
+                </div>
+                <div>
+                    <label>Target Type</label>
+                    <input id="targetFilter" placeholder="e.g. contract" />
+                </div>
+            </div>
+            <div style="margin-top:12px;"><button id="loadReportsBtn">Load Report</button></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Actor</th>
+                        <th>Target</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody id="reportBody">
+                    <tr><td colspan="4" style="text-align:center">Loading report...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="admin-api.js"></script>
+    <script>
+        const api = new AdminAPI();
+
+        function requireRole() {
+            if (!api.user) {
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            document.getElementById('roleBadge').textContent = `Role: ${api.user.role || 'admin'}`;
+            return true;
+        }
+
+        async function loadReport() {
+            try {
+                const days = document.getElementById('daysFilter').value;
+                const action = document.getElementById('actionFilter').value.trim();
+                const target_type = document.getElementById('targetFilter').value.trim();
+
+                const response = await api.getAuditLog({ days, action, target_type, limit: 20, page: 1 });
+                const items = response.entries || [];
+                const tbody = document.getElementById('reportBody');
+
+                if (!items.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">No audit entries found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = items.map(item => `
+                    <tr>
+                        <td>${escapeHtml(item.action || item.event_type || 'event')}</td>
+                        <td>${escapeHtml(item.actor_id || 'system')}</td>
+                        <td>${escapeHtml(item.target_type || '-')}: ${escapeHtml(item.target_id || '-') }</td>
+                        <td>${formatRelativeTime(item.created_at)}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Report load error', error);
+                document.getElementById('reportBody').innerHTML = '<tr><td colspan="4" style="text-align:center">Failed to load report</td></tr>';
+            }
+        }
+
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!requireRole()) return;
+            loadReport();
+            document.getElementById('loadReportsBtn').addEventListener('click', loadReport);
+        });
+    </script>
+</body>
+</html>

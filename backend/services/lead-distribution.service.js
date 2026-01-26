@@ -78,37 +78,36 @@ class LeadDistributionService {
     async findCandidateVendors(quote, qualityScore) {
         try {
             const result = await this.pool.query(
-                `SELECT DISTINCT 
-                    u.id,
-                    u.name,
-                    u.email,
-                    u.postcode,
-                    u.services,
-                    vc.balance,
-                    vp.min_budget,
-                    vp.max_budget,
-                    vp.max_distance_miles,
-                    vp.min_quality_score,
-                    vp.max_concurrent_bids,
-                    vm.reputation_score,
-                    vm.win_rate,
-                    vm.response_rate,
-                    vm.avg_response_time_minutes
-                FROM users u
-                LEFT JOIN vendor_credits vc ON u.id = vc.vendor_id
-                LEFT JOIN vendor_lead_preferences vp ON u.id = vp.vendor_id
-                LEFT JOIN vendor_performance_metrics vm ON u.id = vm.vendor_id
-                WHERE u.user_type = 'vendor'
-                  AND u.email_verified = TRUE
-                  AND COALESCE(vc.balance, 0) >= $1
-                  AND (vp.min_quality_score IS NULL OR $2 >= vp.min_quality_score)
-                  AND (
-                    u.services IS NULL 
-                    OR u.services LIKE $3 
-                    OR $4 = ANY(string_to_array(u.services, ','))
-                  )
-                ORDER BY vm.reputation_score DESC NULLS LAST
-                LIMIT 50`,
+                                `SELECT DISTINCT 
+                                        u.id,
+                                        u.name,
+                                        u.email,
+                                        u.postcode,
+                                        u.services,
+                                        vcs.current_balance AS balance,
+                                        vp.min_budget,
+                                        vp.max_budget,
+                                        vp.max_distance_miles,
+                                        vp.min_quality_score,
+                                        vm.reputation_score,
+                                        vm.win_rate,
+                                        vm.avg_customer_rating,
+                                        vm.avg_response_time_hours
+                                FROM users u
+                                LEFT JOIN vendor_credit_summary vcs ON u.id = vcs.vendor_id
+                                LEFT JOIN vendor_lead_preferences vp ON u.id = vp.vendor_id
+                                LEFT JOIN vendor_performance_metrics vm ON u.id = vm.vendor_id
+                                WHERE u.user_type = 'vendor'
+                                    AND u.email_verified = TRUE
+                                    AND COALESCE(vcs.current_balance, 0) >= $1
+                                    AND (vp.min_quality_score IS NULL OR $2 >= vp.min_quality_score)
+                                    AND (
+                                        u.services IS NULL 
+                                        OR u.services LIKE $3 
+                                        OR $4 = ANY(string_to_array(u.services, ','))
+                                    )
+                                ORDER BY vm.reputation_score DESC NULLS LAST
+                                LIMIT 50`,
                 [
                     5.00, // Minimum credit balance required
                     qualityScore,
@@ -257,9 +256,11 @@ class LeadDistributionService {
      * Score vendor's past performance
      */
     scorePerformance(vendor) {
+        let score = 0;
         const reputation = vendor.reputation_score || 50;
         const winRate = parseFloat(vendor.win_rate || 0);
-        const responseRate = parseFloat(vendor.response_rate || 0);
+        const avgRating = parseFloat(vendor.avg_customer_rating || 0);
+        const avgResponseTimeHours = parseFloat(vendor.avg_response_time_hours || 999);
 
         // Reputation (0-100) scaled to 0-10
         const repScore = (reputation / 100) * 10;
@@ -267,10 +268,19 @@ class LeadDistributionService {
         // Win rate (0-100%) scaled to 0-5
         const winScore = (winRate / 100) * 5;
 
-        // Response rate (0-100%) scaled to 0-5
-        const respScore = (responseRate / 100) * 5;
+        score += repScore + winScore;
 
-        return Math.min(repScore + winScore + respScore, 20);
+        // Rating scoring
+        if (avgRating >= 4.5) score += 7;
+        else if (avgRating >= 4.0) score += 5;
+        else if (avgRating >= 3.5) score += 3;
+
+        // Response time scoring (hours)
+        if (avgResponseTimeHours <= 1) score += 5;       // Under 1 hour
+        else if (avgResponseTimeHours <= 4) score += 3;  // Under 4 hours
+        else if (avgResponseTimeHours <= 24) score += 1; // Under 1 day
+
+        return Math.min(score, 20);
     }
 
     /**
@@ -319,9 +329,20 @@ class LeadDistributionService {
      */
     async recordDistribution(quoteId, vendor, priorityRank, leadCost) {
         try {
+            const existing = await this.pool.query(
+                'SELECT * FROM lead_distributions WHERE quote_id = $1 AND vendor_id = $2',
+                [quoteId, vendor.vendorId]
+            );
+
+            if (existing.rows.length > 0) {
+                return existing.rows[0];
+            }
+
             // Set expiration to 24 hours from now
             const expiresAt = new Date();
             expiresAt.setHours(expiresAt.getHours() + 24);
+
+            const creditsCharged = Math.max(1, Math.round(leadCost));
 
             const result = await this.pool.query(
                 `INSERT INTO lead_distributions (
@@ -330,7 +351,6 @@ class LeadDistributionService {
                     lead_state, expires_at, distributed_at,
                     payment_charged
                 ) VALUES ($1, $2, $3, $4, $5, $6, 'offered', $7, CURRENT_TIMESTAMP, FALSE)
-                ON CONFLICT (quote_id, vendor_id) DO NOTHING
                 RETURNING *`,
                 [
                     quoteId,
@@ -338,7 +358,7 @@ class LeadDistributionService {
                     vendor.matchScore,
                     vendor.distanceMiles,
                     priorityRank,
-                    leadCost,
+                    creditsCharged,
                     expiresAt
                 ]
             );
@@ -374,7 +394,7 @@ class LeadDistributionService {
                                 vendorId: vendor.vendorId,
                                 vendorEmail: quote.vendor_email,
                                 quoteId: quoteId,
-                                leadPrice: leadCost,
+                                leadPrice: creditsCharged,
                                 matchScore: vendor.matchScore,
                                 preview: preview
                             }
@@ -387,11 +407,22 @@ class LeadDistributionService {
                     }
                 }
 
-                console.log(`📨 Lead ${quoteId} offered to vendor ${vendor.vendorId} (£${leadCost}, expires in 24h)`);
+                console.log(`📨 Lead ${quoteId} offered to vendor ${vendor.vendorId} (credits ${creditsCharged}, expires in 24h)`);
             }
 
             return result.rows[0];
         } catch (err) {
+            if (err && err.code === '23505') {
+                try {
+                    const existing = await this.pool.query(
+                        'SELECT * FROM lead_distributions WHERE quote_id = $1 AND vendor_id = $2',
+                        [quoteId, vendor.vendorId]
+                    );
+                    return existing.rows[0] || null;
+                } catch (fetchError) {
+                    console.error('Error fetching existing distribution after duplicate:', fetchError);
+                }
+            }
             console.error('Error recording distribution:', err);
             return null;
         }

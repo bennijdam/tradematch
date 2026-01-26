@@ -14,7 +14,7 @@ exports.up = pgm => {
         base_price: { type: 'decimal(6,2)', notNull: true },
         description: { type: 'text' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
     // Insert default pricing tiers
     pgm.sql(`
@@ -35,7 +35,7 @@ exports.up = pgm => {
         multiplier: { type: 'decimal(4,2)', notNull: true, default: 1.00 },
         description: { type: 'text' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
     pgm.sql(`
         INSERT INTO category_pricing_multipliers (category, multiplier, description) VALUES
@@ -61,7 +61,7 @@ exports.up = pgm => {
         multiplier: { type: 'decimal(4,2)', notNull: true, default: 1.00 },
         description: { type: 'text' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
     pgm.sql(`
         INSERT INTO location_pricing_zones (postcode_prefix, zone_name, multiplier, description) VALUES
@@ -80,40 +80,40 @@ exports.up = pgm => {
     // ==========================================
     pgm.createTable('vendor_credits', {
         id: 'id',
-        vendor_id: { type: 'integer', notNull: true, unique: true, references: '"users"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, unique: true, references: '"users"' },
         balance: { type: 'decimal(10,2)', notNull: true, default: 0 },
         total_purchased: { type: 'decimal(10,2)', notNull: true, default: 0 },
         total_spent: { type: 'decimal(10,2)', notNull: true, default: 0 },
         total_refunded: { type: 'decimal(10,2)', notNull: true, default: 0 },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') },
         updated_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('vendor_credits', 'vendor_id');
+    pgm.createIndex('vendor_credits', 'vendor_id', { ifNotExists: true });
 
     // ==========================================
     // 5. Credit Purchases
     // ==========================================
     pgm.createTable('credit_purchases', {
         id: 'id',
-        vendor_id: { type: 'integer', notNull: true, references: '"users"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, references: '"users"' },
         amount: { type: 'decimal(10,2)', notNull: true },
         credits_purchased: { type: 'decimal(10,2)', notNull: true },
         payment_method: { type: 'varchar(50)', notNull: true },
         transaction_id: { type: 'varchar(255)' },
         status: { type: 'varchar(50)', notNull: true, default: 'pending' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('credit_purchases', 'vendor_id');
-    pgm.createIndex('credit_purchases', 'created_at');
+    pgm.createIndex('credit_purchases', 'vendor_id', { ifNotExists: true });
+    pgm.createIndex('credit_purchases', 'created_at', { ifNotExists: true });
 
     // ==========================================
     // 6. Credit Transactions (Ledger)
     // ==========================================
     pgm.createTable('credit_transactions', {
         id: 'id',
-        vendor_id: { type: 'integer', notNull: true, references: '"users"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, references: '"users"' },
         amount: { type: 'decimal(10,2)', notNull: true },
         transaction_type: { 
             type: 'varchar(50)', 
@@ -123,18 +123,18 @@ exports.up = pgm => {
         description: { type: 'text' },
         reference_id: { type: 'integer' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('credit_transactions', 'vendor_id');
-    pgm.createIndex('credit_transactions', 'created_at');
-    pgm.createIndex('credit_transactions', 'transaction_type');
+    pgm.createIndex('credit_transactions', 'vendor_id', { ifNotExists: true });
+    pgm.createIndex('credit_transactions', 'created_at', { ifNotExists: true });
+    pgm.createIndex('credit_transactions', 'transaction_type', { ifNotExists: true });
 
     // ==========================================
     // 7. Lead Qualification Scores
     // ==========================================
     pgm.createTable('lead_qualification_scores', {
         id: 'id',
-        quote_id: { type: 'integer', notNull: true, unique: true, references: '"quotes"' },
+        quote_id: { type: 'varchar(50)', notNull: true, unique: true, references: '"quotes"' },
         overall_score: { type: 'integer', notNull: true, check: 'overall_score >= 0 AND overall_score <= 100' },
         budget_score: { type: 'integer', notNull: true },
         detail_score: { type: 'integer', notNull: true },
@@ -147,19 +147,48 @@ exports.up = pgm => {
             check: "quality_tier IN ('premium', 'standard', 'basic')"
         },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('lead_qualification_scores', 'quote_id');
-    pgm.createIndex('lead_qualification_scores', 'quality_tier');
-    pgm.createIndex('lead_qualification_scores', 'overall_score');
+    pgm.sql(`
+        DO $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'quote_id'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_qualification_scores_quote_id_index ON lead_qualification_scores(quote_id)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'quality_tier'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_qualification_scores_quality_tier_index ON lead_qualification_scores(quality_tier)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'overall_score'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_qualification_scores_overall_score_index ON lead_qualification_scores(overall_score)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'overall_quality_score'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_qualification_scores_overall_quality_score_index ON lead_qualification_scores(overall_quality_score)';
+            END IF;
+        END $$;
+    `);
 
     // ==========================================
     // 8. Lead Distributions
     // ==========================================
     pgm.createTable('lead_distributions', {
         id: 'id',
-        quote_id: { type: 'integer', notNull: true, references: '"quotes"' },
-        vendor_id: { type: 'integer', notNull: true, references: '"users"' },
+        quote_id: { type: 'varchar(50)', notNull: true, references: '"quotes"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, references: '"users"' },
         lead_cost: { type: 'decimal(6,2)', notNull: true },
         match_score: { type: 'integer', notNull: true, check: 'match_score >= 0 AND match_score <= 100' },
         distance_score: { type: 'integer' },
@@ -176,19 +205,50 @@ exports.up = pgm => {
         refund_reason: { type: 'varchar(100)' },
         refunded_at: { type: 'timestamp' },
         distributed_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('lead_distributions', ['quote_id', 'vendor_id'], { unique: true });
-    pgm.createIndex('lead_distributions', 'vendor_id');
-    pgm.createIndex('lead_distributions', 'accessed');
-    pgm.createIndex('lead_distributions', 'distributed_at');
+    pgm.sql(`
+        DO $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_distributions' AND column_name = 'quote_id'
+            ) AND EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_distributions' AND column_name = 'vendor_id'
+            ) THEN
+                EXECUTE 'CREATE UNIQUE INDEX IF NOT EXISTS lead_distributions_quote_id_vendor_id_unique_index ON lead_distributions(quote_id, vendor_id)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_distributions' AND column_name = 'vendor_id'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_distributions_vendor_id_index ON lead_distributions(vendor_id)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_distributions' AND column_name = 'accessed'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_distributions_accessed_index ON lead_distributions(accessed)';
+            END IF;
+
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_distributions' AND column_name = 'distributed_at'
+            ) THEN
+                EXECUTE 'CREATE INDEX IF NOT EXISTS lead_distributions_distributed_at_index ON lead_distributions(distributed_at)';
+            END IF;
+        END $$;
+    `);
 
     // ==========================================
     // 9. Vendor Lead Preferences
     // ==========================================
     pgm.createTable('vendor_lead_preferences', {
         id: 'id',
-        vendor_id: { type: 'integer', notNull: true, unique: true, references: '"users"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, unique: true, references: '"users"' },
         auto_bid_enabled: { type: 'boolean', notNull: true, default: false },
         min_budget: { type: 'decimal(10,2)' },
         max_budget: { type: 'decimal(10,2)' },
@@ -198,16 +258,16 @@ exports.up = pgm => {
         min_quality_score: { type: 'integer', default: 0, check: 'min_quality_score >= 0 AND min_quality_score <= 100' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') },
         updated_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('vendor_lead_preferences', 'vendor_id');
+    pgm.createIndex('vendor_lead_preferences', 'vendor_id', { ifNotExists: true });
 
     // ==========================================
     // 10. Vendor Performance Metrics
     // ==========================================
     pgm.createTable('vendor_performance_metrics', {
         id: 'id',
-        vendor_id: { type: 'integer', notNull: true, unique: true, references: '"users"' },
+        vendor_id: { type: 'varchar(50)', notNull: true, unique: true, references: '"users"' },
         total_bids_submitted: { type: 'integer', notNull: true, default: 0 },
         total_bids_accepted: { type: 'integer', notNull: true, default: 0 },
         win_rate: { type: 'decimal(5,2)', notNull: true, default: 0 },
@@ -219,36 +279,131 @@ exports.up = pgm => {
         last_active: { type: 'timestamp' },
         created_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') },
         updated_at: { type: 'timestamp', notNull: true, default: pgm.func('current_timestamp') }
-    });
+    }, { ifNotExists: true });
 
-    pgm.createIndex('vendor_performance_metrics', 'vendor_id');
-    pgm.createIndex('vendor_performance_metrics', 'reputation_score');
-    pgm.createIndex('vendor_performance_metrics', 'win_rate');
+    pgm.createIndex('vendor_performance_metrics', 'vendor_id', { ifNotExists: true });
+    pgm.createIndex('vendor_performance_metrics', 'reputation_score', { ifNotExists: true });
+    pgm.createIndex('vendor_performance_metrics', 'win_rate', { ifNotExists: true });
 
     // ==========================================
     // Views for Reporting
     // ==========================================
-    pgm.createView('vendor_credit_summary', {}, `
-        SELECT 
-            vc.vendor_id,
-            vc.balance AS current_balance,
-            vc.total_purchased,
-            vc.total_spent,
-            vc.total_refunded,
-            (SELECT MAX(created_at) FROM credit_purchases WHERE vendor_id = vc.vendor_id) AS last_purchase_date,
-            (SELECT COUNT(*) FROM lead_distributions WHERE vendor_id = vc.vendor_id AND accessed = true) AS total_leads_accessed
-        FROM vendor_credits vc
+    pgm.sql(`
+        DO $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'vendor_credits' AND column_name = 'balance'
+            ) THEN
+                IF EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'lead_distributions' AND column_name = 'accessed'
+                ) THEN
+                    EXECUTE '
+                        CREATE OR REPLACE VIEW vendor_credit_summary AS
+                        SELECT
+                            vc.vendor_id,
+                            vc.balance AS current_balance,
+                            vc.total_purchased,
+                            vc.total_spent,
+                            vc.total_refunded,
+                            (SELECT MAX(created_at) FROM credit_purchases WHERE vendor_id = vc.vendor_id) AS last_purchase_date,
+                            (SELECT COUNT(*) FROM lead_distributions WHERE vendor_id = vc.vendor_id AND accessed = true) AS total_leads_accessed
+                        FROM vendor_credits vc
+                    ';
+                ELSE
+                    EXECUTE '
+                        CREATE OR REPLACE VIEW vendor_credit_summary AS
+                        SELECT
+                            vc.vendor_id,
+                            vc.balance AS current_balance,
+                            vc.total_purchased,
+                            vc.total_spent,
+                            vc.total_refunded,
+                            (SELECT MAX(created_at) FROM credit_purchases WHERE vendor_id = vc.vendor_id) AS last_purchase_date,
+                            (SELECT COUNT(*) FROM lead_distributions WHERE vendor_id = vc.vendor_id) AS total_leads_accessed
+                        FROM vendor_credits vc
+                    ';
+                END IF;
+            ELSIF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'vendor_credits' AND column_name = 'available_credits'
+            ) THEN
+                IF EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name = 'lead_distributions' AND column_name = 'accessed'
+                ) THEN
+                    EXECUTE '
+                        CREATE OR REPLACE VIEW vendor_credit_summary AS
+                        SELECT
+                            vc.vendor_id,
+                            vc.available_credits AS current_balance,
+                            vc.total_purchased_credits AS total_purchased,
+                            vc.total_spent_credits AS total_spent,
+                            NULL::numeric AS total_refunded,
+                            (SELECT MAX(created_at) FROM credit_purchases WHERE vendor_id = vc.vendor_id) AS last_purchase_date,
+                            (SELECT COUNT(*) FROM lead_distributions WHERE vendor_id = vc.vendor_id AND accessed = true) AS total_leads_accessed
+                        FROM vendor_credits vc
+                    ';
+                ELSE
+                    EXECUTE '
+                        CREATE OR REPLACE VIEW vendor_credit_summary AS
+                        SELECT
+                            vc.vendor_id,
+                            vc.available_credits AS current_balance,
+                            vc.total_purchased_credits AS total_purchased,
+                            vc.total_spent_credits AS total_spent,
+                            NULL::numeric AS total_refunded,
+                            (SELECT MAX(created_at) FROM credit_purchases WHERE vendor_id = vc.vendor_id) AS last_purchase_date,
+                            (SELECT COUNT(*) FROM lead_distributions WHERE vendor_id = vc.vendor_id) AS total_leads_accessed
+                        FROM vendor_credits vc
+                    ';
+                END IF;
+            END IF;
+        END $$;
     `);
 
-    pgm.createView('lead_quality_distribution', {}, `
-        SELECT 
-            quality_tier,
-            COUNT(*) as total_leads,
-            AVG(overall_score) as avg_score,
-            MIN(overall_score) as min_score,
-            MAX(overall_score) as max_score
-        FROM lead_qualification_scores
-        GROUP BY quality_tier
+    pgm.sql(`
+        DO $$
+        BEGIN
+            IF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'quality_tier'
+            ) AND EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'overall_score'
+            ) THEN
+                EXECUTE '
+                    CREATE OR REPLACE VIEW lead_quality_distribution AS
+                    SELECT
+                        quality_tier,
+                        COUNT(*) as total_leads,
+                        AVG(overall_score) as avg_score,
+                        MIN(overall_score) as min_score,
+                        MAX(overall_score) as max_score
+                    FROM lead_qualification_scores
+                    GROUP BY quality_tier
+                ';
+            ELSIF EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'qualification_level'
+            ) AND EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_name = 'lead_qualification_scores' AND column_name = 'overall_quality_score'
+            ) THEN
+                EXECUTE '
+                    CREATE OR REPLACE VIEW lead_quality_distribution AS
+                    SELECT
+                        qualification_level AS quality_tier,
+                        COUNT(*) as total_leads,
+                        AVG(overall_quality_score) as avg_score,
+                        MIN(overall_quality_score) as min_score,
+                        MAX(overall_quality_score) as max_score
+                    FROM lead_qualification_scores
+                    GROUP BY qualification_level
+                ';
+            END IF;
+        END $$;
     `);
 };
 

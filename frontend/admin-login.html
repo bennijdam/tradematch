@@ -327,9 +327,13 @@
     </div>
 
     <script>
-        // Force API to use Render backend for production
-        // Admin Login - v2
-        const API_BASE = 'https://tradematch.onrender.com';
+        const isLocal = window.location.protocol === 'file:' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+
+        const API_BASE = isLocal
+            ? 'http://localhost:3001'
+            : 'https://tradematch.onrender.com';
 
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
@@ -404,6 +408,12 @@
                     role: data.role
                 }));
 
+                if (rememberMe) {
+                    localStorage.setItem('admin_remember', '1');
+                } else {
+                    localStorage.removeItem('admin_remember');
+                }
+
                 // Redirect to dashboard
                 window.location.href = 'admin-dashboard.html';
 
@@ -417,5 +427,6 @@
             }
         });
     </script>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

@@ -402,6 +402,11 @@
                 return;
             }
 
+            if (api.user && api.user.role === 'finance_admin') {
+                window.location.href = 'admin-finance.html';
+                return;
+            }
+
             await api.initUserInfo('userName', 'userEmail');
 
             document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -570,5 +575,6 @@
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

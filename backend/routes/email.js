@@ -708,23 +708,27 @@ router.post('/lead-preview-notification', async (req, res) => {
       return res.status(500).json({ error: 'Failed to send email', details: error });
     }
 
-    // Log the notification
-    await pool.query(
-      `INSERT INTO lead_acceptance_log 
-       (quote_id, vendor_id, action, details) 
-       VALUES ($1, $2, $3, $4)`,
-      [
-        quoteId, 
-        vendorId, 
-        'preview_email_sent',
-        JSON.stringify({ 
-          emailId: data.id, 
-          leadPrice, 
-          matchScore,
-          sentTo: vendorEmail 
-        })
-      ]
-    );
+    // Log the notification (skip if schema lacks details column)
+    try {
+      await pool.query(
+        `INSERT INTO lead_acceptance_log 
+         (quote_id, vendor_id, action, details) 
+         VALUES ($1, $2, $3, $4)`,
+        [
+          quoteId, 
+          vendorId, 
+          'preview_email_sent',
+          JSON.stringify({ 
+            emailId: data.id, 
+            leadPrice, 
+            matchScore,
+            sentTo: vendorEmail 
+          })
+        ]
+      );
+    } catch (logErr) {
+      console.warn('Lead preview log skipped:', logErr.message);
+    }
 
     res.json({ 
       success: true, 

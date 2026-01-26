@@ -158,7 +158,7 @@ router.post('/login', [
   try {
     // Find user
     const result = await pool.query(
-      'SELECT id, email, password_hash, name, user_type, status FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, full_name, name, user_type, role, status FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
@@ -180,9 +180,12 @@ router.post('/login', [
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    const role = user.role || user.user_type;
+    const displayName = user.full_name || user.name || user.email;
+
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, userType: user.user_type },
+      { userId: user.id, email: user.email, userType: user.user_type, role },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRY || '7d' }
     );
@@ -191,11 +194,16 @@ router.post('/login', [
       success: true,
       message: 'Login successful',
       token,
+      userId: user.id,
+      email: user.email,
+      name: displayName,
+      role,
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
-        userType: user.user_type
+        name: displayName,
+        userType: user.user_type,
+        role
       }
     });
   } catch (error) {
@@ -234,6 +242,44 @@ router.get('/me', async (req, res) => {
     });
   } catch (error) {
     console.error('Get user error:', error);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+});
+
+// ==========================================
+// VERIFY TOKEN (Admin portal)
+// ==========================================
+router.get('/verify', async (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const result = await pool.query(
+      'SELECT id, email, full_name, user_type, role, status FROM users WHERE id = $1',
+      [decoded.userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    const role = user.role || user.user_type;
+
+    res.json({
+      userId: user.id,
+      email: user.email,
+      name: user.full_name || user.email,
+      role,
+      status: user.status
+    });
+  } catch (error) {
+    console.error('Verify token error:', error);
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 });

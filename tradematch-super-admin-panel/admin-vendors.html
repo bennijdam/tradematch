@@ -363,6 +363,10 @@
                 <span>📊</span>
                 <span>Dashboard</span>
             </a>
+            <a href="admin-analytics.html" class="nav-item">
+                <span>📈</span>
+                <span>Analytics</span>
+            </a>
 
             <div class="nav-section-title">Management</div>
             <a href="admin-users.html" class="nav-item">
@@ -373,15 +377,55 @@
                 <span>🔧</span>
                 <span>Tradespeople</span>
             </a>
+            <a href="admin-contracts.html" class="nav-item">
+                <span>📄</span>
+                <span>Contracts</span>
+            </a>
+            <a href="admin-disputes.html" class="nav-item">
+                <span>⚖️</span>
+                <span>Disputes</span>
+            </a>
             <a href="admin-quotes.html" class="nav-item">
                 <span>📋</span>
                 <span>Quotes</span>
+            </a>
+            <a href="admin-bids.html" class="nav-item">
+                <span>💼</span>
+                <span>Bids</span>
             </a>
 
             <div class="nav-section-title">Moderation</div>
             <a href="admin-reviews.html" class="nav-item">
                 <span>⭐</span>
                 <span>Reviews</span>
+            </a>
+            <a href="admin-reports.html" class="nav-item">
+                <span>🚨</span>
+                <span>Reports</span>
+            </a>
+
+            <div class="nav-section-title">Finance</div>
+            <a href="admin-finance.html" class="nav-item">
+                <span>🏦</span>
+                <span>Finance Control</span>
+            </a>
+            <a href="admin-payments.html" class="nav-item">
+                <span>💳</span>
+                <span>Payments</span>
+            </a>
+            <a href="admin-revenue.html" class="nav-item">
+                <span>💰</span>
+                <span>Revenue</span>
+            </a>
+
+            <div class="nav-section-title">SEO & Growth</div>
+            <a href="admin-seo.html" class="nav-item">
+                <span>🔍</span>
+                <span>SEO Manager</span>
+            </a>
+            <a href="admin-content.html" class="nav-item">
+                <span>📝</span>
+                <span>Content</span>
             </a>
 
             <div class="nav-section-title">System</div>
@@ -392,6 +436,10 @@
             <a href="admin-audit.html" class="nav-item">
                 <span>📋</span>
                 <span>Audit Log</span>
+            </a>
+            <a href="admin-settings.html" class="nav-item">
+                <span>⚙️</span>
+                <span>Settings</span>
             </a>
             <a href="admin-password-change.html" class="nav-item">
                 <span>🔐</span>
@@ -451,6 +499,11 @@
         async function init() {
             api = await checkAuth();
             if (!api) return;
+
+            if (api.user && api.user.role === 'finance_admin') {
+                window.location.href = 'admin-finance.html';
+                return;
+            }
             
             initUserInfo(api);
             await loadPendingVendors();

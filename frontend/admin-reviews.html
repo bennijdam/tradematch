@@ -451,6 +451,11 @@
                 return;
             }
 
+            if (api.user && api.user.role === 'finance_admin') {
+                window.location.href = 'admin-finance.html';
+                return;
+            }
+
             // Load user info
             await api.initUserInfo('userName', 'userEmail');
 
@@ -589,5 +594,6 @@
         // Initialize on load
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

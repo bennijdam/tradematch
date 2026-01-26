@@ -311,6 +311,14 @@
             justify-content: flex-end;
         }
 
+        .message-group.system {
+            justify-content: center;
+        }
+
+        .message-group.system .message-time {
+            text-align: center;
+        }
+
         .message {
             max-width: 60%;
             padding: 12px 16px;
@@ -338,6 +346,117 @@
 
         .message.sent .message-time {
             color: rgba(255, 255, 255, 0.7);
+        }
+
+        .message.card {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .message-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            min-width: 260px;
+        }
+
+        .message-card h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .message-card p {
+            font-size: 14px;
+            color: var(--slate);
+            margin-bottom: 8px;
+        }
+
+        .card-meta {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .card-meta span {
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-pill.accepted { background: #dcfce7; color: #15803d; }
+        .status-pill.sent { background: #e0f2fe; color: #0369a1; }
+        .status-pill.draft { background: #fef3c7; color: #b45309; }
+        .status-pill.cancelled { background: #fee2e2; color: #b91c1c; }
+        .status-pill.planned { background: #fef9c3; color: #a16207; }
+        .status-pill.completed { background: #dcfce7; color: #15803d; }
+        .status-pill.disputed { background: #fee2e2; color: #b91c1c; }
+
+        .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .card-actions button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .card-actions button.primary {
+            background: var(--emerald);
+            color: white;
+            border-color: var(--emerald);
+        }
+
+        .card-actions button.primary:hover {
+            background: var(--emerald-dark);
+        }
+
+        .card-actions button.danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .card-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .system-alert {
+            background: #fef9c3;
+            color: #92400e;
+            border: 1px solid #fde68a;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .payment-notice {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 8px;
         }
 
         /* Message Input */
@@ -446,6 +565,63 @@
             font-size: 12px;
         }
 
+        .profile-menu {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+
+        .profile-button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .profile-initials {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #0f172a;
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 14px;
+            color: #0f172a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .profile-dropdown a:hover {
+            background: #f1f5f9;
+        }
+
+        .profile-dropdown.is-open {
+            display: block;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .messages-container {
@@ -466,6 +642,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/frontend/profile-menu.css">
 </head>
 <body>
 
@@ -476,8 +653,15 @@
                 <a href="/how-it-works.html">How It Works</a>
                 <a href="/find-tradespeople.html">Find Trades</a>
                 <a href="/about.html">About</a>
-                <a href="/customer-dashboard.html">Dashboard</a>
-                <a href="/vendor-dashboard.html">Vendor Dashboard</a>
+                <div class="profile-menu">
+                    <button class="profile-button" id="profileButton" aria-haspopup="true" aria-expanded="false">
+                        <span class="profile-initials" id="profileInitials">TM</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <a href="/frontend/email-preferences.html" role="menuitem">User Settings</a>
+                        <a href="#" id="logoutLink" role="menuitem">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -542,7 +726,7 @@
                 <h4>For Tradespeople</h4>
                 <ul>
                     <li><a href="/vendor-register.html">Join as a Trade</a></li>
-                    <li><a href="/vendor-dashboard.html">Dashboard</a></li>
+                    <li><a href="#" id="logoutLinkFooter">Logout</a></li>
                 </ul>
             </div>
             <div class="footer-column">
@@ -559,20 +743,27 @@
     </footer>
 
     <script>
-        const API_URL = 'https://tradematch.onrender.com';
-        let currentConversationUserId = null;
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+        let currentConversationId = null;
         let allConversations = [];
+        let currentUser = null;
 
         // Get auth token
         function getToken() {
             return localStorage.getItem('token');
         }
 
+        function logoutUser() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/frontend/auth-login.html';
+        }
+
         // Check authentication
         function checkAuth() {
             const token = getToken();
             if (!token) {
-                window.location.href = '/customer-login.html';
+                window.location.href = '/frontend/auth-login.html?redirect=messages.html';
                 return false;
             }
             return true;
@@ -581,7 +772,7 @@
         // Load conversations on page load
         async function loadConversations() {
             try {
-                const response = await fetch(`${API_URL}/api/messages/conversations`, {
+                const response = await fetch(`${API_BASE}/api/messaging/conversations`, {
                     headers: { 'Authorization': `Bearer ${getToken()}` }
                 });
 
@@ -592,8 +783,8 @@
                     return;
                 }
 
-                allConversations = data.data;
-                displayConversations(data.data);
+                allConversations = data.conversations || [];
+                displayConversations(allConversations);
             } catch (error) {
                 console.error('Load conversations error:', error);
                 showConversationsError('Connection error');
@@ -609,22 +800,23 @@
             }
 
             list.innerHTML = conversations.map(conv => {
-                const initials = conv.name
+                const title = conv.job_id ? `Job ${conv.job_id}` : `Conversation ${conv.id}`;
+                const initials = (conv.conversation_type || 'TM')
                     .split(' ')
                     .map(n => n[0])
                     .join('')
                     .toUpperCase()
                     .slice(0, 2);
 
-                const unreadBadge = conv.unread_count > 0 ? 
+                const unreadBadge = conv.unread_count > 0 ?
                     `<div class="unread-badge">${conv.unread_count}</div>` : '';
 
                 return `
-                    <div class="conversation-item" onclick="selectConversation(${conv.other_user_id}, '${conv.name.replace(/'/g, "\\'")}')">
+                    <div class="conversation-item" onclick="selectConversation('${conv.id}', '${title.replace(/'/g, "\\'")}')">
                         <div class="conversation-avatar">${initials}</div>
                         <div class="conversation-info">
-                            <div class="conversation-name">${conv.name}</div>
-                            <div class="conversation-preview">${conv.last_message || 'No messages yet'}</div>
+                            <div class="conversation-name">${title}</div>
+                            <div class="conversation-preview">${conv.conversation_type || 'No messages yet'}</div>
                         </div>
                         ${unreadBadge}
                     </div>
@@ -638,8 +830,8 @@
         }
 
         // Select a conversation
-        async function selectConversation(userId, userName) {
-            currentConversationUserId = userId;
+        async function selectConversation(conversationId, title) {
+            currentConversationId = conversationId;
 
             // Update UI
             document.querySelectorAll('.conversation-item').forEach(item => {
@@ -652,21 +844,21 @@
             document.getElementById('chatContent').style.display = 'flex';
 
             // Set chat header
-            const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const initials = title.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
             document.getElementById('chatAvatar').textContent = initials;
-            document.getElementById('chatName').textContent = userName;
+            document.getElementById('chatName').textContent = title;
 
             // Load messages
-            await loadMessages(userId);
+            await loadMessages(conversationId);
 
             // Focus input
             document.getElementById('messageInput').focus();
         }
 
         // Load messages
-        async function loadMessages(userId) {
+        async function loadMessages(conversationId) {
             try {
-                const response = await fetch(`${API_URL}/api/messages/conversation/${userId}`, {
+                const response = await fetch(`${API_BASE}/api/messaging/conversations/${conversationId}/messages`, {
                     headers: { 'Authorization': `Bearer ${getToken()}` }
                 });
 
@@ -677,10 +869,215 @@
                     return;
                 }
 
-                displayMessages(data.data);
+                const messages = data.messages || [];
+                await hydrateContractsForMessages(messages);
+                displayMessages(messages);
             } catch (error) {
                 console.error('Load messages error:', error);
                 displayMessagesError('Connection error');
+            }
+        }
+
+        const contractCache = new Map();
+
+        function safeParseMetadata(metadata) {
+            if (!metadata) return {};
+            if (typeof metadata === 'object') return metadata;
+            try {
+                return JSON.parse(metadata);
+            } catch (error) {
+                return {};
+            }
+        }
+
+        async function hydrateContractsForMessages(messages) {
+            const contractIds = new Set();
+
+            messages.forEach((msg) => {
+                const meta = safeParseMetadata(msg.metadata);
+                if (meta.contract_id) contractIds.add(meta.contract_id);
+                if (meta.contractId) contractIds.add(meta.contractId);
+            });
+
+            const fetches = [...contractIds]
+                .filter((id) => !contractCache.has(id))
+                .map(async (id) => {
+                    try {
+                        const response = await fetch(`${API_BASE}/api/contracts/${id}`, {
+                            headers: { 'Authorization': `Bearer ${getToken()}` }
+                        });
+                        if (!response.ok) return;
+                        const data = await response.json();
+                        if (data?.success) {
+                            contractCache.set(id, {
+                                contract: data.contract,
+                                milestones: data.milestones || [],
+                                acceptances: data.acceptances || [],
+                                disputes: data.disputes || []
+                            });
+                        }
+                    } catch (error) {
+                        console.warn('Failed to load contract details', error);
+                    }
+                });
+
+            await Promise.all(fetches);
+        }
+
+        function escapeHtml(text) {
+            return String(text || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatCurrency(value) {
+            if (value === null || value === undefined || value === '') return '—';
+            const amount = Number(value);
+            if (Number.isNaN(amount)) return '—';
+            return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
+        }
+
+        function formatDate(value) {
+            if (!value) return '—';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '—';
+            return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        function findMilestone(contractData, milestoneId) {
+            if (!contractData || !milestoneId) return null;
+            return contractData.milestones.find((m) => m.id === milestoneId) || null;
+        }
+
+        function renderStatusPill(status) {
+            if (!status) return '';
+            return `<span class="status-pill ${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+        }
+
+        function renderContractCard(msg) {
+            const meta = safeParseMetadata(msg.metadata);
+            const contractId = meta.contract_id || meta.contractId;
+            const cache = contractId ? contractCache.get(contractId) : null;
+            const contract = cache?.contract || {};
+            const status = contract.status || meta.status || 'sent';
+            const title = meta.title || contract.title || 'Contract';
+            const scope = meta.scope_of_work || contract.scope_of_work || '';
+            const totalPrice = meta.total_price || contract.total_price;
+            const milestones = meta.milestones || cache?.milestones || [];
+            const startDate = meta.start_date || contract.start_date;
+            const endDate = meta.end_date || contract.end_date;
+
+            const hasContract = Boolean(contractId);
+
+            const milestoneList = milestones.length
+                ? `<ul>${milestones.map((milestone) => {
+                    const name = milestone.title || milestone.name || 'Milestone';
+                    const amount = milestone.amount ? formatCurrency(milestone.amount) : '—';
+                    return `<li>${escapeHtml(name)} · ${escapeHtml(amount)}</li>`;
+                }).join('')}</ul>`
+                : '<div class="card-meta">No milestones listed</div>';
+
+            const canAccept = hasContract && status === 'sent';
+            const canCancel = hasContract && (status === 'sent' || status === 'draft');
+            const canDispute = hasContract && status !== 'cancelled';
+
+            return `
+                <div class="message-card">
+                    <div class="card-meta">${renderStatusPill(status)}</div>
+                    <h4>${escapeHtml(title)}</h4>
+                    ${scope ? `<p>${escapeHtml(scope)}</p>` : ''}
+                    <div class="card-meta">
+                        <span>Total: ${escapeHtml(formatCurrency(totalPrice))}</span>
+                        <span>Start: ${escapeHtml(formatDate(startDate))}</span>
+                        <span>End: ${escapeHtml(formatDate(endDate))}</span>
+                    </div>
+                    ${milestoneList}
+                    ${meta.payment_notice ? `<div class="payment-notice">${escapeHtml(meta.payment_notice)}</div>` : ''}
+                    <div class="card-actions">
+                        <button class="primary" data-action="accept-contract" data-contract-id="${escapeHtml(contractId || '')}" ${canAccept ? '' : 'disabled'}>Accept</button>
+                        <button class="danger" data-action="cancel-contract" data-contract-id="${escapeHtml(contractId || '')}" ${canCancel ? '' : 'disabled'}>Cancel</button>
+                        <button data-action="dispute-contract" data-contract-id="${escapeHtml(contractId || '')}" ${canDispute ? '' : 'disabled'}>Raise dispute</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMilestoneCard(msg) {
+            const meta = safeParseMetadata(msg.metadata);
+            const contractId = meta.contract_id || meta.contractId;
+            const milestoneId = meta.milestone_id || meta.milestoneId;
+            const cache = contractId ? contractCache.get(contractId) : null;
+            const milestone = findMilestone(cache, milestoneId) || {};
+            const status = milestone.status || meta.status || 'planned';
+            const title = milestone.title || meta.title || 'Milestone';
+            const amount = milestone.amount || meta.amount;
+            const dueDate = milestone.due_date || meta.due_date;
+
+            const hasMilestone = Boolean(milestoneId);
+
+            const canComplete = hasMilestone && status === 'planned';
+            const canDispute = hasMilestone && status === 'planned';
+
+            return `
+                <div class="message-card">
+                    <div class="card-meta">${renderStatusPill(status)}</div>
+                    <h4>${escapeHtml(title)}</h4>
+                    <div class="card-meta">
+                        <span>Amount: ${escapeHtml(formatCurrency(amount))}</span>
+                        <span>Due: ${escapeHtml(formatDate(dueDate))}</span>
+                    </div>
+                    ${meta.payment_notice ? `<div class="payment-notice">${escapeHtml(meta.payment_notice)}</div>` : ''}
+                    <div class="card-actions">
+                        <button class="primary" data-action="complete-milestone" data-milestone-id="${escapeHtml(milestoneId || '')}" ${canComplete ? '' : 'disabled'}>Mark completed</button>
+                        <button data-action="dispute-milestone" data-contract-id="${escapeHtml(contractId || '')}" data-milestone-id="${escapeHtml(milestoneId || '')}" ${canDispute ? '' : 'disabled'}>Raise dispute</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPaymentEvent(msg) {
+            const meta = safeParseMetadata(msg.metadata);
+            const label = msg.body || 'Payment event logged';
+            const contractId = meta.contract_id || meta.contractId;
+            const milestoneId = meta.milestone_id || meta.milestoneId;
+            const cache = contractId ? contractCache.get(contractId) : null;
+            const milestone = findMilestone(cache, milestoneId);
+            const milestoneTitle = milestone?.title ? ` · ${milestone.title}` : '';
+
+            return `
+                <div class="message-card">
+                    <h4>Payment update</h4>
+                    <p>${escapeHtml(label)}${escapeHtml(milestoneTitle)}</p>
+                    ${meta.payment_notice ? `<div class="payment-notice">${escapeHtml(meta.payment_notice)}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderSystemAlert(msg) {
+            const meta = safeParseMetadata(msg.metadata);
+            const reason = meta.reason ? ` · ${meta.reason}` : '';
+            return `<div class="system-alert">${escapeHtml(msg.body || 'System alert')}${escapeHtml(reason)}</div>`;
+        }
+
+        function renderMessageContent(msg) {
+            if (msg.is_deleted) {
+                return '<em>Message deleted</em>';
+            }
+
+            switch (msg.message_type) {
+                case 'contract_card':
+                    return renderContractCard(msg);
+                case 'milestone_card':
+                    return renderMilestoneCard(msg);
+                case 'payment_event':
+                    return renderPaymentEvent(msg);
+                case 'system_alert':
+                    return renderSystemAlert(msg);
+                default:
+                    return escapeHtml(msg.body || '').replace(/\n/g, '<br>');
             }
         }
 
@@ -694,12 +1091,18 @@
 
             area.innerHTML = messages.map(msg => {
                 const time = new Date(msg.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-                const isOwn = msg.direction === 'sent';
-                
+                const isOwn = currentUser && msg.sender_id === currentUser.id;
+                const content = renderMessageContent(msg);
+                const isCard = ['contract_card', 'milestone_card', 'payment_event', 'system_alert'].includes(msg.message_type);
+
+                const groupClass = msg.message_type === 'system_alert'
+                    ? 'system'
+                    : (isOwn ? 'sent' : '');
+
                 return `
-                    <div class="message-group ${isOwn ? 'sent' : ''}">
+                    <div class="message-group ${groupClass}">
                         <div>
-                            <div class="message ${isOwn ? 'sent' : 'received'}">${msg.message_text}</div>
+                            <div class="message ${isOwn ? 'sent' : 'received'} ${isCard ? 'card' : ''}">${content}</div>
                             <div class="message-time">${time}</div>
                         </div>
                     </div>
@@ -717,7 +1120,7 @@
 
         // Send message
         async function sendMessage() {
-            if (!currentConversationUserId) return;
+            if (!currentConversationId) return;
 
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
@@ -728,15 +1131,15 @@
             sendBtn.disabled = true;
 
             try {
-                const response = await fetch(`${API_URL}/api/messages`, {
+                const response = await fetch(`${API_BASE}/api/messaging/conversations/${currentConversationId}/messages`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${getToken()}`
                     },
                     body: JSON.stringify({
-                        recipient_id: currentConversationUserId,
-                        message_text: message
+                        body: message,
+                        message_type: 'text'
                     })
                 });
 
@@ -748,7 +1151,7 @@
                 }
 
                 input.value = '';
-                await loadMessages(currentConversationUserId);
+                await loadMessages(currentConversationId);
             } catch (error) {
                 console.error('Send message error:', error);
                 alert('Failed to send message');
@@ -762,10 +1165,135 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (!checkAuth()) return;
 
+            try {
+                currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+            } catch (error) {
+                currentUser = null;
+            }
+
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const logoutLink = document.getElementById('logoutLink');
+            const logoutLinkFooter = document.getElementById('logoutLinkFooter');
+
+            if (currentUser) {
+                const name = currentUser.fullName || currentUser.name || currentUser.email || 'User';
+                const initials = name.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase();
+                const initialsEl = document.getElementById('profileInitials');
+                if (initialsEl) initialsEl.textContent = initials || 'TM';
+            }
+
+            if (profileButton && profileDropdown) {
+                profileButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const isOpen = profileDropdown.classList.toggle('is-open');
+                    profileButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!profileDropdown.contains(event.target) && !profileButton.contains(event.target)) {
+                        profileDropdown.classList.remove('is-open');
+                        profileButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            if (logoutLink) {
+                logoutLink.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    logoutUser();
+                });
+            }
+
+            if (logoutLinkFooter) {
+                logoutLinkFooter.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    logoutUser();
+                });
+            }
+
             document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
+                }
+            });
+
+            document.getElementById('messagesArea')?.addEventListener('click', async (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLElement)) return;
+                const action = target.getAttribute('data-action');
+                if (!action) return;
+
+                const contractId = target.getAttribute('data-contract-id');
+                const milestoneId = target.getAttribute('data-milestone-id');
+
+                try {
+                    if (action === 'accept-contract' && contractId) {
+                        await fetch(`${API_BASE}/api/contracts/${contractId}/accept`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${getToken()}` }
+                        });
+                        contractCache.delete(contractId);
+                        await loadMessages(currentConversationId);
+                    }
+
+                    if (action === 'cancel-contract' && contractId) {
+                        const confirmed = confirm('Cancel this contract?');
+                        if (!confirmed) return;
+                        await fetch(`${API_BASE}/api/contracts/${contractId}/cancel`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${getToken()}` }
+                        });
+                        contractCache.delete(contractId);
+                        await loadMessages(currentConversationId);
+                    }
+
+                    if (action === 'dispute-contract' && contractId) {
+                        const reason = prompt('Provide a reason for the dispute:');
+                        if (!reason) return;
+                        await fetch(`${API_BASE}/api/contracts/${contractId}/disputes`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${getToken()}`
+                            },
+                            body: JSON.stringify({ reason })
+                        });
+                        contractCache.delete(contractId);
+                        await loadMessages(currentConversationId);
+                    }
+
+                    if (action === 'complete-milestone' && milestoneId) {
+                        await fetch(`${API_BASE}/api/milestones/${milestoneId}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${getToken()}`
+                            },
+                            body: JSON.stringify({ status: 'completed' })
+                        });
+                        if (contractId) contractCache.delete(contractId);
+                        await loadMessages(currentConversationId);
+                    }
+
+                    if (action === 'dispute-milestone' && contractId && milestoneId) {
+                        const reason = prompt('Provide a reason for the dispute:');
+                        if (!reason) return;
+                        await fetch(`${API_BASE}/api/contracts/${contractId}/disputes`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${getToken()}`
+                            },
+                            body: JSON.stringify({ reason, milestone_id: milestoneId })
+                        });
+                        contractCache.delete(contractId);
+                        await loadMessages(currentConversationId);
+                    }
+                } catch (error) {
+                    console.error('Action failed', error);
+                    alert('Action failed. Please try again.');
                 }
             });
 
@@ -783,10 +1311,11 @@
                 // Check if we should auto-open a conversation
                 const conversationId = sessionStorage.getItem('openConversationWithId');
                 if (conversationId && allConversations.length > 0) {
-                    const conversation = allConversations.find(c => c.other_user_id == conversationId);
+                    const conversation = allConversations.find(c => c.vendor_id === conversationId || c.customer_id === conversationId);
                     if (conversation) {
                         sessionStorage.removeItem('openConversationWithId');
-                        selectConversation(conversation.other_user_id, conversation.name);
+                        const title = conversation.job_id ? `Job ${conversation.job_id}` : `Conversation ${conversation.id}`;
+                        selectConversation(conversation.id, title);
                     }
                 }
             });
@@ -796,5 +1325,6 @@
         });
     </script>
 
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>

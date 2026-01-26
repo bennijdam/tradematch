@@ -42,16 +42,25 @@ async function initServer() {
 
 function runMigrations() {
     return new Promise((resolve, reject) => {
-        const migrateProcess = spawn('npm', ['run', 'migrate:up'], {
-            stdio: ['inherit', 'inherit', 'inherit'],
-            timeout: 30000 // 30 second timeout
+        const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+        const migrateProcess = spawn(npmCommand, ['run', 'migrate:up'], {
+            stdio: 'inherit',
+            shell: process.platform === 'win32'
         });
 
+        const timeoutId = setTimeout(() => {
+            console.warn('⚠️  Migration timed out after 30s, continuing startup...');
+            migrateProcess.kill();
+            resolve();
+        }, 30000);
+
         migrateProcess.on('error', (err) => {
+            clearTimeout(timeoutId);
             reject(err);
         });
 
         migrateProcess.on('close', (code) => {
+            clearTimeout(timeoutId);
             if (code === 0) {
                 resolve();
             } else {

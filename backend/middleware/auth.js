@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const pool = require('../database/postgres-connection');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
 
 // Normalise user payload so downstream code can rely on both id and userId
 function buildUserPayload(decoded) {
@@ -117,6 +117,20 @@ function requireSuperAdmin(req, res, next) {
 }
 
 /**
+ * Require finance admin role
+ */
+function requireFinanceAdmin(req, res, next) {
+    const financeRoles = ['finance_admin', 'super_admin'];
+    if (!req.user || !financeRoles.includes(req.user.role)) {
+        return res.status(403).json({
+            error: 'Finance admin access required',
+            code: 'FINANCE_ADMIN_REQUIRED'
+        });
+    }
+    next();
+}
+
+/**
  * Optional authentication - works with or without token
  */
 function optionalAuth(req, res, next) {
@@ -192,6 +206,7 @@ module.exports = {
     requireCustomer,
     requireAdmin,
     requireSuperAdmin,
+    requireFinanceAdmin,
     optionalAuth,
     refreshToken
 };

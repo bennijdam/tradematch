@@ -3,14 +3,19 @@
  * Handles all API calls and authentication for the admin panel
  */
 
+const isLocal = window.location.protocol === 'file:' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
 const API_CONFIG = {
-    BASE_URL: window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'https://www.tradematch.uk',
+    BASE_URL: isLocal
+        ? 'http://localhost:3001'
+        : 'https://tradematch.onrender.com',
     ENDPOINTS: {
         // Stats
         STATS: '/api/admin/stats',
         ACTIVITY: '/api/admin/activity',
+        CHARTS: '/api/admin/charts',
         
         // Users
         USERS: '/api/admin/users',
@@ -162,6 +167,10 @@ class AdminAPI {
 
     async getActivity(limit = 20) {
         return await this.request(`${API_CONFIG.ENDPOINTS.ACTIVITY}?limit=${limit}`);
+    }
+
+    async getCharts(period = '30d') {
+        return await this.request(`${API_CONFIG.ENDPOINTS.CHARTS}?period=${period}`);
     }
 
     // ============================================================

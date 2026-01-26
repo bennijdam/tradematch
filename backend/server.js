@@ -1,34 +1,140 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 const { Pool } = require("pg");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const passport = require('passport');
+const path = require('path');
+const crypto = require('crypto');
 const { emailLimiter } = require('./middleware/rate-limit');
+const { startCreditExpiryJob } = require('./services/credit-expiry-job');
+const { startVendorScoreRecoveryJob } = require('./services/vendor-score-recovery');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+const uploadsRoutes = require('./routes/uploads');
+
+function sanitizeDatabaseUrl(rawUrl) {
+    if (!rawUrl) return rawUrl;
+    try {
+        const url = new URL(rawUrl);
+        // Node pg does not support channel_binding in libpq params
+        url.searchParams.delete('channel_binding');
+        // Prefer direct Neon host for long-lived Node connections
+        if (url.hostname.includes('-pooler')) {
+            url.hostname = url.hostname.replace('-pooler', '');
+        }
+        return url.toString();
+    } catch (error) {
+        return rawUrl;
+    }
+}
+
+// Catch uncaught exceptions
+process.on('uncaughtException', (err) => {
+    console.error('❌ Uncaught Exception:', err);
+    console.error(err.stack);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+    // Fail fast so we don't keep serving requests with a broken state (e.g., ended DB pool)
+    process.exitCode = 1;
+});
 
 const app = express();
 app.set("trust proxy", 1);
 
+// Security headers
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"]
+        }
+    },
+    referrerPolicy: { policy: 'no-referrer' },
+    crossOriginOpenerPolicy: { policy: 'same-origin' },
+    crossOriginResourcePolicy: { policy: 'same-site' }
+}));
+
+const envOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const defaultAllowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3002',
+    'http://127.0.0.1:8000'
+];
+
+const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultAllowedOrigins]));
+
 app.use(cors({
-    origin: process.env.CORS_ORIGINS || "*",
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.length === 0) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
 }));
 
-app.use(express.json());
+const jsonParser = express.json();
+app.use((req, res, next) => {
+    if (req.originalUrl === '/api/webhooks/stripe') {
+        return next();
+    }
+    return jsonParser(req, res, next);
+});
 app.use(passport.initialize());
+
+// Serve the super admin panel statically so /admin-login.html works locally
+app.use('/', express.static(path.join(__dirname, '../tradematch-super-admin-panel')));
+
+// File uploads (S3 presigned URLs)
+app.use('/api/uploads', uploadsRoutes);
 
 // Database connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+    connectionString: sanitizeDatabaseUrl(process.env.DATABASE_URL),
+    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require') ? true : false,
+    connectionTimeoutMillis: 15000,
+    idleTimeoutMillis: 60000,
+    max: 10,
+    keepAlive: true,
+    options: '-c statement_timeout=15000'
+});
+
+// Avoid closing the pool in development (prevents "Cannot use a pool after calling end")
+const originalPoolEnd = pool.end.bind(pool);
+pool.end = async () => {
+        if (process.env.NODE_ENV !== 'production') {
+                console.warn('⚠️  pool.end() ignored in development mode');
+                return;
+        }
+        return originalPoolEnd();
+};
+
+// Pool error handler (prevents crash on dropped connections)
+pool.on('error', (err) => {
+    console.error('Database pool error:', err.message);
 });
 
 // Test database connection
-pool.connect().then(() => {
+pool.connect().then((client) => {
+    client.release();
     console.log("✅ Database connected (Neon / Postgres)");
+
+    // Background jobs only after DB is reachable
+    startCreditExpiryJob(pool);
+    startVendorScoreRecoveryJob(pool);
 }).catch(err => {
     console.error("❌ Database connection failed:", err.message);
 });
@@ -44,10 +150,12 @@ app.get("/api/health", async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (err) {
-        res.status(500).json({
-            status: "error",
+        res.status(200).json({
+            status: "degraded",
             database: "not connected",
-            error: err.message
+            error: err.message,
+            uptime: process.uptime(),
+            timestamp: new Date().toISOString()
         });
     }
 });
@@ -59,7 +167,7 @@ app.post("/api/auth/register", async (req, res) => {
         
         const { userType, fullName, email, phone, password, postcode, terms, oauth_provider, oauth_id } = req.body;
         
-        console.log('🔧 Parsed data:', { userType, fullName, email, phone, postcode, oauth_provider, !!terms });
+        console.log('🔧 Parsed data:', { userType, fullName, email, phone, postcode, oauth_provider, termsAccepted: !!terms });
         
         if (!email || !password || !fullName) {
             console.log('❌ Missing fields:', { email: !!email, password: !!password, fullName: !!fullName });
@@ -121,9 +229,19 @@ app.post("/api/auth/register", async (req, res) => {
 
         // Create user in database
         const result = await pool.query(
-            `INSERT INTO users (user_type, full_name, email, phone, password, postcode, oauth_provider, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING id, user_type, full_name, email, phone, postcode, oauth_provider`,
-            [userType, fullName, email.toLowerCase(), phone, hashedPassword, postcode, authProvider || 'local']
+            `INSERT INTO users (id, user_type, full_name, name, email, phone, password_hash, postcode, oauth_provider, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW()) RETURNING id, user_type, full_name, email, phone, postcode, oauth_provider`,
+            [
+                crypto.randomUUID(),
+                userType,
+                fullName,
+                fullName,
+                email.toLowerCase(),
+                phone,
+                hashedPassword,
+                postcode,
+                authProvider || 'local'
+            ]
         );
 
         // Create JWT token
@@ -173,7 +291,7 @@ app.post("/api/auth/login", async (req, res) => {
 
         // Find user
         const result = await pool.query(
-            'SELECT id, email, password, full_name, user_type, phone, postcode, oauth_provider FROM users WHERE email = $1',
+            'SELECT id, email, password_hash, full_name, user_type, role, phone, postcode FROM users WHERE email = $1',
             [email.toLowerCase()]
         );
 
@@ -184,24 +302,31 @@ app.post("/api/auth/login", async (req, res) => {
         const user = result.rows[0];
         
         // Check password
-        const validPassword = await bcrypt.compare(password, user.password);
+        const validPassword = await bcrypt.compare(password, user.password_hash || '');
 
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Create JWT token
+        const role = user.role || user.user_type;
+        const displayName = user.full_name || user.email;
+
         const token = jwt.sign(
-            { userId: user.id, email: email.toLowerCase() },
+            { userId: user.id, email: email.toLowerCase(), role },
             process.env.JWT_SECRET || 'fallback-secret',
             { expiresIn: '7d' }
         );
 
-        console.log('✅ User logged in successfully:', { email, userId: user.id, authProvider: user.oauth_provider });
+        console.log('✅ User logged in successfully:', { email, userId: user.id });
 
         return res.json({
             message: 'Login successful',
             token: token,
+            userId: user.id,
+            email: user.email,
+            name: displayName,
+            role,
             user: {
                 id: user.id,
                 userType: user.user_type,
@@ -209,7 +334,8 @@ app.post("/api/auth/login", async (req, res) => {
                 email: user.email,
                 phone: user.phone,
                 postcode: user.postcode,
-                oauth_provider: user.oauth_provider
+                oauth_provider: null,
+                role
             }
         });
 
@@ -248,6 +374,49 @@ app.get("/api/auth/me", async (req, res) => {
     }
 });
 
+// Verify token (used by admin portal)
+app.get("/api/auth/verify", async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+
+        const result = await pool.query(
+            'SELECT id, email, full_name, user_type, role, status FROM users WHERE id = $1',
+            [decoded.userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const user = result.rows[0];
+        const role = user.role || user.user_type;
+
+        return res.json({
+            userId: user.id,
+            email: user.email,
+            name: user.full_name || user.email,
+            role,
+            status: user.status
+        });
+
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token expired' });
+        }
+        console.error('❌ Verify token error:', error);
+        res.status(500).json({ error: 'Failed to verify token' });
+    }
+});
+
 // Mount OAuth routers (use the routers that already configure passport strategies)
 const googleAuthRouter = require('./routes/google-auth');
 const microsoftAuthRouter = require('./routes/microsoft-auth');
@@ -271,7 +440,8 @@ try {
 
 // Lead system routes
 try {
-    const quotesRouter = require('./routes/quotes')(pool);
+    const quotesRouter = require('./routes/quotes');
+    if (typeof quotesRouter.setPool === 'function') quotesRouter.setPool(pool);
     app.use('/api/quotes', quotesRouter);
     console.log('📋 Quotes routes mounted at /api/quotes');
 } catch (e) {
@@ -294,12 +464,82 @@ try {
     console.warn('⚠️ Leads routes not available:', e && e.message ? e.message : e);
 }
 
+// Messaging routes
+try {
+    const messagingRouter = require('./routes/messaging');
+    if (typeof messagingRouter.setPool === 'function') messagingRouter.setPool(pool);
+    app.use('/api/messaging', messagingRouter);
+    console.log('💬 Messaging routes mounted at /api/messaging');
+} catch (e) {
+    console.warn('⚠️ Messaging routes not available:', e && e.message ? e.message : e);
+}
+
+// Contracts & disputes routes
+try {
+    const contractsRouter = require('./routes/contracts');
+    if (typeof contractsRouter.setPool === 'function') contractsRouter.setPool(pool);
+    app.use('/api/contracts', contractsRouter);
+    console.log('📄 Contracts routes mounted at /api/contracts');
+} catch (e) {
+    console.warn('⚠️ Contracts routes not available:', e && e.message ? e.message : e);
+}
+
+// Disputes routes
+try {
+    const disputesRouter = require('./routes/disputes');
+    if (typeof disputesRouter.setPool === 'function') disputesRouter.setPool(pool);
+    app.use('/api/disputes', disputesRouter);
+    console.log('⚖️ Disputes routes mounted at /api/disputes');
+} catch (e) {
+    console.warn('⚠️ Disputes routes not available:', e && e.message ? e.message : e);
+}
+
+// Milestone status routes
+try {
+    const milestoneStatusRouter = require('./routes/milestones-status');
+    if (typeof milestoneStatusRouter.setPool === 'function') milestoneStatusRouter.setPool(pool);
+    app.use('/api/milestones', milestoneStatusRouter);
+    console.log('📌 Milestone status routes mounted at /api/milestones');
+} catch (e) {
+    console.warn('⚠️ Milestone status routes not available:', e && e.message ? e.message : e);
+}
+
+// Stripe webhooks
+try {
+    const webhooksRouter = require('./routes/webhooks');
+    if (typeof webhooksRouter.setPool === 'function') webhooksRouter.setPool(pool);
+    app.use('/api/webhooks', webhooksRouter);
+    console.log('💳 Stripe webhook routes mounted at /api/webhooks/stripe');
+} catch (e) {
+    console.warn('⚠️ Webhook routes not available:', e && e.message ? e.message : e);
+}
+
 try {
     const creditsRouter = require('./routes/credits')(pool);
     app.use('/api/credits', creditsRouter);
     console.log('💰 Credits routes mounted at /api/credits');
 } catch (e) {
     console.warn('⚠️ Credits routes not available:', e && e.message ? e.message : e);
+}
+
+// Finance Admin routes
+try {
+    const financeRouter = require('./routes/admin-finance');
+    if (typeof financeRouter.setPool === 'function') financeRouter.setPool(pool);
+    app.use('/api/admin/finance', financeRouter);
+    console.log('🏦 Finance Admin routes mounted at /api/admin/finance');
+} catch (e) {
+    console.warn('⚠️ Finance routes not available:', e && e.message ? e.message : e);
+}
+
+// Super Admin routes
+try {
+    const adminRouter = require('./routes/admin');
+    if (typeof adminRouter.setPool === 'function') adminRouter.setPool(pool);
+    app.use('/api/admin', adminRouter);
+    console.log('🛡️ Super Admin routes mounted at /api/admin');
+} catch (e) {
+    console.warn('⚠️ Admin routes not available:', e && e.message ? e.message : e);
 }
 
 // Debug endpoint
@@ -379,22 +619,31 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-    console.log('SIGTERM received, closing server gracefully...');
-    await pool.end();
-    process.exit(0);
-});
+// Prevent premature exit
 
 // Start server
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log('🚀 TradeMatch API Server Started');
-    console.log(`📍 Port: ${PORT}`);
-    console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
-    console.log('🔗 Database: Connected');
-    console.log('🔐 OAuth: Google & Microsoft ready');
-    console.log('');
-});
+
+try {
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log('🚀 TradeMatch API Server Started');
+        console.log(`📍 Port: ${PORT}`);
+        console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+        console.log('🔗 Database: Connected');
+        console.log('🔐 OAuth: Google & Microsoft ready');
+        console.log('');
+    });
+
+    server.on('error', (err) => {
+        console.error('❌ Server error:', err.message, err.code);
+        if (err.code === 'EADDRINUSE') {
+            console.error(`Port ${PORT} is already in use`);
+        }
+        process.exit(1);
+    });
+} catch (err) {
+    console.error('❌ Fatal server error:', err);
+    process.exit(1);
+}
 
 module.exports = app;

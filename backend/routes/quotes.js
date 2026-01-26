@@ -299,6 +299,36 @@ router.get('/', async (req, res) => {
 });
 
 // ==========================================
+// GET QUOTES BY CUSTOMER
+// ==========================================
+router.get('/customer/:customerId', authenticate, async (req, res) => {
+  try {
+    const { customerId } = req.params;
+
+    if (req.user.userId !== customerId) {
+      return res.status(403).json({ error: 'Not authorized to view these quotes' });
+    }
+
+    const result = await pool.query(
+      `SELECT q.*
+       FROM quotes q
+       WHERE q.customer_id = $1
+       ORDER BY q.created_at DESC`,
+      [customerId]
+    );
+
+    res.json({
+      success: true,
+      quotes: result.rows,
+      count: result.rows.length
+    });
+  } catch (error) {
+    console.error('Get customer quotes error:', error);
+    res.status(500).json({ error: 'Failed to fetch customer quotes', details: error.message });
+  }
+});
+
+// ==========================================
 // GET SINGLE QUOTE
 // ==========================================
 router.get('/:id', async (req, res) => {

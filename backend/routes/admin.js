@@ -152,6 +152,139 @@ router.get('/activity', async (req, res) => {
     }
 });
 
+/**
+ * GET /api/admin/charts
+ * Get chart data for dashboard (time series + user type breakdown)
+ */
+router.get('/charts', async (req, res) => {
+    try {
+        const { period = '30d' } = req.query;
+
+        const days = period === '7d' ? 7 : period === '90d' ? 90 : period === '1y' ? 365 : 30;
+        const endDate = new Date();
+        endDate.setHours(23, 59, 59, 999);
+
+        const startDate = new Date(endDate);
+        startDate.setDate(startDate.getDate() - (days - 1));
+        startDate.setHours(0, 0, 0, 0);
+
+        const labels = [];
+        const dayIndex = new Map();
+
+        for (let i = 0; i < days; i++) {
+            const d = new Date(startDate);
+            d.setDate(startDate.getDate() + i);
+            const key = d.toISOString().slice(0, 10);
+            labels.push(d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }));
+            dayIndex.set(key, i);
+        }
+
+        const initSeries = () => new Array(days).fill(0);
+        const usersSeries = initSeries();
+        const jobsSeries = initSeries();
+        const quotesSeries = initSeries();
+        const revenueSeries = initSeries();
+
+        const safeQuery = async (sql, params) => {
+            try {
+                return await pool.query(sql, params);
+            } catch (error) {
+                console.warn('Chart query failed:', error.message);
+                return { rows: [] };
+            }
+        };
+
+        const assignSeries = (rows, target) => {
+            rows.forEach(row => {
+                const dayValue = row.day instanceof Date ? row.day.toISOString().slice(0, 10) : String(row.day);
+                const idx = dayIndex.get(dayValue);
+                if (idx !== undefined) {
+                    target[idx] = parseInt(row.count || 0);
+                }
+            });
+        };
+
+        const assignRevenue = (rows, target) => {
+            rows.forEach(row => {
+                const dayValue = row.day instanceof Date ? row.day.toISOString().slice(0, 10) : String(row.day);
+                const idx = dayIndex.get(dayValue);
+                if (idx !== undefined) {
+                    target[idx] = parseFloat(row.amount || 0);
+                }
+            });
+        };
+
+        const usersResult = await safeQuery(
+            `SELECT DATE(created_at) as day, COUNT(*)::int as count
+             FROM users
+             WHERE created_at >= $1
+             GROUP BY day
+             ORDER BY day`,
+            [startDate]
+        );
+        assignSeries(usersResult.rows, usersSeries);
+
+        const jobsResult = await safeQuery(
+            `SELECT DATE(created_at) as day, COUNT(*)::int as count
+             FROM jobs
+             WHERE created_at >= $1
+             GROUP BY day
+             ORDER BY day`,
+            [startDate]
+        );
+        assignSeries(jobsResult.rows, jobsSeries);
+
+        const quotesResult = await safeQuery(
+            `SELECT DATE(created_at) as day, COUNT(*)::int as count
+             FROM quotes
+             WHERE created_at >= $1
+             GROUP BY day
+             ORDER BY day`,
+            [startDate]
+        );
+        assignSeries(quotesResult.rows, quotesSeries);
+
+        const revenueResult = await safeQuery(
+            `SELECT DATE(created_at) as day, COALESCE(SUM(amount), 0)::float as amount
+             FROM payments
+             WHERE status = 'paid' AND created_at >= $1
+             GROUP BY day
+             ORDER BY day`,
+            [startDate]
+        );
+        assignRevenue(revenueResult.rows, revenueSeries);
+
+        const roleResult = await safeQuery(
+            `SELECT COALESCE(role, user_type) as role, COUNT(*)::int as count
+             FROM users
+             GROUP BY COALESCE(role, user_type)`
+        );
+
+        const userTypes = { customers: 0, vendors: 0, admins: 0 };
+        roleResult.rows.forEach(row => {
+            const role = String(row.role || '').toLowerCase();
+            if (role === 'customer') userTypes.customers += parseInt(row.count || 0);
+            else if (role === 'vendor') userTypes.vendors += parseInt(row.count || 0);
+            else if (role === 'admin' || role === 'super_admin') userTypes.admins += parseInt(row.count || 0);
+        });
+
+        res.json({
+            success: true,
+            charts: {
+                labels,
+                users: usersSeries,
+                jobs: jobsSeries,
+                quotes: quotesSeries,
+                revenue: revenueSeries,
+                userTypes
+            }
+        });
+    } catch (error) {
+        console.error('Charts data error:', error);
+        res.status(500).json({ error: 'Failed to fetch chart data' });
+    }
+});
+
 // ============================================================
 // USER MANAGEMENT
 // ============================================================
@@ -450,16 +583,31 @@ router.post('/vendors/:vendorId/reject', async (req, res) => {
  */
 router.get('/reviews/pending', async (req, res) => {
     try {
+        const columnsResult = await pool.query(
+            `SELECT column_name
+             FROM information_schema.columns
+             WHERE table_name = 'job_reviews'`
+        );
+        const columnSet = new Set(columnsResult.rows.map(row => row.column_name));
+
+        const hasModerationStatus = columnSet.has('moderation_status');
+        const commentColumn = columnSet.has('comment')
+            ? 'r.comment'
+            : (columnSet.has('feedback') ? 'r.feedback' : 'NULL');
+        const moderationFilter = hasModerationStatus
+            ? "r.moderation_status = 'pending'"
+            : 'COALESCE(r.is_moderated, false) = false';
+
         const result = await pool.query(
             `SELECT 
-                r.id, r.rating, r.comment, r.created_at,
+                r.id, r.rating, ${commentColumn} AS comment, r.created_at,
                 r.job_id, r.customer_id, r.vendor_id,
                 c.full_name as customer_name,
                 v.full_name as vendor_name
              FROM job_reviews r
              JOIN users c ON r.customer_id = c.id
              JOIN users v ON r.vendor_id = v.id
-             WHERE r.moderation_status = 'pending'
+             WHERE ${moderationFilter}
              ORDER BY r.created_at ASC`
         );
         
@@ -485,14 +633,30 @@ router.patch('/reviews/:reviewId/moderate', async (req, res) => {
             return res.status(400).json({ error: 'Invalid action' });
         }
         
-        const moderationStatus = action === 'approve' ? 'approved' : action === 'hide' ? 'hidden' : 'removed';
-        
-        await pool.query(
-            `UPDATE job_reviews 
-             SET moderation_status = $1, moderated_at = NOW(), moderated_by = $2
-             WHERE id = $3`,
-            [moderationStatus, req.user.userId, reviewId]
+        const columnsResult = await pool.query(
+            `SELECT column_name
+             FROM information_schema.columns
+             WHERE table_name = 'job_reviews'`
         );
+        const columnSet = new Set(columnsResult.rows.map(row => row.column_name));
+
+        if (columnSet.has('moderation_status')) {
+            const moderationStatus = action === 'approve' ? 'approved' : action === 'hide' ? 'hidden' : 'removed';
+            await pool.query(
+                `UPDATE job_reviews 
+                 SET moderation_status = $1, moderated_at = NOW(), moderated_by = $2
+                 WHERE id = $3`,
+                [moderationStatus, req.user.userId, reviewId]
+            );
+        } else {
+            const isApproved = action === 'approve';
+            await pool.query(
+                `UPDATE job_reviews 
+                 SET is_moderated = true, is_approved = $1, moderation_reason = $2
+                 WHERE id = $3`,
+                [isApproved, reason || null, reviewId]
+            );
+        }
         
         // Log admin action
         await pool.query(
@@ -506,6 +670,48 @@ router.patch('/reviews/:reviewId/moderate', async (req, res) => {
     } catch (error) {
         console.error('Review moderation error:', error);
         res.status(500).json({ error: 'Failed to moderate review' });
+    }
+});
+
+// ============================================================
+// BIDS
+// ============================================================
+
+/**
+ * GET /api/admin/bids
+ * List bids with quote and user context
+ */
+router.get('/bids', async (req, res) => {
+    try {
+        const { status, limit = 50, offset = 0 } = req.query;
+        const params = [];
+        let sql = `
+            SELECT b.*, 
+                   q.title AS quote_title,
+                   q.service_type,
+                   q.customer_id,
+                   cu.full_name AS customer_name,
+                   vu.full_name AS vendor_name
+            FROM bids b
+            LEFT JOIN quotes q ON b.quote_id = q.id
+            LEFT JOIN users cu ON q.customer_id = cu.id
+            LEFT JOIN users vu ON b.vendor_id = vu.id
+        `;
+
+        if (status) {
+            params.push(status);
+            sql += ` WHERE b.status = $${params.length}`;
+        }
+
+        params.push(parseInt(limit, 10));
+        params.push(parseInt(offset, 10));
+        sql += ` ORDER BY b.created_at DESC LIMIT $${params.length - 1} OFFSET $${params.length}`;
+
+        const result = await pool.query(sql, params);
+        res.json({ success: true, bids: result.rows });
+    } catch (error) {
+        console.error('Admin bids error:', error);
+        res.status(500).json({ error: 'Failed to fetch bids' });
     }
 });
 
@@ -613,7 +819,7 @@ router.post('/admins', async (req, res) => {
             return res.status(400).json({ error: 'Email already in use' });
         }
         
-        const bcrypt = require('bcryptjs');
+        const bcrypt = require('bcrypt');
         const hashedPassword = await bcrypt.hash(temporary_password, 10);
         const userId = require('crypto').randomUUID();
         
@@ -699,7 +905,7 @@ router.post('/change-password', async (req, res) => {
         }
         
         // Verify current password
-        const bcrypt = require('bcryptjs');
+        const bcrypt = require('bcrypt');
         const isValidPassword = await bcrypt.compare(current_password, userResult.rows[0].password_hash);
         if (!isValidPassword) {
             return res.status(401).json({ error: 'Current password is incorrect' });
@@ -725,7 +931,14 @@ router.post('/change-password', async (req, res) => {
         
     } catch (error) {
         console.error('Password change error:', error);
-        res.status(500).json({ error: 'Failed to change password' });
+        const details = process.env.NODE_ENV === 'production'
+            ? undefined
+            : (error && error.message ? error.message : String(error));
+
+        res.status(500).json({
+            error: 'Failed to change password',
+            ...(details ? { details } : {})
+        });
     }
 });
 

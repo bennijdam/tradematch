@@ -72,9 +72,9 @@ class LeadPricingService {
 
             const result = await this.pool.query(
                 `SELECT base_price FROM lead_pricing_tiers
-                 WHERE min_budget <= $1 
-                   AND (max_budget IS NULL OR max_budget >= $1)
-                 ORDER BY min_budget DESC
+                                 WHERE budget_min <= $1 
+                                     AND (budget_max IS NULL OR budget_max >= $1)
+                                 ORDER BY budget_min DESC
                  LIMIT 1`,
                 [budget]
             );

@@ -7,12 +7,24 @@
     "build": "echo 'No build step needed - static HTML'",
     "start": "python -m http.server 8080",
     "test:smoke": "node scripts/smoke-test.js",
-    "test:security": "node scripts/security-check.js"
+    "test:security": "node scripts/security-check.js",
+    "test:ui-smoke": "node scripts/ui-smoke.js"
   },
-  "keywords": ["trades", "uk", "quotes", "tradespeople", "home-improvement"],
+  "keywords": [
+    "trades",
+    "uk",
+    "quotes",
+    "tradespeople",
+    "home-improvement"
+  ],
   "author": "TradeMatch Team",
   "license": "MIT",
   "devDependencies": {
+    "playwright": "1.50.1",
     "serve": "14.2.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "pg": "^8.17.2"
   }
 }

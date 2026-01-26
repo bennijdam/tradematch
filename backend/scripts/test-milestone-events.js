@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require') ? true : false
 });
 
 const JWT_SECRET = process.env.JWT_SECRET || 'tradematch_jwt_secret_2024_secure_key_generate_a_long_random_string_here_change_in_production';

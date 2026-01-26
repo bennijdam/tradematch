@@ -186,13 +186,13 @@ class LeadSystemIntegrationService {
         try {
             await this.pool.query(
                 `INSERT INTO lead_analytics_daily (
-                    customer_id, service_type, quality_score, quality_tier,
-                    estimated_lead_cost, vendor_count_offered, 
-                    location, created_at
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
-                ON CONFLICT (customer_id, DATE(created_at)) 
+                    customer_id, analytics_date, service_type, quality_score, quality_tier,
+                    estimated_lead_cost, vendor_count_offered,
+                    location, leads_posted, created_at
+                ) VALUES ($1, CURRENT_DATE, $2, $3, $4, $5, $6, $7, 1, NOW())
+                ON CONFLICT (customer_id, analytics_date)
                 DO UPDATE SET
-                    leads_posted = leads_posted + 1`,
+                    leads_posted = lead_analytics_daily.leads_posted + 1`,
                 [
                     quote.customer_id,
                     quote.serviceType,

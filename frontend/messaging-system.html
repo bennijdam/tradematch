@@ -97,6 +97,63 @@
         .nav-links a:hover {
             color: var(--slate);
         }
+
+        .profile-menu {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+
+        .profile-button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .profile-initials {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--slate);
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 14px;
+            color: #0f172a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .profile-dropdown a:hover {
+            background: #f1f5f9;
+        }
+
+        .profile-dropdown.is-open {
+            display: block;
+        }
         
         .btn {
             padding: 12px 28px;
@@ -416,6 +473,7 @@
             .content-section { padding: 60px 24px; }
         }
     </style>
+    <link rel="stylesheet" href="/frontend/profile-menu.css">
 </head>
 <body>
 
@@ -428,7 +486,15 @@
                 <a href="/about.html">About</a>
                 <a href="/contact.html">Contact</a>
                 <a href="/help.html">Help</a>
-                <a href="/customer-login.html" class="btn btn-primary">Sign In</a>
+                <div class="profile-menu">
+                    <button class="profile-button" id="profileButton" aria-haspopup="true" aria-expanded="false">
+                        <span class="profile-initials" id="profileInitials">TM</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <a href="/frontend/email-preferences.html" role="menuitem">User Settings</a>
+                        <a href="#" id="logoutLink" role="menuitem">Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -758,73 +824,111 @@
         sendButton.addEventListener('click', sendMessage);
 
         function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
+            sendMessageToApi();
+        }
 
-            const messagesArea = document.getElementById('messagesArea');
-            const messageHTML = `
-                <div class="message sent">
-                    <div class="message-avatar">YO</div>
-                    <div class="message-content">
-                        <div class="message-bubble">
-                            <div class="message-text">${text}</div>
-                        </div>
-                        <div class="message-meta">
-                            <span>${getCurrentTime()}</span>
-                            <div class="message-status">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </div>
-                        </div>
+        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+        let activeConversationId = null;
+        let currentUserId = null;
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            if (!token) return null;
+            return { Authorization: `Bearer ${token}` };
+        }
+
+        async function fetchJson(path, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            };
+            const res = await fetch(`${API_BASE}${path}`, {
+                ...options,
+                headers
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Request failed');
+            return data;
+        }
+
+        function renderConversationItem(convo) {
+            const item = document.createElement('div');
+            item.className = 'conversation-item';
+            item.dataset.conversationId = convo.id;
+            item.innerHTML = `
+                <div class="conversation-avatar">TM</div>
+                <div class="conversation-content">
+                    <div class="conversation-header">
+                        <span class="conversation-name">${convo.job_id}</span>
+                        <span class="conversation-time">${convo.status}</span>
                     </div>
+                    <div class="conversation-preview">${convo.conversation_type}</div>
                 </div>
             `;
 
-            const typingIndicator = document.querySelector('.typing-indicator');
-            messagesArea.insertBefore(
-                createElementFromHTML(messageHTML),
-                typingIndicator
-            );
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                activeConversationId = convo.id;
+                loadConversation(convo.id);
+            });
+            return item;
+        }
+
+        async function loadConversations() {
+            const headers = getAuthHeaders();
+            if (!headers) return;
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = '';
+            const data = await fetchJson('/api/messaging/conversations', { headers });
+            data.conversations.forEach(convo => list.appendChild(renderConversationItem(convo)));
+        }
+
+        function renderMessage(message) {
+            const isSent = message.sender_id === currentUserId;
+            const wrapper = document.createElement('div');
+            wrapper.className = `message ${isSent ? 'sent' : ''}`;
+            const body = message.is_deleted ? '<em>Message deleted</em>' : (message.body || '');
+            wrapper.innerHTML = `
+                <div class="message-avatar">${isSent ? 'ME' : 'TM'}</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="message-text">${body}</div>
+                    </div>
+                    <div class="message-meta">
+                        <span>${new Date(message.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                </div>
+            `;
+            return wrapper;
+        }
+
+        async function loadConversation(conversationId) {
+            const headers = getAuthHeaders();
+            if (!headers) return;
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = '';
+            const data = await fetchJson(`/api/messaging/conversations/${conversationId}/messages`, { headers });
+            data.messages.forEach(msg => messagesArea.appendChild(renderMessage(msg)));
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        async function sendMessageToApi() {
+            const text = messageInput.value.trim();
+            if (!text || !activeConversationId) return;
+            const headers = getAuthHeaders();
+            if (!headers) return;
+
+            await fetchJson(`/api/messaging/conversations/${activeConversationId}/messages`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ body: text, message_type: 'text' })
+            });
 
             messageInput.value = '';
             messageInput.style.height = 'auto';
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-
-            // In production, send to WebSocket/API
-            sendToBackend(text);
+            await loadConversation(activeConversationId);
         }
-
-        function createElementFromHTML(htmlString) {
-            const div = document.createElement('div');
-            div.innerHTML = htmlString.trim();
-            return div.firstChild;
-        }
-
-        function getCurrentTime() {
-            const now = new Date();
-            return now.toLocaleTimeString('en-US', { 
-                hour: 'numeric', 
-                minute: '2-digit',
-                hour12: true 
-            });
-        }
-
-        // Conversation switching
-        document.querySelectorAll('.conversation-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.conversation-item').forEach(i => {
-                    i.classList.remove('active');
-                });
-                this.classList.add('active');
-                this.classList.remove('unread');
-                const badge = this.querySelector('.unread-badge');
-                if (badge) badge.remove();
-
-                // Load conversation (in production, fetch from API)
-                loadConversation(this.dataset.conversationId);
-            });
-        });
 
         // Search functionality
         document.getElementById('searchInput').addEventListener('input', function(e) {
@@ -840,30 +944,58 @@
             });
         });
 
-        // Simulate WebSocket connection
-        function initializeWebSocket() {
-            // In production:
-            // const ws = new WebSocket('wss://api.tradematch.com/ws');
-            // ws.onmessage = handleIncomingMessage;
-            console.log('WebSocket initialized (demo mode)');
-        }
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                currentUserId = storedUser.id || null;
+                await loadConversations();
+            } catch (error) {
+                console.error('Failed to initialize messaging UI', error);
+            }
 
-        function sendToBackend(message) {
-            // In production:
-            // ws.send(JSON.stringify({ type: 'message', text: message }));
-            console.log('Sending message:', message);
-        }
+            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+            const profileInitials = document.getElementById('profileInitials');
+            if (profileInitials) {
+                const name = storedUser.fullName || storedUser.name || storedUser.email || 'User';
+                const initials = name.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase();
+                profileInitials.textContent = initials || 'TM';
+            }
 
-        function loadConversation(conversationId) {
-            // In production: fetch(`/api/messages/${conversationId}`)
-            console.log('Loading conversation:', conversationId);
-        }
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (profileButton && profileDropdown) {
+                profileButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const isOpen = profileDropdown.classList.toggle('is-open');
+                    profileButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
 
-        // Scroll to bottom on load
-        window.addEventListener('DOMContentLoaded', function() {
-            const messagesArea = document.getElementById('messagesArea');
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-            initializeWebSocket();
+                document.addEventListener('click', (event) => {
+                    if (!profileDropdown.contains(event.target) && !profileButton.contains(event.target)) {
+                        profileDropdown.classList.remove('is-open');
+                        profileButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/frontend/auth-login.html';
+                });
+            }
+
+            document.querySelectorAll('.logout-link').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/frontend/auth-login.html';
+                });
+            });
         });
     </script>
 
@@ -890,7 +1022,7 @@
                     <ul>
                         <li><a href="/vendor-register.html">Join as a Trade</a></li>
                         <li><a href="/vendor-login.html">Trade Login</a></li>
-                        <li><a href="/vendor-dashboard.html">Dashboard</a></li>
+                        <li><a href="#" class="logout-link">Logout</a></li>
                     </ul>
                 </div>
                 
@@ -911,5 +1043,6 @@
         </div>
     </footer>
 
+    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>
