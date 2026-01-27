@@ -53,6 +53,9 @@ function openOAuthPopup(url) {
 
 function resolveReturnTo(value) {
     if (value && value.startsWith(FRONTEND_BASE)) {
+        if (value.includes('/frontend/auth-login.html')) {
+            return FRONTEND_BASE;
+        }
         return value;
     }
     return FRONTEND_BASE;
@@ -169,7 +172,7 @@ async function loginWithGoogle() {
         }
         
         // Store return URL for callback redirect
-        const defaultReturnTo = `${FRONTEND_BASE}/frontend/auth-login.html`;
+        const defaultReturnTo = FRONTEND_BASE;
         const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         
@@ -196,7 +199,7 @@ async function loginWithMicrosoft() {
         }
         
         // Store return URL for callback redirect
-        const defaultReturnTo = `${FRONTEND_BASE}/frontend/auth-login.html`;
+        const defaultReturnTo = FRONTEND_BASE;
         const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         
