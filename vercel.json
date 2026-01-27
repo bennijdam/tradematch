@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "outputDirectory": "frontend",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     {
       "source": "/(.*)",
@@ -8,55 +11,6 @@
       "permanent": true
     }
   ],
-  "builds": [
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/admin-login",
-      "destination": "/frontend/admin-login.html"
-    },
-    {
-      "source": "/admin-dashboard",
-      "destination": "/frontend/admin-dashboard.html"
-    },
-    {
-      "source": "/admin-users",
-      "destination": "/frontend/admin-users.html"
-    },
-    {
-      "source": "/admin-vendors",
-      "destination": "/frontend/admin-vendors.html"
-    },
-    {
-      "source": "/admin-reviews",
-      "destination": "/frontend/admin-reviews.html"
-    },
-    {
-      "source": "/admin-audit",
-      "destination": "/frontend/admin-audit.html"
-    },
-    {
-      "source": "/admin-admins",
-      "destination": "/frontend/admin-admins.html"
-    },
-    {
-      "source": "/admin-password-change",
-      "destination": "/frontend/admin-password-change.html"
-    },
-    {
-      "source": "/admin-api.js",
-      "destination": "/frontend/admin-api.js"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/frontend/:path*"
-    }
-  ],
-  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
