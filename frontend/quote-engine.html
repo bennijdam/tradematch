@@ -2189,11 +2189,13 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
         function goLogin() {
             persistProgress(pendingSubmissionData || {});
+            localStorage.setItem('quoteAutoSubmit', '1');
             window.location.href = 'auth-login.html?redirect=quote-engine.html';
         }
 
         function goRegister() {
             persistProgress(pendingSubmissionData || {});
+            localStorage.setItem('quoteAutoSubmit', '1');
             window.location.href = 'auth-register.html?redirect=quote-engine.html';
         }
 
@@ -2315,6 +2317,15 @@ I'm happy to discuss the project in more detail and answer any questions to help
         // Initialize
         restoreProgress();
         updateStep();
+
+        const autoSubmitFlag = localStorage.getItem('quoteAutoSubmit');
+        if (autoSubmitFlag && localStorage.getItem('token')) {
+            const saved = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            if (saved.formData) {
+                localStorage.removeItem('quoteAutoSubmit');
+                submitAuthenticated(saved.formData);
+            }
+        }
     </script>
 
     <!-- Footer -->
@@ -2323,6 +2334,6 @@ I'm happy to discuss the project in more detail and answer any questions to help
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
-    <script src="/frontend/profile-menu.js"></script>
+    <script src="/profile-menu.js"></script>
 </body>
 </html>

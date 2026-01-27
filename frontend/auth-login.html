@@ -1056,8 +1056,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         // Show success
         showNotification('Login successful! Redirecting...', 'success');
         
-        // Redirect based on user type
+        // Redirect based on user type or explicit redirect
         setTimeout(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect');
+            if (redirect) {
+                window.location.href = redirect;
+                return;
+            }
             window.location.href = data.user.userType === 'customer' 
                 ? 'customer-dashboard.html' 
                 : 'vendor-dashboard.html';

@@ -520,6 +520,59 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
 // QUOTES API ROUTES
 // ==========================================
 
+// Create new quote (public guest)
+app.post("/api/quotes/public", async (req, res) => {
+  try {
+    const {
+      serviceType,
+      title,
+      description,
+      postcode,
+      budgetMin,
+      budgetMax,
+      urgency,
+      additionalDetails
+    } = req.body;
+
+    if (!serviceType || !title || !description || !postcode) {
+      return res.status(400).json({
+        error: 'Missing required fields: serviceType, title, description, postcode'
+      });
+    }
+
+    const quoteId = 'QT' + crypto.randomBytes(6).toString('hex');
+
+    await pool.query(
+      `INSERT INTO quotes
+       (id, customer_id, service_type, title, description, postcode, budget_min, budget_max, urgency, status, additional_details)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', $10)`,
+      [
+        quoteId,
+        null,
+        serviceType,
+        title,
+        description,
+        postcode,
+        budgetMin || null,
+        budgetMax || null,
+        urgency || 'asap',
+        additionalDetails ? JSON.stringify(additionalDetails) : null
+      ]
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: 'Quote created successfully',
+      quote: { id: quoteId }
+    });
+  } catch (error) {
+    console.error('❌ Guest quote error:', error);
+    res.status(500).json({
+      error: 'Failed to create quote: ' + error.message
+    });
+  }
+});
+
 // Create new quote (protected - requires authentication)
 app.post("/api/quotes", authenticateToken, async (req, res) => {
   try {
