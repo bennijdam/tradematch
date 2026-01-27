@@ -2,6 +2,8 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 
+const GOOGLE_CALLBACK_FALLBACK = 'https://tradematch.onrender.com/auth/google/callback';
+
 let pool;
 
 module.exports = {
@@ -14,7 +16,7 @@ module.exports = {
         passport.use(new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
+            callbackURL: process.env.GOOGLE_CALLBACK_URL || GOOGLE_CALLBACK_FALLBACK,
             scope: ['profile', 'email']
         }, async (accessToken, refreshToken, profile, done) => {
             try {

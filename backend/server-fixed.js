@@ -7,6 +7,7 @@ const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "sk_test_dummy");
+const passport = require('passport');
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use(cors({
 app.options('*', cors());
 
 app.use(express.json());
+app.use(passport.initialize());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -116,6 +118,25 @@ try {
     console.log("✉️  Email service routes mounted at /api/email");
 } catch (e) {
     console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
+}
+
+// OAuth routes
+try {
+  const googleAuthRoutes = require('./routes/google-auth');
+  if (typeof googleAuthRoutes.setPool === 'function') googleAuthRoutes.setPool(pool);
+  app.use('/auth', googleAuthRoutes);
+  console.log('🔐 Google OAuth routes mounted at /auth');
+} catch (e) {
+  console.warn('⚠️ Google OAuth routes not available:', e && e.message ? e.message : e);
+}
+
+try {
+  const microsoftAuthRoutes = require('./routes/microsoft-auth');
+  if (typeof microsoftAuthRoutes.setPool === 'function') microsoftAuthRoutes.setPool(pool);
+  app.use('/auth', microsoftAuthRoutes);
+  console.log('🔐 Microsoft OAuth routes mounted at /auth');
+} catch (e) {
+  console.warn('⚠️ Microsoft OAuth routes not available:', e && e.message ? e.message : e);
 }
 
 // Stripe Webhooks
