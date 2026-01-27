@@ -31,6 +31,15 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+const FRONTEND_BASE = 'https://www.tradematch.uk';
+
+function resolveReturnTo(value) {
+    if (value && value.startsWith(FRONTEND_BASE)) {
+        return value;
+    }
+    return FRONTEND_BASE;
+}
+
 // Form Submission
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -102,11 +111,11 @@ async function loginWithGoogle() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = urlParams.get('returnTo') || window.location.origin;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const googleAuthUrl = 'https://api.tradematch.uk/auth/google?returnTo=' + encodeURIComponent(returnTo);
+        const googleAuthUrl = 'https://tradematch.onrender.com/auth/google?returnTo=' + encodeURIComponent(returnTo);
         window.location.href = googleAuthUrl;
         
     } catch (error) {
@@ -128,11 +137,11 @@ async function loginWithMicrosoft() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = urlParams.get('returnTo') || window.location.origin;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = 'https://api.tradematch.uk/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
+        const microsoftAuthUrl = 'https://tradematch.onrender.com/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
         window.location.href = microsoftAuthUrl;
         
     } catch (error) {
@@ -168,7 +177,7 @@ function handleOAuthCallback() {
             
             // Redirect based on user role
             setTimeout(() => {
-                const returnTo = localStorage.getItem('oauthReturnTo') || window.location.origin;
+                const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
                 
                 if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
                     window.location.href = returnTo + '/vendor-dashboard.html?source=google';

@@ -743,7 +743,13 @@
     </footer>
 
     <script>
-        const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+        const isLocal = window.location.protocol === 'file:' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+
+        const API_BASE = isLocal
+            ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+            : 'https://tradematch.onrender.com';
         let currentConversationId = null;
         let allConversations = [];
         let currentUser = null;

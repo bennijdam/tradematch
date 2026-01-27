@@ -3,6 +3,8 @@ const passport = require('passport');
 const router = express.Router();
 const microsoftAuth = require('../config/microsoft-oauth');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://www.tradematch.uk';
+
 let pool;
 
 // Set pool for database access
@@ -22,7 +24,7 @@ microsoftAuth.initialize();
 router.get('/microsoft', (req, res, next) => {
     const { returnTo } = req.query;
     const state = JSON.stringify({
-        returnTo: returnTo || process.env.FRONTEND_URL,
+        returnTo: returnTo || FRONTEND_URL,
         timestamp: Date.now()
     });
     
@@ -38,7 +40,7 @@ router.get('/microsoft', (req, res, next) => {
  * @access   Public
  */
 router.get('/microsoft/callback', passport.authenticate('microsoft', { 
-    failureRedirect: `${process.env.FRONTEND_URL}/auth-login?error=microsoft_failed`,
+    failureRedirect: `${FRONTEND_URL}/auth-login?error=microsoft_failed`,
     session: false 
 }), async (req, res) => {
     try {
@@ -46,10 +48,10 @@ router.get('/microsoft/callback', passport.authenticate('microsoft', {
         const token = microsoftAuth.generateToken(req.user);
         
         // Get redirect URL from state
-        let returnTo = process.env.FRONTEND_URL;
+        let returnTo = FRONTEND_URL;
         try {
             const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            returnTo = state.returnTo || process.env.FRONTEND_URL;
+            returnTo = state.returnTo || FRONTEND_URL;
         } catch (error) {
             console.warn('Failed to parse OAuth state:', error);
         }
@@ -73,7 +75,7 @@ router.get('/microsoft/callback', passport.authenticate('microsoft', {
         
     } catch (error) {
         console.error('Microsoft OAuth callback error:', error);
-        res.redirect(`${process.env.FRONTEND_URL}/auth-login?error=microsoft_callback_failed`);
+        res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_callback_failed`);
     }
 });
 

@@ -4,12 +4,16 @@
  */
 
 // API Configuration - Update this with your Render backend URL
+const isLocal = window.location.protocol === 'file:' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
 const API_CONFIG = {
     // Development: localhost
-    // Production: your Render URL
-    BASE_URL: window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001' 
-        : 'https://tradematch.onrender.com', // <-- Production backend
+    // Production: Render backend
+    BASE_URL: isLocal
+        ? 'http://localhost:3001'
+        : 'https://tradematch.onrender.com',
     
     ENDPOINTS: {
         // Authentication

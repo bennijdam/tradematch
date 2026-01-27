@@ -3,6 +3,8 @@ const passport = require('passport');
 const router = express.Router();
 const googleAuth = require('../config/google-oauth');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://www.tradematch.uk';
+
 let pool;
 
 // Set pool for database access
@@ -22,7 +24,7 @@ googleAuth.initialize();
 router.get('/google', (req, res, next) => {
     const { returnTo } = req.query;
     const state = JSON.stringify({
-        returnTo: returnTo || process.env.FRONTEND_URL,
+        returnTo: returnTo || FRONTEND_URL,
         timestamp: Date.now()
     });
     
@@ -38,7 +40,7 @@ router.get('/google', (req, res, next) => {
  * @access   Public
  */
 router.get('/google/callback', passport.authenticate('google', { 
-    failureRedirect: `${process.env.FRONTEND_URL}/auth-login?error=oauth_failed`,
+    failureRedirect: `${FRONTEND_URL}/auth-login?error=oauth_failed`,
     session: false 
 }), async (req, res) => {
     try {
@@ -46,10 +48,10 @@ router.get('/google/callback', passport.authenticate('google', {
         const token = googleAuth.generateToken(req.user);
         
         // Get redirect URL from state
-        let returnTo = process.env.FRONTEND_URL;
+        let returnTo = FRONTEND_URL;
         try {
             const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            returnTo = state.returnTo || process.env.FRONTEND_URL;
+            returnTo = state.returnTo || FRONTEND_URL;
         } catch (error) {
             console.warn('Failed to parse OAuth state:', error);
         }
@@ -73,7 +75,7 @@ router.get('/google/callback', passport.authenticate('google', {
         
     } catch (error) {
         console.error('Google OAuth callback error:', error);
-        res.redirect(`${process.env.FRONTEND_URL}/auth-login?error=callback_failed`);
+        res.redirect(`${FRONTEND_URL}/auth-login?error=callback_failed`);
     }
 });
 

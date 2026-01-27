@@ -10,7 +10,7 @@ const isLocal = window.location.protocol === 'file:' ||
 const API_CONFIG = {
     BASE_URL: isLocal
         ? 'http://localhost:3001'
-        : 'https://tradematch.onrender.com',
+        : 'https://api.tradematch.uk',
     ENDPOINTS: {
         // Stats
         STATS: '/api/admin/stats',

@@ -925,7 +925,21 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-const API_BASE = localStorage.getItem('apiBase') || 'http://localhost:3001';
+const FRONTEND_BASE = 'https://www.tradematch.uk';
+const isLocal = window.location.protocol === 'file:' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
+const API_BASE = isLocal
+    ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+    : 'https://tradematch.onrender.com';
+
+function resolveReturnTo(value) {
+    if (value && value.startsWith(FRONTEND_BASE)) {
+        return value;
+    }
+    return FRONTEND_BASE;
+}
 
 // Form Submission
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -1010,7 +1024,7 @@ async function loginWithGoogle() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = urlParams.get('returnTo') || window.location.origin;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
@@ -1036,7 +1050,7 @@ async function loginWithMicrosoft() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = urlParams.get('returnTo') || window.location.origin;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
@@ -1076,7 +1090,7 @@ function handleOAuthCallback() {
             
             // Redirect based on user role
             setTimeout(() => {
-                const returnTo = localStorage.getItem('oauthReturnTo') || window.location.origin;
+                const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
                 
                 if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
                     window.location.href = returnTo + '/vendor-dashboard.html?source=google';

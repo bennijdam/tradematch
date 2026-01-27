@@ -60,9 +60,19 @@ app.use(helmet({
 app.use(compression());
 
 // CORS configuration
+const productionOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const defaultProductionOrigins = [
+    'https://www.tradematch.uk',
+    'https://tradematch.uk'
+];
+
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production' 
-        ? (process.env.CORS_ORIGINS || '').split(',').map(o => o.trim())
+    origin: process.env.NODE_ENV === 'production'
+        ? (productionOrigins.length ? productionOrigins : defaultProductionOrigins)
         : "*",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

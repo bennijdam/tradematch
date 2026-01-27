@@ -813,6 +813,242 @@
             margin-bottom: 2rem;
         }
 
+        /* Auth Save Modal */
+        .auth-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: authFadeIn 0.2s ease;
+            z-index: 10001;
+        }
+
+        .auth-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes authFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: authSlideUp 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes authSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate-500);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .auth-modal-close:hover {
+            background: #f3f4f6;
+            color: var(--slate-900);
+        }
+
+        .auth-modal-header {
+            padding: 40px 32px 24px;
+            text-align: center;
+        }
+
+        .auth-modal-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .auth-modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-modal-subtitle {
+            font-size: 15px;
+            color: var(--slate-600);
+            line-height: 1.6;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .auth-modal-body {
+            padding: 0 32px 32px;
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .auth-button-primary {
+            background: var(--emerald-500);
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .auth-button-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .auth-button-secondary {
+            background: #f9fafb;
+            color: var(--slate-900);
+            border: 1.5px solid var(--slate-200);
+            margin-bottom: 12px;
+        }
+
+        .auth-button-secondary:hover {
+            background: #ffffff;
+            border-color: #d1d5db;
+        }
+
+        .auth-button-ghost {
+            background: transparent;
+            color: var(--slate-600);
+            padding: 12px 24px;
+        }
+
+        .auth-button-ghost:hover {
+            background: #f9fafb;
+            color: var(--slate-900);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            color: var(--slate-500);
+            font-size: 13px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--slate-200);
+        }
+
+        .auth-feature-list {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .auth-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--slate-600);
+        }
+
+        .auth-feature-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--emerald-600);
+            flex-shrink: 0;
+        }
+
+        .auth-progress-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .auth-progress-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            transition: all 0.3s;
+        }
+
+        .auth-progress-dot.active {
+            background: var(--emerald-500);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 640px) {
+            .auth-modal {
+                border-radius: 20px 20px 0 0;
+                position: fixed;
+                bottom: 0;
+                max-width: 100%;
+            }
+
+            .auth-modal-header {
+                padding: 32px 24px 20px;
+            }
+
+            .auth-modal-body {
+                padding: 0 24px 32px;
+            }
+
+            .auth-modal-title {
+                font-size: 22px;
+            }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .nav-container {
@@ -1353,18 +1589,74 @@
     </div>
 
     <!-- Auth Prompt Modal -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <h2 style="margin-bottom:0.5rem;">Save your job</h2>
-            <p style="color: var(--slate-600); margin-bottom:1rem;">Log in or create an account to keep this request and track bids. We saved your form.</p>
-            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.75rem;">
-                <button class="btn btn-primary" onclick="goLogin()">Login & Continue</button>
-                <button class="btn btn-secondary" style="background:white; border:1px solid var(--slate-200); color:var(--slate-700);" onclick="goRegister()">Create Account & Continue</button>
+    <div class="auth-modal-overlay" id="authModalOverlay">
+        <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+            <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="auth-modal-header">
+                <div class="auth-modal-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h2 class="auth-modal-title" id="authModalTitle">Save your job request</h2>
+                <p class="auth-modal-subtitle">
+                    Create an account to track bids, message tradespeople, and manage your projects in one place.
+                </p>
             </div>
-            <div style="text-align:center; margin-top:0.75rem;">
-                <button class="btn btn-secondary" style="background:#f8fafc; color:var(--slate-700); border:1px solid var(--slate-200);" onclick="submitGuest(pendingSubmissionData)">Post as Guest</button>
+
+            <div class="auth-modal-body">
+                <button class="auth-button auth-button-primary" onclick="goLogin()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Login & Continue
+                </button>
+
+                <button class="auth-button auth-button-secondary" onclick="goRegister()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Create Account & Continue
+                </button>
+
+                <div class="auth-divider">or</div>
+
+                <button class="auth-button auth-button-ghost" onclick="submitGuest(pendingSubmissionData)">
+                    Post as Guest
+                </button>
+
+                <div class="auth-feature-list">
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Track quotes and messages in real-time</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Compare tradespeople side-by-side</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Secure payment protection included</span>
+                    </div>
+                </div>
+
+                <div class="auth-progress-dots">
+                    <div class="auth-progress-dot"></div>
+                    <div class="auth-progress-dot"></div>
+                    <div class="auth-progress-dot active"></div>
+                </div>
             </div>
-            <button class="btn btn-secondary" style="margin-top:1rem; background:white; color:var(--slate-600); border:1px solid var(--slate-200); width:100%;" onclick="closeAuthModal()">Close</button>
         </div>
     </div>
 
@@ -1873,12 +2165,27 @@ I'm happy to discuss the project in more detail and answer any questions to help
         }
 
         function openAuthModal() {
-            document.getElementById('authModal').classList.add('active');
+            document.getElementById('authModalOverlay').classList.add('active');
         }
 
         function closeAuthModal() {
-            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('authModalOverlay').classList.remove('active');
         }
+
+        const authModalOverlay = document.getElementById('authModalOverlay');
+        if (authModalOverlay) {
+            authModalOverlay.addEventListener('click', (event) => {
+                if (event.target === authModalOverlay) {
+                    closeAuthModal();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeAuthModal();
+            }
+        });
 
         function goLogin() {
             persistProgress(pendingSubmissionData || {});

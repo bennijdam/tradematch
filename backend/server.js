@@ -65,6 +65,8 @@ const envOrigins = (process.env.CORS_ORIGINS || '')
     .filter(Boolean);
 
 const defaultAllowedOrigins = [
+    'https://www.tradematch.uk',
+    'https://tradematch.uk',
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3002',
