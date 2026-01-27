@@ -4,8 +4,13 @@
   "description": "TradeMatch Frontend - Modern UK Trade Services Platform",
   "scripts": {
     "dev": "python -m http.server 8080",
-    "build": "echo 'No build step needed - static HTML'",
+    "build": "node scripts/vercel-clean.js && echo 'No build step needed - static HTML'",
     "start": "python -m http.server 8080",
+    "seo:generate:main": "node generate-pages.js main-pages",
+    "seo:generate:locations": "node generate-pages.js location-pages",
+    "seo:generate:all": "node generate-pages.js all-pages",
+    "seo:sync:s3": "powershell -ExecutionPolicy Bypass -File scripts\\sync-seo-s3.ps1",
+    "seo:sync:s3:sh": "bash scripts/sync-seo-s3.sh",
     "test:smoke": "node scripts/smoke-test.js",
     "test:security": "node scripts/security-check.js",
     "test:ui-smoke": "node scripts/ui-smoke.js"

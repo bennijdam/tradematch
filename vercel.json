@@ -3,6 +3,48 @@
   "outputDirectory": "frontend",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/services",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/services/index.html"
+    },
+    {
+      "source": "/services/:service",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/services/:service/index.html"
+    },
+    {
+      "source": "/services/:service/:path*",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/services/:service/:path*"
+    },
+    {
+      "source": "/locations",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/locations/index.html"
+    },
+    {
+      "source": "/locations/:location",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/locations/:location/index.html"
+    },
+    {
+      "source": "/locations/:path*",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/locations/:path*"
+    },
+    {
+      "source": "/sitemaps/:path*",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/sitemaps/:path*"
+    },
+    {
+      "source": "/sitemap-index.xml",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/sitemap-index.xml"
+    },
+    {
+      "source": "/seo/:path*",
+      "destination": "https://tradematch-storage.s3.ap-southeast-2.amazonaws.com/SEO%20pages/:path*"
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",
