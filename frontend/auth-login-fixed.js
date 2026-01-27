@@ -33,12 +33,70 @@ function showNotification(message, type = 'success') {
 
 const FRONTEND_BASE = 'https://www.tradematch.uk';
 
+function openOAuthPopup(url) {
+    const width = 520;
+    const height = 640;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const popup = window.open(
+        url,
+        'tradematch_oauth',
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+    if (!popup) {
+        window.location.href = url;
+        return null;
+    }
+    popup.focus();
+    return popup;
+}
+
 function resolveReturnTo(value) {
     if (value && value.startsWith(FRONTEND_BASE)) {
         return value;
     }
     return FRONTEND_BASE;
 }
+
+function processOAuthToken(token, source) {
+    localStorage.setItem('token', token);
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userData = {
+            id: payload.userId,
+            email: payload.email,
+            userType: payload.userType || payload.user_type || 'null',
+            authProvider: source || 'google'
+        };
+
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('lastEmail', payload.email);
+
+        showNotification(`Successfully logged in with ${source || 'OAuth'}!`, 'success');
+
+        const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
+
+        if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
+            window.location.href = returnTo + '/vendor-dashboard.html?source=google';
+        } else if (userData.userType === 'customer') {
+            window.location.href = returnTo + '/customer-dashboard.html?source=google';
+        } else {
+            window.location.href = returnTo + '/auth-select-role.html?token=' + token + '&source=google';
+        }
+    } catch (decodeError) {
+        console.error('JWT decode error:', decodeError);
+        showNotification('Login successful, but failed to get user data', 'error');
+    }
+}
+
+window.addEventListener('message', (event) => {
+    if (event.origin !== window.location.origin) return;
+    const { type, token, source } = event.data || {};
+    if (type === 'oauth' && token) {
+        processOAuthToken(token, source);
+    }
+});
 
 // Form Submission
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -111,12 +169,13 @@ async function loginWithGoogle() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
+        const defaultReturnTo = `${FRONTEND_BASE}/frontend/auth-login.html`;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
         const googleAuthUrl = 'https://tradematch.onrender.com/auth/google?returnTo=' + encodeURIComponent(returnTo);
-        window.location.href = googleAuthUrl;
+        openOAuthPopup(googleAuthUrl);
         
     } catch (error) {
         console.error('Google login error:', error);
@@ -137,12 +196,13 @@ async function loginWithMicrosoft() {
         }
         
         // Store return URL for callback redirect
-        const returnTo = resolveReturnTo(urlParams.get('returnTo'));
+        const defaultReturnTo = `${FRONTEND_BASE}/frontend/auth-login.html`;
+        const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
         const microsoftAuthUrl = 'https://tradematch.onrender.com/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
-        window.location.href = microsoftAuthUrl;
+        openOAuthPopup(microsoftAuthUrl);
         
     } catch (error) {
         console.error('Microsoft login error:', error);
@@ -157,43 +217,12 @@ function handleOAuthCallback() {
     const source = urlParams.get('source');
     
     if (token) {
-        // Store token and user data
-        localStorage.setItem('token', token);
-        
-        // Decode JWT to get user info (basic)
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const userData = {
-                id: payload.userId,
-                email: payload.email,
-                userType: payload.userType || payload.user_type || 'null',
-                authProvider: source || 'google'
-            };
-            
-            localStorage.setItem('user', JSON.stringify(userData));
-            localStorage.setItem('lastEmail', payload.email);
-            
-            showNotification(`Successfully logged in with ${source || 'OAuth'}!`, 'success');
-            
-            // Redirect based on user role
-            setTimeout(() => {
-                const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
-                
-                if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
-                    window.location.href = returnTo + '/vendor-dashboard.html?source=google';
-                } else if (userData.userType === 'customer') {
-                    window.location.href = returnTo + '/customer-dashboard.html?source=google';
-                } else {
-                    // No role assigned, redirect to role selection
-                    window.location.href = returnTo + '/auth-select-role.html?token=' + token + '&source=google';
-                }
-            }, 1000);
-            
-        } catch (decodeError) {
-            console.error('JWT decode error:', decodeError);
-            showNotification('Login successful, but failed to get user data', 'error');
+        if (window.opener && !window.opener.closed) {
+            window.opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
+            window.close();
+            return;
         }
-        
+        processOAuthToken(token, source);
     } else if (urlParams.get('error')) {
         const error = urlParams.get('error');
         const source = urlParams.get('source') || 'OAuth';
