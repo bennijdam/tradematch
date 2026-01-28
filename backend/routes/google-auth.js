@@ -56,16 +56,8 @@ router.get('/google/callback', passport.authenticate('google', {
             console.warn('Failed to parse OAuth state:', error);
         }
         
-        // Determine redirect based on user role
-        let redirectUrl;
-        if (req.user.user_type === 'vendor' || req.user.user_type === 'tradesperson') {
-            redirectUrl = `${returnTo}/vendor-dashboard.html?token=${token}&source=google`;
-        } else if (req.user.user_type === 'customer') {
-            redirectUrl = `${returnTo}/customer-dashboard.html?token=${token}&source=google`;
-        } else {
-            // No role assigned, redirect to role selection
-            redirectUrl = `${returnTo}/auth-select-role.html?token=${token}&source=google`;
-        }
+        // Redirect to auth-login so the opener can store token and navigate in the original tab
+        const redirectUrl = `${returnTo}/auth-login?token=${token}&source=google`;
         
         // Log successful OAuth login
         console.log(`Google OAuth login successful: ${req.user.email} (${req.user.user_type || 'no role'})`);
