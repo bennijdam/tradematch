@@ -42,7 +42,7 @@ app.use(helmet({
         directives: {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
-            scriptSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
             imgSrc: ["'self'", "data:", "https:"],
         }
     },
@@ -87,6 +87,24 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Initialize passport
 app.use(passport.initialize());
+
+// Serve frontend static assets
+const frontendPath = path.join(__dirname, '../frontend');
+app.use('/frontend', express.static(frontendPath, {
+    setHeaders: (res, filePath) => {
+        const ext = path.extname(filePath).toLowerCase();
+        if (ext === '.css') {
+            res.setHeader('Content-Type', 'text/css; charset=utf-8');
+        } else if (ext === '.js') {
+            res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        }
+    }
+}));
+
+// Serve root landing page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 // General rate limiting
 const generalLimiter = rateLimit({
