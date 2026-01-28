@@ -945,7 +945,7 @@
          * - Auth: JWT stored in localStorage (`token`) and user in `user`
          * - Data: `dashboardQuotes[]` cached with embedded `bids[]` for render and comparisons
          * - UI: Section filtering via simple tab state; loaders and error messages per view
-         * - Network: `fetch()` with Authorization header; endpoints on https://tradematch.onrender.com
+         * - Network: `fetch()` with Authorization header; endpoints on https://api.tradematch.uk
          * - Transitions: Business rules drive status changes; e.g., bid acceptance → job in_progress
          *
          * Example API Endpoints (Customer scope):
@@ -1026,7 +1026,7 @@
 
         const API_BASE = isLocal
             ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
-            : 'https://tradematch.onrender.com';
+            : 'https://api.tradematch.uk';
 
         // Load Dashboard Data
         // Business Rule: Only confirmed/live quotes are surfaced to vendors; drafts remain private.

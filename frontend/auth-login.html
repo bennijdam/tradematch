@@ -932,7 +932,7 @@ const isLocal = window.location.protocol === 'file:' ||
 
 const API_BASE = isLocal
     ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
-    : 'https://tradematch.onrender.com';
+    : 'https://api.tradematch.uk';
 
 function resolveReturnTo(value) {
     if (value && value.startsWith(FRONTEND_BASE)) {
@@ -1322,7 +1322,7 @@ document.getElementById('resendActivationBtn').addEventListener('click', async f
         btnText.style.display = 'none';
         btnLoader.style.display = 'inline';
         
-        const response = await fetch('https://tradematch.onrender.com/api/auth/resend-activation', {
+        const response = await fetch('https://api.tradematch.uk/api/auth/resend-activation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })

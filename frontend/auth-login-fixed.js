@@ -129,7 +129,7 @@ async function submitPendingQuoteIfAny(token) {
     };
 
     try {
-        const response = await fetch('https://tradematch.onrender.com/api/quotes', {
+        const response = await fetch('https://api.tradematch.uk/api/quotes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
         
         // Real API call to backend
-        const response = await fetch('https://tradematch.onrender.com/api/auth/login', {
+        const response = await fetch('https://api.tradematch.uk/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, userType: currentUserType })
@@ -278,7 +278,7 @@ async function loginWithGoogle() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const googleAuthUrl = 'https://tradematch.onrender.com/auth/google?returnTo=' + encodeURIComponent(returnTo);
+        const googleAuthUrl = 'https://api.tradematch.uk/auth/google?returnTo=' + encodeURIComponent(returnTo);
         openOAuthPopup(googleAuthUrl);
         
     } catch (error) {
@@ -305,7 +305,7 @@ async function loginWithMicrosoft() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = 'https://tradematch.onrender.com/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
+        const microsoftAuthUrl = 'https://api.tradematch.uk/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
         openOAuthPopup(microsoftAuthUrl);
         
     } catch (error) {

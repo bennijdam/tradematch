@@ -13,7 +13,7 @@ const API_CONFIG = {
     // Production: Render backend
     BASE_URL: isLocal
         ? 'http://localhost:3001'
-        : 'https://tradematch.onrender.com',
+        : 'https://api.tradematch.uk',
     
     ENDPOINTS: {
         // Authentication

@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const API_BASE = process.env.API_BASE || 'https://tradematch.onrender.com';
+const API_BASE = process.env.API_BASE || 'https://api.tradematch.uk';
 const EMAIL_TO = process.env.EMAIL_TO || null;
 const PASSWORD = process.env.TEST_PASSWORD || 'SmokeTest123!';
 const EXISTING_CUSTOMER_EMAIL = process.env.EXISTING_CUSTOMER_EMAIL || null;

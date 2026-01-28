@@ -1,5 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 const EmailService = require('../services/email.service');
@@ -67,13 +69,49 @@ router.post('/public', [
   try {
     const quoteId = `quote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
+    const guestDetails = additionalDetails || {};
+    const guestEmailRaw = (guestDetails.email || '').trim().toLowerCase();
+    const guestEmail = guestEmailRaw || `guest_${quoteId}@guest.tradematch.uk`;
+    const guestName = (guestDetails.name || 'Guest Customer').trim();
+    const guestPhone = (guestDetails.phone || '').trim() || null;
+
+    let customerId;
+    const existingUser = await pool.query(
+      'SELECT id FROM users WHERE email = $1',
+      [guestEmail]
+    );
+
+    if (existingUser.rows.length) {
+      customerId = existingUser.rows[0].id;
+    } else {
+      customerId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 8)}`;
+      const tempPassword = crypto.randomBytes(24).toString('hex');
+      const passwordHash = await bcrypt.hash(tempPassword, 10);
+
+      await pool.query(
+        `INSERT INTO users (
+          id, email, password_hash, name, full_name, user_type, phone, postcode, email_verified, status
+        ) VALUES ($1, $2, $3, $4, $5, 'customer', $6, $7, false, 'active')`,
+        [
+          customerId,
+          guestEmail,
+          passwordHash,
+          guestName,
+          guestName,
+          guestPhone,
+          postcode
+        ]
+      );
+    }
+
     await pool.query(
       `INSERT INTO quotes (
         id, customer_id, service_type, title, description, postcode,
         budget_min, budget_max, urgency, additional_details, photos, status
-      ) VALUES ($1, NULL, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'open')`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'open')`,
       [
         quoteId,
+        customerId,
         serviceType,
         title,
         description,

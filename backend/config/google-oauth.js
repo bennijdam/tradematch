@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
-const GOOGLE_CALLBACK_FALLBACK = 'https://tradematch.onrender.com/auth/google/callback';
+const GOOGLE_CALLBACK_FALLBACK = 'https://api.tradematch.uk/auth/google/callback';
 
 let userColumnsCache = null;
 

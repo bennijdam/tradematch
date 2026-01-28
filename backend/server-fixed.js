@@ -367,7 +367,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 
     // Send activation email
     try {
-      await axios.post('https://tradematch.onrender.com/api/email/activation', {
+      await axios.post('https://api.tradematch.uk/api/email/activation', {
         email: user.email,
         fullName: user.name,
         token: activationToken
