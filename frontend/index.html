@@ -14,38 +14,54 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G06GFRVJPL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-G06GFRVJPL');
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap"></noscript>
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+        <!-- Google tag (gtag.js) -->
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+
+            const loadAnalytics = () => {
+                if (window.__gtagLoaded) return;
+                window.__gtagLoaded = true;
+                const gtagScript = document.createElement('script');
+                gtagScript.async = true;
+                gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-G06GFRVJPL';
+                document.head.appendChild(gtagScript);
+                gtag('js', new Date());
+                gtag('config', 'G-G06GFRVJPL');
+            };
+
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(loadAnalytics, { timeout: 2000 });
+            } else {
+                window.addEventListener('load', loadAnalytics);
+            }
       
-      // Enhanced tracking for marketplace
-      function trackQuoteRequest(service) {
-        gtag('event', 'quote_request', {
-          service_category: service,
-          location: window.location.pathname
-        });
-      }
+            // Enhanced tracking for marketplace
+            function trackQuoteRequest(service) {
+                gtag('event', 'quote_request', {
+                    service_category: service,
+                    location: window.location.pathname
+                });
+            }
       
-      function trackLogin(method) {
-        gtag('event', 'login', {
-          method: method,
-          location: 'auth'
-        });
-      }
+            function trackLogin(method) {
+                gtag('event', 'login', {
+                    method: method,
+                    location: 'auth'
+                });
+            }
       
-      function trackRegistration() {
-        gtag('event', 'registration', {
-          method: 'oauth',
-          location: 'auth'
-        });
-      }
-    </script>
+            function trackRegistration() {
+                gtag('event', 'registration', {
+                    method: 'oauth',
+                    location: 'auth'
+                });
+            }
+        </script>
     <link rel="sitemap" type="application/xml" href="https://www.tradematch.uk/sitemap.xml">
     <style>
         :root {
@@ -514,6 +530,8 @@
         .how-it-works {
             padding: 100px 0;
             background: var(--white);
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 900px;
         }
         
         .section-header {
@@ -588,6 +606,8 @@
         .services-section {
             padding: 100px 0;
             background: var(--gray-50);
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 900px;
         }
         
         .services-grid {
@@ -637,6 +657,8 @@
         .trust-section {
             padding: 100px 0;
             background: var(--white);
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 900px;
         }
         
         .trust-grid {
@@ -1388,6 +1410,6 @@ function handleQuickSearch(event) {
             lastScroll = currentScroll;
         });
     </script>
-    <script src="/profile-menu.js"></script>
+    <script src="/profile-menu.js" defer></script>
 </body>
 </html>
