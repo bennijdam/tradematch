@@ -1,7 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { Pool } = require("pg");
+const pg = require("pg");
+const { Pool } = pg;
+const originalPgEmit = pg.Client.prototype.emit;
+pg.Client.prototype.emit = function (event, ...args) {
+  if (event === 'error') {
+    console.error('❌ Postgres client error:', args[0]?.message || args[0]);
+    return true;
+  }
+  return originalPgEmit.call(this, event, ...args);
+};
 const crypto = require("crypto");
 const axios = require("axios");
 const bcrypt = require("bcrypt");
