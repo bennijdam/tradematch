@@ -1005,7 +1005,7 @@ app.post("/api/bids", authenticateToken, async (req, res) => {
       return res.status(403).json({ error: 'Only vendors can submit bids' });
     }
 
-    const vendorId = req.user.userId;
+    const vendorUserId = req.user.userId;
     const {
       quoteId,
       price,
@@ -1035,6 +1035,34 @@ app.post("/api/bids", authenticateToken, async (req, res) => {
 
     if (quote.status !== 'open') {
       return res.status(400).json({ error: 'This quote is no longer accepting bids' });
+    }
+
+    let vendorId = vendorUserId;
+    const existingVendor = await pool.query(
+      'SELECT id FROM vendors WHERE user_id = $1 OR id = $1 LIMIT 1',
+      [vendorUserId]
+    );
+
+    if (existingVendor.rows.length > 0) {
+      vendorId = existingVendor.rows[0].id;
+    } else {
+      const userResult = await pool.query(
+        'SELECT name, email FROM users WHERE id = $1',
+        [vendorUserId]
+      );
+      const user = userResult.rows[0] || {};
+      const companyName = user.name || user.email || 'TradeMatch Vendor';
+      const serviceType = quote.service_type || req.body.serviceType || req.body.service || 'general';
+
+      const insertVendor = await pool.query(
+        `INSERT INTO vendors (id, user_id, company_name, service_type, status, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, 'active', NOW(), NOW())
+         RETURNING id`,
+        [vendorUserId, vendorUserId, companyName, serviceType]
+      );
+
+      vendorId = insertVendor.rows[0].id;
+      console.log('✅ Created vendor profile for user:', vendorUserId, 'vendor:', vendorId);
     }
 
     // Check if vendor already bid on this quote
