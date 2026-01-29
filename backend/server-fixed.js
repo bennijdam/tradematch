@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 const pg = require("pg");
 const { Pool } = pg;
@@ -17,6 +18,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "sk_test_dummy");
 const passport = require('passport');
+const {
+  apiLimiter,
+  authLimiter,
+  registerLimiter,
+  paymentLimiter,
+  emailLimiter,
+  uploadLimiter
+} = require('./middleware/rate-limit');
 
 dotenv.config();
 
@@ -31,6 +40,18 @@ process.on('unhandledRejection', (reason) => {
 });
 
 app.set("trust proxy", 1);
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"]
+    }
+  },
+  referrerPolicy: { policy: 'no-referrer' },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'same-site' }
+}));
 
 // CORS with allowlist - single origin reflection (no multi-value header)
 const allowedOrigins = process.env.CORS_ORIGINS 
@@ -73,6 +94,9 @@ app.options('*', cors());
 
 app.use(express.json());
 app.use(passport.initialize());
+
+// General rate limiting
+app.use('/api', apiLimiter);
 
 const databaseUrl = process.env.DATABASE_URL;
 const sslmode = (() => {
@@ -164,12 +188,12 @@ const authenticateToken = (req, res, next) => {
 
 // Email service (Resend) - ADD ROUTES
 try {
-    const emailRouter = require('./email-resend');
-    if (typeof emailRouter.setPool === 'function') emailRouter.setPool(pool);
-    app.use('/api/email', emailRouter);
-    console.log("✉️  Email service routes mounted at /api/email");
+  const emailRouter = require('./email-resend');
+  if (typeof emailRouter.setPool === 'function') emailRouter.setPool(pool);
+  app.use('/api/email', emailLimiter, emailRouter);
+  console.log("✉️  Email service routes mounted at /api/email");
 } catch (e) {
-    console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
+  console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
 }
 
 // OAuth routes
@@ -201,6 +225,44 @@ try {
     console.warn('⚠️ Stripe webhooks not available:', e && e.message ? e.message : e);
 }
 
+// Uploads (S3 presigned URLs)
+try {
+  const uploadsRouter = require('./routes/uploads');
+  app.use('/api/uploads', uploadLimiter, uploadsRouter);
+  console.log('📤 Upload routes mounted at /api/uploads');
+} catch (e) {
+  console.warn('⚠️ Upload routes not available:', e && e.message ? e.message : e);
+}
+
+// Credits routes
+try {
+  const creditsRouter = require('./routes/credits')(pool);
+  app.use('/api/credits', creditsRouter);
+  console.log('💰 Credits routes mounted at /api/credits');
+} catch (e) {
+  console.warn('⚠️ Credits routes not available:', e && e.message ? e.message : e);
+}
+
+// Finance Admin routes
+try {
+  const financeRouter = require('./routes/admin-finance');
+  if (typeof financeRouter.setPool === 'function') financeRouter.setPool(pool);
+  app.use('/api/admin/finance', financeRouter);
+  console.log('🏦 Finance Admin routes mounted at /api/admin/finance');
+} catch (e) {
+  console.warn('⚠️ Finance routes not available:', e && e.message ? e.message : e);
+}
+
+// Super Admin routes
+try {
+  const adminRouter = require('./routes/admin');
+  if (typeof adminRouter.setPool === 'function') adminRouter.setPool(pool);
+  app.use('/api/admin', adminRouter);
+  console.log('🛡️ Super Admin routes mounted at /api/admin');
+} catch (e) {
+  console.warn('⚠️ Super Admin routes not available:', e && e.message ? e.message : e);
+}
+
 // Health check
 app.get("/api/health", async (req, res) => {
   try {
@@ -221,7 +283,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 // Registration route - WITH ACTIVATION EMAIL
-app.post("/api/auth/register", async (req, res) => {
+app.post("/api/auth/register", registerLimiter, async (req, res) => {
   try {
     console.log('🔧 Registration attempt:', JSON.stringify(req.body));
     
@@ -455,7 +517,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 });
 
 // Login route - WITH EMAIL VERIFICATION CHECK
-app.post("/api/auth/login", async (req, res) => {
+app.post("/api/auth/login", authLimiter, async (req, res) => {
   try {
     console.log('🔧 Login attempt:', JSON.stringify(req.body));
     
@@ -1899,7 +1961,7 @@ app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
 // ===== PAYMENT API =====
 
 // Create Stripe Payment Intent
-app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
+app.post("/api/payments/create-intent", authenticateToken, paymentLimiter, async (req, res) => {
   try {
     const { bidId, bid_id, quoteId, quote_id, amount } = req.body;
     const customer_id = req.user.userId;
