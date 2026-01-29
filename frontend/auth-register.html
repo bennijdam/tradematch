@@ -33,12 +33,15 @@
             line-height: 1.6;
             color: var(--slate-900);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Background with Image */
@@ -514,6 +517,8 @@
 
             body {
                 padding: 1rem;
+                align-items: stretch;
+                justify-content: flex-start;
             }
 
             .right-side {
