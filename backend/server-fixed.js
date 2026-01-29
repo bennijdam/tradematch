@@ -57,9 +57,29 @@ app.options('*', cors());
 app.use(express.json());
 app.use(passport.initialize());
 
+const databaseUrl = process.env.DATABASE_URL;
+const sslmode = (() => {
+  try {
+    return new URL(databaseUrl).searchParams.get('sslmode') || process.env.PGSSLMODE;
+  } catch (error) {
+    return process.env.PGSSLMODE || null;
+  }
+})();
+
+const useSsl = sslmode
+  ? !['disable', 'allow'].includes(String(sslmode).toLowerCase())
+  : false;
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require') ? true : false,
+  connectionString: databaseUrl,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000,
+  max: 10
+});
+
+pool.on('error', (err) => {
+  console.error('❌ Postgres pool error:', err.message);
 });
 
 pool.connect().then(() => {
