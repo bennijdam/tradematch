@@ -13,6 +13,14 @@ dotenv.config();
 
 const app = express();
 
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught exception:', err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('❌ Unhandled rejection:', reason && reason.message ? reason.message : reason);
+});
+
 app.set("trust proxy", 1);
 
 // CORS with allowlist - single origin reflection (no multi-value header)
