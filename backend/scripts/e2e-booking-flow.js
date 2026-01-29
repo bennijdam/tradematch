@@ -271,7 +271,7 @@ const run = async () => {
         availability: 'Next week'
       })
     });
-    bidId = bid.bidId;
+    bidId = bid.bidId || bid.bid?.id || bid.id;
     assertField('bidId', bidId);
     report.steps.push({ name: 'submit-bid', ok: true, bidId });
     logStep('Bid submitted', bidId);
