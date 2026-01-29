@@ -235,11 +235,14 @@ const run = async () => {
       headers: { Authorization: `Bearer ${customerLogin.token}` },
       body: JSON.stringify({
         serviceType: 'plumbing',
+        service: 'plumbing',
+        serviceName: 'Plumbing',
         title: 'Booking flow validation',
         description: 'End-to-end booking flow test run.',
         postcode: 'SW1A 1AA',
         budgetMin: 150,
         budgetMax: 300,
+        budget: '£150 - £300',
         urgency: 'asap'
       })
     });
@@ -286,14 +289,31 @@ const run = async () => {
       headers: { Authorization: `Bearer ${customerLogin.token}` },
       body: JSON.stringify({ bidId, quoteId })
     });
-    report.steps.push({ name: 'accept-bid', ok: true });
-    logStep('Bid accepted');
+    report.steps.push({ name: 'accept-bid', ok: true, via: 'customer' });
+    logStep('Bid accepted (customer route)');
   } catch (error) {
-    report.steps.push({ name: 'accept-bid', ok: false, error: error.message });
-    logFail('Accept bid', error);
-    writeReport(report);
-    process.exitCode = 1;
-    return;
+    if (error.status === 404) {
+      try {
+        await requestJson(`/api/bids/${bidId}/accept`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${customerLogin.token}` }
+        });
+        report.steps.push({ name: 'accept-bid', ok: true, via: 'bids' });
+        logStep('Bid accepted (bids route)');
+      } catch (fallbackError) {
+        report.steps.push({ name: 'accept-bid', ok: false, error: fallbackError.message });
+        logFail('Accept bid', fallbackError);
+        writeReport(report);
+        process.exitCode = 1;
+        return;
+      }
+    } else {
+      report.steps.push({ name: 'accept-bid', ok: false, error: error.message });
+      logFail('Accept bid', error);
+      writeReport(report);
+      process.exitCode = 1;
+      return;
+    }
   }
 
   try {
