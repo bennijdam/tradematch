@@ -532,7 +532,7 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
 
     // Look up user in database
     const userResult = await pool.query(
-      'SELECT id, user_type, name, email, phone, postcode, email_verified, password_hash FROM users WHERE email = $1',
+      'SELECT id, user_type, role, name, email, phone, postcode, email_verified, password_hash FROM users WHERE email = $1',
       [email]
     );
 
@@ -571,7 +571,8 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
       {
         userId: user.id,
         email: user.email,
-        userType: user.user_type
+        userType: user.user_type,
+        role: user.role
       },
       jwtSecret,
       { expiresIn: '7d' } // Token expires in 7 days
@@ -586,6 +587,7 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
       user: {
         id: user.id,
         userType: user.user_type,
+        role: user.role,
         fullName: user.name,
         email: user.email,
         phone: user.phone,
