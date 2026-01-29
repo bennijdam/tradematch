@@ -227,7 +227,10 @@ app.post("/api/auth/register", async (req, res) => {
 
     // Send activation email
     try {
-      const baseUrl = process.env.BACKEND_URL || 'http://localhost:3001';
+      const baseUrl = process.env.BACKEND_URL
+        || process.env.API_URL
+        || process.env.BASE_URL
+        || 'https://api.tradematch.uk';
       await axios.post(`${baseUrl}/api/email/activation`, {
         email: newUser.email,
         fullName: newUser.name,
@@ -353,7 +356,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
     // Invalidate any existing activation tokens for this user
     await pool.query(
       'UPDATE activation_tokens SET used = true WHERE user_id = $1 AND token_type = $2 AND used = false',
-      [user.id, 'activation']
+      [user.id, 'email_verification']
     );
 
     // Generate new activation token
@@ -362,14 +365,18 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 
     await pool.query(
       'INSERT INTO activation_tokens (user_id, token, token_type, expires_at) VALUES ($1, $2, $3, $4)',
-      [user.id, activationToken, 'activation', expiresAt]
+      [user.id, activationToken, 'email_verification', expiresAt]
     );
 
     // Send activation email
     try {
-      await axios.post('https://api.tradematch.uk/api/email/activation', {
+      const baseUrl = process.env.BACKEND_URL
+        || process.env.API_URL
+        || process.env.BASE_URL
+        || 'https://api.tradematch.uk';
+      await axios.post(`${baseUrl}/api/email/activation`, {
         email: user.email,
-        fullName: user.name,
+        fullName: user.full_name || user.name,
         token: activationToken
       });
 
