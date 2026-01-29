@@ -82,11 +82,14 @@ pool.on('error', (err) => {
   console.error('❌ Postgres pool error:', err.message);
 });
 
-pool.connect().then(() => {
+// Verify DB connectivity without holding a client
+pool.query('SELECT 1')
+  .then(() => {
     console.log("✅ Database connected (Neon / Postgres)");
-}).catch(err => {
+  })
+  .catch(err => {
     console.error("❌ Database connection failed:", err.message);
-});
+  });
 
 // Ensure reviews table exists
 async function ensureReviewsTable() {
