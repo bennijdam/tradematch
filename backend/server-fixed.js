@@ -1669,41 +1669,88 @@ app.post("/api/messages", authenticateToken, async (req, res) => {
         recipient_id INTEGER NOT NULL REFERENCES users(id),
         message_text TEXT NOT NULL,
         is_read BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+      const usersResult = await pool.query(
+        'SELECT id, user_type FROM users WHERE id = ANY($1)',
+        [[sender_id, recipient_id]]
+      );
 
-    // Insert message
-    const result = await pool.query(
-      `INSERT INTO messages (sender_id, recipient_id, message_text, created_at)
-       VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
-       RETURNING *`,
-      [sender_id, recipient_id, message_text]
-    );
+      const sender = usersResult.rows.find(row => row.id === sender_id);
+      const recipient = usersResult.rows.find(row => row.id === recipient_id);
 
-    const message = result.rows[0];
-
-    console.log(`✅ Message sent from user ${sender_id} to user ${recipient_id}`);
-
-    return res.json({
-      success: true,
-      data: {
-        id: message.id,
-        sender_id: message.sender_id,
-        recipient_id: message.recipient_id,
-        message_text: message.message_text,
-        is_read: message.is_read,
-        created_at: message.created_at
+      if (!sender || !recipient) {
+        return res.status(404).json({ error: 'Sender or recipient not found' });
       }
-    });
 
-  } catch (error) {
-    console.error('❌ Message send error:', error);
-    res.status(500).json({ 
-      error: 'Failed to send message: ' + error.message 
-    });
-  }
-});
+      let customerId = null;
+      let vendorId = null;
+
+      if (sender.user_type === 'customer' && recipient.user_type === 'vendor') {
+        customerId = sender_id;
+        vendorId = recipient_id;
+      } else if (sender.user_type === 'vendor' && recipient.user_type === 'customer') {
+        customerId = recipient_id;
+        vendorId = sender_id;
+      } else {
+        return res.status(400).json({ error: 'Messaging requires one customer and one vendor' });
+      }
+
+      let conversationId = null;
+      const convoResult = await pool.query(
+        `SELECT id FROM conversations
+         WHERE customer_id = $1 AND vendor_id = $2
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [customerId, vendorId]
+      );
+
+      if (convoResult.rows.length > 0) {
+        conversationId = convoResult.rows[0].id;
+      } else {
+        const jobId = 'JOB' + crypto.randomBytes(6).toString('hex');
+        await pool.query(
+          `INSERT INTO jobs (id, customer_id, title, created_at)
+           VALUES ($1, $2, $3, NOW())`,
+          [jobId, customerId, 'Messaging thread']
+        );
+
+        conversationId = 'CONV' + crypto.randomBytes(6).toString('hex');
+        await pool.query(
+          `INSERT INTO conversations (id, job_id, customer_id, vendor_id, contact_allowed, created_at, updated_at)
+           VALUES ($1, $2, $3, $4, true, NOW(), NOW())`,
+          [conversationId, jobId, customerId, vendorId]
+        );
+      }
+
+      const messageId = 'MSG' + crypto.randomBytes(6).toString('hex');
+      const insertResult = await pool.query(
+        `INSERT INTO messages (id, conversation_id, sender_id, sender_role, message_type, body, created_at)
+         VALUES ($1, $2, $3, $4, 'text', $5, NOW())
+         RETURNING *`,
+        [messageId, conversationId, sender_id, sender.user_type, message_text]
+      );
+
+      await pool.query(
+        `UPDATE conversations
+         SET last_message_id = $1, last_message_at = NOW(), updated_at = NOW()
+         WHERE id = $2`,
+        [messageId, conversationId]
+      );
+
+      const message = insertResult.rows[0];
+
+      console.log(`✅ Message sent in conversation ${conversationId}`);
+
+      return res.json({
+        success: true,
+        data: {
+          id: message.id,
+          conversation_id: message.conversation_id,
+          sender_id: message.sender_id,
+          sender_role: message.sender_role,
+          body: message.body,
+          created_at: message.created_at
+        }
+      });
 
 // Get messages with a specific user (conversation)
 app.get("/api/messages/conversation/:otherId", authenticateToken, async (req, res) => {
@@ -1731,41 +1778,56 @@ app.get("/api/messages/conversation/:otherId", authenticateToken, async (req, re
        FROM messages m
        JOIN users u ON m.sender_id = u.id
        WHERE (m.sender_id = $1 AND m.recipient_id = $2)
-          OR (m.sender_id = $2 AND m.recipient_id = $1)
-       ORDER BY m.created_at ASC`,
-      [userId, otherId]
-    );
+        const usersResult = await pool.query(
+          'SELECT id, user_type FROM users WHERE id = ANY($1)',
+          [[userId, otherId]]
+        );
 
-    // Mark unread messages as read
-    await pool.query(
-      `UPDATE messages 
-       SET is_read = TRUE
-       WHERE recipient_id = $1 AND sender_id = $2 AND is_read = FALSE`,
-      [userId, otherId]
-    );
+        const current = usersResult.rows.find(row => row.id === userId);
+        const other = usersResult.rows.find(row => row.id === otherId);
 
-    return res.json({
-      success: true,
-      data: result.rows
-    });
+        if (!current || !other) {
+          return res.status(404).json({ error: 'User not found' });
+        }
 
-  } catch (error) {
-    console.error('❌ Get conversation error:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch conversation: ' + error.message 
-    });
-  }
-});
+        let customerId = null;
+        let vendorId = null;
 
-// Get list of conversations (users you've messaged)
-app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId;
+        if (current.user_type === 'customer' && other.user_type === 'vendor') {
+          customerId = userId;
+          vendorId = otherId;
+        } else if (current.user_type === 'vendor' && other.user_type === 'customer') {
+          customerId = otherId;
+          vendorId = userId;
+        } else {
+          return res.status(400).json({ error: 'Conversation requires customer/vendor pair' });
+        }
 
-    // Ensure messages table exists
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS messages (
-        id SERIAL PRIMARY KEY,
+        const convoResult = await pool.query(
+          `SELECT id FROM conversations
+           WHERE customer_id = $1 AND vendor_id = $2
+           ORDER BY created_at DESC
+           LIMIT 1`,
+          [customerId, vendorId]
+        );
+
+        if (convoResult.rows.length === 0) {
+          return res.json({ success: true, messages: [] });
+        }
+
+        const conversationId = convoResult.rows[0].id;
+        const result = await pool.query(
+          `SELECT id, conversation_id, sender_id, sender_role, message_type, body, created_at
+           FROM messages
+           WHERE conversation_id = $1
+           ORDER BY created_at ASC`,
+          [conversationId]
+        );
+
+        return res.json({
+          success: true,
+          messages: result.rows
+        });
         sender_id INTEGER NOT NULL REFERENCES users(id),
         recipient_id INTEGER NOT NULL REFERENCES users(id),
         message_text TEXT NOT NULL,
@@ -1788,48 +1850,27 @@ app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
        SELECT 
          c.other_user_id,
          u.name,
-         u.email,
-         c.last_message_time,
-         COUNT(CASE WHEN m.recipient_id = $1 AND m.is_read = FALSE THEN 1 END) as unread_count,
-         m.message_text as last_message
-       FROM conversations c
-       JOIN users u ON c.other_user_id = u.id
-       LEFT JOIN messages m ON m.id = (c.message_ids[1])
-       GROUP BY c.other_user_id, u.name, u.email, c.last_message_time, m.message_text
-       ORDER BY c.last_message_time DESC`,
-      [userId]
-    );
+          const result = await pool.query(
+            `SELECT c.id as conversation_id,
+                    c.customer_id,
+                    c.vendor_id,
+                    c.last_message_at,
+                    m.body as last_message,
+                    u.id as other_user_id,
+                    u.name,
+                    u.email
+             FROM conversations c
+             LEFT JOIN messages m ON m.id = c.last_message_id
+             JOIN users u ON u.id = CASE WHEN c.customer_id = $1 THEN c.vendor_id ELSE c.customer_id END
+             WHERE c.customer_id = $1 OR c.vendor_id = $1
+             ORDER BY c.last_message_at DESC NULLS LAST, c.created_at DESC`,
+            [userId]
+          );
 
-    return res.json({
-      success: true,
-      data: result.rows
-    });
-
-  } catch (error) {
-    console.error('❌ Get conversations error:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch conversations: ' + error.message 
-    });
-  }
-});
-
-// ===== PAYMENT API =====
-
-// Create Stripe Payment Intent
-app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
-  try {
-    const { bidId, bid_id, quoteId, quote_id, amount } = req.body;
-    const customer_id = req.user.userId;
-    const resolvedBidId = bidId || bid_id || null;
-    const resolvedQuoteId = quoteId || quote_id || null;
-
-    if (!resolvedQuoteId || !amount) {
-      return res.status(400).json({ error: 'quote_id and amount are required' });
-    }
-
-    if (amount < 1) {
-      return res.status(400).json({ error: 'Amount must be at least $1' });
-    }
+          return res.json({
+            success: true,
+            data: result.rows
+          });
 
     let vendor_id = null;
     let finalQuoteId = resolvedQuoteId;
