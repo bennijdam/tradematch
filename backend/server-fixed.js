@@ -1655,7 +1655,7 @@ app.get("/api/reviews/vendor/:vendorId", async (req, res) => {
 app.post("/api/messages", authenticateToken, async (req, res) => {
   try {
     const { recipient_id, message_text } = req.body;
-    const sender_id = req.user.id;
+    const sender_id = req.user.userId;
 
     if (!recipient_id || !message_text) {
       return res.status(400).json({ error: 'recipient_id and message_text are required' });
@@ -1709,7 +1709,7 @@ app.post("/api/messages", authenticateToken, async (req, res) => {
 app.get("/api/messages/conversation/:otherId", authenticateToken, async (req, res) => {
   try {
     const { otherId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     // Ensure messages table exists
     await pool.query(`
@@ -1760,7 +1760,7 @@ app.get("/api/messages/conversation/:otherId", authenticateToken, async (req, re
 // Get list of conversations (users you've messaged)
 app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     // Ensure messages table exists
     await pool.query(`
