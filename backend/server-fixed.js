@@ -1818,53 +1818,56 @@ app.get("/api/messages/conversations", authenticateToken, async (req, res) => {
 // Create Stripe Payment Intent
 app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
   try {
-    const { bid_id, quote_id, amount } = req.body;
-    const customer_id = req.user.id;
+    const { bidId, bid_id, quoteId, quote_id, amount } = req.body;
+    const customer_id = req.user.userId;
+    const resolvedBidId = bidId || bid_id || null;
+    const resolvedQuoteId = quoteId || quote_id || null;
 
-    if (!bid_id || !quote_id || !amount) {
-      return res.status(400).json({ error: 'bid_id, quote_id, and amount are required' });
+    if (!resolvedQuoteId || !amount) {
+      return res.status(400).json({ error: 'quote_id and amount are required' });
     }
 
     if (amount < 1) {
       return res.status(400).json({ error: 'Amount must be at least $1' });
     }
 
-    // Create payments table if it doesn't exist
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS payments (
-        id SERIAL PRIMARY KEY,
-        quote_id INTEGER NOT NULL REFERENCES quotes(id),
-        bid_id INTEGER NOT NULL REFERENCES bids(id),
-        customer_id INTEGER NOT NULL REFERENCES users(id),
-        vendor_id INTEGER NOT NULL REFERENCES users(id),
-        amount INTEGER NOT NULL,
-        currency VARCHAR(3) DEFAULT 'USD',
-        stripe_payment_intent_id VARCHAR(255),
-        status VARCHAR(50) DEFAULT 'pending',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    let vendor_id = null;
+    let finalQuoteId = resolvedQuoteId;
 
-    // Get bid details to find vendor
-    const bidResult = await pool.query(
-      'SELECT vendor_id FROM bids WHERE id = $1 AND status = $2',
-      [bid_id, 'accepted']
-    );
+    if (resolvedBidId) {
+      const bidResult = await pool.query(
+        'SELECT vendor_id, quote_id FROM bids WHERE id = $1 AND status = $2',
+        [resolvedBidId, 'accepted']
+      );
 
-    if (!bidResult.rows[0]) {
-      return res.status(400).json({ error: 'Accepted bid not found' });
+      if (!bidResult.rows[0]) {
+        return res.status(400).json({ error: 'Accepted bid not found' });
+      }
+
+      vendor_id = bidResult.rows[0].vendor_id;
+      finalQuoteId = bidResult.rows[0].quote_id || finalQuoteId;
+    } else {
+      const bidResult = await pool.query(
+        'SELECT vendor_id FROM bids WHERE quote_id = $1 AND status = $2 LIMIT 1',
+        [resolvedQuoteId, 'accepted']
+      );
+
+      if (!bidResult.rows[0]) {
+        return res.status(400).json({ error: 'Accepted bid not found for quote' });
+      }
+
+      vendor_id = bidResult.rows[0].vendor_id;
     }
 
-    const vendor_id = bidResult.rows[0].vendor_id;
+    const currency = (process.env.DEFAULT_CURRENCY || 'GBP').toLowerCase();
 
     // Create Stripe PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
-      currency: 'usd',
+      amount: Math.round(amount * 100), // Convert to smallest currency unit
+      currency,
       metadata: {
-        bid_id: bid_id.toString(),
-        quote_id: quote_id.toString(),
+        bid_id: resolvedBidId ? resolvedBidId.toString() : '',
+        quote_id: finalQuoteId.toString(),
         customer_id: customer_id.toString(),
         vendor_id: vendor_id.toString()
       },
@@ -1874,16 +1877,26 @@ app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
     });
 
     // Store payment record in database
+    const paymentId = 'PAY' + crypto.randomBytes(6).toString('hex');
     const paymentResult = await pool.query(
-      `INSERT INTO payments (quote_id, bid_id, customer_id, vendor_id, amount, stripe_payment_intent_id, status)
-       VALUES ($1, $2, $3, $4, $5, $6, 'pending')
+      `INSERT INTO payments (id, quote_id, customer_id, vendor_id, amount, currency, stripe_payment_intent_id, status, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending', $8)
        RETURNING *`,
-      [quote_id, bid_id, customer_id, vendor_id, Math.round(amount * 100), paymentIntent.id]
+      [
+        paymentId,
+        finalQuoteId,
+        customer_id,
+        vendor_id,
+        Math.round(amount * 100),
+        currency.toUpperCase(),
+        paymentIntent.id,
+        { bidId: resolvedBidId }
+      ]
     );
 
     const payment = paymentResult.rows[0];
 
-    console.log(`✅ Payment intent created: ${paymentIntent.id} for bid ${bid_id}`);
+    console.log(`✅ Payment intent created: ${paymentIntent.id} for quote ${finalQuoteId}`);
 
     return res.json({
       success: true,
@@ -1892,7 +1905,7 @@ app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
         stripe_intent_id: paymentIntent.id,
         client_secret: paymentIntent.client_secret,
         amount: amount,
-        currency: 'USD'
+        currency: currency.toUpperCase()
       }
     });
 
@@ -1901,6 +1914,153 @@ app.post("/api/payments/create-intent", authenticateToken, async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to create payment intent: ' + error.message 
     });
+  }
+});
+
+// ===== MILESTONE API =====
+
+// Create milestones for a quote
+app.post("/api/milestones/create", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId, paymentId, milestones } = req.body;
+
+    if (!quoteId || !Array.isArray(milestones) || milestones.length === 0) {
+      return res.status(400).json({ error: 'quoteId and milestones are required' });
+    }
+
+    let resolvedPaymentId = paymentId;
+    if (!resolvedPaymentId) {
+      const paymentResult = await pool.query(
+        'SELECT id FROM payments WHERE quote_id = $1 ORDER BY created_at DESC LIMIT 1',
+        [quoteId]
+      );
+      resolvedPaymentId = paymentResult.rows[0]?.id || null;
+    }
+
+    const quoteResult = await pool.query(
+      'SELECT customer_id FROM quotes WHERE id = $1',
+      [quoteId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
+
+    if (resolvedPaymentId) {
+      await pool.query('DELETE FROM payment_milestones WHERE payment_id = $1', [resolvedPaymentId]);
+    }
+
+    const created = [];
+    for (let i = 0; i < milestones.length; i += 1) {
+      const milestone = milestones[i];
+      const milestoneId = 'ms_' + crypto.randomBytes(8).toString('hex');
+
+      await pool.query(
+        `INSERT INTO payment_milestones (id, payment_id, name, amount, percentage, status, due_date)
+         VALUES ($1, $2, $3, $4, $5, 'pending', $6)`,
+        [
+          milestoneId,
+          resolvedPaymentId,
+          milestone.title || `Milestone ${i + 1}`,
+          milestone.amount,
+          milestone.percentage || null,
+          milestone.dueDate ? new Date(milestone.dueDate) : null
+        ]
+      );
+
+      created.push({ id: milestoneId, title: milestone.title, amount: milestone.amount });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Milestones created successfully',
+      milestones: created
+    });
+  } catch (error) {
+    console.error('❌ Create milestones error:', error);
+    return res.status(500).json({ error: 'Failed to create milestones: ' + error.message });
+  }
+});
+
+// Get milestones for a quote
+app.get("/api/milestones/quote/:quoteId", authenticateToken, async (req, res) => {
+  try {
+    const { quoteId } = req.params;
+    const paymentResult = await pool.query(
+      'SELECT id FROM payments WHERE quote_id = $1 ORDER BY created_at DESC LIMIT 1',
+      [quoteId]
+    );
+    const paymentId = paymentResult.rows[0]?.id;
+    const result = paymentId
+      ? await pool.query(
+          'SELECT * FROM payment_milestones WHERE payment_id = $1 ORDER BY created_at ASC',
+          [paymentId]
+        )
+      : { rows: [] };
+
+    return res.json({ success: true, milestones: result.rows });
+  } catch (error) {
+    console.error('❌ Get milestones error:', error);
+    return res.status(500).json({ error: 'Failed to get milestones: ' + error.message });
+  }
+});
+
+// Create payment milestones (vendor only)
+app.post("/api/payments/milestones", authenticateToken, async (req, res) => {
+  try {
+    if (req.user.userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can create milestones' });
+    }
+
+    const { paymentId, payment_id, milestones } = req.body;
+    const resolvedPaymentId = paymentId || payment_id;
+
+    if (!resolvedPaymentId || !Array.isArray(milestones)) {
+      return res.status(400).json({ error: 'payment_id and milestones are required' });
+    }
+
+    await pool.query('DELETE FROM payment_milestones WHERE payment_id = $1', [resolvedPaymentId]);
+
+    for (let i = 0; i < milestones.length; i += 1) {
+      const milestone = milestones[i] || {};
+      const milestoneId = 'MS' + crypto.randomBytes(6).toString('hex');
+      const name = milestone.name || milestone.title || `Milestone ${i + 1}`;
+      const amount = milestone.amount;
+      const percentage = milestone.percentage || null;
+      const dueDate = milestone.dueDate || milestone.due_date || null;
+
+      await pool.query(
+        `INSERT INTO payment_milestones (id, payment_id, name, amount, percentage, due_date, status)
+         VALUES ($1, $2, $3, $4, $5, $6, 'pending')`,
+        [milestoneId, resolvedPaymentId, name, amount, percentage, dueDate]
+      );
+    }
+
+    return res.json({
+      success: true,
+      message: 'Milestones created successfully'
+    });
+  } catch (error) {
+    console.error('❌ Create milestones error:', error);
+    res.status(500).json({ error: 'Failed to create milestones: ' + error.message });
+  }
+});
+
+// Get milestones for a payment
+app.get("/api/payments/milestones/:paymentId", authenticateToken, async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const result = await pool.query(
+      'SELECT * FROM payment_milestones WHERE payment_id = $1 ORDER BY created_at ASC',
+      [paymentId]
+    );
+    return res.json({
+      success: true,
+      milestones: result.rows
+    });
+  } catch (error) {
+    console.error('❌ Get milestones error:', error);
+    res.status(500).json({ error: 'Failed to get milestones: ' + error.message });
   }
 });
 
@@ -1995,10 +2155,12 @@ app.post("/api/payments/confirm", authenticateToken, async (req, res) => {
       );
 
       // Keep bid status within allowed values
-      await pool.query(
-        'UPDATE bids SET status = $1 WHERE id = $2',
-        ['accepted', payment.bid_id]
-      );
+      if (payment.vendor_id) {
+        await pool.query(
+          'UPDATE bids SET status = $1 WHERE quote_id = $2 AND vendor_id = $3',
+          ['accepted', payment.quote_id, payment.vendor_id]
+        );
+      }
 
       // Update quote status to 'awarded'
       await pool.query(
@@ -2006,7 +2168,7 @@ app.post("/api/payments/confirm", authenticateToken, async (req, res) => {
         ['awarded', payment.quote_id]
       );
 
-      console.log(`✅ Payment confirmed for bid ${payment.bid_id}`);
+      console.log(`✅ Payment confirmed for quote ${payment.quote_id}`);
 
       return res.json({
         success: true,

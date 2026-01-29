@@ -317,7 +317,9 @@ const run = async () => {
   }
 
   try {
-    const quoteInfo = await requestJson(`/api/quotes/${quoteId}`);
+    const quoteInfo = await requestJson(`/api/quotes/${quoteId}`, {
+      headers: { Authorization: `Bearer ${customerLogin.token}` }
+    });
     const status = quoteInfo.quote?.status;
     report.steps.push({ name: 'quote-status', ok: true, status });
     logStep('Quote status fetched', status);
@@ -341,12 +343,13 @@ const run = async () => {
         headers: { Authorization: `Bearer ${customerLogin.token}` },
         body: JSON.stringify({
           quoteId,
+          bidId,
           amount: 225,
           description: 'Booking flow payment intent'
         })
       });
-      paymentId = payment.paymentId;
-      paymentIntentId = payment.paymentIntentId;
+      paymentId = payment.paymentId || payment.data?.payment_id;
+      paymentIntentId = payment.paymentIntentId || payment.data?.stripe_intent_id;
       assertField('paymentId', paymentId);
       assertField('paymentIntentId', paymentIntentId);
       report.steps.push({ name: 'payment-intent', ok: true, paymentId, paymentIntentId });
@@ -358,11 +361,12 @@ const run = async () => {
   }
 
   try {
-    const milestonesRes = await requestJson('/api/payments/milestones', {
+    const milestonesRes = await requestJson('/api/milestones/create', {
       method: 'POST',
       headers: { Authorization: `Bearer ${vendorLogin.token}` },
       body: JSON.stringify({
         quoteId,
+        paymentId,
         milestones: [
           {
             title: 'Deposit',
@@ -389,8 +393,8 @@ const run = async () => {
   }
 
   try {
-    const milestones = await requestJson(`/api/payments/milestones/${quoteId}`, {
-      headers: { Authorization: `Bearer ${customerLogin.token}` }
+    const milestones = await requestJson(`/api/milestones/quote/${quoteId}`, {
+      headers: { Authorization: `Bearer ${vendorLogin.token}` }
     });
     report.steps.push({ name: 'fetch-milestones', ok: true, count: milestones.milestones?.length || 0 });
     logStep('Milestones fetched', `count=${milestones.milestones?.length || 0}`);
