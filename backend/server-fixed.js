@@ -986,6 +986,17 @@ app.get("/", (req, res) => {
 // BIDS API ROUTES
 // ==========================================
 
+let bidsColumnsCache = null;
+
+const getBidsColumns = async () => {
+  if (bidsColumnsCache) return bidsColumnsCache;
+  const result = await pool.query(
+    `SELECT column_name FROM information_schema.columns WHERE table_name = 'bids'`
+  );
+  bidsColumnsCache = new Set(result.rows.map((row) => row.column_name));
+  return bidsColumnsCache;
+};
+
 // Submit a bid on a quote (vendors only)
 app.post("/api/bids", authenticateToken, async (req, res) => {
   try {
@@ -1039,13 +1050,34 @@ app.post("/api/bids", authenticateToken, async (req, res) => {
     // Generate unique bid ID
     const bidId = 'BID' + crypto.randomBytes(6).toString('hex');
 
+    const columns = await getBidsColumns();
+    const insertColumns = ['id', 'quote_id', 'vendor_id', 'price', 'message', 'status'];
+    const values = [bidId, quoteId, vendorId, price, message, 'pending'];
+
+    if (columns.has('estimated_duration')) {
+      insertColumns.push('estimated_duration');
+      values.push(timeline || req.body.estimatedDuration || null);
+    } else if (columns.has('timeline')) {
+      insertColumns.push('timeline');
+      values.push(timeline || null);
+    }
+
+    if (columns.has('availability')) {
+      insertColumns.push('availability');
+      values.push(req.body.availability || null);
+    } else if (columns.has('start_date')) {
+      insertColumns.push('start_date');
+      values.push(startDate || null);
+    }
+
+    const placeholders = insertColumns.map((_, index) => `$${index + 1}`);
+
     // Insert bid
     const bidResult = await pool.query(
-      `INSERT INTO bids 
-       (id, quote_id, vendor_id, price, message, timeline, start_date, status) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending') 
+      `INSERT INTO bids (${insertColumns.join(', ')})
+       VALUES (${placeholders.join(', ')})
        RETURNING *`,
-      [bidId, quoteId, vendorId, price, message, timeline, startDate]
+      values
     );
 
     const bid = bidResult.rows[0];
@@ -1060,7 +1092,7 @@ app.post("/api/bids", authenticateToken, async (req, res) => {
         quoteId: bid.quote_id,
         price: bid.price,
         message: bid.message,
-        timeline: bid.timeline,
+        timeline: bid.timeline || bid.estimated_duration,
         status: bid.status,
         createdAt: bid.created_at
       }
