@@ -118,7 +118,7 @@ const ensureLogin = async ({ email, password, userType, fullName, postcode, phon
     if (error.status !== 400) {
       throw error;
     }
-    if (!/already exists/i.test(error.message || '')) {
+    if (!/already exists|already registered/i.test(error.message || '')) {
       throw error;
     }
   }
