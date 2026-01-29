@@ -932,7 +932,10 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-const FRONTEND_BASE = 'https://www.tradematch.uk';
+const FRONTEND_BASES = ['https://www.tradematch.uk', 'https://tradematch.uk'];
+const FRONTEND_BASE = FRONTEND_BASES.includes(window.location.origin)
+    ? window.location.origin
+    : FRONTEND_BASES[0];
 const isLocal = window.location.protocol === 'file:' ||
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1';
@@ -942,11 +945,14 @@ const API_BASE = isLocal
     : 'https://api.tradematch.uk';
 
 function resolveReturnTo(value) {
-    if (value && value.startsWith(FRONTEND_BASE)) {
-        if (value.includes('/frontend/auth-login.html')) {
-            return FRONTEND_BASE;
+    if (value) {
+        const allowed = FRONTEND_BASES.find((base) => value.startsWith(base));
+        if (allowed) {
+            if (value.includes('/frontend/auth-login.html')) {
+                return allowed;
+            }
+            return value;
         }
-        return value;
     }
     return FRONTEND_BASE;
 }
@@ -1097,7 +1103,7 @@ async function processOAuthToken(token, source) {
 }
 
 window.addEventListener('message', (event) => {
-    if (event.origin !== window.location.origin) return;
+    if (!FRONTEND_BASES.includes(event.origin)) return;
     const { type, token, source } = event.data || {};
     if (type === 'oauth' && token) {
         processOAuthToken(token, source);

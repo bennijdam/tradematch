@@ -126,10 +126,21 @@ const authLimiter = rateLimit({
 // Apply general rate limiting to all routes
 app.use('/api/', generalLimiter);
 
+const databaseUrl = sanitizeDatabaseUrl(process.env.DATABASE_URL);
+if (!databaseUrl) {
+    logger.error('❌ DATABASE_URL is not set');
+}
+
+const requiresSsl = Boolean(
+    process.env.NODE_ENV === 'production' ||
+    process.env.RENDER === 'true' ||
+    (databaseUrl && /sslmode=require|sslmode=verify-ca|sslmode=verify-full/i.test(databaseUrl))
+);
+
 // Database connection with retry logic
 const pool = new Pool({
-    connectionString: sanitizeDatabaseUrl(process.env.DATABASE_URL),
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    connectionString: databaseUrl,
+    ssl: requiresSsl ? { rejectUnauthorized: false } : false,
     max: 20,
     idleTimeoutMillis: 60000,
     connectionTimeoutMillis: 15000,
@@ -149,7 +160,11 @@ pool.connect()
         logger.info("✅ Database connected successfully");
     })
     .catch(err => {
-        logger.error("❌ Database connection failed", { error: err.message });
+        logger.error("❌ Database connection failed", {
+            error: err.message || 'unknown',
+            code: err.code,
+            detail: err.detail
+        });
         if (process.env.NODE_ENV === 'production') {
             // Don't exit immediately - allow server to start and serve health checks
             logger.warn("⚠️  Server continuing despite DB connection error - will retry on next request");
@@ -183,11 +198,12 @@ app.get("/api/health", async (req, res) => {
             notification
         });
     } catch (err) {
-        logger.error("Health check failed", { error: err.message });
+        const errorMessage = err.message || err.code || 'unknown';
+        logger.error("Health check failed", { error: errorMessage, code: err.code, detail: err.detail });
         res.status(200).json({
             status: "degraded",
             database: "not connected",
-            error: err.message,
+            error: errorMessage,
             uptime: process.uptime(),
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV || 'development',
