@@ -83,11 +83,18 @@ const pool = new Pool({
   ssl: useSsl ? { rejectUnauthorized: false } : false,
   connectionTimeoutMillis: 10000,
   idleTimeoutMillis: 30000,
-  max: 10
+  max: 10,
+  keepAlive: true
 });
 
 pool.on('error', (err) => {
   console.error('❌ Postgres pool error:', err.message);
+});
+
+pool.on('connect', (client) => {
+  client.on('error', (err) => {
+    console.error('❌ Postgres client error:', err.message);
+  });
 });
 
 // Verify DB connectivity without holding a client
