@@ -246,7 +246,7 @@ const run = async () => {
         urgency: 'asap'
       })
     });
-    quoteId = quote.quoteId;
+    quoteId = quote.quoteId || quote.quote?.id || quote.id;
     assertField('quoteId', quoteId);
     report.steps.push({ name: 'create-quote', ok: true, quoteId });
     logStep('Quote created', quoteId);
