@@ -1403,7 +1403,7 @@ app.get("/api/vendors/search", async (req, res) => {
        FROM users u
        LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted')
        LEFT JOIN reviews r ON u.id = r.vendor_id
-       WHERE u.role = 'vendor'
+      WHERE u.user_type = 'vendor' OR u.role = 'vendor'
        GROUP BY u.id, u.name, u.email, u.phone, u.created_at
        ORDER BY average_rating DESC, jobs_completed DESC
        LIMIT 20`
@@ -1456,7 +1456,7 @@ app.get("/api/vendors/:id", async (req, res) => {
        FROM users u
        LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted')
        LEFT JOIN reviews r ON u.id = r.vendor_id
-       WHERE u.id = $1 AND u.role = 'vendor'
+      WHERE u.id = $1 AND (u.user_type = 'vendor' OR u.role = 'vendor')
        GROUP BY u.id, u.name, u.email, u.phone, u.created_at`,
       [id]
     );
