@@ -129,6 +129,11 @@ async function ensureReviewsTable() {
       UNIQUE (customer_id, quote_id)
     )
   `);
+
+  await pool.query(`
+    ALTER TABLE reviews
+    ADD COLUMN IF NOT EXISTS comment TEXT
+  `);
 }
 
 // JWT Authentication Middleware
