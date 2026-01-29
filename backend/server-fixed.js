@@ -336,7 +336,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 
     // Find user by email
     const userResult = await pool.query(
-      'SELECT id, full_name, email, email_verified FROM users WHERE LOWER(email) = LOWER($1)',
+      'SELECT id, full_name, name, email, email_verified FROM users WHERE LOWER(email) = LOWER($1)',
       [email]
     );
 
