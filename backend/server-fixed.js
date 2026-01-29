@@ -848,7 +848,7 @@ app.patch("/api/quotes/:quoteId", authenticateToken, async (req, res) => {
     const { status } = req.body;
 
     // Validate status
-    const validStatuses = ['open', 'closed', 'cancelled', 'in_progress'];
+    const validStatuses = ['open', 'closed', 'awarded', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ 
         error: 'Invalid status. Must be one of: ' + validStatuses.join(', ') 
@@ -1281,10 +1281,10 @@ app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
       ['rejected', bid.quote_id, bidId, 'pending']
     );
 
-    // Update quote status to in_progress
+    // Update quote status to awarded
     await pool.query(
       'UPDATE quotes SET status = $1, updated_at = NOW() WHERE id = $2',
-      ['in_progress', bid.quote_id]
+      ['awarded', bid.quote_id]
     );
 
     // Email notifications: notify vendor their bid was accepted and customer confirmation
@@ -1994,16 +1994,16 @@ app.post("/api/payments/confirm", authenticateToken, async (req, res) => {
         [paymentIntent.status, payment.id]
       );
 
-      // Update bid status to 'paid'
+      // Keep bid status within allowed values
       await pool.query(
         'UPDATE bids SET status = $1 WHERE id = $2',
-        ['paid', payment.bid_id]
+        ['accepted', payment.bid_id]
       );
 
-      // Update quote status to 'in_progress'
+      // Update quote status to 'awarded'
       await pool.query(
         'UPDATE quotes SET status = $1 WHERE id = $2',
-        ['in_progress', payment.quote_id]
+        ['awarded', payment.quote_id]
       );
 
       console.log(`✅ Payment confirmed for bid ${payment.bid_id}`);

@@ -321,8 +321,8 @@ const run = async () => {
     const status = quoteInfo.quote?.status;
     report.steps.push({ name: 'quote-status', ok: true, status });
     logStep('Quote status fetched', status);
-    if (status !== 'accepted') {
-      logWarn('Quote status not accepted', status || 'unknown');
+    if (status && !['accepted', 'awarded'].includes(status)) {
+      logWarn('Quote status not accepted/awarded', status || 'unknown');
     }
   } catch (error) {
     report.steps.push({ name: 'quote-status', ok: false, error: error.message });
