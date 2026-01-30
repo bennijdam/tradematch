@@ -305,9 +305,14 @@ router.get('/users', async (req, res) => {
         
         const offset = (page - 1) * limit;
         
+        const roleExpression = `CASE
+            WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role
+            ELSE COALESCE(user_type, role)
+        END`;
+
         let query = `
             SELECT 
-                id, email, full_name, COALESCE(role, user_type) as role, status, phone,
+                id, email, full_name, ${roleExpression} as role, status, phone,
                 email_verified, phone_verified, created_at, last_login_at
             FROM users
             WHERE 1=1
@@ -326,7 +331,7 @@ router.get('/users', async (req, res) => {
         }
         
         if (role) {
-            query += ` AND COALESCE(role, user_type) = $${paramCount}`;
+            query += ` AND ${roleExpression} = $${paramCount}`;
             params.push(role);
             paramCount++;
         }
@@ -353,7 +358,7 @@ router.get('/users', async (req, res) => {
             countParamNum++;
         }
         if (role) {
-            countQuery += ` AND COALESCE(role, user_type) = $${countParamNum}`;
+            countQuery += ` AND ${roleExpression} = $${countParamNum}`;
             countParams.push(role);
             countParamNum++;
         }
@@ -491,14 +496,15 @@ router.patch('/users/:userId/status', async (req, res) => {
  */
 router.get('/vendors/pending', async (req, res) => {
     try {
-        const result = await pool.query(
-            `SELECT 
-                u.id, u.email, u.full_name, u.phone, u.created_at,
-                u.metadata
-             FROM users u
-             WHERE COALESCE(u.role, u.user_type) = 'vendor' AND u.status = 'pending'
-             ORDER BY u.created_at ASC`
-        );
+                const result = await pool.query(
+                        `SELECT 
+                                u.id, u.email, u.full_name, u.phone, u.created_at,
+                                u.metadata
+                         FROM users u
+                         WHERE (CASE WHEN u.role IN ('admin', 'super_admin', 'finance_admin') THEN u.role ELSE COALESCE(u.user_type, u.role) END) = 'vendor'
+                             AND u.status = 'pending'
+                         ORDER BY u.created_at ASC`
+                );
         
         res.json({ success: true, vendors: result.rows });
         
@@ -520,7 +526,7 @@ router.post('/vendors/:vendorId/approve', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'active', updated_at = NOW()
-             WHERE id = $1 AND COALESCE(role, user_type) = 'vendor'`,
+             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
             [vendorId]
         );
         
@@ -553,7 +559,7 @@ router.post('/vendors/:vendorId/reject', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'rejected', updated_at = NOW()
-             WHERE id = $1 AND COALESCE(role, user_type) = 'vendor'`,
+             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
             [vendorId]
         );
         
