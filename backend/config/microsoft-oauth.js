@@ -21,7 +21,16 @@ module.exports = {
             try {
                 // Extract user info from Microsoft profile
                 const { id, displayName, userPrincipalName, mail } = profile;
-                const email = mail || userPrincipalName;
+                const profileJson = profile?._json || {};
+                const email = mail
+                    || userPrincipalName
+                    || profileJson.email
+                    || profileJson.preferred_username
+                    || profile.emails?.[0]?.value;
+
+                if (!email) {
+                    throw new Error('Microsoft account email unavailable');
+                }
                 const nameParts = displayName ? displayName.split(' ') : ['', ''];
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || '';

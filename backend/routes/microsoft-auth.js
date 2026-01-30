@@ -39,36 +39,39 @@ router.get('/microsoft', (req, res, next) => {
  * @desc    Microsoft OAuth callback
  * @access   Public
  */
-router.get('/microsoft/callback', passport.authenticate('microsoft', { 
-    failureRedirect: `${FRONTEND_URL}/auth-login?error=microsoft_failed`,
-    session: false 
-}), async (req, res) => {
-    try {
-        // Generate JWT token
-        const token = microsoftAuth.generateToken(req.user);
-        
-        // Get redirect URL from state
-        let returnTo = FRONTEND_URL;
-        try {
-            const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            returnTo = state.returnTo || FRONTEND_URL;
-        } catch (error) {
-            console.warn('Failed to parse OAuth state:', error);
+router.get('/microsoft/callback', (req, res, next) => {
+    passport.authenticate('microsoft', { session: false }, async (err, user) => {
+        if (err || !user) {
+            console.error('Microsoft OAuth callback error:', err || 'No user returned');
+            return res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_failed`);
         }
-        
-        // Redirect to auth-login so the opener can store token and navigate in the original tab
-        const redirectUrl = `${returnTo}/auth-login?token=${token}&source=microsoft`;
-        
-        // Log successful OAuth login
-        console.log(`Microsoft OAuth login successful: ${req.user.email} (${req.user.user_type || 'no role'})`);
-        
-        // Redirect to frontend
-        res.redirect(redirectUrl);
-        
-    } catch (error) {
-        console.error('Microsoft OAuth callback error:', error);
-        res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_callback_failed`);
-    }
+
+        try {
+            // Generate JWT token
+            const token = microsoftAuth.generateToken(user);
+
+            // Get redirect URL from state
+            let returnTo = FRONTEND_URL;
+            try {
+                const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+                returnTo = state.returnTo || FRONTEND_URL;
+            } catch (error) {
+                console.warn('Failed to parse OAuth state:', error);
+            }
+
+            // Redirect to auth-login so the opener can store token and navigate in the original tab
+            const redirectUrl = `${returnTo}/auth-login?token=${token}&source=microsoft`;
+
+            // Log successful OAuth login
+            console.log(`Microsoft OAuth login successful: ${user.email} (${user.user_type || 'no role'})`);
+
+            // Redirect to frontend
+            return res.redirect(redirectUrl);
+        } catch (error) {
+            console.error('Microsoft OAuth callback error:', error);
+            return res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_callback_failed`);
+        }
+    })(req, res, next);
 });
 
 /**
