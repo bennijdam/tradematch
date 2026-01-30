@@ -1278,8 +1278,15 @@ function handleOAuthCallback() {
     const source = urlParams.get('source');
     
     if (token) {
-        if (window.opener && !window.opener.closed) {
-            window.opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
+        const opener = window.opener;
+        if (opener && !opener.closed) {
+            const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
+            try {
+                opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
+                opener.location.href = `${returnTo}/auth-login?token=${encodeURIComponent(token)}&source=${encodeURIComponent(source || 'oauth')}`;
+            } catch (postError) {
+                console.warn('OAuth opener handoff failed:', postError);
+            }
             try {
                 window.close();
             } catch (closeError) {
