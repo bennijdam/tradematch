@@ -957,6 +957,8 @@ function resolveReturnTo(value) {
     return FRONTEND_BASE;
 }
 
+let oauthPopup = null;
+
 function openOAuthPopup(url) {
     const width = 520;
     const height = 640;
@@ -972,6 +974,7 @@ function openOAuthPopup(url) {
         return null;
     }
     popup.focus();
+    oauthPopup = popup;
     return popup;
 }
 
@@ -1107,6 +1110,10 @@ window.addEventListener('message', (event) => {
     const { type, token, source } = event.data || {};
     if (type === 'oauth' && token) {
         processOAuthToken(token, source);
+        if (oauthPopup && !oauthPopup.closed) {
+            oauthPopup.close();
+            oauthPopup = null;
+        }
     }
 });
 
@@ -1207,6 +1214,9 @@ async function loginWithGoogle() {
         
         // Redirect to backend OAuth initiation
         const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}`;
+        if (oauthPopup && !oauthPopup.closed) {
+            oauthPopup.close();
+        }
         openOAuthPopup(googleAuthUrl);
         
     } catch (error) {
@@ -1236,6 +1246,9 @@ async function loginWithMicrosoft() {
         
         // Redirect to backend OAuth initiation
         const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}`;
+        if (oauthPopup && !oauthPopup.closed) {
+            oauthPopup.close();
+        }
         openOAuthPopup(microsoftAuthUrl);
         
     } catch (error) {
@@ -1267,7 +1280,11 @@ function handleOAuthCallback() {
     if (token) {
         if (window.opener && !window.opener.closed) {
             window.opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
-            window.close();
+            try {
+                window.close();
+            } catch (closeError) {
+                console.warn('Popup close blocked:', closeError);
+            }
             return;
         }
         processOAuthToken(token, source);
