@@ -460,6 +460,15 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 
     const user = userResult.rows[0];
 
+    if (!user.role && user.user_type) {
+      try {
+        await pool.query('UPDATE users SET role = $1 WHERE id = $2 AND role IS NULL', [user.user_type, user.id]);
+        user.role = user.user_type;
+      } catch (updateError) {
+        console.warn('⚠️ Failed to backfill user role:', updateError.message || updateError);
+      }
+    }
+
     // Check if already verified
     if (user.email_verified) {
       return res.status(400).json({ 

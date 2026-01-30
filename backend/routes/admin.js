@@ -307,7 +307,7 @@ router.get('/users', async (req, res) => {
         
         let query = `
             SELECT 
-                id, email, full_name, role, status, phone,
+                id, email, full_name, COALESCE(role, user_type) as role, status, phone,
                 email_verified, phone_verified, created_at, last_login_at
             FROM users
             WHERE 1=1
@@ -326,7 +326,7 @@ router.get('/users', async (req, res) => {
         }
         
         if (role) {
-            query += ` AND role = $${paramCount}`;
+            query += ` AND COALESCE(role, user_type) = $${paramCount}`;
             params.push(role);
             paramCount++;
         }
@@ -353,7 +353,7 @@ router.get('/users', async (req, res) => {
             countParamNum++;
         }
         if (role) {
-            countQuery += ` AND role = $${countParamNum}`;
+            countQuery += ` AND COALESCE(role, user_type) = $${countParamNum}`;
             countParams.push(role);
             countParamNum++;
         }
@@ -419,7 +419,8 @@ router.get('/users/:userId', async (req, res) => {
         
         // Get reviews (if vendor)
         let reviews = [];
-        if (user.role === 'vendor') {
+        const userRole = user.role || user.user_type;
+        if (userRole === 'vendor') {
             const reviewsResult = await pool.query(
                 `SELECT rating, comment, created_at
                  FROM job_reviews
@@ -495,7 +496,7 @@ router.get('/vendors/pending', async (req, res) => {
                 u.id, u.email, u.full_name, u.phone, u.created_at,
                 u.metadata
              FROM users u
-             WHERE u.role = 'vendor' AND u.status = 'pending'
+             WHERE COALESCE(u.role, u.user_type) = 'vendor' AND u.status = 'pending'
              ORDER BY u.created_at ASC`
         );
         
@@ -519,7 +520,7 @@ router.post('/vendors/:vendorId/approve', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'active', updated_at = NOW()
-             WHERE id = $1 AND role = 'vendor'`,
+             WHERE id = $1 AND COALESCE(role, user_type) = 'vendor'`,
             [vendorId]
         );
         
@@ -552,7 +553,7 @@ router.post('/vendors/:vendorId/reject', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'rejected', updated_at = NOW()
-             WHERE id = $1 AND role = 'vendor'`,
+             WHERE id = $1 AND COALESCE(role, user_type) = 'vendor'`,
             [vendorId]
         );
         
