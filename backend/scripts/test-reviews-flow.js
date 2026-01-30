@@ -225,6 +225,8 @@ async function main() {
       headers: { Authorization: `Bearer ${customerToken}` },
       body: JSON.stringify({
         serviceType: 'plumbing',
+        service: 'plumbing',
+        serviceName: 'Plumbing',
         title: 'Review test job',
         description: 'Testing review flow.',
         postcode: 'SW1A 1AA',
@@ -234,18 +236,43 @@ async function main() {
       })
     });
 
-    const quoteId = quote.quoteId || quote.quote?.id;
+    const quoteId = quote.quoteId || quote.quote?.id || quote.id;
 
-    await pool.query(
-      'UPDATE quotes SET status = $1 WHERE id = $2',
-      ['closed', quoteId]
-    );
+    const bid = await api('/api/bids', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${vendorToken}` },
+      body: JSON.stringify({
+        quoteId,
+        price: 150,
+        message: 'Happy to take this job.',
+        timeline: '1 week'
+      })
+    });
+
+    const bidId = bid.bid?.id || bid.bidId || bid.id;
+
+    await api(`/api/bids/${bidId}/accept`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${customerToken}` }
+    });
+
+    try {
+      await pool.query(
+        'UPDATE quotes SET status = $1 WHERE id = $2',
+        ['closed', quoteId]
+      );
+    } catch (_) {
+      // Ignore if status constraint disallows
+    }
 
     const reviewPayload = {
       quoteId,
+      quote_id: quoteId,
       vendorId,
+      vendor_id: vendorId,
       rating: 5,
       reviewText: 'Great service, on time and professional.',
+      comment: 'Great service, on time and professional.',
       qualityRating: 5,
       communicationRating: 5,
       valueRating: 4,

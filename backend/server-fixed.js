@@ -1697,11 +1697,38 @@ app.post("/api/reviews", authenticateToken, async (req, res) => {
     }
 
     try {
+      const columnsResult = await pool.query(
+        `SELECT column_name FROM information_schema.columns WHERE table_name = 'reviews'`
+      );
+      const columns = new Set(columnsResult.rows.map((row) => row.column_name));
+
+      const reviewId = 'REV' + crypto.randomBytes(8).toString('hex');
+      const insertColumns = [];
+      const insertValues = [];
+
+      if (columns.has('id')) {
+        insertColumns.push('id');
+        insertValues.push(reviewId);
+      }
+
+      insertColumns.push('vendor_id', 'customer_id', 'quote_id', 'rating');
+      insertValues.push(vendor_id, userId, quote_id, rating);
+
+      if (columns.has('comment')) {
+        insertColumns.push('comment');
+        insertValues.push(trimmedComment);
+      } else if (columns.has('review_text')) {
+        insertColumns.push('review_text');
+        insertValues.push(trimmedComment);
+      }
+
+      const placeholders = insertValues.map((_, idx) => `$${idx + 1}`);
+
       const reviewResult = await pool.query(
-        `INSERT INTO reviews (vendor_id, customer_id, quote_id, rating, comment)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO reviews (${insertColumns.join(', ')})
+         VALUES (${placeholders.join(', ')})
          RETURNING id, vendor_id, customer_id, quote_id, rating, comment, created_at`,
-        [vendor_id, userId, quote_id, rating, trimmedComment]
+        insertValues
       );
 
       const review = reviewResult.rows[0];
