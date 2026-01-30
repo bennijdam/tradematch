@@ -17,6 +17,33 @@ const FROM_LEADS = process.env.EMAIL_FROM_LEADS || FROM_DEFAULT;
 let pool;
 router.setPool = (p) => { pool = p; };
 
+let cachedQuoteCustomerColumn = null;
+const resolveQuoteCustomerColumn = async () => {
+  if (cachedQuoteCustomerColumn) return cachedQuoteCustomerColumn;
+
+  if (!pool) {
+    cachedQuoteCustomerColumn = 'user_id';
+    return cachedQuoteCustomerColumn;
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT column_name
+       FROM information_schema.columns
+       WHERE table_name = 'quotes'
+         AND column_name IN ('customer_id', 'user_id')`
+    );
+
+    const columns = new Set(result.rows.map((row) => row.column_name));
+    cachedQuoteCustomerColumn = columns.has('customer_id') ? 'customer_id' : 'user_id';
+  } catch (err) {
+    console.warn('Quote column lookup failed, defaulting to user_id:', err.message);
+    cachedQuoteCustomerColumn = 'user_id';
+  }
+
+  return cachedQuoteCustomerColumn;
+};
+
 // Helper: Check if user has consented to receive specific email type
 const checkEmailConsent = async (userId, emailType) => {
   if (!pool || !userId) return false;
@@ -331,6 +358,55 @@ const emailTemplates = {
     `
   }),
 
+  leadCustomerConfirmation: (customerName, quoteTitle, serviceLabel, vendorCount, vendorNames, quoteId) => ({
+    subject: `✅ Your ${serviceLabel} job is live - ${vendorCount} tradespeople matched`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .match-box { background: white; border-left: 4px solid #16A34A; padding: 20px; margin: 20px 0; border-radius: 5px; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          .vendor-list { margin: 10px 0 0 20px; padding: 0; }
+          .vendor-list li { margin: 6px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Your job is live ✅</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${customerName},</h2>
+            <p>Great news! Your request${quoteTitle ? ` <strong>“${quoteTitle}”</strong>` : ''} has been shared with <strong>${vendorCount}</strong> tradespeople.</p>
+            <div class="match-box">
+              <p><strong>Service:</strong> ${serviceLabel}</p>
+              <p><strong>Matched tradespeople:</strong> ${vendorCount}</p>
+              ${vendorNames && vendorNames.length ? `
+                <p><strong>Top matches:</strong></p>
+                <ul class="vendor-list">
+                  ${vendorNames.map((name) => `<li>${name}</li>`).join('')}
+                </ul>
+              ` : ''}
+            </div>
+            <p>You’ll receive bids soon. You can review matches and messages in your dashboard.</p>
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/customer-dashboard.html?quote=${quoteId}" class="button">View Your Job →</a>
+            <p style="font-size: 13px; color: #666;">We only reveal your contact details once you accept a bid.</p>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • Connecting homeowners with trusted tradespeople</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
   paymentConfirmation: (customerName, amount, reference, vendorName) => ({
     subject: `✅ Payment Confirmed - £${amount.toLocaleString()}`,
     html: `
@@ -373,6 +449,45 @@ const emailTemplates = {
           <div class="footer">
             <p>TradeMatch Ltd • Secure payments, peace of mind</p>
             <p>Questions? <a href="${process.env.FRONTEND_URL}/help.html">Visit Help Center</a></p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
+  creditsPurchaseReminder: (vendorName, creditsRemaining) => ({
+    subject: '🧾 Low credits - top up to keep receiving leads',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #16A34A 0%, #15803D 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .button { display: inline-block; background: #16A34A; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .notice { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 5px; }
+          .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Low credits alert</h1>
+          </div>
+          <div class="content">
+            <h2>Hi ${vendorName},</h2>
+            <p>You’re running low on TradeMatch credits, which are required to accept new leads.</p>
+            <div class="notice">
+              <strong>Credits remaining:</strong> ${Number.isFinite(Number(creditsRemaining)) ? Number(creditsRemaining) : 'low'}
+            </div>
+            <p>Top up now to keep receiving new jobs in your area.</p>
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/vendor-credits.html" class="button">Buy Credits →</a>
+          </div>
+          <div class="footer">
+            <p>TradeMatch Ltd • Helping tradespeople grow their business</p>
           </div>
         </div>
       </body>
@@ -830,6 +945,148 @@ router.post('/lead-preview-notification', async (req, res) => {
     });
   } catch (err) {
     console.error('Lead preview notification error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Send lead confirmation to customer (vendor list summary)
+router.post('/lead-customer-confirmation', async (req, res) => {
+  try {
+    const { customerId, quoteId, vendorCount, serviceType, vendorNames } = req.body;
+
+    if (!customerId || !quoteId) {
+      return res.status(400).json({
+        error: 'Missing required fields: customerId, quoteId'
+      });
+    }
+
+    const hasConsent = await checkEmailConsent(customerId, 'leadUpdates');
+    if (!hasConsent) {
+      return res.json({ success: true, message: 'Email skipped - user opted out', skipped: true });
+    }
+
+    const customerColumn = await resolveQuoteCustomerColumn();
+    const customerResult = await pool.query(
+      'SELECT email, COALESCE(full_name, name, email) AS name FROM users WHERE id = $1',
+      [customerId]
+    );
+
+    if (customerResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    const quoteResult = await pool.query(
+      `SELECT * FROM quotes WHERE id = $1 AND ${customerColumn} = $2`,
+      [quoteId, customerId]
+    );
+
+    if (quoteResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Quote not found for customer' });
+    }
+
+    const customer = customerResult.rows[0];
+    const quote = quoteResult.rows[0];
+    const serviceLabel = serviceType || quote.service_type || quote.service || quote.category || 'your service';
+
+    let resolvedVendorNames = Array.isArray(vendorNames) ? vendorNames.filter(Boolean) : [];
+    let resolvedVendorCount = Number.isFinite(Number(vendorCount)) ? Number(vendorCount) : null;
+
+    if (!resolvedVendorNames.length || !resolvedVendorCount) {
+      const vendorRows = await pool.query(
+        `SELECT COALESCE(u.full_name, u.name, u.email) AS name
+         FROM lead_distributions ld
+         JOIN users u ON u.id = ld.vendor_id
+         WHERE ld.quote_id = $1
+         ORDER BY ld.match_score DESC NULLS LAST, ld.distribution_order ASC
+         LIMIT 5`,
+        [quoteId]
+      );
+
+      if (!resolvedVendorNames.length) {
+        resolvedVendorNames = vendorRows.rows.map((row) => row.name).filter(Boolean);
+      }
+
+      if (!resolvedVendorCount) {
+        const countResult = await pool.query(
+          'SELECT COUNT(*)::int AS count FROM lead_distributions WHERE quote_id = $1',
+          [quoteId]
+        );
+        resolvedVendorCount = countResult.rows[0]?.count || resolvedVendorNames.length || 0;
+      }
+    }
+
+    const template = emailTemplates.leadCustomerConfirmation(
+      customer.name,
+      customer.title,
+      serviceLabel,
+      resolvedVendorCount || 0,
+      resolvedVendorNames,
+      quoteId
+    );
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_NOTIFICATIONS,
+      to: customer.email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({
+      success: true,
+      message: 'Lead confirmation sent',
+      emailId: data.id,
+      vendorCount: resolvedVendorCount || 0
+    });
+  } catch (err) {
+    console.error('Lead customer confirmation error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Send credits purchase reminder to vendor
+router.post('/credits-purchase-reminder', async (req, res) => {
+  try {
+    const { vendorId, creditsRemaining } = req.body;
+
+    if (!vendorId) {
+      return res.status(400).json({ error: 'Missing required field: vendorId' });
+    }
+
+    const hasConsent = await checkEmailConsent(vendorId, 'creditUpdates');
+    if (!hasConsent) {
+      return res.json({ success: true, message: 'Email skipped - user opted out', skipped: true });
+    }
+
+    const vendorResult = await pool.query(
+      'SELECT email, COALESCE(full_name, name, email) AS name FROM users WHERE id = $1 AND user_type = $2',
+      [vendorId, 'vendor']
+    );
+
+    if (vendorResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    const vendor = vendorResult.rows[0];
+    const template = emailTemplates.creditsPurchaseReminder(vendor.name, creditsRemaining);
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_PAYMENTS,
+      to: vendor.email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ success: true, message: 'Credits reminder sent', emailId: data.id });
+  } catch (err) {
+    console.error('Credits reminder error:', err);
     res.status(500).json({ error: err.message });
   }
 });

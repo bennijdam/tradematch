@@ -580,6 +580,15 @@ try {
     logger.warn('Customer routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
+try {
+    const reviewsRouter = require('./routes/reviews');
+    if (typeof reviewsRouter.setPool === 'function') reviewsRouter.setPool(pool);
+    app.use('/api/reviews', reviewsRouter);
+    logger.info('Reviews routes mounted at /api/reviews');
+} catch (e) {
+    logger.warn('Reviews routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
 // Payments and milestones routes
 try {
     const paymentsRouter = require('./routes/payments');

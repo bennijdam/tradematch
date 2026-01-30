@@ -9,6 +9,7 @@
  * 5. Record analytics
  */
 
+const axios = require('axios');
 const LeadQualificationService = require('./lead-qualification.service');
 const LeadPricingService = require('./lead-pricing.service');
 const LeadDistributionService = require('./lead-distribution.service');
@@ -20,6 +21,25 @@ class LeadSystemIntegrationService {
         this.qualificationService = new LeadQualificationService(pool);
         this.pricingService = new LeadPricingService(pool);
         this.distributionService = new LeadDistributionService(pool);
+        this.leadAnalyticsColumns = null;
+    }
+
+    async getLeadAnalyticsColumns() {
+        if (this.leadAnalyticsColumns) return this.leadAnalyticsColumns;
+
+        try {
+            const result = await this.pool.query(
+                `SELECT column_name
+                 FROM information_schema.columns
+                 WHERE table_name = 'lead_analytics_daily'`
+            );
+            this.leadAnalyticsColumns = new Set(result.rows.map((row) => row.column_name));
+        } catch (error) {
+            console.warn('Lead analytics column lookup failed:', error.message);
+            this.leadAnalyticsColumns = new Set();
+        }
+
+        return this.leadAnalyticsColumns;
     }
 
     /**
@@ -163,6 +183,10 @@ class LeadSystemIntegrationService {
      */
     async notifyCustomer(quote, customer, vendorCount) {
         try {
+            if (!customer || !customer.id) {
+                return;
+            }
+
             if (this.emailService && this.emailService.sendCustomerLeadConfirm) {
                 await this.emailService.sendCustomerLeadConfirm({
                     customer_id: customer.id,
@@ -172,7 +196,13 @@ class LeadSystemIntegrationService {
                     posted_at: new Date().toISOString()
                 });
             } else {
-                console.log(`📧 Would send confirmation to customer ${customer.id}`);
+                const backendUrl = process.env.BACKEND_URL || process.env.BASE_URL || 'http://localhost:5000';
+                await axios.post(`${backendUrl}/api/email/lead-customer-confirmation`, {
+                    customerId: customer.id,
+                    quoteId: quote.id,
+                    vendorCount,
+                    serviceType: quote.serviceType
+                });
             }
         } catch (error) {
             console.error('Error notifying customer:', error);
@@ -184,6 +214,18 @@ class LeadSystemIntegrationService {
      */
     async recordLeadCreatedAnalytics(quote, qualification, pricing, vendorCount) {
         try {
+            const columns = await this.getLeadAnalyticsColumns();
+            if (!columns.has('customer_id')) {
+                console.warn('Skipping lead analytics insert: lead_analytics_daily.customer_id missing');
+                return;
+            }
+
+            const customerId = quote.customer_id || quote.customerId || quote.user_id || null;
+            if (!customerId) {
+                console.warn('Skipping lead analytics insert: customer id missing on quote');
+                return;
+            }
+
             await this.pool.query(
                 `INSERT INTO lead_analytics_daily (
                     customer_id, analytics_date, service_type, quality_score, quality_tier,
@@ -194,7 +236,7 @@ class LeadSystemIntegrationService {
                 DO UPDATE SET
                     leads_posted = lead_analytics_daily.leads_posted + 1`,
                 [
-                    quote.customer_id,
+                    customerId,
                     quote.serviceType,
                     qualification.overall,
                     qualification.tier,

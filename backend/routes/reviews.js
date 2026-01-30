@@ -5,6 +5,37 @@ const { authenticate } = require('../middleware/auth');
 let pool;
 router.setPool = (p) => { pool = p; };
 
+let cachedReviewsColumns = null;
+let cachedVendorsColumns = null;
+
+const getReviewsColumns = async () => {
+    if (cachedReviewsColumns) return cachedReviewsColumns;
+    try {
+        const result = await pool.query(
+            `SELECT column_name FROM information_schema.columns WHERE table_name = 'reviews'`
+        );
+        cachedReviewsColumns = new Set(result.rows.map((row) => row.column_name));
+    } catch (error) {
+        console.warn('Reviews column lookup failed:', error.message);
+        cachedReviewsColumns = new Set();
+    }
+    return cachedReviewsColumns;
+};
+
+const getVendorsColumns = async () => {
+    if (cachedVendorsColumns) return cachedVendorsColumns;
+    try {
+        const result = await pool.query(
+            `SELECT column_name FROM information_schema.columns WHERE table_name = 'vendors'`
+        );
+        cachedVendorsColumns = new Set(result.rows.map((row) => row.column_name));
+    } catch (error) {
+        console.warn('Vendors column lookup failed:', error.message);
+        cachedVendorsColumns = new Set();
+    }
+    return cachedVendorsColumns;
+};
+
 /**
  * Create Review
  * POST /api/reviews
@@ -27,8 +58,9 @@ router.post('/', authenticate, async (req, res) => {
     try {
         // Verify customer has completed job with this vendor
         const quoteCheck = await pool.query(
-            'SELECT * FROM quotes WHERE id = $1 AND customer_id = $2 AND status = $3',
-            [quoteId, customerId, 'completed']
+            `SELECT * FROM quotes
+             WHERE id = $1 AND customer_id = $2 AND status = ANY($3::text[])`,
+            [quoteId, customerId, ['completed', 'closed', 'in_progress']]
         );
         
         if (quoteCheck.rows.length === 0) {
@@ -46,18 +78,53 @@ router.post('/', authenticate, async (req, res) => {
         }
         
         const reviewId = `rev_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
+
+        const columnResult = await pool.query(
+            `SELECT column_name FROM information_schema.columns WHERE table_name = 'reviews'`
+        );
+        const columnSet = new Set(columnResult.rows.map((row) => row.column_name));
+
+        const insertColumns = ['id', 'quote_id', 'customer_id', 'vendor_id', 'rating'];
+        const insertValues = [reviewId, quoteId, customerId, vendorId, rating];
+
+        if (columnSet.has('review_text')) {
+            insertColumns.push('review_text');
+            insertValues.push(reviewText);
+        } else if (columnSet.has('feedback')) {
+            insertColumns.push('feedback');
+            insertValues.push(reviewText);
+        }
+
+        if (columnSet.has('quality_rating')) {
+            insertColumns.push('quality_rating');
+            insertValues.push(qualityRating);
+        }
+        if (columnSet.has('communication_rating')) {
+            insertColumns.push('communication_rating');
+            insertValues.push(communicationRating);
+        }
+        if (columnSet.has('value_rating')) {
+            insertColumns.push('value_rating');
+            insertValues.push(valueRating);
+        }
+        if (columnSet.has('timeliness_rating')) {
+            insertColumns.push('timeliness_rating');
+            insertValues.push(timelinessRating);
+        }
+        if (columnSet.has('photos')) {
+            insertColumns.push('photos');
+            insertValues.push(JSON.stringify(photos));
+        }
+        if (columnSet.has('is_verified')) {
+            insertColumns.push('is_verified');
+            insertValues.push(true);
+        }
+
+        const placeholders = insertValues.map((_, idx) => `$${idx + 1}`);
+
         await pool.query(
-            `INSERT INTO reviews (
-                id, quote_id, customer_id, vendor_id, rating, review_text,
-                quality_rating, communication_rating, value_rating, timeliness_rating,
-                photos, is_verified
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true)`,
-            [
-                reviewId, quoteId, customerId, vendorId, rating, reviewText,
-                qualityRating, communicationRating, valueRating, timelinessRating,
-                JSON.stringify(photos)
-            ]
+            `INSERT INTO reviews (${insertColumns.join(', ')}) VALUES (${placeholders.join(', ')})`,
+            insertValues
         );
         
         // Update vendor's average rating
@@ -80,6 +147,7 @@ router.get('/vendor/:vendorId', async (req, res) => {
     const { page = 1, limit = 10, sortBy = 'recent' } = req.query;
     
     try {
+        const reviewsColumns = await getReviewsColumns();
         let orderClause = 'r.created_at DESC';
         
         if (sortBy === 'helpful') {
@@ -90,6 +158,11 @@ router.get('/vendor/:vendorId', async (req, res) => {
         
         const offset = (page - 1) * limit;
         
+        const reviewFilters = ['r.vendor_id = $1'];
+        if (reviewsColumns.has('is_verified')) {
+            reviewFilters.push('r.is_verified = true');
+        }
+
         const result = await pool.query(
             `SELECT r.*, 
                     u.name as customer_name,
@@ -98,15 +171,20 @@ router.get('/vendor/:vendorId', async (req, res) => {
              FROM reviews r
              JOIN users u ON r.customer_id = u.id
              JOIN quotes q ON r.quote_id = q.id
-             WHERE r.vendor_id = $1 AND r.is_verified = true
+             WHERE ${reviewFilters.join(' AND ')}
              ORDER BY ${orderClause}
              LIMIT $2 OFFSET $3`,
             [vendorId, limit, offset]
         );
         
         // Get total count
+        const countFilters = ['vendor_id = $1'];
+        if (reviewsColumns.has('is_verified')) {
+            countFilters.push('is_verified = true');
+        }
+
         const countResult = await pool.query(
-            'SELECT COUNT(*) FROM reviews WHERE vendor_id = $1 AND is_verified = true',
+            `SELECT COUNT(*) FROM reviews WHERE ${countFilters.join(' AND ')}`,
             [vendorId]
         );
         
@@ -116,22 +194,25 @@ router.get('/vendor/:vendorId', async (req, res) => {
                 rating,
                 COUNT(*) as count
              FROM reviews
-             WHERE vendor_id = $1 AND is_verified = true
+             WHERE ${countFilters.join(' AND ')}
              GROUP BY rating
              ORDER BY rating DESC`,
             [vendorId]
         );
         
         // Calculate averages
+        const avgFields = [
+            'ROUND(AVG(rating), 2) as avg_rating'
+        ];
+        if (reviewsColumns.has('quality_rating')) avgFields.push('ROUND(AVG(quality_rating), 2) as avg_quality');
+        if (reviewsColumns.has('communication_rating')) avgFields.push('ROUND(AVG(communication_rating), 2) as avg_communication');
+        if (reviewsColumns.has('value_rating')) avgFields.push('ROUND(AVG(value_rating), 2) as avg_value');
+        if (reviewsColumns.has('timeliness_rating')) avgFields.push('ROUND(AVG(timeliness_rating), 2) as avg_timeliness');
+
         const avgResult = await pool.query(
-            `SELECT 
-                ROUND(AVG(rating), 2) as avg_rating,
-                ROUND(AVG(quality_rating), 2) as avg_quality,
-                ROUND(AVG(communication_rating), 2) as avg_communication,
-                ROUND(AVG(value_rating), 2) as avg_value,
-                ROUND(AVG(timeliness_rating), 2) as avg_timeliness
+            `SELECT ${avgFields.join(', ')}
              FROM reviews
-             WHERE vendor_id = $1 AND is_verified = true`,
+             WHERE ${countFilters.join(' AND ')}`,
             [vendorId]
         );
         
@@ -217,6 +298,11 @@ router.post('/:reviewId/helpful', authenticate, async (req, res) => {
  */
 async function updateVendorRating(vendorId) {
     try {
+        const vendorsColumns = await getVendorsColumns();
+        if (!vendorsColumns.has('average_rating')) {
+            return;
+        }
+
         const avgResult = await pool.query(
             'SELECT ROUND(AVG(rating), 2) as avg_rating FROM reviews WHERE vendor_id = $1',
             [vendorId]

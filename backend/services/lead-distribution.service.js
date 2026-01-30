@@ -388,8 +388,12 @@ class LeadDistributionService {
 
                     // Send preview email notification
                     try {
+                        const backendUrl = process.env.BACKEND_URL
+                            || process.env.BASE_URL
+                            || `http://localhost:${process.env.PORT || 3001}`;
+
                         const emailResponse = await axios.post(
-                            `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/email/lead-preview-notification`,
+                            `${backendUrl}/api/email/lead-preview-notification`,
                             {
                                 vendorId: vendor.vendorId,
                                 vendorEmail: quote.vendor_email,
@@ -402,7 +406,13 @@ class LeadDistributionService {
 
                         console.log(`📧 Preview email sent to ${quote.vendor_name} (${quote.vendor_email})`);
                     } catch (emailErr) {
-                        console.error(`⚠️ Failed to send preview email to vendor ${vendor.vendorId}:`, emailErr.message);
+                        const status = emailErr.response?.status;
+                        const data = emailErr.response?.data;
+                        console.error(`⚠️ Failed to send preview email to vendor ${vendor.vendorId}:`, {
+                            message: emailErr.message,
+                            status,
+                            data
+                        });
                         // Don't fail the distribution if email fails - lead is still offered
                     }
                 }
