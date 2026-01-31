@@ -40,7 +40,7 @@ router.get('/google', (req, res, next) => {
  * @access   Public
  */
 router.get('/google/callback', passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/auth-login?error=oauth_failed`,
+    failureRedirect: `${FRONTEND_URL}/auth-login.html?error=oauth_failed`,
     session: false 
 }), async (req, res) => {
     try {
@@ -57,7 +57,7 @@ router.get('/google/callback', passport.authenticate('google', {
         }
         
         // Redirect to auth-login so the opener can store token and navigate in the original tab
-        const redirectUrl = `${returnTo}/auth-login?token=${token}&source=google`;
+        const redirectUrl = `${returnTo}/auth-login.html?token=${token}&source=google`;
         
         // Log successful OAuth login
         console.log(`Google OAuth login successful: ${req.user.email} (${req.user.user_type || 'no role'})`);
@@ -67,7 +67,7 @@ router.get('/google/callback', passport.authenticate('google', {
         
     } catch (error) {
         console.error('Google OAuth callback error:', error);
-        res.redirect(`${FRONTEND_URL}/auth-login?error=callback_failed`);
+        res.redirect(`${FRONTEND_URL}/auth-login.html?error=callback_failed`);
     }
 });
 

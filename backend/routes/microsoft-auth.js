@@ -43,7 +43,7 @@ router.get('/microsoft/callback', (req, res, next) => {
     passport.authenticate('microsoft', { session: false }, async (err, user) => {
         if (err || !user) {
             console.error('Microsoft OAuth callback error:', err || 'No user returned');
-            return res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_failed`);
+            return res.redirect(`${FRONTEND_URL}/auth-login.html?error=microsoft_failed`);
         }
 
         try {
@@ -60,7 +60,7 @@ router.get('/microsoft/callback', (req, res, next) => {
             }
 
             // Redirect to auth-login so the opener can store token and navigate in the original tab
-            const redirectUrl = `${returnTo}/auth-login?token=${token}&source=microsoft`;
+            const redirectUrl = `${returnTo}/auth-login.html?token=${token}&source=microsoft`;
 
             // Log successful OAuth login
             console.log(`Microsoft OAuth login successful: ${user.email} (${user.user_type || 'no role'})`);
@@ -69,7 +69,7 @@ router.get('/microsoft/callback', (req, res, next) => {
             return res.redirect(redirectUrl);
         } catch (error) {
             console.error('Microsoft OAuth callback error:', error);
-            return res.redirect(`${FRONTEND_URL}/auth-login?error=microsoft_callback_failed`);
+            return res.redirect(`${FRONTEND_URL}/auth-login.html?error=microsoft_callback_failed`);
         }
     })(req, res, next);
 });
