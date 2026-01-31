@@ -54,31 +54,49 @@ app.use(helmet({
 }));
 
 // CORS with allowlist - single origin reflection (no multi-value header)
-const allowedOrigins = process.env.CORS_ORIGINS 
-    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
-    : [
-        'https://www.tradematch.uk', 
-        'https://tradematch.uk',
-        'http://localhost:3000',
-        'http://localhost:8080',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:8080'
-      ];
+const normalizeOrigin = (value) => {
+  if (!value) return value;
+  return value.replace(/\/$/, '');
+};
+
+const defaultOrigins = [
+  'https://www.tradematch.uk',
+  'https://tradematch.uk',
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:8080'
+];
+
+const envOrigins = [
+  process.env.CORS_ORIGINS,
+  process.env.FRONTEND_URL,
+  process.env.PUBLIC_URL
+]
+  .filter(Boolean)
+  .flatMap((value) => value.split(','))
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(new Set([
+  ...defaultOrigins,
+  ...envOrigins
+].map(normalizeOrigin)));
 
 app.use(cors({
     origin: function(origin, callback) {
         // Allow requests with no origin (like mobile apps, curl, Postman)
         if (!origin) return callback(null, true);
-        
-        // Check if origin is in allowlist
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            console.log('✅ CORS allowed origin:', origin);
-            callback(null, true);
-        } else {
-            console.warn('⚠️ CORS blocked origin:', origin);
-            // Still allow but log - better for debugging
-            callback(null, true);
-        }
+
+      const normalizedOrigin = normalizeOrigin(origin);
+      // Check if origin is in allowlist
+      if (allowedOrigins.indexOf(normalizedOrigin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn('⚠️ CORS blocked origin:', origin);
+        // Still allow but log - better for debugging
+        callback(null, true);
+      }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
