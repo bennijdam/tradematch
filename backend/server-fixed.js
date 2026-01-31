@@ -212,6 +212,20 @@ try {
 }
 
 // OAuth routes
+app.get(['/auth', '/auth/'], (req, res) => {
+  res.json({
+    message: 'OAuth endpoints',
+    endpoints: [
+      'GET /auth/google',
+      'GET /auth/google/callback',
+      'GET /auth/google/status',
+      'GET /auth/microsoft',
+      'GET /auth/microsoft/callback',
+      'GET /auth/microsoft/status'
+    ]
+  });
+});
+
 try {
   const googleAuthRoutes = require('./routes/google-auth');
   if (typeof googleAuthRoutes.setPool === 'function') googleAuthRoutes.setPool(pool);
@@ -2462,7 +2476,13 @@ app.get("/debug/routes", (req, res) => {
     registered_paths: [
       "/api/health",
       "/api/auth/register", 
-      "/api/auth/login"
+      "/api/auth/login",
+      "/auth/google",
+      "/auth/google/callback",
+      "/auth/google/status",
+      "/auth/microsoft",
+      "/auth/microsoft/callback",
+      "/auth/microsoft/status"
     ]
   });
 });
@@ -2479,6 +2499,13 @@ app.use((req, res) => {
       "GET /api/health",
       "POST /api/auth/register",
       "POST /api/auth/login",
+      "GET /auth",
+      "GET /auth/google",
+      "GET /auth/google/callback",
+      "GET /auth/google/status",
+      "GET /auth/microsoft",
+      "GET /auth/microsoft/callback",
+      "GET /auth/microsoft/status",
       "GET /debug/routes"
     ]
   });
