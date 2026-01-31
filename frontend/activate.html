@@ -242,6 +242,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
 
+        const FRONTEND_BASES = ['https://www.tradematch.uk', 'https://tradematch.uk'];
+        const isLocal = window.location.protocol === 'file:' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocal ? (localStorage.getItem('apiBase') || 'http://localhost:3001') : 'https://api.tradematch.uk';
+
         const loadingState = document.getElementById('loadingState');
         const successState = document.getElementById('successState');
         const errorState = document.getElementById('errorState');
@@ -254,14 +260,24 @@
             }
 
             try {
-                const response = await fetch(`https://api.tradematch.uk/api/auth/activate?token=${encodeURIComponent(token)}`, {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                const response = await fetch(`${API_BASE}/api/auth/activate?token=${encodeURIComponent(token)}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
 
-                const data = await response.json();
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (_) {
+                    const rawText = await response.text().catch(() => '');
+                    data = { error: rawText || 'Activation failed. Please try again.' };
+                }
 
                 if (response.ok && data.success) {
                     showSuccess();
@@ -271,7 +287,11 @@
 
             } catch (error) {
                 console.error('Activation error:', error);
-                showError('Unable to connect to the server. Please check your internet connection and try again.');
+                if (error.name === 'AbortError') {
+                    showError('Activation request timed out. Please try again.');
+                } else {
+                    showError('Unable to connect to the server. Please check your internet connection and try again.');
+                }
             }
         }
 
@@ -290,6 +310,7 @@
 
         // Auto-activate on page load
         window.addEventListener('load', activateAccount);
+        activateAccount();
     </script>
     <script src="/frontend/profile-menu.js"></script>
 </body>
