@@ -960,6 +960,7 @@ function resolveReturnTo(value) {
 let oauthPopup = null;
 
 function openOAuthPopup(url) {
+    localStorage.setItem('oauthPopupActive', '1');
     const width = 520;
     const height = 640;
     const left = window.screenX + (window.outerWidth - width) / 2;
@@ -1124,6 +1125,7 @@ window.addEventListener('message', (event) => {
             oauthPopup.close();
             oauthPopup = null;
         }
+        localStorage.removeItem('oauthPopupActive');
     }
 });
 
@@ -1295,7 +1297,7 @@ function handleOAuthCallback() {
     
     if (token) {
         const opener = window.opener;
-            const isPopup = window.name === 'tradematch_oauth';
+        const isPopup = window.name === 'tradematch_oauth' || localStorage.getItem('oauthPopupActive') === '1';
         if (opener && !opener.closed) {
             const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
             const targetOrigin = new URL(returnTo).origin;
@@ -1312,6 +1314,7 @@ function handleOAuthCallback() {
             return;
         }
             if (isPopup) {
+            localStorage.removeItem('oauthPopupActive');
                 localStorage.setItem('oauthToken', token);
                 localStorage.setItem('oauthSource', source || 'oauth');
                 showNotification('Login complete. You can close this window.', 'success');
