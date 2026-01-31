@@ -1438,7 +1438,9 @@ app.patch("/api/bids/:bidId/accept", authenticateToken, async (req, res) => {
       const customerName = customerResult.rows[0]?.name || 'Customer';
       const quoteTitle = quoteResult.rows[0]?.title || 'Your job';
 
-        const apiUrl = process.env.API_URL || 'http://localhost:5001';
+        const apiUrl = process.env.BACKEND_URL
+          || process.env.BASE_URL
+          || `http://localhost:${process.env.PORT || 3001}`;
         // Notify vendor: bid accepted
         await axios.post(`${apiUrl}/api/email/bid-accepted`, {
           vendorId: bid.vendor_id,

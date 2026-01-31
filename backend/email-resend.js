@@ -1185,93 +1185,101 @@ router.post('/review-reminder', async (req, res) => {
 
   } catch (err) {
     console.error('Review reminder error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // Send bid acceptance notification
-    router.post('/bid-accepted', async (req, res) => {
-      try {
-        const { vendorId, customerName, quoteTitle, bidAmount, quoteId } = req.body;
+// Send bid acceptance notification
+router.post('/bid-accepted', async (req, res) => {
+  try {
+    const { vendorId, customerName, quoteTitle, bidAmount, quoteId } = req.body;
 
-        if (!vendorId || !customerName || !quoteTitle || !bidAmount || !quoteId) {
-          return res.status(400).json({ 
-            error: 'Missing required fields: vendorId, customerName, quoteTitle, bidAmount, quoteId' 
-          });
-        }
+    if (!vendorId || !customerName || !quoteTitle || !bidAmount || !quoteId) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: vendorId, customerName, quoteTitle, bidAmount, quoteId' 
+      });
+    }
 
-    // Check email consent
     const hasConsent = await checkEmailConsent(vendorId, 'bidAccepted');
     if (!hasConsent) {
       return res.json({ success: true, message: 'Email skipped - user opted out', skipped: true });
     }
 
+    const vendorQuery = await pool.query(
+      'SELECT email, COALESCE(full_name, name, email) AS name FROM users WHERE id = $1',
+      [vendorId]
+    );
 
-        const { data, error } = await resend.emails.send({
-          from: FROM_NOTIFICATIONS,
-          to: email,
-          subject: template.subject,
-          html: template.html
-        });
+    if (vendorQuery.rows.length === 0) {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
 
-        if (error) {
-          return res.status(500).json({ error: 'Failed to send email', details: error });
-        }
+    const vendor = vendorQuery.rows[0];
+    const template = emailTemplates.bidAccepted(vendor.name, customerName, quoteTitle, bidAmount, quoteId);
 
-        res.json({ 
-          success: true, 
-          message: 'Bid acceptance notification sent',
-          emailId: data.id 
-        });
-
-      } catch (err) {
-        console.error('Bid acceptance notification error:', err);
-        res.status(500).json({ error: err.message });
-      }
+    const { data, error } = await resend.emails.send({
+      from: FROM_NOTIFICATIONS,
+      to: vendor.email,
+      subject: template.subject,
+      html: template.html
     });
 
-    // Send quote submitted confirmation
-    router.post('/quote-submitted', async (req, res) => {
-      try {
-        const { customerId, quoteTitle, quoteId } = req.body;
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
 
-        if (!customerId || !quoteTitle || !quoteId) {
-          return res.status(400).json({ 
-            error: 'Missing required fields: customerId, quoteTitle, quoteId' 
-          });
-        }
-
-        const customerQuery = await pool.query(
-          'SELECT email, name FROM users WHERE id = $1',
-          [customerId]
-        );
-
-        if (customerQuery.rows.length === 0) {
-          return res.status(404).json({ error: 'Customer not found' });
-        }
-
-        const { email, name } = customerQuery.rows[0];
-        const template = emailTemplates.quoteSubmitted(name, quoteTitle, quoteId);
-
-        const { data, error } = await resend.emails.send({
-          from: FROM_JOBS,
-          to: email,
-          subject: template.subject,
-          html: template.html
-        });
-
-        if (error) {
-          return res.status(500).json({ error: 'Failed to send email', details: error });
-        }
-
-        res.json({ 
-          success: true, 
-          message: 'Quote submitted confirmation sent',
-          emailId: data.id 
-        });
-
-      } catch (err) {
-        console.error('Quote submitted confirmation error:', err);
-        res.status(500).json({ error: err.message });
-      }
+    res.json({ 
+      success: true, 
+      message: 'Bid acceptance notification sent',
+      emailId: data.id 
     });
+  } catch (err) {
+    console.error('Bid acceptance notification error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Send quote submitted confirmation
+router.post('/quote-submitted', async (req, res) => {
+  try {
+    const { customerId, quoteTitle, quoteId } = req.body;
+
+    if (!customerId || !quoteTitle || !quoteId) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: customerId, quoteTitle, quoteId' 
+      });
+    }
+
+    const customerQuery = await pool.query(
+      'SELECT email, COALESCE(full_name, name, email) AS name FROM users WHERE id = $1',
+      [customerId]
+    );
+
+    if (customerQuery.rows.length === 0) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+
+    const { email, name } = customerQuery.rows[0];
+    const template = emailTemplates.quoteSubmitted(name, quoteTitle, quoteId);
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_JOBS,
+      to: email,
+      subject: template.subject,
+      html: template.html
+    });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to send email', details: error });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Quote submitted confirmation sent',
+      emailId: data.id 
+    });
+  } catch (err) {
+    console.error('Quote submitted confirmation error:', err);
     res.status(500).json({ error: err.message });
   }
 });
