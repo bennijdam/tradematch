@@ -979,6 +979,50 @@ function openOAuthPopup(url) {
     return popup;
 }
 
+function showPopupCloseNotice() {
+    const existing = document.getElementById('oauthCloseNotice');
+    if (existing) return;
+    const notice = document.createElement('div');
+    notice.id = 'oauthCloseNotice';
+    notice.style.cssText = [
+        'position:fixed',
+        'top:16px',
+        'right:16px',
+        'background:#0f172a',
+        'color:#fff',
+        'padding:12px 16px',
+        'border-radius:10px',
+        'box-shadow:0 8px 20px rgba(0,0,0,0.25)',
+        'z-index:9999',
+        'font-size:14px'
+    ].join(';');
+    notice.innerHTML = 'Login complete. <button id="oauthCloseBtn" style="margin-left:10px;padding:6px 10px;border:none;border-radius:6px;background:#10b981;color:#fff;font-weight:600;cursor:pointer;">Close</button>';
+    document.body.appendChild(notice);
+    const closeBtn = document.getElementById('oauthCloseBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            try {
+                window.close();
+            } catch (_) {
+                // ignore
+            }
+        });
+    }
+}
+
+function attemptClosePopup() {
+    try {
+        window.close();
+    } catch (_) {
+        // ignore
+    }
+    setTimeout(() => {
+        if (!window.closed) {
+            showPopupCloseNotice();
+        }
+    }, 500);
+}
+
 function generateQuoteTitle(serviceType) {
     const titles = {
         'extension': 'House Extension Quote Request',
@@ -1318,6 +1362,7 @@ function handleOAuthCallback() {
                 localStorage.setItem('oauthToken', token);
                 localStorage.setItem('oauthSource', source || 'oauth');
                 showNotification('Login complete. You can close this window.', 'success');
+                attemptClosePopup();
                 return;
             }
         processOAuthToken(token, source);
