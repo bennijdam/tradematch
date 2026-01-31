@@ -158,6 +158,21 @@ async function ensureReviewsTable() {
     ALTER TABLE reviews
     ADD COLUMN IF NOT EXISTS comment TEXT
   `);
+
+  await pool.query(`
+    ALTER TABLE reviews
+    ADD COLUMN IF NOT EXISTS response_text TEXT
+  `);
+
+  await pool.query(`
+    ALTER TABLE reviews
+    ADD COLUMN IF NOT EXISTS response_at TIMESTAMP
+  `);
+
+  await pool.query(`
+    ALTER TABLE reviews
+    ADD COLUMN IF NOT EXISTS helpful_count INTEGER DEFAULT 0
+  `);
 }
 
 // JWT Authentication Middleware
@@ -1799,6 +1814,69 @@ app.get("/api/reviews/vendor/:vendorId", async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to fetch reviews: ' + error.message 
     });
+  }
+});
+
+// Vendor response to a review
+app.post("/api/reviews/:reviewId/response", authenticateToken, async (req, res) => {
+  const userId = req.user.userId || req.user.id;
+  const { reviewId } = req.params;
+  const { responseText } = req.body;
+
+  if (!userId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  if (!responseText || !responseText.trim()) {
+    return res.status(400).json({ error: 'responseText is required' });
+  }
+
+  try {
+    await ensureReviewsTable();
+
+    const reviewResult = await pool.query(
+      'SELECT vendor_id FROM reviews WHERE id = $1',
+      [reviewId]
+    );
+
+    if (reviewResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    if (reviewResult.rows[0].vendor_id !== userId) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    await pool.query(
+      `UPDATE reviews
+       SET response_text = $1, response_at = NOW()
+       WHERE id = $2`,
+      [responseText.trim(), reviewId]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Review response error:', error);
+    return res.status(500).json({ error: 'Failed to post response' });
+  }
+});
+
+// Mark review as helpful
+app.post("/api/reviews/:reviewId/helpful", authenticateToken, async (req, res) => {
+  const { reviewId } = req.params;
+
+  try {
+    await ensureReviewsTable();
+
+    await pool.query(
+      'UPDATE reviews SET helpful_count = COALESCE(helpful_count, 0) + 1 WHERE id = $1',
+      [reviewId]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Helpful vote error:', error);
+    return res.status(500).json({ error: 'Failed to record vote' });
   }
 });
 

@@ -286,7 +286,7 @@ async function main() {
       body: JSON.stringify(reviewPayload)
     });
 
-    const reviewId = review.reviewId;
+    const reviewId = review.reviewId || review.data?.id || review.id;
 
     await api(`/api/reviews/${reviewId}/response`, {
       method: 'POST',
