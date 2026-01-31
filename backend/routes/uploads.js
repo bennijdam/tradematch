@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
-const AWS = require('aws-sdk');
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
@@ -12,11 +13,14 @@ if (!bucketName || !region) {
     console.warn('⚠️  S3 uploads are not fully configured. Missing AWS_BUCKET_NAME/S3_BUCKET or AWS_REGION.');
 }
 
-const s3 = new AWS.S3({
+const s3 = new S3Client({
     region,
-    signatureVersion: 'v4',
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    credentials: process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+        ? {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        }
+        : undefined
 });
 
 const maxFileSize = Number(process.env.MAX_FILE_SIZE || 5242880);
@@ -61,14 +65,13 @@ router.post('/presign', authenticate, async (req, res) => {
         }
 
         const key = buildKey({ folder, filename });
-        const params = {
+        const uploadCommand = new PutObjectCommand({
             Bucket: bucketName,
             Key: key,
-            ContentType: contentType,
-            Expires: 300
-        };
+            ContentType: contentType
+        });
 
-        const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
+        const uploadUrl = await getSignedUrl(s3, uploadCommand, { expiresIn: 300 });
 
         res.json({
             success: true,
@@ -90,11 +93,12 @@ router.get('/signed-url', authenticate, async (req, res) => {
             return res.status(500).json({ error: 'S3 is not configured' });
         }
 
-        const url = await s3.getSignedUrlPromise('getObject', {
+        const downloadCommand = new GetObjectCommand({
             Bucket: bucketName,
-            Key: key,
-            Expires: 300
+            Key: key
         });
+
+        const url = await getSignedUrl(s3, downloadCommand, { expiresIn: 300 });
 
         res.json({ success: true, url });
     } catch (error) {
