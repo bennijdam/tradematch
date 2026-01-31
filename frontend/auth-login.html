@@ -1105,6 +1105,16 @@ async function processOAuthToken(token, source) {
     }
 }
 
+    function consumeStoredOAuthToken() {
+        const storedToken = localStorage.getItem('oauthToken');
+        if (!storedToken) return false;
+        const storedSource = localStorage.getItem('oauthSource') || 'oauth';
+        localStorage.removeItem('oauthToken');
+        localStorage.removeItem('oauthSource');
+        processOAuthToken(storedToken, storedSource);
+        return true;
+    }
+
 window.addEventListener('message', (event) => {
     if (!FRONTEND_BASES.includes(event.origin)) return;
     const { type, token, source } = event.data || {};
@@ -1116,6 +1126,12 @@ window.addEventListener('message', (event) => {
         }
     }
 });
+
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'oauthToken' && event.newValue) {
+            consumeStoredOAuthToken();
+        }
+    });
 
 // Form Submission
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -1279,11 +1295,12 @@ function handleOAuthCallback() {
     
     if (token) {
         const opener = window.opener;
+            const isPopup = window.name === 'tradematch_oauth';
         if (opener && !opener.closed) {
             const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
+            const targetOrigin = new URL(returnTo).origin;
             try {
-                opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
-                opener.location.href = `${returnTo}/auth-login?token=${encodeURIComponent(token)}&source=${encodeURIComponent(source || 'oauth')}`;
+                opener.postMessage({ type: 'oauth', token, source }, targetOrigin);
             } catch (postError) {
                 console.warn('OAuth opener handoff failed:', postError);
             }
@@ -1294,6 +1311,12 @@ function handleOAuthCallback() {
             }
             return;
         }
+            if (isPopup) {
+                localStorage.setItem('oauthToken', token);
+                localStorage.setItem('oauthSource', source || 'oauth');
+                showNotification('Login complete. You can close this window.', 'success');
+                return;
+            }
         processOAuthToken(token, source);
     } else if (urlParams.get('error')) {
         const error = urlParams.get('error');
@@ -1310,6 +1333,10 @@ window.addEventListener('load', () => {
         handleOAuthCallback();
         return;
     }
+
+        if (consumeStoredOAuthToken()) {
+            return;
+        }
     
     const lastEmail = localStorage.getItem('lastEmail');
     const emailInput = document.getElementById('email');
