@@ -327,6 +327,16 @@
     </div>
 
     <script>
+        // Remove sensitive query params from URL (email/password should never be in URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('email') || urlParams.has('password')) {
+            urlParams.delete('email');
+            urlParams.delete('password');
+            const cleanQuery = urlParams.toString();
+            const cleanUrl = `${window.location.pathname}${cleanQuery ? `?${cleanQuery}` : ''}`;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+
         const isLocal = window.location.protocol === 'file:' ||
             window.location.hostname === 'localhost' ||
             window.location.hostname === '127.0.0.1';
@@ -427,6 +437,5 @@
             }
         });
     </script>
-    <script src="/frontend/profile-menu.js"></script>
 </body>
 </html>
