@@ -46,7 +46,8 @@ const buildPublicUrl = (key) => {
 
 router.post('/presign', authenticate, async (req, res) => {
     try {
-        const { filename, contentType, folder, contentLength } = req.body || {};
+        const payload = (req.body && Object.keys(req.body).length ? req.body : req.query) || {};
+        const { filename, contentType, folder, contentLength } = payload;
 
         if (!filename || !contentType) {
             return res.status(400).json({ error: 'filename and contentType are required' });
