@@ -46,10 +46,27 @@ const buildPublicUrl = (key) => {
 
 router.post('/presign', authenticate, async (req, res) => {
     try {
-        const payload = (req.body && Object.keys(req.body).length ? req.body : req.query) || {};
+        let payload = req.body;
+        if (typeof payload === 'string' && payload.trim()) {
+            try {
+                payload = JSON.parse(payload);
+            } catch (_) {
+                payload = {};
+            }
+        }
+        if (!payload || !Object.keys(payload).length) {
+            payload = req.query || {};
+        }
+
         const { filename, contentType, folder, contentLength } = payload;
 
         if (!filename || !contentType) {
+            console.warn('⚠️ Presign missing params', {
+                hasBody: !!req.body,
+                bodyKeys: req.body && typeof req.body === 'object' ? Object.keys(req.body) : [],
+                queryKeys: req.query ? Object.keys(req.query) : [],
+                contentType: req.headers['content-type']
+            });
             return res.status(400).json({ error: 'filename and contentType are required' });
         }
 
