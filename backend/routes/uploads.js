@@ -6,6 +6,8 @@ const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
+router.use(express.json({ limit: '1mb' }));
+
 const bucketName = process.env.AWS_BUCKET_NAME || process.env.S3_BUCKET;
 const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION;
 
