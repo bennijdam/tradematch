@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading…</title>
+  <link rel="canonical" href="vendor-messages.html">
+</head>
+<body>
+  <noscript>
+    <p>This page requires JavaScript. Open <a href="messages.html">messages.html</a> instead.</p>
+  </noscript>
+  <script>
+    fetch('messages.html', { cache: 'no-store' })
+      .then((response) => response.text())
+      .then((html) => {
+        document.open();
+        document.write(html);
+        document.close();
+      })
+      .catch(() => {
+        window.location.href = 'messages.html';
+      });
+  </script>
+  <script src="vendor-dashboard/vendor-dashboard.js"></script>
+</body>
+</html>

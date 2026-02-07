@@ -40,7 +40,16 @@ async function migrate() {
         await client.query(`
             ALTER TABLE users
             ADD CONSTRAINT users_role_check 
-            CHECK (role IN ('customer', 'vendor', 'admin', 'super_admin'));
+            CHECK (role IN (
+                'customer',
+                'vendor',
+                'admin',
+                'super_admin',
+                'finance_admin',
+                'trust_safety_admin',
+                'support_admin',
+                'read_only_admin'
+            ));
         `);
         console.log('✅ Updated users role constraint');
 

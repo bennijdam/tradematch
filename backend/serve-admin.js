@@ -9,18 +9,15 @@ const path = require('path');
 const app = express();
 const PORT = 3002;
 
-// Serve static files from super admin panel directory
-app.use(express.static(path.join(__dirname, '../tradematch-super-admin-panel')));
+// Serve static files from super admin SPA directory
+app.use(express.static(path.join(__dirname, '../frontend/super-admin-dashboard')));
 
-// Fallback to admin-login.html
+// Fallback to SPA entry
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../tradematch-super-admin-panel/admin-login.html'));
+    res.sendFile(path.join(__dirname, '../frontend/super-admin-dashboard/index.html'));
 });
 
 app.listen(PORT, () => {
     console.log(`🎨 Super Admin Panel running at: http://localhost:${PORT}`);
-    console.log(`📱 Login page: http://localhost:${PORT}/admin-login.html`);
-    console.log(`📊 Dashboard: http://localhost:${PORT}/admin-dashboard.html`);
-    console.log(`👥 Users: http://localhost:${PORT}/admin-users.html`);
-    console.log(`🏪 Vendors: http://localhost:${PORT}/admin-vendors.html`);
+    console.log(`📱 SPA: http://localhost:${PORT}/#/super-admin/dashboard`);
 });

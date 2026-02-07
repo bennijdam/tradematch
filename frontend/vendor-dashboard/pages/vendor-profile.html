@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Profile — TradeMatch Vendor Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+
+<style>
+/* ════════════════════════════════════════════════════════
+   CSS VARIABLES  — dark + light, exact codebase tokens
+   ════════════════════════════════════════════════════════ */
+:root {
+    --bg-primary:#0A0E14; --bg-secondary:#12161E; --bg-tertiary:#1A1F2B; --bg-card:#1E2430;
+    --accent-primary:#00E5A0; --accent-secondary:#00B383;
+    --accent-danger:#FF4757; --accent-warning:#FFA726; --accent-info:#42A5F5; --accent-success:#00E5A0;
+    --text-primary:#FFFFFF; --text-secondary:#9CA3AF; --text-muted:#6B7280;
+    --border:rgba(255,255,255,0.08); --border-hover:rgba(255,255,255,0.16);
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.3); --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:0 8px 32px rgba(0,0,0,0.5); --shadow-glow:0 0 24px rgba(0,229,160,0.4);
+    --ambient-gradient-1:rgba(0,229,160,0.08); --ambient-gradient-2:rgba(66,165,245,0.08);
+}
+[data-theme="light"] {
+    --bg-primary:#F8FAFB; --bg-secondary:#FFFFFF; --bg-tertiary:#F3F4F6; --bg-card:#FFFFFF;
+    --accent-primary:#16A34A; --accent-secondary:#15803D;
+    --accent-danger:#EF4444; --accent-warning:#F59E0B; --accent-info:#3B82F6; --accent-success:#16A34A;
+    --text-primary:#1A2332; --text-secondary:#4B5563; --text-muted:#6B7280;
+    --border:rgba(0,0,0,0.08); --border-hover:rgba(0,0,0,0.16);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.08); --shadow-md:0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg:0 10px 25px rgba(0,0,0,0.12); --shadow-glow:0 0 24px rgba(22,163,74,0.3);
+    --ambient-gradient-1:rgba(22,163,74,0.04); --ambient-gradient-2:rgba(59,130,246,0.04);
+}
+
+/* ════════════════════════════════════════════════════════
+   RESET + BODY
+   ════════════════════════════════════════════════════════ */
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+    font-family:'Archivo',sans-serif; background:var(--bg-primary);
+    color:var(--text-primary); overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    transition:background .3s ease, color .3s ease;
+}
+/* Ambient background — identical to every other page */
+body::before{
+    content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%;
+    background:radial-gradient(circle at 20% 50%,var(--ambient-gradient-1) 0%,transparent 50%),
+               radial-gradient(circle at 80% 80%,var(--ambient-gradient-2) 0%,transparent 50%);
+    animation:ambient 20s ease-in-out infinite; pointer-events:none; z-index:0;
+}
+@keyframes ambient{ 0%,100%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(-5%,-5%) rotate(5deg)} }
+
+/* ════════════════════════════════════════════════════════
+   SIDEBAR  — verbatim from codebase, not modified
+   ════════════════════════════════════════════════════════ */
+.sidebar{position:fixed;top:0;left:0;width:280px;height:100vh;background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:101;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-sm)}
+.sidebar.collapsed{width:80px}
+.sidebar-header{height:72px;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:var(--accent-primary);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:white;flex-shrink:0}
+.logo-text{font-size:20px;font-weight:800;color:var(--text-primary);white-space:nowrap;opacity:1;transition:opacity .2s}
+.sidebar.collapsed .logo-text{opacity:0;pointer-events:none}
+.sidebar-nav{flex:1;padding:24px 16px;overflow-y:auto;overflow-x:hidden}
+.nav-section{margin-bottom:32px}
+.nav-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);padding:0 12px;margin-bottom:8px;white-space:nowrap;opacity:1;transition:opacity .2s}
+.sidebar.collapsed .nav-section-title{opacity:0}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;color:var(--text-secondary);text-decoration:none;border-radius:12px;cursor:pointer;transition:all .2s;margin-bottom:4px;position:relative}
+.nav-item:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.nav-item.active{background:rgba(0,229,160,.12);color:var(--accent-primary)}
+[data-theme="light"] .nav-item.active{background:rgba(22,163,74,.08)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent-primary);border-radius:0 2px 2px 0}
+.nav-icon{width:20px;height:20px;flex-shrink:0}
+.nav-label{font-size:14px;font-weight:500;white-space:nowrap;opacity:1;transition:opacity .2s}
+.sidebar.collapsed .nav-label{opacity:0}
+.nav-badge{margin-left:auto;padding:2px 8px;background:var(--accent-danger);color:white;font-size:11px;font-weight:700;border-radius:6px;opacity:1;transition:opacity .2s}
+.sidebar.collapsed .nav-badge{opacity:0}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border)}
+.collapse-btn{width:100%;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;color:var(--text-secondary);cursor:pointer;transition:all .2s}
+.collapse-btn:hover{border-color:var(--border-hover);color:var(--text-primary)}
+.collapse-btn svg{width:18px;height:18px;transition:transform .3s}
+.sidebar.collapsed .collapse-btn svg{transform:scaleX(-1)}
+
+/* ════════════════════════════════════════════════════════
+   TOP NAV  — verbatim from codebase, not modified
+   ════════════════════════════════════════════════════════ */
+.top-nav{position:fixed;top:0;left:280px;right:0;height:72px;background:var(--bg-secondary);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;z-index:100;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-sm)}
+[data-theme="light"] .top-nav{background:rgba(255,255,255,.95)}
+.top-nav.sidebar-collapsed{left:80px}
+.top-nav-left{display:flex;align-items:center;gap:16px;flex:1}
+.search-container{position:relative;width:100%;max-width:480px}
+.search-input{width:100%;height:44px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:0 16px 0 48px;color:var(--text-primary);font-size:14px;font-family:'Archivo',sans-serif;transition:all .2s}
+.search-input::placeholder{color:var(--text-muted)}
+.search-input:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--text-muted)}
+.top-nav-right{display:flex;align-items:center;gap:12px}
+.icon-button{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;position:relative}
+.icon-button:hover{background:var(--bg-tertiary);border-color:var(--border-hover)}
+.icon-button svg{width:20px;height:20px;color:var(--text-secondary)}
+.notification-badge{position:absolute;top:8px;right:8px;width:8px;height:8px;background:var(--accent-danger);border-radius:50%;border:2px solid var(--bg-secondary)}
+.user-menu{display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s}
+.user-menu:hover{border-color:var(--border-hover)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent-primary),var(--accent-info));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white}
+.user-name{font-size:14px;font-weight:600;color:var(--text-primary)}
+.user-role{font-size:12px;color:var(--text-muted)}
+.theme-toggle{position:relative;width:56px;height:28px;background:var(--bg-tertiary);border:2px solid var(--border);border-radius:14px;cursor:pointer;transition:all .3s;display:flex;align-items:center;padding:0 4px}
+.theme-toggle:hover{border-color:var(--border-hover)}
+.theme-toggle-slider{width:20px;height:20px;background:var(--accent-primary);border-radius:50%;position:absolute;left:4px;transition:all .3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+[data-theme="light"] .theme-toggle-slider{left:30px}
+.theme-toggle-icon{width:12px;height:12px;color:white}
+
+/* ════════════════════════════════════════════════════════
+   MAIN CONTENT SHELL
+   ════════════════════════════════════════════════════════ */
+.main-content{margin-left:280px;margin-top:72px;padding:32px;min-height:calc(100vh - 72px);position:relative;z-index:1;transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+.main-content.sidebar-collapsed{margin-left:80px}
+
+/* ════════════════════════════════════════════════════════
+   PAGE HEADER  (matches settings.html .page-header)
+   ════════════════════════════════════════════════════════ */
+.page-header{margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
+.page-header-left{}
+.page-title{font-size:32px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text-primary),var(--text-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-subtitle{font-size:16px;color:var(--text-secondary)}
+.header-actions{display:flex;gap:10px;align-items:center}
+
+/* ════════════════════════════════════════════════════════
+   COMPLETENESS BAR  — sits just below header
+   ════════════════════════════════════════════════════════ */
+.completeness-strip{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
+    padding:18px 24px;margin-bottom:24px;display:flex;align-items:center;gap:20px;
+    box-shadow:var(--shadow-sm);
+}
+.completeness-label{font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.completeness-bar-wrap{flex:1;min-width:0}
+.completeness-bar-bg{width:100%;height:10px;background:var(--bg-tertiary);border-radius:5px;overflow:hidden}
+.completeness-bar-fill{
+    height:100%;border-radius:5px;
+    background:linear-gradient(90deg,var(--accent-primary),var(--accent-info));
+    transition:width .8s cubic-bezier(.4,0,.2,1);position:relative;
+}
+.completeness-bar-fill::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+    animation:shimmer 2s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.completeness-pct{font-size:15px;font-weight:800;font-family:'Space Mono',monospace;color:var(--accent-primary);white-space:nowrap}
+/* Status badges row */
+.status-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.status-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;
+    font-family:'Space Mono',monospace;
+}
+.status-badge--verified{background:rgba(0,229,160,.12);color:var(--accent-success);border:1px solid rgba(0,229,160,.2)}
+.status-badge--insurance{background:rgba(66,165,245,.12);color:var(--accent-info);border:1px solid rgba(66,165,245,.2)}
+.status-badge--company{background:rgba(255,167,38,.12);color:var(--accent-warning);border:1px solid rgba(255,167,38,.2)}
+[data-theme="light"] .status-badge--verified{background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.2)}
+[data-theme="light"] .status-badge--insurance{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2)}
+[data-theme="light"] .status-badge--company{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2)}
+
+/* ════════════════════════════════════════════════════════
+   SECTION CARDS  (matches settings-section)
+   ════════════════════════════════════════════════════════ */
+.section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:28px 30px;margin-bottom:22px;box-shadow:var(--shadow-sm);transition:box-shadow .25s}
+.section-card:hover{box-shadow:var(--shadow-md)}
+.section-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;flex-wrap:wrap;gap:8px}
+.section-title{font-size:18px;font-weight:700}
+.section-subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:22px;line-height:1.5}
+
+/* ════════════════════════════════════════════════════════
+   FORM SYSTEM  — from settings.html, extended
+   ════════════════════════════════════════════════════════ */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.form-grid--3{grid-template-columns:repeat(3,1fr)}
+.form-grid--full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column}
+.form-label{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px}
+.form-label .required{color:var(--accent-danger);margin-left:2px}
+.form-input{
+    width:100%;height:44px;background:var(--bg-tertiary);
+    border:1px solid var(--border);border-radius:10px;
+    padding:0 16px;color:var(--text-primary);font-size:14px;
+    font-family:'Archivo',sans-serif;transition:all .2s;
+}
+.form-input:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.form-input::placeholder{color:var(--text-muted)}
+.form-input:disabled{opacity:.5;cursor:not-allowed}
+[data-theme="light"] .form-input:focus{box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+
+.form-select{
+    width:100%;height:44px;background:var(--bg-tertiary);
+    border:1px solid var(--border);border-radius:10px;
+    padding:0 40px 0 16px;color:var(--text-primary);font-size:14px;
+    font-family:'Archivo',sans-serif;cursor:pointer;
+    appearance:none;-webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+    transition:border-color .2s;
+}
+.form-select:focus{outline:none;border-color:var(--accent-primary)}
+.form-select option{background:var(--bg-card);color:var(--text-primary)}
+
+.form-textarea{
+    width:100%;min-height:110px;background:var(--bg-tertiary);
+    border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;color:var(--text-primary);font-size:14px;
+    font-family:'Archivo',sans-serif;resize:vertical;transition:border-color .2s;
+}
+.form-textarea:focus{outline:none;border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.form-textarea::placeholder{color:var(--text-muted)}
+.form-helper{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.4}
+.char-counter{font-size:12px;color:var(--text-muted);text-align:right;margin-top:6px;font-family:'Space Mono',monospace}
+
+/* Multi-select tags */
+.multiselect-wrap{position:relative}
+.multiselect-tags{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;min-height:44px;align-items:center;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .2s}
+.multiselect-tags:focus-within{border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,229,160,.1)}
+.tag{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;
+    background:rgba(0,229,160,.12);color:var(--accent-primary);
+    border:1px solid rgba(0,229,160,.2);
+}
+[data-theme="light"] .tag{background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.2)}
+.tag-remove{cursor:pointer;opacity:.6;transition:opacity .15s;font-size:13px;line-height:1}
+.tag-remove:hover{opacity:1}
+.multiselect-input{border:none;background:transparent;outline:none;color:var(--text-primary);font-size:14px;font-family:'Archivo',sans-serif;flex:1;min-width:60px;padding:2px 0}
+.multiselect-input::placeholder{color:var(--text-muted)}
+.multiselect-dropdown{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    box-shadow:var(--shadow-md);z-index:50;display:none;max-height:180px;overflow-y:auto;
+}
+.multiselect-dropdown.open{display:block}
+.multiselect-option{padding:10px 14px;font-size:14px;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+.multiselect-option:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.multiselect-option.selected{color:var(--accent-primary);background:rgba(0,229,160,.06)}
+
+/* ════════════════════════════════════════════════════════
+   SECTION 3  — Verification upload zones + upsell
+   ════════════════════════════════════════════════════════ */
+.verification-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+.upload-card{
+    border:2px dashed var(--border);border-radius:14px;
+    padding:24px 20px;text-align:center;cursor:pointer;
+    transition:all .25s;background:var(--bg-tertiary);position:relative;
+}
+.upload-card:hover{border-color:var(--accent-primary);background:rgba(0,229,160,.04)}
+.upload-card.uploaded{border-style:solid;border-color:rgba(0,229,160,.35);background:rgba(0,229,160,.06)}
+.upload-card.uploaded:hover{border-color:var(--accent-primary)}
+.upload-card-icon{
+    width:48px;height:48px;margin:0 auto 12px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+}
+.upload-card-icon--doc{background:rgba(66,165,245,.12)}
+.upload-card-icon--doc svg{color:var(--accent-info)}
+.upload-card-icon--shield{background:rgba(0,229,160,.12)}
+.upload-card-icon--shield svg{color:var(--accent-primary)}
+.upload-card-icon--cert{background:rgba(255,167,38,.12)}
+.upload-card-icon--cert svg{color:var(--accent-warning)}
+.upload-card-icon svg{width:22px;height:22px}
+.upload-card-title{font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.upload-card-meta{font-size:12px;color:var(--text-muted);line-height:1.4}
+/* Uploaded state: file-name chip */
+.upload-card-file{
+    display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+    padding:5px 10px;border-radius:6px;background:var(--bg-card);
+    border:1px solid var(--border);font-size:12px;color:var(--text-secondary);
+    font-family:'Space Mono',monospace;
+}
+.upload-card-file svg{width:14px;height:14px;color:var(--accent-primary)}
+/* Verification status row */
+.verification-status-row{
+    display:flex;align-items:center;gap:14px;
+    padding:16px 18px;border-radius:12px;margin-top:8px;
+    background:var(--bg-tertiary);border:1px solid var(--border);
+}
+.vsr-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vsr-icon--pending{background:rgba(66,165,245,.12)}
+.vsr-icon--pending svg{color:var(--accent-info)}
+.vsr-icon--verified{background:rgba(0,229,160,.12)}
+.vsr-icon--verified svg{color:var(--accent-primary)}
+.vsr-icon svg{width:18px;height:18px}
+.vsr-text{flex:1}
+.vsr-title{font-size:14px;font-weight:700;color:var(--text-primary)}
+.vsr-sub{font-size:12px;color:var(--text-muted)}
+.vsr-badge{font-size:11px;font-weight:700;font-family:'Space Mono',monospace;padding:4px 10px;border-radius:6px}
+.vsr-badge--pending{background:rgba(66,165,245,.12);color:var(--accent-info)}
+.vsr-badge--verified{background:rgba(0,229,160,.12);color:var(--accent-success)}
+
+/* Verified upsell card */
+.upsell-card{
+    background:linear-gradient(135deg,rgba(0,229,160,.08),rgba(66,165,245,.08));
+    border:1px solid rgba(0,229,160,.25);border-radius:14px;
+    padding:24px;margin-top:20px;display:flex;gap:22px;align-items:flex-start;
+}
+[data-theme="light"] .upsell-card{background:linear-gradient(135deg,rgba(22,163,74,.05),rgba(59,130,246,.05));border-color:rgba(22,163,74,.2)}
+.upsell-price-wrap{flex-shrink:0;text-align:center}
+.upsell-price{font-size:30px;font-weight:800;font-family:'Space Mono',monospace;color:var(--accent-primary);line-height:1}
+.upsell-period{font-size:13px;color:var(--text-muted);margin-top:3px}
+.upsell-content{flex:1}
+.upsell-title{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text-primary)}
+.upsell-desc{font-size:13px;color:var(--text-secondary);margin-bottom:12px;line-height:1.5}
+.upsell-benefits{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.upsell-benefit{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.upsell-benefit svg{width:16px;height:16px;color:var(--accent-primary);flex-shrink:0}
+
+/* ════════════════════════════════════════════════════════
+   SECTION 4  — Work Gallery
+   ════════════════════════════════════════════════════════ */
+.upload-zone{
+    border:2px dashed var(--border);border-radius:14px;
+    padding:36px 24px;text-align:center;cursor:pointer;
+    transition:all .3s;background:var(--bg-tertiary);margin-bottom:22px;
+}
+.upload-zone:hover{border-color:var(--accent-primary);background:rgba(0,229,160,.04)}
+.upload-zone-icon{width:48px;height:48px;margin:0 auto 12px;color:var(--text-muted)}
+.upload-zone-title{font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:4px}
+.upload-zone-meta{font-size:13px;color:var(--text-muted)}
+.upload-zone-meta span{color:var(--accent-primary);font-weight:600}
+
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.gallery-item{position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:var(--bg-tertiary);border:1px solid var(--border);cursor:grab;transition:all .2s}
+.gallery-item:hover{border-color:var(--border-hover);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.gallery-item.dragging{opacity:.5;cursor:grabbing}
+/* Colour-coded placeholder thumbnails */
+.gallery-thumb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:rgba(255,255,255,.7)}
+.gallery-thumb--1{background:linear-gradient(135deg,#1a3a2a,#2d6b4f)}
+.gallery-thumb--2{background:linear-gradient(135deg,#2a1a3a,#4f2d6b)}
+.gallery-thumb--3{background:linear-gradient(135deg,#1a2a3a,#2d4f6b)}
+.gallery-thumb--4{background:linear-gradient(135deg,#3a2a1a,#6b4f2d)}
+.gallery-thumb--5{background:linear-gradient(135deg,#2a3a1a,#4f6b2d)}
+.gallery-thumb--6{background:linear-gradient(135deg,#3a1a2a,#6b2d4f)}
+/* Overlay controls */
+.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:12px}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-caption{font-size:12px;font-weight:600;color:white;margin-bottom:8px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.gallery-actions{display:flex;gap:6px}
+.gallery-btn{width:28px;height:28px;border-radius:6px;border:none;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.gallery-btn:hover{background:rgba(255,255,255,.3)}
+.gallery-btn svg{width:14px;height:14px}
+.gallery-btn--delete:hover{background:rgba(255,71,87,.5)}
+/* Before/After badge */
+.gallery-ba-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white}
+.gallery-ba-badge--before{background:rgba(255,167,38,.85)}
+.gallery-ba-badge--after{background:rgba(0,229,160,.85)}
+
+/* ════════════════════════════════════════════════════════
+   SECTION 5  — Reputation Snapshot
+   ════════════════════════════════════════════════════════ */
+.rep-grid{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+.rep-score-block{text-align:center}
+.rep-score-ring{width:108px;height:108px;margin:0 auto 12px;position:relative}
+.rep-score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rep-score-ring-bg{fill:none;stroke:var(--bg-tertiary);stroke-width:10}
+.rep-score-ring-fill{fill:none;stroke:var(--accent-warning);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
+.rep-score-value{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;font-family:'Space Mono',monospace;color:var(--accent-warning)}
+.rep-score-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.rep-stats-col{display:flex;flex-direction:column;gap:14px}
+.rep-stat-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-tertiary);border-radius:12px;border:1px solid var(--border)}
+.rep-stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rep-stat-icon--reviews{background:rgba(66,165,245,.12)}
+.rep-stat-icon--reviews svg{color:var(--accent-info)}
+.rep-stat-icon--latest{background:rgba(255,167,38,.12)}
+.rep-stat-icon--latest svg{color:var(--accent-warning)}
+.rep-stat-icon svg{width:18px;height:18px}
+.rep-stat-info{flex:1;min-width:0}
+.rep-stat-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.rep-stat-value{font-size:15px;font-weight:700;color:var(--text-primary);margin-top:2px}
+.rep-stat-value--snippet{font-size:13px;font-weight:500;color:var(--text-secondary);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rep-link{display:inline-flex;align-items:center;gap:6px;color:var(--accent-primary);font-size:13px;font-weight:600;text-decoration:none;margin-top:6px;transition:color .15s}
+.rep-link:hover{color:var(--accent-secondary)}
+.rep-link svg{width:15px;height:15px}
+
+/* Enquiries callout */
+.enquiries-callout{
+    margin-top:18px;padding:16px 18px;border-radius:12px;
+    background:var(--bg-tertiary);border:1px solid var(--border);
+    display:flex;align-items:center;gap:14px;
+}
+.enquiries-callout-icon{font-size:22px;flex-shrink:0}
+.enquiries-callout-text{font-size:14px;color:var(--text-secondary);line-height:1.5}
+.enquiries-callout-text strong{color:var(--text-primary)}
+
+/* ════════════════════════════════════════════════════════
+   SECTION 6  — Visibility Controls
+   ════════════════════════════════════════════════════════ */
+.visibility-top{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+/* Toggle rows — from settings.html */
+.toggle-group{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
+.toggle-group:last-child{border-bottom:none}
+.toggle-info{flex:1}
+.toggle-label{font-size:15px;font-weight:600;margin-bottom:3px;color:var(--text-primary)}
+.toggle-description{font-size:13px;color:var(--text-secondary)}
+.toggle-switch{position:relative;width:52px;height:28px;background:var(--bg-tertiary);border:2px solid var(--border);border-radius:14px;cursor:pointer;transition:all .3s;flex-shrink:0}
+.toggle-switch.active{background:var(--accent-primary);border-color:var(--accent-primary)}
+.toggle-slider{position:absolute;left:2px;top:2px;width:20px;height:20px;background:white;border-radius:50%;transition:all .3s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.toggle-switch.active .toggle-slider{left:26px}
+
+/* Coverage cap select */
+.coverage-cap-row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.coverage-cap-row label{font-size:14px;font-weight:600;color:var(--text-primary);flex:1}
+.coverage-cap-row .form-select{max-width:180px}
+
+/* Postcode list with saturation */
+.postcode-list{display:flex;flex-direction:column;gap:10px}
+.postcode-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;transition:border-color .2s}
+.postcode-item:hover{border-color:var(--border-hover)}
+.postcode-code{font-size:17px;font-weight:800;font-family:'Space Mono',monospace;color:var(--text-primary);min-width:52px}
+.postcode-town{font-size:13px;color:var(--text-secondary);flex:1}
+.saturation-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;font-family:'Space Mono',monospace}
+.saturation-badge--low{background:rgba(0,229,160,.12);color:var(--accent-success)}
+.saturation-badge--moderate{background:rgba(255,167,38,.12);color:var(--accent-warning)}
+.saturation-badge--high{background:rgba(255,71,87,.12);color:var(--accent-danger)}
+[data-theme="light"] .saturation-badge--low{background:rgba(22,163,74,.08)}
+[data-theme="light"] .saturation-badge--moderate{background:rgba(245,158,11,.08)}
+[data-theme="light"] .saturation-badge--high{background:rgba(239,68,68,.08)}
+.saturation-badge .dot{width:7px;height:7px;border-radius:50%}
+.saturation-badge--low .dot{background:var(--accent-success)}
+.saturation-badge--moderate .dot{background:var(--accent-warning)}
+.saturation-badge--high .dot{background:var(--accent-danger)}
+
+/* AI-suggested postcodes — locked behind Pro */
+.pro-lock-strip{
+    margin-top:16px;padding:16px 18px;border-radius:12px;
+    background:var(--bg-tertiary);border:1px dashed var(--border);
+    display:flex;align-items:center;gap:14px;opacity:.7;
+}
+.pro-lock-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#FFD700,#FFA500);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pro-lock-icon svg{width:18px;height:18px;color:#000}
+.pro-lock-text{flex:1}
+.pro-lock-title{font-size:14px;font-weight:700;color:var(--text-primary)}
+.pro-lock-sub{font-size:12px;color:var(--text-muted)}
+.badge-pro{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;font-family:'Space Mono',monospace}
+
+/* ════════════════════════════════════════════════════════
+   SECTION 7  — Sticky action bar
+   ════════════════════════════════════════════════════════ */
+.action-bar{
+    position:sticky;bottom:24px;margin-top:8px;
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:16px;padding:16px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    box-shadow:var(--shadow-lg);backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);z-index:10;
+}
+[data-theme="light"] .action-bar{background:rgba(255,255,255,.95)}
+.action-bar-left{display:flex;align-items:center;gap:8px}
+.action-bar-unsaved{font-size:13px;color:var(--accent-warning);font-weight:600;display:none;align-items:center;gap:6px}
+.action-bar-unsaved.visible{display:flex}
+.action-bar-unsaved .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-warning);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.action-bar-right{display:flex;gap:10px}
+
+/* ════════════════════════════════════════════════════════
+   BUTTONS  — from codebase, plus ghost variant
+   ════════════════════════════════════════════════════════ */
+.btn{padding:10px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;font-family:'Archivo',sans-serif;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn svg{width:16px;height:16px}
+.btn-primary{background:var(--accent-primary);color:white}
+.btn-primary:hover{background:var(--accent-secondary);transform:translateY(-2px);box-shadow:var(--shadow-glow)}
+.btn-ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-hover);color:var(--text-primary);background:var(--bg-tertiary)}
+.btn-sm{padding:7px 16px;font-size:13px;border-radius:8px}
+
+/* ════════════════════════════════════════════════════════
+   TOAST  — from settings.html
+   ════════════════════════════════════════════════════════ */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;box-shadow:var(--shadow-lg);z-index:2000;display:none;align-items:center;gap:12px;min-width:300px;max-width:380px}
+.toast.active{display:flex;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
+.toast.success{border-left:4px solid var(--accent-success)}
+.toast.error{border-left:4px solid var(--accent-danger)}
+@keyframes toastIn{from{transform:translateX(420px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.toast-icon--success{background:rgba(0,229,160,.12)}
+.toast-icon--success svg{color:var(--accent-success)}
+.toast-icon--error{background:rgba(255,71,87,.12)}
+.toast-icon--error svg{color:var(--accent-danger)}
+.toast-icon svg{width:18px;height:18px}
+.toast-text{flex:1}
+.toast-title{font-size:14px;font-weight:700;color:var(--text-primary)}
+.toast-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+/* ════════════════════════════════════════════════════════
+   CAPTION MODAL  (gallery image caption editor)
+   ════════════════════════════════════════════════════════ */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal-content{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;width:90%;max-width:440px;position:relative;animation:modalIn .2s cubic-bezier(.4,0,.2,1)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:18px;right:18px;width:32px;height:32px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s}
+.modal-close:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.modal-title{font-size:20px;font-weight:800;margin-bottom:6px}
+.modal-desc{font-size:14px;color:var(--text-secondary);margin-bottom:20px}
+.modal-thumb{width:100%;aspect-ratio:4/3;border-radius:10px;overflow:hidden;margin-bottom:18px;border:1px solid var(--border)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* ════════════════════════════════════════════════════════
+   ANIMATIONS  — staggered fadeIn, codebase convention
+   ════════════════════════════════════════════════════════ */
+@keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.completeness-strip,.section-card{animation:fadeIn .55s cubic-bezier(.4,0,.2,1) backwards}
+.completeness-strip{animation-delay:.06s}
+.section-card:nth-of-type(1){animation-delay:.14s}
+.section-card:nth-of-type(2){animation-delay:.22s}
+.section-card:nth-of-type(3){animation-delay:.30s}
+.section-card:nth-of-type(4){animation-delay:.38s}
+.section-card:nth-of-type(5){animation-delay:.44s}
+.section-card:nth-of-type(6){animation-delay:.50s}
+.section-card:nth-of-type(7){animation-delay:.56s}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════ */
+@media(max-width:1200px){
+    .verification-grid{grid-template-columns:1fr}
+    .visibility-top{grid-template-columns:1fr}
+}
+@media(max-width:1024px){
+    .sidebar{width:80px}
+    .sidebar .logo-text,.sidebar .nav-section-title,.sidebar .nav-label,.sidebar .nav-badge{opacity:0}
+    .top-nav{left:80px}
+    .main-content{margin-left:80px}
+}
+@media(max-width:768px){
+    .sidebar{transform:translateX(-100%)}
+    .top-nav{left:0}
+    .main-content{margin-left:0;padding:16px}
+    .form-grid,.form-grid--3{grid-template-columns:1fr}
+    .gallery-grid{grid-template-columns:repeat(2,1fr)}
+    .rep-grid{grid-template-columns:1fr;text-align:center}
+    .rep-stats-col{align-items:stretch}
+    .action-bar{position:fixed;bottom:0;left:0;right:0;border-radius:0;margin:0;padding:14px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     SIDEBAR  — "Profile & Services" > "Business Profile" is active
+     ══════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="vendor-dashboard-with-modals.html" class="logo">
+            <div class="logo-icon">T</div>
+            <span class="logo-text">TradeMatch</span>
+        </a>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="vendor-dashboard-with-modals.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="vendor-analytics.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="nav-label">Analytics</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Leads & Jobs</div>
+            <a href="vendor-active-quotes.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <span class="nav-label">New Leads</span>
+                <span class="nav-badge">12</span>
+            </a>
+            <a href="vendor-archived-jobs.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="nav-label">Active Quotes</span>
+            </a>
+            <a href="vendor-badges.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="nav-label">Won Jobs</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Impressions</div>
+            <a href="vendor-impressions.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7s-8.268-2.943-9.542-7z"/></svg>
+                <span class="nav-label">Impressions</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Reputation</div>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-5.518-3.24a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+                <span class="nav-label">Reviews</span>
+            </a>
+        </div>
+        <!-- Profile & Services — ACTIVE section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Profile & Services</div>
+            <a href="vendor-profile.html" class="nav-item active">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span class="nav-label">Business Profile</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <span class="nav-label">Services</span>
+            </a>
+            <a href="vendor-coverage.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 12.414a1.414 1.414 0 010-2L17.657 6.343a2 2 0 010 2.828l0 0a2 2 0 010 2.828l0 0a2 2 0 010 2.828z"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                <span class="nav-label">Coverage</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Billing</div>
+            <a href="vendor-billing.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-3m-1 4H8m0 0v.01M8 8v.01M8 11v.01M8 14v.01"/></svg>
+                <span class="nav-label">Billing</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-section-title">Account</div>
+            <a href="vendor-settings.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.826 3.31.077 3.279 1.815a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.31 1.737-1.037 2.64-2.579 1.815a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.826-3.31-.077-3.279-1.815a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.31-1.737 1.037-2.64 2.579-1.815a1.724 1.724 0 002.573-1.066zM15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="nav-label">Settings</span>
+            </a>
+        </div>
+    </nav>
+    <div class="sidebar-footer">
+        <button class="collapse-btn" onclick="toggleSidebar()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+            <span class="nav-label">Collapse</span>
+        </button>
+    </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════
+     TOP NAV  — verbatim, not modified
+     ══════════════════════════════════════════════════ -->
+<header class="top-nav" id="topNav">
+    <div class="top-nav-left">
+        <div class="search-container">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" class="search-input" placeholder="Search jobs, leads, customers…">
+        </div>
+    </div>
+    <div class="top-nav-right">
+        <button class="icon-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="notification-badge"></span>
+        </button>
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="theme-toggle-slider">
+                <svg class="theme-toggle-icon" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
+            </div>
+        </div>
+        <div class="user-menu">
+            <div class="user-avatar">JD</div>
+            <div>
+                <div class="user-name">James Davies</div>
+                <div class="user-role">Pro Vendor</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════
+     MAIN CONTENT  — Profile page. Sidebar & topbar untouched.
+     ══════════════════════════════════════════════════ -->
+<main class="main-content" id="mainContent">
+
+    <!-- Page header + action buttons -->
+    <div class="page-header">
+        <div class="page-header-left">
+            <h1 class="page-title">Business Profile</h1>
+            <p class="page-subtitle">This is how customers see your business</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-ghost btn-sm" onclick="previewProfile()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7s-8.268-2.943-9.542-7z"/></svg>
+                Preview Profile
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="viewSearchAppearance()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                Search Appearance
+            </button>
+        </div>
+    </div>
+
+    <!-- ─── Profile Completeness Strip ─── -->
+    <div class="completeness-strip" id="completenessStrip">
+        <div class="completeness-label">Profile Complete</div>
+        <div class="completeness-bar-wrap">
+            <div class="completeness-bar-bg"><div class="completeness-bar-fill" id="completenessBar" style="width:78%"></div></div>
+        </div>
+        <div class="completeness-pct" id="completnessPct">78%</div>
+    </div>
+    <!-- Status badges below the bar -->
+    <div class="status-badges" style="margin-bottom:24px;">
+        <span class="status-badge status-badge--verified">✅ Verified</span>
+        <span class="status-badge status-badge--insurance">🛡️ Insurance Uploaded</span>
+        <span class="status-badge status-badge--company">🏢 Company Registered</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 2  — Business Details (editable form)
+         ═══════════════════════════════════════════ -->
+    <div class="section-card">
+        <div class="section-head">
+            <h2 class="section-title">Business Details</h2>
+        </div>
+        <p class="section-subtitle">Edit your public-facing business information. Changes are reviewed before going live.</p>
+
+        <div class="form-grid" id="businessDetailsForm">
+            <!-- Populated by renderBusinessForm() -->
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 3  — Trust & Verification
+         ═══════════════════════════════════════════ -->
+    <div class="section-card">
+        <div class="section-head">
+            <h2 class="section-title">Trust & Verification</h2>
+        </div>
+        <p class="section-subtitle">Upload documents to earn trust badges. Verified vendors receive more customer enquiries.</p>
+
+        <!-- Upload cards grid -->
+        <div class="verification-grid" id="verificationGrid">
+            <!-- Populated by renderVerificationUploads() -->
+        </div>
+
+        <!-- Overall verification status -->
+        <div class="verification-status-row">
+            <div class="vsr-icon vsr-icon--verified">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div class="vsr-text">
+                <div class="vsr-title">Overall Verification Status</div>
+                <div class="vsr-sub">All core documents verified — accreditation optional</div>
+            </div>
+            <span class="vsr-badge vsr-badge--verified">Verified</span>
+        </div>
+
+        <!-- Verified badge upsell -->
+        <div class="upsell-card">
+            <div class="upsell-price-wrap">
+                <div class="upsell-price">£4.99</div>
+                <div class="upsell-period">/ month</div>
+            </div>
+            <div class="upsell-content">
+                <div class="upsell-title">Upgrade to Verified Pro Badge</div>
+                <div class="upsell-desc">Stand out from competitors with a premium trust badge displayed prominently on your profile and in search results.</div>
+                <div class="upsell-benefits">
+                    <div class="upsell-benefit">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        Higher conversion
+                    </div>
+                    <div class="upsell-benefit">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        Priority visibility
+                    </div>
+                    <div class="upsell-benefit">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        Trust badge on profile
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="showToast('success','Upgrade Started','Redirecting to billing…')">Upgrade Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 4  — Work Gallery
+         ═══════════════════════════════════════════ -->
+    <div class="section-card">
+        <div class="section-head">
+            <h2 class="section-title">Work Gallery</h2>
+        </div>
+        <p class="section-subtitle">Showcase your best work. Before/after pairs build customer confidence. Drag to reorder.</p>
+
+        <!-- Drop zone -->
+        <div class="upload-zone" onclick="triggerFileInput()">
+            <div class="upload-zone-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:48px;height:48px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <div class="upload-zone-title">Drag & drop photos here</div>
+            <div class="upload-zone-meta">or <span>browse files</span> — JPG, PNG up to 8 MB each</div>
+            <input type="file" id="galleryFileInput" multiple accept="image/*" style="display:none" onchange="handleGalleryUpload(event)">
+        </div>
+
+        <!-- Photo grid — rendered by renderGallery() -->
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 5  — Ratings & Reputation Snapshot
+         ═══════════════════════════════════════════ -->
+    <div class="section-card">
+        <div class="section-head">
+            <h2 class="section-title">Ratings & Reputation</h2>
+        </div>
+        <p class="section-subtitle">A quick view of how customers rate your work.</p>
+
+        <div class="rep-grid">
+            <!-- Score ring -->
+            <div class="rep-score-block">
+                <div class="rep-score-ring">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="rep-score-ring-bg" cx="60" cy="60" r="50"/>
+                        <!-- stroke-dasharray = circumference = 2π×50 ≈ 314.16 -->
+                        <!-- 4.8/5 = 96% → dashoffset = 314.16 × (1-0.96) = 12.57 -->
+                        <circle class="rep-score-ring-fill" cx="60" cy="60" r="50" data-review-ring
+                                stroke-dasharray="314.16" stroke-dashoffset="12.57"/>
+                    </svg>
+                    <div class="rep-score-value" data-review-average>4.8</div>
+                </div>
+                <div class="rep-score-label">out of 5.0</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="rep-stats-col">
+                <div class="rep-stat-row">
+                    <div class="rep-stat-icon rep-stat-icon--reviews">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </div>
+                    <div class="rep-stat-info">
+                        <div class="rep-stat-label">Total Reviews</div>
+                        <div class="rep-stat-value" data-review-total>47</div>
+                    </div>
+                </div>
+                <div class="rep-stat-row">
+                    <div class="rep-stat-icon rep-stat-icon--latest">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    </div>
+                    <div class="rep-stat-info">
+                        <div class="rep-stat-label">Latest Review</div>
+                        <div class="rep-stat-value rep-stat-value--snippet" data-review-latest>"Absolutely brilliant work…"</div>
+                        <a href="reviews.html" class="rep-link">View all reviews <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enquiries callout -->
+        <div class="enquiries-callout">
+            <div class="enquiries-callout-icon">📸</div>
+            <div class="enquiries-callout-text">Profiles with photos and reviews receive up to <strong>3× more enquiries</strong>. Keep your gallery and review requests up to date.</div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 6  — Profile Visibility Controls
+         ═══════════════════════════════════════════ -->
+    <div class="section-card">
+        <div class="section-head">
+            <h2 class="section-title">Visibility Controls</h2>
+        </div>
+        <p class="section-subtitle">Control where and how your profile appears to customers searching for trades.</p>
+
+        <!-- Active / Paused + Coverage cap -->
+        <div class="visibility-top">
+            <div>
+                <div class="toggle-group">
+                    <div class="toggle-info">
+                        <div class="toggle-label">Profile Active</div>
+                        <div class="toggle-description">You will receive new job leads while active</div>
+                    </div>
+                    <div class="toggle-switch active" onclick="this.classList.toggle('active'); markUnsaved()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="coverage-cap-row">
+                    <label>Max postcode coverage</label>
+                    <select class="form-select" onchange="markUnsaved()">
+                        <option value="3">3 postcodes</option>
+                        <option value="5" selected>5 postcodes</option>
+                        <option value="10">10 postcodes</option>
+                        <option value="unlimited">Unlimited</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Postcode list with saturation indicators -->
+        <h3 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px">Your Coverage Areas</h3>
+        <div class="postcode-list" id="postcodeList">
+            <!-- Rendered by renderPostcodes() -->
+        </div>
+
+        <!-- AI-suggested postcodes (Pro-locked) -->
+        <div class="pro-lock-strip">
+            <div class="pro-lock-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <div class="pro-lock-text">
+                <div class="pro-lock-title">AI-Suggested Postcodes <span class="badge-pro">Pro</span></div>
+                <div class="pro-lock-sub">Unlock smart area recommendations based on demand and competition data.</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="opacity:.6;cursor:not-allowed" disabled>Locked</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 7  — Sticky Save / Preview bar
+         ═══════════════════════════════════════════ -->
+    <div class="action-bar">
+        <div class="action-bar-left">
+            <div class="action-bar-unsaved" id="unsavedIndicator">
+                <span class="dot"></span> Unsaved changes
+            </div>
+        </div>
+        <div class="action-bar-right">
+            <button class="btn btn-ghost btn-sm" onclick="previewProfile()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7s-8.268-2.943-9.542-7z"/></svg>
+                Preview
+            </button>
+            <button class="btn btn-primary" onclick="saveProfile()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Save Changes
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- ══════════════════════════════════════════════════
+     CAPTION EDITOR MODAL
+     ══════════════════════════════════════════════════ -->
+<div class="modal" id="captionModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeCaptionModal()">✕</button>
+        <h2 class="modal-title">Edit Caption</h2>
+        <p class="modal-desc">Describe the work — customers use captions to understand scope.</p>
+        <div class="modal-thumb" id="captionModalThumb"></div>
+        <div class="form-group">
+            <label class="form-label">Caption</label>
+            <input type="text" class="form-input" id="captionInput" placeholder="e.g. Kitchen refit — granite worktop install" oninput="markUnsaved()">
+        </div>
+        <div class="form-group" style="margin-top:14px">
+            <label class="form-label">Type</label>
+            <select class="form-select" id="captionType">
+                <option value="general">General</option>
+                <option value="before">Before</option>
+                <option value="after">After</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost btn-sm" onclick="closeCaptionModal()">Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="saveCaptionModal()">Save Caption</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     TOAST  (global)
+     ══════════════════════════════════════════════════ -->
+<div class="toast" id="toast">
+    <div class="toast-icon toast-icon--success" id="toastIcon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <div class="toast-text">
+        <div class="toast-title" id="toastTitle">Saved</div>
+        <div class="toast-sub" id="toastSub">Changes saved successfully</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PLACEHOLDER JSON  +  RENDER / INTERACTION LOGIC
+     ══════════════════════════════════════════════════ -->
+<script>
+// ─── Placeholder Data ─────────────────────────────────────────────────────────
+// HOOK: Replace each object with API response
+
+const VENDOR_PROFILE = {
+    businessName: "Davies Plumbing & Heating",
+    primaryTrade: "plumbing",
+    secondaryTrades: ["heating", "bathroom"],
+    yearsInBusiness: 12,
+    description: "Family-run plumbing and heating business serving central and north London for over a decade. We pride ourselves on punctuality, quality workmanship, and honest pricing. From emergency repairs to full bathroom refits — no job too big or small.",
+    serviceAreas: "SW1, EC2, W1, N7, SE4",
+    website: "https://daviespumbing.co.uk",
+    phone: "020 7123 4567",
+    vatRegistered: true
+};
+
+const VERIFICATION_DOCS = [
+    { id:"doc-crn",   icon:"doc",    title:"Company Registration",       meta:"Companies House number required",        status:"uploaded", file:"Davies_Plumbing_Ltd_CH.pdf" },
+    { id:"doc-ch",    icon:"doc",    title:"Companies House Document",  meta:"Certificate of incorporation",            status:"uploaded", file:"Certificate_Inc_2013.pdf" },
+    { id:"doc-ins",   icon:"shield", title:"Public Liability Insurance",meta:"Must be current & valid",                  status:"uploaded", file:"PLI_2025-2026.pdf" },
+    { id:"doc-acc",   icon:"cert",   title:"Trade Accreditation",       meta:"Optional — e.g. CIPHE, Gas Safe",        status:"pending",  file:"GasSafe_Reg.pdf" }
+];
+
+const GALLERY_IMAGES = [
+    { id:"img-1", thumbClass:"gallery-thumb--1", caption:"Full bathroom refit — SW1",            type:"after" },
+    { id:"img-2", thumbClass:"gallery-thumb--2", caption:"Kitchen extension plumbing",           type:"general" },
+    { id:"img-3", thumbClass:"gallery-thumb--3", caption:"Boiler replacement — N7",              type:"after" },
+    { id:"img-4", thumbClass:"gallery-thumb--4", caption:"Before — original bathroom fixtures",  type:"before" },
+    { id:"img-5", thumbClass:"gallery-thumb--5", caption:"Radiator system upgrade",              type:"general" },
+    { id:"img-6", thumbClass:"gallery-thumb--6", caption:"After — heated towel rails + re-tiled", type:"after" }
+];
+
+const POSTCODES = [
+    { code:"SW1", town:"Westminster",   saturation:"low" },
+    { code:"EC2", town:"City of London", saturation:"high" },
+    { code:"W1",  town:"Mayfair",        saturation:"moderate" },
+    { code:"N7",  town:"Holloway",       saturation:"low" },
+    { code:"SE4", town:"Brockley",       saturation:"low" }
+];
+
+const TRADES = [
+    { key:"plumbing",    label:"Plumbing" },
+    { key:"heating",     label:"Heating" },
+    { key:"electrical",  label:"Electrical" },
+    { key:"bathroom",    label:"Bathroom Fitter" },
+    { key:"kitchen",     label:"Kitchen Fitter" },
+    { key:"joinery",     label:"Joinery" },
+    { key:"painting",    label:"Painting & Decorating" },
+    { key:"tiling",      label:"Tiling" },
+    { key:"extension",   label:"Extensions" },
+    { key:"roofing",     label:"Roofing" }
+];
+
+// ─── Render: Business Details Form ───────────────────────────────────────────
+function renderBusinessForm() {
+    const p = VENDOR_PROFILE;
+    document.getElementById('businessDetailsForm').innerHTML = `
+        <div class="form-group">
+            <label class="form-label">Business Name <span class="required">*</span></label>
+            <input type="text" class="form-input" value="${p.businessName}" data-profile-field="company_name" oninput="markUnsaved()">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Primary Trade <span class="required">*</span></label>
+            <select class="form-select" data-profile-field="primary_trade" onchange="markUnsaved()">
+                ${TRADES.map(t => `<option value="${t.key}" ${t.key===p.primaryTrade?'selected':''}>${t.label}</option>`).join('')}
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Secondary Trades</label>
+            <div class="multiselect-wrap" id="secondaryTradesWrap">
+                <div class="multiselect-tags" onclick="toggleMultiselect(event)">
+                    ${p.secondaryTrades.map(k => {
+                        const label = TRADES.find(t=>t.key===k)?.label || k;
+                        return `<span class="tag">${label}<span class="tag-remove" onclick="removeTag(event,'${k}')">&times;</span></span>`;
+                    }).join('')}
+                    <input type="text" class="multiselect-input" placeholder="Add trade…" oninput="filterMultiselect(this)" autocomplete="off">
+                </div>
+                <div class="multiselect-dropdown" id="multiDropdown">
+                    ${TRADES.filter(t => t.key!==p.primaryTrade).map(t =>
+                        `<div class="multiselect-option ${p.secondaryTrades.includes(t.key)?'selected':''}" onclick="toggleTrade('${t.key}','${t.label}')">${t.label}</div>`
+                    ).join('')}
+                </div>
+            </div>
+            <div class="form-helper">Select trades you regularly offer</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Years in Business <span class="required">*</span></label>
+            <select class="form-select" data-profile-field="years_experience" onchange="markUnsaved()">
+                <option value="1">1 year</option>
+                <option value="3">3 years</option>
+                <option value="5">5 years</option>
+                <option value="10">10 years</option>
+                <option value="12" selected>12 years</option>
+                <option value="15">15 years</option>
+                <option value="20">20+ years</option>
+            </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Business Description</label>
+            <textarea class="form-textarea" data-profile-field="description" oninput="markUnsaved(); updateCharCount(this)" style="min-height:130px">${p.description}</textarea>
+            <div class="char-counter"><span id="descCharCount">${p.description.length}</span> / 500</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Service Areas</label>
+            <input type="text" class="form-input" value="${p.serviceAreas}" data-profile-field="service_areas" oninput="markUnsaved()" placeholder="e.g. SW1, EC2, W1">
+            <div class="form-helper">Postcode prefixes or towns, comma-separated</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Website</label>
+            <input type="url" class="form-input" value="${p.website}" data-profile-field="website" oninput="markUnsaved()" placeholder="https://…">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-input" value="${p.phone}" data-profile-field="phone" oninput="markUnsaved()">
+            <div class="form-helper">Masked publicly — customers see last 4 digits only</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">VAT Registered</label>
+            <select class="form-select" data-profile-field="vat_registered" onchange="markUnsaved()">
+                <option value="yes" ${p.vatRegistered?'selected':''}>Yes</option>
+                <option value="no" ${!p.vatRegistered?'selected':''}>No</option>
+            </select>
+        </div>
+    `;
+}
+
+// ─── Render: Verification Uploads ────────────────────────────────────────────
+function renderVerificationUploads() {
+    document.getElementById('verificationGrid').innerHTML = VERIFICATION_DOCS.map(doc => `
+        <div class="upload-card ${doc.status==='uploaded'?'uploaded':''}" onclick="triggerDocUpload('${doc.id}')">
+            <div class="upload-card-icon upload-card-icon--${doc.icon}">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    ${doc.icon==='doc'  ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>' : ''}
+                    ${doc.icon==='shield'? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>' : ''}
+                    ${doc.icon==='cert' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>' : ''}
+                </svg>
+            </div>
+            <div class="upload-card-title">${doc.title}</div>
+            <div class="upload-card-meta">${doc.meta}</div>
+            ${doc.status==='uploaded' ? `<div class="upload-card-file">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                ${doc.file}
+            </div>` : `<div class="upload-card-file" style="background:rgba(255,167,38,.1);color:var(--accent-warning)">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent-warning)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Pending review
+            </div>`}
+        </div>
+    `).join('');
+}
+
+// ─── Render: Gallery ──────────────────────────────────────────────────────────
+let currentCaptionIdx = null;
+
+function renderGallery() {
+    document.getElementById('galleryGrid').innerHTML = GALLERY_IMAGES.map((img, i) => `
+        <div class="gallery-item" draggable="true" data-index="${i}"
+             ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragend="dragEnd(event)">
+            <div class="gallery-thumb ${img.thumbClass}">${img.caption.slice(0,18)}…</div>
+            ${img.type!=='general' ? `<span class="gallery-ba-badge gallery-ba-badge--${img.type}">${img.type}</span>` : ''}
+            <div class="gallery-overlay">
+                <div class="gallery-caption">${img.caption}</div>
+                <div class="gallery-actions">
+                    <button class="gallery-btn" onclick="openCaptionModal(${i})" title="Edit caption">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button class="gallery-btn gallery-btn--delete" onclick="deleteGalleryImage(${i})" title="Delete">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ─── Render: Postcodes ────────────────────────────────────────────────────────
+function renderPostcodes() {
+    document.getElementById('postcodeList').innerHTML = POSTCODES.map(p => `
+        <div class="postcode-item">
+            <div class="postcode-code">${p.code}</div>
+            <div class="postcode-town">${p.town}</div>
+            <span class="saturation-badge saturation-badge--${p.saturation}">
+                <span class="dot"></span>
+                ${p.saturation.charAt(0).toUpperCase()+p.saturation.slice(1)} competition
+            </span>
+        </div>
+    `).join('');
+}
+
+// ─── Gallery drag-and-drop ────────────────────────────────────────────────────
+let draggedIdx = null;
+function dragStart(e){ draggedIdx=+e.currentTarget.dataset.index; e.currentTarget.classList.add('dragging') }
+function dragEnd(e){ e.currentTarget.classList.remove('dragging') }
+function dragOver(e){ e.preventDefault() }
+function drop(e){
+    e.preventDefault();
+    const targetIdx = +e.currentTarget.dataset.index;
+    if(draggedIdx===null || draggedIdx===targetIdx) return;
+    const item = GALLERY_IMAGES.splice(draggedIdx,1)[0];
+    GALLERY_IMAGES.splice(targetIdx,0,item);
+    draggedIdx = null;
+    renderGallery();
+    markUnsaved();
+}
+
+// ─── Caption modal ────────────────────────────────────────────────────────────
+function openCaptionModal(idx){
+    currentCaptionIdx = idx;
+    const img = GALLERY_IMAGES[idx];
+    document.getElementById('captionModalThumb').innerHTML = `<div class="gallery-thumb ${img.thumbClass}" style="height:100%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:rgba(255,255,255,.7)">${img.caption}</div>`;
+    document.getElementById('captionInput').value = img.caption;
+    document.getElementById('captionType').value = img.type;
+    document.getElementById('captionModal').classList.add('active');
+}
+function closeCaptionModal(){ document.getElementById('captionModal').classList.remove('active') }
+function saveCaptionModal(){
+    GALLERY_IMAGES[currentCaptionIdx].caption = document.getElementById('captionInput').value;
+    GALLERY_IMAGES[currentCaptionIdx].type    = document.getElementById('captionType').value;
+    closeCaptionModal();
+    renderGallery();
+    markUnsaved();
+}
+document.getElementById('captionModal').addEventListener('click', function(e){ if(e.target===this) closeCaptionModal() });
+
+// ─── Gallery helpers ──────────────────────────────────────────────────────────
+function deleteGalleryImage(idx){ GALLERY_IMAGES.splice(idx,1); renderGallery(); markUnsaved() }
+function triggerFileInput(){ document.getElementById('galleryFileInput').click() }
+function handleGalleryUpload(e){
+    // HOOK: POST /api/vendor/gallery  (multipart)
+    // Simulates adding a placeholder
+    Array.from(e.target.files).forEach((f,i) => {
+        const thumbs = ['gallery-thumb--1','gallery-thumb--2','gallery-thumb--3','gallery-thumb--4','gallery-thumb--5','gallery-thumb--6'];
+        GALLERY_IMAGES.push({ id:'img-new-'+Date.now()+i, thumbClass: thumbs[Math.floor(Math.random()*thumbs.length)], caption: f.name.replace(/\.[^.]+$/,''), type:'general' });
+    });
+    renderGallery(); markUnsaved();
+    e.target.value='';
+}
+function triggerDocUpload(docId){
+    // HOOK: open native file picker → POST /api/vendor/verification/:docId
+    showToast('success','Upload Triggered','File picker opened for '+docId);
+}
+
+// ─── Multi-select (secondary trades) ─────────────────────────────────────────
+function toggleMultiselect(e){
+    if(e.target.classList.contains('tag-remove')) return;
+    document.getElementById('multiDropdown').classList.toggle('open');
+}
+function filterMultiselect(input){
+    document.getElementById('multiDropdown').classList.add('open');
+    const val = input.value.toLowerCase();
+    document.querySelectorAll('.multiselect-option').forEach(opt => {
+        opt.style.display = opt.textContent.toLowerCase().includes(val) ? '' : 'none';
+    });
+}
+function toggleTrade(key, label){
+    const tags = document.querySelectorAll('.multiselect-tags .tag');
+    const existing = Array.from(tags).find(t => t.textContent.trim().replace('×','').trim()===label);
+    if(existing){ existing.remove() }
+    else {
+        const tag = document.createElement('span');
+        tag.className='tag';
+        tag.innerHTML = `${label}<span class="tag-remove" onclick="removeTag(event,'${key}')">&times;</span>`;
+        document.querySelector('.multiselect-input').before(tag);
+    }
+    const opt = document.querySelector(`.multiselect-option[onclick*="${key}"]`);
+    if(opt) opt.classList.toggle('selected');
+    markUnsaved();
+}
+function removeTag(e, key){
+    e.stopPropagation();
+    e.currentTarget.parentElement.remove();
+    const opt = document.querySelector(`.multiselect-option[onclick*="${key}"]`);
+    if(opt) opt.classList.remove('selected');
+    markUnsaved();
+}
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+    if(!e.target.closest('.multiselect-wrap')) document.getElementById('multiDropdown')?.classList.remove('open');
+});
+
+// ─── Unsaved indicator ────────────────────────────────────────────────────────
+function markUnsaved(){ document.getElementById('unsavedIndicator').classList.add('visible') }
+function clearUnsaved(){ document.getElementById('unsavedIndicator').classList.remove('visible') }
+
+// ─── Save / Preview ───────────────────────────────────────────────────────────
+function saveProfile(){
+    if (typeof window.saveVendorProfile === 'function') {
+        window.saveVendorProfile();
+        return;
+    }
+    clearUnsaved();
+    showToast('success','Profile Saved','Changes are under review and will go live shortly.');
+}
+function previewProfile(){ showToast('success','Preview','Opening public profile preview…') }
+function viewSearchAppearance(){ showToast('success','Search Appearance','Opening local search simulator…') }
+
+// ─── Toast system ─────────────────────────────────────────────────────────────
+let toastTimeout;
+function showToast(type, title, sub){
+    const t = document.getElementById('toast');
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastSub').textContent = sub || '';
+    t.className = 'toast ' + type;
+    document.getElementById('toastIcon').className = 'toast-icon toast-icon--'+type;
+    t.classList.add('active');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => t.classList.remove('active'), 3200);
+}
+
+// ─── Char counter helper ──────────────────────────────────────────────────────
+function updateCharCount(el){
+    const id = el.id ? el.id.replace('Input','CharCount') : 'descCharCount';
+    const counter = document.getElementById(id);
+    if(counter) counter.textContent = el.value.length;
+}
+
+// ─── Theme + Sidebar ──────────────────────────────────────────────────────────
+function toggleTheme(){
+    const cur = document.documentElement.getAttribute('data-theme');
+    document.documentElement.setAttribute('data-theme', cur==='light'?'dark':'light');
+}
+function toggleSidebar(){
+    document.getElementById('sidebar').classList.toggle('collapsed');
+    document.getElementById('topNav').classList.toggle('sidebar-collapsed');
+    document.getElementById('mainContent').classList.toggle('sidebar-collapsed');
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+renderBusinessForm();
+renderVerificationUploads();
+renderGallery();
+renderPostcodes();
+</script>
+<script src="../dashboardApp.js"></script>
+</body>
+</html>
+

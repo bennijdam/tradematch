@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs - TradeMatch (with Edit Modal)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0E14;
+            --bg-secondary: #12161E;
+            --bg-tertiary: #1A1F2B;
+            --bg-card: #1E2430;
+            --accent-primary: #00E5A0;
+            --accent-secondary: #00B383;
+            --accent-danger: #FF4757;
+            --accent-warning: #FFA726;
+            --accent-info: #42A5F5;
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        /* ========================================
+           JOB CARD (Existing Structure)
+           ======================================== */
+        .job-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .job-status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(0, 229, 160, 0.1);
+            color: var(--accent-primary);
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .job-meta-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .job-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           EDIT JOB MODAL
+           ======================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Warning Banner */
+        .warning-banner {
+            background: rgba(255, 167, 38, 0.1);
+            border: 1px solid rgba(255, 167, 38, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .warning-banner svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-warning);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .warning-banner-content {
+            flex: 1;
+        }
+
+        .warning-banner-title {
+            font-weight: 600;
+            color: var(--accent-warning);
+            margin-bottom: 4px;
+        }
+
+        .warning-banner-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-label.locked {
+            color: var(--text-muted);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'Archivo', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1);
+        }
+
+        .form-input:disabled,
+        .form-textarea:disabled,
+        .form-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Budget Range Inputs */
+        .budget-inputs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .budget-inputs .form-input {
+            flex: 1;
+        }
+
+        .budget-separator {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Urgency Radio Buttons */
+        .radio-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .radio-option {
+            flex: 1;
+        }
+
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .radio-label {
+            display: block;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background: rgba(0, 229, 160, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .radio-label:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            color: var(--text-muted);
+        }
+
+        .file-upload-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .file-upload-hint {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .toast.active {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-primary);
+        }
+
+        .toast-message {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-inputs {
+                flex-direction: column;
+            }
+
+            .budget-separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Jobs</h1>
+        <p class="subtitle">Track and manage your job postings</p>
+
+        <!-- Demo Job Card with Edit Button -->
+        <div class="job-card" data-job-id="job-1">
+            <div class="job-card-header">
+                <span class="job-status-badge">Open</span>
+            </div>
+            
+            <h3 class="job-title" data-field="title">Kitchen Renovation</h3>
+            
+            <div class="job-meta">
+                <div class="job-meta-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Posted 2 days ago</span>
+                </div>
+                <div class="job-meta-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span data-field="postcode">London, SW1A</span>
+                </div>
+                <div class="job-meta-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span data-field="quotes">3 quotes received</span>
+                </div>
+            </div>
+
+            <p class="job-description" data-field="description">
+                I'm looking for a complete kitchen renovation in my London home. The current kitchen is approximately 15 years old and needs a full refit.
+            </p>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Budget:</strong> <span data-field="budget">£8,000 - £12,000</span>
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Urgency:</strong> <span data-field="urgency">Within 1 month</span>
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Trade:</strong> <span data-field="trade">Kitchen Fitting</span>
+                </span>
+            </div>
+
+            <div class="job-actions">
+                <button class="btn-primary">View Quotes (3)</button>
+                <button class="btn-secondary">View Details</button>
+                <button class="btn-icon" onclick="openEditJobModal('job-1')" title="Edit Job">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Second job card without quotes (no warning) -->
+        <div class="job-card" data-job-id="job-2">
+            <div class="job-card-header">
+                <span class="job-status-badge" style="background: rgba(66, 165, 245, 0.1); color: var(--accent-info);">Draft</span>
+            </div>
+            
+            <h3 class="job-title" data-field="title">Bathroom Renovation</h3>
+            
+            <div class="job-meta">
+                <div class="job-meta-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Saved 1 hour ago</span>
+                </div>
+                <div class="job-meta-item">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span data-field="postcode">Manchester, M1</span>
+                </div>
+            </div>
+
+            <p class="job-description" data-field="description">
+                Complete bathroom refurbishment including new tiles, fixtures, and plumbing.
+            </p>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Budget:</strong> <span data-field="budget">£5,000 - £8,000</span>
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Urgency:</strong> <span data-field="urgency">Flexible</span>
+                </span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-tertiary); border-radius: 8px; font-size: 13px;">
+                    <strong>Trade:</strong> <span data-field="trade">Plumbing</span>
+                </span>
+            </div>
+
+            <div class="job-actions">
+                <button class="btn-primary">Publish Job</button>
+                <button class="btn-icon" onclick="openEditJobModal('job-2')" title="Edit Job">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         EDIT JOB MODAL
+         ======================================== -->
+    <div class="modal-overlay" id="editJobModal">
+        <div class="modal-container">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Job Details</h2>
+                <button class="modal-close" onclick="closeEditJobModal()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Warning Banner (shown if job has quotes) -->
+                <div class="warning-banner" id="quotesWarning" style="display: none;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="warning-banner-content">
+                        <div class="warning-banner-title">Job has quotes</div>
+                        <div class="warning-banner-text">
+                            This job already has quotes. Changes may affect responses from tradespeople. Please review carefully before saving.
+                        </div>
+                    </div>
+                </div>
+
+                <form id="editJobForm">
+                    <!-- Job Description -->
+                    <div class="form-group">
+                        <label class="form-label" for="jobDescription">
+                            Job Description
+                        </label>
+                        <textarea 
+                            class="form-textarea" 
+                            id="jobDescription" 
+                            name="description"
+                            placeholder="Describe what work you need done..."
+                            required
+                        ></textarea>
+                        <p class="form-help">Be specific about what you need - tradespeople will use this to provide accurate quotes.</p>
+                    </div>
+
+                    <!-- Budget Range -->
+                    <div class="form-group">
+                        <label class="form-label">Budget Range (£)</label>
+                        <div class="budget-inputs">
+                            <input 
+                                type="number" 
+                                class="form-input" 
+                                id="budgetMin" 
+                                name="budgetMin"
+                                placeholder="Min"
+                                min="0"
+                                step="100"
+                                required
+                            >
+                            <span class="budget-separator">to</span>
+                            <input 
+                                type="number" 
+                                class="form-input" 
+                                id="budgetMax" 
+                                name="budgetMax"
+                                placeholder="Max"
+                                min="0"
+                                step="100"
+                                required
+                            >
+                        </div>
+                        <p class="form-help">Provide a realistic budget range to get accurate quotes.</p>
+                    </div>
+
+                    <!-- Urgency -->
+                    <div class="form-group">
+                        <label class="form-label">Urgency</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="urgencyFlexible" name="urgency" value="flexible">
+                                <label class="radio-label" for="urgencyFlexible">Flexible</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="urgencyMonth" name="urgency" value="month" checked>
+                                <label class="radio-label" for="urgencyMonth">Within 1 month</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="urgencyUrgent" name="urgency" value="urgent">
+                                <label class="radio-label" for="urgencyUrgent">Urgent</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Photos (Optional) -->
+                    <div class="form-group">
+                        <label class="form-label">Additional Photos (Optional)</label>
+                        <div class="file-upload-area" onclick="document.getElementById('photoUpload').click()">
+                            <input type="file" id="photoUpload" name="photos" accept="image/*" multiple>
+                            <svg class="file-upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <div class="file-upload-text">Click to upload photos</div>
+                            <div class="file-upload-hint">JPG, PNG or GIF (Max 5MB each)</div>
+                        </div>
+                    </div>
+
+                    <!-- Locked Fields (Read-only) -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label locked">Trade Category (Locked)</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="tradeCategory" 
+                                name="tradeCategory"
+                                disabled
+                            >
+                            <p class="form-help">Cannot be changed once job is created</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label locked">Postcode (Locked)</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="postcode" 
+                                name="postcode"
+                                disabled
+                            >
+                            <p class="form-help">Cannot be changed after quotes are received</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeEditJobModal()">
+                    Cancel
+                </button>
+                <button class="btn-primary" onclick="saveJobChanges()">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast" id="successToast">
+        <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="toast-message">Job updated successfully!</span>
+    </div>
+
+    <!-- ========================================
+         JAVASCRIPT - EDIT JOB MODAL LOGIC
+         ======================================== -->
+    <script>
+        // Store current job being edited
+        let currentJobId = null;
+
+        /**
+         * Opens the edit job modal and populates it with existing job data
+         * @param {string} jobId - The ID of the job to edit
+         */
+        function openEditJobModal(jobId) {
+            currentJobId = jobId;
+            const jobCard = document.querySelector(`[data-job-id="${jobId}"]`);
+            
+            if (!jobCard) {
+                console.error('Job card not found');
+                return;
+            }
+
+            // Get existing job data from the card
+            const title = jobCard.querySelector('[data-field="title"]').textContent;
+            const description = jobCard.querySelector('[data-field="description"]').textContent.trim();
+            const budgetText = jobCard.querySelector('[data-field="budget"]').textContent;
+            const urgencyText = jobCard.querySelector('[data-field="urgency"]').textContent;
+            const trade = jobCard.querySelector('[data-field="trade"]').textContent;
+            const postcode = jobCard.querySelector('[data-field="postcode"]').textContent;
+            const quotesText = jobCard.querySelector('[data-field="quotes"]')?.textContent || '';
+
+            // Parse budget range (e.g., "£8,000 - £12,000")
+            const budgetMatch = budgetText.match(/£([\d,]+)\s*-\s*£([\d,]+)/);
+            const budgetMin = budgetMatch ? budgetMatch[1].replace(/,/g, '') : '';
+            const budgetMax = budgetMatch ? budgetMatch[2].replace(/,/g, '') : '';
+
+            // Populate form fields
+            document.getElementById('jobDescription').value = description;
+            document.getElementById('budgetMin').value = budgetMin;
+            document.getElementById('budgetMax').value = budgetMax;
+            document.getElementById('tradeCategory').value = trade;
+            document.getElementById('postcode').value = postcode;
+
+            // Set urgency radio button
+            const urgencyMap = {
+                'Flexible': 'flexible',
+                'Within 1 month': 'month',
+                'Urgent': 'urgent'
+            };
+            const urgencyValue = urgencyMap[urgencyText] || 'month';
+            document.getElementById(`urgency${urgencyValue.charAt(0).toUpperCase() + urgencyValue.slice(1)}`).checked = true;
+
+            // Show warning banner if job has quotes
+            const hasQuotes = quotesText.includes('quote');
+            const warningBanner = document.getElementById('quotesWarning');
+            if (hasQuotes) {
+                warningBanner.style.display = 'flex';
+            } else {
+                warningBanner.style.display = 'none';
+            }
+
+            // Open modal
+            document.getElementById('editJobModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        /**
+         * Closes the edit job modal
+         */
+        function closeEditJobModal() {
+            document.getElementById('editJobModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentJobId = null;
+        }
+
+        /**
+         * Saves the job changes and updates the job card
+         */
+        function saveJobChanges() {
+            if (!currentJobId) {
+                console.error('No job selected');
+                return;
+            }
+
+            // Get form data
+            const form = document.getElementById('editJobForm');
+            const formData = new FormData(form);
+            
+            // Validate form
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const description = formData.get('description');
+            const budgetMin = formData.get('budgetMin');
+            const budgetMax = formData.get('budgetMax');
+            const urgency = formData.get('urgency');
+
+            // Get the job card
+            const jobCard = document.querySelector(`[data-job-id="${currentJobId}"]`);
+
+            // Update job card with new data
+            jobCard.querySelector('[data-field="description"]').textContent = description;
+            jobCard.querySelector('[data-field="budget"]').textContent = 
+                `£${parseInt(budgetMin).toLocaleString()} - £${parseInt(budgetMax).toLocaleString()}`;
+
+            const urgencyLabels = {
+                'flexible': 'Flexible',
+                'month': 'Within 1 month',
+                'urgent': 'Urgent'
+            };
+            jobCard.querySelector('[data-field="urgency"]').textContent = urgencyLabels[urgency];
+
+            // In a real app, this would make an API call:
+            // await fetch(`/api/jobs/${currentJobId}`, {
+            //     method: 'PATCH',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ description, budgetMin, budgetMax, urgency })
+            // });
+
+            // Close modal
+            closeEditJobModal();
+
+            // Show success toast
+            showSuccessToast();
+        }
+
+        /**
+         * Shows a success toast notification
+         */
+        function showSuccessToast() {
+            const toast = document.getElementById('successToast');
+            toast.classList.add('active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeEditJobModal();
+            }
+        });
+
+        // Close modal when clicking backdrop
+        document.getElementById('editJobModal').addEventListener('click', (e) => {
+            if (e.target.id === 'editJobModal') {
+                closeEditJobModal();
+            }
+        });
+    </script>
+</body>
+</html>

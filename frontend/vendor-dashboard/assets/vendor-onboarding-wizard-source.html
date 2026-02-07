@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Onboarding - TradeMatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor-onboarding-wizard.css">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="sun-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+        </svg>
+    </button>
+
+    <div class="onboarding-container">
+        <!-- Header -->
+        <header class="onboarding-header">
+            <div class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </div>
+            <div class="step-indicator">
+                <span class="step-current">Step <span id="currentStep">1</span></span>
+                <span class="step-total">of 5</span>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Wizard Steps -->
+        <div class="wizard-content">
+            
+            <!-- Step 1: Understanding Leads -->
+            <div class="step active" data-step="1">
+                <div class="step-inner">
+                    <div class="step-icon-large">💼</div>
+                    <h1 class="step-title">Welcome to <span class="gradient-text">TradeMatch</span></h1>
+                    <p class="step-subtitle">Let's get you set up to receive job leads</p>
+                    
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <div class="info-icon">💡</div>
+                            <h3>How it works</h3>
+                        </div>
+                        <div class="info-steps">
+                            <div class="info-step">
+                                <div class="info-step-number">1</div>
+                                <div class="info-step-content">
+                                    <h4>Customers post jobs</h4>
+                                    <p>Local customers describe the work they need done</p>
+                                </div>
+                            </div>
+                            <div class="info-step">
+                                <div class="info-step-number">2</div>
+                                <div class="info-step-content">
+                                    <h4>We match you with leads</h4>
+                                    <p>Based on your trade, location, and preferences</p>
+                                </div>
+                            </div>
+                            <div class="info-step">
+                                <div class="info-step-number">3</div>
+                                <div class="info-step-content">
+                                    <h4>You unlock & quote</h4>
+                                    <p>Pay only for leads you want, get customer details</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="badge-list">
+                            <span class="badge badge-success">✓ Pay per lead</span>
+                            <span class="badge badge-info">✓ No subscriptions</span>
+                            <span class="badge badge-success">✓ Full control</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Business Profile -->
+            <div class="step" data-step="2">
+                <div class="step-inner">
+                    <div class="step-icon-large">🏢</div>
+                    <h1 class="step-title">Tell us about your <span class="gradient-text">business</span></h1>
+                    <p class="step-subtitle">This helps customers find and trust you</p>
+                    
+                    <form class="onboarding-form">
+                        <div class="form-group">
+                            <label class="form-label">Business Name <span class="required">*</span></label>
+                            <input type="text" class="form-input" placeholder="e.g. John's Plumbing Services" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Trade Categories <span class="required">*</span></label>
+                            <div class="multi-select-grid">
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="architecture">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">📐</span>
+                                        <span class="checkbox-label">Architecture</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="bathroom-fitting">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🛁</span>
+                                        <span class="checkbox-label">Bathroom Fitting</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="bricklaying">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🧱</span>
+                                        <span class="checkbox-label">Bricklaying</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="cad-drawings">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">📋</span>
+                                        <span class="checkbox-label">CAD / Drawings</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="carpentry">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔨</span>
+                                        <span class="checkbox-label">Carpentry</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="carpets-lino">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏠</span>
+                                        <span class="checkbox-label">Carpets & Lino</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="central-heating">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">♨️</span>
+                                        <span class="checkbox-label">Central Heating</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="cleaning-services">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🧹</span>
+                                        <span class="checkbox-label">Cleaning Services</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="conservatories">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏡</span>
+                                        <span class="checkbox-label">Conservatories</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="conversions">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔄</span>
+                                        <span class="checkbox-label">Conversions - General</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="damp-proofing">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">💧</span>
+                                        <span class="checkbox-label">Damp Proofing</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="decking">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🪵</span>
+                                        <span class="checkbox-label">Decking</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="demolition">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">💥</span>
+                                        <span class="checkbox-label">Demolition</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="driveways-paved">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🚗</span>
+                                        <span class="checkbox-label">Driveways (Paved)</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="driveways-tarmac">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🛣️</span>
+                                        <span class="checkbox-label">Driveways (Tarmac)</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="electrical">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">⚡</span>
+                                        <span class="checkbox-label">Electrical</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="extensions">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏗️</span>
+                                        <span class="checkbox-label">Extensions</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="fascias-soffits">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏠</span>
+                                        <span class="checkbox-label">Fascias & Soffits</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="fencing">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🚧</span>
+                                        <span class="checkbox-label">Fencing</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="fireplaces-flues">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔥</span>
+                                        <span class="checkbox-label">Fireplaces & Flues</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="garden-maintenance">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🌻</span>
+                                        <span class="checkbox-label">Garden Maintenance</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="gas-work">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔥</span>
+                                        <span class="checkbox-label">Gas Work</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="groundwork-foundations">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">⛏️</span>
+                                        <span class="checkbox-label">Groundwork & Foundations</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="guttering">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🌧️</span>
+                                        <span class="checkbox-label">Guttering</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="handyman">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🛠️</span>
+                                        <span class="checkbox-label">Handyman</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="hard-flooring">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔲</span>
+                                        <span class="checkbox-label">Hard Flooring</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="insulation">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🧊</span>
+                                        <span class="checkbox-label">Insulation</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="joinery-cabinet">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🪑</span>
+                                        <span class="checkbox-label">Joinery & Cabinet Making</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="kitchen-fitting">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🍳</span>
+                                        <span class="checkbox-label">Kitchen Fitting</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="landscaping">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🌳</span>
+                                        <span class="checkbox-label">Landscaping</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="locksmiths">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔐</span>
+                                        <span class="checkbox-label">Locksmiths</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="loft-conversion">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏚️</span>
+                                        <span class="checkbox-label">Loft Conversion</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="moving-services">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">📦</span>
+                                        <span class="checkbox-label">Moving Services</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="new-builds">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏘️</span>
+                                        <span class="checkbox-label">New Builds</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="painting-decorating">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🎨</span>
+                                        <span class="checkbox-label">Painting & Decorating</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="plastering">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🧱</span>
+                                        <span class="checkbox-label">Plastering</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="plumbing">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🚰</span>
+                                        <span class="checkbox-label">Plumbing</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="repointing">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🧱</span>
+                                        <span class="checkbox-label">Repointing</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="restoration-refurbishment">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">♻️</span>
+                                        <span class="checkbox-label">Restoration & Refurbishment</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="roofing-flat">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏗️</span>
+                                        <span class="checkbox-label">Roofing (Flat)</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="roofing-pitched">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🏠</span>
+                                        <span class="checkbox-label">Roofing (Pitched)</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="security-systems">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">📹</span>
+                                        <span class="checkbox-label">Security Systems</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="stonemasonry">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🗿</span>
+                                        <span class="checkbox-label">Stonemasonry</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="tiling">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🔳</span>
+                                        <span class="checkbox-label">Tiling</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="tree-surgery">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🌲</span>
+                                        <span class="checkbox-label">Tree Surgery</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="waste-clearance">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🗑️</span>
+                                        <span class="checkbox-label">Waste Clearance</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="windows-doors-upvc">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🪟</span>
+                                        <span class="checkbox-label">Windows & Doors (uPVC)</span>
+                                    </div>
+                                </label>
+                                <label class="checkbox-card">
+                                    <input type="checkbox" name="trade" value="windows-doors-wooden">
+                                    <div class="checkbox-card-content">
+                                        <span class="checkbox-icon">🚪</span>
+                                        <span class="checkbox-label">Windows & Doors (Wooden)</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Years of Experience</label>
+                                <input type="number" class="form-input" placeholder="e.g. 10" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-input" placeholder="e.g. 07700 900000">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Business Description</label>
+                            <textarea class="form-textarea" rows="4" placeholder="Tell customers about your business, experience, and what makes you stand out..."></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 3: Service Coverage -->
+            <div class="step" data-step="3">
+                <div class="step-inner">
+                    <div class="step-icon-large">📍</div>
+                    <h1 class="step-title">Where do you <span class="gradient-text">work?</span></h1>
+                    <p class="step-subtitle">Set your service coverage area to receive relevant leads</p>
+                    
+                    <form class="onboarding-form">
+                        <div class="form-group">
+                            <label class="form-label">Base Postcode <span class="required">*</span></label>
+                            <input type="text" class="form-input input-large" placeholder="e.g. SW1A 1AA" required>
+                            <p class="form-hint">💡 This is your business location or the center of your coverage area</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Service Radius <span class="required">*</span></label>
+                            <div class="radius-selector">
+                                <div class="radius-options">
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="5">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">5 miles</span>
+                                            <span class="radio-sublabel">Local area</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="10" checked>
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">10 miles</span>
+                                            <span class="radio-sublabel">Recommended</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="15">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">15 miles</span>
+                                            <span class="radio-sublabel">Wide area</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="25">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">25 miles</span>
+                                            <span class="radio-sublabel">Extended</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-icon">ℹ️</div>
+                            <div class="info-box-content">
+                                <p><strong>Tip:</strong> You can expand your radius with premium add-ons later</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 4: Lead Wallet & Pricing -->
+            <div class="step" data-step="4">
+                <div class="step-inner">
+                    <div class="step-icon-large">💰</div>
+                    <h1 class="step-title">Fund your <span class="gradient-text">lead wallet</span></h1>
+                    <p class="step-subtitle">Top up your balance to start receiving leads</p>
+                    
+                    <div class="wallet-display">
+                        <div class="wallet-card">
+                            <div class="wallet-label">Current Balance</div>
+                            <div class="wallet-amount">£0.00</div>
+                            <div class="wallet-subtext">0 lead credits available</div>
+                            <div class="wallet-status status-warning">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                Balance Empty
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pricing-info">
+                        <h3>Lead Pricing</h3>
+                        <div class="pricing-grid">
+                            <div class="pricing-item">
+                                <div class="pricing-label">Small Job</div>
+                                <div class="pricing-amount">£3 - £5</div>
+                                <div class="pricing-example">Quick repairs</div>
+                            </div>
+                            <div class="pricing-item">
+                                <div class="pricing-label">Medium Job</div>
+                                <div class="pricing-amount">£6 - £10</div>
+                                <div class="pricing-example">Standard projects</div>
+                            </div>
+                            <div class="pricing-item">
+                                <div class="pricing-label">Large Job</div>
+                                <div class="pricing-amount">£12+</div>
+                                <div class="pricing-example">Major works</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="topup-section">
+                        <h3>Select Top-Up Amount</h3>
+                        <div class="topup-grid">
+                            <label class="topup-card">
+                                <input type="radio" name="topup" value="25">
+                                <div class="topup-card-content">
+                                    <div class="topup-amount">£25</div>
+                                    <div class="topup-leads">~5-8 leads</div>
+                                </div>
+                            </label>
+                            <label class="topup-card recommended">
+                                <input type="radio" name="topup" value="50" checked>
+                                <div class="topup-card-content">
+                                    <div class="topup-amount">£50</div>
+                                    <div class="topup-leads">~12-16 leads</div>
+                                    <div class="topup-bonus">+10% bonus</div>
+                                </div>
+                            </label>
+                            <label class="topup-card">
+                                <input type="radio" name="topup" value="100">
+                                <div class="topup-card-content">
+                                    <div class="topup-amount">£100</div>
+                                    <div class="topup-leads">~25-30 leads</div>
+                                    <div class="topup-bonus">+20% bonus</div>
+                                </div>
+                            </label>
+                            <label class="topup-card">
+                                <input type="radio" name="topup" value="250">
+                                <div class="topup-card-content">
+                                    <div class="topup-amount">£250</div>
+                                    <div class="topup-leads">~60-75 leads</div>
+                                    <div class="topup-bonus">+30% bonus</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="payment-info">
+                        <div class="payment-secure">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>Secure payment powered by Stripe</span>
+                        </div>
+                        <div class="payment-methods">
+                            <div class="payment-method">VISA</div>
+                            <div class="payment-method">MC</div>
+                            <div class="payment-method">AMEX</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box info-box-accent">
+                        <div class="info-box-icon">✨</div>
+                        <div class="info-box-content">
+                            <p><strong>No commitments:</strong> You only pay when you unlock leads you want. No subscriptions, no hidden fees.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Upload Media -->
+            <div class="step" data-step="5">
+                <div class="step-inner">
+                    <div class="step-icon-large">📸</div>
+                    <h1 class="step-title">Showcase your <span class="gradient-text">work</span></h1>
+                    <p class="step-subtitle">Upload photos to build trust and win more jobs</p>
+                    
+                    <form class="onboarding-form">
+                        <div class="form-group">
+                            <label class="form-label">Business Logo</label>
+                            <div class="upload-area">
+                                <div class="upload-icon">🖼️</div>
+                                <div class="upload-text">Drag & drop your logo here</div>
+                                <div class="upload-subtext">PNG, JPG or SVG (max 2MB)</div>
+                                <button type="button" class="btn-upload">Choose File</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Work Photos</label>
+                            <div class="upload-area upload-area-multiple">
+                                <div class="upload-icon">📷</div>
+                                <div class="upload-text">Upload photos of your completed work</div>
+                                <div class="upload-subtext">Multiple images • JPG or PNG (max 5MB each)</div>
+                                <button type="button" class="btn-upload">Choose Files</button>
+                            </div>
+                        </div>
+
+                        <div class="trust-indicators">
+                            <h3>Build Trust</h3>
+                            <div class="trust-grid">
+                                <div class="trust-item">
+                                    <div class="trust-icon trust-icon-pending">⏳</div>
+                                    <div class="trust-content">
+                                        <div class="trust-title">Profile Complete</div>
+                                        <div class="trust-status">In Progress</div>
+                                    </div>
+                                </div>
+                                <div class="trust-item">
+                                    <div class="trust-icon trust-icon-pending">📸</div>
+                                    <div class="trust-content">
+                                        <div class="trust-title">Work Photos</div>
+                                        <div class="trust-status">Upload to unlock</div>
+                                    </div>
+                                </div>
+                                <div class="trust-item">
+                                    <div class="trust-icon trust-icon-pending">⚡</div>
+                                    <div class="trust-content">
+                                        <div class="trust-title">Quick Responder</div>
+                                        <div class="trust-status">Earn by responding fast</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="info-box-icon">💡</div>
+                            <div class="info-box-content">
+                                <p>Vendors with photos get <strong>3x more quotes accepted</strong></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Footer -->
+        <footer class="onboarding-footer">
+            <button class="btn btn-ghost" id="skipBtn">Skip onboarding</button>
+            <div class="footer-actions">
+                <button class="btn btn-secondary" id="backBtn" disabled>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Back
+                </button>
+                <button class="btn btn-primary" id="nextBtn">
+                    <span id="nextBtnText">Continue</span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="vendor-onboarding-wizard.js"></script>
+</body>
+</html>

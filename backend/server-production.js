@@ -147,6 +147,9 @@ const pool = new Pool({
     keepAlive: true,
 });
 
+const adminAudit = require('./middleware/admin-audit');
+adminAudit.setPool(pool);
+
 // Handle pool errors gracefully
 pool.on('error', (err, client) => {
     logger.error('Unexpected error on idle client', { error: err.message });
@@ -573,8 +576,11 @@ try {
 
 try {
     const customerRouter = require('./routes/customer');
+    const savedTradesRouter = require('./routes/saved-trades');
     if (typeof customerRouter.setPool === 'function') customerRouter.setPool(pool);
+    if (typeof savedTradesRouter.setPool === 'function') savedTradesRouter.setPool(pool);
     app.use('/api/customer', customerRouter);
+    app.use('/api/saved-trades', savedTradesRouter);
     logger.info('Customer routes mounted at /api/customer');
 } catch (e) {
     logger.warn('Customer routes not available', { error: e && e.message ? e.message : String(e) });

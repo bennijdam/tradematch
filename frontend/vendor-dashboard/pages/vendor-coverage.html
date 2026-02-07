@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coverage Areas — TradeMatch Vendor Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+
+<style>
+/* ================================================================
+   DESIGN-SYSTEM TOKENS — verbatim from index.html
+   ================================================================ */
+:root {
+    --bg-primary:#0A0E14; --bg-secondary:#12161E; --bg-tertiary:#1A1F2B; --bg-card:#1E2430;
+    --accent-primary:#00E5A0; --accent-secondary:#00B383;
+    --accent-danger:#FF4757; --accent-warning:#FFA726; --accent-info:#42A5F5;
+    --text-primary:#FFFFFF; --text-secondary:#9CA3AF; --text-muted:#6B7280;
+    --border:rgba(255,255,255,0.08); --border-hover:rgba(255,255,255,0.16);
+    --shadow-sm:0 2px 8px rgba(0,0,0,0.3); --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:0 8px 32px rgba(0,0,0,0.5); --shadow-glow:0 0 24px rgba(0,229,160,0.4);
+    --ambient-gradient-1:rgba(0,229,160,0.08); --ambient-gradient-2:rgba(66,165,245,0.08);
+    /* coverage-page extras */
+    --demand-high:#FF4757; --demand-high-bg:rgba(255,71,87,0.12);
+    --demand-med:#FFA726;  --demand-med-bg:rgba(255,167,38,0.12);
+    --demand-low:#42A5F5;  --demand-low-bg:rgba(66,165,245,0.12);
+    --sat-high:#FF4757;    --sat-high-bg:rgba(255,71,87,0.14);
+    --sat-med:#FFA726;     --sat-med-bg:rgba(255,167,38,0.14);
+    --sat-low:#00E5A0;     --sat-low-bg:rgba(0,229,160,0.14);
+}
+[data-theme="light"] {
+    --bg-primary:#F8FAFB; --bg-secondary:#FFFFFF; --bg-tertiary:#F3F4F6; --bg-card:#FFFFFF;
+    --accent-primary:#16A34A; --accent-secondary:#15803D;
+    --accent-danger:#EF4444; --accent-warning:#F59E0B; --accent-info:#3B82F6;
+    --text-primary:#1A2332; --text-secondary:#4B5563; --text-muted:#6B7280;
+    --border:rgba(0,0,0,0.08); --border-hover:rgba(0,0,0,0.16);
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.08); --shadow-md:0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg:0 10px 25px rgba(0,0,0,0.12); --shadow-glow:0 0 24px rgba(22,163,74,0.3);
+    --ambient-gradient-1:rgba(22,163,74,0.04); --ambient-gradient-2:rgba(59,130,246,0.04);
+}
+
+/* ================================================================
+   GLOBAL RESET + BODY
+   ================================================================ */
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{
+    font-family:'Archivo',sans-serif; background:var(--bg-primary); color:var(--text-primary);
+    overflow-x:hidden; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    transition:background .3s ease,color .3s ease;
+}
+/* ambient animated background */
+body::before{
+    content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%;
+    background:radial-gradient(circle at 20% 50%,var(--ambient-gradient-1) 0%,transparent 50%),
+               radial-gradient(circle at 80% 80%,var(--ambient-gradient-2) 0%,transparent 50%);
+    animation:ambient 20s ease-in-out infinite; pointer-events:none; z-index:0;
+}
+@keyframes ambient{ 0%,100%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(-5%,-5%) rotate(5deg)} }
+
+/* ================================================================
+   THEME TOGGLE
+   ================================================================ */
+.theme-toggle{
+    position:relative; width:56px; height:28px; background:var(--bg-tertiary);
+    border:2px solid var(--border); border-radius:14px; cursor:pointer;
+    transition:all .3s; display:flex; align-items:center; padding:0 4px;
+}
+.theme-toggle:hover{ border-color:var(--border-hover); }
+.theme-toggle-slider{
+    width:20px; height:20px; background:var(--accent-primary); border-radius:50%;
+    position:absolute; left:4px; transition:all .3s cubic-bezier(.4,0,.2,1);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+[data-theme="light"] .theme-toggle-slider{ left:30px; }
+.theme-toggle-icon{ width:12px; height:12px; color:#fff; }
+
+/* ================================================================
+   TOP NAVIGATION
+   ================================================================ */
+.top-nav{
+    position:fixed; top:0; left:280px; right:0; height:72px;
+    background:var(--bg-secondary); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border); display:flex; align-items:center;
+    padding:0 32px; z-index:100; transition:all .3s cubic-bezier(.4,0,.2,1); box-shadow:var(--shadow-sm);
+}
+[data-theme="light"] .top-nav{ background:rgba(255,255,255,.95); }
+.top-nav.sidebar-collapsed{ left:80px; }
+.top-nav-left{ display:flex; align-items:center; gap:16px; flex:1; }
+.search-container{ position:relative; width:100%; max-width:480px; }
+.search-input{
+    width:100%; height:44px; background:var(--bg-tertiary); border:1px solid var(--border);
+    border-radius:12px; padding:0 16px 0 48px; color:var(--text-primary); font-size:14px;
+    font-family:'Archivo',sans-serif; transition:all .2s;
+}
+.search-input::placeholder{ color:var(--text-muted); }
+.search-input:focus{ outline:none; border-color:var(--accent-primary); box-shadow:0 0 0 3px rgba(22,163,74,.1); }
+.search-icon{ position:absolute; left:16px; top:50%; transform:translateY(-50%); width:20px; height:20px; color:var(--text-muted); }
+.top-nav-right{ display:flex; align-items:center; gap:12px; }
+.icon-button{
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--border); border-radius:12px;
+    cursor:pointer; transition:all .2s; position:relative; text-decoration:none;
+}
+.icon-button:hover{ background:var(--bg-tertiary); border-color:var(--border-hover); }
+.icon-button svg{ width:20px; height:20px; color:var(--text-secondary); }
+.notification-badge{ position:absolute; top:8px; right:8px; width:8px; height:8px; background:var(--accent-danger); border-radius:50%; border:2px solid var(--bg-secondary); }
+.user-menu{
+    display:flex; align-items:center; gap:12px; padding:8px 12px;
+    background:var(--bg-tertiary); border:1px solid var(--border); border-radius:12px;
+    cursor:pointer; transition:all .2s;
+}
+.user-menu:hover{ border-color:var(--border-hover); }
+.user-avatar{ width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent-primary),var(--accent-info)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; color:#fff; }
+.user-name{ font-size:14px; font-weight:600; color:var(--text-primary); }
+.user-role{ font-size:12px; color:var(--text-muted); }
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+.sidebar{
+    position:fixed; top:0; left:0; width:280px; height:100vh;
+    background:var(--bg-secondary); border-right:1px solid var(--border);
+    display:flex; flex-direction:column; z-index:101;
+    transition:all .3s cubic-bezier(.4,0,.2,1); box-shadow:var(--shadow-sm);
+}
+.sidebar.collapsed{ width:80px; }
+.sidebar-header{ height:72px; display:flex; align-items:center; padding:0 24px; border-bottom:1px solid var(--border); }
+.logo{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+.logo-icon{ width:36px; height:36px; background:var(--accent-primary); border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; color:#fff; flex-shrink:0; }
+.logo-text{ font-size:20px; font-weight:800; color:var(--text-primary); white-space:nowrap; opacity:1; transition:opacity .2s; }
+.sidebar.collapsed .logo-text{ opacity:0; pointer-events:none; }
+.sidebar-nav{ flex:1; padding:24px 16px; overflow-y:auto; overflow-x:hidden; }
+.nav-section{ margin-bottom:32px; }
+.nav-section-title{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--text-muted); padding:0 12px; margin-bottom:8px; white-space:nowrap; opacity:1; transition:opacity .2s; }
+.sidebar.collapsed .nav-section-title{ opacity:0; }
+.nav-item{ display:flex; align-items:center; gap:12px; padding:12px 16px; color:var(--text-secondary); text-decoration:none; border-radius:12px; cursor:pointer; transition:all .2s; margin-bottom:4px; position:relative; }
+.nav-item:hover{ background:var(--bg-tertiary); color:var(--text-primary); }
+.nav-item.active{ background:rgba(22,163,74,.12); color:var(--accent-primary); }
+[data-theme="light"] .nav-item.active{ background:rgba(22,163,74,.08); }
+.nav-item.active::before{ content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:24px; background:var(--accent-primary); border-radius:0 2px 2px 0; }
+.nav-icon{ width:20px; height:20px; flex-shrink:0; }
+.nav-label{ font-size:14px; font-weight:500; white-space:nowrap; opacity:1; transition:opacity .2s; }
+.sidebar.collapsed .nav-label{ opacity:0; }
+.nav-badge{ margin-left:auto; padding:2px 8px; background:var(--accent-danger); color:#fff; font-size:11px; font-weight:700; border-radius:6px; opacity:1; transition:opacity .2s; }
+.sidebar.collapsed .nav-badge{ opacity:0; }
+.sidebar-footer{ padding:16px; border-top:1px solid var(--border); }
+.collapse-btn{ width:100%; height:44px; display:flex; align-items:center; justify-content:center; gap:8px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:12px; color:var(--text-secondary); cursor:pointer; transition:all .2s; }
+.collapse-btn:hover{ border-color:var(--border-hover); color:var(--text-primary); }
+
+/* ================================================================
+   MAIN CONTENT SHELL
+   ================================================================ */
+.main-content{
+    margin-left:280px; margin-top:72px; padding:32px;
+    min-height:calc(100vh - 72px); position:relative; z-index:1;
+    transition:margin-left .3s cubic-bezier(.4,0,.2,1);
+}
+.main-content.sidebar-collapsed{ margin-left:80px; }
+
+/* ================================================================
+   SHARED COMPONENTS (btn, table, alert, progress, select — from index/heatmaps)
+   ================================================================ */
+.btn{ padding:10px 20px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; border:none; font-family:'Archivo',sans-serif; }
+.btn-primary{ background:var(--accent-primary); color:#fff; }
+.btn-primary:hover{ background:var(--accent-secondary); transform:translateY(-2px); box-shadow:var(--shadow-glow); }
+.btn-secondary{ background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
+.btn-secondary:hover{ border-color:var(--border-hover); color:var(--text-primary); }
+.btn-danger{ background:transparent; color:var(--accent-danger); border:1px solid rgba(255,71,87,.25); }
+.btn-danger:hover{ background:rgba(255,71,87,.1); border-color:var(--accent-danger); }
+
+/* table — verbatim from index */
+.table-container{ background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); }
+.table-header{ padding:24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.table-title{ font-size:18px; font-weight:700; }
+.table-actions{ display:flex; gap:12px; }
+table{ width:100%; border-collapse:collapse; }
+thead{ background:var(--bg-tertiary); }
+th{ padding:14px 24px; text-align:left; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); white-space:nowrap; }
+tbody tr{ border-bottom:1px solid var(--border); transition:background .2s; }
+tbody tr:hover{ background:var(--bg-tertiary); }
+td{ padding:18px 24px; font-size:14px; color:var(--text-secondary); vertical-align:middle; }
+
+/* status badge — reused from index */
+.status-badge{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:6px; font-size:12px; font-weight:700; font-family:'Space Mono',monospace; }
+.status-active{ background:rgba(0,229,160,.12); color:var(--accent-primary); }
+.status-paused{ background:rgba(255,167,38,.12); color:var(--accent-warning); }
+.status-badge .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* alert banner — verbatim from index */
+.alert-banner{
+    background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.12));
+    border:1px solid rgba(245,158,11,.3); border-radius:12px; padding:16px 20px;
+    margin-bottom:24px; display:flex; align-items:center; gap:16px;
+}
+.alert-banner.info-banner{ background:linear-gradient(135deg,rgba(66,165,245,.1),rgba(0,229,160,.1)); border-color:rgba(66,165,245,.25); }
+.alert-icon{ width:24px; height:24px; color:var(--accent-warning); flex-shrink:0; }
+.alert-banner.info-banner .alert-icon{ color:var(--accent-info); }
+.alert-content{ flex:1; }
+.alert-title{ font-weight:700; margin-bottom:3px; color:var(--accent-warning); font-size:14px; }
+.alert-banner.info-banner .alert-title{ color:var(--accent-info); }
+.alert-message{ font-size:13px; color:var(--text-secondary); line-height:1.45; }
+.alert-action{
+    padding:8px 16px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+    border-radius:8px; color:var(--text-primary); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .2s; white-space:nowrap; font-family:'Archivo',sans-serif;
+}
+[data-theme="light"] .alert-action{ background:rgba(0,0,0,.04); border-color:var(--border); }
+.alert-action:hover{ background:rgba(255,255,255,.14); }
+[data-theme="light"] .alert-action:hover{ background:rgba(0,0,0,.08); }
+
+/* progress bar — from index + impressions warning variant */
+.progress-bar-bg{ width:100%; height:8px; background:var(--bg-tertiary); border-radius:4px; overflow:hidden; }
+.progress-bar-fill{ height:100%; background:linear-gradient(90deg,var(--accent-primary),var(--accent-info)); border-radius:4px; transition:width .6s cubic-bezier(.4,0,.2,1); position:relative; }
+.progress-bar-fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 2s infinite; }
+.progress-bar-fill.warning{ background:linear-gradient(90deg,var(--accent-warning),#FF6B35); }
+.progress-bar-fill.danger{ background:linear-gradient(90deg,var(--accent-danger),#FF2E5B); }
+@keyframes shimmer{ 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.progress-labels{ display:flex; justify-content:space-between; margin-top:6px; font-size:11px; font-family:'Space Mono',monospace; }
+.progress-label{ color:var(--text-muted); }
+.progress-value{ color:var(--accent-primary); font-weight:700; }
+
+/* select input — from heatmaps */
+.select-input{
+    height:44px; background:var(--bg-tertiary); border:1px solid var(--border);
+    border-radius:12px; padding:0 16px; color:var(--text-primary); font-size:14px;
+    font-family:'Archivo',sans-serif; cursor:pointer; transition:all .2s; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 14px center; padding-right:38px;
+}
+.select-input:hover{ border-color:var(--border-hover); }
+.select-input:focus{ outline:none; border-color:var(--accent-primary); box-shadow:0 0 0 3px rgba(0,229,160,.1); }
+option{ background:var(--bg-tertiary); color:var(--text-primary); }
+
+/* ================================================================
+   PAGE HEADER
+   ================================================================ */
+.page-header{ margin-bottom:28px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; }
+.page-header-left{}
+.page-title{ font-size:32px; font-weight:800; background:linear-gradient(135deg,var(--text-primary),var(--text-secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.page-subtitle{ font-size:15px; color:var(--text-secondary); }
+/* postcodes-used pill — right-aligned */
+.postcodes-pill{
+    display:flex; align-items:center; gap:14px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
+    padding:14px 20px; box-shadow:var(--shadow-sm);
+}
+.postcodes-pill__label{ font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:var(--text-muted); margin-bottom:4px; }
+.postcodes-pill__value{ font-size:22px; font-weight:800; font-family:'Space Mono',monospace; color:var(--text-primary); line-height:1; }
+.postcodes-pill__value span{ font-size:14px; font-weight:400; color:var(--text-muted); }
+.postcodes-pill__bar{ width:100px; }
+
+/* ================================================================
+   SECTION HEADERS (reusable across all sections)
+   ================================================================ */
+.section-block{ margin-bottom:32px; }
+.section-head{ margin-bottom:16px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:8px; }
+.section-title{ font-size:18px; font-weight:700; color:var(--text-primary); }
+.section-sub{ font-size:13px; color:var(--text-muted); margin-top:3px; }
+
+/* ================================================================
+   SECTION 2 — ACTIVE COVERAGE TABLE
+   tag badges that float inside the postcode cell
+   ================================================================ */
+.postcode-cell{ display:flex; align-items:center; gap:10px; }
+.postcode-code{ font-weight:700; color:var(--text-primary); font-size:15px; font-family:'Space Mono',monospace; }
+.postcode-town{ font-size:13px; color:var(--text-muted); margin-top:2px; }
+/* inline micro-badges */
+.micro-badge{ display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:5px; font-size:11px; font-weight:700; white-space:nowrap; }
+.micro-badge.fire{ background:rgba(255,71,87,.12); color:#FF4757; }
+.micro-badge.sat{ background:rgba(255,167,38,.14); color:#FFA726; }
+.micro-badge.premium{ background:rgba(255,215,0,.12); color:#FFD700; }
+/* demand / saturation level chips */
+.level-chip{ display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700; font-family:'Space Mono',monospace; }
+.level-high{ background:var(--demand-high-bg); color:var(--demand-high); }
+.level-med{ background:var(--demand-med-bg); color:var(--demand-med); }
+.level-low{ background:var(--demand-low-bg); color:var(--demand-low); }
+.level-chip .lvl-dot{ width:7px; height:7px; border-radius:50%; background:currentColor; }
+/* row action buttons — compact */
+.row-actions{ display:flex; gap:8px; }
+.btn-row{ padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; font-family:'Archivo',sans-serif; border:1px solid var(--border); background:transparent; color:var(--text-secondary); }
+.btn-row:hover{ border-color:var(--border-hover); color:var(--text-primary); background:var(--bg-tertiary); }
+.btn-row.danger{ color:var(--accent-danger); border-color:rgba(255,71,87,.2); }
+.btn-row.danger:hover{ background:rgba(255,71,87,.08); border-color:var(--accent-danger); }
+
+/* ================================================================
+   SECTION 3 — POSTCODE CAP CARD
+   ================================================================ */
+.cap-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    padding:28px; box-shadow:var(--shadow-sm); display:grid;
+    grid-template-columns:1fr auto; gap:28px; align-items:start;
+}
+.cap-card__left{}
+.cap-card__title{ font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+.cap-card__desc{ font-size:13px; color:var(--text-secondary); line-height:1.5; margin-bottom:18px; max-width:540px; }
+.cap-card__progress-wrap{ max-width:400px; }
+.cap-card__progress-label{ display:flex; justify-content:space-between; margin-bottom:8px; }
+.cap-card__progress-label span:first-child{ font-size:13px; color:var(--text-secondary); font-weight:600; }
+.cap-card__progress-label span:last-child{ font-size:13px; font-weight:700; font-family:'Space Mono',monospace; color:var(--accent-primary); }
+/* upgrade pricing pills on the right */
+.cap-card__packs{ display:flex; flex-direction:column; gap:10px; min-width:200px; }
+.pack-pill{
+    background:var(--bg-tertiary); border:1px solid var(--border); border-radius:12px;
+    padding:14px 18px; display:flex; justify-content:space-between; align-items:center;
+    transition:all .2s; cursor:pointer;
+}
+.pack-pill:hover{ border-color:var(--accent-primary); box-shadow:0 0 0 2px rgba(0,229,160,.15); }
+.pack-pill__left{}
+.pack-pill__postcodes{ font-size:14px; font-weight:700; color:var(--text-primary); }
+.pack-pill__postcodes span{ font-size:12px; font-weight:500; color:var(--text-muted); }
+.pack-pill__price{ font-size:16px; font-weight:800; font-family:'Space Mono',monospace; color:var(--accent-primary); white-space:nowrap; }
+.pack-pill__price span{ font-size:11px; font-weight:400; color:var(--text-muted); }
+/* "limit reached" banner inside cap-card, shown via JS */
+.cap-limit-banner{ display:none; background:rgba(255,71,87,.1); border:1px solid rgba(255,71,87,.25); border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:13px; color:var(--accent-danger); font-weight:600; }
+.cap-limit-banner.visible{ display:block; }
+
+/* ================================================================
+   SECTION 4 — ADD POSTCODE INPUT + PREVIEW PANEL
+   ================================================================ */
+.add-postcode-row{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; }
+.input-wrap{ display:flex; flex-direction:column; gap:6px; }
+.input-label{ font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); }
+.postcode-input-group{ display:flex; gap:0; }
+.postcode-input{
+    flex:1; height:44px; background:var(--bg-tertiary); border:1px solid var(--border);
+    border-radius:12px 0 0 12px; padding:0 16px; color:var(--text-primary); font-size:15px;
+    font-family:'Space Mono',monospace; font-weight:700; text-transform:uppercase;
+    transition:all .2s; letter-spacing:1px;
+}
+.postcode-input::placeholder{ color:var(--text-muted); font-weight:400; text-transform:none; letter-spacing:0; font-family:'Archivo',sans-serif; font-size:14px; }
+.postcode-input:focus{ outline:none; border-color:var(--accent-primary); box-shadow:0 0 0 3px rgba(0,229,160,.1); }
+.postcode-input.error{ border-color:var(--accent-danger); }
+.btn-add-postcode{
+    height:44px; padding:0 22px; background:var(--accent-primary); color:#fff;
+    border:none; border-radius:0 12px 12px 0; font-size:14px; font-weight:700;
+    font-family:'Archivo',sans-serif; cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.btn-add-postcode:hover{ background:var(--accent-secondary); }
+.btn-add-postcode:disabled{ opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+/* validation / error message under input */
+.input-feedback{ font-size:12px; min-height:18px; margin-top:4px; }
+.input-feedback.error{ color:var(--accent-danger); }
+.input-feedback.warn{ color:var(--accent-warning); }
+
+/* Preview card that appears when a valid postcode is typed */
+.postcode-preview{
+    display:none; background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
+    padding:18px 20px; margin-top:14px; box-shadow:var(--shadow-sm);
+    grid-column:1/-1; /* span full width inside the grid */
+}
+.postcode-preview.visible{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.preview-stat{ text-align:center; }
+.preview-stat__label{ font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); margin-bottom:6px; }
+.preview-stat__value{ font-size:18px; font-weight:800; font-family:'Space Mono',monospace; color:var(--text-primary); }
+.preview-stat__sub{ font-size:12px; color:var(--text-secondary); margin-top:3px; }
+/* warning bubble inside preview */
+.preview-warning{
+    grid-column:1/-1; display:flex; align-items:center; gap:10px;
+    background:rgba(255,167,38,.1); border:1px solid rgba(255,167,38,.25); border-radius:8px;
+    padding:10px 14px; font-size:13px; color:var(--accent-warning); font-weight:600;
+}
+
+/* ================================================================
+   SECTION 5 — AI SUGGESTIONS (locked overlay pattern from heatmaps)
+   ================================================================ */
+.ai-section{ position:relative; }
+.ai-suggestions-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+.ai-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
+    padding:20px; box-shadow:var(--shadow-sm); transition:all .25s;
+}
+.ai-card:hover{ border-color:var(--border-hover); transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.ai-card__header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.ai-card__postcode{ font-size:20px; font-weight:800; font-family:'Space Mono',monospace; color:var(--text-primary); }
+.ai-card__leads{ font-size:12px; font-weight:700; color:var(--accent-primary); font-family:'Space Mono',monospace; }
+.ai-card__reason{ font-size:13px; color:var(--text-secondary); line-height:1.4; margin-bottom:14px; }
+.ai-card__btn{ width:100%; padding:8px 0; border-radius:8px; border:1px solid var(--accent-primary); background:transparent; color:var(--accent-primary); font-size:13px; font-weight:700; cursor:pointer; font-family:'Archivo',sans-serif; transition:all .2s; }
+.ai-card__btn:hover{ background:rgba(0,229,160,.1); }
+/* blurred lock overlay — same pattern as heatmaps map-overlay */
+.ai-lock-overlay{
+    position:absolute; inset:0; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    background:rgba(10,14,20,.82); border-radius:16px; display:flex; align-items:center;
+    justify-content:center; z-index:5; padding:24px;
+}
+[data-theme="light"] .ai-lock-overlay{ background:rgba(248,250,251,.93); }
+.ai-lock-panel{ text-align:center; max-width:380px; }
+.ai-lock-icon{ font-size:36px; margin-bottom:14px; }
+.ai-lock-title{ font-size:20px; font-weight:800; color:var(--text-primary); margin-bottom:8px; }
+.ai-lock-desc{ font-size:14px; color:var(--text-secondary); line-height:1.5; margin-bottom:20px; }
+.ai-lock-btn{ padding:11px 28px; background:linear-gradient(135deg,var(--accent-primary),var(--accent-info)); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:'Archivo',sans-serif; transition:all .2s; box-shadow:0 4px 16px rgba(0,229,160,.3); }
+.ai-lock-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 24px rgba(0,229,160,.4); }
+
+/* ================================================================
+   SECTION 6 — SATURATION ALERTS (reuses alert-banner pattern)
+   ================================================================ */
+/* already covered by .alert-banner — just need the postcode list inside */
+.sat-postcode-list{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.sat-postcode-chip{ padding:4px 10px; background:rgba(255,71,87,.1); border:1px solid rgba(255,71,87,.2); border-radius:6px; font-size:12px; font-weight:700; font-family:'Space Mono',monospace; color:var(--accent-danger); }
+
+/* ================================================================
+   SECTION 7 — COVERAGE MAP (placeholder from heatmaps pattern)
+   ================================================================ */
+.map-container{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    overflow:hidden; box-shadow:var(--shadow-sm); position:relative;
+}
+.map-header{ padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.map-header-title{ font-size:16px; font-weight:700; }
+/* legend row */
+.map-legend{ display:flex; gap:18px; flex-wrap:wrap; }
+.map-legend-item{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-muted); font-weight:600; }
+.map-legend-dot{ width:12px; height:12px; border-radius:3px; }
+.map-legend-dot.high{ background:var(--demand-high); }
+.map-legend-dot.med{ background:var(--demand-med); }
+.map-legend-dot.low{ background:var(--demand-low); }
+.map-legend-dot.active{ background:var(--accent-primary); }
+/* the actual map area */
+.map-area{
+    width:100%; height:380px;
+    background:
+        linear-gradient(135deg,rgba(0,229,160,.05) 0%,rgba(66,165,245,.05) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ccircle cx='20' cy='20' r='2' fill='%2300E5A0' opacity='.2'/%3E%3Ccircle cx='50' cy='40' r='3' fill='%2300E5A0' opacity='.3'/%3E%3Ccircle cx='80' cy='30' r='2' fill='%2342A5F5' opacity='.2'/%3E%3Ccircle cx='30' cy='60' r='4' fill='%2300E5A0' opacity='.4'/%3E%3Ccircle cx='70' cy='70' r='2' fill='%2342A5F5' opacity='.3'/%3E%3Ccircle cx='40' cy='80' r='3' fill='%2300E5A0' opacity='.2'/%3E%3C/svg%3E");
+    background-size:cover, 100px 100px;
+    position:relative; display:flex; align-items:center; justify-content:center;
+}
+/* SVG-based abstract UK postcode map pins — purely decorative placeholder */
+.map-pins{ position:absolute; inset:0; pointer-events:none; }
+/* each pin is absolutely positioned; colour set inline via class */
+.map-pin{
+    position:absolute; width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:800; font-family:'Space Mono',monospace; color:#fff;
+    box-shadow:0 3px 12px rgba(0,0,0,.35); transition:transform .2s, box-shadow .2s;
+    cursor:pointer;
+}
+.map-pin:hover{ transform:scale(1.18); box-shadow:0 5px 20px rgba(0,0,0,.45); }
+.map-pin::after{
+    content:''; position:absolute; bottom:-6px; left:50%; transform:translateX(-50%);
+    border-left:6px solid transparent; border-right:6px solid transparent;
+    border-top:7px solid currentColor;
+}
+.map-pin.pin-active{ background:var(--accent-primary); color:#fff; }
+.map-pin.pin-active::after{ border-top-color:var(--accent-primary); }
+.map-pin.pin-high{ background:var(--demand-high); }
+.map-pin.pin-high::after{ border-top-color:var(--demand-high); }
+.map-pin.pin-med{ background:var(--demand-med); }
+.map-pin.pin-med::after{ border-top-color:var(--demand-med); }
+/* tooltip on pin hover */
+.map-pin .pin-tip{
+    display:none; position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%);
+    background:var(--bg-secondary); border:1px solid var(--border-hover); border-radius:8px;
+    padding:8px 12px; font-size:11px; color:var(--text-secondary); white-space:nowrap;
+    box-shadow:var(--shadow-md); pointer-events:none; z-index:2;
+}
+.map-pin .pin-tip::after{ content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--border-hover); }
+.map-pin:hover .pin-tip{ display:block; }
+.map-pin .pin-tip strong{ color:var(--text-primary); display:block; }
+/* placeholder text in centre */
+.map-placeholder-text{ font-size:14px; color:var(--text-muted); text-align:center; line-height:1.5; position:relative; z-index:1; }
+.map-placeholder-text strong{ color:var(--text-secondary); display:block; margin-bottom:4px; font-size:16px; }
+
+/* ================================================================
+   SECTION 8 — HOW COVERAGE AFFECTS LEADS (info cards)
+   ================================================================ */
+.info-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.info-card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+    padding:24px; box-shadow:var(--shadow-sm); transition:all .25s;
+}
+.info-card:hover{ border-color:var(--border-hover); box-shadow:var(--shadow-md); }
+.info-card__icon{ width:42px; height:42px; border-radius:11px; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:14px; }
+.info-card__title{ font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:8px; }
+.info-card__body{ font-size:13px; color:var(--text-secondary); line-height:1.55; }
+
+/* ================================================================
+   STAGGERED ENTRANCE ANIMATIONS
+   ================================================================ */
+@keyframes fadeUp{ from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.anim{ animation:fadeUp .5s cubic-bezier(.4,0,.2,1) backwards; }
+.d1{animation-delay:.06s} .d2{animation-delay:.12s} .d3{animation-delay:.18s}
+.d4{animation-delay:.24s} .d5{animation-delay:.30s} .d6{animation-delay:.36s}
+.d7{animation-delay:.42s} .d8{animation-delay:.48s} .d9{animation-delay:.54s}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:1100px){
+    .cap-card{ grid-template-columns:1fr; }
+    .cap-card__packs{ flex-direction:row; }
+    .info-cards{ grid-template-columns:1fr 1fr; }
+}
+@media(max-width:1024px){
+    .sidebar{ width:80px; }
+    .sidebar .logo-text,.sidebar .nav-section-title,.sidebar .nav-label,.sidebar .nav-badge{ opacity:0; }
+    .top-nav{ left:80px; }
+    .main-content{ margin-left:80px; }
+    .map-area{ height:300px; }
+}
+@media(max-width:768px){
+    .sidebar{ transform:translateX(-100%); }
+    .top-nav{ left:0; }
+    .main-content{ margin-left:0; padding:16px; }
+    .page-header{ flex-direction:column; }
+    .info-cards{ grid-template-columns:1fr; }
+    .ai-suggestions-grid{ grid-template-columns:1fr 1fr; }
+    /* make table horizontally scrollable */
+    .table-container{ overflow-x:auto; }
+    table{ min-width:680px; }
+}
+@media(max-width:520px){
+    .ai-suggestions-grid{ grid-template-columns:1fr; }
+    .postcode-preview.visible{ grid-template-columns:1fr; }
+    .add-postcode-row{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SIDEBAR — identical shell; "Coverage" nav-item is .active
+     ============================================================ -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <a href="vendor-dashboard-with-modals.html" class="logo">
+            <div class="logo-icon">T</div>
+            <span class="logo-text">TradeMatch</span>
+        </a>
+    </div>
+    <nav class="sidebar-nav">
+        <!-- Overview -->
+        <div class="nav-section">
+            <div class="nav-section-title">Overview</div>
+            <a href="vendor-dashboard-with-modals.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="vendor-analytics.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="nav-label">Analytics</span>
+            </a>
+        </div>
+        <!-- Leads & Jobs -->
+        <div class="nav-section">
+            <div class="nav-section-title">Leads &amp; Jobs</div>
+            <a href="vendor-new-leads.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <span class="nav-label">New Leads</span>
+                <span class="nav-badge">12</span>
+            </a>
+            <a href="vendor-active-quotes.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="nav-label">Active Quotes</span>
+            </a>
+            <a href="vendor-archived-jobs.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="nav-label">Won Jobs</span>
+            </a>
+            <a href="vendor-timeline.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                <span class="nav-label">Archived</span>
+            </a>
+        </div>
+        <!-- Impressions -->
+        <div class="nav-section">
+            <div class="nav-section-title">Impressions</div>
+            <a href="vendor-impressions.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <span class="nav-label">Usage</span>
+            </a>
+            <a href="vendor-timeline.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="nav-label">Timeline</span>
+            </a>
+        </div>
+        <!-- Communication -->
+        <div class="nav-section">
+            <div class="nav-section-title">Communication</div>
+            <a href="vendor-messages.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                <span class="nav-label">Messaging</span>
+                <span class="nav-badge">3</span>
+            </a>
+        </div>
+        <!-- Reputation -->
+        <div class="nav-section">
+            <div class="nav-section-title">Reputation</div>
+            <a href="#" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                <span class="nav-label">Reviews</span>
+            </a>
+            <a href="vendor-badges.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                <span class="nav-label">Badges</span>
+            </a>
+        </div>
+        <!-- Business — "Coverage" is active -->
+        <div class="nav-section">
+            <div class="nav-section-title">Business</div>
+            <a href="vendor-billing.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <span class="nav-label">Billing</span>
+            </a>
+            <a href="vendor-profile.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span class="nav-label">Profile</span>
+            </a>
+            <!-- Coverage — ACTIVE -->
+            <a href="vendor-coverage.html" class="nav-item active">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 12.414a1 1 0 00-.707-.293H5a1 1 0 00-1 1v.5A2.5 2.5 0 007.5 16h1m6.657.657L13.414 12.414m4.243 4.243a2 2 0 01-2.828 0l-4.586-4.586a1 1 0 01-.293-.707V5a1 1 0 011-1h2.586a1 1 0 01.707.293l4.586 4.586a2 2 0 010 2.828z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="nav-label">Coverage</span>
+            </a>
+            <a href="vendor-settings.html" class="nav-item">
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="nav-label">Settings</span>
+            </a>
+        </div>
+    </nav>
+    <div class="sidebar-footer">
+        <button class="collapse-btn" onclick="toggleSidebar()">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+        </button>
+    </div>
+</aside>
+
+<!-- ============================================================
+     TOP NAVIGATION — identical
+     ============================================================ -->
+<nav class="top-nav" id="topNav">
+    <div class="top-nav-left">
+        <div class="search-container">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" class="search-input" placeholder="Search leads, quotes, jobs...">
+        </div>
+    </div>
+    <div class="top-nav-right">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <div class="theme-toggle-slider">
+                <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </div>
+        </div>
+        <a href="vendor-messages.html" class="icon-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <span class="notification-badge"></span>
+        </a>
+        <button class="icon-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="notification-badge"></span>
+        </button>
+        <button class="icon-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        </button>
+        <div class="user-menu">
+            <div class="user-avatar">JD</div>
+            <div style="display:flex;flex-direction:column;">
+                <div class="user-name">John Doe</div>
+                <div class="user-role">Pro Plan</div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ============================================================
+     MAIN CONTENT — Coverage Areas page
+     ============================================================ -->
+<main class="main-content" id="mainContent">
+
+    <!-- --------------------------------------------------------
+         SECTION 1 — Page Header + Postcodes-Used Pill
+         -------------------------------------------------------- -->
+    <div class="page-header anim d1">
+        <div class="page-header-left">
+            <h1 class="page-title">Coverage Areas</h1>
+            <p class="page-subtitle">Control where you receive leads and optimise your territory</p>
+        </div>
+        <!-- Right-aligned: postcodes used summary -->
+        <div class="postcodes-pill">
+            <div>
+                <div class="postcodes-pill__label">Postcodes Used</div>
+                <div class="postcodes-pill__value" id="postcodeCount">7 <span>/ 10 active</span></div>
+            </div>
+            <div class="postcodes-pill__bar">
+                <div class="progress-bar-bg">
+                    <!-- 7/10 = 70 %; warning class kicks in at 80 % — set via JS on load -->
+                    <div class="progress-bar-fill" id="headerProgressFill" style="width:70%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 6 — Saturation Alerts  (placed high for visibility)
+         Two of the vendor's postcodes are flagged; banner + CTA.
+         -------------------------------------------------------- -->
+    <div class="alert-banner anim d2" id="saturationAlert">
+        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <div class="alert-content">
+            <div class="alert-title">Saturation Warning</div>
+            <div class="alert-message">2 of your postcodes are heavily saturated — you may be losing leads to competitors in these areas.</div>
+            <div class="sat-postcode-list">
+                <span class="sat-postcode-chip">SW1A</span>
+                <span class="sat-postcode-chip">EC1A</span>
+            </div>
+        </div>
+        <button class="alert-action" onclick="scrollToSuggestions()">Review suggestions</button>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 2 — Active Coverage Areas Table
+         Columns: Postcode · Town / City · Demand · Saturation · Status · Actions
+         Sample data: 7 rows (mix of statuses, demand & saturation levels, micro-badges)
+         -------------------------------------------------------- -->
+    <div class="section-block anim d3">
+        <div class="section-head">
+            <div>
+                <div class="section-title">Active Coverage Areas</div>
+                <div class="section-sub">Postcodes where you are currently eligible to receive leads</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <div class="table-title">Your Postcodes</div>
+                <div class="table-actions">
+                    <!-- filter select — reuses heatmaps select-input -->
+                    <select class="select-input" style="width:160px;" onchange="filterTable(this.value)">
+                        <option value="all">All statuses</option>
+                        <option value="active">Active only</option>
+                        <option value="paused">Paused only</option>
+                    </select>
+                </div>
+            </div>
+
+            <table id="coverageTable">
+                <thead>
+                    <tr>
+                        <th>Postcode</th>
+                        <th>Town / City</th>
+                        <th>Demand</th>
+                        <th>Saturation</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="coverageTableBody">
+                    <!-- rows injected by JS from SAMPLE_DATA — see <script> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 3 — Postcode Cap + Upgrade Packs
+         Shows remaining slots, a progress bar, and two purchasable
+         packs (+5 / +10 postcodes).  A "limit reached" banner is
+         toggled by JS when slots hit zero.
+         -------------------------------------------------------- -->
+    <div class="section-block anim d4">
+        <div class="section-head">
+            <div>
+                <div class="section-title">Postcode Allowance</div>
+                <div class="section-sub">Your plan includes up to 10 postcodes</div>
+            </div>
+        </div>
+
+        <div class="cap-card">
+            <div class="cap-card__left">
+                <div class="cap-card__title">Included Coverage</div>
+                <div class="cap-card__desc">
+                    Your <strong style="color:var(--text-primary);">Pro plan</strong> includes up to <strong style="color:var(--text-primary);">10 postcodes</strong> at no extra cost.
+                    This is in line with industry benchmarks. Paused postcodes still count toward your total.
+                </div>
+
+                <!-- Limit-reached warning — hidden until slots = 0 -->
+                <div class="cap-limit-banner" id="limitBanner">
+                    🚫 You've reached your postcode limit. Purchase an additional pack below to expand.
+                </div>
+
+                <div class="cap-card__progress-wrap">
+                    <div class="cap-card__progress-label">
+                        <span>Postcodes used</span>
+                        <span id="capProgressLabel">7 / 10</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="capProgressFill" style="width:70%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchasable packs -->
+            <div class="cap-card__packs">
+                <div class="pack-pill" onclick="purchasePack(5)">
+                    <div class="pack-pill__left">
+                        <div class="pack-pill__postcodes">+5 postcodes <span>extra</span></div>
+                    </div>
+                    <div class="pack-pill__price">£9.99<span>/mo</span></div>
+                </div>
+                <div class="pack-pill" onclick="purchasePack(10)">
+                    <div class="pack-pill__left">
+                        <div class="pack-pill__postcodes">+10 postcodes <span>best value</span></div>
+                    </div>
+                    <div class="pack-pill__price">£17.99<span>/mo</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 4 — Add New Postcode
+         Input with live validation, a preview panel that surfaces
+         estimated lead volume + saturation + impression impact,
+         and a contextual warning when the area is competitive.
+         -------------------------------------------------------- -->
+    <div class="section-block anim d5">
+        <div class="section-head">
+            <div>
+                <div class="section-title">Add a Postcode</div>
+                <div class="section-sub">Search to see demand and saturation before committing</div>
+            </div>
+        </div>
+
+        <div class="add-postcode-row" id="addPostcodeArea">
+            <div class="input-wrap">
+                <label class="input-label">Postcode</label>
+                <div class="postcode-input-group">
+                    <input type="text" class="postcode-input" id="postcodeInput" placeholder="e.g. SW1A 1AA" autocomplete="off" oninput="onPostcodeInput()" maxlength="8">
+                    <button class="btn-add-postcode" id="addBtn" onclick="addPostcode()" disabled>Add postcode</button>
+                </div>
+                <div class="input-feedback" id="inputFeedback"></div>
+            </div>
+
+            <!-- Preview panel — hidden until a valid, non-duplicate postcode is typed -->
+            <div class="postcode-preview" id="postcodePreview">
+                <div class="preview-stat">
+                    <div class="preview-stat__label">Est. Leads / Month</div>
+                    <div class="preview-stat__value" id="previewLeads">—</div>
+                    <div class="preview-stat__sub">based on current demand</div>
+                </div>
+                <div class="preview-stat">
+                    <div class="preview-stat__label">Saturation</div>
+                    <div class="preview-stat__value" id="previewSat">—</div>
+                    <div class="preview-stat__sub">competitors in area</div>
+                </div>
+                <div class="preview-stat">
+                    <div class="preview-stat__label">Est. Impressions / Month</div>
+                    <div class="preview-stat__value" id="previewImpressions">—</div>
+                    <div class="preview-stat__sub">at current lead rate</div>
+                </div>
+                <!-- conditional warning — shown via JS when saturation is high -->
+                <div class="preview-warning" id="previewWarning" style="display:none;">
+                    ⚠️ This postcode is highly competitive. You may receive fewer leads than estimated.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 5 — AI Suggested Postcodes (Pro Feature)
+         6 suggestion cards behind a blurred lock overlay.
+         Clicking "Upgrade to Pro" would redirect to Stripe.
+         -------------------------------------------------------- -->
+    <div class="section-block anim d6" id="aiSuggestionsSection">
+        <div class="section-head">
+            <div>
+                <div class="section-title">✨ AI Suggested Postcodes</div>
+                <div class="section-sub">Smart recommendations based on your trade, conversions, and local demand</div>
+            </div>
+        </div>
+
+        <!-- Wrapper holds both the cards AND the overlay -->
+        <div class="ai-section" style="border-radius:16px; overflow:hidden; position:relative;">
+            <!-- The 6 suggestion cards (blurred behind the overlay) -->
+            <div class="ai-suggestions-grid" style="padding:4px;">
+                <!-- Card 1 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">SE1</div>
+                        <div class="ai-card__leads">~34 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">High demand, low saturation — strong match for your electrical trade.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+                <!-- Card 2 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">W1</div>
+                        <div class="ai-card__leads">~28 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">Premium area with growing plumbing demand and low competition.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+                <!-- Card 3 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">N7</div>
+                        <div class="ai-card__leads">~19 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">Nearby area — 2 won jobs from similar vendors this month.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+                <!-- Card 4 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">E14</div>
+                        <div class="ai-card__leads">~41 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">Highest lead volume in London — medium saturation.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+                <!-- Card 5 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">KT1</div>
+                        <div class="ai-card__leads">~15 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">Suburban expansion zone — your conversion rate here would likely be high.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+                <!-- Card 6 -->
+                <div class="ai-card">
+                    <div class="ai-card__header">
+                        <div class="ai-card__postcode">CR0</div>
+                        <div class="ai-card__leads">~22 leads/mo</div>
+                    </div>
+                    <div class="ai-card__reason">Rising demand — heatmap trending upward over last 30 days.</div>
+                    <button class="ai-card__btn">+ Add to coverage</button>
+                </div>
+            </div>
+
+            <!-- Lock overlay — remove or set display:none to "unlock" for Pro users -->
+            <div class="ai-lock-overlay" id="aiLockOverlay">
+                <div class="ai-lock-panel">
+                    <div class="ai-lock-icon">🔐</div>
+                    <div class="ai-lock-title">Pro Feature</div>
+                    <div class="ai-lock-desc">Upgrade to Pro to unlock smart postcode suggestions powered by TradeMatch AI — tailored to your trade, location, and past performance.</div>
+                    <button class="ai-lock-btn" onclick="upgradeToAI()">Upgrade to Pro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 7 — Coverage Map (Visual Aid)
+         Abstract placeholder with colour-coded pins for each active
+         postcode.  Tooltips show demand on hover.  No real map tile
+         dependency — ready to swap in Mapbox / Google Maps.
+         -------------------------------------------------------- -->
+    <div class="section-block anim d7">
+        <div class="map-container">
+            <div class="map-header">
+                <div class="map-header-title">Coverage Map</div>
+                <div class="map-legend">
+                    <div class="map-legend-item"><div class="map-legend-dot active"></div> Active</div>
+                    <div class="map-legend-item"><div class="map-legend-dot high"></div> High demand</div>
+                    <div class="map-legend-item"><div class="map-legend-dot med"></div> Medium demand</div>
+                    <div class="map-legend-item"><div class="map-legend-dot low"></div> Low demand</div>
+                </div>
+            </div>
+            <div class="map-area">
+                <!-- Decorative pins — positions are illustrative; swap with real geocoding -->
+                <div class="map-pins">
+                    <!-- SW11 — high demand, active -->
+                    <div class="map-pin pin-high" style="top:38%;left:22%;">
+                        <span class="pin-tip"><strong>SW11</strong>Battersea · High demand</span>
+                        SW11
+                    </div>
+                    <!-- EC2A — medium demand -->
+                    <div class="map-pin pin-med" style="top:28%;left:42%;">
+                        <span class="pin-tip"><strong>EC2A</strong>Shoreditch · Med demand</span>
+                        EC2A
+                    </div>
+                    <!-- SW1A — saturated / high demand (red) -->
+                    <div class="map-pin pin-high" style="top:44%;left:38%;">
+                        <span class="pin-tip"><strong>SW1A</strong>Westminster · Saturated ⚠️</span>
+                        SW1A
+                    </div>
+                    <!-- N1 — medium -->
+                    <div class="map-pin pin-med" style="top:22%;left:35%;">
+                        <span class="pin-tip"><strong>N1</strong>Islington · Med demand</span>
+                        N1
+                    </div>
+                    <!-- EC1A — saturated -->
+                    <div class="map-pin pin-high" style="top:32%;left:40%;">
+                        <span class="pin-tip"><strong>EC1A</strong>Clerkenwell · Saturated ⚠️</span>
+                        EC1A
+                    </div>
+                    <!-- SE1 — low demand (AI suggestion preview) -->
+                    <div class="map-pin pin-low" style="top:50%;left:44%; opacity:.5; border:2px dashed var(--accent-info);" >
+                        <span class="pin-tip"><strong>SE1</strong>Lambeth · AI suggested</span>
+                        SE1
+                    </div>
+                    <!-- W2 — active, low -->
+                    <div class="map-pin pin-active" style="top:35%;left:26%;">
+                        <span class="pin-tip"><strong>W2</strong>Paddington · Active</span>
+                        W2
+                    </div>
+                </div>
+                <!-- Centred fallback text (hidden once pins render) -->
+                <div class="map-placeholder-text" style="opacity:.35;">
+                    <strong>Interactive Map</strong>
+                    Swap this placeholder with Mapbox or Google Maps for live geocoding
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------------------------------------------------------
+         SECTION 8 — How Coverage Affects Leads
+         Three educational info-cards; non-salesy, plain language.
+         -------------------------------------------------------- -->
+    <div class="section-block anim d8">
+        <div class="section-head">
+            <div>
+                <div class="section-title">How Coverage Affects Leads</div>
+                <div class="section-sub">Understanding the link between your postcodes and the leads you receive</div>
+            </div>
+        </div>
+
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-card__icon">📍</div>
+                <div class="info-card__title">Leads match your postcodes</div>
+                <div class="info-card__body">
+                    When a customer posts a job, TradeMatch delivers it only to vendors whose active coverage includes that job's postcode. If a postcode is paused or removed, you won't see those leads.
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-card__icon">⚖️</div>
+                <div class="info-card__title">Saturation affects quality</div>
+                <div class="info-card__body">
+                    In heavily saturated areas, customers receive more quotes — which can lower your win rate. Choosing less competitive postcodes often delivers a better return on your impressions.
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-card__icon">📊</div>
+                <div class="info-card__title">Smart coverage = better ROI</div>
+                <div class="info-card__body">
+                    Vendors who balance high-demand postcodes with lower-saturation areas convert at a higher rate. Use the AI suggestions and saturation warnings above to optimise without guesswork.
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main><!-- end .main-content -->
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ── Theme Toggle (verbatim from index.html) ─────────────────────
+function toggleTheme(){
+    const h=document.documentElement, c=h.getAttribute('data-theme'), n=c==='light'?'dark':'light';
+    h.setAttribute('data-theme',n); localStorage.setItem('theme',n);
+    const i=document.querySelector('.theme-toggle-icon');
+    i.innerHTML=n==='light'
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+}
+(function(){
+    const t=localStorage.getItem('theme')||'dark';
+    document.documentElement.setAttribute('data-theme',t);
+    if(t==='light'){
+        const i=document.querySelector('.theme-toggle-icon');
+        if(i) i.innerHTML='<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+    }
+})();
+
+// ── Sidebar Toggle ──────────────────────────────────────────────
+function toggleSidebar(){
+    document.getElementById('sidebar').classList.toggle('collapsed');
+    document.getElementById('topNav').classList.toggle('sidebar-collapsed');
+    document.getElementById('mainContent').classList.toggle('sidebar-collapsed');
+}
+
+// ============================================================
+// SAMPLE DATA — replace with API calls in production
+// Each object maps to one <tr> in the coverage table AND a map pin.
+// ============================================================
+const SAMPLE_DATA = [
+    { postcode:'SW11', town:'Battersea, London',  demand:'high', saturation:'med',  status:'active',  badges:['fire','premium'] },
+    { postcode:'EC2A', town:'Shoreditch, London', demand:'med',  saturation:'low',  status:'active',  badges:[] },
+    { postcode:'SW1A', town:'Westminster, London',demand:'high', saturation:'high', status:'active',  badges:['fire','sat'] },
+    { postcode:'N1',   town:'Islington, London',  demand:'med',  saturation:'med',  status:'active',  badges:[] },
+    { postcode:'EC1A', town:'Clerkenwell, London',demand:'high', saturation:'high', status:'active',  badges:['fire','sat'] },
+    { postcode:'W2',   town:'Paddington, London', demand:'low',  saturation:'low',  status:'active',  badges:[] },
+    { postcode:'KT8',  town:'East Molesey',       demand:'low',  saturation:'low',  status:'paused',  badges:[] },
+];
+
+// Cap settings (driven by plan; swap with API)
+const PLAN_CAP = 10;
+
+// ── Render table ────────────────────────────────────────────────
+function renderTable(filter){
+    const tbody = document.getElementById('coverageTableBody');
+    tbody.innerHTML = '';
+    SAMPLE_DATA
+        .filter(d => filter === 'all' || d.status === filter)
+        .forEach(d => {
+            // badge chips
+            const badgeHtml = d.badges.map(b => {
+                const labels = { fire:'🔥 High demand', sat:'⚠️ Saturated', premium:'💰 Premium' };
+                return `<span class="micro-badge ${b}">${labels[b]||b}</span>`;
+            }).join(' ');
+
+            // demand chip
+            const demandChip = `<span class="level-chip level-${d.demand}"><span class="lvl-dot"></span>${d.demand.charAt(0).toUpperCase()+d.demand.slice(1)}</span>`;
+            // saturation chip
+            const satChip = `<span class="level-chip level-${d.saturation}"><span class="lvl-dot"></span>${d.saturation.charAt(0).toUpperCase()+d.saturation.slice(1)}</span>`;
+            // status badge
+            const statusChip = d.status === 'active'
+                ? '<span class="status-badge status-active"><span class="dot"></span>Active</span>'
+                : '<span class="status-badge status-paused"><span class="dot"></span>Paused</span>';
+            // action buttons
+            const pauseLabel = d.status === 'active' ? 'Pause' : 'Resume';
+            const actionBtns = `<div class="row-actions">
+                <button class="btn-row" onclick="togglePause('${d.postcode}')">${pauseLabel}</button>
+                <button class="btn-row danger" onclick="removePostcode('${d.postcode}')">Remove</button>
+            </div>`;
+
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr data-postcode="${d.postcode}" data-status="${d.status}">
+                    <td>
+                        <div class="postcode-cell">
+                            <div>
+                                <div class="postcode-code">${d.postcode}</div>
+                            </div>
+                            ${badgeHtml ? '<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;">'+badgeHtml+'</div>' : ''}
+                        </div>
+                    </td>
+                    <td>${d.town}</td>
+                    <td>${demandChip}</td>
+                    <td>${satChip}</td>
+                    <td>${statusChip}</td>
+                    <td style="text-align:right;">${actionBtns}</td>
+                </tr>
+            `);
+        });
+}
+
+// initial render
+renderTable('all');
+
+// ── Table filter (select) ───────────────────────────────────────
+function filterTable(val){ renderTable(val); }
+
+// ── Pause / Resume toggle ───────────────────────────────────────
+function togglePause(postcode){
+    const row = SAMPLE_DATA.find(d => d.postcode === postcode);
+    if(!row) return;
+    row.status = row.status === 'active' ? 'paused' : 'active';
+    // re-render with current filter
+    const sel = document.querySelector('.table-header select');
+    renderTable(sel ? sel.value : 'all');
+}
+
+// ── Remove postcode (with confirm) ─────────────────────────────
+function removePostcode(postcode){
+    if(!confirm(`Remove ${postcode} from your coverage? You can re-add it later.`)) return;
+    const idx = SAMPLE_DATA.findIndex(d => d.postcode === postcode);
+    if(idx > -1) SAMPLE_DATA.splice(idx, 1);
+    const sel = document.querySelector('.table-header select');
+    renderTable(sel ? sel.value : 'all');
+    updateCapUI();
+}
+
+// ── Cap UI update (progress + limit banner) ─────────────────────
+function updateCapUI(){
+    const used = SAMPLE_DATA.length;
+    const pct  = Math.round((used / PLAN_CAP) * 100);
+    // header pill
+    document.getElementById('postcodeCount').innerHTML = used + ' <span>/ ' + PLAN_CAP + ' active</span>';
+    document.getElementById('headerProgressFill').style.width = pct + '%';
+    document.getElementById('headerProgressFill').className = 'progress-bar-fill' + (pct >= 80 ? ' warning' : '') + (pct >= 100 ? ' danger' : '');
+    // cap card
+    document.getElementById('capProgressLabel').textContent = used + ' / ' + PLAN_CAP;
+    document.getElementById('capProgressFill').style.width = pct + '%';
+    document.getElementById('capProgressFill').className = 'progress-bar-fill' + (pct >= 80 ? ' warning' : '') + (pct >= 100 ? ' danger' : '');
+    // limit banner
+    document.getElementById('limitBanner').classList.toggle('visible', used >= PLAN_CAP);
+    // add-button disabled state
+    document.getElementById('addBtn').disabled = used >= PLAN_CAP;
+}
+updateCapUI(); // run once on load
+
+// ============================================================
+// SECTION 4 — postcode input + live preview
+// Simulates validation & preview data (swap with real API)
+// ============================================================
+// Fake "known postcode" lookup for demo purposes
+const KNOWN_POSTCODES = {
+    'SE1': { leads:34, saturation:'low',  impressions:68,  warn:false },
+    'W1':  { leads:28, saturation:'med',  impressions:56,  warn:false },
+    'N7':  { leads:19, saturation:'low',  impressions:38,  warn:false },
+    'E14': { leads:41, saturation:'med',  impressions:82,  warn:false },
+    'KT1': { leads:15, saturation:'low',  impressions:30,  warn:false },
+    'CR0': { leads:22, saturation:'med',  impressions:44,  warn:false },
+    'E1':  { leads:31, saturation:'high', impressions:62,  warn:true  },
+    'SE11':{ leads:18, saturation:'high', impressions:36,  warn:true  },
+    'W11': { leads:24, saturation:'med',  impressions:48,  warn:false },
+    'N16': { leads:12, saturation:'low',  impressions:24,  warn:false },
+};
+
+function onPostcodeInput(){
+    const raw   = document.getElementById('postcodeInput').value.trim().toUpperCase();
+    const input = document.getElementById('postcodeInput');
+    const fb    = document.getElementById('inputFeedback');
+    const preview = document.getElementById('postcodePreview');
+    const addBtn  = document.getElementById('addBtn');
+
+    // reset
+    input.classList.remove('error');
+    fb.className = 'input-feedback';
+    fb.textContent = '';
+    preview.classList.remove('visible');
+    addBtn.disabled = true;
+
+    if(!raw){ return; }
+
+    // duplicate check
+    if(SAMPLE_DATA.find(d => d.postcode === raw)){
+        input.classList.add('error');
+        fb.className = 'input-feedback error';
+        fb.textContent = `${raw} is already in your coverage.`;
+        return;
+    }
+
+    // cap check
+    if(SAMPLE_DATA.length >= PLAN_CAP){
+        fb.className = 'input-feedback error';
+        fb.textContent = 'You\'ve reached your postcode limit. Purchase an additional pack first.';
+        return;
+    }
+
+    // look up preview data (simulated)
+    const data = KNOWN_POSTCODES[raw];
+    if(!data){
+        // treat unknown but plausible-length input as "no data yet"
+        if(raw.length >= 2 && raw.length <= 4){
+            fb.className = 'input-feedback';
+            fb.textContent = 'No demand data available for this postcode yet.';
+        } else {
+            input.classList.add('error');
+            fb.className = 'input-feedback error';
+            fb.textContent = 'Enter a valid UK postcode (e.g. SW1A).';
+        }
+        return;
+    }
+
+    // Show preview
+    preview.classList.add('visible');
+    document.getElementById('previewLeads').textContent       = '~' + data.leads;
+    document.getElementById('previewSat').textContent         = data.saturation.charAt(0).toUpperCase() + data.saturation.slice(1);
+    document.getElementById('previewSat').style.color         = data.saturation === 'high' ? 'var(--accent-danger)' : data.saturation === 'med' ? 'var(--accent-warning)' : 'var(--accent-primary)';
+    document.getElementById('previewImpressions').textContent = '~' + data.impressions;
+
+    // Conditional competitive warning
+    const warnEl = document.getElementById('previewWarning');
+    warnEl.style.display = data.warn ? 'flex' : 'none';
+
+    // enable add button
+    addBtn.disabled = false;
+}
+
+function addPostcode(){
+    const raw  = document.getElementById('postcodeInput').value.trim().toUpperCase();
+    const data = KNOWN_POSTCODES[raw];
+    if(!data || SAMPLE_DATA.find(d => d.postcode === raw) || SAMPLE_DATA.length >= PLAN_CAP) return;
+
+    // push into sample data
+    SAMPLE_DATA.push({
+        postcode: raw,
+        town:     'New area',          // placeholder — real geocoding would fill this
+        demand:   data.saturation === 'high' ? 'high' : data.leads > 25 ? 'med' : 'low',
+        saturation: data.saturation,
+        status:   'active',
+        badges:   data.warn ? ['sat'] : (data.leads > 30 ? ['fire'] : [])
+    });
+
+    // reset input + preview
+    document.getElementById('postcodeInput').value = '';
+    document.getElementById('postcodePreview').classList.remove('visible');
+    document.getElementById('inputFeedback').textContent = '';
+    document.getElementById('addBtn').disabled = true;
+
+    // re-render
+    const sel = document.querySelector('.table-header select');
+    renderTable(sel ? sel.value : 'all');
+    updateCapUI();
+}
+
+// ── Pack purchase stub ──────────────────────────────────────────
+function purchasePack(qty){
+    // In production → redirect to Stripe Checkout with metadata { vendor_id, pack: qty }
+    alert(`Redirecting to Stripe checkout for +${qty} postcodes…`);
+}
+
+// ── AI upgrade stub ─────────────────────────────────────────────
+function upgradeToAI(){
+    alert('Redirecting to Pro upgrade page…');
+}
+
+// ── Scroll helper (saturation alert → AI suggestions) ──────────
+function scrollToSuggestions(){
+    document.getElementById('aiSuggestionsSection').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+    </script>
+    <script src="../dashboardApp.js"></script>
+</body>
+</html>
+

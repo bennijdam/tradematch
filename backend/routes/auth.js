@@ -228,7 +228,7 @@ router.get('/me', async (req, res) => {
 
     // Get user from database
     const result = await pool.query(
-      'SELECT id, email, name, user_type, phone, postcode, avatar_url, created_at FROM users WHERE id = $1',
+      'SELECT id, email, name, user_type, phone, postcode, avatar_url, created_at, metadata FROM users WHERE id = $1',
       [decoded.userId]
     );
 
@@ -236,9 +236,15 @@ router.get('/me', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    const user = result.rows[0];
+    const metadata = user.metadata || {};
+
     res.json({
       success: true,
-      user: result.rows[0]
+      user: {
+        ...user,
+        onboarding_completed: Boolean(metadata.onboarding_completed)
+      }
     });
   } catch (error) {
     console.error('Get user error:', error);

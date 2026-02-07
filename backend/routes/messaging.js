@@ -117,6 +117,50 @@ const addNotification = async ({ userId, type, title, body, metadata }) => {
     return notificationId;
 };
 
+const ensureConversationArchivesTable = async () => {
+    await pool.query(
+        `CREATE TABLE IF NOT EXISTS conversation_archives (
+            id VARCHAR(80) PRIMARY KEY,
+            conversation_id VARCHAR(60) NOT NULL,
+            user_id VARCHAR(60) NOT NULL,
+            archived_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )`
+    );
+    await pool.query(
+        `CREATE UNIQUE INDEX IF NOT EXISTS idx_conversation_archives_unique
+         ON conversation_archives(conversation_id, user_id)`
+    );
+    await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_conversation_archives_user
+         ON conversation_archives(user_id)`
+    );
+};
+
+const ensureConversationReportsTable = async () => {
+    await pool.query(
+        `CREATE TABLE IF NOT EXISTS conversation_reports (
+            id VARCHAR(80) PRIMARY KEY,
+            conversation_id VARCHAR(60) NOT NULL,
+            user_id VARCHAR(60) NOT NULL,
+            reason VARCHAR(40) NOT NULL,
+            details TEXT,
+            status VARCHAR(20) NOT NULL DEFAULT 'open',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )`
+    );
+    await pool.query(
+        `CREATE INDEX IF NOT EXISTS idx_conversation_reports_conversation
+         ON conversation_reports(conversation_id)`
+    );
+};
+
+const maskPostcodeDistrict = (postcode) => {
+    if (!postcode) return null;
+    const trimmed = String(postcode).trim();
+    if (!trimmed) return null;
+    return trimmed.split(/\s+/)[0].toUpperCase();
+};
+
 // ============================================================
 // Conversations
 // ============================================================
@@ -155,8 +199,18 @@ router.get('/conversations', authenticate, async (req, res) => {
         params.push(limit);
         params.push(offset);
 
+        await ensureConversationArchivesTable();
+
         const result = await pool.query(
-            `SELECT c.*, 
+            `SELECT c.*,
+                    q.title AS job_title,
+                    q.status AS job_status,
+                    q.postcode AS job_postcode,
+                    q.budget_min,
+                    q.budget_max,
+                    cp.notification_pref,
+                    cp.muted_until,
+                    CASE WHEN ca.conversation_id IS NULL THEN false ELSE true END AS is_archived,
                     COALESCE((SELECT COUNT(*) FROM messages m
                         WHERE m.conversation_id = c.id
                           AND m.is_deleted = false
@@ -166,7 +220,11 @@ router.get('/conversations', authenticate, async (req, res) => {
                               WHERE mr.message_id = m.id AND mr.user_id = $1
                           )), 0) AS unread_count
              FROM conversations c
-             LEFT JOIN conversation_participants cp ON c.id = cp.conversation_id
+             LEFT JOIN quotes q ON q.id = c.job_id
+             LEFT JOIN conversation_participants cp
+                ON c.id = cp.conversation_id AND cp.user_id = $1
+             LEFT JOIN conversation_archives ca
+                ON c.id = ca.conversation_id AND ca.user_id = $1
              ${whereClause}
              ORDER BY c.last_message_at DESC NULLS LAST, c.updated_at DESC
              LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -455,6 +513,312 @@ router.post('/conversations/:conversationId/messages', authenticate, async (req,
     }
 });
 
+// ============================================================
+// Conversation Actions (Mute, Archive, Details, Reports, Files)
+// ============================================================
+
+router.get('/conversations/preferences', authenticate, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        await ensureConversationArchivesTable();
+
+        const mutedResult = await pool.query(
+            `SELECT conversation_id
+             FROM conversation_participants
+             WHERE user_id = $1 AND notification_pref = 'mute'`,
+            [userId]
+        );
+
+        const archivedResult = await pool.query(
+            `SELECT conversation_id
+             FROM conversation_archives
+             WHERE user_id = $1`,
+            [userId]
+        );
+
+        res.json({
+            success: true,
+            mutedConversationIds: mutedResult.rows.map(row => row.conversation_id),
+            archivedConversationIds: archivedResult.rows.map(row => row.conversation_id)
+        });
+    } catch (error) {
+        console.error('Conversation preferences error:', error);
+        res.status(500).json({ error: 'Failed to load preferences' });
+    }
+});
+
+router.get('/conversations/:conversationId/job-details', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        const convoResult = await pool.query('SELECT * FROM conversations WHERE id = $1', [conversationId]);
+        if (!convoResult.rows.length) return res.status(404).json({ error: 'Conversation not found' });
+
+        const conversation = convoResult.rows[0];
+        const jobResult = await pool.query(
+            `SELECT id, title, description, status, postcode, budget_min, budget_max
+             FROM quotes
+             WHERE id = $1`,
+            [conversation.job_id]
+        );
+
+        if (!jobResult.rows.length) {
+            return res.status(404).json({ error: 'Job not found' });
+        }
+
+        const job = jobResult.rows[0];
+        res.json({
+            success: true,
+            job: {
+                id: job.id,
+                title: job.title,
+                description: job.description,
+                status: job.status,
+                postcode_district: maskPostcodeDistrict(job.postcode),
+                budget_min: job.budget_min,
+                budget_max: job.budget_max
+            }
+        });
+    } catch (error) {
+        console.error('Job details error:', error);
+        res.status(500).json({ error: 'Failed to load job details' });
+    }
+});
+
+router.get('/conversations/:conversationId/accepted-quote', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        const convoResult = await pool.query('SELECT * FROM conversations WHERE id = $1', [conversationId]);
+        if (!convoResult.rows.length) return res.status(404).json({ error: 'Conversation not found' });
+
+        const conversation = convoResult.rows[0];
+        const bidResult = await pool.query(
+            `SELECT b.id, b.price, b.message, b.estimated_duration, b.availability, b.vendor_id
+             FROM bids b
+             WHERE b.quote_id = $1 AND b.status = 'accepted'
+             ORDER BY b.created_at DESC
+             LIMIT 1`,
+            [conversation.job_id]
+        );
+
+        if (!bidResult.rows.length) {
+            return res.status(404).json({ error: 'Accepted quote not found' });
+        }
+
+        const bid = bidResult.rows[0];
+        res.json({
+            success: true,
+            quote: {
+                bid_id: bid.id,
+                price: bid.price,
+                scope: bid.message || 'Scope details available in the bid message.',
+                timeline: bid.estimated_duration || 'Timeline not specified',
+                vendor_notes: bid.availability || 'No additional notes.'
+            }
+        });
+    } catch (error) {
+        console.error('Accepted quote error:', error);
+        res.status(500).json({ error: 'Failed to load accepted quote' });
+    }
+});
+
+router.post('/conversations/:conversationId/files', authenticate, async (req, res) => {
+    const client = await pool.connect();
+    try {
+        const { conversationId } = req.params;
+        const { attachments = [], note } = req.body;
+        const userId = req.user.userId;
+
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        const convResult = await pool.query('SELECT * FROM conversations WHERE id = $1', [conversationId]);
+        if (!convResult.rows.length) return res.status(404).json({ error: 'Conversation not found' });
+        const conversation = convResult.rows[0];
+        if (conversation.is_locked || ['archived', 'locked'].includes(conversation.status)) {
+            if (!['admin', 'super_admin'].includes(req.user.role)) {
+                return res.status(423).json({ error: 'Conversation is locked' });
+            }
+        }
+
+        if (!Array.isArray(attachments) || attachments.length === 0) {
+            return res.status(400).json({ error: 'attachments are required' });
+        }
+
+        const allowedTypes = new Set(['image', 'document']);
+        for (const attachment of attachments) {
+            if (!allowedTypes.has(attachment.attachment_type)) {
+                return res.status(400).json({ error: 'Invalid attachment type' });
+            }
+            if (!attachment.url) {
+                return res.status(400).json({ error: 'Attachment url required' });
+            }
+        }
+
+        const messageId = `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const body = note || `Shared ${attachments.length} file${attachments.length > 1 ? 's' : ''}`;
+
+        await client.query('BEGIN');
+
+        await client.query(
+            `INSERT INTO messages (id, conversation_id, sender_id, sender_role, message_type, body, metadata, attachment_count)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+            [
+                messageId,
+                conversationId,
+                userId,
+                req.user.role,
+                'document',
+                body,
+                JSON.stringify({ attachment_share: true }),
+                attachments.length
+            ]
+        );
+
+        for (const attachment of attachments) {
+            const attachmentId = `att_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+            await client.query(
+                `INSERT INTO message_attachments (id, message_id, attachment_type, url, file_name, mime_type, size_bytes)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+                [
+                    attachmentId,
+                    messageId,
+                    attachment.attachment_type,
+                    attachment.url,
+                    attachment.file_name || null,
+                    attachment.mime_type || null,
+                    attachment.size_bytes || null
+                ]
+            );
+        }
+
+        await client.query(
+            `UPDATE conversations
+             SET last_message_id = $1, last_message_at = NOW(), updated_at = NOW()
+             WHERE id = $2`,
+            [messageId, conversationId]
+        );
+
+        await addSystemEvent(conversationId, 'files_shared', userId, { message_id: messageId });
+        await client.query('COMMIT');
+
+        res.status(201).json({ success: true, message_id: messageId });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Share files error:', error);
+        res.status(500).json({ error: 'Failed to share files' });
+    } finally {
+        client.release();
+    }
+});
+
+router.post('/conversations/:conversationId/mute', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const { muted = true } = req.body;
+        const userId = req.user.userId;
+
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        await ensureParticipant(conversationId, userId, req.user.role);
+
+        await pool.query(
+            `UPDATE conversation_participants
+             SET notification_pref = $1, muted_until = NULL
+             WHERE conversation_id = $2 AND user_id = $3`,
+            [muted ? 'mute' : null, conversationId, userId]
+        );
+
+        res.json({ success: true, muted: !!muted });
+    } catch (error) {
+        console.error('Mute conversation error:', error);
+        res.status(500).json({ error: 'Failed to update mute preference' });
+    }
+});
+
+router.post('/conversations/:conversationId/archive', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const userId = req.user.userId;
+
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        await ensureConversationArchivesTable();
+        const archiveId = `arch_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        await pool.query(
+            `INSERT INTO conversation_archives (id, conversation_id, user_id)
+             VALUES ($1, $2, $3)
+             ON CONFLICT (conversation_id, user_id) DO NOTHING`,
+            [archiveId, conversationId, userId]
+        );
+
+        await addSystemEvent(conversationId, 'conversation_archived', userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Archive conversation error:', error);
+        res.status(500).json({ error: 'Failed to archive conversation' });
+    }
+});
+
+router.post('/conversations/:conversationId/restore', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const userId = req.user.userId;
+
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        await ensureConversationArchivesTable();
+        await pool.query(
+            `DELETE FROM conversation_archives WHERE conversation_id = $1 AND user_id = $2`,
+            [conversationId, userId]
+        );
+
+        await addSystemEvent(conversationId, 'conversation_restored', userId);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Restore conversation error:', error);
+        res.status(500).json({ error: 'Failed to restore conversation' });
+    }
+});
+
+router.post('/conversations/:conversationId/report', authenticate, async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const { reason, details } = req.body;
+        const userId = req.user.userId;
+        const allowedReasons = new Set(['unresponsive', 'dispute', 'inappropriate']);
+
+        if (!allowedReasons.has(reason)) {
+            return res.status(400).json({ error: 'Invalid reason' });
+        }
+
+        const access = await ensureConversationAccess(conversationId, req.user);
+        if (!access) return res.status(403).json({ error: 'Access denied' });
+
+        await ensureConversationReportsTable();
+        const reportId = `rep_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        await pool.query(
+            `INSERT INTO conversation_reports (id, conversation_id, user_id, reason, details)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [reportId, conversationId, userId, reason, details || null]
+        );
+
+        await addSystemEvent(conversationId, 'conversation_reported', userId, { reason });
+        res.json({ success: true, report_id: reportId });
+    } catch (error) {
+        console.error('Report conversation error:', error);
+        res.status(500).json({ error: 'Failed to submit report' });
+    }
+});
+
 router.put('/messages/:messageId', authenticate, async (req, res) => {
     try {
         const { messageId } = req.params;
@@ -638,14 +1002,43 @@ router.get('/conversations/:conversationId/typing', authenticate, async (req, re
 router.get('/notifications', authenticate, async (req, res) => {
     try {
         const userId = req.user.userId;
+        const { limit = 50, offset = 0, unread } = req.query;
+        const limitValue = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+        const offsetValue = Math.max(parseInt(offset, 10) || 0, 0);
+        const filters = ['user_id = $1'];
+        const params = [userId];
+
+        if (String(unread).toLowerCase() === 'true') {
+            filters.push('is_read = false');
+        }
+
         const result = await pool.query(
-            `SELECT * FROM user_notifications WHERE user_id = $1 ORDER BY created_at DESC LIMIT 50`,
-            [userId]
+            `SELECT * FROM user_notifications
+             WHERE ${filters.join(' AND ')}
+             ORDER BY created_at DESC
+             LIMIT $2 OFFSET $3`,
+            [...params, limitValue, offsetValue]
         );
         res.json({ success: true, notifications: result.rows });
     } catch (error) {
         console.error('Notifications error:', error);
         res.status(500).json({ error: 'Failed to fetch notifications' });
+    }
+});
+
+router.get('/notifications/unread-count', authenticate, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const result = await pool.query(
+            `SELECT COUNT(*)::int AS unread_count
+             FROM user_notifications
+             WHERE user_id = $1 AND is_read = false`,
+            [userId]
+        );
+        res.json({ success: true, unreadCount: result.rows[0]?.unread_count || 0 });
+    } catch (error) {
+        console.error('Unread count error:', error);
+        res.status(500).json({ error: 'Failed to fetch unread count' });
     }
 });
 
@@ -660,6 +1053,29 @@ router.post('/notifications/read', authenticate, async (req, res) => {
     } catch (error) {
         console.error('Notifications read error:', error);
         res.status(500).json({ error: 'Failed to update notifications' });
+    }
+});
+
+router.post('/notifications/:notificationId/read', authenticate, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { notificationId } = req.params;
+        const result = await pool.query(
+            `UPDATE user_notifications
+             SET is_read = true
+             WHERE id = $1 AND user_id = $2
+             RETURNING id`,
+            [notificationId, userId]
+        );
+
+        if (!result.rows.length) {
+            return res.status(404).json({ error: 'Notification not found' });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Notification read error:', error);
+        res.status(500).json({ error: 'Failed to update notification' });
     }
 });
 

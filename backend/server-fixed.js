@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const dotenv = require("dotenv");
+const path = require("path");
 const pg = require("pg");
 const { Pool } = pg;
 const originalPgEmit = pg.Client.prototype.emit;
@@ -17,6 +18,9 @@ const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY || "sk_test_dummy");
+const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const PDFDocument = require("pdfkit");
 const passport = require('passport');
 const {
   apiLimiter,
@@ -27,7 +31,7 @@ const {
   uploadLimiter
 } = require('./middleware/rate-limit');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
@@ -138,6 +142,89 @@ const pool = new Pool({
   keepAlive: true
 });
 
+const adminAudit = require('./middleware/admin-audit');
+adminAudit.setPool(pool);
+
+// S3 client (for photo uploads)
+const s3Region = process.env.AWS_REGION || 'eu-west-1';
+const s3Bucket = process.env.S3_BUCKET;
+const s3PublicBase = process.env.S3_PUBLIC_BASE_URL;
+const MAX_VENDOR_PHOTOS = 10;
+const s3Client = new S3Client({
+  region: s3Region,
+  credentials: process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY
+    ? {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+      }
+    : undefined
+});
+
+const getS3PublicUrl = (key) => {
+  if (s3PublicBase) {
+    return `${s3PublicBase.replace(/\/$/, '')}/${key}`;
+  }
+  return `https://${s3Bucket}.s3.${s3Region}.amazonaws.com/${key}`;
+};
+
+const generateInvoicePdfBuffer = ({
+  invoiceId,
+  customerName,
+  customerEmail,
+  date,
+  description,
+  relatedJob,
+  amount,
+  status
+}) => new Promise((resolve, reject) => {
+  try {
+    const doc = new PDFDocument({ margin: 50 });
+    const chunks = [];
+
+    doc.on('data', (chunk) => chunks.push(chunk));
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
+
+    doc.fontSize(20).text('TradeMatch Invoice', { align: 'left' });
+    doc.moveDown(0.5);
+
+    doc.fontSize(10).fillColor('#555555')
+      .text(`Invoice ID: ${invoiceId}`)
+      .text(`Date: ${date}`)
+      .text(`Status: ${status}`);
+
+    doc.moveDown();
+    doc.fillColor('#000000').fontSize(12).text('Billed To');
+    doc.fontSize(10).fillColor('#333333')
+      .text(customerName || 'Customer')
+      .text(customerEmail || '');
+
+    doc.moveDown();
+    doc.fontSize(12).fillColor('#000000').text('Line Item');
+    doc.fontSize(10).fillColor('#333333')
+      .text(`Description: ${description}`)
+      .text(`Related Job: ${relatedJob}`)
+      .text(`Amount: ${amount}`);
+
+    doc.moveDown();
+    const amountValue = Number(String(amount).replace(/[^0-9.]/g, '')) || 0;
+    const vatAmount = amountValue * 0.2;
+    const totalAmount = amountValue + vatAmount;
+
+    doc.fontSize(10).fillColor('#333333')
+      .text(`Subtotal: £${amountValue.toFixed(2)}`)
+      .text(`VAT (20%): £${vatAmount.toFixed(2)}`)
+      .text(`Total: £${totalAmount.toFixed(2)}`);
+
+    doc.moveDown(1.5);
+    doc.fontSize(9).fillColor('#777777')
+      .text('Thank you for choosing TradeMatch.', { align: 'left' });
+
+    doc.end();
+  } catch (error) {
+    reject(error);
+  }
+});
+
 pool.on('error', (err) => {
   console.error('❌ Postgres pool error:', err.message);
 });
@@ -190,6 +277,84 @@ async function ensureReviewsTable() {
   await pool.query(`
     ALTER TABLE reviews
     ADD COLUMN IF NOT EXISTS helpful_count INTEGER DEFAULT 0
+  `);
+}
+
+// Ensure notification preferences table exists
+async function ensureNotificationPreferencesTable() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS notification_preferences (
+      user_id INTEGER PRIMARY KEY REFERENCES users(id),
+      email_enabled BOOLEAN DEFAULT true,
+      sms_enabled BOOLEAN DEFAULT false,
+      push_enabled BOOLEAN DEFAULT false,
+      in_app_enabled BOOLEAN DEFAULT true,
+      quiet_hours_start VARCHAR(5),
+      quiet_hours_end VARCHAR(5),
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+}
+
+// Ensure vendor photos table exists
+async function ensureVendorPhotosTable() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS vendor_photos (
+      id SERIAL PRIMARY KEY,
+      vendor_id INTEGER NOT NULL REFERENCES users(id),
+      photo_url TEXT NOT NULL,
+      photo_key TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+}
+
+// Ensure user avatar columns exist
+async function ensureUserAvatarColumns() {
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS avatar_url TEXT
+  `);
+
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS avatar_key TEXT
+  `);
+}
+
+// Ensure user profile columns exist
+async function ensureUserProfileColumns() {
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS first_name TEXT
+  `);
+
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS last_name TEXT
+  `);
+
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS address TEXT
+  `);
+
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS city TEXT
+  `);
+}
+
+// Ensure email preference columns exist
+async function ensureEmailPreferenceColumns() {
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS email_notifications_enabled BOOLEAN DEFAULT true
+  `);
+
+  await pool.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS email_preferences JSONB
   `);
 }
 
@@ -290,6 +455,16 @@ try {
   console.warn('⚠️ Credits routes not available:', e && e.message ? e.message : e);
 }
 
+// Saved trades routes
+try {
+  const savedTradesRouter = require('./routes/saved-trades');
+  if (typeof savedTradesRouter.setPool === 'function') savedTradesRouter.setPool(pool);
+  app.use('/api/saved-trades', savedTradesRouter);
+  console.log('⭐ Saved trades routes mounted at /api/saved-trades');
+} catch (e) {
+  console.warn('⚠️ Saved trades routes not available:', e && e.message ? e.message : e);
+}
+
 // Finance Admin routes
 try {
   const financeRouter = require('./routes/admin-finance');
@@ -326,6 +501,47 @@ app.get("/api/health", async (req, res) => {
       database: "not connected",
       error: err.message
     });
+  }
+});
+
+// Companies House verification lookup (REST API)
+app.get("/api/verification/companies-house/:companyNumber", async (req, res) => {
+  const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: "COMPANIES_HOUSE_API_KEY not configured" });
+  }
+
+  const rawNumber = String(req.params.companyNumber || '').trim().toUpperCase();
+  if (!rawNumber || !/^[A-Z0-9]{1,8}$/.test(rawNumber)) {
+    return res.status(400).json({ error: "Invalid company number" });
+  }
+
+  const auth = Buffer.from(`${apiKey}:`).toString("base64");
+
+  try {
+    const response = await axios.get(
+      `https://api.company-information.service.gov.uk/company/${encodeURIComponent(rawNumber)}`,
+      { headers: { Authorization: `Basic ${auth}` } }
+    );
+
+    const data = response.data || {};
+
+    return res.json({
+      found: true,
+      companyNumber: rawNumber,
+      companyName: data.company_name || null,
+      status: data.company_status || null,
+      incorporationDate: data.date_of_creation || null,
+      registeredOfficeAddress: data.registered_office_address || null,
+      sicCodes: data.sic_codes || []
+    });
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      return res.status(404).json({ found: false });
+    }
+
+    console.error("❌ Companies House lookup failed:", err.message);
+    return res.status(502).json({ error: "Companies House lookup failed" });
   }
 });
 
@@ -507,7 +723,7 @@ app.post("/api/auth/resend-activation", async (req, res) => {
 
     const user = userResult.rows[0];
 
-    const adminRoles = ['admin', 'super_admin', 'finance_admin'];
+    const adminRoles = ['admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin'];
     if (user.user_type && (!user.role || (user.role !== user.user_type && !adminRoles.includes(user.role)))) {
       try {
         await pool.query('UPDATE users SET role = $1 WHERE id = $2', [user.user_type, user.id]);
@@ -648,7 +864,8 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
         fullName: user.name,
         email: user.email,
         phone: user.phone,
-        postcode: user.postcode
+        postcode: user.postcode,
+        avatarUrl: user.avatar_url
       }
     });
 
@@ -663,9 +880,12 @@ app.post("/api/auth/login", authLimiter, async (req, res) => {
 // Get current user info (protected route)
 app.get("/api/auth/me", authenticateToken, async (req, res) => {
   try {
+    await ensureUserAvatarColumns();
+    await ensureUserProfileColumns();
+
     // req.user contains decoded JWT payload (userId, email, userType)
     const userResult = await pool.query(
-      'SELECT id, user_type, name, email, phone, postcode, email_verified FROM users WHERE id = $1',
+      'SELECT id, user_type, name, first_name, last_name, email, phone, postcode, address, city, email_verified, avatar_url FROM users WHERE id = $1',
       [req.user.userId]
     );
 
@@ -681,10 +901,15 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
         id: user.id,
         userType: user.user_type,
         fullName: user.name,
+        firstName: user.first_name,
+        lastName: user.last_name,
         email: user.email,
         phone: user.phone,
         postcode: user.postcode,
-        emailVerified: user.email_verified
+        address: user.address,
+        city: user.city,
+        emailVerified: user.email_verified,
+        avatarUrl: user.avatar_url
       }
     });
 
@@ -693,6 +918,921 @@ app.get("/api/auth/me", authenticateToken, async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to get user: ' + error.message 
     });
+  }
+});
+
+// ==========================================
+// USER SETTINGS & PREFERENCES
+// ==========================================
+
+// Update personal profile details (protected)
+app.post("/api/users/me/profile", authenticateToken, async (req, res) => {
+  try {
+    await ensureUserProfileColumns();
+
+    const payload = req.body || {};
+    const hasFirstName = Object.prototype.hasOwnProperty.call(payload, 'firstName');
+    const hasLastName = Object.prototype.hasOwnProperty.call(payload, 'lastName');
+    const hasPhone = Object.prototype.hasOwnProperty.call(payload, 'phone');
+    const hasPostcode = Object.prototype.hasOwnProperty.call(payload, 'postcode');
+    const hasAddress = Object.prototype.hasOwnProperty.call(payload, 'address');
+    const hasCity = Object.prototype.hasOwnProperty.call(payload, 'city');
+
+    if (!hasFirstName && !hasLastName && !hasPhone && !hasPostcode && !hasAddress && !hasCity) {
+      return res.status(400).json({ error: 'No profile fields provided' });
+    }
+
+    const normalizeValue = (value) => {
+      if (typeof value !== 'string') return null;
+      const trimmed = value.trim();
+      return trimmed.length ? trimmed : null;
+    };
+
+    let currentProfile = null;
+    if (hasFirstName || hasLastName) {
+      const currentResult = await pool.query(
+        'SELECT first_name, last_name, name FROM users WHERE id = $1',
+        [req.user.userId]
+      );
+
+      if (currentResult.rows.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      currentProfile = currentResult.rows[0];
+    }
+
+    const updates = [];
+    const values = [];
+    let idx = 1;
+
+    if (hasFirstName) {
+      updates.push(`first_name = $${idx}`);
+      values.push(normalizeValue(payload.firstName));
+      idx++;
+    }
+
+    if (hasLastName) {
+      updates.push(`last_name = $${idx}`);
+      values.push(normalizeValue(payload.lastName));
+      idx++;
+    }
+
+    if (hasPhone) {
+      updates.push(`phone = $${idx}`);
+      values.push(normalizeValue(payload.phone));
+      idx++;
+    }
+
+    if (hasPostcode) {
+      updates.push(`postcode = $${idx}`);
+      values.push(normalizeValue(payload.postcode));
+      idx++;
+    }
+
+    if (hasAddress) {
+      updates.push(`address = $${idx}`);
+      values.push(normalizeValue(payload.address));
+      idx++;
+    }
+
+    if (hasCity) {
+      updates.push(`city = $${idx}`);
+      values.push(normalizeValue(payload.city));
+      idx++;
+    }
+
+    if (hasFirstName || hasLastName) {
+      const finalFirstName = hasFirstName ? normalizeValue(payload.firstName) : currentProfile?.first_name;
+      const finalLastName = hasLastName ? normalizeValue(payload.lastName) : currentProfile?.last_name;
+      const fullName = [finalFirstName, finalLastName].filter(Boolean).join(' ').trim() || currentProfile?.name || null;
+
+      updates.push(`name = $${idx}`);
+      values.push(fullName);
+      idx++;
+    }
+
+    updates.push('updated_at = CURRENT_TIMESTAMP');
+
+    values.push(req.user.userId);
+    const updateQuery = `UPDATE users SET ${updates.join(', ')} WHERE id = $${idx} RETURNING id, user_type, name, first_name, last_name, email, phone, postcode, address, city, email_verified, avatar_url`;
+
+    const updateResult = await pool.query(updateQuery, values);
+
+    if (updateResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = updateResult.rows[0];
+
+    return res.json({
+      success: true,
+      user: {
+        id: user.id,
+        userType: user.user_type,
+        fullName: user.name,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        postcode: user.postcode,
+        address: user.address,
+        city: user.city,
+        emailVerified: user.email_verified,
+        avatarUrl: user.avatar_url
+      }
+    });
+  } catch (error) {
+    console.error('❌ Profile update error:', error);
+    res.status(500).json({ error: 'Failed to update profile: ' + error.message });
+  }
+});
+
+// Get notification preferences (protected)
+app.get("/api/notifications/preferences", authenticateToken, async (req, res) => {
+  try {
+    await ensureNotificationPreferencesTable();
+
+    const prefsResult = await pool.query(
+      `SELECT email_enabled, sms_enabled, push_enabled, in_app_enabled, quiet_hours_start, quiet_hours_end
+       FROM notification_preferences WHERE user_id = $1`,
+      [req.user.userId]
+    );
+
+    if (prefsResult.rows.length === 0) {
+      return res.json({
+        success: true,
+        preferences: {
+          emailEnabled: true,
+          smsEnabled: false,
+          pushEnabled: false,
+          inAppEnabled: true,
+          quietHoursStart: null,
+          quietHoursEnd: null
+        }
+      });
+    }
+
+    const prefs = prefsResult.rows[0];
+
+    return res.json({
+      success: true,
+      preferences: {
+        emailEnabled: prefs.email_enabled,
+        smsEnabled: prefs.sms_enabled,
+        pushEnabled: prefs.push_enabled,
+        inAppEnabled: prefs.in_app_enabled,
+        quietHoursStart: prefs.quiet_hours_start,
+        quietHoursEnd: prefs.quiet_hours_end
+      }
+    });
+  } catch (error) {
+    console.error('❌ Get notification preferences error:', error);
+    res.status(500).json({ error: 'Failed to get notification preferences: ' + error.message });
+  }
+});
+
+// Update notification preferences (protected)
+app.put("/api/notifications/preferences", authenticateToken, async (req, res) => {
+  try {
+    await ensureNotificationPreferencesTable();
+
+    const {
+      emailEnabled,
+      smsEnabled,
+      pushEnabled,
+      inAppEnabled,
+      quietHoursStart,
+      quietHoursEnd
+    } = req.body || {};
+
+    const emailEnabledValue = typeof emailEnabled === 'boolean' ? emailEnabled : null;
+    const smsEnabledValue = typeof smsEnabled === 'boolean' ? smsEnabled : null;
+    const pushEnabledValue = typeof pushEnabled === 'boolean' ? pushEnabled : null;
+    const inAppEnabledValue = typeof inAppEnabled === 'boolean' ? inAppEnabled : null;
+    const quietStartValue = typeof quietHoursStart === 'string' && quietHoursStart.trim() ? quietHoursStart.trim() : null;
+    const quietEndValue = typeof quietHoursEnd === 'string' && quietHoursEnd.trim() ? quietHoursEnd.trim() : null;
+
+    if (
+      emailEnabledValue === null &&
+      smsEnabledValue === null &&
+      pushEnabledValue === null &&
+      inAppEnabledValue === null &&
+      quietStartValue === null &&
+      quietEndValue === null
+    ) {
+      return res.status(400).json({ error: 'No updates provided' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO notification_preferences
+        (user_id, email_enabled, sms_enabled, push_enabled, in_app_enabled, quiet_hours_start, quiet_hours_end)
+       VALUES ($1,
+        COALESCE($2, true),
+        COALESCE($3, false),
+        COALESCE($4, false),
+        COALESCE($5, true),
+        $6,
+        $7)
+       ON CONFLICT (user_id) DO UPDATE SET
+        email_enabled = COALESCE($2, notification_preferences.email_enabled),
+        sms_enabled = COALESCE($3, notification_preferences.sms_enabled),
+        push_enabled = COALESCE($4, notification_preferences.push_enabled),
+        in_app_enabled = COALESCE($5, notification_preferences.in_app_enabled),
+        quiet_hours_start = COALESCE($6, notification_preferences.quiet_hours_start),
+        quiet_hours_end = COALESCE($7, notification_preferences.quiet_hours_end),
+        updated_at = CURRENT_TIMESTAMP
+       RETURNING email_enabled, sms_enabled, push_enabled, in_app_enabled, quiet_hours_start, quiet_hours_end`,
+      [
+        req.user.userId,
+        emailEnabledValue,
+        smsEnabledValue,
+        pushEnabledValue,
+        inAppEnabledValue,
+        quietStartValue,
+        quietEndValue
+      ]
+    );
+
+    const prefs = result.rows[0];
+
+    return res.json({
+      success: true,
+      message: 'Notification preferences updated',
+      preferences: {
+        emailEnabled: prefs.email_enabled,
+        smsEnabled: prefs.sms_enabled,
+        pushEnabled: prefs.push_enabled,
+        inAppEnabled: prefs.in_app_enabled,
+        quietHoursStart: prefs.quiet_hours_start,
+        quietHoursEnd: prefs.quiet_hours_end
+      }
+    });
+  } catch (error) {
+    console.error('❌ Update notification preferences error:', error);
+    res.status(500).json({ error: 'Failed to update notification preferences: ' + error.message });
+  }
+});
+
+// Export account data (protected)
+app.get("/api/users/me/export", authenticateToken, async (req, res) => {
+  try {
+    await ensureUserProfileColumns();
+    await ensureUserAvatarColumns();
+    await ensureNotificationPreferencesTable();
+    await ensureEmailPreferenceColumns();
+
+    const userResult = await pool.query(
+      `SELECT id, user_type, name, first_name, last_name, email, phone, postcode, address, city,
+              email_verified, avatar_url, created_at, updated_at,
+              email_notifications_enabled, email_preferences
+       FROM users WHERE id = $1`,
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    const notificationResult = await pool.query(
+      `SELECT email_enabled, sms_enabled, push_enabled, in_app_enabled, quiet_hours_start, quiet_hours_end
+       FROM notification_preferences WHERE user_id = $1`,
+      [req.user.userId]
+    );
+
+    const notificationPreferences = notificationResult.rows[0] || null;
+
+    const exportPayload = {
+      exportedAt: new Date().toISOString(),
+      user: {
+        id: user.id,
+        userType: user.user_type,
+        fullName: user.name,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        postcode: user.postcode,
+        address: user.address,
+        city: user.city,
+        emailVerified: user.email_verified,
+        avatarUrl: user.avatar_url,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at
+      },
+      emailPreferences: {
+        emailNotificationsEnabled: user.email_notifications_enabled,
+        preferences: user.email_preferences
+      },
+      notificationPreferences: notificationPreferences
+        ? {
+            emailEnabled: notificationPreferences.email_enabled,
+            smsEnabled: notificationPreferences.sms_enabled,
+            pushEnabled: notificationPreferences.push_enabled,
+            inAppEnabled: notificationPreferences.in_app_enabled,
+            quietHoursStart: notificationPreferences.quiet_hours_start,
+            quietHoursEnd: notificationPreferences.quiet_hours_end
+          }
+        : null
+    };
+
+    const fileName = `tradematch-account-${req.user.userId}.json`;
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    return res.send(JSON.stringify(exportPayload, null, 2));
+  } catch (error) {
+    console.error('❌ Export account error:', error);
+    res.status(500).json({ error: 'Failed to export account data: ' + error.message });
+  }
+});
+
+// Change email (protected)
+app.post("/api/users/me/email", authenticateToken, async (req, res) => {
+  try {
+    const { newEmail, password } = req.body || {};
+
+    if (!newEmail || !password) {
+      return res.status(400).json({ error: 'newEmail and password are required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, email, password_hash, name, phone, user_type, role FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    if (user.email === newEmail) {
+      return res.status(400).json({ error: 'New email must be different from current email' });
+    }
+
+    const existingEmail = await pool.query(
+      'SELECT id FROM users WHERE email = $1 AND id <> $2',
+      [newEmail, user.id]
+    );
+
+    if (existingEmail.rows.length > 0) {
+      return res.status(409).json({ error: 'Email already in use' });
+    }
+
+    const updateResult = await pool.query(
+      'UPDATE users SET email = $1, email_verified = false, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING id, name, email, phone, user_type, role, email_verified',
+      [newEmail, user.id]
+    );
+
+    const updatedUser = updateResult.rows[0];
+
+    return res.json({
+      success: true,
+      message: 'Email updated successfully',
+      user: {
+        id: updatedUser.id,
+        fullName: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        userType: updatedUser.user_type,
+        role: updatedUser.role,
+        emailVerified: updatedUser.email_verified
+      }
+    });
+  } catch (error) {
+    console.error('❌ Update email error:', error);
+    res.status(500).json({ error: 'Failed to update email: ' + error.message });
+  }
+});
+
+// Change phone (protected)
+app.post("/api/users/me/phone", authenticateToken, async (req, res) => {
+  try {
+    const { newPhone, password } = req.body || {};
+
+    if (!newPhone || !password) {
+      return res.status(400).json({ error: 'newPhone and password are required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, password_hash, name, email, phone, user_type, role FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    if (user.phone === newPhone) {
+      return res.status(400).json({ error: 'New phone must be different from current phone' });
+    }
+
+    const updateResult = await pool.query(
+      'UPDATE users SET phone = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING id, name, email, phone, user_type, role',
+      [newPhone, user.id]
+    );
+
+    const updatedUser = updateResult.rows[0];
+
+    return res.json({
+      success: true,
+      message: 'Phone updated successfully',
+      user: {
+        id: updatedUser.id,
+        fullName: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        userType: updatedUser.user_type,
+        role: updatedUser.role
+      }
+    });
+  } catch (error) {
+    console.error('❌ Update phone error:', error);
+    res.status(500).json({ error: 'Failed to update phone: ' + error.message });
+  }
+});
+
+// Change password (protected)
+app.post("/api/users/me/password", authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'currentPassword and newPassword are required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, password_hash FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid current password' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await pool.query(
+      'UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [hashedPassword, user.id]
+    );
+
+    return res.json({
+      success: true,
+      message: 'Password updated successfully'
+    });
+  } catch (error) {
+    console.error('❌ Update password error:', error);
+    res.status(500).json({ error: 'Failed to update password: ' + error.message });
+  }
+});
+
+// Log out all devices (protected)
+app.post("/api/users/me/logout-all", authenticateToken, async (req, res) => {
+  try {
+    const { password } = req.body || {};
+
+    if (!password) {
+      return res.status(400).json({ error: 'password is required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, password_hash FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Logged out from other devices'
+    });
+  } catch (error) {
+    console.error('❌ Logout-all error:', error);
+    res.status(500).json({ error: 'Failed to logout devices: ' + error.message });
+  }
+});
+
+// Deactivate account (protected)
+app.post("/api/users/me/deactivate", authenticateToken, async (req, res) => {
+  try {
+    const { password } = req.body || {};
+
+    if (!password) {
+      return res.status(400).json({ error: 'password is required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, password_hash FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    const statusColumnResult = await pool.query(
+      `SELECT column_name FROM information_schema.columns
+       WHERE table_name = 'users' AND column_name = 'status'`
+    );
+
+    if (statusColumnResult.rows.length > 0) {
+      await pool.query(
+        'UPDATE users SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        ['suspended', req.user.userId]
+      );
+    }
+
+    return res.json({
+      success: true,
+      message: 'Account deactivated'
+    });
+  } catch (error) {
+    console.error('❌ Deactivate account error:', error);
+    res.status(500).json({ error: 'Failed to deactivate account: ' + error.message });
+  }
+});
+
+// ==========================================
+// INVOICES (PDF -> S3)
+// ==========================================
+
+app.post('/api/invoices/pdf', authenticateToken, async (req, res) => {
+  try {
+    if (!s3Bucket) {
+      return res.status(500).json({ error: 'S3 bucket not configured' });
+    }
+
+    const {
+      invoiceId,
+      date,
+      description,
+      relatedJob,
+      amount,
+      status
+    } = req.body || {};
+
+    if (!invoiceId || !date || !description || !amount) {
+      return res.status(400).json({ error: 'invoiceId, date, description, and amount are required' });
+    }
+
+    const userResult = await pool.query(
+      'SELECT id, name, email FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = userResult.rows[0];
+
+    const pdfBuffer = await generateInvoicePdfBuffer({
+      invoiceId,
+      customerName: user.name,
+      customerEmail: user.email,
+      date,
+      description,
+      relatedJob: relatedJob || 'N/A',
+      amount,
+      status: status || 'Paid'
+    });
+
+    const key = `invoices/${req.user.userId}/${invoiceId}.pdf`;
+
+    await s3Client.send(new PutObjectCommand({
+      Bucket: s3Bucket,
+      Key: key,
+      Body: pdfBuffer,
+      ContentType: 'application/pdf'
+    }));
+
+    const downloadUrl = await getSignedUrl(
+      s3Client,
+      new GetObjectCommand({ Bucket: s3Bucket, Key: key }),
+      { expiresIn: 300 }
+    );
+
+    return res.json({
+      success: true,
+      downloadUrl
+    });
+  } catch (error) {
+    console.error('❌ Invoice PDF error:', error);
+    res.status(500).json({ error: 'Failed to generate invoice: ' + error.message });
+  }
+});
+
+// ==========================================
+// USER AVATAR (S3)
+// ==========================================
+
+app.post('/api/users/me/avatar/presign', authenticateToken, async (req, res) => {
+  try {
+    if (!s3Bucket) {
+      return res.status(500).json({ error: 'S3 bucket not configured' });
+    }
+
+    const { filename, contentType } = req.body || {};
+    if (!filename || !contentType) {
+      return res.status(400).json({ error: 'filename and contentType are required' });
+    }
+
+    await ensureUserAvatarColumns();
+
+    const safeName = String(filename).replace(/[^a-zA-Z0-9._-]/g, '_');
+    const uniqueId = crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex');
+    const key = `avatars/${req.user.userId}/${Date.now()}-${uniqueId}-${safeName}`;
+
+    const command = new PutObjectCommand({
+      Bucket: s3Bucket,
+      Key: key,
+      ContentType: contentType
+    });
+
+    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+    const avatarUrl = getS3PublicUrl(key);
+
+    return res.json({
+      success: true,
+      uploadUrl,
+      avatarUrl,
+      key
+    });
+  } catch (error) {
+    console.error('❌ Avatar presign error:', error);
+    res.status(500).json({ error: 'Failed to create avatar upload URL: ' + error.message });
+  }
+});
+
+app.post('/api/users/me/avatar/confirm', authenticateToken, async (req, res) => {
+  try {
+    const { key, avatarUrl } = req.body || {};
+    if (!key) {
+      return res.status(400).json({ error: 'key is required' });
+    }
+
+    await ensureUserAvatarColumns();
+
+    const finalUrl = avatarUrl || getS3PublicUrl(key);
+
+    await pool.query(
+      'UPDATE users SET avatar_url = $1, avatar_key = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3',
+      [finalUrl, key, req.user.userId]
+    );
+
+    return res.json({
+      success: true,
+      avatarUrl: finalUrl
+    });
+  } catch (error) {
+    console.error('❌ Avatar confirm error:', error);
+    res.status(500).json({ error: 'Failed to save avatar: ' + error.message });
+  }
+});
+
+app.delete('/api/users/me/avatar', authenticateToken, async (req, res) => {
+  try {
+    await ensureUserAvatarColumns();
+
+    const userResult = await pool.query(
+      'SELECT avatar_key FROM users WHERE id = $1',
+      [req.user.userId]
+    );
+
+    const avatarKey = userResult.rows[0]?.avatar_key;
+
+    if (avatarKey && s3Bucket) {
+      try {
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: s3Bucket,
+          Key: avatarKey
+        });
+        await s3Client.send(deleteCommand);
+      } catch (error) {
+        console.error('❌ Avatar delete error:', error);
+        return res.status(500).json({ error: 'Failed to delete avatar from storage' });
+      }
+    }
+
+    await pool.query(
+      'UPDATE users SET avatar_url = NULL, avatar_key = NULL, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
+      [req.user.userId]
+    );
+
+    return res.json({
+      success: true,
+      message: 'Avatar removed'
+    });
+  } catch (error) {
+    console.error('❌ Avatar remove error:', error);
+    res.status(500).json({ error: 'Failed to remove avatar: ' + error.message });
+  }
+});
+
+// ==========================================
+// VENDOR PHOTO UPLOADS (S3)
+// ==========================================
+
+app.post('/api/vendor/photos/presign', authenticateToken, async (req, res) => {
+  try {
+    const userType = req.user.userType || req.user.role;
+    if (userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can upload photos' });
+    }
+
+    if (!s3Bucket) {
+      return res.status(500).json({ error: 'S3 bucket not configured' });
+    }
+
+    const { filename, contentType } = req.body || {};
+    if (!filename || !contentType) {
+      return res.status(400).json({ error: 'filename and contentType are required' });
+    }
+
+    await ensureVendorPhotosTable();
+
+    const photoCountResult = await pool.query(
+      'SELECT COUNT(*)::int AS count FROM vendor_photos WHERE vendor_id = $1',
+      [req.user.userId]
+    );
+
+    if ((photoCountResult.rows[0]?.count || 0) >= MAX_VENDOR_PHOTOS) {
+      return res.status(400).json({ error: `Photo limit reached (${MAX_VENDOR_PHOTOS}).` });
+    }
+
+    const safeName = String(filename).replace(/[^a-zA-Z0-9._-]/g, '_');
+    const uniqueId = crypto.randomUUID ? crypto.randomUUID() : crypto.randomBytes(16).toString('hex');
+    const key = `vendor-photos/${req.user.userId}/${Date.now()}-${uniqueId}-${safeName}`;
+
+    const command = new PutObjectCommand({
+      Bucket: s3Bucket,
+      Key: key,
+      ContentType: contentType
+    });
+
+    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+    const photoUrl = getS3PublicUrl(key);
+
+    return res.json({
+      success: true,
+      uploadUrl,
+      photoUrl,
+      key
+    });
+  } catch (error) {
+    console.error('❌ Presign upload error:', error);
+    res.status(500).json({ error: 'Failed to create upload URL: ' + error.message });
+  }
+});
+
+app.post('/api/vendor/photos/confirm', authenticateToken, async (req, res) => {
+  try {
+    const userType = req.user.userType || req.user.role;
+    if (userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can confirm photos' });
+    }
+
+    const { key, photoUrl } = req.body || {};
+    if (!key) {
+      return res.status(400).json({ error: 'key is required' });
+    }
+
+    await ensureVendorPhotosTable();
+
+    const photoCountResult = await pool.query(
+      'SELECT COUNT(*)::int AS count FROM vendor_photos WHERE vendor_id = $1',
+      [req.user.userId]
+    );
+
+    if ((photoCountResult.rows[0]?.count || 0) >= MAX_VENDOR_PHOTOS) {
+      return res.status(400).json({ error: `Photo limit reached (${MAX_VENDOR_PHOTOS}).` });
+    }
+
+    const finalUrl = photoUrl || getS3PublicUrl(key);
+
+    const insertResult = await pool.query(
+      `INSERT INTO vendor_photos (vendor_id, photo_url, photo_key)
+       VALUES ($1, $2, $3)
+       RETURNING id, photo_url, photo_key, created_at`,
+      [req.user.userId, finalUrl, key]
+    );
+
+    return res.json({
+      success: true,
+      photo: insertResult.rows[0]
+    });
+  } catch (error) {
+    console.error('❌ Confirm photo error:', error);
+    res.status(500).json({ error: 'Failed to save photo: ' + error.message });
+  }
+});
+
+app.get('/api/vendor/photos', authenticateToken, async (req, res) => {
+  try {
+    const userType = req.user.userType || req.user.role;
+    if (userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can access photos' });
+    }
+
+    await ensureVendorPhotosTable();
+
+    const result = await pool.query(
+      `SELECT id, photo_url, photo_key, created_at
+       FROM vendor_photos
+       WHERE vendor_id = $1
+       ORDER BY created_at DESC`,
+      [req.user.userId]
+    );
+
+    return res.json({
+      success: true,
+      photos: result.rows
+    });
+  } catch (error) {
+    console.error('❌ Fetch vendor photos error:', error);
+    res.status(500).json({ error: 'Failed to fetch photos: ' + error.message });
+  }
+});
+
+app.delete('/api/vendor/photos/:id', authenticateToken, async (req, res) => {
+  try {
+    const userType = req.user.userType || req.user.role;
+    if (userType !== 'vendor') {
+      return res.status(403).json({ error: 'Only vendors can delete photos' });
+    }
+
+    const { id } = req.params;
+    await ensureVendorPhotosTable();
+
+    const photoResult = await pool.query(
+      'SELECT id, photo_key FROM vendor_photos WHERE id = $1 AND vendor_id = $2',
+      [id, req.user.userId]
+    );
+
+    if (photoResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Photo not found' });
+    }
+
+    const photoKey = photoResult.rows[0].photo_key;
+
+    if (!s3Bucket) {
+      return res.status(500).json({ error: 'S3 bucket not configured' });
+    }
+
+    if (photoKey) {
+      try {
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: s3Bucket,
+          Key: photoKey
+        });
+        await s3Client.send(deleteCommand);
+      } catch (error) {
+        console.error('❌ S3 delete error:', error);
+        return res.status(500).json({ error: 'Failed to delete photo from storage' });
+      }
+    }
+
+    await pool.query('DELETE FROM vendor_photos WHERE id = $1 AND vendor_id = $2', [id, req.user.userId]);
+
+    return res.json({
+      success: true,
+      message: 'Photo deleted'
+    });
+  } catch (error) {
+    console.error('❌ Delete vendor photo error:', error);
+    res.status(500).json({ error: 'Failed to delete photo: ' + error.message });
   }
 });
 
@@ -722,13 +1862,48 @@ app.post("/api/quotes/public", async (req, res) => {
 
     const quoteId = 'QT' + crypto.randomBytes(6).toString('hex');
 
+    const guestDetails = additionalDetails || {};
+    const guestEmailRaw = (guestDetails.email || '').trim().toLowerCase();
+    const guestEmail = guestEmailRaw || `guest_${quoteId}@guest.tradematch.uk`;
+    const guestName = (guestDetails.name || 'Guest Customer').trim();
+    const guestPhone = (guestDetails.phone || '').trim() || null;
+
+    let customerId;
+    const existingUser = await pool.query(
+      'SELECT id FROM users WHERE email = $1',
+      [guestEmail]
+    );
+
+    if (existingUser.rows.length) {
+      customerId = existingUser.rows[0].id;
+    } else {
+      customerId = `guest_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+      const tempPassword = crypto.randomBytes(24).toString('hex');
+      const passwordHash = await bcrypt.hash(tempPassword, 10);
+
+      await pool.query(
+        `INSERT INTO users (
+          id, email, password_hash, name, full_name, user_type, phone, postcode, email_verified, status
+        ) VALUES ($1, $2, $3, $4, $5, 'customer', $6, $7, false, 'active')`,
+        [
+          customerId,
+          guestEmail,
+          passwordHash,
+          guestName,
+          guestName,
+          guestPhone,
+          postcode
+        ]
+      );
+    }
+
     await pool.query(
       `INSERT INTO quotes
        (id, customer_id, service_type, title, description, postcode, budget_min, budget_max, urgency, status, additional_details)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', $10)`,
       [
         quoteId,
-        null,
+        customerId,
         serviceType,
         title,
         description,
@@ -1915,6 +3090,88 @@ app.post("/api/reviews/:reviewId/helpful", authenticateToken, async (req, res) =
 });
 
 // ===== MESSAGING API =====
+
+// Notifications (in-app)
+app.get("/api/messaging/notifications", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { limit = 50, offset = 0, unread } = req.query;
+    const limitValue = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+    const offsetValue = Math.max(parseInt(offset, 10) || 0, 0);
+    const filters = ['user_id = $1'];
+    const params = [userId];
+
+    if (String(unread).toLowerCase() === 'true') {
+      filters.push('is_read = false');
+    }
+
+    const result = await pool.query(
+      `SELECT * FROM user_notifications
+       WHERE ${filters.join(' AND ')}
+       ORDER BY created_at DESC
+       LIMIT $2 OFFSET $3`,
+      [...params, limitValue, offsetValue]
+    );
+
+    return res.json({ success: true, notifications: result.rows });
+  } catch (error) {
+    console.error('❌ Notifications error:', error);
+    return res.status(500).json({ error: 'Failed to fetch notifications' });
+  }
+});
+
+app.get("/api/messaging/notifications/unread-count", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const result = await pool.query(
+      `SELECT COUNT(*)::int AS unread_count
+       FROM user_notifications
+       WHERE user_id = $1 AND is_read = false`,
+      [userId]
+    );
+    return res.json({ success: true, unreadCount: result.rows[0]?.unread_count || 0 });
+  } catch (error) {
+    console.error('❌ Unread count error:', error);
+    return res.status(500).json({ error: 'Failed to fetch unread count' });
+  }
+});
+
+app.post("/api/messaging/notifications/read", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    await pool.query(
+      `UPDATE user_notifications SET is_read = true WHERE user_id = $1 AND is_read = false`,
+      [userId]
+    );
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Notifications read error:', error);
+    return res.status(500).json({ error: 'Failed to update notifications' });
+  }
+});
+
+app.post("/api/messaging/notifications/:notificationId/read", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { notificationId } = req.params;
+    const result = await pool.query(
+      `UPDATE user_notifications
+       SET is_read = true
+       WHERE id = $1 AND user_id = $2
+       RETURNING id`,
+      [notificationId, userId]
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({ error: 'Notification not found' });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('❌ Notification read error:', error);
+    return res.status(500).json({ error: 'Failed to update notification' });
+  }
+});
 
 // Send a message
 app.post("/api/messages", authenticateToken, async (req, res) => {

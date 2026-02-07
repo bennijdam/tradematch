@@ -6,6 +6,7 @@ const express = require('express');
 const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '');
 const { authenticate, requireFinanceAdmin } = require('../middleware/auth');
+const { adminAudit } = require('../middleware/admin-audit');
 
 const router = express.Router();
 let pool;
@@ -117,7 +118,20 @@ router.get('/reason-codes', async (req, res) => {
 });
 
 // Refund request
-router.post('/refunds', async (req, res) => {
+router.post(
+    '/refunds',
+    adminAudit({
+        action: 'finance_refund_requested',
+        targetType: 'payment',
+        getTargetId: (req, res) => res.locals.refundTargetId || req.body.stripePaymentIntentId || null,
+        getDetails: (req, res) => ({
+            refundId: res.locals.refundRecordId || null,
+            amount: req.body.amount,
+            reasonCode: req.body.reasonCode || null,
+            memo: req.body.memo || null
+        })
+    }),
+    async (req, res) => {
     try {
         ensureStripeKey();
         const {
@@ -140,6 +154,8 @@ router.post('/refunds', async (req, res) => {
         const idempotencyKey = req.headers['idempotency-key'] || crypto.randomUUID();
 
         const refundRecordId = crypto.randomUUID();
+        res.locals.refundRecordId = refundRecordId;
+        res.locals.refundTargetId = stripePaymentIntentId;
         await pool.query(
             `INSERT INTO finance_refunds
                 (id, payment_id, stripe_payment_intent_id, amount_cents, currency, status, reason_code, requested_by, approved_by, approved_at, memo, idempotency_key)
@@ -195,7 +211,21 @@ router.post('/refunds', async (req, res) => {
 });
 
 // Issue vendor credit
-router.post('/credits', async (req, res) => {
+router.post(
+    '/credits',
+    adminAudit({
+        action: 'finance_credit_issued',
+        targetType: 'vendor',
+        getTargetId: (req) => req.body.vendorId,
+        getDetails: (req, res) => ({
+            creditId: res.locals.creditId || null,
+            amount: req.body.amount,
+            origin: req.body.origin || null,
+            expiresAt: req.body.expiresAt || null,
+            memo: req.body.memo || null
+        })
+    }),
+    async (req, res) => {
     try {
         const { vendorId, amount, origin, expiresAt, memo } = req.body;
         if (!vendorId || !amount || !origin) {
@@ -207,6 +237,7 @@ router.post('/credits', async (req, res) => {
         }
 
         const creditId = crypto.randomUUID();
+        res.locals.creditId = creditId;
         await pool.query(
             `INSERT INTO finance_credit_lots
                 (id, vendor_id, amount_cents, remaining_cents, currency, origin, expires_at, created_by, memo)
@@ -232,7 +263,18 @@ router.post('/credits', async (req, res) => {
 });
 
 // Consume vendor credits (offset fees/charges)
-router.post('/credits/consume', async (req, res) => {
+router.post(
+    '/credits/consume',
+    adminAudit({
+        action: 'finance_credit_consumed',
+        targetType: 'vendor',
+        getTargetId: (req) => req.body.vendorId,
+        getDetails: (req) => ({
+            amount: req.body.amount,
+            usedFor: req.body.usedFor || null
+        })
+    }),
+    async (req, res) => {
     try {
         const { vendorId, amount, usedFor } = req.body;
         if (!vendorId || !amount || !usedFor) {
@@ -610,6 +652,74 @@ router.get('/reconciliation/stripe', async (req, res) => {
     }
 });
 
+// ============================================================
+// STRIPE READ-ONLY DATA
+// ============================================================
+
+// List Stripe payment intents (read-only)
+router.get('/stripe/payments', async (req, res) => {
+    try {
+        ensureStripeKey();
+        const { limit = 50 } = req.query;
+        const payments = await stripe.paymentIntents.list({ limit: parseInt(limit, 10) });
+        const data = payments.data.map((item) => ({
+            id: item.id,
+            amount: item.amount,
+            currency: item.currency,
+            status: item.status,
+            created: item.created,
+            customer: item.customer || null,
+            description: item.description || null
+        }));
+        res.json({ success: true, payments: data });
+    } catch (error) {
+        console.error('Stripe payments error:', error);
+        res.status(500).json({ error: 'Stripe payments fetch failed' });
+    }
+});
+
+// List Stripe subscriptions (read-only)
+router.get('/stripe/subscriptions', async (req, res) => {
+    try {
+        ensureStripeKey();
+        const { limit = 50 } = req.query;
+        const subscriptions = await stripe.subscriptions.list({ limit: parseInt(limit, 10) });
+        const data = subscriptions.data.map((item) => ({
+            id: item.id,
+            status: item.status,
+            customer: item.customer || null,
+            current_period_start: item.current_period_start,
+            current_period_end: item.current_period_end,
+            created: item.created
+        }));
+        res.json({ success: true, subscriptions: data });
+    } catch (error) {
+        console.error('Stripe subscriptions error:', error);
+        res.status(500).json({ error: 'Stripe subscriptions fetch failed' });
+    }
+});
+
+// List Stripe refunds (read-only)
+router.get('/stripe/refunds', async (req, res) => {
+    try {
+        ensureStripeKey();
+        const { limit = 50 } = req.query;
+        const refunds = await stripe.refunds.list({ limit: parseInt(limit, 10) });
+        const data = refunds.data.map((item) => ({
+            id: item.id,
+            amount: item.amount,
+            currency: item.currency,
+            status: item.status,
+            payment_intent: item.payment_intent || null,
+            created: item.created
+        }));
+        res.json({ success: true, refunds: data });
+    } catch (error) {
+        console.error('Stripe refunds error:', error);
+        res.status(500).json({ error: 'Stripe refunds fetch failed' });
+    }
+});
+
 // Export reconciliation as CSV (ledger)
 router.get('/reconciliation/export', async (req, res) => {
     try {
@@ -637,7 +747,17 @@ router.get('/reconciliation/export', async (req, res) => {
 });
 
 // Expire vendor credits and write ledger entries
-router.post('/credits/expire', async (req, res) => {
+router.post(
+    '/credits/expire',
+    adminAudit({
+        action: 'finance_credit_expired',
+        targetType: 'credit_lot',
+        getTargetId: () => null,
+        getDetails: (req, res) => ({
+            expiredCount: res.locals.expiredCount || 0
+        })
+    }),
+    async (req, res) => {
     try {
         const now = new Date();
         const result = await pool.query(
@@ -663,6 +783,7 @@ router.post('/credits/expire', async (req, res) => {
             });
         }
 
+        res.locals.expiredCount = result.rows.length;
         res.json({ success: true, expiredCount: result.rows.length });
     } catch (error) {
         console.error('Credit expiry error:', error);

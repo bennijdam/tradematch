@@ -89,18 +89,47 @@ function requireCustomer(req, res, next) {
     next();
 }
 
+const ADMIN_ROLES = [
+    'admin',
+    'super_admin',
+    'finance_admin',
+    'trust_safety_admin',
+    'support_admin',
+    'read_only_admin'
+];
+
 /**
  * Require admin role
  */
 function requireAdmin(req, res, next) {
-    const adminRoles = ['admin', 'super_admin'];
-    if (!req.user || !adminRoles.includes(req.user.role)) {
-        return res.status(403).json({ 
+    if (!req.user || !ADMIN_ROLES.includes(req.user.role)) {
+        return res.status(403).json({
             error: 'Admin access required',
             code: 'ADMIN_REQUIRED'
         });
     }
     next();
+}
+
+/**
+ * Require specific admin roles
+ */
+function requireAdminRole(roles = []) {
+    return (req, res, next) => {
+        if (!req.user || !ADMIN_ROLES.includes(req.user.role)) {
+            return res.status(403).json({
+                error: 'Admin access required',
+                code: 'ADMIN_REQUIRED'
+            });
+        }
+        if (!roles.includes(req.user.role)) {
+            return res.status(403).json({
+                error: 'Insufficient admin role',
+                code: 'ADMIN_ROLE_REQUIRED'
+            });
+        }
+        next();
+    };
 }
 
 /**
@@ -205,8 +234,10 @@ module.exports = {
     requireVendor,
     requireCustomer,
     requireAdmin,
+    requireAdminRole,
     requireSuperAdmin,
     requireFinanceAdmin,
     optionalAuth,
-    refreshToken
+    refreshToken,
+    ADMIN_ROLES
 };

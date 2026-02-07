@@ -70,9 +70,11 @@ const defaultAllowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3002',
+    'http://localhost:3003',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3002',
+    'http://127.0.0.1:3003',
     'http://127.0.0.1:8000'
 ];
 
@@ -97,8 +99,8 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 
-// Serve the super admin panel statically so /admin-login.html works locally
-app.use('/', express.static(path.join(__dirname, '../tradematch-super-admin-panel')));
+// Serve the super admin SPA
+app.use('/frontend/super-admin-dashboard', express.static(path.join(__dirname, '../frontend/super-admin-dashboard')));
 
 // File uploads (S3 presigned URLs)
 app.use('/api/uploads', uploadsRoutes);
@@ -113,6 +115,9 @@ const pool = new Pool({
     keepAlive: true,
     options: '-c statement_timeout=15000'
 });
+
+const adminAudit = require('./middleware/admin-audit');
+adminAudit.setPool(pool);
 
 // Avoid closing the pool in development (prevents "Cannot use a pool after calling end")
 const originalPoolEnd = pool.end.bind(pool);
@@ -450,6 +455,39 @@ try {
     console.warn('⚠️ Quotes routes not available:', e && e.message ? e.message : e);
 }
 
+// Customer dashboard routes
+try {
+    const customerRouter = require('./routes/customer');
+    const savedTradesRouter = require('./routes/saved-trades');
+    if (typeof customerRouter.setPool === 'function') customerRouter.setPool(pool);
+    if (typeof savedTradesRouter.setPool === 'function') savedTradesRouter.setPool(pool);
+    app.use('/api/customer', customerRouter);
+    app.use('/api/saved-trades', savedTradesRouter);
+    console.log('🧑‍💼 Customer routes mounted at /api/customer');
+} catch (e) {
+    console.warn('⚠️ Customer routes not available:', e && e.message ? e.message : e);
+}
+
+// Vendor dashboard routes
+try {
+    const vendorRouter = require('./routes/vendor');
+    if (typeof vendorRouter.setPool === 'function') vendorRouter.setPool(pool);
+    app.use('/api/vendor', vendorRouter);
+    console.log('🏗️ Vendor routes mounted at /api/vendor');
+} catch (e) {
+    console.warn('⚠️ Vendor routes not available:', e && e.message ? e.message : e);
+}
+
+// Bids routes
+try {
+    const bidsRouter = require('./routes/bids');
+    if (typeof bidsRouter.setPool === 'function') bidsRouter.setPool(pool);
+    app.use('/api/bids', bidsRouter);
+    console.log('💼 Bids routes mounted at /api/bids');
+} catch (e) {
+    console.warn('⚠️ Bids routes not available:', e && e.message ? e.message : e);
+}
+
 try {
     const vendorCreditsRouter = require('./routes/vendor-credits')(pool);
     app.use('/api/vendor-credits', vendorCreditsRouter);
@@ -522,6 +560,15 @@ try {
     console.log('💰 Credits routes mounted at /api/credits');
 } catch (e) {
     console.warn('⚠️ Credits routes not available:', e && e.message ? e.message : e);
+}
+
+// Billing routes (Stripe Checkout)
+try {
+    const billingRouter = require('./routes/billing');
+    app.use('/api/billing', billingRouter);
+    console.log('💳 Billing routes mounted at /api/billing');
+} catch (e) {
+    console.warn('⚠️ Billing routes not available:', e && e.message ? e.message : e);
 }
 
 // Finance Admin routes

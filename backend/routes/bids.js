@@ -51,12 +51,73 @@ router.post('/', authenticate, async (req, res) => {
     const vendorId = req.user.userId;
     
     try {
+        const errors = [];
+        const normalizedQuoteId = typeof quoteId === 'string' ? quoteId.trim() : '';
+        const normalizedMessage = typeof message === 'string' ? message.trim() : '';
+        const normalizedDuration = typeof estimatedDuration === 'string' ? estimatedDuration.trim() : '';
+        const normalizedAvailability = typeof availability === 'string' ? availability.trim() : '';
+        const numericPrice = Number(price);
+
+        if (!normalizedQuoteId) {
+            errors.push('quoteId is required.');
+        }
+
+        if (Number.isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 100000) {
+            errors.push('price must be a valid amount.');
+        }
+
+        if (normalizedMessage && normalizedMessage.length > 2000) {
+            errors.push('message is too long.');
+        }
+
+        if (normalizedDuration && normalizedDuration.length > 120) {
+            errors.push('estimatedDuration is too long.');
+        }
+
+        if (normalizedAvailability && normalizedAvailability.length > 120) {
+            errors.push('availability is too long.');
+        }
+
+        if (errors.length) {
+            return res.status(400).json({ error: 'Invalid bid data', details: errors });
+        }
+
+        const quoteCheck = await pool.query(
+            'SELECT id, status FROM quotes WHERE id = $1',
+            [normalizedQuoteId]
+        );
+
+        if (!quoteCheck.rows.length) {
+            return res.status(404).json({ error: 'Quote not found' });
+        }
+
+        if (quoteCheck.rows[0].status !== 'open') {
+            return res.status(409).json({ error: 'Quote is not open for bids' });
+        }
+
+        const existingBid = await pool.query(
+            'SELECT 1 FROM bids WHERE quote_id = $1 AND vendor_id = $2',
+            [normalizedQuoteId, vendorId]
+        );
+
+        if (existingBid.rows.length) {
+            return res.status(409).json({ error: 'Bid already submitted for this quote' });
+        }
+
         const bidId = `bid_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         
         await pool.query(
             `INSERT INTO bids (id, quote_id, vendor_id, price, message, estimated_duration, availability, status)
              VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending')`,
-            [bidId, quoteId, vendorId, price, message, estimatedDuration, availability]
+            [
+                bidId,
+                normalizedQuoteId,
+                vendorId,
+                numericPrice,
+                normalizedMessage || null,
+                normalizedDuration || null,
+                normalizedAvailability || null
+            ]
         );
         
         res.json({ success: true, bidId });

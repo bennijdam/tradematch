@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | TradeMatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --slate: #1A2332;
+            --slate-light: #2D3B4E;
+            --emerald: #16A34A;
+            --emerald-dark: #15803D;
+            --gray-50: #F8FAFB;
+            --gray-100: #F3F4F6;
+            --gray-600: #4B5563;
+            --white: #FFFFFF;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Manrope', sans-serif;
+            color: var(--slate);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Glassmorphism Header */
+        header, nav {
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Source Serif 4', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--slate);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo span {
+            color: var(--emerald);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--slate);
+        }
+
+        .profile-menu {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 8px;
+        }
+
+        .profile-button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .profile-initials {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--slate);
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 14px;
+            color: #0f172a;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .profile-dropdown a:hover {
+            background: #f1f5f9;
+        }
+
+        .profile-dropdown.is-open {
+            display: block;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--emerald);
+            color: var(--white);
+            box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background: var(--emerald-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80') center/cover;
+            padding: 120px 24px;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+        
+        .hero h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            position: relative;
+        }
+        
+        .hero h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .hero-cta {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .postcode-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 16px;
+            font-family: 'Manrope', sans-serif;
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 14px 32px;
+            background: var(--emerald);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .search-btn:hover {
+            background: var(--emerald-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
+        }
+        
+        /* Content Sections */
+        .content-section {
+            padding: 100px 24px;
+            background: var(--white);
+        }
+        
+        .content-section.alt {
+            background: var(--gray-50);
+        }
+        
+        .section-title {
+            font-family: 'Source Serif 4', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--slate);
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-subtitle {
+            font-size: 19px;
+            color: var(--gray-600);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+        
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            background: #E8F5E9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--emerald);
+        }
+        
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--slate);
+        }
+        
+        .feature-desc {
+            color: var(--gray-600);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        
+        /* Steps */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--white);
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.25);
+        }
+        
+        .step h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--slate);
+        }
+        
+        .step p {
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+        
+        /* Trust Stats */
+        .trust-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+            margin-top: 60px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--emerald);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--slate);
+            color: rgba(255,255,255,0.8);
+            padding: 60px 24px 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto 48px;
+        }
+        
+        .footer-brand h3 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 24px;
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+        
+        .footer-column h4 {
+            color: var(--white);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        
+        .footer-column a:hover {
+            color: var(--emerald);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .section-title { font-size: 36px; }
+            .nav-links { display: none; }
+            .hero { padding: 80px 24px; }
+            .content-section { padding: 60px 24px; }
+        }
+    </style>
+    <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="/index.html" class="logo">Trade<span>Match</span></a>
+<div class="nav-links">
+                <a href="/how-it-works.html">How It Works</a>
+                <a href="/find-tradespeople.html">Find Trades</a>
+                <a href="/about.html">About</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/help.html">Help</a>
+                <div class="profile-menu">
+                    <button class="profile-button" id="profileButton" aria-haspopup="true" aria-expanded="false">
+                        <span class="profile-initials" id="profileInitials">TM</span>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown" role="menu">
+                        <a href="/frontend/email-preferences.html" role="menuitem">User Settings</a>
+                        <a href="#" id="logoutLink" role="menuitem">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="messaging-container">
+        <!-- Conversations Sidebar -->
+        <div class="conversations-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Messages</h2>
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search conversations..." id="searchInput">
+                </div>
+            </div>
+            
+            <div class="conversations-list" id="conversationsList">
+                <div class="conversation-item active unread" data-conversation-id="1">
+                    <div class="conversation-avatar">JD</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">John Doe</span>
+                            <span class="conversation-time">2m ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            When can you start the rewiring work?
+                            <span class="unread-badge">3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="2">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #0891B2, #06B6D4);">SM</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Sarah Miller</span>
+                            <span class="conversation-time">1h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Thanks for the quote! One question about...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="3">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #10B981, #34D399);">RJ</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Robert Johnson</span>
+                            <span class="conversation-time">3h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Perfect! I'll have the materials ready by then.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item unread" data-conversation-id="4">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">EW</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Emma Wilson</span>
+                            <span class="conversation-time">5h ago</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Do you offer a warranty on the work?
+                            <span class="unread-badge">1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="conversation-item" data-conversation-id="5">
+                    <div class="conversation-avatar" style="background: linear-gradient(135deg, #8B5CF6, #A78BFA);">MT</div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Michael Taylor</span>
+                            <span class="conversation-time">Yesterday</span>
+                        </div>
+                        <div class="conversation-preview">
+                            Great! Looking forward to working with you.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">JD</div>
+                    <div class="chat-user-info">
+                        <h3>John Doe</h3>
+                        <div class="chat-user-status">
+                            <span class="online-indicator"></span>
+                            Online
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn-icon" title="View Quote">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" title="Call">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </button>
+                    <button class="btn-icon" title="More Options">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="12" cy="5" r="1"></circle>
+                            <circle cx="12" cy="19" r="1"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="messages-area" id="messagesArea">
+                <div class="message-date-divider">
+                    <span>Today</span>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Hi! I saw your quote for the full house rewiring. I have a few questions before we proceed.
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Of course! I'd be happy to answer any questions you have. What would you like to know?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:32 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                How long will the work take? And will I need to move out during the rewiring?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:35 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Great questions! For a 3-bedroom house like yours, the full rewiring typically takes 5-7 working days. You won't need to move out, but there will be some disruption - power cuts at certain times, dust from chasing walls, etc.
+                            </div>
+                        </div>
+                        <div class="message-bubble" style="margin-top: 4px;">
+                            <div class="message-text">
+                                We work room by room to minimize inconvenience, and we'll make sure you have power for essential appliances during the evening.
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:37 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: -8px;">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                That sounds reasonable. One more thing - do you include the consumer unit upgrade in your quote?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:40 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">YO</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Yes, absolutely! The consumer unit upgrade is included. Here's what's covered in the quote:
+                            </div>
+                            <div class="quote-card-inline">
+                                <h4>Full House Rewiring - Quote Breakdown</h4>
+                                <p>✓ Complete rewiring of all circuits</p>
+                                <p>✓ Consumer unit upgrade (17th edition)</p>
+                                <p>✓ Additional sockets as discussed</p>
+                                <p>✓ Testing and certification</p>
+                                <p>✓ 12-month warranty</p>
+                                <p style="font-weight: 600; color: var(--dark); margin-top: 12px;">Total: £4,500</p>
+                                <button class="btn btn-primary">
+                                    Accept Quote
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:42 AM</span>
+                            <div class="message-status">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message">
+                    <div class="message-avatar">JD</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="message-text">
+                                Perfect! When can you start the work?
+                            </div>
+                        </div>
+                        <div class="message-meta">
+                            <span>10:45 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="typing-indicator active">
+                    <div class="message-avatar">JD</div>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <div class="input-actions">
+                        <button class="btn-attach" title="Attach file">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                        <button class="btn-attach" title="Send photo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="message-input-container">
+                        <textarea 
+                            class="message-input" 
+                            placeholder="Type a message..."
+                            id="messageInput"
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button class="btn-send" id="sendButton">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message
+        const sendButton = document.getElementById('sendButton');
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            sendMessageToApi();
+        }
+
+        const isLocal = window.location.protocol === 'file:' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+
+        const API_BASE = isLocal
+            ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+            : 'https://api.tradematch.uk';
+        let activeConversationId = null;
+        let currentUserId = null;
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            if (!token) return null;
+            return { Authorization: `Bearer ${token}` };
+        }
+
+        async function fetchJson(path, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            };
+            const res = await fetch(`${API_BASE}${path}`, {
+                ...options,
+                headers
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Request failed');
+            return data;
+        }
+
+        function renderConversationItem(convo) {
+            const item = document.createElement('div');
+            item.className = 'conversation-item';
+            item.dataset.conversationId = convo.id;
+            item.innerHTML = `
+                <div class="conversation-avatar">TM</div>
+                <div class="conversation-content">
+                    <div class="conversation-header">
+                        <span class="conversation-name">${convo.job_id}</span>
+                        <span class="conversation-time">${convo.status}</span>
+                    </div>
+                    <div class="conversation-preview">${convo.conversation_type}</div>
+                </div>
+            `;
+
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.conversation-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                activeConversationId = convo.id;
+                loadConversation(convo.id);
+            });
+            return item;
+        }
+
+        async function loadConversations() {
+            const headers = getAuthHeaders();
+            if (!headers) return;
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = '';
+            const data = await fetchJson('/api/messaging/conversations', { headers });
+            data.conversations.forEach(convo => list.appendChild(renderConversationItem(convo)));
+        }
+
+        function renderMessage(message) {
+            const isSent = message.sender_id === currentUserId;
+            const wrapper = document.createElement('div');
+            wrapper.className = `message ${isSent ? 'sent' : ''}`;
+            const body = message.is_deleted ? '<em>Message deleted</em>' : (message.body || '');
+            wrapper.innerHTML = `
+                <div class="message-avatar">${isSent ? 'ME' : 'TM'}</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="message-text">${body}</div>
+                    </div>
+                    <div class="message-meta">
+                        <span>${new Date(message.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                </div>
+            `;
+            return wrapper;
+        }
+
+        async function loadConversation(conversationId) {
+            const headers = getAuthHeaders();
+            if (!headers) return;
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = '';
+            const data = await fetchJson(`/api/messaging/conversations/${conversationId}/messages`, { headers });
+            data.messages.forEach(msg => messagesArea.appendChild(renderMessage(msg)));
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        async function sendMessageToApi() {
+            const text = messageInput.value.trim();
+            if (!text || !activeConversationId) return;
+            const headers = getAuthHeaders();
+            if (!headers) return;
+
+            await fetchJson(`/api/messaging/conversations/${activeConversationId}/messages`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ body: text, message_type: 'text' })
+            });
+
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            await loadConversation(activeConversationId);
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                const name = item.querySelector('.conversation-name').textContent.toLowerCase();
+                const preview = item.querySelector('.conversation-preview').textContent.toLowerCase();
+                if (name.includes(searchTerm) || preview.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                currentUserId = storedUser.id || null;
+                await loadConversations();
+            } catch (error) {
+                console.error('Failed to initialize messaging UI', error);
+            }
+
+            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+            const profileInitials = document.getElementById('profileInitials');
+            if (profileInitials) {
+                const name = storedUser.fullName || storedUser.name || storedUser.email || 'User';
+                const initials = name.split(' ').map(part => part[0]).join('').slice(0, 2).toUpperCase();
+                profileInitials.textContent = initials || 'TM';
+            }
+
+            const profileButton = document.getElementById('profileButton');
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (profileButton && profileDropdown) {
+                profileButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const isOpen = profileDropdown.classList.toggle('is-open');
+                    profileButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+
+                document.addEventListener('click', (event) => {
+                    if (!profileDropdown.contains(event.target) && !profileButton.contains(event.target)) {
+                        profileDropdown.classList.remove('is-open');
+                        profileButton.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/frontend/pages/auth-login.html';
+                });
+            }
+
+            document.querySelectorAll('.logout-link').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/frontend/pages/auth-login.html';
+                });
+            });
+        });
+    </script>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>TradeMatch</h3>
+                    <p>Connecting homeowners with trusted local tradespeople across the UK.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Customers</h4>
+                    <ul>
+                        <li><a href="/how-it-works.html">How It Works</a></li>
+                        <li><a href="/quote-engine.html">Post a Job</a></li>
+                        <li><a href="/find-tradespeople.html">Find Trades</a></li>
+                        <li><a href="/help.html">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>For Tradespeople</h4>
+                    <ul>
+                        <li><a href="/vendor-register.html">Join as a Trade</a></li>
+                        <li><a href="/vendor-login.html">Trade Login</a></li>
+                        <li><a href="#" class="logout-link">Logout</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                        <li><a href="/terms.html">Terms</a></li>
+                        <li><a href="/privacy.html">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+<div class="footer-bottom">
+                © 2026 TradeMatch. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8);">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/frontend/shared/ui/profile-menu.js"></script>
+</body>
+</html>
+
+
+
+
+

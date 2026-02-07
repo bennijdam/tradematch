@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Jobs - TradeMatch Customer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <style>
+        .edit-job-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: edit-job-fade-in 0.2s ease;
+        }
+
+        .edit-job-modal.active {
+            display: flex;
+        }
+
+        @keyframes edit-job-fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .edit-job-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: edit-job-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes edit-job-slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .edit-job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .edit-job-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .edit-job-close {
+            background: transparent;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .edit-job-close:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .edit-job-close svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+
+        .edit-job-body {
+            padding: 24px;
+        }
+
+        .edit-job-warning {
+            background: rgba(255, 167, 38, 0.1);
+            border: 1px solid rgba(255, 167, 38, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .edit-job-warning svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-warning);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .edit-job-warning-content {
+            flex: 1;
+        }
+
+        .edit-job-warning-title {
+            font-weight: 600;
+            color: var(--accent-warning);
+            margin-bottom: 4px;
+        }
+
+        .edit-job-warning-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .edit-job-form-group {
+            margin-bottom: 20px;
+        }
+
+        .edit-job-form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .edit-job-form-label.edit-job-locked {
+            color: var(--text-muted);
+        }
+
+        .edit-job-form-input,
+        .edit-job-form-textarea {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'Archivo', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .edit-job-form-input:focus,
+        .edit-job-form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1);
+        }
+
+        .edit-job-form-input:disabled,
+        .edit-job-form-textarea:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .edit-job-form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .edit-job-form-help {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .edit-job-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .edit-job-budget-inputs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .edit-job-budget-inputs .edit-job-form-input {
+            flex: 1;
+        }
+
+        .edit-job-budget-separator {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .edit-job-radio-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .edit-job-radio-option {
+            flex: 1;
+        }
+
+        .edit-job-radio-option input[type="radio"] {
+            display: none;
+        }
+
+        .edit-job-radio-label {
+            display: block;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .edit-job-radio-option input[type="radio"]:checked + .edit-job-radio-label {
+            background: rgba(0, 229, 160, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .edit-job-radio-label:hover {
+            border-color: var(--border-hover);
+        }
+
+        .edit-job-file-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-job-file-upload:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+
+        .edit-job-file-upload input[type="file"] {
+            display: none;
+        }
+
+        .edit-job-file-upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            color: var(--text-muted);
+        }
+
+        .edit-job-file-upload-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .edit-job-file-upload-hint {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .job-list-actions {
+            position: relative;
+        }
+
+        .job-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 220px;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 30;
+        }
+
+        .job-menu.open {
+            display: flex;
+        }
+
+        .job-menu button {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 12px;
+            text-align: left;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .job-menu button:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .job-menu button[aria-disabled="true"] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .job-menu .menu-muted {
+            color: var(--text-muted);
+        }
+
+        .job-menu-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 14, 20, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .job-menu-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .job-menu-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .job-menu-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .job-menu-modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .job-menu-modal-close:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .job-menu-modal-close svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-secondary);
+        }
+
+        .job-menu-modal-body {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .job-menu-modal-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 14px;
+        }
+
+        .job-menu-modal-label {
+            color: var(--text-muted);
+        }
+
+        .job-menu-modal-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .job-menu-modal-footer {
+            padding: 16px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .job-menu-file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .job-menu-radio-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .job-menu-textarea {
+            width: 100%;
+            min-height: 100px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-family: 'Archivo', sans-serif;
+            resize: vertical;
+        }
+
+        .edit-job-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .edit-job-form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .edit-job-budget-inputs {
+                flex-direction: column;
+            }
+
+            .edit-job-budget-separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar - same structure as index.html -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="my-jobs.html" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="nav-text">My Jobs</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="quotes.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="nav-text">Quotes</span>
+                    <span class="nav-badge">5</span>
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <span class="nav-text">Messages</span>
+                    <span class="nav-badge notification">2</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Trades</div>
+                <a href="saved-trades.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="nav-text">Saved Trades</span>
+                </a>
+                <a href="reviews.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="nav-text">Reviews</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="notifications.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-text">Notifications</span>
+                    <span class="nav-badge notification">4</span>
+                </a>
+                <a href="billing.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="nav-text">Billing</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="collapse-btn" id="collapseBtn">
+                <svg class="collapse-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Top Navigation - same as index.html -->
+    <!-- Top Navigation with Modals -->
+<header class="top-nav" id="topNav">
+    <div class="top-nav-left">
+        <div class="search-container">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input type="text" class="search-input" placeholder="Search jobs, quotes, messages...">
+        </div>
+    </div>
+
+    <div class="top-nav-right">
+        <div class="theme-toggle" id="themeToggle">
+            <div class="theme-toggle-slider">
+                <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Notification Button with Modal -->
+        <div class="notification-modal-container">
+            <button class="icon-button" id="notificationBtn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+
+            <!-- Notification Modal -->
+            <div class="top-bar-modal notification-modal" id="notificationModal">
+                <div class="notification-modal-header">
+                    <h3 class="notification-modal-title">Notifications</h3>
+                    <button class="mark-all-read" id="markAllRead">Mark all read</button>
+                </div>
+                <div class="notification-modal-body">
+                    <div class="notification-item unread" data-link="quotes.html">
+                        <div class="notification-icon quote">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text">New quote received from Elite Builders for Kitchen Renovation</div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item unread" data-link="messages.html">
+                        <div class="notification-icon message">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text">Green Gardens Ltd sent you a message about Garden Landscaping</div>
+                            <div class="notification-time">5 hours ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" data-link="reviews.html">
+                        <div class="notification-icon review">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text">Please leave a review for PowerPro Electricians</div>
+                            <div class="notification-time">1 day ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" data-link="quotes.html">
+                        <div class="notification-icon quote">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text">New quote received from Quick Fix Plumbing for Bathroom Plumbing</div>
+                            <div class="notification-time">2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-modal-footer">
+                    <a href="notifications.html" class="view-all-link">View all notifications</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Menu with Modal -->
+        <div class="profile-modal-container">
+            <div class="user-menu" id="profileMenuBtn">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Customer</div>
+                </div>
+            </div>
+
+            <!-- Profile Modal -->
+            <div class="top-bar-modal profile-modal" id="profileModal">
+                <div class="profile-modal-header">
+                    <div class="profile-modal-avatar">JD</div>
+                    <div class="profile-modal-info">
+                        <div class="profile-modal-name">John Doe</div>
+                        <div class="profile-modal-role">Customer</div>
+                    </div>
+                </div>
+                <div class="profile-modal-menu">
+                    <a href="profile.html" class="profile-menu-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        My Profile
+                    </a>
+                    <a href="settings.html" class="profile-menu-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Account Settings
+                    </a>
+                    <a href="billing.html" class="profile-menu-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                        Billing
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="#" class="profile-menu-item logout" id="logoutBtn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
+
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">My Jobs</h1>
+                <p class="page-subtitle">Manage all your job postings and track their progress</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='post-job.html'">
+                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Post New Job
+            </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All Jobs (6)</button>
+            <button class="filter-tab" data-filter="open">Open (2)</button>
+            <button class="filter-tab" data-filter="quoted">Quoted (2)</button>
+            <button class="filter-tab" data-filter="accepted">Accepted (1)</button>
+            <button class="filter-tab" data-filter="completed">Completed (1)</button>
+        </div>
+
+        <!-- Jobs List -->
+        <div class="jobs-list">
+            <!-- Job Card 1 -->
+            <div class="job-list-card" data-status="open" data-job-id="job-1" data-review-submitted="false" data-has-quotes="true" data-budget-min="8000" data-budget-max="12000" data-urgency="month" data-trade="Kitchen Fitting" data-postcode="SW1A">
+                <div class="job-list-header">
+                    <div class="job-list-left">
+                        <div class="job-status-badge open">Open</div>
+                        <h3 class="job-list-title">Kitchen Renovation</h3>
+                    </div>
+                    <div class="job-list-actions">
+                        <button class="btn-icon-only" title="Edit" onclick="openEditJobModal(this.closest('.job-list-card'))">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-icon-only job-menu-toggle" title="More" aria-haspopup="true" aria-expanded="false">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                            </svg>
+                        </button>
+                        <div class="job-menu" role="menu" aria-hidden="true">
+                            <button type="button" data-action="view-job">View Job Details</button>
+                            <button type="button" data-action="view-quote">View Accepted Quote</button>
+                            <button type="button" data-action="upload-files">Upload / Share Files</button>
+                            <button type="button" data-action="mute">Mute Notifications</button>
+                            <button type="button" data-action="report">Report an Issue</button>
+                            <button type="button" class="menu-muted" data-action="archive">Archive Conversation</button>
+                            <button type="button" data-action="review">Leave a Review</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="job-list-description">Complete kitchen remodel including cabinets, countertops, and appliances. Modern design preferred.</p>
+                <div class="job-list-meta">
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Posted 2 days ago
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        London, SW1A
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        3 Quotes received
+                    </div>
+                </div>
+                <div class="job-list-footer">
+                    <button class="btn btn-secondary btn-sm" data-action="view-details">View Details</button>
+                    <button class="btn btn-primary btn-sm" data-action="view-quotes">View Quotes (3)</button>
+                </div>
+            </div>
+
+            <!-- Job Card 2 -->
+            <div class="job-list-card" data-status="quoted" data-job-id="job-2" data-review-submitted="false" data-has-quotes="false" data-budget-min="5000" data-budget-max="8000" data-urgency="flexible" data-trade="Plumbing" data-postcode="M1">
+                <div class="job-list-header">
+                    <div class="job-list-left">
+                        <div class="job-status-badge quoted">Quoted</div>
+                        <h3 class="job-list-title">Bathroom Plumbing Repair</h3>
+                    </div>
+                    <div class="job-list-actions">
+                        <button class="btn-icon-only" title="Edit" onclick="openEditJobModal(this.closest('.job-list-card'))">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button class="btn-icon-only job-menu-toggle" title="More" aria-haspopup="true" aria-expanded="false">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                            </svg>
+                        </button>
+                        <div class="job-menu" role="menu" aria-hidden="true">
+                            <button type="button" data-action="view-job">View Job Details</button>
+                            <button type="button" data-action="view-quote">View Accepted Quote</button>
+                            <button type="button" data-action="upload-files">Upload / Share Files</button>
+                            <button type="button" data-action="mute">Mute Notifications</button>
+                            <button type="button" data-action="report">Report an Issue</button>
+                            <button type="button" class="menu-muted" data-action="archive">Archive Conversation</button>
+                            <button type="button" data-action="review">Leave a Review</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="job-list-description">Leaking shower and toilet cistern need repair. Urgent fix required.</p>
+                <div class="job-list-meta">
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Posted 5 days ago
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Manchester, M1
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        2 Quotes received
+                    </div>
+                </div>
+                <div class="job-list-footer">
+                    <button class="btn btn-secondary btn-sm" data-action="view-details">View Details</button>
+                    <button class="btn btn-primary btn-sm" data-action="view-quotes">View Quotes (2)</button>
+                </div>
+            </div>
+
+            <!-- Job Card 3 -->
+            <div class="job-list-card" data-status="accepted" data-job-id="job-3" data-vendor-slug="green-gardens" data-vendor-name="Green Gardens Ltd" data-review-submitted="false">
+                <div class="job-list-header">
+                    <div class="job-list-left">
+                        <div class="job-status-badge accepted">Accepted</div>
+                        <h3 class="job-list-title">Garden Landscaping</h3>
+                    </div>
+                    <div class="job-list-actions">
+                        <button class="btn-icon-only job-menu-toggle" title="More" aria-haspopup="true" aria-expanded="false">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                            </svg>
+                        </button>
+                        <div class="job-menu" role="menu" aria-hidden="true">
+                            <button type="button" data-action="view-job">View Job Details</button>
+                            <button type="button" data-action="view-quote">View Accepted Quote</button>
+                            <button type="button" data-action="upload-files">Upload / Share Files</button>
+                            <button type="button" data-action="mute">Mute Notifications</button>
+                            <button type="button" data-action="report">Report an Issue</button>
+                            <button type="button" class="menu-muted" data-action="archive">Archive Conversation</button>
+                            <button type="button" data-action="review">Leave a Review</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="job-list-description">Redesign back garden with patio area, new lawn, and flower beds.</p>
+                <div class="job-list-meta">
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Posted 1 week ago
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Birmingham, B1
+                    </div>
+                    <div class="job-meta-item">
+                        <svg class="job-meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Green Gardens Ltd
+                    </div>
+                </div>
+                <div class="job-list-footer">
+                    <button class="btn btn-secondary btn-sm" data-action="view-details">View Details</button>
+                    <button class="btn btn-primary btn-sm" data-action="message-vendor">Message Vendor</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal job-menu-modal" id="jobAcceptedQuoteModal" aria-hidden="true">
+        <div class="job-menu-modal-content">
+            <div class="job-menu-modal-header">
+                <div class="job-menu-modal-title">Accepted Quote</div>
+                <button class="job-menu-modal-close" data-close-modal="jobAcceptedQuoteModal" aria-label="Close accepted quote">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="job-menu-modal-body">
+                <div class="job-menu-modal-row">
+                    <span class="job-menu-modal-label">Job</span>
+                    <span class="job-menu-modal-value" id="jobAcceptedQuoteJob">Job</span>
+                </div>
+                <div class="job-menu-modal-row">
+                    <span class="job-menu-modal-label">Vendor</span>
+                    <span class="job-menu-modal-value" id="jobAcceptedQuoteVendor">Vendor</span>
+                </div>
+                <div class="job-menu-modal-row">
+                    <span class="job-menu-modal-label">Price</span>
+                    <span class="job-menu-modal-value" id="jobAcceptedQuotePrice">£0.00</span>
+                </div>
+                <div class="job-menu-modal-row">
+                    <span class="job-menu-modal-label">Timeline</span>
+                    <span class="job-menu-modal-value" id="jobAcceptedQuoteTimeline">Not specified</span>
+                </div>
+                <div>
+                    <div class="job-menu-modal-label" style="margin-bottom: 6px;">Scope</div>
+                    <div class="job-menu-modal-value" id="jobAcceptedQuoteScope" style="text-align: left; font-weight: 500;">Scope details will appear here.</div>
+                </div>
+            </div>
+            <div class="job-menu-modal-footer">
+                <button class="btn btn-secondary" data-close-modal="jobAcceptedQuoteModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal job-menu-modal" id="jobUploadModal" aria-hidden="true">
+        <div class="job-menu-modal-content">
+            <div class="job-menu-modal-header">
+                <div class="job-menu-modal-title">Upload / Share Files</div>
+                <button class="job-menu-modal-close" data-close-modal="jobUploadModal" aria-label="Close file upload">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="job-menu-modal-body">
+                <input type="file" id="jobUploadInput" multiple accept="image/*,.pdf,.doc,.docx" />
+                <div class="job-menu-file-list" id="jobUploadList">No files selected.</div>
+            </div>
+            <div class="job-menu-modal-footer">
+                <button class="btn btn-secondary" data-close-modal="jobUploadModal">Cancel</button>
+                <button class="btn btn-primary" id="jobUploadConfirm">Share Files</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal job-menu-modal" id="jobReportModal" aria-hidden="true">
+        <div class="job-menu-modal-content">
+            <div class="job-menu-modal-header">
+                <div class="job-menu-modal-title">Report an Issue</div>
+                <button class="job-menu-modal-close" data-close-modal="jobReportModal" aria-label="Close report issue">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="job-menu-modal-body">
+                <div class="job-menu-radio-list">
+                    <label><input type="radio" name="jobReportReason" value="spam" checked> Spam</label>
+                    <label><input type="radio" name="jobReportReason" value="inappropriate"> Inappropriate messages</label>
+                    <label><input type="radio" name="jobReportReason" value="payment"> Payment dispute</label>
+                    <label><input type="radio" name="jobReportReason" value="other"> Other</label>
+                </div>
+                <textarea class="job-menu-textarea" id="jobReportDetails" placeholder="Add more details (optional)"></textarea>
+            </div>
+            <div class="job-menu-modal-footer">
+                <button class="btn btn-secondary" data-close-modal="jobReportModal">Cancel</button>
+                <button class="btn btn-primary" id="jobReportSubmit">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal job-menu-modal" id="jobArchiveModal" aria-hidden="true">
+        <div class="job-menu-modal-content">
+            <div class="job-menu-modal-header">
+                <div class="job-menu-modal-title" id="jobArchiveTitle">Archive Conversation</div>
+                <button class="job-menu-modal-close" data-close-modal="jobArchiveModal" aria-label="Close archive confirmation">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="job-menu-modal-body" id="jobArchiveMessage">Archiving hides this conversation from your inbox. You can restore it later.</div>
+            <div class="job-menu-modal-footer">
+                <button class="btn btn-secondary" data-close-modal="jobArchiveModal">Cancel</button>
+                <button class="btn btn-primary" id="jobArchiveConfirm">Archive</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal job-menu-modal" id="jobReviewModal" aria-hidden="true">
+        <div class="job-menu-modal-content">
+            <div class="job-menu-modal-header">
+                <div class="job-menu-modal-title">Leave a Review</div>
+                <button class="job-menu-modal-close" data-close-modal="jobReviewModal" aria-label="Close review modal">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="job-menu-modal-body">Ready to share feedback on this completed job?</div>
+            <div class="job-menu-modal-footer">
+                <button class="btn btn-secondary" data-close-modal="jobReviewModal">Not now</button>
+                <button class="btn btn-primary" id="jobReviewGo">Go to Reviews</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT JOB MODAL -->
+    <div class="edit-job-modal" id="editJobModal">
+        <div class="edit-job-container">
+            <div class="edit-job-header">
+                <h2 class="edit-job-title">Edit Job Details</h2>
+                <button class="edit-job-close" onclick="closeEditJobModal()" aria-label="Close">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="edit-job-body">
+                <div class="edit-job-warning" id="editJobWarning" style="display: none;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="edit-job-warning-content">
+                        <div class="edit-job-warning-title">Job has quotes</div>
+                        <div class="edit-job-warning-text">
+                            This job already has quotes. Changes may affect responses from tradespeople. Please review carefully before saving.
+                        </div>
+                    </div>
+                </div>
+
+                <form id="editJobForm">
+                    <div class="edit-job-form-group">
+                        <label class="edit-job-form-label" for="editJobDescription">Job Description</label>
+                        <textarea
+                            class="edit-job-form-textarea"
+                            id="editJobDescription"
+                            name="description"
+                            placeholder="Describe what work you need done..."
+                            required
+                        ></textarea>
+                        <p class="edit-job-form-help">Be specific about what you need - tradespeople will use this to provide accurate quotes.</p>
+                    </div>
+
+                    <div class="edit-job-form-group">
+                        <label class="edit-job-form-label">Budget Range (£)</label>
+                        <div class="edit-job-budget-inputs">
+                            <input
+                                type="number"
+                                class="edit-job-form-input"
+                                id="editJobBudgetMin"
+                                name="budgetMin"
+                                placeholder="Min"
+                                min="0"
+                                step="100"
+                                required
+                            >
+                            <span class="edit-job-budget-separator">to</span>
+                            <input
+                                type="number"
+                                class="edit-job-form-input"
+                                id="editJobBudgetMax"
+                                name="budgetMax"
+                                placeholder="Max"
+                                min="0"
+                                step="100"
+                                required
+                            >
+                        </div>
+                        <p class="edit-job-form-help">Provide a realistic budget range to get accurate quotes.</p>
+                    </div>
+
+                    <div class="edit-job-form-group">
+                        <label class="edit-job-form-label">Urgency</label>
+                        <div class="edit-job-radio-group">
+                            <div class="edit-job-radio-option">
+                                <input type="radio" id="editJobUrgencyFlexible" name="urgency" value="flexible">
+                                <label class="edit-job-radio-label" for="editJobUrgencyFlexible">Flexible</label>
+                            </div>
+                            <div class="edit-job-radio-option">
+                                <input type="radio" id="editJobUrgencyMonth" name="urgency" value="month">
+                                <label class="edit-job-radio-label" for="editJobUrgencyMonth">Within 1 month</label>
+                            </div>
+                            <div class="edit-job-radio-option">
+                                <input type="radio" id="editJobUrgencyUrgent" name="urgency" value="urgent">
+                                <label class="edit-job-radio-label" for="editJobUrgencyUrgent">Urgent</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-job-form-group">
+                        <label class="edit-job-form-label">Additional Photos (Optional)</label>
+                        <div class="edit-job-file-upload" onclick="document.getElementById('editJobPhotoUpload').click()">
+                            <input type="file" id="editJobPhotoUpload" name="photos" accept="image/*" multiple>
+                            <svg class="edit-job-file-upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <div class="edit-job-file-upload-text">Click to upload photos</div>
+                            <div class="edit-job-file-upload-hint">JPG, PNG or GIF (Max 5MB each)</div>
+                        </div>
+                    </div>
+
+                    <div class="edit-job-form-row">
+                        <div class="edit-job-form-group">
+                            <label class="edit-job-form-label edit-job-locked">Trade Category (Locked)</label>
+                            <input
+                                type="text"
+                                class="edit-job-form-input"
+                                id="editJobTradeCategory"
+                                name="tradeCategory"
+                                disabled
+                            >
+                            <p class="edit-job-form-help">Cannot be changed once job is created</p>
+                        </div>
+                        <div class="edit-job-form-group">
+                            <label class="edit-job-form-label edit-job-locked">Postcode (Locked)</label>
+                            <input
+                                type="text"
+                                class="edit-job-form-input"
+                                id="editJobPostcode"
+                                name="postcode"
+                                disabled
+                            >
+                            <p class="edit-job-form-help">Cannot be changed after quotes are received</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="edit-job-footer">
+                <button class="btn btn-secondary" onclick="closeEditJobModal()">Cancel</button>
+                <button class="btn btn-primary" data-edit-job-save>Save Changes</button>
+            </div>
+        </div>
+    </div>
+    <!-- /EDIT JOB MODAL -->
+
+    <script src="../dashboardApp.js"></script>
+    <script>
+        // Filter tabs functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const jobCards = document.querySelectorAll('.job-list-card');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                filterTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                tab.classList.add('active');
+
+                const filter = tab.dataset.filter;
+
+                // Show/hide job cards based on filter
+                jobCards.forEach(card => {
+                    if (filter === 'all' || card.dataset.status === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function openEditJobModal(jobElement) {
+            if (!jobElement) return;
+            const modal = document.getElementById('editJobModal');
+            if (!modal) return;
+
+            modal._editJobElement = jobElement;
+            populateEditJobModal(jobElement);
+
+            const form = document.getElementById('editJobForm');
+            const saveBtn = modal.querySelector('[data-edit-job-save]');
+
+            if (saveBtn) {
+                saveBtn.onclick = () => {
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+
+                    const minValue = parseInt(document.getElementById('editJobBudgetMin').value, 10);
+                    const maxValue = parseInt(document.getElementById('editJobBudgetMax').value, 10);
+                    if (!Number.isFinite(minValue) || !Number.isFinite(maxValue) || minValue > maxValue) {
+                        const maxInput = document.getElementById('editJobBudgetMax');
+                        maxInput.setCustomValidity('Max budget must be greater than min budget.');
+                        form.reportValidity();
+                        maxInput.setCustomValidity('');
+                        return;
+                    }
+
+                    const description = document.getElementById('editJobDescription').value.trim();
+                    const urgency = form.querySelector('input[name="urgency"]:checked')?.value || 'flexible';
+
+                    jobElement.dataset.budgetMin = `${minValue}`;
+                    jobElement.dataset.budgetMax = `${maxValue}`;
+                    jobElement.dataset.urgency = urgency;
+
+                    const descriptionTarget = jobElement.querySelector('.job-list-description');
+                    if (descriptionTarget) descriptionTarget.textContent = description;
+
+                    closeEditJobModal();
+                };
+            }
+
+            if (!modal._editJobEscHandler) {
+                modal._editJobEscHandler = (event) => {
+                    if (event.key === 'Escape') closeEditJobModal();
+                };
+            }
+            document.addEventListener('keydown', modal._editJobEscHandler);
+
+            modal.onclick = (event) => {
+                if (event.target === modal) closeEditJobModal();
+            };
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditJobModal() {
+            const modal = document.getElementById('editJobModal');
+            if (!modal) return;
+
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            const form = document.getElementById('editJobForm');
+            if (form) form.reset();
+
+            if (modal._editJobEscHandler) {
+                document.removeEventListener('keydown', modal._editJobEscHandler);
+            }
+
+            modal._editJobElement = null;
+            modal.onclick = null;
+        }
+
+        function populateEditJobModal(jobElement) {
+            const description = jobElement.querySelector('.job-list-description')?.textContent.trim() || '';
+            const budgetMin = jobElement.dataset.budgetMin || '';
+            const budgetMax = jobElement.dataset.budgetMax || '';
+            const urgencyValue = jobElement.dataset.urgency || 'flexible';
+            const trade = jobElement.dataset.trade || '';
+            const postcode = jobElement.dataset.postcode || '';
+
+            document.getElementById('editJobDescription').value = description;
+            document.getElementById('editJobBudgetMin').value = budgetMin;
+            document.getElementById('editJobBudgetMax').value = budgetMax;
+            document.getElementById('editJobTradeCategory').value = trade;
+            document.getElementById('editJobPostcode').value = postcode;
+
+            const urgencyInput = document.getElementById(`editJobUrgency${urgencyValue.charAt(0).toUpperCase() + urgencyValue.slice(1)}`);
+            if (urgencyInput) urgencyInput.checked = true;
+
+            const warning = document.getElementById('editJobWarning');
+            if (warning) {
+                warning.style.display = jobElement.dataset.hasQuotes === 'true' ? 'flex' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+

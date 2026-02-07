@@ -1,0 +1,2928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Free Quotes - Compare Local Tradespeople | TradeMatch UK</title>
+    <meta name="description" content="Get free quotes from verified local tradespeople. Compare prices for bathroom installations, kitchen fitting, extensions, and more. No obligation. 2 minute form.">
+    <meta name="keywords" content="free quotes, tradesperson quotes UK, compare tradespeople prices, local builders quotes, home improvement quotes">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Initialize analytics
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            'anonymize_ip': true,
+            'cookie_domain': 'tradematch-fixed.vercel.app'
+        });
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-400: #34d399;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --purple-500: #8b5cf6;
+            --purple-600: #7c3aed;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--slate-50);
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.875rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald-500);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            min-height: 300px;
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            padding: 4rem 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--emerald-500) 0%, transparent 70%);
+            opacity: 0.15;
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
+            margin: -50px auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--slate-200);
+            z-index: -1;
+        }
+
+        .progress-step.active:not(:last-child)::after {
+            background: var(--emerald-500);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            color: var(--slate-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-number,
+        .progress-step.completed .step-number {
+            background: var(--emerald-500);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--emerald-600);
+        }
+
+        .progress-bar-fill {
+            width: 100%;
+            height: 8px;
+            background: var(--slate-200);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-500) 0%, var(--emerald-400) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 0 0 24px 24px;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-description {
+            color: var(--slate-600);
+            margin-bottom: 0;
+            font-size: 1.0625rem;
+        }
+
+        /* Service Search Section */
+        .service-search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .service-search-container {
+            position: relative;
+            flex: 0 0 auto;
+            min-width: 300px;
+        }
+
+        .service-search-input {
+            width: 100%;
+            padding: 0.875rem 3rem 0.875rem 2.75rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .service-search-input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .service-search-input::placeholder {
+            color: var(--slate-400);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-400);
+            font-size: 1.125rem;
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--slate-200);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--slate-600);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .search-clear.active {
+            display: flex;
+        }
+
+        .search-clear:hover {
+            background: var(--slate-300);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .no-results-message {
+            display: none;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--slate-600);
+        }
+
+        .no-results-message.active {
+            display: block;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-results-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results-hint {
+            font-size: 0.9375rem;
+            color: var(--slate-500);
+        }
+
+        .service-option.hidden {
+            display: none;
+        }
+
+        /* Service Selection Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-option {
+            aspect-ratio: 1;
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            padding: 1rem;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .service-option:hover {
+            border-color: var(--emerald-500);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .service-option.selected {
+            border-color: var(--emerald-500);
+            background: rgba(16, 185, 129, 0.05);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+        }
+
+        .service-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            text-align: center;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--slate-700);
+            margin-bottom: 0.625rem;
+            font-size: 0.9375rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            color: var(--slate-900);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%23475569'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 3rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* AI Generator Section */
+        .ai-generator-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%);
+            border: 2px dashed var(--purple-500);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, var(--purple-500) 0%, var(--purple-600) 100%);
+            color: white;
+            padding: 0.375rem 0.875rem;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .ai-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .ai-description {
+            color: var(--slate-600);
+            font-size: 0.9375rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .quick-prompts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .quick-prompt {
+            background: white;
+            border: 1.5px solid var(--purple-500);
+            color: var(--purple-600);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-prompt:hover {
+            background: var(--purple-500);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 0.875rem 1.125rem;
+            border: 2px solid var(--purple-500);
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .ai-input:focus {
+            outline: none;
+            border-color: var(--purple-600);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        .btn-ai-generate {
+            background: linear-gradient(135deg, var(--purple-500) 0%, var(--purple-600) 100%);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-ai-generate:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-ai-generate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .ai-output {
+            background: white;
+            border: 2px solid var(--purple-500);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .ai-output.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .ai-output-label {
+            font-weight: 600;
+            color: var(--purple-600);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-output-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: var(--slate-100);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.125rem;
+        }
+
+        .btn-icon:hover {
+            background: var(--slate-200);
+            transform: scale(1.05);
+        }
+
+        .ai-output-text {
+            color: var(--slate-700);
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .ai-loading {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--purple-600);
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .ai-loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--purple-200);
+            border-top-color: var(--purple-600);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Budget Range Slider */
+        .budget-display {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--emerald-600);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: var(--slate-200);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Timeline Options */
+        .timeline-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .timeline-option {
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .timeline-option:hover {
+            border-color: var(--emerald-500);
+            transform: translateY(-2px);
+        }
+
+        .timeline-option.selected {
+            border-color: var(--emerald-500);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .timeline-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-label {
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        /* Review Section */
+        .review-section {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-weight: 600;
+            color: var(--slate-600);
+        }
+
+        .review-value {
+            color: var(--slate-900);
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--emerald-500);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--slate-700);
+            border: 2px solid var(--slate-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--slate-400);
+        }
+
+        /* Success Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .quote-id {
+            background: var(--slate-50);
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--emerald-600);
+            margin-bottom: 2rem;
+        }
+
+        /* Auth Save Modal */
+        .auth-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: authFadeIn 0.2s ease;
+            z-index: 10001;
+        }
+
+        .auth-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes authFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-modal {
+            background: #ffffff;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            animation: authSlideUp 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes authSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--slate-500);
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .auth-modal-close:hover {
+            background: #f3f4f6;
+            color: var(--slate-900);
+        }
+
+        .auth-modal-header {
+            padding: 40px 32px 24px;
+            text-align: center;
+        }
+
+        .auth-modal-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .auth-modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .auth-modal-subtitle {
+            font-size: 15px;
+            color: var(--slate-600);
+            line-height: 1.6;
+            max-width: 360px;
+            margin: 0 auto;
+        }
+
+        .auth-modal-body {
+            padding: 0 32px 32px;
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .auth-button-primary {
+            background: var(--emerald-500);
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .auth-button-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .auth-button-secondary {
+            background: #f9fafb;
+            color: var(--slate-900);
+            border: 1.5px solid var(--slate-200);
+            margin-bottom: 12px;
+        }
+
+        .auth-button-secondary:hover {
+            background: #ffffff;
+            border-color: #d1d5db;
+        }
+
+        .auth-button-ghost {
+            background: transparent;
+            color: var(--slate-600);
+            padding: 12px 24px;
+        }
+
+        .auth-button-ghost:hover {
+            background: #f9fafb;
+            color: var(--slate-900);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            color: var(--slate-500);
+            font-size: 13px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--slate-200);
+        }
+
+        .auth-feature-list {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .auth-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--slate-600);
+        }
+
+        .auth-feature-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--emerald-600);
+            flex-shrink: 0;
+        }
+
+        .auth-progress-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .auth-progress-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            transition: all 0.3s;
+        }
+
+        .auth-progress-dot.active {
+            background: var(--emerald-500);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 640px) {
+            .auth-modal {
+                border-radius: 20px 20px 0 0;
+                position: fixed;
+                bottom: 0;
+                max-width: 100%;
+            }
+
+            .auth-modal-header {
+                padding: 32px 24px 20px;
+            }
+
+            .auth-modal-body {
+                padding: 0 24px 32px;
+            }
+
+            .auth-modal-title {
+                font-size: 22px;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                min-height: 300px;
+                padding: 6rem 1rem 4rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.75rem;
+                line-height: 1.3;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                margin: -30px auto 2rem;
+                padding: 0 1rem;
+            }
+
+            .progress-container {
+                padding: 1.5rem 1rem;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .progress-steps {
+                margin-bottom: 1rem;
+            }
+
+            .step-number {
+                width: 32px;
+                height: 32px;
+                font-size: 0.875rem;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+                display: none;
+            }
+
+            .progress-step.active .step-label {
+                display: block;
+            }
+
+            .progress-bar-fill {
+                height: 6px;
+            }
+
+            .form-card {
+                padding: 1.5rem 1rem;
+                border-radius: 0 0 16px 16px;
+            }
+
+            .step-title {
+                font-size: 1.5rem;
+            }
+
+            .step-description {
+                font-size: 0.9375rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .service-search-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .service-search-container {
+                min-width: 100%;
+                order: 2;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .service-option {
+                padding: 0.75rem;
+            }
+
+            .service-icon {
+                font-size: 2rem;
+            }
+
+            .service-name {
+                font-size: 0.8125rem;
+            }
+
+            .form-row,
+            .timeline-options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-control {
+                padding: 0.875rem 1rem;
+                font-size: 0.9375rem;
+            }
+
+            textarea.form-control {
+                min-height: 100px;
+            }
+
+            .ai-generator-section {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .ai-title {
+                font-size: 1rem;
+            }
+
+            .ai-subtitle {
+                font-size: 0.8125rem;
+            }
+
+            .quick-prompts {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .quick-prompt {
+                padding: 0.625rem 1rem;
+                font-size: 0.8125rem;
+            }
+
+            .ai-input-group {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn-ai-generate {
+                width: 100%;
+                justify-content: center;
+                padding: 0.875rem;
+                font-size: 0.9375rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                padding: 0.875rem 1.5rem;
+                font-size: 0.9375rem;
+            }
+
+            .review-section {
+                padding: 1.25rem;
+            }
+
+            .review-item {
+                padding: 1rem;
+            }
+
+            .review-label {
+                font-size: 0.8125rem;
+            }
+
+            .review-value {
+                font-size: 0.9375rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .quote-id {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .main-content {
+                padding: 0 0.75rem;
+            }
+
+            .form-card {
+                padding: 1.25rem 0.875rem;
+            }
+
+            .step-title {
+                font-size: 1.25rem;
+            }
+
+            .service-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .service-option {
+                padding: 0.5rem;
+            }
+
+            .service-icon {
+                font-size: 1.75rem;
+            }
+
+            .service-name {
+                font-size: 0.75rem;
+            }
+
+            .progress-container {
+                padding: 1rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Trade<span>Match</span></a>
+            <ul class="nav-links">
+                <li><a href="how-it-works.html">How It Works</a></li>
+                <li><a href="find-tradespeople.html">Find Trades</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="auth-login.html">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Get Free Quotes from Local Tradespeople</h1>
+            <p>Tell us about your project and receive competitive quotes from verified professionals within 24 hours</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Service</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Timeline</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+            <div class="progress-bar-fill">
+                <div class="progress-bar-inner" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form id="quoteForm">
+                <!-- Step 1: Service Selection -->
+                <div class="form-step active" data-step="1">
+                    <h2 class="step-title">What service do you need?</h2>
+                    
+                    <!-- Search Header -->
+                    <div class="service-search-header">
+                        <p class="step-description">Select the type of work you need done</p>
+                        <div class="service-search-container">
+                            <span class="search-icon">🔍</span>
+                            <input 
+                                type="text" 
+                                id="serviceSearch" 
+                                class="service-search-input" 
+                                placeholder="Search services..."
+                                autocomplete="off">
+                            <button type="button" class="search-clear" id="searchClear">✕</button>
+                        </div>
+                    </div>
+                    
+                    <div class="service-grid" id="serviceGrid">
+                        <div class="service-option" data-service="architecture">
+                            <div class="service-icon">📐</div>
+                            <div class="service-name">Architecture</div>
+                        </div>
+                        <div class="service-option" data-service="bathroom-fitting">
+                            <div class="service-icon">🛁</div>
+                            <div class="service-name">Bathroom Fitting</div>
+                        </div>
+                        <div class="service-option" data-service="bricklaying">
+                            <div class="service-icon">🧱</div>
+                            <div class="service-name">Bricklaying</div>
+                        </div>
+                        <div class="service-option" data-service="cad-drawings">
+                            <div class="service-icon">📋</div>
+                            <div class="service-name">CAD / Drawings</div>
+                        </div>
+                        <div class="service-option" data-service="carpentry">
+                            <div class="service-icon">🔨</div>
+                            <div class="service-name">Carpentry</div>
+                        </div>
+                        <div class="service-option" data-service="carpets-lino">
+                            <div class="service-icon">🏠</div>
+                            <div class="service-name">Carpets & Lino</div>
+                        </div>
+                        <div class="service-option" data-service="central-heating">
+                            <div class="service-icon">♨️</div>
+                            <div class="service-name">Central Heating</div>
+                        </div>
+                        <div class="service-option" data-service="cleaning-services">
+                            <div class="service-icon">🧹</div>
+                            <div class="service-name">Cleaning Services</div>
+                        </div>
+                        <div class="service-option" data-service="conservatories">
+                            <div class="service-icon">🏡</div>
+                            <div class="service-name">Conservatories</div>
+                        </div>
+                        <div class="service-option" data-service="conversions">
+                            <div class="service-icon">🔄</div>
+                            <div class="service-name">Conversions - General</div>
+                        </div>
+                        <div class="service-option" data-service="damp-proofing">
+                            <div class="service-icon">💧</div>
+                            <div class="service-name">Damp Proofing</div>
+                        </div>
+                        <div class="service-option" data-service="decking">
+                            <div class="service-icon">🪵</div>
+                            <div class="service-name">Decking</div>
+                        </div>
+                        <div class="service-option" data-service="demolition">
+                            <div class="service-icon">💥</div>
+                            <div class="service-name">Demolition</div>
+                        </div>
+                        <div class="service-option" data-service="driveways-paved">
+                            <div class="service-icon">🚗</div>
+                            <div class="service-name">Driveways (Paved & Loose)</div>
+                        </div>
+                        <div class="service-option" data-service="driveways-tarmac">
+                            <div class="service-icon">🛣️</div>
+                            <div class="service-name">Driveways (Tarmac)</div>
+                        </div>
+                        <div class="service-option" data-service="electrical">
+                            <div class="service-icon">⚡</div>
+                            <div class="service-name">Electrical</div>
+                        </div>
+                        <div class="service-option" data-service="extensions">
+                            <div class="service-icon">🏗️</div>
+                            <div class="service-name">Extensions</div>
+                        </div>
+                        <div class="service-option" data-service="fascias-soffits">
+                            <div class="service-icon">🏠</div>
+                            <div class="service-name">Fascias & Soffits</div>
+                        </div>
+                        <div class="service-option" data-service="fencing">
+                            <div class="service-icon">🚧</div>
+                            <div class="service-name">Fencing</div>
+                        </div>
+                        <div class="service-option" data-service="fireplaces-flues">
+                            <div class="service-icon">🔥</div>
+                            <div class="service-name">Fireplaces & Flues</div>
+                        </div>
+                        <div class="service-option" data-service="garden-maintenance">
+                            <div class="service-icon">🌻</div>
+                            <div class="service-name">Garden Maintenance</div>
+                        </div>
+                        <div class="service-option" data-service="gas-work">
+                            <div class="service-icon">🔥</div>
+                            <div class="service-name">Gas Work</div>
+                        </div>
+                        <div class="service-option" data-service="groundwork-foundations">
+                            <div class="service-icon">⛏️</div>
+                            <div class="service-name">Groundwork & Foundations</div>
+                        </div>
+                        <div class="service-option" data-service="guttering">
+                            <div class="service-icon">🌧️</div>
+                            <div class="service-name">Guttering</div>
+                        </div>
+                        <div class="service-option" data-service="handyman">
+                            <div class="service-icon">🛠️</div>
+                            <div class="service-name">Handyman</div>
+                        </div>
+                        <div class="service-option" data-service="hard-flooring">
+                            <div class="service-icon">🔲</div>
+                            <div class="service-name">Hard Flooring</div>
+                        </div>
+                        <div class="service-option" data-service="insulation">
+                            <div class="service-icon">🧊</div>
+                            <div class="service-name">Insulation</div>
+                        </div>
+                        <div class="service-option" data-service="joinery-cabinet">
+                            <div class="service-icon">🪑</div>
+                            <div class="service-name">Joinery & Cabinet Making</div>
+                        </div>
+                        <div class="service-option" data-service="kitchen-fitting">
+                            <div class="service-icon">🍳</div>
+                            <div class="service-name">Kitchen Fitting</div>
+                        </div>
+                        <div class="service-option" data-service="landscaping">
+                            <div class="service-icon">🌳</div>
+                            <div class="service-name">Landscaping</div>
+                        </div>
+                        <div class="service-option" data-service="locksmiths">
+                            <div class="service-icon">🔐</div>
+                            <div class="service-name">Locksmiths</div>
+                        </div>
+                        <div class="service-option" data-service="loft-conversion">
+                            <div class="service-icon">🏚️</div>
+                            <div class="service-name">Loft Conversion</div>
+                        </div>
+                        <div class="service-option" data-service="moving-services">
+                            <div class="service-icon">📦</div>
+                            <div class="service-name">Moving Services</div>
+                        </div>
+                        <div class="service-option" data-service="new-builds">
+                            <div class="service-icon">🏘️</div>
+                            <div class="service-name">New Builds</div>
+                        </div>
+                        <div class="service-option" data-service="painting-decorating">
+                            <div class="service-icon">🎨</div>
+                            <div class="service-name">Painting & Decorating</div>
+                        </div>
+                        <div class="service-option" data-service="plastering">
+                            <div class="service-icon">🧱</div>
+                            <div class="service-name">Plastering</div>
+                        </div>
+                        <div class="service-option" data-service="plumbing">
+                            <div class="service-icon">🚰</div>
+                            <div class="service-name">Plumbing</div>
+                        </div>
+                        <div class="service-option" data-service="repointing">
+                            <div class="service-icon">🧱</div>
+                            <div class="service-name">Repointing</div>
+                        </div>
+                        <div class="service-option" data-service="restoration-refurbishment">
+                            <div class="service-icon">♻️</div>
+                            <div class="service-name">Restoration & Refurbishment</div>
+                        </div>
+                        <div class="service-option" data-service="roofing-flat">
+                            <div class="service-icon">🏗️</div>
+                            <div class="service-name">Roofing (Flat)</div>
+                        </div>
+                        <div class="service-option" data-service="roofing-pitched">
+                            <div class="service-icon">🏠</div>
+                            <div class="service-name">Roofing (Pitched)</div>
+                        </div>
+                        <div class="service-option" data-service="security-systems">
+                            <div class="service-icon">📹</div>
+                            <div class="service-name">Security Systems</div>
+                        </div>
+                        <div class="service-option" data-service="stonemasonry">
+                            <div class="service-icon">🗿</div>
+                            <div class="service-name">Stonemasonry</div>
+                        </div>
+                        <div class="service-option" data-service="tiling">
+                            <div class="service-icon">🔳</div>
+                            <div class="service-name">Tiling</div>
+                        </div>
+                        <div class="service-option" data-service="tree-surgery">
+                            <div class="service-icon">🌲</div>
+                            <div class="service-name">Tree Surgery</div>
+                        </div>
+                        <div class="service-option" data-service="waste-clearance">
+                            <div class="service-icon">🗑️</div>
+                            <div class="service-name">Waste Clearance</div>
+                        </div>
+                        <div class="service-option" data-service="windows-doors-upvc">
+                            <div class="service-icon">🪟</div>
+                            <div class="service-name">Windows & Doors (uPVC & Metal)</div>
+                        </div>
+                        <div class="service-option" data-service="windows-doors-wooden">
+                            <div class="service-icon">🚪</div>
+                            <div class="service-name">Windows & Doors (Wooden)</div>
+                        </div>
+                    </div>
+
+                    <!-- No Results Message -->
+                    <div class="no-results-message" id="noResultsMessage">
+                        <div class="no-results-icon">🔍</div>
+                        <div class="no-results-text">No services found</div>
+                        <div class="no-results-hint">Try a different search term or browse all services</div>
+                    </div>
+
+                    <input type="hidden" id="serviceInput" name="service" required>
+                </div>
+
+                <!-- Step 2: Project Details with AI Generator -->
+                <div class="form-step" data-step="2">
+                    <h2 class="step-title">Tell us about your project</h2>
+                    <p class="step-description">Provide details so tradespeople can give accurate quotes</p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="postcode">Your Postcode *</label>
+                            <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required pattern="[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}">
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyType">Property Type</label>
+                            <select id="propertyType" name="propertyType" class="form-control">
+                                <option value="house">House</option>
+                                <option value="flat">Flat/Apartment</option>
+                                <option value="bungalow">Bungalow</option>
+                                <option value="commercial">Commercial</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- AI Description Generator -->
+                    <div class="ai-generator-section">
+                        <div class="ai-header">
+                            <div class="ai-badge">
+                                <span>✨</span>
+                                <span>AI POWERED</span>
+                            </div>
+                            <div class="ai-title">Let AI Write Your Description</div>
+                        </div>
+                        <p class="ai-description">
+                            Save time! Tell us briefly what you need, and our AI will create a detailed project description that helps tradespeople provide accurate quotes.
+                        </p>
+
+                        <!-- Quick Prompts -->
+                        <div class="quick-prompts">
+                            <button type="button" class="quick-prompt" data-prompt="Complete bathroom renovation with new suite">🛁 Full Bathroom Renovation</button>
+                            <button type="button" class="quick-prompt" data-prompt="New kitchen installation with units and appliances">🍳 Kitchen Installation</button>
+                            <button type="button" class="quick-prompt" data-prompt="Single storey rear extension">🏠 House Extension</button>
+                            <button type="button" class="quick-prompt" data-prompt="Loft conversion into bedroom">🏚️ Loft Conversion</button>
+                            <button type="button" class="quick-prompt" data-prompt="Full house rewiring">⚡ Electrical Rewiring</button>
+                        </div>
+
+                        <!-- AI Input -->
+                        <div class="ai-input-group">
+                            <input type="text" 
+                                   id="aiInput" 
+                                   class="ai-input" 
+                                   placeholder="e.g., Replace old bathroom suite and retile walls">
+                            <button type="button" class="btn-ai-generate" id="generateBtn">
+                                <span>✨</span>
+                                <span>Generate Description</span>
+                            </button>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div class="ai-loading" id="aiLoading">
+                            <div class="spinner"></div>
+                            <span>AI is writing your description...</span>
+                        </div>
+
+                        <!-- AI Output -->
+                        <div class="ai-output" id="aiOutput">
+                            <div class="ai-output-header">
+                                <span class="ai-output-label">
+                                    <span>✨</span>
+                                    <span>AI Generated Description</span>
+                                </span>
+                                <div class="ai-output-actions">
+                                    <button type="button" class="btn-icon" id="copyBtn" title="Copy to clipboard">
+                                        📋
+                                    </button>
+                                    <button type="button" class="btn-icon" id="useBtn" title="Use this description">
+                                        ✓
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="ai-output-text" id="aiOutputText"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Project Description *</label>
+                        <textarea id="description" name="description" class="form-control" placeholder="Describe your project in detail. Include any specific requirements, materials, or preferences..." required></textarea>
+                        <small style="color: var(--slate-600); font-size: 0.875rem; margin-top: 0.5rem; display: block;">
+                            💡 Tip: The more detail you provide, the more accurate the quotes will be
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">Your Budget</label>
+                        <div class="budget-display" id="budgetDisplay">£5,000 - £10,000</div>
+                        <input type="range" id="budgetSlider" min="500" max="100000" step="500" value="7500">
+                    </div>
+                </div>
+
+                <!-- Step 3: Timeline -->
+                <div class="form-step" data-step="3">
+                    <h2 class="step-title">When do you need this done?</h2>
+                    <p class="step-description">Select your preferred timeline</p>
+                    
+                    <div class="timeline-options">
+                        <div class="timeline-option" data-urgency="urgent">
+                            <div class="timeline-icon">🔥</div>
+                            <div class="timeline-label">ASAP / Urgent</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="soon">
+                            <div class="timeline-icon">📅</div>
+                            <div class="timeline-label">Within 1 Month</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="flexible">
+                            <div class="timeline-icon">🗓️</div>
+                            <div class="timeline-label">1-3 Months</div>
+                        </div>
+                        <div class="timeline-option" data-urgency="planning">
+                            <div class="timeline-icon">💭</div>
+                            <div class="timeline-label">Just Planning</div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="urgencyInput" name="urgency" required>
+
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label for="contactPreference">Preferred Contact Method</label>
+                        <select id="contactPreference" name="contactPreference" class="form-control">
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                            <option value="both">Both Email and Phone</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review -->
+                <div class="form-step" data-step="4">
+                    <h2 class="step-title">Review your quote request</h2>
+                    <p class="step-description">Check your details before submitting</p>
+                    
+                    <div class="review-section">
+                        <div class="review-item">
+                            <span class="review-label">Service:</span>
+                            <span class="review-value" id="reviewService">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Postcode:</span>
+                            <span class="review-value" id="reviewPostcode">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Property:</span>
+                            <span class="review-value" id="reviewProperty">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Budget:</span>
+                            <span class="review-value" id="reviewBudget">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Timeline:</span>
+                            <span class="review-value" id="reviewUrgency">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span class="review-label">Description:</span>
+                            <span class="review-value" id="reviewDescription">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Optional Add-Ons Section -->
+                    <div class="addons-section" style="margin-top: 2.5rem; padding-top: 2.5rem; border-top: 2px solid var(--slate-200);">
+                        <div class="addons-header" style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--slate-900); margin-bottom: 0.5rem;">Optional Add-Ons</h3>
+                            <p style="color: var(--slate-600); font-size: 1rem;">Enhance your job visibility and matching speed (completely optional)</p>
+                        </div>
+
+                        <!-- Priority Posting Add-On -->
+                        <div class="addon-card" data-addon="priority" data-price="4.99" style="background: white; border: 2px solid var(--slate-200); border-radius: 16px; padding: 1.75rem; margin-bottom: 1.25rem; transition: all 0.3s; cursor: pointer; display: flex; gap: 1.25rem; align-items: flex-start;">
+                            <div class="addon-checkbox-wrapper">
+                                <input type="checkbox" id="priorityAddon" class="addon-checkbox" style="width: 24px; height: 24px; cursor: pointer; accent-color: var(--emerald-500);">
+                            </div>
+                            <div class="addon-content" style="flex: 1;">
+                                <div class="addon-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                                    <div class="addon-title-row" style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                                        <h4 class="addon-name" style="font-size: 1.25rem; font-weight: 700; color: var(--slate-900); margin: 0;">Priority Posting</h4>
+                                        <span class="addon-badge recommended" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Recommended</span>
+                                    </div>
+                                    <div class="addon-price" style="font-size: 1.75rem; font-weight: 800; color: var(--emerald-500); white-space: nowrap;">£4.99</div>
+                                </div>
+                                <p class="addon-description" style="color: var(--slate-600); line-height: 1.6; margin-bottom: 1rem; font-size: 0.9375rem;">Your job appears at the top of vendor search results for this category, increasing visibility and response rate by up to 3x.</p>
+                                <div class="addon-benefits" style="display: grid; gap: 0.5rem;">
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Top placement in vendor search
+                                    </div>
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Highlighted listing badge
+                                    </div>
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Active for 14 days or until job completion
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Faster Matching Boost Add-On -->
+                        <div class="addon-card" data-addon="matching" data-price="2.99" style="background: white; border: 2px solid var(--slate-200); border-radius: 16px; padding: 1.75rem; margin-bottom: 1.25rem; transition: all 0.3s; cursor: pointer; display: flex; gap: 1.25rem; align-items: flex-start;">
+                            <div class="addon-checkbox-wrapper">
+                                <input type="checkbox" id="matchingAddon" class="addon-checkbox" style="width: 24px; height: 24px; cursor: pointer; accent-color: var(--emerald-500);">
+                            </div>
+                            <div class="addon-content" style="flex: 1;">
+                                <div class="addon-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+                                    <div class="addon-title-row">
+                                        <h4 class="addon-name" style="font-size: 1.25rem; font-weight: 700; color: var(--slate-900); margin: 0;">Faster Matching Boost</h4>
+                                    </div>
+                                    <div class="addon-price" style="font-size: 1.75rem; font-weight: 800; color: var(--emerald-500); white-space: nowrap;">£2.99</div>
+                                </div>
+                                <p class="addon-description" style="color: var(--slate-600); line-height: 1.6; margin-bottom: 1rem; font-size: 0.9375rem;">Your job is sent to 50% more suitable vendors in your area, helping you receive additional quality quotes faster.</p>
+                                <div class="addon-benefits" style="display: grid; gap: 0.5rem;">
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Reach 50% more vendors
+                                    </div>
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Faster quote responses
+                                    </div>
+                                    <div class="addon-benefit" style="display: flex; align-items: center; gap: 0.5rem; color: var(--slate-700); font-size: 0.875rem;">
+                                        <svg class="benefit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; color: var(--emerald-500); flex-shrink: 0;">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Priority notification to vendors
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="addons-info" style="background: rgba(66, 165, 245, 0.05); border: 1px solid rgba(66, 165, 245, 0.2); border-radius: 12px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+                            <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; color: #3b82f6; flex-shrink: 0; margin-top: 2px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p class="info-text" style="color: var(--slate-700); font-size: 0.875rem; line-height: 1.6; margin: 0;">These add-ons are completely optional. You can submit your quote request without any extras and still get great service.</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--slate-900); margin-bottom: 1rem;">Your Contact Information</h3>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Your Phone *</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="07700 900000" required>
+                    </div>
+
+                    <p style="color: var(--slate-600); font-size: 0.875rem; margin-top: 1.5rem;">
+
+                    <!-- Trust Badges -->
+                    <div class="trust-badges" style="display: grid; gap: 1rem; margin-top: 2rem; margin-bottom: 1.5rem;">
+                        <div class="trust-badge" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 12px;">
+                            <svg class="trust-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 40px; height: 40px; color: var(--emerald-500); flex-shrink: 0;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            <div class="trust-text">
+                                <div class="trust-title" style="font-weight: 700; font-size: 1rem; color: var(--slate-900); margin-bottom: 0.125rem;">Money Protected</div>
+                                <div class="trust-description" style="font-size: 0.875rem; color: var(--slate-600);">All payments secured</div>
+                            </div>
+                        </div>
+                        <div class="trust-badge" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 12px;">
+                            <svg class="trust-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 40px; height: 40px; color: var(--emerald-500); flex-shrink: 0;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <div class="trust-text">
+                                <div class="trust-title" style="font-weight: 700; font-size: 1rem; color: var(--slate-900); margin-bottom: 0.125rem;">Verified Vendors</div>
+                                <div class="trust-description" style="font-size: 0.875rem; color: var(--slate-600);">Background checked</div>
+                            </div>
+                        </div>
+                    </div>
+                        By submitting this form, you agree to be contacted by up to 4 verified tradespeople to provide quotes for your project. 
+                        Your details will not be shared with any other parties.
+                    </p>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Submit Quote Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h2>Quote Request Submitted!</h2>
+            <p>We've received your quote request and will match you with verified tradespeople in your area.</p>
+            <div class="quote-id">Quote ID: <span id="quoteIdDisplay">LOADING...</span></div>
+            <p style="font-size: 0.9375rem;">You'll receive quotes within 24 hours via email and SMS.</p>
+            <button class="btn btn-primary" onclick="window.location.href='user-dashboard/dashboard.html'">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Auth Prompt Modal -->
+    <div class="auth-modal-overlay" id="authModalOverlay">
+        <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+            <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="auth-modal-header">
+                <div class="auth-modal-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h2 class="auth-modal-title" id="authModalTitle">Save your job request</h2>
+                <p class="auth-modal-subtitle">
+                    Create an account to track bids, message tradespeople, and manage your projects in one place.
+                </p>
+            </div>
+
+            <div class="auth-modal-body">
+                <button class="auth-button auth-button-primary" onclick="goLogin()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    </svg>
+                    Login & Continue
+                </button>
+
+                <button class="auth-button auth-button-secondary" onclick="goRegister()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    Create Account & Continue
+                </button>
+
+                <div class="auth-divider">or</div>
+
+                <button class="auth-button auth-button-ghost" onclick="submitGuest(pendingSubmissionData)">
+                    Post as Guest
+                </button>
+
+                <div class="auth-feature-list">
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Track quotes and messages in real-time</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Compare tradespeople side-by-side</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Secure payment protection included</span>
+                    </div>
+                </div>
+
+                <div class="auth-progress-dots">
+                    <div class="auth-progress-dot"></div>
+                    <div class="auth-progress-dot"></div>
+                    <div class="auth-progress-dot active"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Add-Ons State Management
+        const addonsState = {
+            priority: { selected: false, price: 4.99 },
+            matching: { selected: false, price: 2.99 }
+        };
+
+        // Handle addon checkbox changes
+        document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const addonCard = e.target.closest('.addon-card');
+                const addonType = addonCard.dataset.addon;
+                const isChecked = e.target.checked;
+                
+                addonsState[addonType].selected = isChecked;
+                
+                // Visual feedback
+                if (isChecked) {
+                    addonCard.style.borderColor = 'var(--emerald-500)';
+                    addonCard.style.background = 'rgba(16, 185, 129, 0.03)';
+                    addonCard.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                } else {
+                    addonCard.style.borderColor = 'var(--slate-200)';
+                    addonCard.style.background = 'white';
+                    addonCard.style.boxShadow = 'none';
+                }
+            });
+        });
+
+        // Handle addon card click (toggle checkbox)
+        document.querySelectorAll('.addon-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking the checkbox itself
+                if (e.target.classList.contains('addon-checkbox')) return;
+                
+                const checkbox = card.querySelector('.addon-checkbox');
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Include addons in form submission
+        function getSubmissionDataWithAddons(baseData) {
+            return {
+                ...baseData,
+                addons: {
+                    priorityPosting: addonsState.priority.selected,
+                    fasterMatching: addonsState.matching.selected
+                },
+                totalAddonsPrice: (
+                    (addonsState.priority.selected ? addonsState.priority.price : 0) +
+                    (addonsState.matching.selected ? addonsState.matching.price : 0)
+                ).toFixed(2)
+            };
+        }
+
+        // Form State
+        let currentStep = 1;
+        const totalSteps = 4;
+        const formData = {};
+        let pendingSubmissionData = null;
+        
+        // Auto-fill from homepage parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const preSelectedService = urlParams.get('service');
+        const preSelectedPostcode = urlParams.get('postcode');
+        const preSelectedDistrict = urlParams.get('district');
+        const preSelectedRegion = urlParams.get('region');
+        const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+
+        function restoreProgress() {
+            if (!savedProgress.formData) return;
+            const data = savedProgress.formData;
+
+            // Service
+            if (data.service) {
+                const targetOption = document.querySelector(`[data-service="${data.service}"]`);
+                if (targetOption) targetOption.click();
+            }
+
+            // Postcode and property type
+            if (data.postcode) {
+                document.getElementById('postcode').value = data.postcode;
+                formData.postcode = data.postcode;
+            }
+            if (data.propertyType) {
+                document.getElementById('propertyType').value = data.propertyType;
+                formData.propertyType = data.propertyType;
+            }
+
+            // Description
+            if (data.description) {
+                document.getElementById('description').value = data.description;
+                formData.description = data.description;
+            }
+
+            // Urgency
+            if (data.urgency) {
+                const targetUrgency = document.querySelector(`.timeline-option[data-urgency="${data.urgency}"]`);
+                if (targetUrgency) targetUrgency.click();
+            }
+
+            // Budget
+            if (data.budgetMin) {
+                budgetSlider.value = data.budgetMin;
+                budgetSlider.dispatchEvent(new Event('input'));
+            }
+
+            // Contact prefs
+            if (data.contactPreference) {
+                document.getElementById('contactPreference').value = data.contactPreference;
+                formData.contactPreference = data.contactPreference;
+            }
+            if (data.name) document.getElementById('name').value = data.name;
+            if (data.email) document.getElementById('email').value = data.email;
+            if (data.phone) document.getElementById('phone').value = data.phone;
+
+            if (savedProgress.step) {
+                currentStep = savedProgress.step;
+            }
+        }
+        
+        // Service Selection - Using event delegation for better reliability
+        const serviceGrid = document.querySelector('.service-grid');
+        
+        if (serviceGrid) {
+            serviceGrid.addEventListener('click', function(e) {
+                const serviceOption = e.target.closest('.service-option');
+                
+                if (serviceOption) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Remove selected from all
+                    document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                    // Add selected to clicked
+                    serviceOption.classList.add('selected');
+                    
+                    // Store service data
+                    formData.service = serviceOption.dataset.service;
+                    formData.serviceName = serviceOption.querySelector('.service-name').textContent;
+                    const serviceInput = document.getElementById('serviceInput');
+                    if (serviceInput) {
+                        serviceInput.value = serviceOption.dataset.service;
+                    }
+                }
+            });
+        }
+        
+        // Also attach direct click handlers as fallback
+        const serviceOptions = document.querySelectorAll('.service-option');
+        
+        serviceOptions.forEach((option, index) => {
+            option.style.cursor = 'pointer';
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Store service data
+                formData.service = this.dataset.service;
+                formData.serviceName = this.querySelector('.service-name').textContent;
+                document.getElementById('serviceInput').value = this.dataset.service;
+            });
+        });
+        
+        // Auto-select service from homepage and fill postcode
+        if (preSelectedService) {
+            const targetOption = document.querySelector(`[data-service="${preSelectedService}"]`);
+            if (targetOption) {
+                targetOption.click();
+            }
+        }
+        
+        // ========================================
+        // AI-ASSISTED SERVICE SEARCH
+        // ========================================
+        
+        // Comprehensive keyword mapping for each service
+        const serviceKeywords = {
+            'architecture': ['architecture', 'architect', 'design', 'plans', 'building design', 'structural design', 'architectural drawings'],
+            'bathroom-fitting': ['bathroom', 'bath', 'shower', 'toilet', 'sink', 'wet room', 'ensuite', 'loo', 'washroom', 'vanity', 'basin'],
+            'bricklaying': ['bricklaying', 'brick', 'brickwork', 'wall', 'garden wall', 'brick wall', 'pointing', 'mortar'],
+            'cad-drawings': ['cad', 'drawings', 'technical drawings', 'plans', 'blueprints', 'autocad', 'design drawings'],
+            'carpentry': ['carpentry', 'carpenter', 'wood', 'timber', 'shelving', 'skirting', 'architrave', 'door hanging', 'wood work'],
+            'carpets-lino': ['carpet', 'lino', 'linoleum', 'vinyl', 'flooring', 'floor covering', 'underlay', 'carpet fitting'],
+            'central-heating': ['central heating', 'heating', 'boiler', 'radiator', 'underfloor heating', 'heating system', 'combi boiler', 'warm'],
+            'cleaning-services': ['cleaning', 'clean', 'cleaner', 'deep clean', 'end of tenancy', 'domestic cleaning', 'commercial cleaning'],
+            'conservatories': ['conservatory', 'conservatories', 'sunroom', 'glass room', 'garden room', 'orangery'],
+            'conversions': ['conversion', 'convert', 'change of use', 'garage conversion', 'barn conversion'],
+            'damp-proofing': ['damp', 'damp proofing', 'waterproofing', 'moisture', 'mould', 'mold', 'condensation', 'rising damp', 'penetrating damp'],
+            'decking': ['decking', 'deck', 'wooden deck', 'composite decking', 'garden deck', 'outdoor deck', 'timber deck'],
+            'demolition': ['demolition', 'demolish', 'knock down', 'remove', 'strip out', 'tear down'],
+            'driveways-paved': ['driveway', 'drive', 'paved', 'block paving', 'paving', 'parking area', 'patio', 'slabs'],
+            'driveways-tarmac': ['driveway', 'drive', 'tarmac', 'asphalt', 'resurfacing', 'tarmacking', 'parking'],
+            'electrical': ['electrical', 'electrician', 'electric', 'wiring', 'lights', 'lighting', 'sockets', 'power', 'fuse box', 'consumer unit', 'rewire', 'switches'],
+            'extensions': ['extension', 'extend', 'addition', 'building extension', 'home extension', 'house extension', 'rear extension', 'side extension'],
+            'fascias-soffits': ['fascia', 'fascias', 'soffit', 'soffits', 'bargeboard', 'roofline', 'gutter board'],
+            'fencing': ['fencing', 'fence', 'garden fence', 'panel fence', 'security fence', 'boundary', 'gates'],
+            'fireplaces-flues': ['fireplace', 'fire', 'chimney', 'flue', 'wood burner', 'log burner', 'stove', 'hearth'],
+            'garden-maintenance': ['garden', 'gardening', 'lawn', 'grass', 'hedge', 'trimming', 'pruning', 'weeding', 'garden maintenance'],
+            'gas-work': ['gas', 'gas work', 'boiler', 'gas safe', 'gas fitting', 'gas pipe', 'gas appliance', 'gas cooker', 'gas fire'],
+            'groundwork-foundations': ['groundwork', 'ground work', 'foundations', 'excavation', 'digging', 'footings', 'base', 'earthworks'],
+            'guttering': ['guttering', 'gutter', 'downpipe', 'rainwater', 'roof drainage', 'gutter cleaning', 'fascia'],
+            'handyman': ['handyman', 'odd jobs', 'general maintenance', 'repairs', 'fix', 'maintenance', 'small jobs'],
+            'hard-flooring': ['flooring', 'floor', 'laminate', 'wood flooring', 'engineered wood', 'lvt', 'hard floor', 'parquet'],
+            'insulation': ['insulation', 'insulate', 'loft insulation', 'cavity wall', 'thermal', 'soundproofing', 'energy efficiency'],
+            'joinery-cabinet': ['joinery', 'joiner', 'cabinet', 'bespoke', 'fitted furniture', 'wardrobes', 'cabinets', 'custom woodwork'],
+            'kitchen-fitting': ['kitchen', 'kitchen fitting', 'kitchen installation', 'fitted kitchen', 'worktop', 'units', 'kitchen cabinets'],
+            'landscaping': ['landscaping', 'landscape', 'garden design', 'patio', 'paving', 'garden transformation', 'hard landscaping', 'soft landscaping'],
+            'locksmiths': ['locksmith', 'lock', 'keys', 'locked out', 'security', 'door lock', 'lock change', 'lock repair'],
+            'loft-conversion': ['loft', 'loft conversion', 'attic', 'roof space', 'dormer', 'velux', 'extra bedroom', 'loft room'],
+            'moving-services': ['moving', 'removals', 'moving house', 'furniture removal', 'house move', 'relocation'],
+            'new-builds': ['new build', 'new construction', 'building project', 'build from scratch', 'ground up', 'new house'],
+            'painting-decorating': ['painting', 'decorating', 'paint', 'decorator', 'wallpaper', 'emulsion', 'gloss', 'interior decorating'],
+            'plastering': ['plastering', 'plaster', 'plasterer', 'skim', 'skimming', 'rendering', 'plasterboard', 'dry lining'],
+            'plumbing': ['plumbing', 'plumber', 'pipes', 'leak', 'tap', 'toilet', 'sink', 'drainage', 'water', 'bathroom'],
+            'repointing': ['repointing', 'pointing', 'mortar', 'brick repair', 'joint', 'tuckpointing', 'brick restoration'],
+            'restoration-refurbishment': ['restoration', 'refurbishment', 'renovation', 'restore', 'refurb', 'period property', 'listed building'],
+            'roofing-flat': ['roofing', 'roof', 'flat roof', 'felt', 'fibreglass', 'grp', 'epdm', 'rubber roof'],
+            'roofing-pitched': ['roofing', 'roof', 'pitched roof', 'tiles', 'slate', 'ridge', 'roof repair', 're-roof', 'leak'],
+            'security-systems': ['security', 'alarm', 'cctv', 'cameras', 'burglar alarm', 'security system', 'monitoring'],
+            'stonemasonry': ['stonemasonry', 'stone', 'mason', 'stonework', 'natural stone', 'stone wall', 'stone repair'],
+            'tiling': ['tiling', 'tiles', 'tiler', 'wall tiles', 'floor tiles', 'bathroom tiles', 'kitchen tiles', 'splashback'],
+            'tree-surgery': ['tree', 'tree surgery', 'tree surgeon', 'tree removal', 'tree pruning', 'tree cutting', 'arborist'],
+            'waste-clearance': ['waste', 'clearance', 'rubbish', 'skip', 'junk removal', 'garden waste', 'house clearance'],
+            'windows-doors-upvc': ['windows', 'doors', 'upvc', 'pvc', 'double glazing', 'triple glazing', 'aluminium', 'metal windows'],
+            'windows-doors-wooden': ['windows', 'doors', 'wooden', 'timber', 'sash', 'hardwood', 'softwood', 'wood windows']
+        };
+        
+        // Search functionality
+        const searchInput = document.getElementById('serviceSearch');
+        const searchClear = document.getElementById('searchClear');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const allServiceOptions = document.querySelectorAll('.service-option');
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            // Show/hide clear button
+            if (searchTerm) {
+                searchClear.classList.add('active');
+            } else {
+                searchClear.classList.remove('active');
+            }
+            
+            // If empty search, show all services
+            if (!searchTerm) {
+                allServiceOptions.forEach(option => option.classList.remove('hidden'));
+                noResultsMessage.classList.remove('active');
+                return;
+            }
+            
+            // Filter services
+            let visibleCount = 0;
+            allServiceOptions.forEach(option => {
+                const serviceName = option.querySelector('.service-name').textContent.toLowerCase();
+                const serviceId = option.dataset.service;
+                const keywords = serviceKeywords[serviceId] || [];
+                
+                // Check if search term matches service name or any keyword
+                const matches = serviceName.includes(searchTerm) || 
+                               keywords.some(keyword => keyword.includes(searchTerm));
+                
+                if (matches) {
+                    option.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
+            
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResultsMessage.classList.add('active');
+            } else {
+                noResultsMessage.classList.remove('active');
+            }
+        }
+        
+        // Event listeners for search
+        if (searchInput) {
+            searchInput.addEventListener('input', performSearch);
+            searchInput.addEventListener('keyup', performSearch);
+        }
+        
+        if (searchClear) {
+            searchClear.addEventListener('click', () => {
+                searchInput.value = '';
+                performSearch();
+                searchInput.focus();
+            });
+        }
+        
+        // ========================================
+        // END AI-ASSISTED SERVICE SEARCH
+        // ========================================
+        
+        // Auto-fill postcode from homepage
+        if (preSelectedPostcode) {
+            document.getElementById('postcode').value = decodeURIComponent(preSelectedPostcode);
+            formData.postcode = decodeURIComponent(preSelectedPostcode);
+            formData.district = preSelectedDistrict ? decodeURIComponent(preSelectedDistrict) : '';
+            formData.region = preSelectedRegion ? decodeURIComponent(preSelectedRegion) : '';
+        }
+
+        // Timeline Selection
+        document.querySelectorAll('.timeline-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.timeline-option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                const urgency = option.dataset.urgency;
+                document.getElementById('urgencyInput').value = urgency;
+                formData.urgency = urgency;
+                formData.urgencyLabel = option.querySelector('.timeline-label').textContent;
+            });
+        });
+
+        // Budget Slider
+        const budgetSlider = document.getElementById('budgetSlider');
+        const budgetDisplay = document.getElementById('budgetDisplay');
+        
+        budgetSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            const min = value;
+            const max = Math.min(value * 2, 100000);
+            const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
+            budgetDisplay.textContent = display;
+            formData.budget = display;
+            formData.budgetMin = min;
+            formData.budgetMax = max;
+        });
+
+        // AI Generator Functions
+        const aiInput = document.getElementById('aiInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const aiLoading = document.getElementById('aiLoading');
+        const aiOutput = document.getElementById('aiOutput');
+        const aiOutputText = document.getElementById('aiOutputText');
+        const copyBtn = document.getElementById('copyBtn');
+        const useBtn = document.getElementById('useBtn');
+        const descriptionField = document.getElementById('description');
+
+        // Quick Prompts
+        document.querySelectorAll('.quick-prompt').forEach(btn => {
+            btn.addEventListener('click', () => {
+                aiInput.value = btn.dataset.prompt;
+                generateDescription();
+            });
+        });
+
+        // Generate Description
+        generateBtn.addEventListener('click', generateDescription);
+
+        aiInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                generateDescription();
+            }
+        });
+
+        async function generateDescription() {
+            const prompt = aiInput.value.trim();
+            
+            if (!prompt) {
+                alert('Please enter a brief description of your project');
+                return;
+            }
+
+            // Show loading
+            generateBtn.disabled = true;
+            aiLoading.classList.add('active');
+            aiOutput.classList.remove('active');
+
+            try {
+                // Generate enhanced description using AI
+                const enhancedDescription = await generateAIDescription(prompt);
+                
+                // Display result
+                aiOutputText.textContent = enhancedDescription;
+                aiOutput.classList.add('active');
+                
+            } catch (error) {
+                alert('Failed to generate description. Please try again.');
+                console.error(error);
+            } finally {
+                generateBtn.disabled = false;
+                aiLoading.classList.remove('active');
+            }
+        }
+
+async function generateAIDescription(prompt) {
+            // Get service context
+            const service = formData.serviceName || 'home improvement';
+            const propertyType = document.getElementById('propertyType').value;
+            
+            // For now, return a template-based description
+            // TODO: Integrate with Claude API when ready
+            return generateSmartDescription(prompt, service, propertyType);
+        }
+
+        function generateSmartDescription(prompt, service, propertyType) {
+            // Smart template-based generation
+            const templates = {
+                bathroom: `I'm looking to renovate my ${propertyType} bathroom. ${prompt}
+
+The current bathroom suite is outdated and showing signs of wear. I'd like to replace the entire suite including the bath/shower, toilet, and sink with modern fixtures.
+
+The work should include:
+• Removal and disposal of the old bathroom suite
+• Installation of new sanitaryware and fixtures
+• Retiling of walls and floor with quality ceramic tiles
+• New bathroom furniture/storage if space permits
+• Updated plumbing and waste connections
+• Proper waterproofing and ventilation
+
+I'm looking for a professional finish with attention to detail. The bathroom is approximately [size] and I'd prefer modern, contemporary styling. All work should comply with current building regulations.
+
+Please provide a detailed quote including materials, labour, and estimated timeframe. I'm happy to discuss material choices and can be flexible on exact specifications.`,
+
+                kitchen: `I need a complete kitchen installation for my ${propertyType}. ${prompt}
+
+The current kitchen is outdated and no longer meets our needs. I'm looking for a full replacement including:
+
+• Removal of existing kitchen units and appliances
+• Installation of new kitchen units (base and wall)
+• Worktop fitting (granite/quartz preferred)
+• Integrated appliances (oven, hob, extractor, dishwasher)
+• New sink and tap installation
+• Plumbing and electrical work as needed
+• Tiling of splashback areas
+
+The kitchen space is approximately [size]. I'm looking for a modern design with good storage solutions and quality materials that will last. Soft-close mechanisms and LED under-cabinet lighting would be ideal.
+
+Please include all materials, labour, and removal/disposal costs in your quote. Timeline and payment terms are flexible for the right contractor.`,
+
+                extension: `I'm planning a house extension for my ${propertyType}. ${prompt}
+
+I'm looking to extend the property to create additional living space. The project requires:
+
+• Single/double storey extension [specify based on prompt]
+• Structural design and planning permission support
+• Foundation work and construction
+• Roof structure and covering
+• Windows and doors installation
+• Internal walls and plastering
+• Electrical and plumbing first fix
+• Heating system extension
+• Flooring preparation
+
+The extension should match the existing property style and use quality materials throughout. All work must comply with building regulations and I'll need Building Control sign-off.
+
+I'm looking for an experienced contractor who can manage the full project from design through to completion. Please provide a detailed breakdown of costs, timeline, and what's included in your quote.`,
+
+                loft: `I want to convert my loft space into a usable room in my ${propertyType}. ${prompt}
+
+The loft currently has [height] headroom and [access type]. I'm looking for a full loft conversion including:
+
+• Structural survey and building regulations compliance
+• Floor strengthening and insulation
+• Staircase installation
+• Dormer windows or velux windows
+• Plastering and finishing
+• Electrical wiring and lighting
+• Heating extension
+• Storage solutions
+
+I'd like the converted space to be a [bedroom/office/playroom] with proper insulation, ventilation, and natural light. The finish should match the rest of the house.
+
+Please advise on planning permission requirements and include all structural work, materials, and finishing in your quote. Building Control approval and warranty/guarantee are essential.`,
+
+                electrical: `I need electrical work completed for my ${propertyType}. ${prompt}
+
+Current situation: The electrical system [describe issue from prompt]. This needs addressing urgently/soon.
+
+Work required:
+• Full electrical inspection and testing
+• [Specific work based on prompt - rewiring, new circuits, consumer unit upgrade, etc.]
+• Compliance with current 18th Edition regulations
+• Minor remedial works as identified
+• Testing and certification
+
+All work must be carried out by a qualified electrician and come with the appropriate certification (EICR, Minor Works Certificate, etc.). The property [is/isn't] occupied during the work so [access arrangements needed].
+
+Please provide a detailed quote breaking down labour, materials, and any additional costs. Include estimated timeframe and whether any follow-up inspections will be needed. All work must comply with Part P Building Regulations.`,
+
+                plumbing: `I require plumbing work for my ${propertyType}. ${prompt}
+
+Issue/requirement: ${prompt}
+
+Specific work needed:
+• Diagnosis of current problem (if applicable)
+• [Installation/Repair/Replacement] of plumbing system/fixtures
+• Pressure testing and leak detection
+• Compliance with water regulations
+• Clean-up and making good
+
+I'm looking for a Gas Safe registered plumber (if gas work involved) with public liability insurance. The work needs to be completed to a professional standard with appropriate guarantees.
+
+Please provide a detailed quote including:
+- Call-out/inspection fee (if applicable)
+- Parts and materials
+- Labour costs
+- Estimated timeframe
+- Payment terms
+
+Emergency/urgent work may be required depending on the severity of the issue.`
+            };
+
+            // Get base template or create generic one
+            let description = templates[service.toLowerCase()] || `I need ${service} work completed for my ${propertyType}. ${prompt}
+
+Please provide a detailed quote including all materials, labour, and any additional costs. Include an estimated timeframe for completion.
+
+I'm looking for a professional, qualified tradesperson with appropriate insurance and certifications. References or examples of previous work would be appreciated.
+
+The work needs to comply with all relevant building regulations and industry standards. Please advise if any permits or approvals will be needed.
+
+I'm happy to discuss the project in more detail and answer any questions to help you provide an accurate quote.`;
+
+            // Personalize with the prompt
+            description = description.replace(/\[describe issue from prompt\]/g, prompt);
+            description = description.replace(/\[size\]/g, 'standard size');
+            description = description.replace(/\[specify based on prompt\]/g, prompt.toLowerCase().includes('double') ? 'double storey' : 'single storey');
+            description = description.replace(/\[height\]/g, 'good');
+            description = description.replace(/\[access type\]/g, 'loft hatch access');
+            description = description.replace(/\[bedroom\/office\/playroom\]/g, 'additional bedroom');
+            
+            return description;
+        }
+
+        // Copy to Clipboard
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(aiOutputText.textContent);
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '✓';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            } catch (error) {
+                alert('Failed to copy to clipboard');
+            }
+        });
+
+        // Use Description
+        useBtn.addEventListener('click', () => {
+            descriptionField.value = aiOutputText.textContent;
+            // Smooth scroll to description field
+            descriptionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Highlight the field briefly
+            descriptionField.style.borderColor = 'var(--purple-500)';
+            setTimeout(() => {
+                descriptionField.style.borderColor = '';
+            }, 2000);
+        });
+
+        // Navigation
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        nextBtn.addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStep();
+                }
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        });
+
+        function updateStep() {
+            // Update form steps
+            document.querySelectorAll('.form-step').forEach((step, index) => {
+                step.classList.toggle('active', index + 1 === currentStep);
+            });
+            
+            // Update progress
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+            
+            // Save progress shell to localStorage
+            const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            localStorage.setItem('quoteProgress', JSON.stringify({
+                step: currentStep,
+                timestamp: Date.now(),
+                formData: savedProgress.formData || {},
+                quoteId: savedProgress.quoteId || ''
+            }));
+
+            // Update progress bar
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Update buttons
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            nextBtn.style.display = currentStep === totalSteps ? 'none' : 'block';
+            submitBtn.style.display = currentStep === totalSteps ? 'block' : 'none';
+
+            // Update review if on last step
+            if (currentStep === totalSteps) {
+                updateReview();
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateStep(step) {
+            switch(step) {
+                case 1:
+                    if (!formData.service) {
+                        alert('Please select a service');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    const postcode = document.getElementById('postcode').value.trim().toUpperCase();
+                    const description = document.getElementById('description').value.trim();
+                    
+                    if (!postcode || !description) {
+                        alert('Please fill in all required fields');
+                        return false;
+                    }
+                    
+                    // UK postcode validation
+                    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
+                    if (!postcodeRegex.test(postcode)) {
+                        alert('Please enter a valid UK postcode');
+                        return false;
+                    }
+                    
+                    formData.postcode = postcode;
+                    formData.propertyType = document.getElementById('propertyType').value;
+                    formData.description = description;
+                    break;
+                case 3:
+                    if (!formData.urgency) {
+                        alert('Please select a timeline');
+                        return false;
+                    }
+                    formData.contactPreference = document.getElementById('contactPreference').value;
+                    break;
+            }
+            return true;
+        }
+
+        function updateReview() {
+            document.getElementById('reviewService').textContent = formData.serviceName || '-';
+            document.getElementById('reviewPostcode').textContent = formData.postcode || '-';
+            document.getElementById('reviewProperty').textContent = formData.propertyType || '-';
+            const budgetText = formData.budget || (formData.budgetMin ? `£${formData.budgetMin.toLocaleString()} - £${formData.budgetMax?.toLocaleString() || ''}` : '-');
+            document.getElementById('reviewBudget').textContent = budgetText;
+            document.getElementById('reviewUrgency').textContent = formData.urgencyLabel || '-';
+            document.getElementById('reviewDescription').textContent = formData.description || '-';
+        }
+
+        function persistProgress(snapshot) {
+            localStorage.setItem('quoteProgress', JSON.stringify({
+                step: currentStep,
+                timestamp: Date.now(),
+                formData: snapshot
+            }));
+        }
+
+        function openAuthModal() {
+            document.getElementById('authModalOverlay').classList.add('active');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModalOverlay').classList.remove('active');
+        }
+
+        const authModalOverlay = document.getElementById('authModalOverlay');
+        if (authModalOverlay) {
+            authModalOverlay.addEventListener('click', (event) => {
+                if (event.target === authModalOverlay) {
+                    closeAuthModal();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeAuthModal();
+            }
+        });
+
+        function goLogin() {
+            persistProgress(pendingSubmissionData || {});
+            localStorage.setItem('quoteAutoSubmit', '1');
+            window.location.href = 'auth-login.html?redirect=quote-engine.html';
+        }
+
+        function goRegister() {
+            persistProgress(pendingSubmissionData || {});
+            localStorage.setItem('quoteAutoSubmit', '1');
+            window.location.href = 'auth-register.html?redirect=quote-engine.html';
+        }
+
+        async function submitAuthenticated(finalData) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Missing token');
+                }
+
+                const response = await fetch('https://api.tradematch.uk/api/quotes', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(finalData)
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit quote');
+                }
+                
+                const quoteId = data.quote.id;
+                document.getElementById('quoteIdDisplay').textContent = quoteId;
+                document.getElementById('successModal').classList.add('active');
+                localStorage.removeItem('quoteProgress');
+            } catch (error) {
+                console.error('Quote submission error:', error);
+                alert(error.message || 'Failed to submit quote request. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quote Request';
+            }
+        }
+
+        async function submitGuest(finalData) {
+            if (!finalData) {
+                alert('Please complete the form before posting as a guest.');
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch('https://api.tradematch.uk/api/quotes/public', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceType: finalData.service,
+                        title: finalData.serviceName || 'Home project',
+                        description: finalData.description,
+                        postcode: finalData.postcode,
+                        budgetMin: finalData.budgetMin || null,
+                        budgetMax: finalData.budgetMax || null,
+                        urgency: finalData.urgency || null,
+                        additionalDetails: {
+                            propertyType: finalData.propertyType,
+                            contactPreference: finalData.contactPreference,
+                            name: finalData.name,
+                            email: finalData.email,
+                            phone: finalData.phone
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit quote');
+                }
+
+                const quoteId = data.quote?.id || 'GUEST';
+                document.getElementById('quoteIdDisplay').textContent = quoteId;
+                document.getElementById('successModal').classList.add('active');
+                localStorage.removeItem('quoteProgress');
+            } catch (error) {
+                console.error('Guest quote submission error:', error);
+                alert(error.message || 'Failed to submit quote request. Please try again.');
+            } finally {
+                closeAuthModal();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quote Request';
+            }
+        }
+
+        // Form Submission
+        document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const finalData = {
+                ...formData,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value
+            };
+            const finalDataWithAddons = getSubmissionDataWithAddons(finalData);
+            pendingSubmissionData = finalDataWithAddons;
+            persistProgress(finalDataWithAddons);
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                openAuthModal();
+                return;
+            }
+
+            await submitAuthenticated(finalData);
+        });
+
+        // Auto-uppercase postcode
+        document.getElementById('postcode').addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Initialize
+        restoreProgress();
+        updateStep();
+
+        const autoSubmitFlag = localStorage.getItem('quoteAutoSubmit');
+        if (autoSubmitFlag && localStorage.getItem('token')) {
+            const saved = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            if (saved.formData) {
+                localStorage.removeItem('quoteAutoSubmit');
+                submitAuthenticated(saved.formData);
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
+        </div>
+    </footer>
+    <script src="/frontend/shared/ui/profile-menu.js"></script>
+</body>
+</html>

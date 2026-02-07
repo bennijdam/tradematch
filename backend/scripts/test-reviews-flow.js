@@ -23,6 +23,7 @@ function sanitizeDatabaseUrl(rawUrl) {
 const LOCAL_PORT = process.env.LOCAL_TEST_PORT || '3030';
 const API_BASE = process.env.BACKEND_URL || `http://localhost:${LOCAL_PORT}`;
 const PASSWORD = 'ReviewPass123!';
+const VERIFY_EMAIL_ENDPOINTS = process.env.VERIFY_EMAIL_ENDPOINTS === '1';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -45,6 +46,24 @@ async function api(path, options = {}) {
     throw error;
   }
   return data;
+}
+
+async function apiWithRetry(path, options = {}, retries = 3) {
+  let lastError;
+  for (let attempt = 1; attempt <= retries; attempt += 1) {
+    try {
+      return await api(path, options);
+    } catch (error) {
+      lastError = error;
+      if (error?.data?.details?.statusCode === 429 || error?.data?.details?.name === 'rate_limit_exceeded') {
+        const waitMs = 1500 * attempt;
+        await sleep(waitMs);
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw lastError;
 }
 
 async function waitForHealth() {
@@ -256,6 +275,40 @@ async function main() {
       headers: { Authorization: `Bearer ${customerToken}` }
     });
 
+    if (VERIFY_EMAIL_ENDPOINTS) {
+      const bidAcceptedEmail = await apiWithRetry('/api/email/bid-accepted', {
+        method: 'POST',
+        body: JSON.stringify({
+          vendorId,
+          customerName: 'Review Customer',
+          quoteTitle: 'Review test job',
+          bidAmount: 150,
+          quoteId
+        })
+      });
+
+      if (!bidAcceptedEmail.success) {
+        throw new Error('Bid accepted email endpoint returned failure');
+      }
+
+      await sleep(2000);
+
+      const customerConfirmEmail = await apiWithRetry('/api/email/send', {
+        method: 'POST',
+        body: JSON.stringify({
+          to: customerEmail,
+          subject: 'You accepted a bid - next steps',
+          html: '<h2>Bid Accepted</h2><p>Thanks for choosing a vendor.</p>'
+        })
+      });
+
+      if (!customerConfirmEmail.success) {
+        throw new Error('Customer confirmation email endpoint returned failure');
+      }
+
+      console.log('✅ Email endpoints verified');
+    }
+
     try {
       await pool.query(
         'UPDATE quotes SET status = $1 WHERE id = $2',
@@ -300,10 +353,12 @@ async function main() {
     });
 
     const vendorReviews = await api(`/api/reviews/vendor/${vendorId}`);
+    const reviewCount = vendorReviews.pagination?.total
+      ?? (Array.isArray(vendorReviews.data) ? vendorReviews.data.length : 0);
 
     console.log('✅ Review flow completed');
     console.log(`Review ID: ${reviewId}`);
-    console.log(`Vendor review count: ${vendorReviews.pagination.total}`);
+    console.log(`Vendor review count: ${reviewCount}`);
   } finally {
     await pool.end();
     if (serverProc) {

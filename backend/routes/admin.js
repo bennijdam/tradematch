@@ -11,16 +11,71 @@
 
 const express = require('express');
 const router = express.Router();
-const { authenticate, requireSuperAdmin } = require('../middleware/auth');
+const { authenticate, requireAdmin, requireAdminRole } = require('../middleware/auth');
+const { adminAudit } = require('../middleware/admin-audit');
 
 let pool, eventBroker;
 
 router.setPool = (p) => { pool = p; };
 router.setEventBroker = (eb) => { eventBroker = eb; };
 
-// Apply super admin authentication to all routes
+const ADMIN_READ_ROLES = [
+    'admin',
+    'super_admin',
+    'finance_admin',
+    'trust_safety_admin',
+    'support_admin',
+    'read_only_admin'
+];
+const ADMIN_WRITE_ROLES = [
+    'admin',
+    'super_admin',
+    'finance_admin',
+    'trust_safety_admin',
+    'support_admin'
+];
+const TRUST_SAFETY_ROLES = ['admin', 'super_admin', 'trust_safety_admin', 'support_admin'];
+const FINANCE_ROLES = ['admin', 'super_admin', 'finance_admin'];
+const SUPPORT_ROLES = ['admin', 'super_admin', 'support_admin', 'trust_safety_admin'];
+const SUPER_ROLES = ['admin', 'super_admin'];
+
+const resolveVendorCredits = async (vendorId) => {
+    if (!pool) return null;
+    try {
+        const columnsResult = await pool.query(
+            `SELECT column_name FROM information_schema.columns WHERE table_name = 'vendor_credits'`
+        );
+        const columns = new Set(columnsResult.rows.map(row => row.column_name));
+        if (columns.size === 0) return null;
+
+        if (columns.has('available_credits')) {
+            const result = await pool.query(
+                `SELECT available_credits, total_purchased_credits, total_spent_credits, expires_at
+                 FROM vendor_credits WHERE vendor_id = $1`,
+                [vendorId]
+            );
+            return result.rows[0] || null;
+        }
+
+        if (columns.has('balance')) {
+            const result = await pool.query(
+                `SELECT balance, total_purchased, total_spent, total_refunded
+                 FROM vendor_credits WHERE vendor_id = $1`,
+                [vendorId]
+            );
+            return result.rows[0] || null;
+        }
+
+        return null;
+    } catch (error) {
+        console.warn('Vendor credits lookup failed:', error.message);
+        return null;
+    }
+};
+
+// Apply admin authentication to all routes
 router.use(authenticate);
-router.use(requireSuperAdmin);
+router.use(requireAdmin);
 
 // ============================================================
 // DASHBOARD STATS
@@ -306,7 +361,7 @@ router.get('/users', async (req, res) => {
         const offset = (page - 1) * limit;
         
         const roleExpression = `CASE
-            WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role
+            WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role
             ELSE COALESCE(user_type, role)
         END`;
 
@@ -452,10 +507,79 @@ router.get('/users/:userId', async (req, res) => {
 });
 
 /**
+ * GET /api/admin/users/:userId/jobs
+ * Get job history for a user
+ */
+router.get('/users/:userId/jobs', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const result = await pool.query(
+            `SELECT id, title, status, created_at, updated_at
+             FROM jobs
+             WHERE customer_id = $1
+             ORDER BY created_at DESC
+             LIMIT 50`,
+            [userId]
+        );
+
+        res.json({ success: true, jobs: result.rows });
+    } catch (error) {
+        console.error('User jobs fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch user jobs' });
+    }
+});
+
+/**
+ * GET /api/admin/users/:userId/messages
+ * Read-only message history for a user
+ */
+router.get('/users/:userId/messages', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const conversations = await pool.query(
+            `SELECT id FROM conversations
+             WHERE customer_id = $1 OR vendor_id = $1`,
+            [userId]
+        );
+
+        const conversationIds = conversations.rows.map(row => row.id);
+        if (conversationIds.length === 0) {
+            return res.json({ success: true, messages: [] });
+        }
+
+        const messagesResult = await pool.query(
+            `SELECT m.id, m.conversation_id, m.sender_id, m.sender_role, m.message_type, m.body, m.created_at
+             FROM messages m
+             WHERE m.conversation_id = ANY($1)
+             ORDER BY m.created_at DESC
+             LIMIT 200`,
+            [conversationIds]
+        );
+
+        res.json({ success: true, messages: messagesResult.rows });
+    } catch (error) {
+        console.error('User messages fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch user messages' });
+    }
+});
+
+/**
  * PATCH /api/admin/users/:userId/status
  * Update user status (suspend, activate, ban)
  */
-router.patch('/users/:userId/status', async (req, res) => {
+router.patch(
+    '/users/:userId/status',
+    requireAdminRole(SUPPORT_ROLES),
+    adminAudit({
+        action: 'user_status_change',
+        targetType: 'user',
+        getTargetId: (req) => req.params.userId,
+        getDetails: (req) => ({
+            status: req.body.status,
+            reason: req.body.reason || null
+        })
+    }),
+    async (req, res) => {
     try {
         const { userId } = req.params;
         const { status, reason } = req.body;
@@ -471,13 +595,6 @@ router.patch('/users/:userId/status', async (req, res) => {
             [status, userId]
         );
         
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'user_status_change', 'user', userId, JSON.stringify({ status, reason })]
-        );
-        
         res.json({ success: true, message: `User ${status}` });
         
     } catch (error) {
@@ -491,6 +608,160 @@ router.patch('/users/:userId/status', async (req, res) => {
 // ============================================================
 
 /**
+ * GET /api/admin/vendors
+ * Get vendors with filters and pagination
+ */
+router.get('/vendors', async (req, res) => {
+    try {
+        const { search = '', status = '', page = 1, limit = 50 } = req.query;
+        const offset = (page - 1) * limit;
+        const roleExpression = `CASE
+            WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role
+            ELSE COALESCE(user_type, role)
+        END`;
+
+        let query = `
+            SELECT id, email, full_name, status, phone, created_at, metadata
+            FROM users
+            WHERE ${roleExpression} = 'vendor'
+        `;
+        const params = [];
+        let paramCount = 1;
+
+        if (search) {
+            query += ` AND (email ILIKE $${paramCount} OR full_name ILIKE $${paramCount} OR id ILIKE $${paramCount})`;
+            params.push(`%${search}%`);
+            paramCount++;
+        }
+        if (status) {
+            query += ` AND status = $${paramCount}`;
+            params.push(status);
+            paramCount++;
+        }
+
+        query += ` ORDER BY created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+        params.push(limit, offset);
+
+        const result = await pool.query(query, params);
+        res.json({ success: true, vendors: result.rows, page: parseInt(page), limit: parseInt(limit) });
+    } catch (error) {
+        console.error('Vendors fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch vendors' });
+    }
+});
+
+/**
+ * GET /api/admin/vendors/:vendorId
+ * Get detailed vendor information
+ */
+router.get('/vendors/:vendorId', async (req, res) => {
+    try {
+        const { vendorId } = req.params;
+        const roleExpression = `CASE
+            WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role
+            ELSE COALESCE(user_type, role)
+        END`;
+
+        const vendorResult = await pool.query(
+            `SELECT *, ${roleExpression} as role
+             FROM users
+             WHERE id = $1`,
+            [vendorId]
+        );
+
+        if (vendorResult.rows.length === 0 || vendorResult.rows[0].role !== 'vendor') {
+            return res.status(404).json({ error: 'Vendor not found' });
+        }
+
+        const credits = await resolveVendorCredits(vendorId);
+        const payments = await pool.query(
+            `SELECT COUNT(*)::int as count, COALESCE(SUM(amount), 0) as total
+             FROM payments
+             WHERE vendor_id = $1 AND status = 'paid'`,
+            [vendorId]
+        );
+
+        res.json({
+            success: true,
+            vendor: vendorResult.rows[0],
+            credits,
+            revenue: payments.rows[0]
+        });
+    } catch (error) {
+        console.error('Vendor detail fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch vendor details' });
+    }
+});
+
+/**
+ * PATCH /api/admin/vendors/:vendorId/status
+ * Update vendor status
+ */
+router.patch(
+    '/vendors/:vendorId/status',
+    requireAdminRole(SUPPORT_ROLES),
+    adminAudit({
+        action: 'vendor_status_change',
+        targetType: 'vendor',
+        getTargetId: (req) => req.params.vendorId,
+        getDetails: (req) => ({ status: req.body.status, reason: req.body.reason || null })
+    }),
+    async (req, res) => {
+        try {
+            const { vendorId } = req.params;
+            const { status } = req.body;
+            const validStatuses = ['active', 'suspended', 'restricted', 'pending', 'rejected'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({ error: 'Invalid status' });
+            }
+
+            await pool.query(
+                `UPDATE users SET status = $1, updated_at = NOW()
+                 WHERE id = $2`,
+                [status, vendorId]
+            );
+
+            res.json({ success: true, message: `Vendor ${status}` });
+        } catch (error) {
+            console.error('Vendor status update error:', error);
+            res.status(500).json({ error: 'Failed to update vendor status' });
+        }
+    }
+);
+
+/**
+ * POST /api/admin/vendors/:vendorId/reverify
+ * Trigger vendor re-verification
+ */
+router.post(
+    '/vendors/:vendorId/reverify',
+    requireAdminRole(TRUST_SAFETY_ROLES),
+    adminAudit({
+        action: 'vendor_reverify_requested',
+        targetType: 'vendor',
+        getTargetId: (req) => req.params.vendorId,
+        getDetails: (req) => ({ reason: req.body.reason || null })
+    }),
+    async (req, res) => {
+        try {
+            const { vendorId } = req.params;
+            await pool.query(
+                `UPDATE users
+                 SET metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{verification_status}', '"pending"'::jsonb, true),
+                     updated_at = NOW()
+                 WHERE id = $1`,
+                [vendorId]
+            );
+
+            res.json({ success: true, message: 'Vendor re-verification requested' });
+        } catch (error) {
+            console.error('Vendor reverify error:', error);
+            res.status(500).json({ error: 'Failed to request re-verification' });
+        }
+    }
+);
+
+/**
  * GET /api/admin/vendors/pending
  * Get vendors pending approval
  */
@@ -501,7 +772,7 @@ router.get('/vendors/pending', async (req, res) => {
                                 u.id, u.email, u.full_name, u.phone, u.created_at,
                                 u.metadata
                          FROM users u
-                         WHERE (CASE WHEN u.role IN ('admin', 'super_admin', 'finance_admin') THEN u.role ELSE COALESCE(u.user_type, u.role) END) = 'vendor'
+                         WHERE (CASE WHEN u.role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN u.role ELSE COALESCE(u.user_type, u.role) END) = 'vendor'
                              AND u.status = 'pending'
                          ORDER BY u.created_at ASC`
                 );
@@ -518,7 +789,16 @@ router.get('/vendors/pending', async (req, res) => {
  * POST /api/admin/vendors/:vendorId/approve
  * Approve a vendor application
  */
-router.post('/vendors/:vendorId/approve', async (req, res) => {
+router.post(
+    '/vendors/:vendorId/approve',
+    requireAdminRole(TRUST_SAFETY_ROLES),
+    adminAudit({
+        action: 'vendor_approved',
+        targetType: 'user',
+        getTargetId: (req) => req.params.vendorId,
+        getDetails: (req) => ({ notes: req.body.notes || null })
+    }),
+    async (req, res) => {
     try {
         const { vendorId } = req.params;
         const { notes } = req.body;
@@ -526,15 +806,8 @@ router.post('/vendors/:vendorId/approve', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'active', updated_at = NOW()
-             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
+             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
             [vendorId]
-        );
-        
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'vendor_approved', 'user', vendorId, JSON.stringify({ notes })]
         );
         
         // TODO: Send approval email to vendor
@@ -551,7 +824,16 @@ router.post('/vendors/:vendorId/approve', async (req, res) => {
  * POST /api/admin/vendors/:vendorId/reject
  * Reject a vendor application
  */
-router.post('/vendors/:vendorId/reject', async (req, res) => {
+router.post(
+    '/vendors/:vendorId/reject',
+    requireAdminRole(TRUST_SAFETY_ROLES),
+    adminAudit({
+        action: 'vendor_rejected',
+        targetType: 'user',
+        getTargetId: (req) => req.params.vendorId,
+        getDetails: (req) => ({ reason: req.body.reason || null })
+    }),
+    async (req, res) => {
     try {
         const { vendorId } = req.params;
         const { reason } = req.body;
@@ -559,15 +841,8 @@ router.post('/vendors/:vendorId/reject', async (req, res) => {
         await pool.query(
             `UPDATE users 
              SET status = 'rejected', updated_at = NOW()
-             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
+             WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
             [vendorId]
-        );
-        
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'vendor_rejected', 'user', vendorId, JSON.stringify({ reason })]
         );
         
         // TODO: Send rejection email to vendor
@@ -630,7 +905,19 @@ router.get('/reviews/pending', async (req, res) => {
  * PATCH /api/admin/reviews/:reviewId/moderate
  * Approve or reject a review
  */
-router.patch('/reviews/:reviewId/moderate', async (req, res) => {
+router.patch(
+    '/reviews/:reviewId/moderate',
+    requireAdminRole(TRUST_SAFETY_ROLES),
+    adminAudit({
+        action: 'review_moderated',
+        targetType: 'review',
+        getTargetId: (req) => req.params.reviewId,
+        getDetails: (req) => ({
+            action: req.body.action,
+            reason: req.body.reason || null
+        })
+    }),
+    async (req, res) => {
     try {
         const { reviewId } = req.params;
         const { action, reason } = req.body; // action: 'approve', 'hide', 'remove'
@@ -664,13 +951,6 @@ router.patch('/reviews/:reviewId/moderate', async (req, res) => {
                 [isApproved, reason || null, reviewId]
             );
         }
-        
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'review_moderated', 'review', reviewId, JSON.stringify({ action, reason })]
-        );
         
         res.json({ success: true, message: `Review ${action}d` });
         
@@ -721,6 +1001,234 @@ router.get('/bids', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch bids' });
     }
 });
+
+// ============================================================
+// JOBS & LEADS
+// ============================================================
+
+/**
+ * GET /api/admin/jobs
+ * List jobs with filters
+ */
+router.get('/jobs', async (req, res) => {
+    try {
+        const { status, limit = 50, offset = 0 } = req.query;
+        const params = [];
+        let sql = `SELECT id, title, status, trade_category, postcode, created_at
+                   FROM jobs`;
+
+        if (status) {
+            params.push(status);
+            sql += ` WHERE status = $${params.length}`;
+        }
+
+        params.push(parseInt(limit, 10));
+        params.push(parseInt(offset, 10));
+        sql += ` ORDER BY created_at DESC LIMIT $${params.length - 1} OFFSET $${params.length}`;
+
+        const result = await pool.query(sql, params);
+        res.json({ success: true, jobs: result.rows });
+    } catch (error) {
+        console.error('Admin jobs error:', error);
+        res.status(500).json({ error: 'Failed to fetch jobs' });
+    }
+});
+
+/**
+ * GET /api/admin/leads
+ * List leads with job and vendor context
+ */
+router.get('/leads', async (req, res) => {
+    try {
+        const { status, limit = 50, offset = 0 } = req.query;
+        const params = [];
+        let sql = `
+            SELECT l.id, l.status, l.created_at,
+                   j.title AS job_title, j.postcode,
+                   u.full_name AS vendor_name
+            FROM leads l
+            JOIN jobs j ON l.job_id = j.id
+            JOIN users u ON l.vendor_id = u.id
+        `;
+
+        if (status) {
+            params.push(status);
+            sql += ` WHERE l.status = $${params.length}`;
+        }
+
+        params.push(parseInt(limit, 10));
+        params.push(parseInt(offset, 10));
+        sql += ` ORDER BY l.created_at DESC LIMIT $${params.length - 1} OFFSET $${params.length}`;
+
+        const result = await pool.query(sql, params);
+        res.json({ success: true, leads: result.rows });
+    } catch (error) {
+        console.error('Admin leads error:', error);
+        res.status(500).json({ error: 'Failed to fetch leads' });
+    }
+});
+
+// ============================================================
+// LEAD PRICING
+// ============================================================
+
+router.get('/lead-pricing/tiers', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, tier_name, budget_min, budget_max, base_price, description
+             FROM lead_pricing_tiers
+             ORDER BY budget_min ASC`
+        );
+        res.json({ success: true, tiers: result.rows });
+    } catch (error) {
+        console.error('Lead pricing tiers error:', error);
+        res.status(500).json({ error: 'Failed to fetch lead pricing tiers' });
+    }
+});
+
+router.patch(
+    '/lead-pricing/tiers/:tierId',
+    requireAdminRole(SUPER_ROLES),
+    adminAudit({
+        action: 'lead_pricing_tier_updated',
+        targetType: 'lead_pricing_tier',
+        getTargetId: (req) => req.params.tierId,
+        getDetails: (req) => req.body
+    }),
+    async (req, res) => {
+        try {
+            const { tierId } = req.params;
+            const { base_price, budget_min, budget_max, description } = req.body;
+            const result = await pool.query(
+                `UPDATE lead_pricing_tiers
+                 SET base_price = COALESCE($1, base_price),
+                     budget_min = COALESCE($2, budget_min),
+                     budget_max = COALESCE($3, budget_max),
+                     description = COALESCE($4, description)
+                 WHERE id = $5
+                 RETURNING *`,
+                [base_price, budget_min, budget_max, description, tierId]
+            );
+            res.json({ success: true, tier: result.rows[0] });
+        } catch (error) {
+            console.error('Lead pricing tier update error:', error);
+            res.status(500).json({ error: 'Failed to update lead pricing tier' });
+        }
+    }
+);
+
+router.get('/lead-pricing/rules', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, category, min_budget, max_budget, base_credit_cost,
+                    urgency_multiplier, quality_bonus_min_score, quality_bonus_credit_cost,
+                    region, active
+             FROM lead_pricing_rules
+             ORDER BY id ASC`
+        );
+        res.json({ success: true, rules: result.rows });
+    } catch (error) {
+        console.error('Lead pricing rules error:', error);
+        res.status(500).json({ error: 'Failed to fetch lead pricing rules' });
+    }
+});
+
+router.patch(
+    '/lead-pricing/rules/:ruleId',
+    requireAdminRole(SUPER_ROLES),
+    adminAudit({
+        action: 'lead_pricing_rule_updated',
+        targetType: 'lead_pricing_rule',
+        getTargetId: (req) => req.params.ruleId,
+        getDetails: (req) => req.body
+    }),
+    async (req, res) => {
+        try {
+            const { ruleId } = req.params;
+            const {
+                base_credit_cost,
+                urgency_multiplier,
+                quality_bonus_min_score,
+                quality_bonus_credit_cost,
+                active
+            } = req.body;
+
+            const result = await pool.query(
+                `UPDATE lead_pricing_rules
+                 SET base_credit_cost = COALESCE($1, base_credit_cost),
+                     urgency_multiplier = COALESCE($2, urgency_multiplier),
+                     quality_bonus_min_score = COALESCE($3, quality_bonus_min_score),
+                     quality_bonus_credit_cost = COALESCE($4, quality_bonus_credit_cost),
+                     active = COALESCE($5, active),
+                     updated_at = NOW()
+                 WHERE id = $6
+                 RETURNING *`,
+                [
+                    base_credit_cost,
+                    urgency_multiplier,
+                    quality_bonus_min_score,
+                    quality_bonus_credit_cost,
+                    active,
+                    ruleId
+                ]
+            );
+            res.json({ success: true, rule: result.rows[0] });
+        } catch (error) {
+            console.error('Lead pricing rule update error:', error);
+            res.status(500).json({ error: 'Failed to update lead pricing rule' });
+        }
+    }
+);
+
+// ============================================================
+// PLATFORM SETTINGS
+// ============================================================
+
+router.get('/platform/settings', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT key, value, updated_at FROM platform_settings ORDER BY key ASC`
+        );
+        res.json({ success: true, settings: result.rows });
+    } catch (error) {
+        console.error('Platform settings fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch platform settings' });
+    }
+});
+
+router.put(
+    '/platform/settings',
+    requireAdminRole(SUPER_ROLES),
+    adminAudit({
+        action: 'platform_settings_updated',
+        targetType: 'platform_settings',
+        getTargetId: () => 'platform_settings',
+        getDetails: (req) => req.body
+    }),
+    async (req, res) => {
+        try {
+            const { settings } = req.body;
+            if (!settings || typeof settings !== 'object') {
+                return res.status(400).json({ error: 'Settings object required' });
+            }
+
+            const updates = Object.entries(settings);
+            for (const [key, value] of updates) {
+                await pool.query(
+                    `INSERT INTO platform_settings (key, value, updated_at)
+                     VALUES ($1, $2, NOW())
+                     ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()`,
+                    [key, JSON.stringify(value)]
+                );
+            }
+
+            res.json({ success: true, message: 'Platform settings updated' });
+        } catch (error) {
+            console.error('Platform settings update error:', error);
+            res.status(500).json({ error: 'Failed to update platform settings' });
+        }
+    }
+);
 
 // ============================================================
 // AUDIT LOG
@@ -812,7 +1320,16 @@ router.get('/admins', async (req, res) => {
  * POST /api/admin/admins
  * Create new admin user
  */
-router.post('/admins', async (req, res) => {
+router.post(
+    '/admins',
+    requireAdminRole(SUPER_ROLES),
+    adminAudit({
+        action: 'admin_created',
+        targetType: 'admin',
+        getTargetId: (req, res) => res.locals.createdAdminId || null,
+        getDetails: (req) => ({ full_name: req.body.full_name, email: req.body.email })
+    }),
+    async (req, res) => {
     try {
         const { full_name, email, temporary_password } = req.body;
         
@@ -836,13 +1353,7 @@ router.post('/admins', async (req, res) => {
             [userId, full_name, email, hashedPassword, 'admin', 'admin', 'active', true]
         );
         
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'admin_created', 'admin', userId, JSON.stringify({ full_name, email })]
-        );
-        
+        res.locals.createdAdminId = userId;
         res.json({ success: true, message: 'Admin account created successfully', admin_id: userId });
         
     } catch (error) {
@@ -855,7 +1366,16 @@ router.post('/admins', async (req, res) => {
  * DELETE /api/admin/admins/:adminId
  * Remove admin user
  */
-router.delete('/admins/:adminId', async (req, res) => {
+router.delete(
+    '/admins/:adminId',
+    requireAdminRole(SUPER_ROLES),
+    adminAudit({
+        action: 'admin_removed',
+        targetType: 'admin',
+        getTargetId: (req) => req.params.adminId,
+        getDetails: (req) => ({ removed_by: req.user.userId })
+    }),
+    async (req, res) => {
     try {
         const { adminId } = req.params;
         
@@ -868,13 +1388,6 @@ router.delete('/admins/:adminId', async (req, res) => {
         await pool.query(
             `UPDATE users SET role = 'customer', user_type = 'customer' WHERE id = $1`,
             [adminId]
-        );
-        
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'admin_removed', 'admin', adminId, JSON.stringify({ removed_by: req.user.userId })]
         );
         
         res.json({ success: true, message: 'Admin account removed successfully' });
@@ -893,7 +1406,15 @@ router.delete('/admins/:adminId', async (req, res) => {
  * POST /api/admin/change-password
  * Change admin password
  */
-router.post('/change-password', async (req, res) => {
+router.post(
+    '/change-password',
+    adminAudit({
+        action: 'password_changed',
+        targetType: 'admin',
+        getTargetId: (req) => req.user.userId,
+        getDetails: () => ({ changed_at: new Date().toISOString() })
+    }),
+    async (req, res) => {
     try {
         const { current_password, new_password } = req.body;
         
@@ -925,13 +1446,6 @@ router.post('/change-password', async (req, res) => {
         await pool.query(
             'UPDATE users SET password_hash = $1 WHERE id = $2',
             [hashedPassword, req.user.userId]
-        );
-        
-        // Log admin action
-        await pool.query(
-            `INSERT INTO admin_audit_log (admin_id, action, target_type, target_id, details, created_at)
-             VALUES ($1, $2, $3, $4, $5, NOW())`,
-            [req.user.userId, 'password_changed', 'admin', req.user.userId, JSON.stringify({ changed_at: new Date() })]
         );
         
         res.json({ success: true, message: 'Password changed successfully' });

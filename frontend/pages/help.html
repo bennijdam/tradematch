@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & FAQ - TradeMatch UK | Frequently Asked Questions</title>
+    <meta name="description" content="Find answers to common questions about using TradeMatch. Learn how to post quotes, submit bids, and get the most from our platform.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--slate-50);
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald-500);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.375rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        /* Search Box */
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1.25rem 1.5rem 1.25rem 4rem;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.0625rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 0;
+            padding: 0 2rem 5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            background: white;
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            padding: 0.875rem 1.75rem;
+            border: none;
+            background: transparent;
+            color: var(--slate-600);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-tab.active {
+            background: var(--emerald-500);
+            color: white;
+        }
+
+        .category-tab:hover:not(.active) {
+            background: var(--slate-100);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            display: none;
+        }
+
+        .faq-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            border: none;
+            background: white;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .faq-question:hover {
+            background: var(--slate-50);
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 2rem 1.5rem;
+            color: var(--slate-600);
+            font-size: 1.0625rem;
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 3rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: var(--slate-600);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1.125rem 2.5rem;
+            background: var(--emerald-500);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.0625rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--slate-900);
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .category-tabs {
+                flex-wrap: nowrap;
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Trade<span>Match</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="how-it-works.html">How It Works</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>How Can We Help?</h1>
+        <p>Find answers to frequently asked questions about using TradeMatch</p>
+        
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search for help..." id="searchInput" onkeyup="searchFAQs()">
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active" onclick="showCategory('general')">General</button>
+            <button class="category-tab" onclick="showCategory('customers')">For Customers</button>
+            <button class="category-tab" onclick="showCategory('vendors')">For Tradespeople</button>
+            <button class="category-tab" onclick="showCategory('billing')">Billing</button>
+        </div>
+
+        <!-- General FAQs -->
+        <div class="faq-section active" id="general">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What is TradeMatch?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        TradeMatch is the UK's leading platform connecting customers who need home improvements with verified, skilled tradespeople. We make it easy to post quotes, receive competitive bids, and hire trusted professionals for your projects.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is TradeMatch free to use?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Yes! For customers, posting quotes and receiving bids is completely free. For tradespeople, creating an account and browsing quotes is free. We only charge a small commission on completed projects.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How does TradeMatch verify tradespeople?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        All tradespeople go through our verification process including ID checks, insurance validation, and qualification verification. We also monitor customer reviews and ratings to maintain high standards.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What areas do you cover?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We cover the entire United Kingdom with verified tradespeople in every major city and region. Simply enter your postcode when posting a quote to find local professionals.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer FAQs -->
+        <div class="faq-section" id="customers">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I post a quote?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Click "Get Free Quotes" on the homepage, fill out our simple 4-step form describing your project, budget, and timeline. Your quote will be visible to verified tradespeople in your area within minutes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How many bids will I receive?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Most customers receive 3-5 competitive bids within 24 hours. The number depends on your project type, budget, and location. You're free to accept any bid that meets your needs.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I choose the best tradesperson?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Compare bids based on price, timeline, tradesperson rating, years of experience, and customer reviews. You can message tradespeople directly to ask questions before making your decision.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What if I'm not satisfied with the work?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Contact our support team immediately. We'll work with both parties to resolve any issues. If necessary, we can mediate disputes and, in serious cases, remove tradespeople from our platform.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vendor FAQs -->
+        <div class="faq-section" id="vendors">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I sign up as a tradesperson?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Click "Sign Up as Tradesperson," complete our registration form with your company details and services, then go through our verification process. Once approved, you can start browsing and bidding on quotes immediately.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I submit a bid?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Browse available quotes in your area, click on projects that match your skills, review the requirements, then submit your bid with your price, timeline, and a message explaining why you're the best choice.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>What fees do you charge tradespeople?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        We charge a 10% commission on completed projects paid through our platform. There are no monthly fees, subscription costs, or charges for browsing and bidding on quotes.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do I get more positive reviews?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Deliver excellent work, communicate clearly, arrive on time, and exceed customer expectations. After completing projects, politely ask satisfied customers to leave a review. High ratings lead to more job opportunities.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing FAQs -->
+        <div class="faq-section" id="billing">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>How do payments work?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Customers and tradespeople arrange payment terms directly. We recommend using our secure payment system for protection, but direct payment is also allowed. Always get a written contract before starting work.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>When do I pay the tradesperson?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Payment terms are agreed between you and the tradesperson. Common arrangements include deposits, stage payments, or payment upon completion. Never pay the full amount upfront without a proper contract.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Is there a refund policy?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        TradeMatch doesn't hold or process payments, so refunds are arranged directly between customers and tradespeople. If you have a payment dispute, contact our support team for mediation assistance.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Do I need to pay VAT?</span>
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        VAT rules depend on the tradesperson's registration status. VAT-registered tradespeople will include VAT in their quotes. Always request an itemized quote showing all costs including VAT if applicable.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Still Have Questions?</h2>
+            <p>Can't find what you're looking for? Our support team is here to help.</p>
+            <a href="contact.html" class="btn">Contact Support</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8);">Privacy</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFAQ(button) {
+            const item = button.parentElement;
+            const wasOpen = item.classList.contains('open');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('open');
+            });
+            
+            // Open clicked FAQ if it wasn't open
+            if (!wasOpen) {
+                item.classList.add('open');
+            }
+        }
+
+        function showCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show corresponding section
+            document.querySelectorAll('.faq-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(category).classList.add('active');
+
+            // Close all open FAQs
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('open');
+            });
+        }
+
+        function searchFAQs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const allFAQs = document.querySelectorAll('.faq-item');
+
+            allFAQs.forEach(faq => {
+                const question = faq.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = faq.querySelector('.faq-answer-content').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    faq.style.display = 'block';
+                } else {
+                    faq.style.display = searchTerm ? 'none' : 'block';
+                }
+            });
+
+            // Show all sections when searching
+            if (searchTerm) {
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    section.style.display = 'block';
+                });
+            }
+        }
+    </script>
+    <script src="/frontend/shared/ui/profile-menu.js"></script>
+</body>
+</html>
+

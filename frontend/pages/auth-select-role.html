@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role - TradeMatch UK</title>
+    <meta name="description" content="Choose your role on TradeMatch - Customer looking for tradespeople or tradesperson offering services.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-400: #34d399;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-600) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .role-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--emerald-600);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .user-info {
+            background: var(--slate-100);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-weight: 500;
+            color: var(--slate-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .user-name {
+            color: var(--slate-900);
+            font-size: 1.1rem;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-card {
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .role-card:hover {
+            border-color: var(--emerald-400);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--slate-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-description {
+            color: var(--slate-600);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .role-features {
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--slate-700);
+        }
+
+        .role-features li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .role-features li::before {
+            content: '✓';
+            color: var(--emerald-600);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--emerald-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-700);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--slate-200);
+            color: var(--slate-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--slate-300);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--emerald-600);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            font-size: 14px;
+            max-width: 300px;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .notification.success {
+            background: #059669;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            .role-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .role-options {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
+</head>
+<body>
+    <div class="role-container">
+        <div class="logo">TradeMatch</div>
+        
+        <h1>Welcome to TradeMatch!</h1>
+        <p class="subtitle">Please select your role to continue</p>
+        
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-email" id="userEmail">user@example.com</div>
+            <div class="user-name" id="userName">User Name</div>
+        </div>
+        
+        <div class="role-options">
+            <div class="role-card" onclick="selectRole('customer')">
+                <div class="role-icon">🏠</div>
+                <div class="role-title">I'm a Customer</div>
+                <div class="role-description">
+                    Looking for trusted tradespeople for my projects
+                </div>
+                <ul class="role-features">
+                    <li>Post quote requests</li>
+                    <li>Compare bids from multiple tradespeople</li>
+                    <li>Manage projects from dashboard</li>
+                    <li>Secure payment processing</li>
+                </ul>
+            </div>
+            
+            <div class="role-card" onclick="selectRole('vendor')">
+                <div class="role-icon">🔧</div>
+                <div class="role-title">I'm a Tradesperson</div>
+                <div class="role-description">
+                    Offering my professional services to customers
+                </div>
+                <ul class="role-features">
+                    <li>Browse available quote requests</li>
+                    <li>Submit competitive bids</li>
+                    <li>Manage earnings and schedule</li>
+                    <li>Build reputation and reviews</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <button class="btn btn-secondary" onclick="signOut()">Sign Out</button>
+        </div>
+        
+        <a href="auth-login.html" class="back-link">← Back to Login</a>
+    </div>
+
+    <script>
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function selectRole(role) {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    showNotification('No token found. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'auth-login.html';
+                    }, 2000);
+                    return;
+                }
+
+                // Update user role via API
+                updateRole(role);
+                
+            } catch (error) {
+                console.error('Role selection error:', error);
+                showNotification('Failed to select role. Please try again.', 'error');
+            }
+        }
+
+        async function updateRole(role) {
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch('https://api.tradematch.uk/api/user/update-role', {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userType: role })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local storage
+                    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+                    userData.userType = role;
+                    userData.user_type = role;
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    
+                    showNotification(`Role updated successfully! Redirecting to ${role} dashboard...`, 'success');
+                    
+                    // Redirect to appropriate dashboard
+                    setTimeout(() => {
+                        if (role === 'vendor' || role === 'tradesperson') {
+                            window.location.href = 'dashboard.html?source=google';
+                        } else {
+                            window.location.href = 'user-dashboard/dashboard.html?source=google';
+                        }
+                    }, 1500);
+                    
+                } else {
+                    throw new Error(data.error || 'Failed to update role');
+                }
+                
+            } catch (error) {
+                console.error('Update role error:', error);
+                showNotification('Failed to update role. Please try again.', 'error');
+            }
+        }
+
+        function signOut() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('oauthReturnTo');
+            showNotification('Signed out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'auth-login.html';
+            }, 1000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+                const source = urlParams.get('source');
+                
+                if (!token) {
+                    showNotification('No token found. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'auth-login.html';
+                    }, 2000);
+                    return;
+                }
+
+                // Store token
+                localStorage.setItem('token', token);
+                
+                // Decode JWT to get user info
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    
+                    document.getElementById('userEmail').textContent = payload.email;
+                    document.getElementById('userName').textContent = payload.first_name 
+                        ? `${payload.first_name} ${payload.last_name || ''}`.trim()
+                        : payload.email.split('@')[0];
+                    
+                    // Set avatar initial
+                    const avatar = document.getElementById('userAvatar');
+                    const initial = payload.first_name 
+                        ? payload.first_name.charAt(0).toUpperCase()
+                        : payload.email.charAt(0).toUpperCase();
+                    avatar.textContent = initial;
+                    
+                    // Update local user data
+                    const userData = {
+                        id: payload.userId,
+                        email: payload.email,
+                        first_name: payload.first_name,
+                        last_name: payload.last_name,
+                        userType: payload.userType || payload.user_type,
+                        authProvider: source || 'google'
+                    };
+                    
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    
+                } catch (decodeError) {
+                    console.error('JWT decode error:', decodeError);
+                    showNotification('Failed to get user information', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Page initialization error:', error);
+                showNotification('Failed to load page. Please refresh.', 'error');
+            }
+        });
+    </script>
+    <script src="/frontend/shared/ui/profile-menu.js"></script>
+</body>
+</html>
+

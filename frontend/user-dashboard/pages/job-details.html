@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - TradeMatch Customer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <style>
+        .job-detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .job-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .job-detail-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .job-detail-meta {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+        }
+
+        .job-detail-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .detail-section {
+            margin-bottom: 32px;
+        }
+
+        .detail-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-primary);
+        }
+
+        .detail-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .info-box-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .info-box-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-marker.completed {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .timeline-marker.completed svg {
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        .timeline-marker.active {
+            border-color: var(--accent-primary);
+            background: var(--bg-card);
+        }
+
+        .timeline-marker.active::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+        }
+
+        .timeline-content {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .file-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .file-item:hover {
+            border-color: var(--accent-primary);
+            background: rgba(0, 229, 160, 0.05);
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 8px;
+            color: var(--text-muted);
+        }
+
+        .file-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            word-break: break-word;
+        }
+
+        .alert-box {
+            background: rgba(255, 165, 38, 0.08);
+            border: 1px solid rgba(255, 165, 38, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-box svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-warning);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-box-content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .alert-box-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .job-detail-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .job-detail-actions {
+                width: 100%;
+            }
+
+            .job-detail-actions .btn {
+                flex: 1;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="index.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="my-jobs.html" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="nav-text">My Jobs</span>
+                    <span class="nav-badge">5</span>
+                </a>
+                <a href="quotes.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="nav-text">Quotes</span>
+                    <span class="nav-badge">5</span>
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <span class="nav-text">Messages</span>
+                    <span class="nav-badge notification">2</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Trades</div>
+                <a href="saved-trades.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="nav-text">Saved Trades</span>
+                </a>
+                <a href="reviews.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="nav-text">Reviews</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="notifications.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-text">Notifications</span>
+                    <span class="nav-badge notification">4</span>
+                </a>
+                <a href="billing.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="nav-text">Billing</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="collapse-btn" id="collapseBtn">
+                <svg class="collapse-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav" id="topNav">
+        <div class="top-nav-left">
+            <div class="search-container">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search jobs, quotes, messages...">
+            </div>
+        </div>
+
+        <div class="top-nav-right">
+            <div class="theme-toggle" id="themeToggle">
+                <div class="theme-toggle-slider">
+                    <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <button class="icon-button">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span class="notification-badge">3</span>
+            </button>
+
+            <div class="user-menu">
+                <div class="user-avatar">JD</div>
+                <span class="user-name">John Doe</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <button class="btn btn-secondary btn-sm" onclick="window.location.href='my-jobs.html'" style="margin-bottom: 24px;">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px; margin-right: 6px;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to My Jobs
+        </button>
+
+        <!-- Job Details Card -->
+        <div class="job-detail-card">
+            <div class="job-detail-header">
+                <div>
+                    <div class="job-status-badge open" style="margin-bottom: 12px;" data-job-field="status">Open</div>
+                    <h1 class="job-detail-title" data-job-field="title">Kitchen Renovation</h1>
+                    <div class="job-detail-meta">
+                        <div class="meta-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span data-job-field="posted">Posted 2 days ago</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <span data-job-field="location">London, SW1</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span data-job-field="quotes">3 Quotes received</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="job-detail-actions">
+                    <button class="btn btn-secondary" type="button" onclick="openEditJobModalFromDetails()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; margin-right: 6px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit Job
+                    </button>
+                    <button class="btn btn-primary" data-action="view-quotes">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; margin-right: 6px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span data-job-field="viewQuotesLabel">View Quotes (3)</span>
+                    </button>
+                    <button class="btn btn-secondary" disabled style="opacity: 0.5; cursor: not-allowed;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px; margin-right: 6px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Cancel Job
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Info Grid -->
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-box-label">Service Type</div>
+                    <div class="info-box-value" data-job-field="serviceType">Kitchen Fitting</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Budget Range</div>
+                    <div class="info-box-value" data-job-field="budget">£8,000 - £12,000</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Property Type</div>
+                    <div class="info-box-value" data-job-field="propertyType">Semi-detached House</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Urgency</div>
+                    <div class="info-box-value" data-job-field="urgency">Within 1 month</div>
+                </div>
+            </div>
+
+            <!-- Job Description -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                    </svg>
+                    Job Description
+                </h3>
+                <div class="detail-content" data-job-field="description">
+                    <p>I'm looking for a complete kitchen renovation in my London home. The current kitchen is approximately 15 years old and needs a full refit.</p>
+                    <br>
+                    <p><strong>Requirements:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li>Remove existing kitchen units and appliances</li>
+                        <li>Install new modern cabinetry (approximately 10 units)</li>
+                        <li>Granite or quartz worktops</li>
+                        <li>Integrated appliances (oven, hob, dishwasher, fridge)</li>
+                        <li>New sink and tap fittings</li>
+                        <li>Tiling for splashback</li>
+                        <li>Updated lighting (under-cabinet and ceiling)</li>
+                    </ul>
+                    <br>
+                    <p>The kitchen dimensions are approximately 3.5m x 4m. I have a modern, minimalist style preference with handleless units in matt grey or white finish. All work must comply with building regulations and I would need all appropriate certifications for electrical and plumbing work.</p>
+                </div>
+            </div>
+
+            <!-- Attached Files -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+                    </svg>
+                    Attached Files
+                </h3>
+                <div class="file-list">
+                    <div class="file-item">
+                        <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <div class="file-name">current_kitchen_1.jpg</div>
+                    </div>
+                    <div class="file-item">
+                        <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <div class="file-name">current_kitchen_2.jpg</div>
+                    </div>
+                    <div class="file-item">
+                        <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <div class="file-name">floor_plan.pdf</div>
+                    </div>
+                    <div class="file-item">
+                        <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <div class="file-name">inspiration.jpg</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Timeline -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Job Activity Timeline
+                </h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker completed">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Job Posted</div>
+                                <div class="timeline-date">4th Feb 2026, 10:30 AM</div>
+                            </div>
+                            <div class="timeline-desc">Your job was successfully posted and is now visible to qualified vendors in your area.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker completed">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">First Quote Received</div>
+                                <div class="timeline-date">4th Feb 2026, 2:15 PM</div>
+                            </div>
+                            <div class="timeline-desc">Kitchen Bros Ltd submitted a quote of £8,500 with a 3-4 week timeline.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker completed">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Additional Quotes Received</div>
+                                <div class="timeline-date">5th Feb 2026</div>
+                            </div>
+                            <div class="timeline-desc">Two more vendors (Premium Renovations and Luxury Kitchens UK) submitted quotes.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker active"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Awaiting Your Decision</div>
+                                <div class="timeline-date">Current Status</div>
+                            </div>
+                            <div class="timeline-desc">Review the quotes and accept one to proceed with your kitchen renovation.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Quote Acceptance</div>
+                                <div class="timeline-date">Pending</div>
+                            </div>
+                            <div class="timeline-desc">Once you accept a quote, messaging will be unlocked and work can be scheduled.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <div class="timeline-title">Work Completion</div>
+                                <div class="timeline-date">Pending</div>
+                            </div>
+                            <div class="timeline-desc">After work is completed, you'll be able to leave a review for the vendor.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../dashboardApp.js"></script>
+    <div id="editJobModalMount"></div>
+    <script>
+        let editJobModalLoaded = false;
+        let editJobModalLoading = null;
+
+        function escapeHtml(value) {
+            if (value === null || value === undefined) return '';
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function extractEditModalStyles(styleText) {
+            const marker = 'EDIT JOB MODAL';
+            const startIndex = styleText.indexOf(marker);
+            if (startIndex === -1) return '';
+            const commentStart = styleText.lastIndexOf('/*', startIndex);
+            return styleText.slice(commentStart === -1 ? startIndex : commentStart);
+        }
+
+        async function ensureEditJobModalLoaded() {
+            if (editJobModalLoaded) return;
+            if (editJobModalLoading) return editJobModalLoading;
+
+            editJobModalLoading = fetch('edit-job-modal.html', { cache: 'no-store' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load edit job modal');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const modal = doc.getElementById('editJobModal');
+                    const toast = doc.getElementById('successToast');
+                    const styleTag = doc.querySelector('style');
+
+                    if (!modal || !toast) {
+                        throw new Error('Edit job modal markup missing');
+                    }
+
+                    let mount = document.getElementById('editJobModalMount');
+                    if (!mount) {
+                        mount = document.createElement('div');
+                        mount.id = 'editJobModalMount';
+                        document.body.appendChild(mount);
+                    }
+                    mount.innerHTML = '';
+                    mount.appendChild(modal);
+                    mount.appendChild(toast);
+
+                    if (styleTag) {
+                        const style = document.createElement('style');
+                        style.setAttribute('data-edit-job-modal', 'true');
+                        style.textContent = extractEditModalStyles(styleTag.textContent);
+                        document.head.appendChild(style);
+                    }
+
+                    const modalOverlay = document.getElementById('editJobModal');
+                    if (modalOverlay) {
+                        modalOverlay.addEventListener('click', (event) => {
+                            if (event.target.id === 'editJobModal') {
+                                closeEditJobModal();
+                            }
+                        });
+                    }
+
+                    const form = document.getElementById('editJobForm');
+                    if (form) {
+                        form.addEventListener('submit', (event) => {
+                            event.preventDefault();
+                            saveJobChanges();
+                        });
+                    }
+
+                    editJobModalLoaded = true;
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+                .finally(() => {
+                    editJobModalLoading = null;
+                });
+
+            return editJobModalLoading;
+        }
+
+        function getJobDetailText(selector) {
+            return document.querySelector(selector)?.textContent?.trim() || '';
+        }
+
+        function parseBudgetRange(value) {
+            const match = value.match(/£\s*([\d,]+)\s*-\s*£\s*([\d,]+)/i);
+            if (!match) return { min: '', max: '' };
+            return {
+                min: match[1].replace(/,/g, ''),
+                max: match[2].replace(/,/g, '')
+            };
+        }
+
+        function mapUrgencyValue(label) {
+            const normalized = label.toLowerCase();
+            if (normalized.includes('flexible')) return 'flexible';
+            if (normalized.includes('urgent')) return 'urgent';
+            return 'month';
+        }
+
+        function openEditJobModalFromDetails() {
+            ensureEditJobModalLoaded().then(() => {
+                const modal = document.getElementById('editJobModal');
+                if (!modal) return;
+
+                const description = getJobDetailText('[data-job-field="description"]');
+                const budgetText = getJobDetailText('[data-job-field="budget"]');
+                const urgencyText = getJobDetailText('[data-job-field="urgency"]');
+                const tradeText = getJobDetailText('[data-job-field="serviceType"]');
+                const locationText = getJobDetailText('[data-job-field="location"]');
+                const quotesText = getJobDetailText('[data-job-field="quotes"]');
+
+                const budget = parseBudgetRange(budgetText);
+                const postcode = locationText.includes(',')
+                    ? locationText.split(',').pop().trim()
+                    : locationText.split(' ').pop().trim();
+
+                const urgencyValue = mapUrgencyValue(urgencyText);
+
+                const descriptionInput = document.getElementById('jobDescription');
+                const budgetMinInput = document.getElementById('budgetMin');
+                const budgetMaxInput = document.getElementById('budgetMax');
+                const tradeInput = document.getElementById('tradeCategory');
+                const postcodeInput = document.getElementById('postcode');
+
+                if (descriptionInput) descriptionInput.value = description;
+                if (budgetMinInput) budgetMinInput.value = budget.min;
+                if (budgetMaxInput) budgetMaxInput.value = budget.max;
+                if (tradeInput) tradeInput.value = tradeText;
+                if (postcodeInput) postcodeInput.value = postcode;
+
+                const urgencyRadio = document.getElementById(`urgency${urgencyValue.charAt(0).toUpperCase() + urgencyValue.slice(1)}`);
+                if (urgencyRadio) urgencyRadio.checked = true;
+
+                const warningBanner = document.getElementById('quotesWarning');
+                const quoteCount = parseInt(quotesText, 10);
+                if (warningBanner) {
+                    warningBanner.style.display = Number.isNaN(quoteCount) || quoteCount <= 0 ? 'none' : 'flex';
+                }
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        function closeEditJobModal() {
+            const modal = document.getElementById('editJobModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        function showSuccessToast() {
+            const toast = document.getElementById('successToast');
+            if (!toast) return;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 2500);
+        }
+
+        function saveJobChanges() {
+            const descriptionInput = document.getElementById('jobDescription');
+            const budgetMinInput = document.getElementById('budgetMin');
+            const budgetMaxInput = document.getElementById('budgetMax');
+            const urgencyInputs = document.querySelectorAll('input[name="urgency"]');
+
+            const newDescription = descriptionInput?.value?.trim() || '';
+            const budgetMin = budgetMinInput?.value?.trim();
+            const budgetMax = budgetMaxInput?.value?.trim();
+            let urgencyLabel = 'Within 1 month';
+
+            urgencyInputs.forEach(input => {
+                if (input.checked) {
+                    if (input.value === 'flexible') urgencyLabel = 'Flexible';
+                    if (input.value === 'urgent') urgencyLabel = 'Urgent';
+                    if (input.value === 'month') urgencyLabel = 'Within 1 month';
+                }
+            });
+
+            const budgetValue = budgetMin && budgetMax
+                ? `£${Number(budgetMin).toLocaleString('en-GB')} - £${Number(budgetMax).toLocaleString('en-GB')}`
+                : getJobDetailText('[data-job-field="budget"]');
+
+            const descriptionEl = document.querySelector('[data-job-field="description"]');
+            if (descriptionEl && newDescription) {
+                descriptionEl.innerHTML = `<p>${escapeHtml(newDescription)}</p>`;
+            }
+            const budgetEl = document.querySelector('[data-job-field="budget"]');
+            if (budgetEl && budgetValue) budgetEl.textContent = budgetValue;
+
+            const urgencyEl = document.querySelector('[data-job-field="urgency"]');
+            if (urgencyEl) urgencyEl.textContent = urgencyLabel;
+
+            closeEditJobModal();
+            showSuccessToast();
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeEditJobModal();
+            }
+        });
+    </script>
+</body>
+</html>
+

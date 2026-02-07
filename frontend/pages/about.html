@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - TradeMatch UK | Our Story & Mission</title>
+    <meta name="description" content="Learn about TradeMatch UK - connecting customers with verified tradespeople since 2024. Our mission, values, and the team behind the platform.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: white;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--emerald-500);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.375rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Content Sections */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+        }
+
+        .section-alt {
+            background: var(--slate-50);
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .section p {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--emerald-500);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--slate-600);
+            font-weight: 600;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .value-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--emerald-500);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            color: var(--slate-600);
+            font-size: 1.0625rem;
+            margin: 0;
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-600) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+            font-weight: 700;
+        }
+
+        .team-name {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            font-size: 1rem;
+            color: var(--emerald-600);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .team-bio {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-600) 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            background: white;
+            color: var(--emerald-600);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--slate-900);
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .values-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Trade<span>Match</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="how-it-works.html">How It Works</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="help.html">Help</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>About TradeMatch</h1>
+        <p>We're on a mission to make finding trusted tradespeople simple, transparent, and reliable for everyone across the UK.</p>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Our Story</h2>
+            <p>TradeMatch was founded in 2024 with a simple vision: to bridge the gap between customers needing home improvements and skilled tradespeople looking for work. We saw firsthand how difficult it was for homeowners to find reliable professionals, and how talented tradespeople struggled to find consistent work.</p>
+            
+            <p>Starting from a small office in London, we've grown into the UK's leading platform connecting customers with verified tradespeople. What makes us different is our commitment to transparency, quality, and building lasting relationships between customers and professionals.</p>
+            
+            <p>Today, we're proud to have facilitated over 50,000 successful projects, saved customers millions in competitive bidding, and helped thousands of tradespeople grow their businesses.</p>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section section-alt">
+        <div class="container">
+            <h2>TradeMatch by Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Projects Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Verified Tradespeople</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8★</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">£5M+</div>
+                    <div class="stat-label">Projects Value</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto;">To create a trusted marketplace where quality tradespeople and customers can connect easily, work together successfully, and build lasting professional relationships.</p>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="section section-alt">
+        <div class="container">
+            <h2>Our Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">🔒</div>
+                    <h3>Trust & Safety</h3>
+                    <p>Every tradesperson is thoroughly verified with ID checks, insurance validation, and customer reviews. We prioritize your safety and peace of mind.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💎</div>
+                    <h3>Quality First</h3>
+                    <p>We maintain high standards through our rating system, customer reviews, and ongoing monitoring. Only the best tradespeople thrive on our platform.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3>Fair Pricing</h3>
+                    <p>Competitive bidding ensures customers get fair market prices while tradespeople earn what they deserve. No hidden fees or unfair commissions.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🚀</div>
+                    <h3>Innovation</h3>
+                    <p>We continuously improve our platform with new features, better tools, and smarter technology to make your experience seamless.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Meet Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-photo">JS</div>
+                    <div class="team-name">James Smith</div>
+                    <div class="team-role">Founder & CEO</div>
+                    <p class="team-bio">Former tradesperson with 15 years experience. Passionate about helping skilled professionals grow their businesses.</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">EJ</div>
+                    <div class="team-name">Emily Johnson</div>
+                    <div class="team-role">Head of Operations</div>
+                    <p class="team-bio">Expert in marketplace operations. Ensures smooth experiences for both customers and tradespeople.</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">MP</div>
+                    <div class="team-name">Michael Patel</div>
+                    <div class="team-role">Chief Technology Officer</div>
+                    <p class="team-bio">Tech innovator building the platform that powers thousands of successful projects every month.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Join the TradeMatch Community</h2>
+        <p>Whether you need work done or you're a tradesperson looking for opportunities</p>
+        <a href="auth-register.html" class="btn">Get Started Free</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8);">Privacy</a></p>
+        </div>
+    </footer>
+
+    <script src="/frontend/shared/ui/profile-menu.js"></script>
+</body>
+</html>
+

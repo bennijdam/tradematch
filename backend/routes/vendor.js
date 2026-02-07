@@ -10,6 +10,40 @@ router.use(authenticate);
 router.use(requireVendor);
 
 /**
+ * PATCH /api/vendor/onboarding
+ * Mark vendor onboarding as completed
+ */
+router.patch('/onboarding', async (req, res) => {
+  try {
+    const vendorId = req.user.userId;
+    const { completed } = req.body || {};
+
+    if (completed !== true) {
+      return res.status(400).json({
+        success: false,
+        error: 'completed must be true'
+      });
+    }
+
+    await pool.query(
+      `UPDATE users
+       SET metadata = COALESCE(metadata, '{}'::jsonb)
+         || jsonb_build_object('onboarding_completed', true, 'onboarding_completed_at', NOW())
+       WHERE id = $1`,
+      [vendorId]
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Onboarding update error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update onboarding status'
+    });
+  }
+});
+
+/**
  * GET /api/vendor/dashboard
  * Vendor dashboard with available quotes and stats
  */
@@ -342,6 +376,66 @@ router.put('/profile', async (req, res) => {
       description,
       years_experience 
     } = req.body;
+
+    const errors = [];
+
+    const normalizedCompany = typeof company_name === 'string' ? company_name.trim() : '';
+    const normalizedPhone = typeof phone === 'string' ? phone.trim() : null;
+    const normalizedEmail = typeof email === 'string' ? email.trim() : null;
+    const normalizedPostcode = typeof postcode === 'string' ? postcode.trim() : null;
+    const normalizedAreas = typeof service_areas === 'string' ? service_areas.trim() : null;
+    const normalizedDescription = typeof description === 'string' ? description.trim() : null;
+    const normalizedYears = years_experience !== undefined && years_experience !== null
+      ? Number(years_experience)
+      : null;
+
+    if (company_name !== undefined && (!normalizedCompany || normalizedCompany.length < 2 || normalizedCompany.length > 120)) {
+      errors.push('Company name must be between 2 and 120 characters.');
+    }
+
+    if (normalizedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      errors.push('Email format is invalid.');
+    }
+
+    if (normalizedPhone && normalizedPhone.length > 30) {
+      errors.push('Phone number is too long.');
+    }
+
+    if (normalizedPostcode && normalizedPostcode.length > 12) {
+      errors.push('Postcode is too long.');
+    }
+
+    if (normalizedAreas && normalizedAreas.length > 500) {
+      errors.push('Service areas are too long.');
+    }
+
+    if (normalizedDescription && normalizedDescription.length > 1000) {
+      errors.push('Description is too long.');
+    }
+
+    if (normalizedYears !== null && (Number.isNaN(normalizedYears) || normalizedYears < 0 || normalizedYears > 100)) {
+      errors.push('Years of experience must be between 0 and 100.');
+    }
+
+    if (services !== undefined && !Array.isArray(services)) {
+      errors.push('Services must be an array.');
+    }
+
+    if (Array.isArray(services) && services.some((service) => typeof service !== 'string' || service.trim().length === 0 || service.length > 60)) {
+      errors.push('Each service must be a non-empty string up to 60 characters.');
+    }
+
+    if (!normalizedCompany && !normalizedPhone && !normalizedEmail && !normalizedPostcode && !normalizedAreas && !normalizedDescription && normalizedYears === null && !services) {
+      errors.push('At least one field must be provided.');
+    }
+
+    if (errors.length) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid profile data',
+        details: errors
+      });
+    }
     
     await pool.query(
       `UPDATE vendors 
@@ -349,8 +443,17 @@ router.put('/profile', async (req, res) => {
            service_areas = $5, services = $6, description = $7,
            years_experience = $8, updated_at = CURRENT_TIMESTAMP
        WHERE id = $9`,
-      [company_name, phone, email, postcode, service_areas, services, 
-       description, years_experience, vendorId]
+      [
+        normalizedCompany || null,
+        normalizedPhone,
+        normalizedEmail,
+        normalizedPostcode,
+        normalizedAreas,
+        Array.isArray(services) ? services.map((service) => service.trim()) : services,
+        normalizedDescription,
+        normalizedYears,
+        vendorId
+      ]
     );
     
     res.json({

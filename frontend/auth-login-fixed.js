@@ -31,7 +31,21 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-const FRONTEND_BASE = 'https://www.tradematch.uk';
+const FRONTEND_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? window.location.origin
+    : 'https://www.tradematch.uk';
+
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3001'
+    : 'https://api.tradematch.uk';
+
+const VENDOR_DASHBOARD_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3003/vendor-dashboard-with-modals.html'
+    : `${FRONTEND_BASE}/vendor-dashboard.html`;
+
+const CUSTOMER_DASHBOARD_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? `${FRONTEND_BASE}/index.html`
+    : `${FRONTEND_BASE}/customer-dashboard.html`;
 
 function openOAuthPopup(url) {
     const width = 520;
@@ -53,7 +67,7 @@ function openOAuthPopup(url) {
 
 function resolveReturnTo(value) {
     if (value && value.startsWith(FRONTEND_BASE)) {
-        if (value.includes('/frontend/auth-login.html')) {
+        if (value.includes('/frontend/pages/auth-login.html')) {
             return FRONTEND_BASE;
         }
         return value;
@@ -129,7 +143,7 @@ async function submitPendingQuoteIfAny(token) {
     };
 
     try {
-        const response = await fetch('https://api.tradematch.uk/api/quotes', {
+        const response = await fetch(`${API_BASE}/api/quotes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -171,13 +185,13 @@ async function processOAuthToken(token, source) {
         const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
 
         if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
-            window.location.href = returnTo + '/vendor-dashboard.html?source=google';
+            window.location.href = VENDOR_DASHBOARD_URL + '?source=google';
             return;
         }
 
         if (userData.userType === 'customer') {
             await submitPendingQuoteIfAny(token);
-            window.location.href = returnTo + '/customer-dashboard.html?source=google';
+            window.location.href = CUSTOMER_DASHBOARD_URL + '?source=google';
             return;
         }
 
@@ -214,7 +228,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
         
         // Real API call to backend
-        const response = await fetch('https://api.tradematch.uk/api/auth/login', {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, userType: currentUserType })
@@ -246,9 +260,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 window.location.href = redirect;
                 return;
             }
-            window.location.href = data.user.userType === 'customer' 
-                ? 'customer-dashboard.html' 
-                : 'vendor-dashboard.html';
+            window.location.href = data.user.userType === 'customer'
+                ? CUSTOMER_DASHBOARD_URL
+                : VENDOR_DASHBOARD_URL;
         }, 1500);
         
     } catch (error) {
@@ -364,3 +378,6 @@ window.addEventListener('load', () => {
         document.getElementById('remember').checked = true;
     }
 });
+
+
+
