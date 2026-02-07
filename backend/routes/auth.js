@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { body, validationResult } = require('express-validator');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const EmailService = require('../services/email.service');
 
@@ -13,24 +13,48 @@ router.setPool = (p) => {
   pool = p;
 };
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Too many authentication attempts, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true
+});
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const allowedUserTypes = ['customer', 'vendor', 'tradesperson'];
+
 // ==========================================
 // REGISTER ENDPOINT
 // ==========================================
-router.post('/register', [
-  body('email').isEmail().withMessage('Valid email required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('name').notEmpty().withMessage('Name is required'),
-  body('userType').isIn(['customer', 'vendor']).withMessage('User type must be customer or vendor')
-], async (req, res) => {
-  // Validate input
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email, password, name, userType, phone, postcode } = req.body;
+router.post('/register', authLimiter, async (req, res) => {
+  const { userType, fullName, name, email, phone, password, postcode, oauth_provider, oauth_id } = req.body;
+  const normalizedName = (fullName || name || '').trim();
+  const normalizedUserType = (userType || 'customer').toLowerCase();
 
   try {
+    if (!email || !normalizedName) {
+      return res.status(400).json({
+        error: 'Missing required fields',
+        required: ['email', 'fullName']
+      });
+    }
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    if (!allowedUserTypes.includes(normalizedUserType)) {
+      return res.status(400).json({ error: 'User type must be customer or vendor' });
+    }
+
+    if (!oauth_provider && (!password || password.length < 8)) {
+      return res.status(400).json({
+        error: 'Password must be at least 8 characters long'
+      });
+    }
+
     // Check if user already exists
     const existingUser = await pool.query(
       'SELECT id FROM users WHERE email = $1',
@@ -41,23 +65,68 @@ router.post('/register', [
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let hashedPassword = null;
+    let authProvider = 'local';
 
-    // Create user ID
-    const userId = `usr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    if (oauth_provider && oauth_provider !== 'local') {
+      authProvider = oauth_provider;
+
+      if (oauth_id) {
+        const existingOauthUser = await pool.query(
+          'SELECT id FROM users WHERE oauth_id = $1',
+          [oauth_id]
+        );
+
+        if (existingOauthUser.rows.length > 0) {
+          await pool.query(
+            'UPDATE users SET oauth_provider = $1, full_name = $2, email = $3, phone = $4, postcode = $5 WHERE oauth_id = $6',
+            [oauth_provider, normalizedName, email.toLowerCase(), phone, postcode, oauth_id]
+          );
+
+          const user = await pool.query(
+            'SELECT * FROM users WHERE id = $1',
+            [existingOauthUser.rows[0].id]
+          );
+
+          const token = jwt.sign(
+            { userId: user.rows[0].id, email: email.toLowerCase() },
+            process.env.JWT_SECRET || 'fallback-secret',
+            { expiresIn: '7d' }
+          );
+
+          return res.json({
+            message: 'OAuth account linked successfully',
+            token,
+            user: user.rows[0]
+          });
+        }
+      }
+    } else {
+      hashedPassword = await bcrypt.hash(password, 12);
+    }
 
     // Insert user
-    await pool.query(
-      `INSERT INTO users (id, email, password_hash, name, user_type, phone, postcode, email_verified, status)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, false, 'active')`,
-      [userId, email.toLowerCase(), hashedPassword, name, userType, phone || null, postcode || null]
+    const insertResult = await pool.query(
+      `INSERT INTO users (id, user_type, full_name, name, email, phone, password_hash, postcode, oauth_provider, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+       RETURNING id, user_type, full_name, email, phone, postcode, oauth_provider`,
+      [
+        require('crypto').randomUUID(),
+        normalizedUserType,
+        normalizedName,
+        normalizedName,
+        email.toLowerCase(),
+        phone || null,
+        hashedPassword,
+        postcode || null,
+        authProvider
+      ]
     );
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId, email: email.toLowerCase(), userType },
-      process.env.JWT_SECRET,
+      { userId: insertResult.rows[0].id, email: email.toLowerCase() },
+      process.env.JWT_SECRET || 'fallback-secret',
       { expiresIn: process.env.JWT_EXPIRY || '7d' }
     );
 
@@ -67,10 +136,10 @@ router.post('/register', [
       if (emailService) {
         await emailService.sendEmail({
           to: email.toLowerCase(),
-          subject: `Welcome to TradeMatch${userType === 'vendor' ? ' - Your Vendor Account is Ready!' : '!'} ✅`,
-          html: userType === 'vendor' ? `
+          subject: `Welcome to TradeMatch${normalizedUserType === 'vendor' || normalizedUserType === 'tradesperson' ? ' - Your Vendor Account is Ready!' : '!'} ✅`,
+          html: normalizedUserType === 'vendor' || normalizedUserType === 'tradesperson' ? `
             <h2>Welcome to TradeMatch! 🎉</h2>
-            <p>Dear ${name},</p>
+            <p>Dear ${normalizedName},</p>
             <p>Thank you for registering as a trusted tradesperson on TradeMatch. Your professional profile has been created and is now visible to homeowners across the UK.</p>
             <h3>What You Can Do:</h3>
             <ul>
@@ -93,7 +162,7 @@ router.post('/register', [
             <p>Best regards,<br>The TradeMatch Team</p>
           ` : `
             <h2>Welcome to TradeMatch! 🏠</h2>
-            <p>Dear ${name},</p>
+            <p>Dear ${normalizedName},</p>
             <p>Thank you for joining TradeMatch! Your account has been created and you're ready to get matched with customers who need your skills and expertise.</p>
             <h3>What You Can Do:</h3>
             <ul>
@@ -114,7 +183,7 @@ router.post('/register', [
             <p>Ready to transform your trade business? Let's get started!</p>
             <p>Best regards,<br>The TradeMatch Team</p>
           `,
-          text: `Welcome to TradeMatch${userType === 'vendor' ? ' - Your Vendor Account is Ready!' : '!'} ✅\n\nDear ${name},\n\nThank you for registering with TradeMatch! Your account has been successfully created and you're ready to get started.`
+          text: `Welcome to TradeMatch${normalizedUserType === 'vendor' || normalizedUserType === 'tradesperson' ? ' - Your Vendor Account is Ready!' : '!'} ✅\n\nDear ${normalizedName},\n\nThank you for registering with TradeMatch! Your account has been successfully created and you're ready to get started.`
         });
         console.log(`📧 Welcome email sent to ${email.toLowerCase()}`);
       }
@@ -128,10 +197,12 @@ router.post('/register', [
       message: 'User registered successfully',
       token,
       user: {
-        id: userId,
-        email: email.toLowerCase(),
-        name,
-        userType
+        id: insertResult.rows[0].id,
+        email: insertResult.rows[0].email,
+        name: normalizedName,
+        fullName: insertResult.rows[0].full_name,
+        userType: insertResult.rows[0].user_type,
+        oauth_provider: insertResult.rows[0].oauth_provider
       }
     });
   } catch (error) {
@@ -143,16 +214,7 @@ router.post('/register', [
 // ==========================================
 // LOGIN ENDPOINT
 // ==========================================
-router.post('/login', [
-  body('email').isEmail().withMessage('Valid email required'),
-  body('password').notEmpty().withMessage('Password is required')
-], async (req, res) => {
-  // Validate input
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
+router.post('/login', authLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -169,7 +231,7 @@ router.post('/login', [
     const user = result.rows[0];
 
     // Check if user is active
-    if (user.status !== 'active') {
+    if (user.status && user.status !== 'active' && user.status !== 'confirmed') {
       return res.status(403).json({ error: 'Account is suspended or deleted' });
     }
 
@@ -186,7 +248,7 @@ router.post('/login', [
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email, userType: user.user_type, role },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'fallback-secret',
       { expiresIn: process.env.JWT_EXPIRY || '7d' }
     );
 
@@ -202,8 +264,10 @@ router.post('/login', [
         id: user.id,
         email: user.email,
         name: displayName,
+        fullName: displayName,
         userType: user.user_type,
-        role
+        role,
+        oauth_provider: user.oauth_provider || null
       }
     });
   } catch (error) {
@@ -228,7 +292,7 @@ router.get('/me', async (req, res) => {
 
     // Get user from database
     const result = await pool.query(
-      'SELECT id, email, name, user_type, phone, postcode, avatar_url, created_at, metadata FROM users WHERE id = $1',
+      'SELECT id, email, full_name, name, user_type, phone, postcode, avatar_url, created_at, metadata, oauth_provider, email_verified FROM users WHERE id = $1',
       [decoded.userId]
     );
 
@@ -243,6 +307,7 @@ router.get('/me', async (req, res) => {
       success: true,
       user: {
         ...user,
+        fullName: user.full_name || user.name || user.email,
         onboarding_completed: Boolean(metadata.onboarding_completed)
       }
     });
