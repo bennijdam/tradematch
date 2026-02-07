@@ -3,13 +3,20 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
-    if (filePath === './') {
-        filePath = './frontend/index.html';
+    let urlPath = req.url;
+    if (urlPath === '/') {
+        urlPath = '/pages/index.html';
     }
 
-    if (filePath.endsWith('/')) {
-        filePath = path.join(filePath, 'index.html');
+    if (urlPath.endsWith('/')) {
+        urlPath = `${urlPath}index.html`;
+    }
+
+    let filePath;
+    if (urlPath.startsWith('/frontend/')) {
+        filePath = path.join('.', urlPath.replace(/^\/+/, ''));
+    } else {
+        filePath = path.join('.', 'frontend', urlPath.replace(/^\/+/, ''));
     }
 
     fs.stat(filePath, (statError, stats) => {
