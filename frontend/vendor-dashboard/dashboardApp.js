@@ -41,7 +41,7 @@ function getAuthBaseUrl() {
 
 function redirectToLogin() {
     const returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = `${getAuthBaseUrl()}/frontend/pages/auth-login.html?redirect=${returnUrl}`;
+    window.location.href = `${getAuthBaseUrl()}/login?redirect=${returnUrl}`;
 }
 
 async function enforceVendorSession() {

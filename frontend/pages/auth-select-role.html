@@ -302,7 +302,7 @@
             <button class="btn btn-secondary" onclick="signOut()">Sign Out</button>
         </div>
         
-        <a href="auth-login.html" class="back-link">← Back to Login</a>
+        <a href="/login" class="back-link">← Back to Login</a>
     </div>
 
     <script>
@@ -323,7 +323,7 @@
                 if (!token) {
                     showNotification('No token found. Please login again.', 'error');
                     setTimeout(() => {
-                        window.location.href = 'auth-login.html';
+                        window.location.href = '/login';
                     }, 2000);
                     return;
                 }
@@ -386,7 +386,7 @@
             localStorage.removeItem('oauthReturnTo');
             showNotification('Signed out successfully', 'success');
             setTimeout(() => {
-                window.location.href = 'auth-login.html';
+                window.location.href = '/login';
             }, 1000);
         }
 
@@ -400,7 +400,7 @@
                 if (!token) {
                     showNotification('No token found. Please login again.', 'error');
                     setTimeout(() => {
-                        window.location.href = 'auth-login.html';
+                        window.location.href = '/login';
                     }, 2000);
                     return;
                 }

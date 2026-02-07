@@ -18,7 +18,7 @@ function getReturnUrl() {
 
 function redirectToLogin() {
     const returnUrl = encodeURIComponent(getReturnUrl());
-    window.location.href = `/frontend/pages/auth-login.html?redirect=${returnUrl}`;
+    window.location.href = `/login?redirect=${returnUrl}`;
 }
 
 function enforceCustomerSession() {

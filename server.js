@@ -2,13 +2,32 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const server = http.createServer((req, res) => {
-    let urlPath = req.url;
-    if (urlPath === '/') {
-        urlPath = '/pages/index.html';
-    }
+const cleanRoutes = {
+    '/': '/index.html',
+    '/login': '/pages/auth-login.html',
+    '/signup': '/pages/auth-register.html',
+    '/select-role': '/pages/auth-select-role.html',
+    '/activate': '/pages/activate.html',
+    '/about': '/pages/about.html',
+    '/contact': '/pages/contact.html',
+    '/help': '/pages/help.html',
+    '/how-it-works': '/pages/how-it-works.html',
+    '/find-tradespeople': '/pages/find-tradespeople.html',
+    '/terms': '/pages/terms.html',
+    '/privacy': '/pages/privacy.html',
+    '/cookies': '/pages/cookies.html',
+    '/blog': '/pages/blog.html',
+    '/post-job': '/pages/quote-engine.html',
+    '/trade-signup': '/pages/vendor-register.html'
+};
 
-    if (urlPath.endsWith('/')) {
+const server = http.createServer((req, res) => {
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    let urlPath = parsedUrl.pathname;
+
+    if (cleanRoutes[urlPath]) {
+        urlPath = cleanRoutes[urlPath];
+    } else if (urlPath.endsWith('/')) {
         urlPath = `${urlPath}index.html`;
     }
 
@@ -60,7 +79,7 @@ const PORT = 8000;
 server.listen(PORT, () => {
     console.log(`🚀 TradeMatch Local Server running at http://localhost:${PORT}`);
     console.log(`📱 Main page: http://localhost:${PORT}`);
-    console.log(`🔧 Quote Engine: http://localhost:${PORT}/frontend/quote-engine.html`);
-    console.log(`👷 Vendor Portal: http://localhost:${PORT}/frontend/vendor-register.html`);
-    console.log(`🧪 API Test: http://localhost:${PORT}/frontend/api-test.html`);
+    console.log(`🔧 Quote Engine: http://localhost:${PORT}/post-job`);
+    console.log(`👷 Vendor Portal: http://localhost:${PORT}/trade-signup`);
+    console.log(`🧪 API Test: http://localhost:${PORT}/pages/api-test.html`);
 });
