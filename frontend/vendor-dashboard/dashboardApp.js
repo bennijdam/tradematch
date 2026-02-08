@@ -25,7 +25,7 @@ function getApiBaseUrl() {
     if (isLocalhost && !origin.includes(':3001')) {
         return 'http://localhost:3001';
     }
-    return origin;
+    return 'https://api.tradematch.uk';
 }
 
 function getAuthBaseUrl() {

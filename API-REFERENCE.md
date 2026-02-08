@@ -9,6 +9,47 @@ This file provides a canonical endpoint map. For implementation details, see bac
 
 All API routes are prefixed with /api unless otherwise noted.
 
+## Source of Truth (Mount Points)
+
+Primary mounts live in backend/server.js (local/dev) and backend/server-production.js (production). Router implementations are in backend/routes/.
+
+- /api/auth -> backend/routes/auth.js
+- /api/user -> backend/routes/user.js
+- /api/uploads -> backend/routes/uploads.js
+- /api/email -> backend/email-resend.js
+- /api/quotes -> backend/routes/quotes.js
+- /api/bids -> backend/routes/bids.js
+- /api/customer -> backend/routes/customer.js
+- /api/saved-trades -> backend/routes/saved-trades.js
+- /api/vendor -> backend/routes/vendor.js
+- /api/vendor-credits -> backend/routes/vendor-credits.js
+- /api/leads -> backend/routes/leads.js
+- /api/messaging -> backend/routes/messaging.js
+- /api/reviews -> backend/routes/reviews.js
+- /api/contracts -> backend/routes/contracts.js
+- /api/disputes -> backend/routes/disputes.js
+- /api/credits -> backend/routes/credits.js
+- /api/billing -> backend/routes/billing.js
+- /api/webhooks -> backend/routes/webhooks.js
+- /api/admin -> backend/routes/admin.js
+- /api/admin/finance -> backend/routes/admin-finance.js
+- /api/milestones (status) -> backend/routes/milestones-status.js (server.js)
+- /api/milestones -> backend/routes/milestones.js (server-production.js)
+- /api/payments -> backend/routes/payments.js (server-production.js)
+- /api/connection -> backend/routes/connection-layer.js (server-production.js)
+
+OAuth (no /api prefix)
+
+- /auth/google -> backend/routes/google-auth.js
+- /auth/microsoft -> backend/routes/microsoft-auth.js
+
+Additional routers exist (analytics, ai, contact, oauth-simple). Confirm mounts in backend/server-production.js before relying on them.
+
+## Maintenance Policy
+
+- Update this file when adding, removing, or remounting routers in backend/server.js or backend/server-production.js.
+- Treat backend/routes/ as the implementation source; keep endpoint lists consistent with those routers.
+
 ## Auth
 
 - POST /api/auth/register

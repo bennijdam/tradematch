@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const passport = require('passport');
 const path = require('path');
 const crypto = require('crypto');
-const { emailLimiter } = require('./middleware/rate-limit');
+const { apiLimiter, emailLimiter, quoteLimiter, paymentLimiter, uploadLimiter } = require('./middleware/rate-limit');
 const { startCreditExpiryJob } = require('./services/credit-expiry-job');
 const { startVendorScoreRecoveryJob } = require('./services/vendor-score-recovery');
 
@@ -71,10 +71,12 @@ const defaultAllowedOrigins = [
     'http://localhost:3001',
     'http://localhost:3002',
     'http://localhost:3003',
+    'http://localhost:8080',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3002',
     'http://127.0.0.1:3003',
+    'http://127.0.0.1:8080',
     'http://127.0.0.1:8000'
 ];
 
@@ -90,6 +92,8 @@ app.use(cors({
     credentials: true,
 }));
 
+app.use('/api/', apiLimiter);
+
 const jsonParser = express.json();
 app.use((req, res, next) => {
     if (req.originalUrl === '/api/webhooks/stripe') {
@@ -103,7 +107,7 @@ app.use(passport.initialize());
 app.use('/frontend/super-admin-dashboard', express.static(path.join(__dirname, '../frontend/super-admin-dashboard')));
 
 // File uploads (S3 presigned URLs)
-app.use('/api/uploads', uploadsRoutes);
+app.use('/api/uploads', uploadLimiter, uploadsRoutes);
 
 // Database connection
 const pool = new Pool({
@@ -172,6 +176,10 @@ const authRouter = require('./routes/auth');
 if (typeof authRouter.setPool === 'function') authRouter.setPool(pool);
 app.use('/api/auth', authRouter);
 
+const userRouter = require('./routes/user');
+if (typeof userRouter.setPool === 'function') userRouter.setPool(pool);
+app.use('/api/user', userRouter);
+
 // Mount OAuth routers (use the routers that already configure passport strategies)
 const googleAuthRouter = require('./routes/google-auth');
 const microsoftAuthRouter = require('./routes/microsoft-auth');
@@ -197,6 +205,7 @@ try {
 try {
     const quotesRouter = require('./routes/quotes');
     if (typeof quotesRouter.setPool === 'function') quotesRouter.setPool(pool);
+    app.use('/api/quotes/public', quoteLimiter);
     app.use('/api/quotes', quotesRouter);
     console.log('📋 Quotes routes mounted at /api/quotes');
 } catch (e) {
@@ -238,6 +247,8 @@ try {
 
 try {
     const vendorCreditsRouter = require('./routes/vendor-credits')(pool);
+    app.use('/api/vendor-credits/purchase', paymentLimiter);
+    app.use('/api/vendor-credits/refund', paymentLimiter);
     app.use('/api/vendor-credits', vendorCreditsRouter);
     console.log('💳 Vendor credits routes mounted at /api/vendor-credits');
 } catch (e) {
@@ -304,6 +315,9 @@ try {
 
 try {
     const creditsRouter = require('./routes/credits')(pool);
+    app.use('/api/credits/purchase', paymentLimiter);
+    app.use('/api/credits/purchase/confirm', paymentLimiter);
+    app.use('/api/credits/checkout', paymentLimiter);
     app.use('/api/credits', creditsRouter);
     console.log('💰 Credits routes mounted at /api/credits');
 } catch (e) {
@@ -313,6 +327,7 @@ try {
 // Billing routes (Stripe Checkout)
 try {
     const billingRouter = require('./routes/billing');
+    app.use('/api/billing/checkout', paymentLimiter);
     app.use('/api/billing', billingRouter);
     console.log('💳 Billing routes mounted at /api/billing');
 } catch (e) {

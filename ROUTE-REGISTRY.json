@@ -1,0 +1,138 @@
+{
+  "origins": {
+    "production": {
+      "frontend": "https://www.tradematch.uk",
+      "api": "https://api.tradematch.uk"
+    },
+    "local": {
+      "frontendStatic": "http://localhost:8080",
+      "frontendRootServer": "http://localhost:8000",
+      "api": "http://localhost:3001"
+    }
+  },
+  "cleanRoutes": [
+    { "path": "/", "destination": "/index.html" },
+    { "path": "/login", "destination": "/pages/auth-login.html" },
+    { "path": "/signup", "destination": "/pages/auth-register.html" },
+    { "path": "/select-role", "destination": "/pages/auth-select-role.html" },
+    { "path": "/activate", "destination": "/pages/activate.html" },
+    { "path": "/about", "destination": "/pages/about.html" },
+    { "path": "/contact", "destination": "/pages/contact.html" },
+    { "path": "/help", "destination": "/pages/help.html" },
+    { "path": "/how-it-works", "destination": "/pages/how-it-works.html" },
+    { "path": "/find-tradespeople", "destination": "/pages/find-tradespeople.html" },
+    { "path": "/terms", "destination": "/pages/terms.html" },
+    { "path": "/privacy", "destination": "/pages/privacy.html" },
+    { "path": "/cookies", "destination": "/pages/cookies.html" },
+    { "path": "/blog", "destination": "/pages/blog.html" },
+    { "path": "/post-job", "destination": "/pages/quote-engine.html" },
+    { "path": "/trade-signup", "destination": "/pages/vendor-register.html" }
+  ],
+  "dashboards": {
+    "entryPoints": [
+      { "path": "/user-dashboard", "destination": "/user-dashboard/index.html" },
+      { "path": "/vendor-dashboard", "destination": "/vendor-dashboard/index.html" },
+      { "path": "/super-admin", "destination": "/super-admin-dashboard/index.html" }
+    ],
+    "user": [
+      "/user-dashboard/dashboard",
+      "/user-dashboard/my-jobs",
+      "/user-dashboard/job-details",
+      "/user-dashboard/job-quotes",
+      "/user-dashboard/quotes",
+      "/user-dashboard/messages",
+      "/user-dashboard/notifications",
+      "/user-dashboard/profile",
+      "/user-dashboard/settings",
+      "/user-dashboard/reviews",
+      "/user-dashboard/saved-trades",
+      "/user-dashboard/your-quotes",
+      "/user-dashboard/post-job",
+      "/user-dashboard/billing",
+      "/user-dashboard/billing-addons",
+      "/user-dashboard/edit-job-modal"
+    ],
+    "vendor": [
+      "/vendor-dashboard/vendor-dashboard-enhanced",
+      "/vendor-dashboard/vendor-dashboard-with-modals",
+      "/vendor-dashboard/vendor-new-jobs",
+      "/vendor-dashboard/vendor-active-quotes",
+      "/vendor-dashboard/vendor-archived-jobs",
+      "/vendor-dashboard/vendor-new-leads",
+      "/vendor-dashboard/vendor-messages",
+      "/vendor-dashboard/vendor-profile",
+      "/vendor-dashboard/vendor-settings",
+      "/vendor-dashboard/vendor-coverage",
+      "/vendor-dashboard/vendor-billing",
+      "/vendor-dashboard/vendor-analytics",
+      "/vendor-dashboard/vendor-impressions",
+      "/vendor-dashboard/vendor-heatmaps",
+      "/vendor-dashboard/vendor-badges",
+      "/vendor-dashboard/vendor-timeline"
+    ],
+    "superAdmin": [
+      "/super-admin",
+      "/frontend/super-admin-dashboard/index.html"
+    ]
+  },
+  "legacyHtml": [
+    "/pages/auth-login.html",
+    "/pages/auth-register.html",
+    "/pages/auth-select-role.html",
+    "/pages/quote-engine.html",
+    "/pages/vendor-register.html"
+  ],
+  "seoRewrites": [
+    { "path": "/services", "destination": "S3 services index" },
+    { "path": "/services/:service", "destination": "S3 service page" },
+    { "path": "/locations", "destination": "S3 locations index" },
+    { "path": "/locations/:location", "destination": "S3 location page" },
+    { "path": "/sitemaps/:path*", "destination": "S3 sitemaps" },
+    { "path": "/seo/:path*", "destination": "S3 SEO pages" }
+  ],
+  "api": {
+    "prefixes": [
+      "/api/health",
+      "/api/auth",
+      "/api/user",
+      "/api/uploads",
+      "/api/email",
+      "/api/quotes",
+      "/api/bids",
+      "/api/customer",
+      "/api/vendor",
+      "/api/vendor-credits",
+      "/api/leads",
+      "/api/messaging",
+      "/api/reviews",
+      "/api/contracts",
+      "/api/disputes",
+      "/api/payments",
+      "/api/milestones",
+      "/api/credits",
+      "/api/billing",
+      "/api/analytics",
+      "/api/ai",
+      "/api/contact",
+      "/api/webhooks/stripe"
+    ],
+    "oauth": [
+      "/auth/google",
+      "/auth/google/callback",
+      "/auth/microsoft",
+      "/auth/microsoft/callback"
+    ],
+    "admin": [
+      "/api/admin",
+      "/api/admin/finance"
+    ],
+    "notes": "See API-REFERENCE.md for full endpoint map."
+  },
+  "sources": [
+    "vercel.json",
+    "frontend/vercel.json",
+    "server.js",
+    "backend/server.js"
+  ],
+  "maintenance": "Update this registry when clean routes, rewrites, or API mounts change. Keep it aligned with vercel.json, server.js, and backend/server.js."
+}

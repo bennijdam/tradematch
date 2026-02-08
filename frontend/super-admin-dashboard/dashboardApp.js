@@ -417,7 +417,7 @@
         const cancel = document.getElementById("loginCancel");
         if (cancel) {
             cancel.addEventListener("click", () => {
-                window.location.href = "/frontend/pages/index.html";
+                window.location.href = "/";
             });
         }
 

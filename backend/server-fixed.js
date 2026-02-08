@@ -3557,7 +3557,7 @@ app.get("/api/milestones/quote/:quoteId", authenticateToken, async (req, res) =>
 });
 
 // Create payment milestones (vendor only)
-app.post("/api/payments/milestones", authenticateToken, async (req, res) => {
+app.post("/api/payments/milestones", authenticateToken, paymentLimiter, async (req, res) => {
   try {
     if (req.user.userType !== 'vendor') {
       return res.status(403).json({ error: 'Only vendors can create milestones' });
@@ -3598,7 +3598,7 @@ app.post("/api/payments/milestones", authenticateToken, async (req, res) => {
 });
 
 // Get milestones for a payment
-app.get("/api/payments/milestones/:paymentId", authenticateToken, async (req, res) => {
+app.get("/api/payments/milestones/:paymentId", authenticateToken, paymentLimiter, async (req, res) => {
   try {
     const { paymentId } = req.params;
     const result = await pool.query(
@@ -3616,7 +3616,7 @@ app.get("/api/payments/milestones/:paymentId", authenticateToken, async (req, re
 });
 
 // Get payment status
-app.get("/api/payments/:paymentId", authenticateToken, async (req, res) => {
+app.get("/api/payments/:paymentId", authenticateToken, paymentLimiter, async (req, res) => {
   try {
     const { paymentId } = req.params;
     const userId = req.user.id;
@@ -3675,7 +3675,7 @@ app.get("/api/payments/:paymentId", authenticateToken, async (req, res) => {
 });
 
 // Get payment by Stripe Intent ID (for webhook confirmation)
-app.post("/api/payments/confirm", authenticateToken, async (req, res) => {
+app.post("/api/payments/confirm", authenticateToken, paymentLimiter, async (req, res) => {
   try {
     const { stripe_intent_id } = req.body;
 

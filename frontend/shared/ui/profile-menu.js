@@ -160,7 +160,7 @@
                 event.preventDefault();
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.href = '/frontend/pages/auth-login.html';
+                window.location.href = '/login';
             });
         }
     };

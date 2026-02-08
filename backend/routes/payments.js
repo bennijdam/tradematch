@@ -41,6 +41,11 @@ router.post('/create-intent', authenticate, async (req, res) => {
     const customerId = req.user.userId;
     
     try {
+        const normalizedAmount = Number(amount);
+        if (!quoteId || !Number.isFinite(normalizedAmount) || normalizedAmount <= 0) {
+            return res.status(400).json({ error: 'quoteId and a valid amount are required' });
+        }
+
         // Get quote details
         const quoteResult = await pool.query(
             'SELECT * FROM quotes WHERE id = $1 AND customer_id = $2',
@@ -52,15 +57,28 @@ router.post('/create-intent', authenticate, async (req, res) => {
         }
         
         const quote = quoteResult.rows[0];
+        let vendorId = quote.vendor_id;
+
+        if (!vendorId) {
+            const bidResult = await pool.query(
+                'SELECT vendor_id FROM bids WHERE quote_id = $1 AND status = $2 LIMIT 1',
+                [quoteId, 'accepted']
+            );
+            vendorId = bidResult.rows[0]?.vendor_id || null;
+        }
+
+        if (!vendorId) {
+            return res.status(400).json({ error: 'Accepted vendor not found for this quote' });
+        }
         
         // Create Stripe PaymentIntent
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(amount * 100), // Convert to pence
+            amount: Math.round(normalizedAmount * 100), // Convert to pence
             currency: 'gbp',
             metadata: {
                 quoteId,
                 customerId,
-                vendorId: quote.vendor_id
+                vendorId
             },
             description: description || `Payment for ${quote.title}`,
             automatic_payment_methods: {
@@ -76,7 +94,7 @@ router.post('/create-intent', authenticate, async (req, res) => {
                 id, quote_id, customer_id, vendor_id, amount, 
                 stripe_payment_intent_id, status, escrow_status
             ) VALUES ($1, $2, $3, $4, $5, $6, 'pending', 'held')`,
-            [paymentId, quoteId, customerId, quote.vendor_id, amount, paymentIntent.id]
+            [paymentId, quoteId, customerId, vendorId, normalizedAmount, paymentIntent.id]
         );
         
         res.json({
@@ -98,11 +116,11 @@ router.post('/create-intent', authenticate, async (req, res) => {
                 customer.email,
                 'Payment Initiated for TradeMatch Service',
                 `<h2>Payment Initiated</h2>
-                 <p>Your payment of £${amount} has been initiated for the service.</p>
+                 <p>Your payment of £${normalizedAmount} has been initiated for the service.</p>
                  <p><strong>Payment ID:</strong> ${paymentId}</p>
                  <p><strong>Quote ID:</strong> ${quoteId}</p>
                  <p>Your payment is securely held in escrow until the work is completed to your satisfaction.</p>`,
-                `Payment of £${amount} initiated for your TradeMatch service. Payment ID: ${paymentId}`
+                `Payment of £${normalizedAmount} initiated for your TradeMatch service. Payment ID: ${paymentId}`
             );
         }
         
@@ -127,14 +145,14 @@ router.post('/confirm', authenticate, async (req, res) => {
             // Update payment record
             await pool.query(
                 `UPDATE payments 
-                 SET status = 'paid', 
+                 SET status = 'completed', 
                      paid_at = CURRENT_TIMESTAMP,
                      stripe_charge_id = $1
                  WHERE stripe_payment_intent_id = $2`,
                 [paymentIntent.latest_charge, paymentIntentId]
             );
             
-            res.json({ success: true, status: 'paid' });
+            res.json({ success: true, status: 'completed' });
         } else {
             res.json({ success: false, status: paymentIntent.status });
         }
@@ -154,6 +172,11 @@ router.post('/release-escrow', authenticate, async (req, res) => {
     const userId = req.user.userId;
     
     try {
+        const normalizedAmount = Number(amount);
+        if (!paymentId || !Number.isFinite(normalizedAmount) || normalizedAmount <= 0) {
+            return res.status(400).json({ error: 'paymentId and a valid amount are required' });
+        }
+
         // Verify payment ownership
         const paymentResult = await pool.query(
             'SELECT * FROM payments WHERE id = $1 AND customer_id = $2',
@@ -166,8 +189,33 @@ router.post('/release-escrow', authenticate, async (req, res) => {
         
         const payment = paymentResult.rows[0];
         
+        if (payment.status !== 'completed') {
+            return res.status(400).json({ error: 'Payment is not completed' });
+        }
+
         if (payment.escrow_status !== 'held') {
             return res.status(400).json({ error: 'Funds already released' });
+        }
+
+        let vendorStripeAccountId = payment.vendor_stripe_account_id || null;
+        if (!vendorStripeAccountId) {
+            const vendorResult = await pool.query(
+                'SELECT metadata FROM users WHERE id = $1',
+                [payment.vendor_id]
+            );
+            vendorStripeAccountId = vendorResult.rows[0]?.metadata?.stripe_account_id || null;
+        }
+
+        if (!vendorStripeAccountId) {
+            return res.status(400).json({ error: 'Vendor Stripe account not connected' });
+        }
+
+        const account = await stripe.accounts.retrieve(vendorStripeAccountId);
+        if (!account.charges_enabled || !account.payouts_enabled) {
+            return res.status(400).json({
+                error: 'Vendor Stripe account not fully enabled',
+                requirements: account.requirements?.currently_due || []
+            });
         }
         
         // Create escrow release request
@@ -183,9 +231,9 @@ router.post('/release-escrow', authenticate, async (req, res) => {
         
         // Create Stripe Transfer to vendor
         const transfer = await stripe.transfers.create({
-            amount: Math.round(amount * 100),
+            amount: Math.round(normalizedAmount * 100),
             currency: 'gbp',
-            destination: payment.vendor_stripe_account_id, // Vendor's connected account
+            destination: vendorStripeAccountId,
             metadata: {
                 paymentId,
                 releaseId
@@ -199,6 +247,13 @@ router.post('/release-escrow', authenticate, async (req, res) => {
                  released_at = CURRENT_TIMESTAMP
              WHERE id = $1`,
             [releaseId]
+        );
+
+        await pool.query(
+            `UPDATE payments
+             SET escrow_status = 'released'
+             WHERE id = $1`,
+            [paymentId]
         );
         
         // Update milestone if provided
@@ -233,7 +288,7 @@ router.post('/release-escrow', authenticate, async (req, res) => {
                     metadata: {
                         customer_id: jobData.customer_id,
                         vendor_id: jobData.vendor_id,
-                        amount: amount,
+                        amount: normalizedAmount,
                         milestone_id: milestoneId,
                         transfer_id: transfer.id
                     }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendor Dashboard - TradeMatch UK</title>
@@ -1627,13 +1628,13 @@
             // Check authentication
             const token = localStorage.getItem('token');
             if (!token) {
-                window.location.href = '/frontend/pages/auth-login.html';
+                window.location.href = '/login';
                 return;
             }
 
             const storedUser = getStoredUser();
             if (storedUser && storedUser.userType && !['vendor', 'tradesperson'].includes(storedUser.userType)) {
-                window.location.href = '/frontend/user-dashboard/index.html';
+                window.location.href = '/user-dashboard';
                 return;
             }
 
@@ -2301,13 +2302,14 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/frontend/pages/auth-login.html';
+            window.location.href = '/login';
         }
     </script>
     <script src="/frontend/shared/ui/profile-menu.js"></script>
     <script src="../dashboardApp.js"></script>
 </body>
 </html>
+
 
 
 

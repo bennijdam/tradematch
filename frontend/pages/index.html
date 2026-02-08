@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=60" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/hero-background-optimized.webp" fetchpriority="high">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -18,6 +18,7 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap"></noscript>
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+        <script defer src="/_vercel/analytics/script.js"></script>
         <!-- Google tag (gtag.js) -->
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -247,17 +248,29 @@
         
         /* Hero Section with Background Image */
         .hero {
-            background-image:
-                linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%),
-                image-set(
-                    url('/images/hero-background-optimized.webp') type('image/webp'),
-                    url('/images/hero-background-optimized.jpg') type('image/jpeg')
-                );
-            background-position: center, center;
-            background-size: cover, cover;
             padding: 120px 0 140px;
             position: relative;
             overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%);
+            z-index: 1;
         }
         
         .hero::before {
@@ -270,6 +283,8 @@
             right: -200px;
             border-radius: 50%;
             animation: pulse 4s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
         }
         
         @keyframes pulse {
@@ -283,6 +298,7 @@
             gap: 80px;
             align-items: center;
             position: relative;
+            z-index: 3;
         }
         
         .hero-text h1 {
@@ -4585,6 +4601,24 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-media">
+            <picture>
+                <source
+                    type="image/webp"
+                    srcset="/images/hero-background-optimized.webp"
+                >
+                <img
+                    src="/images/hero-background-optimized.jpg"
+                    alt="Trusted tradespeople across the UK"
+                    width="1600"
+                    height="900"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                >
+            </picture>
+        </div>
+        <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -5833,7 +5867,7 @@ function handleQuickSearch(event) {
 
         function viewPolicy() {
             // Redirect to privacy policy page
-            window.location.href = '/privacy-policy.html';
+            window.location.href = '/privacy';
         }
 
         // Check if GDPR already accepted
@@ -6023,4 +6057,6 @@ function handleQuickSearch(event) {
 
 </body>
 </html>
+
+
 

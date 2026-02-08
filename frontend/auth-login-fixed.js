@@ -39,13 +39,9 @@ const API_BASE = (window.location.hostname === 'localhost' || window.location.ho
     ? 'http://localhost:3001'
     : 'https://api.tradematch.uk';
 
-const VENDOR_DASHBOARD_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3003/vendor-dashboard-with-modals.html'
-    : `${FRONTEND_BASE}/vendor-dashboard.html`;
+const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/vendor-dashboard`;
 
-const CUSTOMER_DASHBOARD_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? `${FRONTEND_BASE}/index.html`
-    : `${FRONTEND_BASE}/customer-dashboard.html`;
+const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/user-dashboard`;
 
 function openOAuthPopup(url) {
     const width = 520;
@@ -67,9 +63,6 @@ function openOAuthPopup(url) {
 
 function resolveReturnTo(value) {
     if (value && value.startsWith(FRONTEND_BASE)) {
-        if (value.includes('/frontend/pages/auth-login.html')) {
-            return FRONTEND_BASE;
-        }
         return value;
     }
     return FRONTEND_BASE;
@@ -195,7 +188,7 @@ async function processOAuthToken(token, source) {
             return;
         }
 
-        window.location.href = returnTo + '/auth-select-role.html?token=' + token + '&source=google';
+        window.location.href = returnTo + '/select-role?token=' + token + '&source=google';
     } catch (decodeError) {
         console.error('JWT decode error:', decodeError);
         showNotification('Login successful, but failed to get user data', 'error');
@@ -292,7 +285,7 @@ async function loginWithGoogle() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const googleAuthUrl = 'https://api.tradematch.uk/auth/google?returnTo=' + encodeURIComponent(returnTo);
+        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}`;
         openOAuthPopup(googleAuthUrl);
         
     } catch (error) {
@@ -319,7 +312,7 @@ async function loginWithMicrosoft() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = 'https://api.tradematch.uk/auth/microsoft?returnTo=' + encodeURIComponent(returnTo);
+        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}`;
         openOAuthPopup(microsoftAuthUrl);
         
     } catch (error) {

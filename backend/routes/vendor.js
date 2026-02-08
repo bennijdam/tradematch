@@ -1,13 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, requireVendor } = require('../middleware/auth');
+const StripeService = require('../services/stripe.service');
 
 let pool;
 router.setPool = (p) => { pool = p; };
+const stripeService = new StripeService();
 
 // Apply authentication to all vendor routes
 router.use(authenticate);
 router.use(requireVendor);
+
+async function updateStripeMetadata(vendorId, updates) {
+  await pool.query(
+    `UPDATE users
+     SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE id = $1`,
+    [vendorId, JSON.stringify(updates)]
+  );
+}
 
 /**
  * PATCH /api/vendor/onboarding
@@ -40,6 +52,119 @@ router.patch('/onboarding', async (req, res) => {
       success: false,
       error: 'Failed to update onboarding status'
     });
+  }
+});
+
+/**
+ * POST /api/vendor/stripe/onboarding
+ * Create or refresh Stripe Connect onboarding link
+ */
+router.post('/stripe/onboarding', async (req, res) => {
+  try {
+    const vendorId = req.user.userId;
+    const userResult = await pool.query(
+      'SELECT email, name, metadata FROM users WHERE id = $1',
+      [vendorId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Vendor not found' });
+    }
+
+    const user = userResult.rows[0];
+    const metadata = user.metadata || {};
+    let accountId = metadata.stripe_account_id;
+
+    if (!accountId) {
+      const accountResult = await stripeService.createConnectedAccount({
+        email: user.email,
+        businessProfile: {
+          name: user.name || user.email
+        }
+      });
+
+      if (!accountResult.success) {
+        return res.status(500).json({ error: accountResult.error || 'Failed to create Stripe account' });
+      }
+
+      accountId = accountResult.account.id;
+      await updateStripeMetadata(vendorId, {
+        stripe_account_id: accountId,
+        stripe_account_status: 'pending'
+      });
+    }
+
+    const frontendBase = process.env.FRONTEND_URL || process.env.APP_BASE_URL || req.headers.origin || 'http://localhost:3003';
+    const returnUrl = process.env.STRIPE_CONNECT_RETURN_URL || `${frontendBase}/vendor-dashboard/vendor-settings?stripe=return`;
+    const refreshUrl = process.env.STRIPE_CONNECT_REFRESH_URL || `${frontendBase}/vendor-dashboard/vendor-settings?stripe=refresh`;
+
+    const linkResult = await stripeService.createAccountLink(accountId, returnUrl, refreshUrl);
+    if (!linkResult.success) {
+      return res.status(500).json({ error: linkResult.error || 'Failed to create Stripe onboarding link' });
+    }
+
+    return res.json({
+      success: true,
+      accountId,
+      url: linkResult.accountLink.url
+    });
+  } catch (error) {
+    console.error('Stripe onboarding error:', error);
+    res.status(500).json({ error: 'Failed to initiate Stripe onboarding' });
+  }
+});
+
+/**
+ * GET /api/vendor/stripe/status
+ * Fetch Stripe Connect account status
+ */
+router.get('/stripe/status', async (req, res) => {
+  try {
+    const vendorId = req.user.userId;
+    const userResult = await pool.query(
+      'SELECT metadata FROM users WHERE id = $1',
+      [vendorId]
+    );
+
+    const metadata = userResult.rows[0]?.metadata || {};
+    const accountId = metadata.stripe_account_id;
+
+    if (!accountId) {
+      return res.json({
+        connected: false,
+        status: 'not_connected'
+      });
+    }
+
+    const accountResult = await stripeService.retrieveAccount(accountId);
+    if (!accountResult.success) {
+      return res.status(500).json({ error: accountResult.error || 'Failed to fetch Stripe status' });
+    }
+
+    const account = accountResult.account;
+    const status = account.charges_enabled && account.payouts_enabled ? 'verified' : 'pending';
+    const requirements = account.requirements || {};
+
+    await updateStripeMetadata(vendorId, {
+      stripe_account_id: account.id,
+      stripe_account_status: status,
+      stripe_account_details: {
+        charges_enabled: account.charges_enabled,
+        payouts_enabled: account.payouts_enabled,
+        requirements
+      }
+    });
+
+    return res.json({
+      connected: true,
+      status,
+      charges_enabled: account.charges_enabled,
+      payouts_enabled: account.payouts_enabled,
+      requirements
+    });
+  } catch (error) {
+    console.error('Stripe status error:', error);
+    res.status(500).json({ error: 'Failed to fetch Stripe status' });
   }
 });
 

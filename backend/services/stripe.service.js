@@ -187,6 +187,28 @@ class StripeService {
     }
 
     /**
+     * Retrieve Stripe account details
+     * @param {string} accountId - Stripe account ID
+     * @returns {Promise<Object>} Account object
+     */
+    async retrieveAccount(accountId) {
+        try {
+            const account = await this.stripe.accounts.retrieve(accountId);
+
+            return {
+                success: true,
+                account
+            };
+        } catch (error) {
+            console.error('Stripe Account retrieval error:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    /**
      * Create a Refund
      * @param {Object} refundData - Refund data
      * @param {string} refundData.chargeId - Charge ID to refund

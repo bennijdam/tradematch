@@ -211,7 +211,7 @@ class TradeMatchAPI {
      */
     logout() {
         this.setToken(null);
-        window.location.href = '/index.html';
+        window.location.href = '/';
     }
 
     // ==========================================

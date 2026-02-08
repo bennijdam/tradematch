@@ -171,6 +171,10 @@ router.post('/stripe', express.raw({ type: 'application/json' }), async (req, re
             case 'charge.dispute.created':
                 await handleChargeDispute(event.data.object);
                 break;
+
+            case 'account.updated':
+                await handleAccountUpdated(event.data.object);
+                break;
                 
             case 'customer.created':
                 logger.info('Customer created', { customerId: event.data.object.id });
@@ -214,6 +218,18 @@ async function handlePaymentIntentSucceeded(paymentIntent) {
             const credits = parseInt(paymentIntent.metadata.credits || '0', 10);
             const vendorId = paymentIntent.metadata.vendor_id;
             if (vendorId && credits > 0) {
+                const purchaseStatus = await pool.query(
+                    `SELECT status
+                     FROM credit_purchases
+                     WHERE stripe_payment_intent_id = $1
+                     LIMIT 1`,
+                    [paymentIntent.id]
+                );
+
+                if (purchaseStatus.rows[0]?.status === 'completed') {
+                    return;
+                }
+
                 await pool.query(
                     `UPDATE credit_purchases
                      SET status = 'completed', completed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
@@ -357,6 +373,18 @@ async function handleCheckoutSessionCompleted(session) {
     const paymentIntentId = session.payment_intent;
 
     if (!vendorId || credits <= 0) return;
+
+    const purchaseStatus = await pool.query(
+        `SELECT status
+         FROM credit_purchases
+         WHERE stripe_checkout_session_id = $1
+         LIMIT 1`,
+        [session.id]
+    );
+
+    if (purchaseStatus.rows[0]?.status === 'completed') {
+        return;
+    }
 
     await pool.query(
         `UPDATE credit_purchases
@@ -510,6 +538,30 @@ async function handleChargeDispute(dispute) {
         });
         throw error;
     }
+}
+
+/**
+ * Handle Stripe Connect account updates
+ */
+async function handleAccountUpdated(account) {
+    const status = account.charges_enabled && account.payouts_enabled ? 'verified' : 'pending';
+    const details = {
+        charges_enabled: account.charges_enabled,
+        payouts_enabled: account.payouts_enabled,
+        requirements: account.requirements || {}
+    };
+
+    await pool.query(
+        `UPDATE users
+         SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb,
+             updated_at = CURRENT_TIMESTAMP
+         WHERE metadata->>'stripe_account_id' = $1` ,
+        [account.id, JSON.stringify({
+            stripe_account_id: account.id,
+            stripe_account_status: status,
+            stripe_account_details: details
+        })]
+    );
 }
 
 module.exports = router;

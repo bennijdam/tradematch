@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - TradeMatch UK | Access Your Account</title>
@@ -948,13 +949,27 @@ function resolveReturnTo(value) {
     if (value) {
         const allowed = FRONTEND_BASES.find((base) => value.startsWith(base));
         if (allowed) {
-            if (value.includes('/login') || value.includes('/auth-login.html') || value.includes('/frontend/pages/auth-login.html')) {
+            if (value.includes('/login')) {
                 return allowed;
             }
             return value;
         }
     }
     return FRONTEND_BASE;
+}
+
+function resolveRedirectTarget(value) {
+    if (!value) return null;
+    if (value.startsWith('/')) return value;
+    try {
+        const targetUrl = new URL(value);
+        if (FRONTEND_BASES.includes(targetUrl.origin)) {
+            return `${targetUrl.origin}${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`;
+        }
+    } catch (error) {
+        return null;
+    }
+    return null;
 }
 
 let oauthPopup = null;
@@ -1133,17 +1148,17 @@ async function processOAuthToken(token, source) {
         const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
 
         if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
-            window.location.href = returnTo + '/frontend/vendor-dashboard/index.html?source=google';
+            window.location.href = returnTo + '/vendor-dashboard?source=google';
             return;
         }
 
         if (userData.userType === 'customer') {
             await submitPendingQuoteIfAny(token);
-            window.location.href = returnTo + '/frontend/user-dashboard/index.html?source=google';
+            window.location.href = returnTo + '/user-dashboard?source=google';
             return;
         }
 
-        window.location.href = returnTo + '/auth-select-role.html?token=' + token + '&source=google';
+        window.location.href = returnTo + '/select-role?token=' + token + '&source=google';
     } catch (decodeError) {
         console.error('JWT decode error:', decodeError);
         showNotification('Login successful, but failed to get user data', 'error');
@@ -1237,13 +1252,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         setTimeout(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const redirect = urlParams.get('redirect');
-            if (redirect) {
-                window.location.href = redirect;
+            const safeRedirect = resolveRedirectTarget(redirect);
+            if (safeRedirect) {
+                window.location.href = safeRedirect;
                 return;
             }
-            window.location.href = data.user.userType === 'customer' 
-                ? 'user-dashboard/index.html' 
-                : 'vendor-dashboard/index.html';
+            window.location.href = data.user.userType === 'customer'
+                ? '/user-dashboard'
+                : '/vendor-dashboard';
         }, 1500);
         
     } catch (error) {
@@ -1478,12 +1494,15 @@ document.getElementById('resendActivationBtn').addEventListener('click', async f
     <!-- Footer -->
     <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
         <div class="container" style="max-width: 1200px; margin: 0 auto;">
-            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
+            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
     <script src="/frontend/shared/ui/profile-menu.js"></script>
 </body>
 </html>
+
+
+
 
 
 

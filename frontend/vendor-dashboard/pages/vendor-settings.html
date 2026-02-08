@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
+    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - TradeMatch Vendor</title>
@@ -1157,6 +1158,22 @@
                     Manage Billing & Subscriptions
                 </a>
             </div>
+
+            <div class="settings-section">
+                <h2 class="section-title">Payouts (Stripe)</h2>
+                <p class="section-description">Connect Stripe to receive payouts for completed jobs</p>
+
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <span id="stripeStatusBadge" class="badge warning">Checking</span>
+                    <span id="stripeStatusDetail" class="form-helper">Fetching your Stripe status...</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <div id="stripeStatusChecked" class="form-helper">Last checked: --</div>
+                    <button id="stripeRefreshButton" class="btn btn-secondary" type="button" style="padding: 6px 12px; font-size: 12px;">Refresh Status</button>
+                </div>
+
+                <button id="stripeOnboardingButton" class="btn btn-primary">Start Stripe Onboarding</button>
+            </div>
         </div>
         
         <!-- Danger Zone Tab -->
@@ -1414,7 +1431,7 @@
             const authBase = localStorage.getItem('authBaseUrl') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                 ? 'http://localhost:3002'
                 : window.location.origin);
-            window.location.href = `${authBase.replace(/\/$/, '')}/frontend/pages/auth-login.html?redirect=${returnUrl}`;
+            window.location.href = `${authBase.replace(/\/$/, '')}/login?redirect=${returnUrl}`;
         }
 
         function ensureAuth() {
@@ -1478,6 +1495,181 @@
                 }
             } catch (error) {
                 showToast(error.message || 'Unable to start checkout', 'error');
+            }
+        }
+
+        function getStripeRequirementMessage(requirements) {
+            const current = Array.isArray(requirements?.currently_due) ? requirements.currently_due : [];
+            const past = Array.isArray(requirements?.past_due) ? requirements.past_due : [];
+            const all = Array.from(new Set([...current, ...past]));
+
+            if (!all.length) return '';
+
+            if (all.some((key) => key.includes('external_account'))) {
+                return 'Add a bank account to receive payouts.';
+            }
+            if (all.some((key) => key.includes('verification.document'))) {
+                return 'Upload identity documents to verify your account.';
+            }
+            if (all.some((key) => key.includes('tos_acceptance'))) {
+                return 'Accept Stripe terms to continue.';
+            }
+            if (all.some((key) => key.includes('business_profile'))) {
+                return 'Complete your business profile details.';
+            }
+            if (all.some((key) => key.includes('company') || key.includes('individual') || key.includes('owners'))) {
+                return 'Provide required business or owner details.';
+            }
+
+            return '';
+        }
+
+        function setStripeLoading(message) {
+            const badge = document.getElementById('stripeStatusBadge');
+            const detail = document.getElementById('stripeStatusDetail');
+            if (!badge || !detail) return;
+
+            badge.className = 'badge warning';
+            badge.textContent = 'Checking';
+            detail.textContent = message || 'Fetching your Stripe status...';
+        }
+
+        function updateStripeCheckedTimestamp(value) {
+            const checkedEl = document.getElementById('stripeStatusChecked');
+            if (!checkedEl) return;
+
+            if (!value) {
+                checkedEl.textContent = 'Last checked: --';
+                return;
+            }
+
+            const date = value instanceof Date ? value : new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                checkedEl.textContent = 'Last checked: just now';
+                return;
+            }
+
+            const formatted = date.toLocaleString('en-GB', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            checkedEl.textContent = `Last checked: ${formatted}`;
+        }
+
+        function setStripeStatus(state, details) {
+            const badge = document.getElementById('stripeStatusBadge');
+            const detail = document.getElementById('stripeStatusDetail');
+            const button = document.getElementById('stripeOnboardingButton');
+            if (!badge || !detail || !button) return;
+
+            badge.className = 'badge';
+
+            if (state === 'verified') {
+                badge.classList.add('success');
+                badge.textContent = 'Verified';
+                detail.textContent = 'Payouts and charges are enabled.';
+                button.textContent = 'Update Stripe Details';
+                return;
+            }
+
+            if (state === 'pending') {
+                badge.classList.add('warning');
+                badge.textContent = 'Pending';
+                const requirementMessage = getStripeRequirementMessage(details?.requirements);
+                if (requirementMessage) {
+                    detail.textContent = requirementMessage;
+                } else if (details?.requiredCount) {
+                    detail.textContent = `${details.requiredCount} item(s) required to enable payouts.`;
+                } else {
+                    detail.textContent = 'Stripe needs more information to enable payouts.';
+                }
+                button.textContent = 'Continue Stripe Onboarding';
+                return;
+            }
+
+            badge.classList.add('danger');
+            badge.textContent = 'Not Connected';
+            detail.textContent = 'Connect Stripe to receive payouts.';
+            button.textContent = 'Start Stripe Onboarding';
+        }
+
+        async function loadStripeStatus() {
+            try {
+                const data = await apiFetchJson('/vendor/stripe/status');
+                if (!data?.connected) {
+                    setStripeStatus('not_connected');
+                    return;
+                }
+
+                const requiredCount = Array.isArray(data.requirements?.currently_due)
+                    ? data.requirements.currently_due.length
+                    : 0;
+
+                setStripeStatus(data.status || 'pending', {
+                    requiredCount,
+                    requirements: data.requirements
+                });
+                updateStripeCheckedTimestamp(new Date());
+            } catch (error) {
+                setStripeStatus('not_connected');
+                updateStripeCheckedTimestamp(new Date());
+            }
+        }
+
+        async function startStripeOnboarding(event) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            if (!ensureAuth()) return;
+            const button = document.getElementById('stripeOnboardingButton');
+            const previousText = button?.textContent;
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Opening Stripe...';
+            }
+
+            try {
+                const result = await apiFetchJson('/vendor/stripe/onboarding', {
+                    method: 'POST'
+                });
+
+                if (result?.url) {
+                    window.location.href = result.url;
+                    return;
+                }
+
+                throw new Error('Missing Stripe onboarding URL');
+            } catch (error) {
+                showToast(error.message || 'Unable to start Stripe onboarding', 'error');
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = previousText || 'Start Stripe Onboarding';
+                }
+            }
+        }
+
+        async function refreshStripeStatus(event) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            const button = document.getElementById('stripeRefreshButton');
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Refreshing...';
+            }
+
+            setStripeLoading('Refreshing Stripe status...');
+            await loadStripeStatus();
+
+            if (button) {
+                button.disabled = false;
+                button.textContent = 'Refresh Status';
             }
         }
 
@@ -1895,6 +2087,16 @@
             });
         }
 
+        const stripeOnboardingButton = document.getElementById('stripeOnboardingButton');
+        if (stripeOnboardingButton) {
+            stripeOnboardingButton.addEventListener('click', startStripeOnboarding);
+        }
+
+        const stripeRefreshButton = document.getElementById('stripeRefreshButton');
+        if (stripeRefreshButton) {
+            stripeRefreshButton.addEventListener('click', refreshStripeStatus);
+        }
+
         /* =========================
            COMPANIES HOUSE LOOKUP
            ========================= */
@@ -2216,11 +2418,13 @@
             loadBusinessDescription();
             loadPhotos();
             loadPostcodes();
+            loadStripeStatus();
         });
     </script>
     <script src="../dashboardApp.js"></script>
 </body>
 </html>
+
 
 
 

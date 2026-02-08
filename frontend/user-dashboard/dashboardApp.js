@@ -52,7 +52,7 @@ function enforceCustomerSession() {
     }
 
     if (user.userType === 'vendor' || user.userType === 'tradesperson') {
-        window.location.href = '/dashboard.html';
+        window.location.href = '/vendor-dashboard';
         return false;
     }
 
@@ -622,7 +622,7 @@ function getApiBaseUrl() {
     if (isLocalhost && !origin.includes(':3001')) {
         return 'http://localhost:3001';
     }
-    return origin;
+    return 'https://api.tradematch.uk';
 }
 
 async function apiFetchJson(path, options = {}) {

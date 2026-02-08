@@ -249,6 +249,22 @@ module.exports = (pool) => {
 
       const credits = parseInt(paymentIntent.metadata.credits, 10);
 
+      const purchaseStatus = await pool.query(
+        `SELECT status
+         FROM credit_purchases
+         WHERE vendor_id = $1 AND stripe_payment_intent_id = $2
+         LIMIT 1`,
+        [vendorId, paymentIntentId]
+      );
+
+      if (purchaseStatus.rows[0]?.status === 'completed') {
+        return res.json({
+          success: true,
+          message: 'Credits already applied',
+          creditsAdded: 0
+        });
+      }
+
       await ensureVendorCreditsRow(vendorId);
 
       // Update credit purchase record

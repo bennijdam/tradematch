@@ -1,0 +1,62 @@
+# Documentation Index
+
+This index provides the canonical entry points for TradeMatch documentation.
+
+## Core
+
+- README.md (project overview and quick start)
+- ROUTE-REGISTRY.md (clean URLs, legacy routes, dashboards, API prefixes)
+- API-REFERENCE.md (full API endpoint map)
+
+## Architecture and System Design
+
+- CONNECTION-LAYER-INDEX.md
+- CONNECTION-LAYER-ARCHITECTURE.md
+- CONNECTION-LAYER-INTEGRATION.md
+- CONNECTION-LAYER-TESTING.md
+- CONNECTION-LAYER-MANIFEST.md
+
+## Dashboards and UX
+
+- CUSTOMER-DASHBOARD-SPEC.md
+- CUSTOMER-DASHBOARD-IMPLEMENTATION.md
+- VENDOR-DASHBOARD-SUMMARY.md
+- VENDOR-DASHBOARD-COMPLETE.md
+- SUPER-ADMIN-COMPLETE.md
+- USER_DASHBOARD_BLUEPRINT.md
+
+## Payments and Messaging
+
+- MESSAGING-SYSTEM.md
+- MESSAGING-SYSTEM-REPORT.md
+- LEAD-PREVIEW-EMAIL-SYSTEM.md
+
+## Deployment and Operations
+
+- DEPLOYMENT.md
+- LAUNCH-READY.md
+- PRODUCTION-CHECKLIST.md
+- POST-DEPLOYMENT-CHECKLIST.md
+- MONITORING-SETUP.md
+- RENDER-ENV-SETUP.md
+- DNS-AND-API-LIST.md
+- NEON-DB-SETUP.md
+- JWT-SECRET-SETUP.md
+
+## Testing and Verification
+
+- SMOKE-TESTING.md
+- MANUAL-TESTING-GUIDE.md
+- MANUAL-TESTING-STATUS.md
+- TESTING-READY-REPORT.md
+- SMOKE-TEST-FINDINGS.md
+
+## Status and Progress
+
+- CURRENT-STATUS.md
+- IMPLEMENTATION-SUMMARY.md
+- DELIVERABLES.md
+- LEAD-SYSTEM-STATUS.md
+- LEAD-SYSTEM-COMPLETE.md
+- MIGRATION-STATUS.md
+- CONNECTION-LAYER-STATUS.md

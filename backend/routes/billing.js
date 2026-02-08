@@ -31,9 +31,9 @@ router.post('/checkout', authenticate, async (req, res) => {
       });
     }
 
-    const origin = req.headers.origin || process.env.APP_BASE_URL || 'http://localhost:3003';
-    const successUrl = process.env.STRIPE_CHECKOUT_SUCCESS_URL || `${origin}/vendor-settings.html?checkout=success`;
-    const cancelUrl = process.env.STRIPE_CHECKOUT_CANCEL_URL || `${origin}/vendor-settings.html?checkout=cancel`;
+    const frontendBase = process.env.FRONTEND_URL || process.env.APP_BASE_URL || req.headers.origin || 'http://localhost:3003';
+    const successUrl = process.env.STRIPE_CHECKOUT_SUCCESS_URL || `${frontendBase}/vendor-dashboard/vendor-settings?checkout=success`;
+    const cancelUrl = process.env.STRIPE_CHECKOUT_CANCEL_URL || `${frontendBase}/vendor-dashboard/vendor-settings?checkout=cancel`;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Loft Conversion in East Ham | Get Free Quotes | TradeMatch</title>
@@ -50,6 +51,7 @@
     </script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=webp&auto=format" fetchpriority="high">
     
     
     
@@ -170,13 +172,36 @@
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%),
-                        url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80') center/cover;
             padding: 120px 24px;
             text-align: center;
             color: var(--white);
             position: relative;
             overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
         }
         
         .hero::before {
@@ -189,6 +214,8 @@
             right: -200px;
             border-radius: 50%;
             animation: pulse 4s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
         }
         
         @keyframes pulse {
@@ -479,14 +506,14 @@
     
     <header>
         <div class="nav-container">
-            <a href="/index.html" class="logo">Trade<span>Match</span></a>
+            <a href="/" class="logo">Trade<span>Match</span></a>
 <div class="nav-links">
-                <a href="/how-it-works.html">How It Works</a>
-                <a href="/find-tradespeople.html">Find Trades</a>
-                <a href="/about.html">About</a>
-                <a href="/contact.html">Contact</a>
-                <a href="/help.html">Help</a>
-                <a href="/customer-login.html" class="btn btn-primary">Sign In</a>
+                <a href="/how-it-works">How It Works</a>
+                <a href="/find-tradespeople">Find Trades</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/help">Help</a>
+                <a href="/login" class="btn btn-primary">Sign In</a>
             </div>
         </div>
     </header>
@@ -496,10 +523,27 @@
     <!-- Hero Section with Background Image -->
     <section class="hero">
         <div class="hero-background">
-            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80" 
-                 alt="Loft Conversion" 
-                 class="hero-image"
-                 id="heroImage">
+            <picture>
+                <source
+                    id="heroSourceAvif"
+                    type="image/avif"
+                    srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=avif&auto=format"
+                >
+                <source
+                    id="heroSourceWebp"
+                    type="image/webp"
+                    srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=webp&auto=format"
+                >
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80" 
+                     alt="Loft Conversion" 
+                     class="hero-image"
+                     id="heroImage"
+                     width="1600"
+                     height="900"
+                     loading="eager"
+                     fetchpriority="high"
+                     decoding="async">
+            </picture>
             <div class="hero-overlay"></div>
         </div>
         
@@ -714,35 +758,35 @@
                 <div class="footer-column">
                     <h4>For Customers</h4>
                     <ul>
-                        <li><a href="/how-it-works.html">How It Works</a></li>
-                        <li><a href="/quote-engine.html">Post a Job</a></li>
-                        <li><a href="/find-tradespeople.html">Find Trades</a></li>
-                        <li><a href="/help.html">Help Center</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/find-tradespeople">Find Trades</a></li>
+                        <li><a href="/help">Help Center</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
                     <h4>For Tradespeople</h4>
                     <ul>
-                        <li><a href="/vendor-register.html">Join as a Trade</a></li>
-                        <li><a href="/vendor-login.html">Trade Login</a></li>
-                        <li><a href="/frontend/vendor-dashboard/index.html">Dashboard</a></li>
+                        <li><a href="/trade-signup">Join as a Trade</a></li>
+                        <li><a href="/login">Trade Login</a></li>
+                        <li><a href="/vendor-dashboard">Dashboard</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="/about.html">About Us</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
-                        <li><a href="/terms.html">Terms</a></li>
-                        <li><a href="/privacy.html">Privacy</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <li><a href="/terms">Terms</a></li>
+                        <li><a href="/privacy">Privacy</a></li>
                     </ul>
                 </div>
             </div>
             
 <div class="footer-bottom">
-                © 2026 TradeMatch. All rights reserved. | <a href="terms.html" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="privacy.html" style="color: rgba(255,255,255,0.8);">Privacy</a>
+                © 2026 TradeMatch. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8);">Privacy</a>
             </div>
         </div>
     </footer>
@@ -781,6 +825,27 @@
         };
 
         // Initialize page
+        function buildUnsplashUrl(url, format) {
+            try {
+                const parsed = new URL(url);
+                parsed.searchParams.set('fm', format);
+                parsed.searchParams.set('auto', 'format');
+                return parsed.toString();
+            } catch (error) {
+                return url;
+            }
+        }
+
+        function setHeroImage(url) {
+            const heroImage = document.getElementById('heroImage');
+            const heroSourceAvif = document.getElementById('heroSourceAvif');
+            const heroSourceWebp = document.getElementById('heroSourceWebp');
+
+            if (heroSourceAvif) heroSourceAvif.srcset = buildUnsplashUrl(url, 'avif');
+            if (heroSourceWebp) heroSourceWebp.srcset = buildUnsplashUrl(url, 'webp');
+            if (heroImage) heroImage.src = url;
+        }
+
         function initializePage() {
             // Update dynamic content
             document.getElementById('serviceName').textContent = PAGE_DATA.serviceName;
@@ -802,7 +867,7 @@
             // Load images
             const images = serviceImages[PAGE_DATA.service];
             if (images) {
-                document.getElementById('heroImage').src = images.hero;
+                setHeroImage(images.hero);
                 loadGallery(images.gallery);
             }
             
@@ -980,7 +1045,7 @@
             e.preventDefault();
             const service = document.getElementById('serviceSelect').value;
             const postcode = document.getElementById('postcodeInput').value;
-            window.location.href = `/quote-engine.html?service=${service}&postcode=${postcode}`;
+            window.location.href = `/post-job?service=${service}&postcode=${postcode}`;
         });
 
         function scrollToBooking() {
@@ -993,6 +1058,9 @@
     <script src="/frontend/shared/ui/profile-menu.js"></script>
 </body>
 </html>
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - TradeMatch Customer</title>
@@ -838,7 +839,7 @@
 
                     localStorage.clear();
                     notifySuccess('Your account has been deactivated.');
-                    window.location.href = '/frontend/pages/auth-login.html';
+                    window.location.href = '/login';
                 } catch (error) {
                     notifyError(error.message || 'Failed to deactivate account.');
                     deleteAccountBtn.textContent = originalText;
@@ -1038,6 +1039,7 @@
     </script>
 </body>
 </html>
+
 
 
 

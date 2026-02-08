@@ -11,7 +11,7 @@ const rateLimit = require('express-rate-limit');
 const logger = require('./config/logger');
 const path = require('path');
 const crypto = require('crypto');
-const { emailLimiter } = require('./middleware/rate-limit');
+const { emailLimiter, paymentLimiter, quoteLimiter } = require('./middleware/rate-limit');
 const { TradeMatchEventBroker, NotificationDispatcher } = require('./services/event-broker.service');
 const connectionLayerRouter = require('./routes/connection-layer');
 
@@ -267,6 +267,7 @@ try {
 try {
     const quotesRouter = require('./routes/quotes');
     if (typeof quotesRouter.setPool === 'function') quotesRouter.setPool(pool);
+    app.use('/api/quotes/public', quoteLimiter);
     app.use('/api/quotes', quotesRouter);
     logger.info('Quotes routes mounted at /api/quotes');
 } catch (e) {
@@ -308,7 +309,7 @@ try {
     const paymentsRouter = require('./routes/payments');
     if (typeof paymentsRouter.setPool === 'function') paymentsRouter.setPool(pool);
     if (typeof paymentsRouter.setEventBroker === 'function') paymentsRouter.setEventBroker(eventBroker);
-    app.use('/api/payments', paymentsRouter);
+    app.use('/api/payments', paymentLimiter, paymentsRouter);
     logger.info('Payments routes mounted at /api/payments');
 } catch (e) {
     logger.warn('Payments routes not available', { error: e && e.message ? e.message : String(e) });
