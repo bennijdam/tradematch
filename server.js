@@ -92,6 +92,10 @@ const server = http.createServer((req, res) => {
         };
 
         const contentType = mimeTypes[extname] || 'application/octet-stream';
+        const isHtml = extname === '.html';
+        const cacheControl = isHtml
+            ? 'no-cache'
+            : 'public, max-age=31536000, immutable';
 
         fs.readFile(filePath, (error, content) => {
             if (error) {
@@ -103,7 +107,10 @@ const server = http.createServer((req, res) => {
                     res.end('Server Error', 'utf-8');
                 }
             } else {
-                res.writeHead(200, { 'Content-Type': contentType });
+                res.writeHead(200, {
+                    'Content-Type': contentType,
+                    'Cache-Control': cacheControl
+                });
                 res.end(content, 'utf-8');
             }
         });

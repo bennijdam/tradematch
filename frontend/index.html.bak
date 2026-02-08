@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=60" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/hero-background-optimized.webp" fetchpriority="high">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -98,6 +98,11 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 24px;
+        }
+
+        .defer-section {
+            content-visibility: auto;
+            contain-intrinsic-size: 1px 900px;
         }
         
         /* White Top Navigation */
@@ -248,17 +253,29 @@
         
         /* Hero Section with Background Image */
         .hero {
-            background-image:
-                linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%),
-                image-set(
-                    url('images/hero-background-optimized.webp') type('image/webp'),
-                    url('images/hero-background-optimized.jpg') type('image/jpeg')
-                );
-            background-position: center, center;
-            background-size: cover, cover;
             padding: 120px 0 140px;
             position: relative;
             overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%);
+            z-index: 1;
         }
         
         .hero::before {
@@ -271,6 +288,8 @@
             right: -200px;
             border-radius: 50%;
             animation: pulse 4s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
         }
         
         @keyframes pulse {
@@ -284,6 +303,7 @@
             gap: 80px;
             align-items: center;
             position: relative;
+            z-index: 3;
         }
         
         .hero-text h1 {
@@ -2509,8 +2529,8 @@
         .gdpr-popup {
             position: fixed;
             bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 24px;
+            transform: translateY(0);
             max-width: 480px;
             width: calc(100% - 48px);
             background: #0F172A;
@@ -2525,11 +2545,11 @@
         @keyframes slideUpGDPR {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(20px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0);
             }
         }
 
@@ -4447,7 +4467,7 @@
         }
 
     </style>
-    <link rel="stylesheet" href="/profile-menu.css">
+    <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
 </head>
 <body>
     <!-- Header with Glass Effect -->
@@ -4586,6 +4606,24 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-media">
+            <picture>
+                <source
+                    type="image/webp"
+                    srcset="/images/hero-background-optimized.webp"
+                >
+                <img
+                    src="/images/hero-background-optimized.jpg"
+                    alt="Trusted tradespeople across the UK"
+                    width="1600"
+                    height="900"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                >
+            </picture>
+        </div>
+        <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -4696,7 +4734,7 @@
     </section>
 
     <!-- How It Works -->
-    <section class="how-it-works">
+    <section class="how-it-works defer-section">
         <div class="container">
             <div class="section-header">
                 <div class="section-label">Simple Process</div>
@@ -4839,7 +4877,7 @@
     </section>
 
     <!-- Services Section with Sample Images -->
-    <section class="services-section">
+    <section class="services-section defer-section">
         <div class="container">
             <div class="section-header">
                 <div class="section-label">Our Services</div>
@@ -4848,7 +4886,7 @@
             </div>
             
             <div class="services-grid">
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=extension'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=extension'">
                     <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=400&q=60" alt="Extension" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Extensions</h3>
@@ -4856,7 +4894,7 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=kitchen'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=kitchen'">
                     <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&q=60" alt="Kitchen" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Kitchen Fitting</h3>
@@ -4864,7 +4902,7 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=bathroom'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=bathroom'">
                     <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=400&q=60" alt="Bathroom" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Bathroom</h3>
@@ -4872,10 +4910,10 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=roofing'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=roofing'">
                     <picture>
-                        <source srcset="images/roofing-optimized.webp" type="image/webp">
-                        <img src="images/roofing-optimized.jpg" alt="Roofing" class="service-image" loading="lazy" decoding="async" width="800" height="600">
+                        <source srcset="/images/roofing-optimized.webp" type="image/webp">
+                        <img src="/images/roofing-optimized.jpg" alt="Roofing" class="service-image" loading="lazy" decoding="async" width="800" height="600">
                     </picture>
                     <div class="service-content">
                         <h3>Roofing</h3>
@@ -4883,7 +4921,7 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=electrical'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=electrical'">
                     <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=60" alt="Electrical" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Electrical</h3>
@@ -4891,7 +4929,7 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=plumbing'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=plumbing'">
                     <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=400&q=60" alt="Plumbing" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Plumbing</h3>
@@ -4899,7 +4937,7 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=landscaping'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=landscaping'">
                     <img src="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=400&q=60" alt="Landscaping" class="service-image" loading="lazy" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Landscaping</h3>
@@ -4907,10 +4945,10 @@
                     </div>
                 </div>
                 
-                <div class="service-card" onclick="window.location.href='quote-engine.html?service=carpentry'">
+                <div class="service-card" onclick="window.location.href='/post-job?service=carpentry'">
                     <picture>
-                        <source srcset="images/carpentry-optimized.webp" type="image/webp">
-                        <img src="images/carpentry-optimized.jpg" alt="Carpentry" class="service-image" loading="lazy" decoding="async" width="800" height="600">
+                        <source srcset="/images/carpentry-optimized.webp" type="image/webp">
+                        <img src="/images/carpentry-optimized.jpg" alt="Carpentry" class="service-image" loading="lazy" decoding="async" width="800" height="600">
                     </picture>
                     <div class="service-content">
                         <h3>Carpentry</h3>
@@ -4922,7 +4960,7 @@
     </section>
 
     <!-- Trust Section -->
-    <section class="trust-section">
+    <section class="trust-section defer-section">
         <div class="container">
             <div class="section-header">
                 <div class="section-label">Why Choose Us</div>
@@ -5039,9 +5077,9 @@
 
 
     <!-- Social Proof Hero Section -->
-    <section class="social-proof-hero">
+    <section class="social-proof-hero defer-section">
         <div class="hero-background">
-            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=2000&q=80" alt="Happy homeowners with tradesperson">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=2000&q=80" alt="Happy homeowners with tradesperson" loading="lazy" decoding="async" width="2000" height="1333">
         </div>
         <div class="hero-overlay"></div>
         
@@ -5086,7 +5124,7 @@
             <div class="review-card cta-card">
                 <h3 class="card-title">Thousands of 5 star reviews</h3>
                 <p class="card-description">Read real reviews from customers about their service experiences.</p>
-                <a href="quote-engine.html" class="review-cta-button">Post a job</a>
+                <a href="/post-job" class="review-cta-button">Post a job</a>
             </div>
 
             <!-- Review Cards will be populated by JavaScript -->
@@ -5095,7 +5133,7 @@
 
     
 
-    <section class="tm-app-section" id="app-section">
+    <section class="tm-app-section defer-section" id="app-section">
     <div class="tm-app-container">
       <div class="tm-glass-card">
         <div class="tm-content-grid">
@@ -5221,7 +5259,7 @@
   </section>
 
         <!-- Location Discovery Section -->
-    <section class="location-discovery">
+    <section class="location-discovery defer-section">
         <div class="location-container">
             <div class="location-content-wrapper">
                 
@@ -5340,9 +5378,9 @@
                 <div class="footer-column">
                     <h4>For Homeowners</h4>
                     <ul class="footer-links">
-                        <li><a href="how-it-works.html">How It Works</a></li>
-                        <li><a href="quote-engine.html">Get Free Quotes</a></li>
-                        <li><a href="find-tradespeople.html">Find Tradespeople</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/post-job">Get Free Quotes</a></li>
+                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
                         <li><a href="/compare">Compare Platforms</a></li>
                         <li><a href="/advice">Home Advice</a></li>
                     </ul>
@@ -5352,11 +5390,11 @@
                 <div class="footer-column">
                     <h4>Popular Services</h4>
                     <ul class="footer-links">
-                        <li><a href="quote-engine.html?service=plumbing">Plumbers</a></li>
-                        <li><a href="quote-engine.html?service=electrical">Electricians</a></li>
-                        <li><a href="quote-engine.html?service=bathroom">Bathroom Fitters</a></li>
-                        <li><a href="quote-engine.html?service=kitchen">Kitchen Fitters</a></li>
-                        <li><a href="quote-engine.html?service=landscaping">Landscapers</a></li>
+                        <li><a href="/post-job?service=plumbing">Plumbers</a></li>
+                        <li><a href="/post-job?service=electrical">Electricians</a></li>
+                        <li><a href="/post-job?service=bathroom">Bathroom Fitters</a></li>
+                        <li><a href="/post-job?service=kitchen">Kitchen Fitters</a></li>
+                        <li><a href="/post-job?service=landscaping">Landscapers</a></li>
                     </ul>
                 </div>
 
@@ -5364,11 +5402,11 @@
                 <div class="footer-column">
                     <h4>Company</h4>
                     <ul class="footer-links">
-                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="/about">About Us</a></li>
                         <li><a href="/careers">Careers</a></li>
                         <li><a href="/press">Press</a></li>
                         <li><a href="/blog">Blog</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="/contact">Contact</a></li>
                     </ul>
                 </div>
 
@@ -5376,11 +5414,11 @@
                 <div class="footer-column">
                     <h4>Legal</h4>
                     <ul class="footer-links">
-                        <li><a href="terms.html">Terms & Conditions</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms & Conditions</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
                         <li><a href="/cookies">Cookie Policy</a></li>
                         <li><a href="/complaints">Complaints</a></li>
-                        <li><a href="help.html">Help Centre</a></li>
+                        <li><a href="/help">Help Centre</a></li>
                     </ul>
                 </div>
             </div>
@@ -5389,8 +5427,8 @@
             <div class="footer-bottom">
                 <p>&copy; 2026 TradeMatch UK. All rights reserved.</p>
                 <div class="footer-legal">
-                    <a href="terms.html">Terms & Conditions</a>
-                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="/terms">Terms & Conditions</a>
+                    <a href="/privacy">Privacy Policy</a>
                 </div>
             </div>
         </div>
@@ -5665,7 +5703,7 @@ function handleQuickSearch(event) {
             }
              
             // Build URL with postcode data
-            let url = `quote-engine.html?service=${service}&postcode=${encodeURIComponent(postcodeValue)}`;
+            let url = `/post-job?service=${service}&postcode=${encodeURIComponent(postcodeValue)}`;
             
             // Add district and region if available
             if (postcodeData) {
@@ -5724,7 +5762,7 @@ function handleQuickSearch(event) {
             });
         }
     </script>
-    <script src="/profile-menu.js" defer></script>
+    <script src="/frontend/shared/ui/profile-menu.js" defer></script>
 
     <script src="/frontend/shared/api/config.js"></script>
     <script>
@@ -5834,7 +5872,7 @@ function handleQuickSearch(event) {
 
         function viewPolicy() {
             // Redirect to privacy policy page
-            window.location.href = '/privacy-policy.html';
+            window.location.href = '/privacy';
         }
 
         // Check if GDPR already accepted
@@ -5876,51 +5914,19 @@ function handleQuickSearch(event) {
     }, observerOptions);
 
     // Observe the section
-    window.addEventListener('DOMContentLoaded', () => {
-      const appSection = document.getElementById('app-section');
-      if (appSection) {
-        observer.observe(appSection);
-      }
-    });
+        window.addEventListener('DOMContentLoaded', () => {
+            const appSection = document.getElementById('app-section');
+            if (!appSection) return;
+            appSection.classList.add('tm-visible');
+            if ('IntersectionObserver' in window) {
+                observer.observe(appSection);
+            }
+        });
   
     </script>
 
     <script>
 
-        // GDPR Cookie Notice
-        (function() {
-            const gdprNotice = document.getElementById('gdprNotice');
-            const acceptBtn = document.getElementById('acceptCookies');
-            const settingsBtn = document.getElementById('cookieSettings');
-            
-            // Check if user already accepted
-            if (!localStorage.getItem('cookiesAccepted')) {
-                setTimeout(() => {
-                    gdprNotice.classList.add('show');
-                }, 1000);
-            } else {
-                gdprNotice.classList.add('hidden');
-            }
-            
-            // Accept cookies
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-            
-            // Settings (for now, just accepts)
-            settingsBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-        })();
-        
         // Social Proof Notifications
         (function() {
             const container = document.getElementById('socialProofContainer');
@@ -6035,157 +6041,6 @@ function handleQuickSearch(event) {
 
         // GDPR Cookie Notice
         (function() {
-            const gdprNotice = document.getElementById('gdprNotice');
-            const acceptBtn = document.getElementById('acceptCookies');
-            const settingsBtn = document.getElementById('cookieSettings');
-            
-            if (!gdprNotice || !acceptBtn || !settingsBtn) return;
-            
-            // Check if user already accepted
-            if (!localStorage.getItem('cookiesAccepted')) {
-                setTimeout(() => {
-                    gdprNotice.classList.add('show');
-                }, 1000);
-            } else {
-                gdprNotice.classList.add('hidden');
-            }
-            
-            // Accept cookies
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-            
-            // Settings
-            settingsBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-        })();
-        
-        // Social Proof Notifications
-        (function() {
-            const container = document.getElementById('socialProofContainer');
-            if (!container) return;
-            
-            const notifications = [
-                { service: 'Architecture design', location: 'E6 6DR', time: '30 seconds ago' },
-                { service: 'Plumbing repair', location: 'SW1A 1AA', time: '2 minutes ago' },
-                { service: 'Electrical rewiring', location: 'M1 1AE', time: '5 minutes ago' },
-                { service: 'Kitchen installation', location: 'B1 1BB', time: '8 minutes ago' },
-                { service: 'Bathroom fitting', location: 'LS1 1UR', time: '12 minutes ago' },
-                { service: 'Roof repair', location: 'L1 8JQ', time: '15 minutes ago' },
-                { service: 'Garden landscaping', location: 'BS1 1AA', time: '18 minutes ago' },
-                { service: 'Extension build', location: 'EH1 1YZ', time: '22 minutes ago' },
-                { service: 'Plastering work', location: 'G1 1AA', time: '25 minutes ago' },
-                { service: 'Carpet fitting', location: 'CF10 1DD', time: '28 minutes ago' },
-                { service: 'Boiler installation', location: 'NE1 1EE', time: '32 minutes ago' },
-                { service: 'Painting & decorating', location: 'SO14 0AA', time: '35 minutes ago' }
-            ];
-            
-            let currentIndex = 0;
-            let activeNotifications = [];
-            
-            function createNotification(data) {
-                const notification = document.createElement('div');
-                notification.className = 'social-proof-notification';
-                
-                notification.innerHTML = `
-                    <div class="notification-content">
-                        <div class="notification-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                        </div>
-                        <div class="notification-text">
-                            <div class="notification-service">Quote for ${data.service} requested</div>
-                            <div class="notification-location">in ${data.location}</div>
-                            <div class="notification-time">${data.time}</div>
-                        </div>
-                        <button class="notification-close" aria-label="Close notification">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-                
-                const closeBtn = notification.querySelector('.notification-close');
-                closeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => {
-                        notification.remove();
-                        activeNotifications = activeNotifications.filter(n => n !== notification);
-                    }, 400);
-                });
-                
-                notification.addEventListener('click', () => {
-                    notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => {
-                        notification.remove();
-                        activeNotifications = activeNotifications.filter(n => n !== notification);
-                    }, 400);
-                });
-                
-                return notification;
-            }
-            
-            function showNotification() {
-                if (activeNotifications.length >= 2) {
-                    const oldest = activeNotifications.shift();
-                    oldest.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => oldest.remove(), 400);
-                }
-                
-                const data = notifications[currentIndex];
-                const notification = createNotification(data);
-                
-                container.appendChild(notification);
-                activeNotifications.push(notification);
-                
-                currentIndex = (currentIndex + 1) % notifications.length;
-                
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                        setTimeout(() => {
-                            notification.remove();
-                            activeNotifications = activeNotifications.filter(n => n !== notification);
-                        }, 400);
-                    }
-                }, 7000);
-            }
-            
-            setTimeout(() => {
-                showNotification();
-                setInterval(showNotification, 10000);
-            }, 3000);
-        })();
-
-    </script>
-
-    <script>
-
-        // Mega Menu Mobile Toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            const navMenu = document.getElementById('navMenu');
-            const megaTriggers = document.querySelectorAll('.mega-trigger');
-            
-            if (mobileToggle && navMenu) {
-                mobileToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                });
-            }
             
             // Mobile accordion for mega menus
             if (window.innerWidth <= 968) {
@@ -6202,55 +6057,9 @@ function handleQuickSearch(event) {
     </script>
 
 
-
-
-
-    <!-- GDPR Cookie Notice -->
-    <div class="gdpr-notice" id="gdprNotice">
-        <div class="gdpr-header">
-            <div class="gdpr-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-            </div>
-            <h4 class="gdpr-title">Cookie Consent</h4>
-        </div>
-        <p class="gdpr-text">
-            We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
-            <a href="/privacy-policy">Privacy Policy</a>
-        </p>
-        <div class="gdpr-actions">
-            <button class="gdpr-btn gdpr-accept" id="acceptCookies">Accept All</button>
-            <button class="gdpr-btn gdpr-settings" id="cookieSettings">Settings</button>
-        </div>
-    </div>
-    
-    <!-- Social Proof Notifications Container -->
-    <div class="social-proof-container" id="socialProofContainer"></div>
-
-
-    <!-- GDPR Cookie Notice -->
-    <div class="gdpr-notice" id="gdprNotice">
-        <div class="gdpr-header">
-            <div class="gdpr-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-            </div>
-            <h4 class="gdpr-title">Cookie Consent</h4>
-        </div>
-        <p class="gdpr-text">
-            We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
-            <a href="/privacy-policy">Privacy Policy</a>
-        </p>
-        <div class="gdpr-actions">
-            <button class="gdpr-btn gdpr-accept" id="acceptCookies">Accept All</button>
-            <button class="gdpr-btn gdpr-settings" id="cookieSettings">Settings</button>
-        </div>
-    </div>
-    
     <!-- Social Proof Notifications Container -->
     <div class="social-proof-container" id="socialProofContainer"></div>
 
 </body>
 </html>
+
