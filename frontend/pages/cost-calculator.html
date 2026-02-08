@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UK Home Improvement Cost Calculator 2025 | Free Instant Estimates | TradeMatch</title>
+    <meta name="description" content="Get instant cost estimates for UK home improvement projects. Calculate prices for extensions, renovations, bathroom, kitchen, and more. Compare quotes from verified local tradespeople.">
+    
+    <!-- Schema.org markup for Answer Engine Optimization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TradeMatch Cost Calculator",
+      "applicationCategory": "HomeImprovementApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "GBP"
+      },
+      "description": "Free cost calculator for UK home improvement projects providing instant estimates for extensions, renovations, plumbing, electrical work, and more.",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "UK Homeowners"
+      },
+      "featureList": [
+        "Extension cost estimates",
+        "Kitchen renovation pricing",
+        "Bathroom installation costs",
+        "Loft conversion estimates",
+        "Plumbing and electrical pricing",
+        "Local tradesperson matching"
+      ]
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --blue-500: #3b82f6;
+            --amber-500: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--slate-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--emerald-600) 0%, var(--blue-500) 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            padding: 3rem 0;
+        }
+
+        .calculator-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .calculator-header {
+            background: linear-gradient(135deg, var(--slate-900), var(--slate-800));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .calculator-header h2 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .calculator-body {
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Archivo', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .slider-container {
+            margin-top: 1rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 8px;
+            background: var(--slate-200);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--emerald-500);
+            cursor: pointer;
+            border: none;
+        }
+
+        .slider-value {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--slate-600);
+        }
+
+        .slider-current {
+            font-weight: 700;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--emerald-500);
+            background: var(--slate-50);
+        }
+
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calculate-btn:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Results */
+        .results-section {
+            display: none;
+            padding: 2rem;
+            background: var(--slate-50);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .estimate-result {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .estimate-label {
+            font-size: 1rem;
+            color: var(--slate-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .estimate-amount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .estimate-range {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+        }
+
+        .breakdown {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .breakdown h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--slate-900);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: var(--slate-700);
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            color: var(--slate-900);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--emerald-600);
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Popular Projects */
+        .popular-projects {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--slate-50);
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--emerald-500);
+            background: white;
+            transform: translateY(-4px);
+        }
+
+        .project-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--slate-900);
+        }
+
+        .project-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .calculator-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .estimate-amount {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Trade<span>Match</span></a>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/pages/how-it-works-customer.html">How it works</a></li>
+                <li><a href="/pages/ask-a-trade.html">Ask a trade</a></li>
+                
+                <!-- Services Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Building & Construction</h3>
+                                <ul>
+                                    <li><a href="/services/builders">Builders</a></li>
+                                    <li><a href="/services/extensions">Extensions</a></li>
+                                    <li><a href="/services/loft-conversions">Loft Conversions</a></li>
+                                    <li><a href="/services/garage-conversions">Garage Conversions</a></li>
+                                    <li><a href="/services/bricklayers">Bricklayers</a></li>
+                                    <li><a href="/services/stonemasons">Stonemasons</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Plumbing & Heating</h3>
+                                <ul>
+                                    <li><a href="/services/plumbers">Plumbers</a></li>
+                                    <li><a href="/services/gas-engineers">Gas Engineers</a></li>
+                                    <li><a href="/services/heating-engineers">Heating Engineers</a></li>
+                                    <li><a href="/services/boiler-installation">Boiler Installation</a></li>
+                                    <li><a href="/services/bathroom-installation">Bathroom Installation</a></li>
+                                    <li><a href="/services/radiator-installation">Radiator Installation</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Electrical & Lighting</h3>
+                                <ul>
+                                    <li><a href="/services/electricians">Electricians</a></li>
+                                    <li><a href="/services/rewiring">Rewiring</a></li>
+                                    <li><a href="/services/ev-charger">EV Charger Installation</a></li>
+                                    <li><a href="/services/fuse-box">Fuse Box Replacement</a></li>
+                                    <li><a href="/services/lighting">Lighting Installation</a></li>
+                                    <li><a href="/services/solar-panels">Solar Panels</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Decorating & Finishes</h3>
+                                <ul>
+                                    <li><a href="/services/painters">Painters & Decorators</a></li>
+                                    <li><a href="/services/plasterers">Plasterers</a></li>
+                                    <li><a href="/services/tilers">Tilers</a></li>
+                                    <li><a href="/services/flooring">Flooring Installation</a></li>
+                                    <li><a href="/services/carpenters">Carpenters</a></li>
+                                    <li><a href="/services/kitchen-fitters">Kitchen Fitters</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <!-- Locations Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Major Cities</h3>
+                                <ul>
+                                    <li><a href="/trades/london">London</a></li>
+                                    <li><a href="/trades/birmingham">Birmingham</a></li>
+                                    <li><a href="/trades/manchester">Manchester</a></li>
+                                    <li><a href="/trades/leeds">Leeds</a></li>
+                                    <li><a href="/trades/liverpool">Liverpool</a></li>
+                                    <li><a href="/trades/bristol">Bristol</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Southern England</h3>
+                                <ul>
+                                    <li><a href="/trades/brighton">Brighton</a></li>
+                                    <li><a href="/trades/southampton">Southampton</a></li>
+                                    <li><a href="/trades/reading">Reading</a></li>
+                                    <li><a href="/trades/oxford">Oxford</a></li>
+                                    <li><a href="/trades/portsmouth">Portsmouth</a></li>
+                                    <li><a href="/trades/bournemouth">Bournemouth</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Midlands & North</h3>
+                                <ul>
+                                    <li><a href="/trades/nottingham">Nottingham</a></li>
+                                    <li><a href="/trades/sheffield">Sheffield</a></li>
+                                    <li><a href="/trades/newcastle">Newcastle</a></li>
+                                    <li><a href="/trades/stoke-on-trent">Stoke-on-Trent</a></li>
+                                    <li><a href="/trades/coventry">Coventry</a></li>
+                                    <li><a href="/trades/leicester">Leicester</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Scotland & Wales</h3>
+                                <ul>
+                                    <li><a href="/trades/glasgow">Glasgow</a></li>
+                                    <li><a href="/trades/edinburgh">Edinburgh</a></li>
+                                    <li><a href="/trades/aberdeen">Aberdeen</a></li>
+                                    <li><a href="/trades/cardiff">Cardiff</a></li>
+                                    <li><a href="/trades/swansea">Swansea</a></li>
+                                    <li><a href="/trades/belfast">Belfast</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="nav-cta">
+                    <a href="/pages/post-a-job.html" class="btn-post">Post a Job</a>
+                    <a href="/trade-signup" class="btn-signup">Trade Signup</a>
+                    <a href="/login" class="btn-login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>UK Home Improvement Cost Calculator</h1>
+            <p class="hero-subtitle">Get instant, accurate cost estimates for your project. Free tool powered by real UK pricing data from 85,000+ completed jobs.</p>
+            
+            <div class="trust-badges">
+                <div class="trust-badge">
+                    <span>✓</span>
+                    <span>Based on Real UK Data</span>
+                </div>
+                <div class="trust-badge">
+                    <span>✓</span>
+                    <span>Updated for 2025</span>
+                </div>
+                <div class="trust-badge">
+                    <span>✓</span>
+                    <span>100% Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="calculator-section">
+        <div class="container">
+            <div class="calculator-container">
+                <div class="calculator-header">
+                    <h2>Calculate Your Project Cost</h2>
+                    <p>Answer a few questions to get your instant estimate</p>
+                </div>
+
+                <div class="calculator-body">
+                    <form id="costCalculator">
+                        
+                        <div class="form-group">
+                            <label class="form-label">What type of project?</label>
+                            <select class="form-select" id="projectType" required>
+                                <option value="">Select a project type...</option>
+                                <option value="extension">Extension / Addition</option>
+                                <option value="loft-conversion">Loft Conversion</option>
+                                <option value="kitchen">Kitchen Renovation</option>
+                                <option value="bathroom">Bathroom Installation</option>
+                                <option value="boiler">Boiler Replacement</option>
+                                <option value="rewire">Full House Rewire</option>
+                                <option value="plumbing">Plumbing Work</option>
+                                <option value="roofing">Roof Repair/Replace</option>
+                                <option value="plastering">Plastering</option>
+                                <option value="flooring">Flooring Installation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Your Location</label>
+                            <select class="form-select" id="location" required>
+                                <option value="">Select your area...</option>
+                                <option value="london">London</option>
+                                <option value="south-east">South East England</option>
+                                <option value="south-west">South West England</option>
+                                <option value="midlands">Midlands</option>
+                                <option value="north">North England</option>
+                                <option value="scotland">Scotland</option>
+                                <option value="wales">Wales</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Property Type</label>
+                            <select class="form-select" id="propertyType" required>
+                                <option value="">Select property type...</option>
+                                <option value="terraced">Terraced House</option>
+                                <option value="semi-detached">Semi-Detached</option>
+                                <option value="detached">Detached House</option>
+                                <option value="flat">Flat/Apartment</option>
+                                <option value="bungalow">Bungalow</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="sizeGroup" style="display: none;">
+                            <label class="form-label">Project Size (sq meters): <span class="slider-current" id="sizeValue">20</span></label>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="projectSize" min="5" max="100" value="20" step="5">
+                                <div class="slider-value">
+                                    <span>5 m²</span>
+                                    <span>100 m²</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="qualityGroup">
+                            <label class="form-label">Quality Level</label>
+                            <select class="form-select" id="quality" required>
+                                <option value="">Select quality...</option>
+                                <option value="budget">Budget (Basic materials)</option>
+                                <option value="standard">Standard (Mid-range)</option>
+                                <option value="premium">Premium (High-end)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="extrasGroup" style="display: none;">
+                            <label class="form-label">Additional Requirements</label>
+                            <div class="checkbox-group" id="extrasCheckboxes">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <button type="submit" class="calculate-btn">Calculate My Estimate →</button>
+                    </form>
+
+                    <div class="results-section" id="results">
+                        <div class="estimate-result">
+                            <div class="estimate-label">Estimated Project Cost</div>
+                            <div class="estimate-amount" id="estimateAmount">£0</div>
+                            <div class="estimate-range" id="estimateRange">Range: £0 - £0</div>
+                        </div>
+
+                        <div class="breakdown">
+                            <h3>Cost Breakdown</h3>
+                            <div id="breakdownItems">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+
+                        <div class="cta-box">
+                            <h3>Get Accurate Quotes from Local Professionals</h3>
+                            <p>Post your job free and receive up to 5 competitive quotes from verified tradespeople in your area</p>
+                            <a href="/post-job" class="cta-btn">Get Free Quotes Now →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="popular-projects">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Popular Projects</h2>
+                <p style="font-size: 1.125rem; color: var(--slate-600);">Click to see instant estimates</p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card" onclick="quickCalculate('extension', 'london', 20)">
+                    <div class="project-icon">🏗️</div>
+                    <h3 class="project-name">Extension</h3>
+                    <p class="project-price">£25,000 - £75,000</p>
+                </div>
+
+                <div class="project-card" onclick="quickCalculate('loft-conversion', 'london', 25)">
+                    <div class="project-icon">🏠</div>
+                    <h3 class="project-name">Loft Conversion</h3>
+                    <p class="project-price">£20,000 - £50,000</p>
+                </div>
+
+                <div class="project-card" onclick="quickCalculate('kitchen', 'london', 12)">
+                    <div class="project-icon">🍳</div>
+                    <h3 class="project-name">Kitchen Renovation</h3>
+                    <p class="project-price">£8,000 - £25,000</p>
+                </div>
+
+                <div class="project-card" onclick="quickCalculate('bathroom', 'london', 6)">
+                    <div class="project-icon">🛁</div>
+                    <h3 class="project-name">Bathroom</h3>
+                    <p class="project-price">£4,000 - £12,000</p>
+                </div>
+
+                <div class="project-card" onclick="quickCalculate('boiler', 'london', 0)">
+                    <div class="project-icon">🔥</div>
+                    <h3 class="project-name">Boiler Replacement</h3>
+                    <p class="project-price">£1,500 - £4,000</p>
+                </div>
+
+                <div class="project-card" onclick="quickCalculate('rewire', 'london', 0)">
+                    <div class="project-icon">⚡</div>
+                    <h3 class="project-name">Full Rewire</h3>
+                    <p class="project-price">£2,500 - £6,000</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Pricing Database (per sq meter or fixed)
+        const PRICING_DATA = {
+            'extension': {
+                name: 'Extension / Addition',
+                perSqM: true,
+                basePrice: { budget: 1200, standard: 1500, premium: 2000 },
+                extras: {
+                    'Architect drawings': 1500,
+                    'Building regulations': 800,
+                    'Structural engineer': 1200,
+                    'Electrics included': 2000
+                }
+            },
+            'loft-conversion': {
+                name: 'Loft Conversion',
+                perSqM: true,
+                basePrice: { budget: 800, standard: 1200, premium: 1800 },
+                extras: {
+                    'Velux windows': 1500,
+                    'Ensuite bathroom': 4000,
+                    'Building regs': 1000,
+                    'Dormer conversion': 8000
+                }
+            },
+            'kitchen': {
+                name: 'Kitchen Renovation',
+                perSqM: true,
+                basePrice: { budget: 600, standard: 1000, premium: 1800 },
+                extras: {
+                    'New appliances': 2500,
+                    'Worktop upgrade': 1200,
+                    'Move plumbing': 800,
+                    'Underfloor heating': 1500
+                }
+            },
+            'bathroom': {
+                name: 'Bathroom Installation',
+                fixed: true,
+                basePrice: { budget: 4000, standard: 7000, premium: 12000 },
+                extras: {
+                    'Walk-in shower': 1200,
+                    'Underfloor heating': 800,
+                    'High-end fixtures': 2000,
+                    'Tiling upgrade': 1500
+                }
+            },
+            'boiler': {
+                name: 'Boiler Replacement',
+                fixed: true,
+                basePrice: { budget: 1800, standard: 2500, premium: 3500 },
+                extras: {
+                    'Smart controls': 400,
+                    'Power flush': 500,
+                    'Relocate boiler': 800,
+                    'Upgrade pipework': 600
+                }
+            },
+            'rewire': {
+                name: 'Full House Rewire',
+                perBedroom: true,
+                basePrice: { budget: 2500, standard: 3500, premium: 5000 },
+                extras: {
+                    'Consumer unit upgrade': 800,
+                    'LED downlights': 1200,
+                    'Smart home wiring': 1500,
+                    'External sockets': 400
+                }
+            },
+            'plumbing': {
+                name: 'Plumbing Work',
+                fixed: true,
+                basePrice: { budget: 500, standard: 1000, premium: 2000 },
+                extras: {}
+            },
+            'roofing': {
+                name: 'Roof Repair/Replace',
+                perSqM: true,
+                basePrice: { budget: 80, standard: 120, premium: 180 },
+                extras: {
+                    'Scaffolding': 1200,
+                    'Felt upgrade': 800,
+                    'Insulation': 1500,
+                    'Guttering replacement': 600
+                }
+            },
+            'plastering': {
+                name: 'Plastering',
+                perSqM: true,
+                basePrice: { budget: 15, standard: 25, premium: 40 },
+                extras: {}
+            },
+            'flooring': {
+                name: 'Flooring Installation',
+                perSqM: true,
+                basePrice: { budget: 30, standard: 60, premium: 120 },
+                extras: {
+                    'Underlay upgrade': 500,
+                    'Remove old flooring': 400,
+                    'Subfloor prep': 800
+                }
+            }
+        };
+
+        // Location multipliers
+        const LOCATION_MULTIPLIERS = {
+            'london': 1.3,
+            'south-east': 1.15,
+            'south-west': 1.0,
+            'midlands': 0.9,
+            'north': 0.85,
+            'scotland': 0.9,
+            'wales': 0.85
+        };
+
+        // Form elements
+        const form = document.getElementById('costCalculator');
+        const projectType = document.getElementById('projectType');
+        const location = document.getElementById('location');
+        const propertyType = document.getElementById('propertyType');
+        const projectSize = document.getElementById('projectSize');
+        const quality = document.getElementById('quality');
+        const sizeGroup = document.getElementById('sizeGroup');
+        const extrasGroup = document.getElementById('extrasGroup');
+        const results = document.getElementById('results');
+
+        // Update size display
+        projectSize.addEventListener('input', function() {
+            document.getElementById('sizeValue').textContent = this.value;
+        });
+
+        // Show/hide size input based on project type
+        projectType.addEventListener('change', function() {
+            const project = PRICING_DATA[this.value];
+            if (project) {
+                if (project.perSqM) {
+                    sizeGroup.style.display = 'block';
+                } else {
+                    sizeGroup.style.display = 'none';
+                }
+
+                // Populate extras
+                const extrasContainer = document.getElementById('extrasCheckboxes');
+                extrasContainer.innerHTML = '';
+                
+                if (Object.keys(project.extras).length > 0) {
+                    extrasGroup.style.display = 'block';
+                    for (const [extra, price] of Object.entries(project.extras)) {
+                        const div = document.createElement('div');
+                        div.className = 'checkbox-item';
+                        div.innerHTML = `
+                            <input type="checkbox" id="extra-${extra.replace(/\s+/g, '-')}" value="${price}">
+                            <label for="extra-${extra.replace(/\s+/g, '-')}">${extra} (+£${price.toLocaleString()})</label>
+                        `;
+                        extrasContainer.appendChild(div);
+                    }
+                } else {
+                    extrasGroup.style.display = 'none';
+                }
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateCost();
+        });
+
+        function calculateCost() {
+            const projectTypeValue = projectType.value;
+            const locationValue = location.value;
+            const qualityValue = quality.value;
+            const sizeValue = parseInt(projectSize.value);
+
+            if (!projectTypeValue || !locationValue || !qualityValue) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const project = PRICING_DATA[projectTypeValue];
+            const locationMultiplier = LOCATION_MULTIPLIERS[locationValue];
+            
+            // Base cost
+            let baseCost = project.basePrice[qualityValue];
+            
+            if (project.perSqM) {
+                baseCost *= sizeValue;
+            }
+
+            // Apply location multiplier
+            baseCost *= locationMultiplier;
+
+            // Add extras
+            let extrasCost = 0;
+            const selectedExtras = [];
+            document.querySelectorAll('#extrasCheckboxes input:checked').forEach(checkbox => {
+                const cost = parseInt(checkbox.value);
+                extrasCost += cost;
+                selectedExtras.push({
+                    name: checkbox.nextElementSibling.textContent.split('(+')[0].trim(),
+                    cost: cost
+                });
+            });
+
+            const totalCost = baseCost + extrasCost;
+            const lowRange = Math.round(totalCost * 0.85);
+            const highRange = Math.round(totalCost * 1.15);
+
+            // Display results
+            document.getElementById('estimateAmount').textContent = '£' + Math.round(totalCost).toLocaleString();
+            document.getElementById('estimateRange').textContent = `Range: £${lowRange.toLocaleString()} - £${highRange.toLocaleString()}`;
+
+            // Breakdown
+            const breakdownContainer = document.getElementById('breakdownItems');
+            breakdownContainer.innerHTML = `
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Base ${project.name} Cost</span>
+                    <span class="breakdown-value">£${Math.round(baseCost).toLocaleString()}</span>
+                </div>
+                ${selectedExtras.map(extra => `
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">${extra.name}</span>
+                        <span class="breakdown-value">£${extra.cost.toLocaleString()}</span>
+                    </div>
+                `).join('')}
+                <div class="breakdown-item" style="border-top: 2px solid var(--slate-300); margin-top: 1rem; padding-top: 1rem;">
+                    <span class="breakdown-label"><strong>Total Estimated Cost</strong></span>
+                    <span class="breakdown-value" style="font-size: 1.25rem; color: var(--emerald-600);">£${Math.round(totalCost).toLocaleString()}</span>
+                </div>
+            `;
+
+            results.classList.add('active');
+            results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Quick calculate for popular projects
+        function quickCalculate(type, loc, size) {
+            projectType.value = type;
+            location.value = loc;
+            quality.value = 'standard';
+            projectSize.value = size;
+            document.getElementById('sizeValue').textContent = size;
+            
+            // Trigger change event
+            projectType.dispatchEvent(new Event('change'));
+            
+            // Scroll to calculator
+            document.querySelector('.calculator-container').scrollIntoView({ behavior: 'smooth' });
+            
+            // Calculate immediately if all fields filled
+            setTimeout(() => {
+                if (propertyType.value) {
+                    calculateCost();
+                }
+            }, 500);
+        }
+
+        console.log('%cTradeMatch Cost Calculator', 'font-size: 20px; font-weight: bold; color: #10b981;');
+    </script>
+</body>
+</html>
+
+
