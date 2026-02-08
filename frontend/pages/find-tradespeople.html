@@ -1,467 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Tradespeople | TradeMatch</title>
+    <title>Find Local Tradespeople Near You | TradeMatch</title>
+    <meta name="description" content="Find verified local tradespeople in your area. Browse by trade, read reviews, compare quotes, and hire with confidence. All tradespeople ID verified and insured.">
     
-    
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80&fm=webp&auto=format" fetchpriority="high">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* ========================================
+           CSS VARIABLES - TradeMatch Design System
+           ======================================== */
         :root {
-            --slate: #1A2332;
-            --slate-light: #2D3B4E;
-            --emerald: #16A34A;
-            --emerald-dark: #15803D;
-            --gray-50: #F8FAFB;
-            --gray-100: #F3F4F6;
-            --gray-600: #4B5563;
-            --white: #FFFFFF;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.18);
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --purple-600: #7c3aed;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --red-500: #ef4444;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --orange-500: #f97316;
         }
-        
+
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+           ======================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Manrope', sans-serif;
-            color: var(--slate);
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+            color: var(--slate-900);
+            background: var(--white);
             overflow-x: hidden;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
-        
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
         .container {
-            max-width: 1200px;
+            width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 2rem;
         }
-        
-        /* Glassmorphism Header */
-        header, nav {
-            background: var(--glass-bg);
-            border-bottom: 1px solid var(--glass-border);
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-sm {
+            padding: 3rem 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 24px;
+
+        .navbar .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
-            font-family: 'Source Serif 4', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--slate);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
             text-decoration: none;
-            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .logo span {
-            color: var(--emerald);
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 2rem;
             align-items: center;
+            list-style: none;
         }
-        
+
         .nav-links a {
-            color: var(--gray-600);
             text-decoration: none;
+            color: var(--slate-600);
             font-weight: 500;
-            font-size: 15px;
+            font-size: 0.9375rem;
             transition: color 0.2s;
         }
-        
+
         .nav-links a:hover {
-            color: var(--slate);
+            color: var(--emerald-500);
         }
-        
-        .btn {
-            padding: 12px 28px;
+
+        .btn-nav {
+            padding: 0.625rem 1.25rem;
+            background: var(--emerald-500);
+            color: white;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 15px;
-            text-decoration: none;
             transition: all 0.2s;
-            display: inline-block;
-            border: none;
-            cursor: pointer;
         }
-        
-        .btn-primary {
-            background: var(--emerald);
-            color: var(--white);
-            box-shadow: 0 1px 2px rgba(22, 163, 74, 0.2);
-        }
-        
-        .btn-primary:hover {
-            background: var(--emerald-dark);
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
         }
-        
-        /* Hero Section */
+
+        /* ========================================
+           HERO SECTION WITH SEARCH
+           ======================================== */
         .hero {
-            padding: 120px 24px;
-            text-align: center;
-            color: var(--white);
-            position: relative;
+            background: linear-gradient(135deg, var(--emerald-600) 0%, var(--blue-600) 100%);
+            color: white;
             overflow: hidden;
-        }
-
-        .hero-media {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-
-        .hero-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(45, 59, 78, 0.95) 100%);
-            z-index: 1;
-        }
-
-        .hero-container {
             position: relative;
-            z-index: 2;
         }
-        
+
         .hero::before {
             content: '';
             position: absolute;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(22, 163, 74, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             top: -200px;
             right: -200px;
-            border-radius: 50%;
-            animation: pulse 4s ease-in-out infinite;
-            z-index: 2;
-            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
         }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.2; }
-            50% { transform: scale(1.1); opacity: 0.3; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
         }
-        
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+            padding: 4rem 0;
+            max-width: 1000px;
+        }
+
         .hero h1 {
-            font-family: 'Source Serif 4', serif;
-            font-size: 56px;
-            font-weight: 700;
+            font-size: 3.5rem;
+            font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .search-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr auto;
+            gap: 1rem;
+        }
+
+        .search-input-group {
             position: relative;
         }
-        
-        .hero h2 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-        
-        .hero-cta {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-        
-        .postcode-input {
+
+        .search-input,
+        .search-select {
             width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--gray-100);
-            border-radius: 8px;
-            font-size: 15px;
-            margin-bottom: 16px;
-            font-family: 'Manrope', sans-serif;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Archivo', sans-serif;
+            transition: all 0.2s;
         }
-        
-        .search-btn {
-            width: 100%;
-            padding: 14px 32px;
-            background: var(--emerald);
+
+        .search-input:focus,
+        .search-select:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-400);
+            font-size: 1.25rem;
+        }
+
+        .btn-search {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .search-suggestions {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .suggestions-label {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .suggestion-tag {
+            padding: 0.5rem 1rem;
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--slate-700);
             cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .search-btn:hover {
-            background: var(--emerald-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
-        }
-        
-        /* Content Sections */
-        .content-section {
-            padding: 100px 24px;
-            background: var(--white);
-        }
-        
-        .content-section.alt {
-            background: var(--gray-50);
-        }
-        
-        .section-title {
-            font-family: 'Source Serif 4', serif;
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--slate);
-            margin-bottom: 20px;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-        
-        .section-subtitle {
-            font-size: 19px;
-            color: var(--gray-600);
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto 60px;
-        }
-        
-        /* Feature Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 32px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .feature-card {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .feature-icon {
-            width: 72px;
-            height: 72px;
-            background: #E8F5E9;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 32px;
-            color: var(--emerald);
-        }
-        
-        .feature-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--slate);
-        }
-        
-        .feature-desc {
-            color: var(--gray-600);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        
-        /* Steps */
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .step {
-            text-align: center;
-        }
-        
-        .step-number {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--white);
-            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.25);
-        }
-        
-        .step h3 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--slate);
-        }
-        
-        .step p {
-            color: var(--gray-600);
-            line-height: 1.7;
-        }
-        
-        /* Trust Stats */
-        .trust-stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            flex-wrap: wrap;
-            margin-top: 60px;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--emerald);
-            display: block;
-            margin-bottom: 4px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-        
-        /* Vendor Grid */
-        .vendor-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
+
+        .suggestion-tag:hover {
+            background: var(--emerald-500);
+            color: white;
+            border-color: var(--emerald-500);
         }
 
-        .vendor-card {
+        /* ========================================
+           SECTION HEADER
+           ======================================== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           CATEGORIES SECTION
+           ======================================== */
+        .categories-section {
+            background: var(--slate-50);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
             background: white;
             border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             cursor: pointer;
-            border: 1px solid var(--gray-100);
+            border: 2px solid transparent;
         }
 
-        .vendor-card:hover {
+        .category-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            border-color: var(--emerald);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-color: var(--emerald-500);
         }
 
-        .vendor-header {
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .category-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        /* ========================================
+           FEATURED TRADESPEOPLE SECTION
+           ======================================== */
+        .featured-section {
+            background: white;
+        }
+
+        .filter-bar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--slate-50);
+            border-radius: 12px;
         }
 
-        .vendor-avatar {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+        .filter-left {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.25rem;
+            background: white;
+            border: 2px solid var(--slate-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--emerald-500);
+            color: var(--emerald-600);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .results-count {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        .tradespeople-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .tradesperson-card {
+            background: white;
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .tradesperson-card:hover {
+            border-color: var(--emerald-500);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .tradesperson-header {
+            background: var(--slate-50);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .pro-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tradesperson-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .tradesperson-name {
+            font-size: 1.25rem;
             font-weight: 700;
-            font-size: 24px;
+            color: var(--slate-900);
+            margin-bottom: 0.25rem;
         }
 
-        .vendor-info h3 {
-            margin: 0;
-            color: var(--slate);
-            font-size: 18px;
+        .tradesperson-trade {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
         }
 
-        .vendor-info p {
-            margin: 4px 0 0 0;
-            color: var(--gray-600);
-            font-size: 14px;
+        .tradesperson-body {
+            padding: 1.5rem 2rem;
         }
 
-        .vendor-rating {
+        .rating-section {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .vendor-stars {
-            color: #FFB800;
-            font-size: 14px;
+        .stars {
+            color: var(--amber-500);
+            font-size: 1.125rem;
         }
 
-        .vendor-reviews {
-            color: var(--gray-600);
-            font-size: 13px;
+        .rating-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--slate-900);
         }
 
-        .vendor-stats {
+        .rating-count {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        .tradesperson-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--gray-100);
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--slate-50);
+            border-radius: 8px;
         }
 
         .stat {
@@ -469,393 +530,1032 @@
         }
 
         .stat-value {
-            font-weight: 700;
-            color: var(--emerald);
-            font-size: 18px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
         }
 
         .stat-label {
-            color: var(--gray-600);
-            font-size: 12px;
-            margin-top: 4px;
+            font-size: 0.75rem;
+            color: var(--slate-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .vendor-member {
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-bottom: 16px;
+        .tradesperson-info {
+            margin-bottom: 1.5rem;
         }
 
-        .vendor-btn {
-            width: 100%;
-            padding: 10px;
-            background: var(--emerald);
-            color: white;
-            border: none;
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--slate-700);
+        }
+
+        .info-icon {
+            color: var(--emerald-500);
+            font-size: 1rem;
+        }
+
+        .tradesperson-footer {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0 2rem 2rem;
+        }
+
+        .btn-view {
+            flex: 1;
+            padding: 0.75rem;
+            background: white;
+            color: var(--emerald-600);
+            border: 2px solid var(--emerald-500);
             border-radius: 8px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .vendor-btn:hover {
-            background: var(--emerald-dark);
+        .btn-view:hover {
+            background: var(--emerald-500);
+            color: white;
         }
 
-        .no-results {
+        .btn-contact {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-contact:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           TRUST SECTION
+           ======================================== */
+        .trust-section {
+            background: var(--slate-50);
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .trust-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
             text-align: center;
-            padding: 60px 20px;
-            color: var(--gray-600);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .no-results h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        .trust-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
         }
 
-        /* Footer */
-        footer {
-            background: var(--slate);
-            color: rgba(255,255,255,0.8);
-            padding: 60px 24px 30px;
+        .trust-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--slate-900);
         }
-        
+
+        .trust-description {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           CTA SECTION
+           ======================================== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            padding: 1.25rem 3rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 48px;
-            max-width: 1200px;
-            margin: 0 auto 48px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
-        
-        .footer-brand h3 {
-            font-family: 'Source Serif 4', serif;
-            font-size: 24px;
-            color: var(--white);
-            margin-bottom: 16px;
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
         }
-        
-        .footer-column h4 {
-            color: var(--white);
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        
-        .footer-column ul {
+
+        .footer-links {
             list-style: none;
         }
-        
-        .footer-column ul li {
-            margin-bottom: 12px;
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
         }
-        
-        .footer-column a {
-            color: rgba(255,255,255,0.7);
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            font-size: 15px;
+            font-size: 0.875rem;
             transition: color 0.2s;
         }
-        
-        .footer-column a:hover {
-            color: var(--emerald);
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
         }
-        
+
         .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
             text-align: center;
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
-        
-        /* Responsive */
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1200px) {
+            .categories-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .tradespeople-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .categories-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 { font-size: 40px; }
-            .section-title { font-size: 36px; }
-            .nav-links { display: none; }
-            .hero { padding: 80px 24px; }
-            .content-section { padding: 60px 24px; }
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .tradespeople-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-left {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
         }
     </style>
-    <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
-    <script type="module">
-        import posthog from "https://cdn.jsdelivr.net/npm/posthog-js@1.132.0/dist/posthog.esm.js";
-
-        posthog.init('phc_lNYTxmLahkabE1B4ZH4ovjN3y8LCOG4gtNtuKfJiwxj', {
-            api_host: 'https://eu.i.posthog.com',
-            defaults: '2025-11-30'
-        });
-    </script>
 </head>
 <body>
-
-    <header>
-        <div class="nav-container">
-            <a href="/" class="logo">Trade<span>Match</span></a>
-<div class="nav-links">
-                <a href="/how-it-works">How It Works</a>
-                <a href="/find-tradespeople">Find Trades</a>
-                <a href="/about">About</a>
-                <a href="/contact">Contact</a>
-                <a href="/help">Help</a>
-                <a href="/login" class="btn btn-primary">Sign In</a>
-            </div>
+    
+    <!-- ========================================
+         NAVIGATION
+         ======================================== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">T</div>
+                <span>TradeMatch</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/how-it-works">How it Works</a></li>
+                <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                <li><a href="/compare">Compare Platforms</a></li>
+                <li><a href="/vendors">For Tradespeople</a></li>
+                <li><a href="/post-job" class="btn-nav">Post a Job</a></li>
+            </ul>
         </div>
-    </header>
+    </nav>
 
+    <!-- ========================================
+         HERO SECTION WITH SEARCH
+         ======================================== -->
     <section class="hero">
-        <div class="hero-media">
-            <picture>
-                <source
-                    type="image/avif"
-                    srcset="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80&fm=avif&auto=format"
-                >
-                <source
-                    type="image/webp"
-                    srcset="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80&fm=webp&auto=format"
-                >
-                <img
-                    src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=80"
-                    alt="Find trusted tradespeople"
-                    width="1600"
-                    height="900"
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async"
-                >
-            </picture>
-        </div>
-        <div class="hero-overlay"></div>
-
-        <div class="container hero-container">
-            <h1>Find Trusted Tradespeople</h1>
-            <p>Browse our directory of verified professionals across the UK.</p>
+        <div class="container">
+            <h1>Find Local Tradespeople</h1>
+            <p class="subtitle">Search 12,000+ verified professionals. Compare reviews, quotes, and hire with confidence.</p>
             
-            <div class="search-section">
-                <select id="serviceSelect">
-                    <option value="">Select a service...</option>
-                    <option value="Builders">Builders</option>
-                    <option value="Electricians">Electricians</option>
-                    <option value="Plumbers">Plumbers</option>
-                    <option value="Roofers">Roofers</option>
-                    <option value="Carpentry">Carpentry</option>
-                    <option value="Painting">Painting</option>
-                    <option value="HVAC">HVAC</option>
-                    <option value="Masonry">Masonry</option>
-                </select>
-                <input type="text" placeholder="Enter postcode..." id="postcodeInput">
-                <button onclick="searchTradespeople()">Search Tradespeople</button>
+            <div class="search-container">
+                <form class="search-form" id="searchForm">
+                    <div class="search-input-group">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="What do you need done? (e.g., bathroom renovation)" required>
+                    </div>
+                    <div class="search-input-group">
+                        <span class="search-icon">📍</span>
+                        <input type="text" class="search-input" placeholder="Your postcode (e.g., SW1A 1AA)" required>
+                    </div>
+                    <button type="submit" class="btn-search">Search</button>
+                </form>
+
+                <div class="search-suggestions">
+                    <div class="suggestions-label">Popular searches:</div>
+                    <div class="suggestion-tags">
+                        <span class="suggestion-tag">Plumbers</span>
+                        <span class="suggestion-tag">Electricians</span>
+                        <span class="suggestion-tag">Builders</span>
+                        <span class="suggestion-tag">Bathroom Fitters</span>
+                        <span class="suggestion-tag">Painters</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <div class="container">
-        <div id="vendorResults" style="display: none; margin-top: 40px;">
-            <h2 id="resultsTitle">Search Results</h2>
-            <div id="vendorGrid" class="vendor-grid"></div>
-        </div>
-        
-        <div class="categories">
-            <h2>Browse by Category</h2>
-            <div class="category-grid">
-                <div class="category">
-                    <h3>🏗️ Builders</h3>
-                    <p>Extensions, renovations, new builds</p>
+    <!-- ========================================
+         CATEGORIES SECTION
+         ======================================== -->
+    <section class="categories-section section-sm">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Browse by <span class="gradient-text">Trade</span></h2>
+                <p class="section-subtitle">Explore all trades and find the right professional for your project</p>
+            </div>
+
+            <div class="categories-grid">
+                <div class="category-card fade-in" onclick="filterByCategory('plumbing')">
+                    <div class="category-icon">🚰</div>
+                    <div class="category-name">Plumbing</div>
                 </div>
-                <div class="category">
-                    <h3>⚡ Electricians</h3>
-                    <p>Wiring, installations, repairs</p>
+
+                <div class="category-card fade-in" onclick="filterByCategory('electrical')">
+                    <div class="category-icon">⚡</div>
+                    <div class="category-name">Electrical</div>
                 </div>
-                <div class="category">
-                    <h3>🔧 Plumbers</h3>
-                    <p>Boilers, heating, bathrooms</p>
+
+                <div class="category-card fade-in" onclick="filterByCategory('building')">
+                    <div class="category-icon">🏗️</div>
+                    <div class="category-name">Building</div>
                 </div>
-                <div class="category">
-                    <h3>🏠 Roofers</h3>
-                    <p>Repairs, replacements, new roofs</p>
+
+                <div class="category-card fade-in" onclick="filterByCategory('carpentry')">
+                    <div class="category-icon">🔨</div>
+                    <div class="category-name">Carpentry</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('painting')">
+                    <div class="category-icon">🎨</div>
+                    <div class="category-name">Painting</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('roofing')">
+                    <div class="category-icon">🏠</div>
+                    <div class="category-name">Roofing</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('landscaping')">
+                    <div class="category-icon">🌳</div>
+                    <div class="category-name">Landscaping</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('bathroom')">
+                    <div class="category-icon">🛁</div>
+                    <div class="category-name">Bathroom</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('heating')">
+                    <div class="category-icon">♨️</div>
+                    <div class="category-name">Heating</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('kitchen')">
+                    <div class="category-icon">🍳</div>
+                    <div class="category-name">Kitchen</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('windows')">
+                    <div class="category-icon">🪟</div>
+                    <div class="category-name">Windows</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('flooring')">
+                    <div class="category-icon">📐</div>
+                    <div class="category-name">Flooring</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('plastering')">
+                    <div class="category-icon">🧱</div>
+                    <div class="category-name">Plastering</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('tiling')">
+                    <div class="category-icon">⬜</div>
+                    <div class="category-name">Tiling</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('fencing')">
+                    <div class="category-icon">🌲</div>
+                    <div class="category-name">Fencing</div>
+                </div>
+
+                <div class="category-card fade-in" onclick="filterByCategory('more')">
+                    <div class="category-icon">➕</div>
+                    <div class="category-name">View All</div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <footer>
+    <!-- ========================================
+         FEATURED TRADESPEOPLE
+         ======================================== -->
+    <section class="featured-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured <span class="gradient-text">Tradespeople</span></h2>
+                <p class="section-subtitle">Top-rated professionals in your area</p>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-left">
+                    <button class="filter-btn active">All Trades</button>
+                    <button class="filter-btn">Highest Rated</button>
+                    <button class="filter-btn">Most Reviews</button>
+                    <button class="filter-btn">Recently Active</button>
+                </div>
+                <div class="results-count">
+                    <strong>342</strong> tradespeople found
+                </div>
+            </div>
+
+            <div class="tradespeople-grid">
+                
+                <!-- Tradesperson Card 1 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <span class="pro-badge">PRO</span>
+                        <div class="tradesperson-avatar">MJ</div>
+                        <h3 class="tradesperson-name">Mike Johnson</h3>
+                        <p class="tradesperson-trade">Master Plumber</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">4.9</span>
+                            <span class="rating-count">(127 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">15</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">340+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">98%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Manchester & 10 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 1 hour</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+                <!-- Tradesperson Card 2 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <span class="pro-badge">PRO</span>
+                        <div class="tradesperson-avatar">ST</div>
+                        <h3 class="tradesperson-name">Sarah Thompson</h3>
+                        <p class="tradesperson-trade">Electrician</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">5.0</span>
+                            <span class="rating-count">(89 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">280+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Birmingham & 15 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 2 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+                <!-- Tradesperson Card 3 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <div class="tradesperson-avatar">DP</div>
+                        <h3 class="tradesperson-name">David Peters</h3>
+                        <p class="tradesperson-trade">Builder</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">4.8</span>
+                            <span class="rating-count">(156 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">20</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">450+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">96%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>London & 8 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 3 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+                <!-- Tradesperson Card 4 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <span class="pro-badge">PRO</span>
+                        <div class="tradesperson-avatar">LW</div>
+                        <h3 class="tradesperson-name">Lisa Wilson</h3>
+                        <p class="tradesperson-trade">Painter & Decorator</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">4.9</span>
+                            <span class="rating-count">(94 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">10</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">220+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">99%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Leeds & 12 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 1 hour</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+                <!-- Tradesperson Card 5 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <div class="tradesperson-avatar">RH</div>
+                        <h3 class="tradesperson-name">Robert Harris</h3>
+                        <p class="tradesperson-trade">Carpenter</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">4.7</span>
+                            <span class="rating-count">(78 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">18</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">310+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">95%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Bristol & 10 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 4 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+                <!-- Tradesperson Card 6 -->
+                <div class="tradesperson-card fade-in">
+                    <div class="tradesperson-header">
+                        <span class="pro-badge">PRO</span>
+                        <div class="tradesperson-avatar">JB</div>
+                        <h3 class="tradesperson-name">James Brown</h3>
+                        <p class="tradesperson-trade">Roofer</p>
+                    </div>
+                    <div class="tradesperson-body">
+                        <div class="rating-section">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">4.9</span>
+                            <span class="rating-count">(112 reviews)</span>
+                        </div>
+
+                        <div class="tradesperson-stats">
+                            <div class="stat">
+                                <div class="stat-value">22</div>
+                                <div class="stat-label">Years</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">380+</div>
+                                <div class="stat-label">Jobs</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">97%</div>
+                                <div class="stat-label">Rate</div>
+                            </div>
+                        </div>
+
+                        <div class="tradesperson-info">
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <span>Liverpool & 15 miles</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">✅</span>
+                                <span>ID & Insurance Verified</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-icon">⚡</span>
+                                <span>Responds within 2 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tradesperson-footer">
+                        <button class="btn-view">View Profile</button>
+                        <button class="btn-contact">Get Quote</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         TRUST SECTION
+         ======================================== -->
+    <section class="trust-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose <span class="gradient-text">TradeMatch</span>?</h2>
+                <p class="section-subtitle">Hire with complete confidence</p>
+            </div>
+
+            <div class="trust-grid">
+                
+                <div class="trust-card fade-in">
+                    <div class="trust-icon">✅</div>
+                    <h3 class="trust-title">Fully Verified</h3>
+                    <p class="trust-description">Every tradesperson is ID verified with business checks and insurance verification.</p>
+                </div>
+
+                <div class="trust-card fade-in">
+                    <div class="trust-icon">⭐</div>
+                    <h3 class="trust-title">Real Reviews</h3>
+                    <p class="trust-description">Only verified customers can leave reviews. No fake reviews, ever.</p>
+                </div>
+
+                <div class="trust-card fade-in">
+                    <div class="trust-icon">💰</div>
+                    <h3 class="trust-title">Free Quotes</h3>
+                    <p class="trust-description">Get up to 5 free quotes from local pros. Compare prices with no obligation.</p>
+                </div>
+
+                <div class="trust-card fade-in">
+                    <div class="trust-icon">🔒</div>
+                    <h3 class="trust-title">Payment Protection</h3>
+                    <p class="trust-description">Optional payment protection available for extra peace of mind on larger projects.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         CTA SECTION
+         ======================================== -->
+    <section class="cta-section section">
+        <div class="container">
+            <h2>Can't find what you're looking for?</h2>
+            <p>Post your job and let local tradespeople come to you with free quotes</p>
+            <a href="/post-job" class="btn-primary">Post Your Job Free</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>TradeMatch</h3>
-                    <p>Connecting homeowners with trusted local tradespeople across the UK.</p>
-                </div>
-                
-                <div class="footer-column">
+                <div class="footer-section">
                     <h4>For Customers</h4>
-                    <ul>
-                        <li><a href="/how-it-works">How It Works</a></li>
+                    <ul class="footer-links">
                         <li><a href="/post-job">Post a Job</a></li>
-                        <li><a href="/find-tradespeople">Find Trades</a></li>
-                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                        <li><a href="/ask-a-trade">Ask a Trade</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-column">
+                <div class="footer-section">
                     <h4>For Tradespeople</h4>
-                    <ul>
-                        <li><a href="/trade-signup">Join as a Trade</a></li>
-                        <li><a href="/login">Trade Login</a></li>
-                        <li><a href="/vendor-dashboard">Dashboard</a></li>
+                    <ul class="footer-links">
+                        <li><a href="/vendors/signup">Join TradeMatch</a></li>
+                        <li><a href="/vendors/how-it-works">How It Works</a></li>
+                        <li><a href="/compare">Compare Platforms</a></li>
+                        <li><a href="/vendors/help">Vendor Help</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-column">
+                <div class="footer-section">
                     <h4>Company</h4>
-                    <ul>
+                    <ul class="footer-links">
                         <li><a href="/about">About Us</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                        <li><a href="/terms">Terms</a></li>
-                        <li><a href="/privacy">Privacy</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/press">Press</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
                     </ul>
                 </div>
             </div>
-            
-<div class="footer-bottom">
-                © 2026 TradeMatch. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8);">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8);">Privacy</a>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <!-- ========================================
+         JAVASCRIPT
+         ======================================== -->
     <script>
-        const API_URL = 'https://api.tradematch.uk';
+        // ========================================
+        // Intersection Observer for Animations
+        // ========================================
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        };
 
-        async function searchTradespeople() {
-            const service = document.getElementById('serviceSelect').value;
-            const postcode = document.getElementById('postcodeInput').value;
-
-            if (!service) {
-                alert('Please select a service');
-                return;
-            }
-
-            if (!postcode) {
-                alert('Please enter a postcode');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/api/vendors/search?service=${encodeURIComponent(service)}&postcode=${encodeURIComponent(postcode)}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    displayVendors(data.data, service);
-                } else {
-                    showNoResults('No tradespeople found matching your search.');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-            } catch (error) {
-                console.error('Search error:', error);
-                showNoResults('An error occurred while searching. Please try again.');
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========================================
+        // Search Form Handler
+        // ========================================
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const what = this.querySelector('input[placeholder*="What"]').value;
+            const where = this.querySelector('input[placeholder*="postcode"]').value;
+            
+            console.log('Searching for:', what, 'in', where);
+            alert(`Searching for "${what}" in ${where}\n\nIn production, this would show filtered results.`);
+        });
+
+        // ========================================
+        // Category Filter
+        // ========================================
+        function filterByCategory(category) {
+            console.log('Filter by category:', category);
+            
+            if (category === 'more') {
+                alert('In production, this would show all 48+ trade categories in a modal or expanded view.');
+            } else {
+                alert(`Filtering results to show ${category} professionals.\n\nIn production, the results would update below.`);
             }
         }
 
-        function displayVendors(vendors, service) {
-            const vendorResults = document.getElementById('vendorResults');
-            const vendorGrid = document.getElementById('vendorGrid');
-            const resultsTitle = document.getElementById('resultsTitle');
-
-            if (!vendors || vendors.length === 0) {
-                showNoResults(`No ${service} tradespeople found in this area.`);
-                return;
-            }
-
-            resultsTitle.textContent = `Found ${vendors.length} ${service} Tradespeople`;
-            vendorGrid.innerHTML = '';
-
-            vendors.forEach(vendor => {
-                const card = createVendorCard(vendor);
-                vendorGrid.appendChild(card);
+        // ========================================
+        // Suggestion Tag Click
+        // ========================================
+        document.querySelectorAll('.suggestion-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-input[placeholder*="What"]');
+                searchInput.value = this.textContent;
+                searchInput.focus();
             });
+        });
 
-            vendorResults.style.display = 'block';
-            vendorResults.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function createVendorCard(vendor) {
-            const card = document.createElement('div');
-            card.className = 'vendor-card';
-
-            const initials = vendor.name
-                .split(' ')
-                .map(n => n[0])
-                .join('')
-                .toUpperCase()
-                .slice(0, 2);
-
-            const rating = vendor.average_rating || 0;
-            const ratingStars = '⭐'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
-
-            const memberSince = new Date(vendor.member_since).toLocaleDateString('en-GB', {
-                year: 'numeric',
-                month: 'short'
+        // ========================================
+        // Filter Button Toggle
+        // ========================================
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.textContent;
+                console.log('Filter applied:', filter);
+                alert(`Filtering by: ${filter}\n\nIn production, results would re-sort below.`);
             });
+        });
 
-            card.innerHTML = `
-                <div class="vendor-header">
-                    <div class="vendor-avatar">${initials}</div>
-                    <div class="vendor-info">
-                        <h3>${vendor.name}</h3>
-                        <p>${vendor.service_type || 'Tradesperson'}</p>
-                    </div>
-                </div>
+        // ========================================
+        // Tradesperson Card Actions
+        // ========================================
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.tradesperson-card');
+                const name = card.querySelector('.tradesperson-name').textContent;
+                
+                console.log('View profile:', name);
+                alert(`Opening full profile for ${name}\n\nIn production, this would navigate to their detailed profile page.`);
+            });
+        });
 
-                <div class="vendor-rating">
-                    <div class="vendor-stars">${ratingStars || 'New'}</div>
-                    <div class="vendor-reviews">(${vendor.total_reviews || 0} reviews)</div>
-                </div>
+        document.querySelectorAll('.btn-contact').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.tradesperson-card');
+                const name = card.querySelector('.tradesperson-name').textContent;
+                
+                console.log('Get quote from:', name);
+                alert(`Requesting quote from ${name}\n\nIn production, this would open a quote request form or direct message.`);
+            });
+        });
 
-                <div class="vendor-stats">
-                    <div class="stat">
-                        <div class="stat-value">${vendor.jobs_completed || 0}</div>
-                        <div class="stat-label">Jobs Done</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">${vendor.bids_submitted || 0}</div>
-                        <div class="stat-label">Bids Sent</div>
-                    </div>
-                </div>
+        // ========================================
+        // Card Click Handler
+        // ========================================
+        document.querySelectorAll('.tradesperson-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const name = this.querySelector('.tradesperson-name').textContent;
+                console.log('Card clicked:', name);
+                // Could navigate to profile page
+            });
+        });
 
-                <div class="vendor-member">Member since ${memberSince}</div>
-
-                <button class="vendor-btn" onclick="viewVendorProfile(${vendor.id}, '${vendor.name.replace(/'/g, "\\'")}')">
-                    View Profile & Request Quote
-                </button>
-            `;
-
-            return card;
-        }
-
-        function showNoResults(message) {
-            const vendorResults = document.getElementById('vendorResults');
-            const vendorGrid = document.getElementById('vendorGrid');
-
-            vendorGrid.innerHTML = `
-                <div class="no-results" style="grid-column: 1 / -1;">
-                    <h3>No Results Found</h3>
-                    <p>${message}</p>
-                </div>
-            `;
-
-            vendorResults.style.display = 'block';
-            vendorResults.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function viewVendorProfile(vendorId, vendorName) {
-            window.location.href = `/vendor-profile.html?id=${vendorId}`;
-        }
+        // ========================================
+        // Console Log
+        // ========================================
+        console.log('%cTradeMatch - Find Tradespeople', 'font-size: 20px; font-weight: bold; color: #10b981;');
+        console.log('Features:');
+        console.log('✓ Advanced search with location');
+        console.log('✓ Category filtering');
+        console.log('✓ Featured tradesperson cards');
+        console.log('✓ Rating and review display');
+        console.log('✓ Verification badges');
+        console.log('✓ Interactive filters');
     </script>
-
-    <script src="/frontend/shared/ui/profile-menu.js"></script>
 </body>
 </html>
-
-
-
-

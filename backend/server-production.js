@@ -363,6 +363,13 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
+// Sentry test endpoint (disable in production)
+if (process.env.NODE_ENV !== 'production') {
+    app.get("/debug-sentry", function mainHandler(req, res) {
+        throw new Error("My first Sentry error!");
+    });
+}
+
 // Root endpoint
 app.get("/", (req, res) => {
     res.json({
