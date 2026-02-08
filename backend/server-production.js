@@ -1,3 +1,5 @@
+require("./instrument.js");
+const Sentry = require("@sentry/node");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -392,6 +394,9 @@ app.use((req, res) => {
         method: req.method
     });
 });
+
+// Sentry error handler (register before any other error middleware)
+Sentry.setupExpressErrorHandler(app);
 
 // Global error handler
 app.use((err, req, res, next) => {
