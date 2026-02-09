@@ -694,7 +694,11 @@
             }
         }
     </style>
-</head>
+    <script>
+        if (window.zaraz && typeof window.zaraz.track === "function") {
+            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
+        }
+    </script></head>
 <body>
     
     <!-- Navigation -->
@@ -1431,5 +1435,6 @@
     </script>
 </body>
 </html>
+
 
 

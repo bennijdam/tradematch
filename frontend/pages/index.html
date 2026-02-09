@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <link rel="preload" as="image" href="/images/hero-background-optimized.webp" fetchpriority="high">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -18,52 +17,7 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700&display=swap"></noscript>
         <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-        <script defer src="/_vercel/analytics/script.js"></script>
-        <!-- Google tag (gtag.js) -->
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-
-            const loadAnalytics = () => {
-                if (window.__gtagLoaded) return;
-                window.__gtagLoaded = true;
-                const gtagScript = document.createElement('script');
-                gtagScript.async = true;
-                gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-G06GFRVJPL';
-                document.head.appendChild(gtagScript);
-                gtag('js', new Date());
-                gtag('config', 'G-G06GFRVJPL');
-            };
-
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(loadAnalytics, { timeout: 2000 });
-            } else {
-                window.addEventListener('load', loadAnalytics);
-            }
-      
-            // Enhanced tracking for marketplace
-            function trackQuoteRequest(service) {
-                gtag('event', 'quote_request', {
-                    service_category: service,
-                    location: window.location.pathname
-                });
-            }
-      
-            function trackLogin(method) {
-                gtag('event', 'login', {
-                    method: method,
-                    location: 'auth'
-                });
-            }
-      
-            function trackRegistration() {
-                gtag('event', 'registration', {
-                    method: 'oauth',
-                    location: 'auth'
-                });
-            }
-        </script>
-    <link rel="sitemap" type="application/xml" href="https://www.tradematch.uk/sitemap.xml">
+        <link rel="sitemap" type="application/xml" href="https://www.tradematch.uk/sitemap.xml">
     <style>
         :root {
             --slate: #1A2332;
@@ -4463,15 +4417,11 @@
 
     </style>
     <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
-    <script type="module">
-        import posthog from "https://cdn.jsdelivr.net/npm/posthog-js@1.132.0/dist/posthog.esm.js";
-
-        posthog.init('phc_lNYTxmLahkabE1B4ZH4ovjN3y8LCOG4gtNtuKfJiwxj', {
-            api_host: 'https://eu.i.posthog.com',
-            defaults: '2025-11-30'
-        });
-    </script>
-</head>
+        <script>
+        if (window.zaraz && typeof window.zaraz.track === "function") {
+            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
+        }
+    </script></head>
 <body>
     <!-- Header with Glass Effect -->
     <!-- Top Navigation -->
@@ -6065,5 +6015,6 @@ function handleQuickSearch(event) {
 
 </body>
 </html>
+
 
 

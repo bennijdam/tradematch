@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - TradeMatch UK | Access Your Account</title>
@@ -724,15 +723,11 @@
             }
         }
     </style>
-    <script type="module">
-        import posthog from "https://cdn.jsdelivr.net/npm/posthog-js@1.132.0/dist/posthog.esm.js";
-
-        posthog.init('phc_lNYTxmLahkabE1B4ZH4ovjN3y8LCOG4gtNtuKfJiwxj', {
-            api_host: 'https://eu.i.posthog.com',
-            defaults: '2025-11-30'
-        });
-    </script>
-</head>
+        <script>
+        if (window.zaraz && typeof window.zaraz.track === "function") {
+            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
+        }
+    </script></head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -1508,6 +1503,7 @@ document.getElementById('resendActivationBtn').addEventListener('click', async f
     <script src="/frontend/shared/ui/profile-menu.js"></script>
 </body>
 </html>
+
 
 
 
