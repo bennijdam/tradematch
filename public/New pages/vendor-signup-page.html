@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join TradeMatch - Win Better Jobs, Pay Less for Leads</title>
+    <meta name="description" content="Only receive local, relevant leads. Transparent per-lead pricing. No subscriptions required. Start winning better jobs today.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES - TradeMatch Design System
+           ======================================== */
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --purple-600: #7c3aed;
+            --blue-500: #3b82f6;
+            --red-500: #ef4444;
+            --amber-500: #f59e0b;
+        }
+
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-sm {
+            padding: 3rem 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================================
+           NAVIGATION (SIMPLE HEADER)
+           ======================================== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .btn-nav {
+            padding: 0.625rem 1.25rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            min-height: 600px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-benefits {
+            list-style: none;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-benefits li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+
+        .hero-benefits li::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--emerald-500);
+            border-radius: 50%;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-mockup {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .mockup-metric {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); }
+        }
+
+        .mockup-metric-icon {
+            font-size: 2.5rem;
+        }
+
+        .mockup-metric-label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .mockup-metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* ========================================
+           EARNINGS POTENTIAL SECTION (CRITICAL)
+           ======================================== */
+        .earnings-section {
+            background: var(--slate-50);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .earnings-example {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        .earnings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .earnings-trade {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .earnings-location {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        .earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .earnings-stat {
+            text-align: center;
+        }
+
+        .earnings-stat-label {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .earnings-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .earnings-breakdown {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .earnings-breakdown-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--slate-900);
+        }
+
+        .earnings-flow {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .earnings-flow-item {
+            text-align: center;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .earnings-flow-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .earnings-flow-label {
+            font-size: 0.75rem;
+            color: var(--slate-600);
+        }
+
+        .earnings-flow-arrow {
+            font-size: 1.5rem;
+            color: var(--emerald-500);
+        }
+
+        .earnings-disclaimer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        /* ========================================
+           ANIMATED COUNTER BARS
+           ======================================== */
+        .counter-section {
+            max-width: 700px;
+            margin: 3rem auto 0;
+        }
+
+        .counter-bar {
+            margin-bottom: 2rem;
+        }
+
+        .counter-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .counter-bar-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .counter-bar-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .counter-bar-track {
+            height: 12px;
+            background: var(--slate-200);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .counter-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .counter-bar-fill.animate {
+            width: var(--width);
+        }
+
+        /* ========================================
+           COMPETITOR COMPARISON TABLE
+           ======================================== */
+        .comparison-section {
+            background: white;
+        }
+
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .comparison-table thead {
+            background: var(--slate-900);
+            color: white;
+        }
+
+        .comparison-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-table th:first-child {
+            width: 25%;
+        }
+
+        .comparison-table tbody tr {
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .comparison-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-table td {
+            padding: 1.25rem 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .highlight-col {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--emerald-500);
+            border-right: 3px solid var(--emerald-500);
+        }
+
+        .highlight-col-header {
+            background: var(--emerald-600) !important;
+            position: relative;
+        }
+
+        .highlight-col-header::after {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--amber-500);
+            color: white;
+            font-size: 0.625rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .check-icon {
+            color: var(--emerald-500);
+            font-weight: 700;
+        }
+
+        .cross-icon {
+            color: var(--slate-400);
+        }
+
+        /* ========================================
+           HOW IT WORKS SECTION
+           ======================================== */
+        .how-it-works {
+            background: var(--slate-50);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--slate-900);
+        }
+
+        .step-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        .micro-copy {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .micro-copy p {
+            font-size: 1rem;
+            color: var(--emerald-700);
+            font-weight: 600;
+        }
+
+        /* ========================================
+           WALLET EXPLANATION SECTION
+           ======================================== */
+        .wallet-section {
+            background: white;
+        }
+
+        .wallet-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .wallet-visual {
+            background: var(--slate-50);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .wallet-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-balance {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .wallet-balance-label {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .wallet-balance-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .wallet-features {
+            list-style: none;
+        }
+
+        .wallet-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-features li::before {
+            content: '💎';
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .wallet-feature-title {
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .wallet-feature-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        /* ========================================
+           ADD-ONS PREVIEW SECTION
+           ======================================== */
+        .addons-section {
+            background: var(--slate-50);
+        }
+
+        .addons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .addon-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid var(--slate-200);
+            transition: all 0.3s;
+        }
+
+        .addon-card:hover {
+            border-color: var(--emerald-500);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .addon-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-700);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .addon-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .addon-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .addon-features {
+            list-style: none;
+        }
+
+        .addon-features li {
+            font-size: 0.875rem;
+            color: var(--slate-700);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .addon-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--emerald-500);
+            font-weight: 700;
+        }
+
+        /* ========================================
+           TRUST & SOCIAL PROOF SECTION
+           ======================================== */
+        .trust-section {
+            background: white;
+        }
+
+        .trust-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .trust-stat {
+            text-align: center;
+        }
+
+        .trust-stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-stat-label {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: var(--slate-50);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .testimonial-stars {
+            color: var(--amber-500);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--slate-900);
+            font-size: 0.9375rem;
+        }
+
+        .testimonial-trade {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        /* ========================================
+           FINAL CTA SECTION
+           ======================================== */
+        .final-cta {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========================================
+           FOOTER (SIMPLE)
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .wallet-content {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .addons-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .earnings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .earnings-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .earnings-flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .comparison-table-wrapper {
+                overflow-x: scroll;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .final-cta h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========================================
+           ANIMATION UTILITIES
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- ========================================
+         NAVIGATION
+         ======================================== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">T</div>
+                <span>TradeMatch</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="#signup" class="btn-nav">Sign Up Free</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Win better jobs.<br>Pay less for leads.</h1>
+                <p class="subtitle">Only receive jobs in your area. No bidding wars. No wasted spend.</p>
+                
+                <ul class="hero-benefits">
+                    <li>Only local, relevant leads</li>
+                    <li>Transparent per-lead pricing</li>
+                    <li>No subscriptions required</li>
+                </ul>
+
+                <div class="hero-cta">
+                    <a href="#signup" class="btn-primary">Sign up free</a>
+                    <a href="#how-it-works" class="btn-secondary">See how it works</a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-mockup">
+                    <div class="mockup-metric">
+                        <div class="mockup-metric-icon">💰</div>
+                        <div>
+                            <div class="mockup-metric-label">Average cost per lead</div>
+                            <div class="mockup-metric-value">£3 - £15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         EARNINGS POTENTIAL SECTION (CRITICAL)
+         ======================================== -->
+    <section class="earnings-section section" id="earnings">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">See Your <span class="gradient-text">Earning Potential</span></h2>
+                <p class="section-subtitle">Real numbers from vendors like you</p>
+            </div>
+
+            <div class="earnings-example fade-in">
+                <div class="earnings-header">
+                    <div>
+                        <div class="earnings-trade">🔧 Plumber</div>
+                        <div class="earnings-location">SW London</div>
+                    </div>
+                </div>
+
+                <div class="earnings-grid">
+                    <div class="earnings-stat">
+                        <div class="earnings-stat-label">Average Job Value</div>
+                        <div class="earnings-stat-value">£1,200</div>
+                    </div>
+                    <div class="earnings-stat">
+                        <div class="earnings-stat-label">Typical Lead Cost</div>
+                        <div class="earnings-stat-value">£8 - £25</div>
+                    </div>
+                    <div class="earnings-stat">
+                        <div class="earnings-stat-label">Win Rate</div>
+                        <div class="earnings-stat-value">67%</div>
+                    </div>
+                </div>
+
+                <div class="earnings-breakdown">
+                    <h3 class="earnings-breakdown-title">📊 Example: Win 1 job from 6 leads</h3>
+                    <div class="earnings-flow">
+                        <div class="earnings-flow-item">
+                            <div class="earnings-flow-value">6</div>
+                            <div class="earnings-flow-label">Leads received</div>
+                        </div>
+                        <div class="earnings-flow-arrow">→</div>
+                        <div class="earnings-flow-item">
+                            <div class="earnings-flow-value">£120</div>
+                            <div class="earnings-flow-label">Total spend</div>
+                        </div>
+                        <div class="earnings-flow-arrow">→</div>
+                        <div class="earnings-flow-item">
+                            <div class="earnings-flow-value">1</div>
+                            <div class="earnings-flow-label">Job won</div>
+                        </div>
+                        <div class="earnings-flow-arrow">→</div>
+                        <div class="earnings-flow-item">
+                            <div class="earnings-flow-value">£1,200</div>
+                            <div class="earnings-flow-label">Revenue</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="earnings-disclaimer">* Figures are illustrative and vary by trade and location. Based on Q4 2024 data.</p>
+            </div>
+
+            <!-- Animated Counter Bars -->
+            <div class="counter-section">
+                <div class="counter-bar">
+                    <div class="counter-bar-header">
+                        <span class="counter-bar-label">Leads Received</span>
+                        <span class="counter-bar-value" data-count="156">0</span>
+                    </div>
+                    <div class="counter-bar-track">
+                        <div class="counter-bar-fill" style="--width: 100%" data-animate="true"></div>
+                    </div>
+                </div>
+
+                <div class="counter-bar">
+                    <div class="counter-bar-header">
+                        <span class="counter-bar-label">Quotes Sent</span>
+                        <span class="counter-bar-value" data-count="124">0</span>
+                    </div>
+                    <div class="counter-bar-track">
+                        <div class="counter-bar-fill" style="--width: 80%" data-animate="true"></div>
+                    </div>
+                </div>
+
+                <div class="counter-bar">
+                    <div class="counter-bar-header">
+                        <span class="counter-bar-label">Jobs Won</span>
+                        <span class="counter-bar-value" data-count="84">0</span>
+                    </div>
+                    <div class="counter-bar-track">
+                        <div class="counter-bar-fill" style="--width: 67%" data-animate="true"></div>
+                    </div>
+                </div>
+
+                <div class="counter-bar">
+                    <div class="counter-bar-header">
+                        <span class="counter-bar-label">Net Earnings (last 3 months)</span>
+                        <span class="counter-bar-value" data-count="9600">£0</span>
+                    </div>
+                    <div class="counter-bar-track">
+                        <div class="counter-bar-fill" style="--width: 100%" data-animate="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         COMPETITOR COMPARISON TABLE
+         ======================================== -->
+    <section class="comparison-section section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose <span class="gradient-text">TradeMatch</span>?</h2>
+                <p class="section-subtitle">Honest comparison with other platforms</p>
+            </div>
+
+            <div class="comparison-table-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="highlight-col-header">TradeMatch</th>
+                            <th>MyBuilder</th>
+                            <th>Bark</th>
+                            <th>Checkatrade</th>
+                            <th>Rated People</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pay per lead</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> Yes</td>
+                            <td><span class="cross-icon">✗</span> No</td>
+                            <td><span class="check-icon">✓</span> Yes</td>
+                            <td><span class="cross-icon">✗</span> No</td>
+                            <td><span class="check-icon">✓</span> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Monthly subscription</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> None</td>
+                            <td><span class="cross-icon">✗</span> £1,000+/year</td>
+                            <td><span class="check-icon">✓</span> None</td>
+                            <td><span class="cross-icon">✗</span> £1,200+/year</td>
+                            <td><span class="check-icon">✓</span> None</td>
+                        </tr>
+                        <tr>
+                            <td>Lead exclusivity</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> Limited vendors</td>
+                            <td>Multiple vendors</td>
+                            <td>Multiple vendors</td>
+                            <td>Multiple vendors</td>
+                            <td>Multiple vendors</td>
+                        </tr>
+                        <tr>
+                            <td>Control over spend</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> Full control</td>
+                            <td>Monthly commitment</td>
+                            <td>Credit bundles</td>
+                            <td>Annual lock-in</td>
+                            <td>Credit packs</td>
+                        </tr>
+                        <tr>
+                            <td>Local targeting</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> Postcode level</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                        </tr>
+                        <tr>
+                            <td>Wallet-based system</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> Yes</td>
+                            <td><span class="cross-icon">✗</span> No</td>
+                            <td>Partial</td>
+                            <td><span class="cross-icon">✗</span> No</td>
+                            <td>Partial</td>
+                        </tr>
+                        <tr>
+                            <td>Hidden fees</td>
+                            <td class="highlight-col"><span class="check-icon">✓</span> None</td>
+                            <td>Setup fees apply</td>
+                            <td>Variable pricing</td>
+                            <td>Joining fees</td>
+                            <td>Processing fees</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         HOW IT WORKS
+         ======================================== -->
+    <section class="how-it-works section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How <span class="gradient-text">Leads Work</span></h2>
+                <p class="section-subtitle">Simple, transparent process from start to finish</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">📋</div>
+                    <h3 class="step-title">Create your profile</h3>
+                    <p class="step-desc">Add your trade, service area, experience, and photos to stand out</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">💰</div>
+                    <h3 class="step-title">Top up your wallet</h3>
+                    <p class="step-desc">Add funds to your wallet balance to start receiving leads</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🎯</div>
+                    <h3 class="step-title">Receive matching leads</h3>
+                    <p class="step-desc">Get notified of jobs in your area that match your skills</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Choose which to quote</h3>
+                    <p class="step-desc">Review job details and only unlock leads you want to quote on</p>
+                </div>
+            </div>
+
+            <div class="micro-copy">
+                <p>🛡️ You're never charged unless a lead is delivered. Full control, full transparency.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         WALLET EXPLANATION
+         ======================================== -->
+    <section class="wallet-section section">
+        <div class="container">
+            <div class="wallet-content">
+                <div class="wallet-visual fade-in">
+                    <div class="wallet-icon">💳</div>
+                    <div class="wallet-balance">
+                        <div class="wallet-balance-label">Your Lead Wallet</div>
+                        <div class="wallet-balance-value">£150</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title">How Your <span class="gradient-text">Wallet</span> Works</h2>
+                    <ul class="wallet-features">
+                        <li>
+                            <div>
+                                <div class="wallet-feature-title">Each lead has a clear £ cost shown upfront</div>
+                                <div class="wallet-feature-desc">No hidden fees. You see the exact price before unlocking any job.</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="wallet-feature-title">Minimum balance required to receive leads</div>
+                                <div class="wallet-feature-desc">To ensure fair access, we require a minimum wallet balance. Top up anytime.</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="wallet-feature-title">Leads pause automatically if balance runs low</div>
+                                <div class="wallet-feature-desc">You're always in control. Pause or resume lead delivery whenever you want.</div>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <div class="wallet-feature-title">No auto-charging or surprises</div>
+                                <div class="wallet-feature-desc">You manually choose which leads to unlock. Never charged without your approval.</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         ADD-ONS PREVIEW
+         ======================================== -->
+    <section class="addons-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Boost Your <span class="gradient-text">Visibility</span></h2>
+                <p class="section-subtitle">Optional add-ons to help you stand out (no requirement to purchase)</p>
+            </div>
+
+            <div class="addons-grid">
+                <div class="addon-card fade-in">
+                    <span class="addon-badge">Optional</span>
+                    <h3 class="addon-title">🌟 Pro Local Visibility</h3>
+                    <p class="addon-desc">Appear at the top of local search pages in your service area</p>
+                    <ul class="addon-features">
+                        <li>Featured placement on local pages</li>
+                        <li>Priority in search results</li>
+                        <li>Highlighted profile badge</li>
+                    </ul>
+                </div>
+
+                <div class="addon-card fade-in">
+                    <span class="addon-badge">Optional</span>
+                    <h3 class="addon-title">⚡ Priority Lead Delivery</h3>
+                    <p class="addon-desc">Get notified of new jobs before other vendors in your area</p>
+                    <ul class="addon-features">
+                        <li>Early access to new leads</li>
+                        <li>15-30 minute head start</li>
+                        <li>Increased win rate potential</li>
+                    </ul>
+                </div>
+
+                <div class="addon-card fade-in">
+                    <span class="addon-badge">Optional</span>
+                    <h3 class="addon-title">💎 Profile Highlighting</h3>
+                    <p class="addon-desc">Stand out with a premium profile design and verification badges</p>
+                    <ul class="addon-features">
+                        <li>Premium profile styling</li>
+                        <li>Trust badges displayed</li>
+                        <li>Enhanced credibility</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         TRUST & SOCIAL PROOF
+         ======================================== -->
+    <section class="trust-section section" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Trusted by <span class="gradient-text">UK Trades</span></h2>
+                <p class="section-subtitle">Join thousands of successful tradespeople</p>
+            </div>
+
+            <div class="trust-stats">
+                <div class="trust-stat fade-in">
+                    <div class="trust-stat-value">12,000+</div>
+                    <div class="trust-stat-label">Active vendors</div>
+                </div>
+                <div class="trust-stat fade-in">
+                    <div class="trust-stat-value">4.8★</div>
+                    <div class="trust-stat-label">Average rating</div>
+                </div>
+                <div class="trust-stat fade-in">
+                    <div class="trust-stat-value">£45M+</div>
+                    <div class="trust-stat-label">Jobs completed</div>
+                </div>
+                <div class="trust-stat fade-in">
+                    <div class="trust-stat-value">98%</div>
+                    <div class="trust-stat-label">Satisfaction rate</div>
+                </div>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"I switched from MyBuilder and cut my lead costs in half. The wallet system means I'm always in control of my spend."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MJ</div>
+                        <div>
+                            <div class="testimonial-name">Mike Johnson</div>
+                            <div class="testimonial-trade">Plumber • Manchester</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Finally, a platform that's transparent about pricing. No hidden fees, no annual contracts. Just quality leads."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ST</div>
+                        <div>
+                            <div class="testimonial-name">Sarah Thompson</div>
+                            <div class="testimonial-trade">Electrician • Birmingham</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"The local targeting is brilliant. I only get jobs within my 10-mile radius. No more wasted quotes for jobs too far away."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">DP</div>
+                        <div>
+                            <div class="testimonial-name">David Peters</div>
+                            <div class="testimonial-trade">Builder • London</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FINAL CTA
+         ======================================== -->
+    <section class="final-cta section" id="signup">
+        <div class="container">
+            <h2>Start winning better jobs today</h2>
+            <p>Join 12,000+ tradespeople growing their business with TradeMatch</p>
+            <div class="final-cta-buttons">
+                <button class="btn-primary" onclick="handleSignup()">Sign up free</button>
+                <a href="#pricing" class="btn-secondary">Compare platforms</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>For Vendors</h4>
+                    <ul class="footer-links">
+                        <li><a href="/signup">Sign Up</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/pricing">Pricing</a></li>
+                        <li><a href="/help">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Customers</h4>
+                    <ul class="footer-links">
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                        <li><a href="/categories">All Categories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/press">Press</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT - Animations & Interactions
+         ======================================== -->
+    <script>
+        // ========================================
+        // Animated Counters
+        // ========================================
+        function animateCounter(element, target, prefix = '') {
+            const duration = 2000;
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = prefix + Math.floor(target).toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = prefix + Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // ========================================
+        // Intersection Observer for Fade-In Animations
+        // ========================================
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Trigger counter animations when visible
+                    if (entry.target.classList.contains('counter-section')) {
+                        const counters = entry.target.querySelectorAll('[data-count]');
+                        counters.forEach(counter => {
+                            const target = parseInt(counter.getAttribute('data-count'));
+                            const prefix = counter.textContent.includes('£') ? '£' : '';
+                            animateCounter(counter, target, prefix);
+                        });
+                        
+                        // Animate progress bars
+                        const bars = entry.target.querySelectorAll('[data-animate]');
+                        bars.forEach(bar => {
+                            setTimeout(() => bar.classList.add('animate'), 200);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // Observe counter section
+        const counterSection = document.querySelector('.counter-section');
+        if (counterSection) {
+            observer.observe(counterSection);
+        }
+
+        // ========================================
+        // Smooth Scroll for Anchor Links
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // Sign Up Handler (Mock)
+        // ========================================
+        function handleSignup() {
+            // In production, this would show a sign-up modal or redirect
+            const email = prompt('Enter your email to get started:');
+            if (email) {
+                console.log('Sign up initiated for:', email);
+                alert('Great! Check your email for verification. After verifying, you\'ll access your vendor dashboard and complete onboarding.');
+                
+                // In production:
+                // 1. Send email verification
+                // 2. Redirect to dashboard after verification
+                // 3. Trigger onboarding modal
+                
+                // Simulate redirect to dashboard (where onboarding modal would trigger)
+                // window.location.href = '/vendor/dashboard';
+            }
+        }
+
+        // ========================================
+        // Console Helper
+        // ========================================
+        console.log('%cTradeMatch Vendor Sign-Up Page', 'font-size: 20px; font-weight: bold; color: #10b981;');
+        console.log('This page demonstrates:');
+        console.log('✓ Earnings-focused messaging');
+        console.log('✓ Competitor comparison');
+        console.log('✓ Animated counters and progress bars');
+        console.log('✓ Fade-in animations on scroll');
+        console.log('✓ Modern, conversion-optimized design');
+    </script>
+</body>
+</html>

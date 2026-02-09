@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeMatch Blog - Home Improvement Tips, Guides & Industry News</title>
+    <meta name="description" content="Expert advice, how-to guides, and industry insights for UK homeowners and tradespeople. Learn about home improvement, hiring tips, and trade industry trends.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES
+           ======================================== */
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --amber-500: #f59e0b;
+            --purple-600: #7c3aed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--slate-50);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .btn-nav {
+            padding: 0.625rem 1.25rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           HEADER
+           ======================================== */
+        .blog-header {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            padding: 4rem 0 3rem;
+            text-align: center;
+        }
+
+        .blog-header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .blog-header p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           SEARCH & FILTER BAR
+           ======================================== */
+        .filter-bar {
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 65px;
+            z-index: 100;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Archivo', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-400);
+            font-size: 1.25rem;
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.625rem 1.25rem;
+            border: 2px solid var(--slate-200);
+            background: white;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--slate-600);
+        }
+
+        .category-btn:hover {
+            border-color: var(--emerald-500);
+            color: var(--emerald-600);
+        }
+
+        .category-btn.active {
+            background: var(--emerald-500);
+            color: white;
+            border-color: var(--emerald-500);
+        }
+
+        /* ========================================
+           BLOG CONTENT
+           ======================================== */
+        .blog-content {
+            padding: 3rem 0;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        /* Featured Post */
+        .featured-post {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            margin-bottom: 3rem;
+        }
+
+        .featured-post:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .featured-post:hover .featured-image img {
+            transform: scale(1.05);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-content {
+            padding: 2.5rem;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--slate-600);
+        }
+
+        .meta-icon {
+            color: var(--emerald-500);
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-700);
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .featured-content h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .featured-content h2 a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .featured-content h2 a:hover {
+            color: var(--emerald-600);
+        }
+
+        .post-excerpt {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--emerald-600);
+            font-weight: 600;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+
+        .read-more:hover {
+            gap: 0.75rem;
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .post-card:hover .post-image img {
+            transform: scale(1.05);
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+        }
+
+        .post-content h3 a {
+            color: var(--slate-900);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .post-content h3 a:hover {
+            color: var(--emerald-600);
+        }
+
+        .post-content .post-excerpt {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 145px;
+            height: fit-content;
+        }
+
+        .sidebar-widget {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .widget-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--slate-900);
+        }
+
+        .popular-posts {
+            list-style: none;
+        }
+
+        .popular-post-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .popular-post-item:last-child {
+            border-bottom: none;
+        }
+
+        .popular-post-item a {
+            color: var(--slate-900);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            transition: color 0.2s;
+        }
+
+        .popular-post-item a:hover {
+            color: var(--emerald-600);
+        }
+
+        .popular-post-date {
+            font-size: 0.8125rem;
+            color: var(--slate-500);
+            margin-top: 0.25rem;
+        }
+
+        .categories-list {
+            list-style: none;
+        }
+
+        .categories-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .categories-list a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--slate-700);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .categories-list a:hover {
+            color: var(--emerald-600);
+        }
+
+        .category-count {
+            background: var(--slate-100);
+            color: var(--slate-600);
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .newsletter-form {
+            margin-top: 1.5rem;
+        }
+
+        .newsletter-form input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            margin-bottom: 0.75rem;
+            font-family: 'Archivo', sans-serif;
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+        }
+
+        .newsletter-form button {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--emerald-600);
+        }
+
+        /* ========================================
+           PAGINATION
+           ======================================== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid var(--slate-200);
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--slate-700);
+        }
+
+        .page-btn:hover {
+            border-color: var(--emerald-500);
+            color: var(--emerald-600);
+        }
+
+        .page-btn.active {
+            background: var(--emerald-500);
+            color: white;
+            border-color: var(--emerald-500);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .blog-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .featured-content h2 {
+                font-size: 1.75rem;
+            }
+
+            .featured-image {
+                height: 250px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">T</div>
+                <span>TradeMatch</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/how-it-works">How it Works</a></li>
+                <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/post-job" class="btn-nav">Post a Job</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Blog Header -->
+    <header class="blog-header">
+        <div class="container">
+            <h1>TradeMatch Blog</h1>
+            <p>Expert advice, how-to guides, and industry insights for UK homeowners and tradespeople</p>
+        </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar">
+        <div class="container">
+            <div class="filter-container">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search articles..." id="searchInput">
+                </div>
+                <div class="category-filters">
+                    <button class="category-btn active" data-category="all">All Posts</button>
+                    <button class="category-btn" data-category="how-to">How-To Guides</button>
+                    <button class="category-btn" data-category="home-improvement">Home Improvement</button>
+                    <button class="category-btn" data-category="hiring-tips">Hiring Tips</button>
+                    <button class="category-btn" data-category="industry-news">Industry News</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="blog-content">
+        <div class="container">
+            <div class="blog-grid">
+                <!-- Main Content -->
+                <div class="main-content">
+                    
+                    <!-- Featured Post -->
+                    <article class="featured-post fade-in">
+                        <div class="featured-image">
+                            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80" alt="Complete Guide to Hiring a Plumber">
+                            <span class="featured-badge">Featured</span>
+                        </div>
+                        <div class="featured-content">
+                            <div class="post-meta">
+                                <span class="post-category">Hiring Tips</span>
+                                <span class="meta-item">
+                                    <span class="meta-icon">📅</span>
+                                    <span>15 Jan 2025</span>
+                                </span>
+                                <span class="meta-item">
+                                    <span class="meta-icon">⏱️</span>
+                                    <span>8 min read</span>
+                                </span>
+                            </div>
+                            <h2><a href="/blog/complete-guide-hiring-plumber">The Complete Guide to Hiring a Plumber in the UK (2025)</a></h2>
+                            <p class="post-excerpt">Everything you need to know about finding, vetting, and hiring a qualified plumber. From checking certifications to understanding fair pricing, this comprehensive guide covers it all.</p>
+                            <a href="/blog/complete-guide-hiring-plumber" class="read-more">Read Full Article →</a>
+                        </div>
+                    </article>
+
+                    <!-- Posts Grid -->
+                    <div class="posts-grid">
+                        
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Kitchen Renovation Costs">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">Home Improvement</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>12 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/kitchen-renovation-costs-uk">Kitchen Renovation Costs UK: What to Expect in 2025</a></h3>
+                                <p class="post-excerpt">Planning a kitchen renovation? Learn about average costs, budget breakdowns, and how to save money without compromising quality.</p>
+                                <a href="/blog/kitchen-renovation-costs-uk" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600&q=80" alt="Red Flags When Hiring">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">Hiring Tips</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>10 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/red-flags-hiring-tradespeople">10 Red Flags to Watch for When Hiring Tradespeople</a></h3>
+                                <p class="post-excerpt">Protect yourself from cowboy builders and unreliable tradespeople. Learn the warning signs that indicate you should walk away.</p>
+                                <a href="/blog/red-flags-hiring-tradespeople" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&q=80" alt="DIY vs Professional">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">How-To Guides</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>8 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/diy-vs-professional">When to DIY vs When to Hire a Professional</a></h3>
+                                <p class="post-excerpt">Not every home improvement job requires a professional. Learn which projects you can tackle yourself and which need expert help.</p>
+                                <a href="/blog/diy-vs-professional" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80" alt="Bathroom Renovation">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">Home Improvement</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>5 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/bathroom-renovation-checklist">The Ultimate Bathroom Renovation Checklist (2025)</a></h3>
+                                <p class="post-excerpt">Step-by-step guide to planning and executing a successful bathroom renovation. From design to final touches.</p>
+                                <a href="/blog/bathroom-renovation-checklist" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?w=600&q=80" alt="Electrician Qualifications">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">Industry News</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>3 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/understanding-electrician-qualifications">Understanding Electrician Qualifications in the UK</a></h3>
+                                <p class="post-excerpt">What do all those letters mean? A complete breakdown of electrician qualifications, certifications, and what you should look for.</p>
+                                <a href="/blog/understanding-electrician-qualifications" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                        <article class="post-card fade-in">
+                            <div class="post-image">
+                                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=600&q=80" alt="Home Energy Efficiency">
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="post-category">How-To Guides</span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">📅</span>
+                                        <span>1 Jan 2025</span>
+                                    </span>
+                                </div>
+                                <h3><a href="/blog/improve-home-energy-efficiency">How to Improve Your Home's Energy Efficiency</a></h3>
+                                <p class="post-excerpt">Save money on energy bills while reducing your carbon footprint. Practical tips for making your home more energy efficient.</p>
+                                <a href="/blog/improve-home-energy-efficiency" class="read-more">Read More →</a>
+                            </div>
+                        </article>
+
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">4</button>
+                        <button class="page-btn">Next →</button>
+                    </div>
+
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    
+                    <!-- Popular Posts -->
+                    <div class="sidebar-widget fade-in">
+                        <h3 class="widget-title">Popular Posts</h3>
+                        <ul class="popular-posts">
+                            <li class="popular-post-item">
+                                <a href="/blog/complete-guide-hiring-plumber">The Complete Guide to Hiring a Plumber in the UK</a>
+                                <div class="popular-post-date">15 Jan 2025</div>
+                            </li>
+                            <li class="popular-post-item">
+                                <a href="/blog/kitchen-renovation-costs-uk">Kitchen Renovation Costs UK: What to Expect</a>
+                                <div class="popular-post-date">12 Jan 2025</div>
+                            </li>
+                            <li class="popular-post-item">
+                                <a href="/blog/red-flags-hiring-tradespeople">10 Red Flags When Hiring Tradespeople</a>
+                                <div class="popular-post-date">10 Jan 2025</div>
+                            </li>
+                            <li class="popular-post-item">
+                                <a href="/blog/diy-vs-professional">When to DIY vs Hire a Professional</a>
+                                <div class="popular-post-date">8 Jan 2025</div>
+                            </li>
+                            <li class="popular-post-item">
+                                <a href="/blog/bathroom-renovation-checklist">The Ultimate Bathroom Renovation Checklist</a>
+                                <div class="popular-post-date">5 Jan 2025</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="sidebar-widget fade-in">
+                        <h3 class="widget-title">Categories</h3>
+                        <ul class="categories-list">
+                            <li>
+                                <a href="/blog/category/how-to">
+                                    <span>How-To Guides</span>
+                                    <span class="category-count">24</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/category/home-improvement">
+                                    <span>Home Improvement</span>
+                                    <span class="category-count">18</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/category/hiring-tips">
+                                    <span>Hiring Tips</span>
+                                    <span class="category-count">32</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/category/industry-news">
+                                    <span>Industry News</span>
+                                    <span class="category-count">15</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/blog/category/cost-guides">
+                                    <span>Cost Guides</span>
+                                    <span class="category-count">12</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Newsletter -->
+                    <div class="sidebar-widget fade-in">
+                        <h3 class="widget-title">Subscribe to Our Newsletter</h3>
+                        <p style="font-size: 0.9375rem; color: var(--slate-600); margin-bottom: 1rem;">Get the latest home improvement tips and industry news delivered to your inbox.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>For Customers</h4>
+                    <ul class="footer-links">
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                        <li><a href="/ask-a-trade">Ask a Trade</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Tradespeople</h4>
+                    <ul class="footer-links">
+                        <li><a href="/vendors/signup">Join TradeMatch</a></li>
+                        <li><a href="/vendors/how-it-works">How It Works</a></li>
+                        <li><a href="/compare">Compare Platforms</a></li>
+                        <li><a href="/vendors/help">Vendor Help</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/investors">Investors</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Category filter
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.dataset.category;
+                console.log('Filter by:', category);
+                // In production, filter posts here
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            console.log('Search for:', searchTerm);
+            // In production, filter posts here
+        });
+
+        // Newsletter form
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            console.log('Subscribe:', email);
+            alert('Thank you for subscribing! Check your email for confirmation.');
+            this.reset();
+        });
+
+        // Pagination
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.textContent.includes('Next')) {
+                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+                console.log('Go to page:', this.textContent);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        console.log('%cTradeMatch - Blog', 'font-size: 20px; font-weight: bold; color: #10b981;');
+    </script>
+</body>
+</html>

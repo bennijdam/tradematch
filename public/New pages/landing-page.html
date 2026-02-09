@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeMatch - Find Trusted Local Tradespeople | Get Free Quotes Fast</title>
+    <meta name="description" content="Connect with verified local tradespeople in seconds. Post your job free, receive up to 5 quotes, and hire with confidence. 12,000+ verified professionals across the UK.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES
+           ======================================== */
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --amber-500: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .btn-nav {
+            padding: 0.75rem 1.5rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* ========================================
+           HERO SECTION WITH PARALLAX
+           ======================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(135deg, rgba(5, 150, 105, 0.85) 0%, rgba(37, 99, 235, 0.85) 100%),
+                url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1600&q=80') center center / cover no-repeat;
+            z-index: 0;
+            will-change: transform;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.25rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--emerald-600);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--slate-900);
+        }
+
+        /* Trust Stats */
+        .trust-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .trust-stat {
+            text-align: center;
+        }
+
+        .trust-stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-family: 'Space Mono', monospace;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-stat-label {
+            font-size: 0.9375rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ========================================
+           ALTERNATING IMAGE SECTIONS
+           ======================================== */
+        .feature-section {
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .feature-section:nth-child(even) {
+            background: var(--slate-50);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .feature-grid.reverse {
+            direction: rtl;
+        }
+
+        .feature-grid.reverse > * {
+            direction: ltr;
+        }
+
+        .feature-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transform: translateY(0);
+            transition: all 0.6s;
+        }
+
+        .feature-image:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .feature-content {
+            max-width: 550px;
+        }
+
+        .feature-label {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-700);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-title {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--slate-900);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+        }
+
+        .feature-points {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .feature-points li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: var(--slate-700);
+        }
+
+        .feature-points .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--emerald-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .btn-feature {
+            padding: 1rem 2rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-feature:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+        }
+
+        /* ========================================
+           PARALLAX DIVIDER
+           ======================================== */
+        .parallax-divider {
+            height: 500px;
+            background: 
+                linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)),
+                url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1600&q=80') center center / cover fixed no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .parallax-content {
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .parallax-content h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .parallax-content p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* ========================================
+           HOW IT WORKS
+           ======================================== */
+        .how-it-works {
+            padding: 8rem 0;
+            text-align: center;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-700);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--slate-600);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            position: relative;
+            padding: 2.5rem 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-number {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            font-family: 'Space Mono', monospace;
+            margin: 0 auto 2rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .step-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .step-card p {
+            font-size: 1rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           TESTIMONIALS
+           ======================================== */
+        .testimonials {
+            padding: 8rem 0;
+            background: var(--slate-50);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .testimonial-author h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-author p {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+        }
+
+        .testimonial-stars {
+            color: var(--amber-500);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--slate-700);
+            font-style: italic;
+        }
+
+        /* ========================================
+           CTA SECTION
+           ======================================== */
+        .cta-section {
+            background: 
+                linear-gradient(135deg, rgba(5, 150, 105, 0.95) 0%, rgba(37, 99, 235, 0.95) 100%),
+                url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80') center center / cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 8rem 0;
+            position: relative;
+        }
+
+        .cta-section h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-section p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            max-width: 300px;
+        }
+
+        .footer-logo {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .footer-description {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--emerald-500);
+            transform: translateY(-2px);
+        }
+
+        .footer-section h4 {
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1024px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .feature-grid.reverse {
+                direction: ltr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+
+            .trust-stats {
+                gap: 1.5rem;
+            }
+
+            .feature-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .parallax-content h2 {
+                font-size: 2rem;
+            }
+
+            .steps-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .hero-cta,
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">T</div>
+                <span>TradeMatch</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/careers">Careers</a></li>
+                <li><a href="/post-job" class="btn-nav">Post a Job</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Parallax -->
+    <section class="hero" id="hero">
+        <div class="hero-background" id="heroBackground"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">🏆 Trusted by 85,000+ UK Homeowners</div>
+                <h1>Find Trusted Local Tradespeople in Minutes</h1>
+                <p class="hero-subtitle">Post your job free, receive up to 5 competitive quotes from verified local professionals, and hire with complete confidence.</p>
+                
+                <div class="hero-cta">
+                    <a href="/post-job" class="btn btn-primary">Get Free Quotes →</a>
+                    <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+                </div>
+
+                <div class="trust-stats">
+                    <div class="trust-stat">
+                        <span class="trust-stat-value">12,000+</span>
+                        <span class="trust-stat-label">Verified Tradespeople</span>
+                    </div>
+                    <div class="trust-stat">
+                        <span class="trust-stat-value">4.9★</span>
+                        <span class="trust-stat-label">Average Rating</span>
+                    </div>
+                    <div class="trust-stat">
+                        <span class="trust-stat-value">85,000+</span>
+                        <span class="trust-stat-label">Jobs Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature 1: For Homeowners (Image Right) -->
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-content fade-in">
+                    <span class="feature-label">For Homeowners</span>
+                    <h2 class="feature-title">Find the Right Tradesperson <span class="gradient-text">Without the Hassle</span></h2>
+                    <p class="feature-description">No more endless phone calls, unreturned messages, or wondering if you're getting a fair price. TradeMatch connects you with verified local professionals in minutes.</p>
+                    
+                    <ul class="feature-points">
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Post Your Job Free</strong> - Describe what you need in 60 seconds. No credit card required.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Receive Multiple Quotes</strong> - Get up to 5 competitive quotes from local verified pros.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Compare & Choose</strong> - Review ratings, experience, and pricing before making a decision.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Hire with Confidence</strong> - All tradespeople are ID verified, insurance checked, and rated by real customers.</span>
+                        </li>
+                    </ul>
+
+                    <a href="/post-job" class="btn-feature">Post Your Job Free →</a>
+                </div>
+
+                <div class="feature-image fade-in">
+                    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80" alt="Homeowner reviewing quotes on laptop">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature 2: For Tradespeople (Image Left) -->
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-grid reverse">
+                <div class="feature-content fade-in">
+                    <span class="feature-label">For Tradespeople</span>
+                    <h2 class="feature-title">Grow Your Business with <span class="gradient-text">Quality Leads</span></h2>
+                    <p class="feature-description">Stop wasting money on expensive subscriptions and leads that go nowhere. TradeMatch gives you access to real customers actively looking for your services.</p>
+                    
+                    <ul class="feature-points">
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Pay Per Lead</strong> - Only £3-£15 per quote. No monthly subscriptions or hidden fees.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Quality Customers</strong> - Every job is real, local, and ready to hire. No time-wasters.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Build Your Reputation</strong> - Earn reviews, showcase your work, and grow your business organically.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Control Your Workload</strong> - Choose which jobs to quote on. Work when you want, where you want.</span>
+                        </li>
+                    </ul>
+
+                    <a href="/vendors/signup" class="btn-feature">Join TradeMatch →</a>
+                </div>
+
+                <div class="feature-image fade-in">
+                    <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800&q=80" alt="Tradespeople working on construction site">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Divider -->
+    <div class="parallax-divider">
+        <div class="parallax-content">
+            <h2>85,000+ Jobs Completed<br>£45M+ Worth of Work</h2>
+            <p>Homeowners and tradespeople across the UK trust TradeMatch to make hiring simple, fair, and transparent.</p>
+            <a href="/post-job" class="btn btn-primary">Get Started Free</a>
+        </div>
+    </div>
+
+    <!-- Feature 3: Trust & Safety (Image Right) -->
+    <section class="feature-section">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-content fade-in">
+                    <span class="feature-label">Trust & Safety</span>
+                    <h2 class="feature-title">Every Professional is <span class="gradient-text">Verified & Insured</span></h2>
+                    <p class="feature-description">Your home, your project, your peace of mind. We take trust seriously, which is why every tradesperson on TradeMatch goes through rigorous verification.</p>
+                    
+                    <ul class="feature-points">
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>ID Verification</strong> - Every tradesperson's identity is verified before joining the platform.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Insurance Checked</strong> - We verify public liability insurance so you're always protected.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Real Reviews</strong> - Read honest feedback from verified customers before you hire.</span>
+                        </li>
+                        <li>
+                            <span class="icon">✓</span>
+                            <span><strong>Dispute Resolution</strong> - Our team is here to help if anything goes wrong.</span>
+                        </li>
+                    </ul>
+
+                    <a href="/about" class="btn-feature">Learn More About Us →</a>
+                </div>
+
+                <div class="feature-image fade-in">
+                    <img src="https://images.unsplash.com/photo-1521791055366-0d553872125f?w=800&q=80" alt="Professional tradesperson with safety equipment">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">How It Works</span>
+                <h2 class="section-title">Get From Post to Hire in <span class="gradient-text">4 Simple Steps</span></h2>
+                <p class="section-subtitle">Finding the right tradesperson has never been easier</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <h3>Post Your Job</h3>
+                    <p>Describe what you need done in 60 seconds. It's completely free with no obligation to hire.</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <h3>Receive Quotes</h3>
+                    <p>Get up to 5 competitive quotes from verified local tradespeople within 24 hours.</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <h3>Compare & Choose</h3>
+                    <p>Review profiles, ratings, and prices side-by-side. Message directly to ask questions.</p>
+                </div>
+
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <h3>Get It Done</h3>
+                    <p>Hire your chosen tradesperson and get your project completed to your satisfaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Testimonials</span>
+                <h2 class="section-title">Loved by <span class="gradient-text">Thousands</span> of UK Homeowners</h2>
+                <p class="section-subtitle">See what real customers say about TradeMatch</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">SJ</div>
+                        <div class="testimonial-author">
+                            <h4>Sarah Johnson</h4>
+                            <p>London</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Absolutely brilliant service. Posted my bathroom renovation job and had 4 quotes within hours. Chose a local plumber with great reviews and the work was fantastic. Will definitely use again!"</p>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">MP</div>
+                        <div class="testimonial-author">
+                            <h4>Mike Peterson</h4>
+                            <p>Manchester</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"As a tradesperson, TradeMatch has been a game-changer. I only pay for leads I want, and every customer is genuine. Made back my investment on the first job. Highly recommend!"</p>
+                </div>
+
+                <div class="testimonial-card fade-in">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">EC</div>
+                        <div class="testimonial-author">
+                            <h4>Emma Clarke</h4>
+                            <p>Birmingham</p>
+                        </div>
+                    </div>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p class="testimonial-text">"Finally, a platform that actually works! Found an electrician for an emergency job within an hour. He was professional, affordable, and did amazing work. Thank you TradeMatch!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of UK homeowners and tradespeople who trust TradeMatch every day</p>
+            
+            <div class="cta-buttons">
+                <a href="/post-job" class="btn btn-primary">Post a Job Free</a>
+                <a href="/vendors/signup" class="btn btn-secondary">Join as a Tradesperson</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">T</div>
+                        <span>TradeMatch</span>
+                    </div>
+                    <p class="footer-description">Connecting UK homeowners with trusted local tradespeople since 2019. Fair pricing, verified professionals, transparent reviews.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">f</a>
+                        <a href="#" class="social-link">𝕏</a>
+                        <a href="#" class="social-link">in</a>
+                        <a href="#" class="social-link">📷</a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Customers</h4>
+                    <ul class="footer-links">
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
+                        <li><a href="/ask-a-trade">Ask a Trade</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>For Tradespeople</h4>
+                    <ul class="footer-links">
+                        <li><a href="/vendors/signup">Join TradeMatch</a></li>
+                        <li><a href="/vendors/how-it-works">How It Works</a></li>
+                        <li><a href="/compare">Compare Platforms</a></li>
+                        <li><a href="/vendors/help">Help Center</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/investors">Investors</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/press">Press</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved. | Made with ❤️ in the UK</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Parallax effect for hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroBackground = document.getElementById('heroBackground');
+            const hero = document.getElementById('hero');
+            
+            if (scrolled < hero.offsetHeight) {
+                heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        console.log('%cTradeMatch - Landing Page', 'font-size: 20px; font-weight: bold; color: #10b981;');
+        console.log('Built with ❤️ for UK homeowners and tradespeople');
+    </script>
+</body>
+</html>

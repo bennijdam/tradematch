@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - Get Free Quotes from Local Tradespeople | TradeMatch</title>
+    <meta name="description" content="Post your job in 2 minutes. Get up to 5 free quotes from vetted local tradespeople. Compare prices, reviews, and hire with confidence.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES - TradeMatch Design System
+           ======================================== */
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --purple-600: #7c3aed;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --red-500: #ef4444;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+        }
+
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-sm {
+            padding: 3rem 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .btn-nav {
+            padding: 0.625rem 1.25rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            background: linear-gradient(135deg, var(--emerald-600) 0%, var(--blue-600) 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ========================================
+           PROCESS TIMELINE SECTION
+           ======================================== */
+        .process-section {
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .process-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            align-items: center;
+        }
+
+        .process-step:nth-child(even) .step-content {
+            order: 3;
+        }
+
+        .process-step:nth-child(even) .step-connector {
+            order: 2;
+        }
+
+        .process-step:nth-child(even) .step-visual {
+            order: 1;
+        }
+
+        .step-content {
+            background: var(--slate-50);
+            padding: 2rem;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .step-content:hover {
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .step-description {
+            font-size: 1rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-features {
+            list-style: none;
+        }
+
+        .step-features li {
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .step-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--emerald-500);
+            font-weight: 700;
+        }
+
+        .step-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .connector-line {
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--emerald-500), var(--blue-500));
+            border-radius: 2px;
+        }
+
+        .connector-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid var(--emerald-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-visual {
+            background: linear-gradient(135deg, var(--slate-50), white);
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 2rem;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            transition: all 0.3s;
+        }
+
+        .step-visual:hover {
+            border-color: var(--emerald-500);
+            transform: scale(1.05);
+        }
+
+        /* ========================================
+           BENEFITS SECTION
+           ======================================== */
+        .benefits-section {
+            background: var(--slate-50);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .benefit-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .benefit-description {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           COMPARISON SECTION
+           ======================================== */
+        .comparison-section {
+            background: white;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+
+        .comparison-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .comparison-old {
+            background: var(--slate-100);
+            border: 2px solid var(--slate-300);
+        }
+
+        .comparison-new {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+            border: 2px solid var(--emerald-500);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.2);
+        }
+
+        .comparison-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-old .comparison-badge {
+            background: var(--slate-400);
+            color: white;
+        }
+
+        .comparison-new .comparison-badge {
+            background: var(--emerald-500);
+            color: white;
+        }
+
+        .comparison-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--slate-900);
+        }
+
+        .comparison-list {
+            list-style: none;
+        }
+
+        .comparison-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--slate-700);
+        }
+
+        .comparison-old li::before {
+            content: '✗';
+            color: var(--red-500);
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        .comparison-new li::before {
+            content: '✓';
+            color: var(--emerald-500);
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        /* ========================================
+           PRICING SECTION
+           ======================================== */
+        .pricing-section {
+            background: var(--slate-50);
+        }
+
+        .pricing-highlight {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            margin: 3rem auto 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
+        }
+
+        .pricing-feature-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pricing-feature-text {
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+            font-weight: 500;
+        }
+
+        /* ========================================
+           FAQ SECTION
+           ======================================== */
+        .faq-section {
+            background: white;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: var(--emerald-500);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, margin-top 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            margin-top: 1rem;
+        }
+
+        .faq-answer p {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           TRUST SECTION
+           ======================================== */
+        .trust-section {
+            background: var(--slate-50);
+        }
+
+        .trust-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .trust-metric {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .trust-metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-metric-label {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        /* ========================================
+           CTA SECTION
+           ======================================== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            padding: 1.25rem 3rem;
+            background: var(--emerald-500);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5);
+        }
+
+        .cta-note {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .process-step {
+                grid-template-columns: 1fr;
+            }
+
+            .process-step:nth-child(even) .step-content,
+            .process-step:nth-child(even) .step-visual {
+                order: initial;
+            }
+
+            .step-connector {
+                display: none;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .pricing-features {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- ========================================
+         NAVIGATION
+         ======================================== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">
+                <div class="logo-icon">T</div>
+                <span>TradeMatch</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/how-it-works">How it Works</a></li>
+                <li><a href="/categories">All Services</a></li>
+                <li><a href="/vendors">For Tradespeople</a></li>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/post-job" class="btn-nav">Post a Job</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero">
+        <div class="container">
+            <h1>How TradeMatch Works</h1>
+            <p class="subtitle">Post your job in 2 minutes. Get up to 5 free quotes from vetted local tradespeople. Compare and hire with confidence.</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">2 min</div>
+                    <div class="hero-stat-label">To post a job</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">5</div>
+                    <div class="hero-stat-label">Free quotes</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">24hrs</div>
+                    <div class="hero-stat-label">Average response time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         PROCESS TIMELINE
+         ======================================== -->
+    <section class="process-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Simple, Fast, <span class="gradient-text">Free</span></h2>
+                <p class="section-subtitle">From posting your job to hiring the right tradesperson</p>
+            </div>
+
+            <div class="process-timeline">
+                
+                <!-- Step 1 -->
+                <div class="process-step slide-left">
+                    <div class="step-content">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Tell us what you need</h3>
+                        <p class="step-description">Describe your project in your own words. Our smart form helps you provide the right details without any hassle.</p>
+                        <ul class="step-features">
+                            <li>Takes just 2 minutes</li>
+                            <li>No technical knowledge needed</li>
+                            <li>Upload photos if helpful</li>
+                            <li>Set your budget and timeline</li>
+                        </ul>
+                    </div>
+                    <div class="step-connector">
+                        <div class="connector-icon">📝</div>
+                    </div>
+                    <div class="step-visual slide-right">📋</div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="process-step slide-right">
+                    <div class="step-visual slide-left">🎯</div>
+                    <div class="step-connector">
+                        <div class="connector-icon">🔍</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">We match you with local pros</h3>
+                        <p class="step-description">Our algorithm finds the best-matched tradespeople in your area based on their skills, availability, and reviews.</p>
+                        <ul class="step-features">
+                            <li>Only local, verified tradespeople</li>
+                            <li>Matched to your specific job</li>
+                            <li>Pre-screened for quality</li>
+                            <li>Available for your timeline</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="process-step slide-left">
+                    <div class="step-content">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Receive free quotes</h3>
+                        <p class="step-description">Get up to 5 detailed quotes within 24 hours. Compare prices, read reviews, and see past work.</p>
+                        <ul class="step-features">
+                            <li>Up to 5 free quotes</li>
+                            <li>Detailed breakdowns included</li>
+                            <li>View profiles and reviews</li>
+                            <li>See photos of past projects</li>
+                        </ul>
+                    </div>
+                    <div class="step-connector">
+                        <div class="connector-icon">💬</div>
+                    </div>
+                    <div class="step-visual slide-right">💰</div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="process-step slide-right">
+                    <div class="step-visual slide-left">👤</div>
+                    <div class="step-connector">
+                        <div class="connector-icon">⭐</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">Compare and message</h3>
+                        <p class="step-description">Review quotes side-by-side. Message tradespeople directly to ask questions and clarify details.</p>
+                        <ul class="step-features">
+                            <li>Direct messaging included</li>
+                            <li>Ask questions before hiring</li>
+                            <li>Compare prices and timelines</li>
+                            <li>Check verified reviews</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="process-step slide-left">
+                    <div class="step-content">
+                        <div class="step-number">5</div>
+                        <h3 class="step-title">Hire with confidence</h3>
+                        <p class="step-description">Choose the tradesperson that's right for you. Book them directly through TradeMatch and track your project.</p>
+                        <ul class="step-features">
+                            <li>Secure booking system</li>
+                            <li>Track project progress</li>
+                            <li>Payment protection available</li>
+                            <li>Leave a review when complete</li>
+                        </ul>
+                    </div>
+                    <div class="step-connector">
+                        <div class="connector-icon">✅</div>
+                    </div>
+                    <div class="step-visual slide-right">🤝</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         BENEFITS SECTION
+         ======================================== -->
+    <section class="benefits-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose <span class="gradient-text">TradeMatch</span>?</h2>
+                <p class="section-subtitle">The smarter way to find and hire local tradespeople</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🆓</div>
+                    <h3 class="benefit-title">Completely Free</h3>
+                    <p class="benefit-description">Post unlimited jobs and receive quotes at no cost. Only pay your chosen tradesperson for the work.</p>
+                </div>
+
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">⚡</div>
+                    <h3 class="benefit-title">Fast Responses</h3>
+                    <p class="benefit-description">Get your first quote within hours. Most jobs receive 3-5 quotes within 24 hours of posting.</p>
+                </div>
+
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">✅</div>
+                    <h3 class="benefit-title">Verified Tradespeople</h3>
+                    <p class="benefit-description">All tradespeople are ID verified with business checks. Read genuine reviews from real customers.</p>
+                </div>
+
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">📍</div>
+                    <h3 class="benefit-title">Local Experts Only</h3>
+                    <p class="benefit-description">Only get quotes from tradespeople who actually work in your area and can start when you need.</p>
+                </div>
+
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">🔒</div>
+                    <h3 class="benefit-title">Safe & Secure</h3>
+                    <p class="benefit-description">Your data is protected. Optional payment protection available for extra peace of mind.</p>
+                </div>
+
+                <div class="benefit-card fade-in">
+                    <div class="benefit-icon">💬</div>
+                    <h3 class="benefit-title">No Obligation</h3>
+                    <p class="benefit-description">Review quotes at your own pace. No pressure to hire. Change your mind anytime.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         OLD WAY vs NEW WAY COMPARISON
+         ======================================== -->
+    <section class="comparison-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">The Old Way vs <span class="gradient-text">The TradeMatch Way</span></h2>
+                <p class="section-subtitle">See why thousands switch to TradeMatch every month</p>
+            </div>
+
+            <div class="comparison-grid">
+                
+                <!-- Old Way -->
+                <div class="comparison-card comparison-old fade-in">
+                    <div class="comparison-badge">Old Way</div>
+                    <h3 class="comparison-title">Finding Trades Before</h3>
+                    <ul class="comparison-list">
+                        <li>Search through multiple websites</li>
+                        <li>Call 10+ tradespeople individually</li>
+                        <li>Wait days for call-backs</li>
+                        <li>Get vague estimates over phone</li>
+                        <li>No way to compare quotes easily</li>
+                        <li>Unsure if they're available</li>
+                        <li>No reviews or verified history</li>
+                        <li>Risk hiring the wrong person</li>
+                    </ul>
+                </div>
+
+                <!-- New Way -->
+                <div class="comparison-card comparison-new fade-in">
+                    <div class="comparison-badge">TradeMatch Way</div>
+                    <h3 class="comparison-title">Finding Trades Now</h3>
+                    <ul class="comparison-list">
+                        <li>Post once, reach multiple pros</li>
+                        <li>They come to you - no calling</li>
+                        <li>Get quotes within 24 hours</li>
+                        <li>Receive detailed written quotes</li>
+                        <li>Compare all quotes side-by-side</li>
+                        <li>See exact availability upfront</li>
+                        <li>Read verified reviews & ratings</li>
+                        <li>Hire with complete confidence</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         PRICING CLARITY SECTION
+         ======================================== -->
+    <section class="pricing-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Always <span class="gradient-text">100% Free</span></h2>
+                <p class="section-subtitle">No hidden costs, no membership fees, no credit card required</p>
+            </div>
+
+            <div class="pricing-highlight fade-in">
+                <div class="pricing-badge">£0</div>
+                <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--slate-900);">Free for Customers. Forever.</h3>
+                <p style="font-size: 1.125rem; color: var(--slate-600); margin-bottom: 2rem;">You only pay the tradesperson you hire for the work they do. That's it.</p>
+                
+                <div class="pricing-features">
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">Post unlimited jobs</div>
+                    </div>
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">Receive up to 5 free quotes</div>
+                    </div>
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">Message tradespeople directly</div>
+                    </div>
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">View profiles and reviews</div>
+                    </div>
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">Compare quotes easily</div>
+                    </div>
+                    <div class="pricing-feature">
+                        <div class="pricing-feature-icon">✅</div>
+                        <div class="pricing-feature-text">Book with confidence</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FAQ SECTION
+         ======================================== -->
+    <section class="faq-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+                <p class="section-subtitle">Everything you need to know about using TradeMatch</p>
+            </div>
+
+            <div class="faq-list">
+                
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>How long does it take to receive quotes?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Most jobs receive their first quote within a few hours of posting. You'll typically have 3-5 quotes within 24 hours. Response times can vary based on the type of work and your location, but our tradespeople are incentivized to respond quickly.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Is TradeMatch really free for customers?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, absolutely. There are no fees to post a job, receive quotes, or message tradespeople. You only pay the tradesperson you hire for the work they do. We make money by charging tradespeople a small fee when they choose to quote on your job.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Are the tradespeople verified?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. All tradespeople go through ID verification and business checks before they can quote. We also verify insurance and qualifications where applicable. Plus, you can read genuine reviews from previous customers to help you choose.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What if I don't like any of the quotes?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No problem at all. There's zero obligation to hire anyone. You can decline all quotes, ask for revisions, or simply let them expire. Your job posting stays active for 7 days, and you may receive additional quotes during that time.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>How do I know which tradesperson to choose?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Compare quotes side-by-side, read verified customer reviews, view photos of their past work, and check their response times. You can also message them directly to ask questions. Look for a combination of competitive pricing, good reviews, and clear communication.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What types of jobs can I post?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Almost any home improvement or trade work! From emergency repairs to full renovations. We cover plumbing, electrical, building, carpentry, painting, roofing, landscaping, and 40+ other categories. If you're not sure, just post it – we'll match you with the right professionals.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>How do payments work?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You arrange payment directly with your chosen tradesperson. Most accept bank transfer, cash, or card. For larger projects, we offer optional payment protection through our escrow service for an extra layer of security (small fee applies).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What if something goes wrong with the work?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>First, try to resolve it directly with the tradesperson – most issues are simple misunderstandings. If that doesn't work, contact our support team. We'll mediate disputes and can remove tradespeople who consistently fail to meet standards. All our tradespeople must have insurance.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         TRUST SECTION
+         ======================================== -->
+    <section class="trust-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Trusted by <span class="gradient-text">Thousands</span></h2>
+                <p class="section-subtitle">Join homeowners across the UK who've found their perfect tradesperson</p>
+            </div>
+
+            <div class="trust-metrics">
+                <div class="trust-metric fade-in">
+                    <div class="trust-metric-value">150K+</div>
+                    <div class="trust-metric-label">Jobs posted</div>
+                </div>
+                <div class="trust-metric fade-in">
+                    <div class="trust-metric-value">4.8★</div>
+                    <div class="trust-metric-label">Average rating</div>
+                </div>
+                <div class="trust-metric fade-in">
+                    <div class="trust-metric-value">12,000+</div>
+                    <div class="trust-metric-label">Verified tradespeople</div>
+                </div>
+                <div class="trust-metric fade-in">
+                    <div class="trust-metric-value">98%</div>
+                    <div class="trust-metric-label">Satisfaction rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         CTA SECTION
+         ======================================== -->
+    <section class="cta-section section">
+        <div class="container">
+            <h2>Ready to find your perfect tradesperson?</h2>
+            <p>Post your job in 2 minutes and get up to 5 free quotes from local pros</p>
+            <button class="btn-primary" onclick="window.location.href='/post-job'">Post Your Job Free</button>
+            <p class="cta-note">✓ No credit card required  ✓ No obligation to hire</p>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>For Customers</h4>
+                    <ul class="footer-links">
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/categories">All Services</a></li>
+                        <li><a href="/help">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Tradespeople</h4>
+                    <ul class="footer-links">
+                        <li><a href="/vendors/signup">Join TradeMatch</a></li>
+                        <li><a href="/vendors/how-it-works">How It Works</a></li>
+                        <li><a href="/vendors/pricing">Pricing</a></li>
+                        <li><a href="/vendors/help">Vendor Help</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/press">Press</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT
+         ======================================== -->
+    <script>
+        // ========================================
+        // Intersection Observer for Animations
+        // ========================================
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.fade-in, .slide-left, .slide-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========================================
+        // FAQ Toggle
+        // ========================================
+        function toggleFaq(element) {
+            const wasActive = element.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked FAQ if it wasn't active
+            if (!wasActive) {
+                element.classList.add('active');
+            }
+        }
+
+        // ========================================
+        // Smooth Scroll
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // Console Log
+        // ========================================
+        console.log('%cTradeMatch - How It Works', 'font-size: 20px; font-weight: bold; color: #10b981;');
+        console.log('Features:');
+        console.log('✓ Timeline process visualization');
+        console.log('✓ Scroll-triggered animations');
+        console.log('✓ Interactive FAQ accordion');
+        console.log('✓ Old vs New comparison');
+        console.log('✓ Trust metrics and social proof');
+    </script>
+</body>
+</html>
