@@ -263,6 +263,24 @@
   ],
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "x-tradematch-config",
+          "value": "active-v1"
+        }
+      ]
+    },
+    {
+      "source": "/login",
+      "headers": [
+        {
+          "key": "x-tradematch-config-login",
+          "value": "active-v1"
+        }
+      ]
+    },
+    {
       "source": "/(.*)\\.(css|js|mjs|png|jpg|jpeg|gif|svg|webp|avif|ico|woff|woff2)",
       "headers": [
         {

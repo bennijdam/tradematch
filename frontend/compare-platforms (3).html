@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Platforms - TradeMatch vs MyBuilder, Bark, Checkatrade | TradeMatch</title>
+    <meta name="description" content="Compare TradeMatch with MyBuilder, Bark, Checkatrade, and Rated People. See pricing, features, and which platform offers the best value for tradespeople and customers.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           CSS VARIABLES - TradeMatch Design System
+           ======================================== */
+        :root {
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+            --purple-600: #7c3aed;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --red-500: #ef4444;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --orange-500: #f97316;
+        }
+
+        /* ========================================
+           GLOBAL RESET & BASE STYLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--slate-900);
+            background: var(--white);
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ========================================
+           UTILITY CLASSES
+           ======================================== */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-sm {
+            padding: 3rem 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--slate-900);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--slate-600);
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .btn-nav {
+            padding: 0.625rem 1.25rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--emerald-600);
+            transform: translateY(-1px);
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 30px); }
+        }
+
+        .hero .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-badge {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ========================================
+           SECTION HEADER
+           ======================================== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           MAIN COMPARISON TABLE
+           ======================================== */
+        .comparison-table-section {
+            background: var(--slate-50);
+        }
+
+        .comparison-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 60px rgba(0, 0, 0, 0.15);
+            background: white;
+            margin: 0 auto;
+        }
+
+        .comparison-wrapper::-webkit-scrollbar {
+            height: 12px;
+        }
+
+        .comparison-wrapper::-webkit-scrollbar-track {
+            background: var(--slate-100);
+            border-radius: 10px;
+        }
+
+        .comparison-wrapper::-webkit-scrollbar-thumb {
+            background: var(--emerald-500);
+            border-radius: 10px;
+        }
+
+        .comparison-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--emerald-600);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            min-width: 1200px;
+            table-layout: auto;
+            display: table;
+        }
+
+        .comparison-table thead {
+            position: sticky;
+            top: 80px;
+            z-index: 10;
+            display: table-header-group;
+        }
+
+        .comparison-table thead tr {
+            display: table-row;
+        }
+
+        .comparison-table tbody {
+            display: table-row-group;
+        }
+
+        .comparison-table tbody tr {
+            display: table-row;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            display: table-cell;
+        }
+
+        .comparison-table th {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 3px solid var(--slate-200);
+            background: white;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .comparison-table th:first-child {
+            background: var(--slate-100);
+            text-align: left;
+            font-size: 1rem;
+            color: var(--slate-900);
+            width: 250px;
+        }
+
+        .comparison-table th.platform-header {
+            background: var(--slate-900);
+            color: white;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 160px;
+            width: auto;
+        }
+
+        .comparison-table th.tradematch-header {
+            background: var(--emerald-600);
+            color: white;
+            position: relative;
+        }
+
+        .comparison-table th.tradematch-header::after {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--amber-500);
+            color: white;
+            font-size: 0.625rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .comparison-table tbody tr {
+            border-bottom: 1px solid var(--slate-200);
+            transition: background 0.2s;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: var(--slate-50);
+        }
+
+        .comparison-table td {
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9375rem;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--slate-700);
+            background: var(--slate-50);
+        }
+
+        .comparison-table .tradematch-col {
+            background: rgba(16, 185, 129, 0.05);
+            font-weight: 600;
+        }
+
+        .check {
+            color: var(--emerald-500);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .cross {
+            color: var(--slate-400);
+            font-size: 1.25rem;
+        }
+
+        .feature-good {
+            color: var(--emerald-600);
+            font-weight: 600;
+        }
+
+        .feature-bad {
+            color: var(--red-500);
+            font-weight: 600;
+        }
+
+        .feature-neutral {
+            color: var(--slate-600);
+        }
+
+        .price-highlight {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .category-row {
+            background: var(--slate-100) !important;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .category-row td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========================================
+           DETAILED COMPARISON CARDS
+           ======================================== */
+        .detailed-comparison {
+            background: white;
+        }
+
+        .platform-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .platform-card {
+            background: var(--slate-50);
+            border: 2px solid var(--slate-200);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover {
+            border-color: var(--emerald-500);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .platform-card.featured {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+            border-color: var(--emerald-500);
+            border-width: 3px;
+        }
+
+        .platform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--slate-200);
+        }
+
+        .platform-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .platform-logo.competitor {
+            background: var(--slate-400);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .platform-badge {
+            padding: 0.5rem 1rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .platform-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--slate-900);
+        }
+
+        .platform-tagline {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+        }
+
+        .platform-pricing {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-label {
+            font-size: 0.875rem;
+            color: var(--slate-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .pricing-value.expensive {
+            color: var(--red-500);
+        }
+
+        .pricing-note {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            margin-top: 0.5rem;
+        }
+
+        .platform-pros,
+        .platform-cons {
+            margin-bottom: 2rem;
+        }
+
+        .pros-title,
+        .cons-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pros-title {
+            color: var(--emerald-600);
+        }
+
+        .cons-title {
+            color: var(--red-500);
+        }
+
+        .pros-list,
+        .cons-list {
+            list-style: none;
+        }
+
+        .pros-list li,
+        .cons-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+        }
+
+        .pros-list li::before {
+            content: '✓';
+            color: var(--emerald-500);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .cons-list li::before {
+            content: '✗';
+            color: var(--red-500);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .platform-verdict {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--slate-400);
+        }
+
+        .platform-verdict.recommended {
+            border-left-color: var(--emerald-500);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .verdict-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--slate-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .verdict-text {
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           COST CALCULATOR
+           ======================================== */
+        .calculator-section {
+            background: var(--slate-50);
+        }
+
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 3rem auto 0;
+        }
+
+        .calculator-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--slate-900);
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .calc-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .calc-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .calc-input {
+            padding: 1rem;
+            border: 2px solid var(--slate-200);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Archivo', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .calc-input:focus {
+            outline: none;
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .calc-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .calc-result-card {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .calc-result-card.winner {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--emerald-500);
+        }
+
+        .calc-platform-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--slate-700);
+            margin-bottom: 1rem;
+        }
+
+        .calc-cost {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .calc-result-card.winner .calc-cost {
+            color: var(--emerald-600);
+        }
+
+        .calc-savings {
+            font-size: 0.875rem;
+            color: var(--emerald-600);
+            font-weight: 700;
+        }
+
+        /* ========================================
+           VERDICT SECTION
+           ======================================== */
+        .verdict-section {
+            background: white;
+        }
+
+        .verdict-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .verdict-card {
+            background: var(--slate-50);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .verdict-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .verdict-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .verdict-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .verdict-description {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           CTA SECTION
+           ======================================== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--emerald-600) 0%, var(--blue-600) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            padding: 1.25rem 3rem;
+            background: white;
+            color: var(--emerald-600);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .platform-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .calc-results {
+                grid-template-columns: 1fr;
+            }
+
+            .verdict-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .comparison-wrapper {
+                overflow-x: scroll;
+            }
+
+            .calculator-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- ========================================
+         NAVIGATION
+         ======================================== -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Trade<span>Match</span></a>
+
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/how-it-works">How it works</a></li>
+                <li><a href="/ask-a-trade">Ask a trade</a></li>
+
+                <!-- Services Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Building & Construction</h3>
+                                <ul>
+                                    <li><a href="/services/builders">Builders</a></li>
+                                    <li><a href="/services/extensions">Extensions</a></li>
+                                    <li><a href="/services/loft-conversions">Loft Conversions</a></li>
+                                    <li><a href="/services/garage-conversions">Garage Conversions</a></li>
+                                    <li><a href="/services/bricklayers">Bricklayers</a></li>
+                                    <li><a href="/services/stonemasons">Stonemasons</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Plumbing & Heating</h3>
+                                <ul>
+                                    <li><a href="/services/plumbers">Plumbers</a></li>
+                                    <li><a href="/services/gas-engineers">Gas Engineers</a></li>
+                                    <li><a href="/services/heating-engineers">Heating Engineers</a></li>
+                                    <li><a href="/services/boiler-installation">Boiler Installation</a></li>
+                                    <li><a href="/services/bathroom-installation">Bathroom Installation</a></li>
+                                    <li><a href="/services/radiator-installation">Radiator Installation</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Electrical & Lighting</h3>
+                                <ul>
+                                    <li><a href="/services/electricians">Electricians</a></li>
+                                    <li><a href="/services/rewiring">Rewiring</a></li>
+                                    <li><a href="/services/ev-charger">EV Charger Installation</a></li>
+                                    <li><a href="/services/fuse-box">Fuse Box Replacement</a></li>
+                                    <li><a href="/services/lighting">Lighting Installation</a></li>
+                                    <li><a href="/services/solar-panels">Solar Panels</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Decorating & Finishes</h3>
+                                <ul>
+                                    <li><a href="/services/painters">Painters & Decorators</a></li>
+                                    <li><a href="/services/plasterers">Plasterers</a></li>
+                                    <li><a href="/services/tilers">Tilers</a></li>
+                                    <li><a href="/services/flooring">Flooring Installation</a></li>
+                                    <li><a href="/services/carpenters">Carpenters</a></li>
+                                    <li><a href="/services/kitchen-fitters">Kitchen Fitters</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Locations Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Major Cities</h3>
+                                <ul>
+                                    <li><a href="/trades/london">London</a></li>
+                                    <li><a href="/trades/birmingham">Birmingham</a></li>
+                                    <li><a href="/trades/manchester">Manchester</a></li>
+                                    <li><a href="/trades/leeds">Leeds</a></li>
+                                    <li><a href="/trades/liverpool">Liverpool</a></li>
+                                    <li><a href="/trades/bristol">Bristol</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Southern England</h3>
+                                <ul>
+                                    <li><a href="/trades/brighton">Brighton</a></li>
+                                    <li><a href="/trades/southampton">Southampton</a></li>
+                                    <li><a href="/trades/reading">Reading</a></li>
+                                    <li><a href="/trades/oxford">Oxford</a></li>
+                                    <li><a href="/trades/portsmouth">Portsmouth</a></li>
+                                    <li><a href="/trades/bournemouth">Bournemouth</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Midlands & North</h3>
+                                <ul>
+                                    <li><a href="/trades/nottingham">Nottingham</a></li>
+                                    <li><a href="/trades/sheffield">Sheffield</a></li>
+                                    <li><a href="/trades/newcastle">Newcastle</a></li>
+                                    <li><a href="/trades/stoke-on-trent">Stoke-on-Trent</a></li>
+                                    <li><a href="/trades/coventry">Coventry</a></li>
+                                    <li><a href="/trades/leicester">Leicester</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Scotland & Wales</h3>
+                                <ul>
+                                    <li><a href="/trades/glasgow">Glasgow</a></li>
+                                    <li><a href="/trades/edinburgh">Edinburgh</a></li>
+                                    <li><a href="/trades/aberdeen">Aberdeen</a></li>
+                                    <li><a href="/trades/cardiff">Cardiff</a></li>
+                                    <li><a href="/trades/swansea">Swansea</a></li>
+                                    <li><a href="/trades/belfast">Belfast</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-cta">
+                    <a href="/post-job" class="btn-post">Post a Job</a>
+                    <a href="/trade-signup" class="btn-signup">Trade Signup</a>
+                    <a href="/login" class="btn-login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========================================
+         HERO SECTION
+         ======================================== -->
+    <section class="hero">
+        <div class="container">
+            <h1>Compare TradeMatch with Other Platforms</h1>
+            <p class="subtitle">Honest, side-by-side comparison of pricing, features, and value. We're confident in our offer – see why thousands are switching.</p>
+            
+            <div class="hero-badges">
+                <div class="hero-badge">✓ No bias, just facts</div>
+                <div class="hero-badge">✓ Updated Feb 2025</div>
+                <div class="hero-badge">✓ Real pricing data</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         MAIN COMPARISON TABLE
+         ======================================== -->
+    <section class="comparison-table-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Feature-by-Feature <span class="gradient-text">Comparison</span></h2>
+                <p class="section-subtitle">Everything you need to know about each platform</p>
+            </div>
+
+            <div class="comparison-wrapper">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th class="platform-header tradematch-header">TRADEMATCH</th>
+                            <th class="platform-header">MYBUILDER</th>
+                            <th class="platform-header">BARK</th>
+                            <th class="platform-header">CHECKATRADE</th>
+                            <th class="platform-header">RATED PEOPLE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Pricing Category -->
+                        <tr class="category-row">
+                            <td colspan="6">💰 Pricing & Fees</td>
+                        </tr>
+                        <tr>
+                            <td>For Customers</td>
+                            <td class="tradematch-col feature-good">100% Free</td>
+                            <td class="feature-good">Free</td>
+                            <td class="feature-good">Free</td>
+                            <td class="feature-good">Free</td>
+                            <td class="feature-good">Free</td>
+                        </tr>
+                        <tr>
+                            <td>For Tradespeople</td>
+                            <td class="tradematch-col price-highlight">£3-£15 per lead</td>
+                            <td class="feature-bad">£1,000+/year</td>
+                            <td class="feature-neutral">£10-£30 per lead</td>
+                            <td class="feature-bad">£1,200+/year</td>
+                            <td class="feature-neutral">£10-£40 per lead</td>
+                        </tr>
+                        <tr>
+                            <td>Monthly Subscription</td>
+                            <td class="tradematch-col"><span class="check">✓</span> None</td>
+                            <td><span class="cross">✗</span> Required</td>
+                            <td><span class="check">✓</span> None</td>
+                            <td><span class="cross">✗</span> Required</td>
+                            <td><span class="check">✓</span> None</td>
+                        </tr>
+                        <tr>
+                            <td>Setup/Joining Fees</td>
+                            <td class="tradematch-col"><span class="check">✓</span> None</td>
+                            <td><span class="cross">✗</span> £199+</td>
+                            <td><span class="check">✓</span> None</td>
+                            <td><span class="cross">✗</span> £300+</td>
+                            <td><span class="check">✓</span> None</td>
+                        </tr>
+                        <tr>
+                            <td>Contract Length</td>
+                            <td class="tradematch-col feature-good">No contract</td>
+                            <td class="feature-bad">12 months</td>
+                            <td class="feature-good">No contract</td>
+                            <td class="feature-bad">12 months</td>
+                            <td class="feature-good">No contract</td>
+                        </tr>
+
+                        <!-- Lead Quality Category -->
+                        <tr class="category-row">
+                            <td colspan="6">🎯 Lead Quality & Control</td>
+                        </tr>
+                        <tr>
+                            <td>Lead Verification</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Full verification</td>
+                            <td><span class="check">✓</span> Basic</td>
+                            <td>Minimal</td>
+                            <td><span class="check">✓</span> Basic</td>
+                            <td>Minimal</td>
+                        </tr>
+                        <tr>
+                            <td>Choose Which Leads</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Yes</td>
+                            <td><span class="cross">✗</span> Auto-sent</td>
+                            <td><span class="check">✓</span> Yes</td>
+                            <td><span class="cross">✗</span> Auto-sent</td>
+                            <td><span class="check">✓</span> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Lead Exclusivity</td>
+                            <td class="tradematch-col">3-5 vendors</td>
+                            <td>5-10 vendors</td>
+                            <td>Unlimited</td>
+                            <td>5-10 vendors</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Price Shown Upfront</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Yes</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="check">✓</span> Yes</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="check">✓</span> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Local Targeting</td>
+                            <td class="tradematch-col">Postcode level</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                            <td>Regional</td>
+                        </tr>
+
+                        <!-- Platform Features Category -->
+                        <tr class="category-row">
+                            <td colspan="6">⚙️ Platform Features</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile App</td>
+                            <td class="tradematch-col"><span class="check">✓</span> iOS & Android</td>
+                            <td><span class="check">✓</span> iOS & Android</td>
+                            <td><span class="check">✓</span> iOS & Android</td>
+                            <td><span class="check">✓</span> iOS only</td>
+                            <td><span class="check">✓</span> iOS & Android</td>
+                        </tr>
+                        <tr>
+                            <td>Wallet System</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Pre-paid wallet</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td>Partial</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td>Partial</td>
+                        </tr>
+                        <tr>
+                            <td>Direct Messaging</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Unlimited</td>
+                            <td><span class="check">✓</span> Limited</td>
+                            <td><span class="check">✓</span> Unlimited</td>
+                            <td><span class="check">✓</span> Limited</td>
+                            <td><span class="check">✓</span> Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td>Payment Protection</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Available</td>
+                            <td><span class="check">✓</span> Available</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="cross">✗</span> No</td>
+                        </tr>
+                        <tr>
+                            <td>Community Q&A</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Ask a Trade</td>
+                            <td><span class="check">✓</span> Limited</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="cross">✗</span> No</td>
+                            <td><span class="cross">✗</span> No</td>
+                        </tr>
+
+                        <!-- Support Category -->
+                        <tr class="category-row">
+                            <td colspan="6">🤝 Support & Trust</td>
+                        </tr>
+                        <tr>
+                            <td>Customer Support</td>
+                            <td class="tradematch-col">Live chat & email</td>
+                            <td>Email only</td>
+                            <td>Email only</td>
+                            <td>Phone & email</td>
+                            <td>Email only</td>
+                        </tr>
+                        <tr>
+                            <td>ID Verification</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Required</td>
+                            <td><span class="check">✓</span> Required</td>
+                            <td>Optional</td>
+                            <td><span class="check">✓</span> Required</td>
+                            <td>Optional</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance Checks</td>
+                            <td class="tradematch-col"><span class="check">✓</span> Verified</td>
+                            <td><span class="check">✓</span> Verified</td>
+                            <td>Self-declared</td>
+                            <td><span class="check">✓</span> Verified</td>
+                            <td>Self-declared</td>
+                        </tr>
+                        <tr>
+                            <td>Review System</td>
+                            <td class="tradematch-col">Verified only</td>
+                            <td>Verified only</td>
+                            <td>Unverified</td>
+                            <td>Verified only</td>
+                            <td>Mixed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         DETAILED PLATFORM CARDS
+         ======================================== -->
+    <section class="detailed-comparison section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Platform <span class="gradient-text">Deep Dive</span></h2>
+                <p class="section-subtitle">Detailed pros, cons, and honest verdicts</p>
+            </div>
+
+            <div class="platform-cards">
+                
+                <!-- TradeMatch -->
+                <div class="platform-card featured fade-in">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo">T</div>
+                        </div>
+                        <div class="platform-badge">Our Platform</div>
+                    </div>
+                    <h3 class="platform-name">TradeMatch</h3>
+                    <p class="platform-tagline">Modern lead marketplace with full transparency</p>
+                    
+                    <div class="platform-pricing">
+                        <div class="pricing-label">For Tradespeople</div>
+                        <div class="pricing-value">£3-£15</div>
+                        <div class="pricing-note">per lead • no subscriptions</div>
+                    </div>
+
+                    <div class="platform-pros">
+                        <h4 class="pros-title">✓ Pros</h4>
+                        <ul class="pros-list">
+                            <li>Lowest per-lead costs in the industry</li>
+                            <li>Complete price transparency before unlocking</li>
+                            <li>No contracts or monthly commitments</li>
+                            <li>Wallet system = full spend control</li>
+                            <li>Postcode-level local targeting</li>
+                            <li>Modern platform with great UX</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-cons">
+                        <h4 class="cons-title">✗ Cons</h4>
+                        <ul class="cons-list">
+                            <li>Newer platform (less market share vs MyBuilder)</li>
+                            <li>Still building brand recognition</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-verdict recommended">
+                        <div class="verdict-title">Our Take</div>
+                        <p class="verdict-text">Best value for money, especially for tradespeople who want control over costs. Perfect if you want to pay only for quality leads without being locked into expensive contracts.</p>
+                    </div>
+                </div>
+
+                <!-- MyBuilder -->
+                <div class="platform-card fade-in">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo competitor">M</div>
+                        </div>
+                    </div>
+                    <h3 class="platform-name">MyBuilder</h3>
+                    <p class="platform-tagline">Established subscription-based marketplace</p>
+                    
+                    <div class="platform-pricing">
+                        <div class="pricing-label">For Tradespeople</div>
+                        <div class="pricing-value expensive">£1,000+</div>
+                        <div class="pricing-note">per year • plus setup fees</div>
+                    </div>
+
+                    <div class="platform-pros">
+                        <h4 class="pros-title">✓ Pros</h4>
+                        <ul class="pros-list">
+                            <li>Large customer base (established 2005)</li>
+                            <li>Strong brand recognition</li>
+                            <li>Good quality verification</li>
+                            <li>Reliable platform</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-cons">
+                        <h4 class="cons-title">✗ Cons</h4>
+                        <ul class="cons-list">
+                            <li>Expensive annual subscriptions (£1,000-£2,400+)</li>
+                            <li>Setup fees (£199+)</li>
+                            <li>12-month contract lock-in</li>
+                            <li>Can't see lead price before acceptance</li>
+                            <li>Leads auto-sent (no filtering)</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-verdict">
+                        <div class="verdict-title">Honest Verdict</div>
+                        <p class="verdict-text">Good for established tradespeople with steady income who can afford the annual commitment. Not ideal for those starting out or wanting flexible spending.</p>
+                    </div>
+                </div>
+
+                <!-- Bark -->
+                <div class="platform-card fade-in">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo competitor">B</div>
+                        </div>
+                    </div>
+                    <h3 class="platform-name">Bark</h3>
+                    <p class="platform-tagline">Credit-based lead marketplace</p>
+                    
+                    <div class="platform-pricing">
+                        <div class="pricing-label">For Tradespeople</div>
+                        <div class="pricing-value expensive">£10-£30</div>
+                        <div class="pricing-note">per lead • credit bundles</div>
+                    </div>
+
+                    <div class="platform-pros">
+                        <h4 class="pros-title">✓ Pros</h4>
+                        <ul class="pros-list">
+                            <li>No monthly subscription</li>
+                            <li>Wide category coverage</li>
+                            <li>International presence</li>
+                            <li>Choose which leads to purchase</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-cons">
+                        <h4 class="cons-title">✗ Cons</h4>
+                        <ul class="cons-list">
+                            <li>Very expensive per-lead (2-3x TradeMatch)</li>
+                            <li>Lead quality can be inconsistent</li>
+                            <li>Unlimited competition (many vendors per lead)</li>
+                            <li>Minimal verification of customers</li>
+                            <li>No insurance verification</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-verdict">
+                        <div class="verdict-title">Honest Verdict</div>
+                        <p class="verdict-text">Flexible model but expensive leads with variable quality. High competition means lower conversion rates. Better for niche services not available elsewhere.</p>
+                    </div>
+                </div>
+
+                <!-- Checkatrade -->
+                <div class="platform-card fade-in">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo competitor">C</div>
+                        </div>
+                    </div>
+                    <h3 class="platform-name">Checkatrade</h3>
+                    <p class="platform-tagline">Premium membership directory</p>
+                    
+                    <div class="platform-pricing">
+                        <div class="pricing-label">For Tradespeople</div>
+                        <div class="pricing-value expensive">£1,200+</div>
+                        <div class="pricing-note">per year • plus vetting fees</div>
+                    </div>
+
+                    <div class="platform-pros">
+                        <h4 class="pros-title">✓ Pros</h4>
+                        <ul class="pros-list">
+                            <li>Premium brand with trust factor</li>
+                            <li>Rigorous vetting process</li>
+                            <li>Good for brand credibility</li>
+                            <li>Directory listing benefits</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-cons">
+                        <h4 class="cons-title">✗ Cons</h4>
+                        <ul class="cons-list">
+                            <li>Most expensive option (£1,200-£2,000+/year)</li>
+                            <li>High joining fees (£300+)</li>
+                            <li>Annual contract required</li>
+                            <li>Leads not guaranteed</li>
+                            <li>More of a directory than active marketplace</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-verdict">
+                        <div class="verdict-title">Honest Verdict</div>
+                        <p class="verdict-text">Premium positioning and brand trust, but very expensive with no guarantee of work. Best suited for established businesses using it as marketing rather than primary lead source.</p>
+                    </div>
+                </div>
+
+                <!-- Rated People -->
+                <div class="platform-card fade-in">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo competitor">R</div>
+                        </div>
+                    </div>
+                    <h3 class="platform-name">Rated People</h3>
+                    <p class="platform-tagline">Pay-per-lead marketplace</p>
+                    
+                    <div class="platform-pricing">
+                        <div class="pricing-label">For Tradespeople</div>
+                        <div class="pricing-value expensive">£10-£40</div>
+                        <div class="pricing-note">per lead • credit packs</div>
+                    </div>
+
+                    <div class="platform-pros">
+                        <h4 class="pros-title">✓ Pros</h4>
+                        <ul class="pros-list">
+                            <li>No subscription required</li>
+                            <li>Established platform</li>
+                            <li>Decent lead volume</li>
+                            <li>Choose which leads to buy</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-cons">
+                        <h4 class="cons-title">✗ Cons</h4>
+                        <ul class="cons-list">
+                            <li>Expensive leads (3-4x TradeMatch)</li>
+                            <li>High competition per lead</li>
+                            <li>Variable lead quality</li>
+                            <li>Limited verification</li>
+                            <li>Processing fees on top</li>
+                        </ul>
+                    </div>
+
+                    <div class="platform-verdict">
+                        <div class="verdict-title">Honest Verdict</div>
+                        <p class="verdict-text">Similar model to TradeMatch but significantly more expensive with less transparency. Good lead volume but ROI suffers from high costs and competition.</p>
+                    </div>
+                </div>
+
+                <!-- Placeholder for grid balance -->
+                <div class="platform-card fade-in" style="opacity: 0.3; pointer-events: none;">
+                    <div class="platform-header">
+                        <div>
+                            <div class="platform-logo competitor">?</div>
+                        </div>
+                    </div>
+                    <h3 class="platform-name">Your Platform</h3>
+                    <p class="platform-tagline">Have a suggestion? Let us know!</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         COST CALCULATOR
+         ======================================== -->
+    <section class="calculator-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Calculate Your <span class="gradient-text">Savings</span></h2>
+                <p class="section-subtitle">See how much you could save by switching to TradeMatch</p>
+            </div>
+
+            <div class="calculator-container fade-in">
+                <h3 class="calculator-title">💰 Annual Cost Calculator</h3>
+                
+                <div class="calculator-inputs">
+                    <div class="calc-input-group">
+                        <label class="calc-label">Leads per month</label>
+                        <input type="number" class="calc-input" id="leadsPerMonth" value="20" min="1" max="200">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Average lead value</label>
+                        <select class="calc-input" id="leadValue">
+                            <option value="5">Small jobs (£5)</option>
+                            <option value="8" selected>Medium jobs (£8)</option>
+                            <option value="12">Large jobs (£12)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-results">
+                    <div class="calc-result-card winner">
+                        <div class="calc-platform-name">TradeMatch</div>
+                        <div class="calc-cost" id="tradematchCost">£960</div>
+                        <div class="calc-savings">🏆 Best Value</div>
+                    </div>
+                    <div class="calc-result-card">
+                        <div class="calc-platform-name">MyBuilder</div>
+                        <div class="calc-cost" id="mybuilderCost">£1,400</div>
+                        <div class="calc-savings" id="mybuilderSavings">+£440/year</div>
+                    </div>
+                    <div class="calc-result-card">
+                        <div class="calc-platform-name">Bark / Rated People</div>
+                        <div class="calc-cost" id="barkCost">£2,880</div>
+                        <div class="calc-savings" id="barkSavings">+£1,920/year</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         VERDICT SECTION
+         ======================================== -->
+    <section class="verdict-section section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our <span class="gradient-text">Recommendation</span></h2>
+                <p class="section-subtitle">Choose the right platform for your needs</p>
+            </div>
+
+            <div class="verdict-grid">
+                
+                <div class="verdict-card fade-in">
+                    <div class="verdict-icon">🎯</div>
+                    <h3 class="verdict-title">Best for New Tradespeople</h3>
+                    <p class="verdict-description">TradeMatch wins hands-down. No upfront costs, no contracts, pay-as-you-go. Perfect for testing the market.</p>
+                </div>
+
+                <div class="verdict-card fade-in">
+                    <div class="verdict-icon">💰</div>
+                    <h3 class="verdict-title">Best Value for Money</h3>
+                    <p class="verdict-description">TradeMatch offers 3-4x cheaper leads than competitors. Same quality customers, fraction of the cost.</p>
+                </div>
+
+                <div class="verdict-card fade-in">
+                    <div class="verdict-icon">🔒</div>
+                    <h3 class="verdict-title">Best for Control</h3>
+                    <p class="verdict-description">TradeMatch lets you choose exactly which leads to unlock, with transparent pricing upfront. No surprises.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================
+         CTA SECTION
+         ======================================== -->
+    <section class="cta-section section">
+        <div class="container">
+            <h2>Ready to save on lead costs?</h2>
+            <p>Join 12,000+ tradespeople who've switched to TradeMatch for better value and more control</p>
+            <a href="/vendors/signup" class="btn-primary">Start Saving Today</a>
+        </div>
+    </section>
+
+    <!-- ========================================
+         FOOTER
+         ======================================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>For Customers</h4>
+                    <ul class="footer-links">
+                        <li><a href="/post-job">Post a Job</a></li>
+                        <li><a href="/how-it-works">How It Works</a></li>
+                        <li><a href="/ask-a-trade">Ask a Trade</a></li>
+                        <li><a href="/categories">All Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Tradespeople</h4>
+                    <ul class="footer-links">
+                        <li><a href="/vendors/signup">Join TradeMatch</a></li>
+                        <li><a href="/vendors/how-it-works">How It Works</a></li>
+                        <li><a href="/compare">Compare Platforms</a></li>
+                        <li><a href="/vendors/help">Vendor Help</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/careers">Careers</a></li>
+                        <li><a href="/press">Press</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/cookie-policy">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TradeMatch. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================
+         JAVASCRIPT
+         ======================================== -->
+    <script>
+        // ========================================
+        // Intersection Observer for Animations
+        // ========================================
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ========================================
+        // Cost Calculator
+        // ========================================
+        function updateCalculator() {
+            const leadsPerMonth = parseInt(document.getElementById('leadsPerMonth').value) || 20;
+            const leadValue = parseInt(document.getElementById('leadValue').value) || 8;
+            
+            // Calculate annual costs
+            const tradematchCost = leadsPerMonth * leadValue * 12;
+            const mybuilderCost = 1400; // Base subscription
+            const barkCost = leadsPerMonth * (leadValue * 2.5) * 12; // Approx 2.5x more expensive
+            
+            // Update display
+            document.getElementById('tradematchCost').textContent = '£' + tradematchCost.toLocaleString();
+            document.getElementById('mybuilderCost').textContent = '£' + mybuilderCost.toLocaleString();
+            document.getElementById('barkCost').textContent = '£' + barkCost.toLocaleString();
+            
+            // Calculate savings
+            const mybuilderSavings = mybuilderCost - tradematchCost;
+            const barkSavings = barkCost - tradematchCost;
+            
+            document.getElementById('mybuilderSavings').textContent = 
+                mybuilderSavings > 0 ? '+£' + mybuilderSavings.toLocaleString() + '/year' : 'Cheaper';
+            document.getElementById('barkSavings').textContent = 
+                barkSavings > 0 ? '+£' + barkSavings.toLocaleString() + '/year' : 'Cheaper';
+        }
+
+        // Initialize calculator
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCalculator();
+            
+            document.getElementById('leadsPerMonth').addEventListener('input', updateCalculator);
+            document.getElementById('leadValue').addEventListener('change', updateCalculator);
+        });
+
+        // ========================================
+        // Smooth Scroll
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========================================
+        // Console Log
+        // ========================================
+        console.log('%cTradeMatch - Compare Platforms', 'font-size: 20px; font-weight: bold; color: #10b981;');
+        console.log('Features:');
+        console.log('✓ Comprehensive comparison table');
+        console.log('✓ Detailed platform cards with pros/cons');
+        console.log('✓ Interactive cost calculator');
+        console.log('✓ Honest, factual comparisons');
+    </script>
+</body>
+</html>
