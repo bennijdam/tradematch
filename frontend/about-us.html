@@ -18,11 +18,13 @@
             --emerald-dark: #15803D;
             --gray-50: #F8FAFB;
             --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
             --gray-600: #4B5563;
             --amber: #F59E0B;
             --white: #FFFFFF;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
             --glass-bg: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(255, 255, 255, 0.18);
         }
@@ -45,134 +47,134 @@
             margin: 0 auto;
             padding: 0 24px;
         }
-
-        .defer-section {
-            content-visibility: auto;
-            contain-intrinsic-size: 1px 900px;
-        }
-        
-        /* White Top Navigation */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .nav-logo {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--slate);
-            text-decoration: none;
-            font-family: 'Source Serif 4', serif;
-        }
-        
-        .nav-logo span {
-            color: var(--emerald);
-        }
-        
-        .nav-menu {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            list-style: none;
-        }
-        
-        .nav-menu a {
-            color: var(--gray-600);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: color 0.3s;
-        }
-        
-        .nav-menu a:hover {
-            color: var(--emerald);
-        }
-        
-        /* Button Styles */
-        .nav-buttons {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-        
-        .btn-login {
-            background: transparent;
-            color: var(--slate);
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            border: 2px solid rgba(15, 23, 42, 0.2);
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-login:hover {
-            border-color: var(--emerald);
-            color: var(--emerald);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
-        }
-        
-        .btn-signup {
-            background: var(--emerald);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .btn-signup:hover {
-            background: var(--emerald-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
-        }
-        
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--slate);
-            font-size: 28px;
-            cursor: pointer;
-            padding: 8px;
-            line-height: 1;
-        }
-        
-        /* Mobile Responsive for Nav */
-        @media (max-width: 968px) {
-            .nav-menu {
-                position: fixed;
-                top: 80px;
-                right: -100%;
-                width: 100%;
-                height: calc(100vh - 80px);
-                background: rgba(255, 255, 255, 0.98);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 40px;
-                transition: right 0.3s ease-in-out;
-                gap: 20px;
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">Trade<span>Match</span></a>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="how-it-works.html">How it works</a></li>
+                <li><a href="ask-a-trade.html">Ask a trade</a></li>
+                
+                <!-- Services Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Building & Construction</h3>
+                                <ul>
+                                    <li><a href="/services/builders">Builders</a></li>
+                                    <li><a href="/services/extensions">Extensions</a></li>
+                                    <li><a href="/services/loft-conversions">Loft Conversions</a></li>
+                                    <li><a href="/services/garage-conversions">Garage Conversions</a></li>
+                                    <li><a href="/services/bricklayers">Bricklayers</a></li>
+                                    <li><a href="/services/stonemasons">Stonemasons</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Plumbing & Heating</h3>
+                                <ul>
+                                    <li><a href="/services/plumbers">Plumbers</a></li>
+                                    <li><a href="/services/gas-engineers">Gas Engineers</a></li>
+                                    <li><a href="/services/heating-engineers">Heating Engineers</a></li>
+                                    <li><a href="/services/boiler-installation">Boiler Installation</a></li>
+                                    <li><a href="/services/bathroom-installation">Bathroom Installation</a></li>
+                                    <li><a href="/services/radiator-installation">Radiator Installation</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Electrical & Lighting</h3>
+                                <ul>
+                                    <li><a href="/services/electricians">Electricians</a></li>
+                                    <li><a href="/services/rewiring">Rewiring</a></li>
+                                    <li><a href="/services/ev-charger">EV Charger Installation</a></li>
+                                    <li><a href="/services/fuse-box">Fuse Box Replacement</a></li>
+                                    <li><a href="/services/lighting">Lighting Installation</a></li>
+                                    <li><a href="/services/solar-panels">Solar Panels</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Decorating & Finishes</h3>
+                                <ul>
+                                    <li><a href="/services/painters">Painters & Decorators</a></li>
+                                    <li><a href="/services/plasterers">Plasterers</a></li>
+                                    <li><a href="/services/tilers">Tilers</a></li>
+                                    <li><a href="/services/flooring">Flooring Installation</a></li>
+                                    <li><a href="/services/carpenters">Carpenters</a></li>
+                                    <li><a href="/services/kitchen-fitters">Kitchen Fitters</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <!-- Locations Mega Menu -->
+                <li class="has-mega-menu">
+                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-content">
+                            <div class="mega-column">
+                                <h3>Major Cities</h3>
+                                <ul>
+                                    <li><a href="/trades/london">London</a></li>
+                                    <li><a href="/trades/birmingham">Birmingham</a></li>
+                                    <li><a href="/trades/manchester">Manchester</a></li>
+                                    <li><a href="/trades/leeds">Leeds</a></li>
+                                    <li><a href="/trades/liverpool">Liverpool</a></li>
+                                    <li><a href="/trades/bristol">Bristol</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Southern England</h3>
+                                <ul>
+                                    <li><a href="/trades/brighton">Brighton</a></li>
+                                    <li><a href="/trades/southampton">Southampton</a></li>
+                                    <li><a href="/trades/reading">Reading</a></li>
+                                    <li><a href="/trades/oxford">Oxford</a></li>
+                                    <li><a href="/trades/portsmouth">Portsmouth</a></li>
+                                    <li><a href="/trades/bournemouth">Bournemouth</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Midlands & North</h3>
+                                <ul>
+                                    <li><a href="/trades/nottingham">Nottingham</a></li>
+                                    <li><a href="/trades/sheffield">Sheffield</a></li>
+                                    <li><a href="/trades/newcastle">Newcastle</a></li>
+                                    <li><a href="/trades/stoke-on-trent">Stoke-on-Trent</a></li>
+                                    <li><a href="/trades/coventry">Coventry</a></li>
+                                    <li><a href="/trades/leicester">Leicester</a></li>
+                                </ul>
+                            </div>
+                            <div class="mega-column">
+                                <h3>Scotland & Wales</h3>
+                                <ul>
+                                    <li><a href="/trades/glasgow">Glasgow</a></li>
+                                    <li><a href="/trades/edinburgh">Edinburgh</a></li>
+                                    <li><a href="/trades/aberdeen">Aberdeen</a></li>
+                                    <li><a href="/trades/cardiff">Cardiff</a></li>
+                                    <li><a href="/trades/swansea">Swansea</a></li>
+                                    <li><a href="/trades/belfast">Belfast</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <li class="nav-cta">
+                    <a href="post-a-job.html" class="btn-post">Post a Job</a>
+                    <a href="vendor-signup-page.html" class="btn-signup">Trade Sign up</a>
+                    <a href="/login" class="btn-login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
                 box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
             }
             
@@ -1731,11 +1733,11 @@
                 <div class="footer-column">
                     <h4>Company</h4>
                     <ul class="footer-links">
-                        <li><a href="/pages/about.html">About Us</a></li>
-                        <li><a href="/careers.html">Careers</a></li>
-                        <li><a href="/investor-relations.html">Investor Relations</a></li>
-                        <li><a href="/pages/blog.html">Blog</a></li>
-                        <li><a href="/pages/help.html">Help Centre</a></li>
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="investor-relations.html">Investor Relations</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="help-centre.html">Help Centre</a></li>
                     </ul>
                 </div>
 
@@ -1747,7 +1749,7 @@
                         <li><a href="/privacy">Privacy Policy</a></li>
                         <li><a href="/cookies">Cookie Policy</a></li>
                         <li><a href="/complaints">Complaints</a></li>
-                        <li><a href="/pages/help.html">Help Centre</a></li>
+                        <li><a href="help-centre.html">Help Centre</a></li>
                     </ul>
                 </div>
             </div>
@@ -1786,6 +1788,28 @@
 
         console.log('%cTradeMatch - About Us', 'font-size: 20px; font-weight: bold; color: #10b981;');
         console.log('Building the future of home improvement 🚀');
+    </script>
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn') || document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks') || document.getElementById('navMenu');
+        
+        if (mobileMenuBtn && navLinks) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Mega Menu Accordion for Mobile
+        const megaTriggers = document.querySelectorAll('.has-mega-menu > a');
+        megaTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                if (window.innerWidth < 968) {
+                    e.preventDefault();
+                    trigger.parentElement.classList.toggle('active');
+                }
+            });
+        });
     </script>
 </body>
 </html>
