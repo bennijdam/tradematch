@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) {
+                    return parts.pop().split(';').shift();
+                }
+                return undefined;
+            }
+
+            const routes = {
+                vendor: '/vendor-dashboard',
+                user: '/user-dashboard',
+                admin: '/super-admin'
+            };
+
+            const userRole = getCookie('user_role');
+            if (userRole && routes[userRole]) {
+                window.location.replace(routes[userRole]);
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Get trusted local tradespeople for home improvements across the UK. Compare quotes from verified professionals in minutes. TradeMatch connects homeowners with reliable, background-checked tradespeople for plumbing, electrical, roofing, and more.">
