@@ -52,3 +52,4 @@ node server.js
 - OAuth callbacks are handled by the backend and redirect to /login with a token.
 - Clean URLs are defined in vercel.json and server.js.
 - The not-found page can be tested directly at /404.
+- The landing page redirects based on the `user_role` cookie (`vendor`, `user`, `admin`).
