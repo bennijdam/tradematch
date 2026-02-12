@@ -51,7 +51,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=webp&auto=format" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/unsplash-photo-1560518883-ce09059eeffa.jpg" fetchpriority="high">
     
     
     
@@ -526,27 +526,7 @@
     <!-- Hero Section with Background Image -->
     <section class="hero">
         <div class="hero-background">
-            <picture>
-                <source
-                    id="heroSourceAvif"
-                    type="image/avif"
-                    srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=avif&auto=format"
-                >
-                <source
-                    id="heroSourceWebp"
-                    type="image/webp"
-                    srcset="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80&fm=webp&auto=format"
-                >
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80" 
-                     alt="Loft Conversion" 
-                     class="hero-image"
-                     id="heroImage"
-                     width="1600"
-                     height="900"
-                     loading="eager"
-                     fetchpriority="high"
-                     decoding="async">
-            </picture>
+            @@PICTURE_BLOCK_0@@
             <div class="hero-overlay"></div>
         </div>
         
@@ -661,13 +641,21 @@
             
             <div class="before-after-container">
                 <div class="before-after-wrapper">
-                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80" 
+                    <picture>
+    <source type="image/webp" srcset="/images/optimized/unsplash-photo-1484154218962-a197022b5858-mobile.webp" media="(max-width: 600px)">
+    <source type="image/webp" srcset="/images/optimized/unsplash-photo-1484154218962-a197022b5858-desktop.webp" media="(min-width: 601px)">
+    <img src="/images/unsplash-photo-1484154218962-a197022b5858.jpg" 
                          alt="Before" 
                          class="before-image">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80" 
+</picture>
+                    <picture>
+    <source type="image/webp" srcset="/images/optimized/unsplash-photo-1560518883-ce09059eeffa-mobile.webp" media="(max-width: 600px)">
+    <source type="image/webp" srcset="/images/optimized/unsplash-photo-1560518883-ce09059eeffa-desktop.webp" media="(min-width: 601px)">
+    <img src="/images/unsplash-photo-1560518883-ce09059eeffa.jpg" 
                          alt="After" 
                          class="after-image"
                          id="afterImage">
+</picture>
                     <div class="slider-handle" id="sliderHandle">
                         <div class="slider-button">⇄</div>
                     </div>
@@ -802,7 +790,7 @@
             serviceName: 'Loft Conversion',
             location: 'east-ham',
             locationName: 'East Ham',
-            heroImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80',
+            heroImage: '/images/unsplash-photo-1560518883-ce09059eeffa.jpg',
             localSpecialists: 23,
             avgPrice: '£35k',
             priceRange: {
@@ -815,14 +803,14 @@
         // Service-specific images
         const serviceImages = {
             'loft-conversion': {
-                hero: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80',
+                hero: '/images/unsplash-photo-1560518883-ce09059eeffa.jpg',
                 gallery: [
-                    {url: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80', caption: 'Modern Loft Bedroom', desc: 'Completed in 2024'},
-                    {url: 'https://images.unsplash.com/photo-1560449752-7e5c2b280e3e?w=600&q=80', caption: 'Loft Office Space', desc: 'East Ham Project'},
-                    {url: 'https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=600&q=80', caption: 'Dormer Conversion', desc: 'Recent work'},
-                    {url: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&q=80', caption: 'Velux Windows', desc: '6 weeks completion'},
-                    {url: 'https://images.unsplash.com/photo-1560185127-bc5e3c2e8c9b?w=600&q=80', caption: 'Ensuite Bathroom', desc: 'Premium finish'},
-                    {url: 'https://images.unsplash.com/photo-1560185009-5bf9f2849488?w=600&q=80', caption: 'Storage Solutions', desc: 'Bespoke carpentry'}
+                    {url: '/images/unsplash-photo-1484154218962-a197022b5858.jpg', caption: 'Modern Loft Bedroom', desc: 'Completed in 2024'},
+                    {url: '/images/unsplash-photo-1560449752-7e5c2b280e3e.jpg', caption: 'Loft Office Space', desc: 'East Ham Project'},
+                    {url: '/images/unsplash-photo-1556912173-46c336c7fd55.jpg', caption: 'Dormer Conversion', desc: 'Recent work'},
+                    {url: '/images/unsplash-photo-1556911220-e15b29be8c8f.jpg', caption: 'Velux Windows', desc: '6 weeks completion'},
+                    {url: '/images/unsplash-photo-1560185127-bc5e3c2e8c9b.jpg', caption: 'Ensuite Bathroom', desc: 'Premium finish'},
+                    {url: '/images/unsplash-photo-1560185009-5bf9f2849488.jpg', caption: 'Storage Solutions', desc: 'Bespoke carpentry'}
                 ]
             }
         };
@@ -1058,9 +1046,13 @@
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', initializePage);
     </script>
-    <script src="/frontend/shared/ui/profile-menu.js"></script>
+    <script src="/frontend/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>
+
+
+
+
 
 
 

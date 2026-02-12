@@ -6,7 +6,7 @@ PREFIX=${S3_PREFIX:-"SEO pages"}
 REGION=${AWS_REGION:-ap-southeast-2}
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-PREFERRED_DIR="$ROOT_DIR/frontend/seo-generator/generated-pages"
+PREFERRED_DIR="$ROOT_DIR/apps/web/seo-generator/generated-pages"
 FALLBACK_DIR="$ROOT_DIR/seo-pages/public"
 
 if [[ -n "${SEO_LOCAL_DIR:-}" ]]; then

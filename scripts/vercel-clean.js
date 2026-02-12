@@ -3,8 +3,8 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const pathsToRemove = [
-  'frontend/seo-generator/generated-pages',
-  'frontend/seo-generator/generated-pages.tmp',
+  'apps/web/seo-generator/generated-pages',
+  'apps/web/seo-generator/generated-pages.tmp',
   'seo-pages'
 ].map((p) => path.join(root, p));
 

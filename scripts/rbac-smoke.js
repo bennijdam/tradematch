@@ -1,10 +1,10 @@
-const { spawn } = require('child_process');
+﻿const { spawn } = require('child_process');
 const path = require('path');
-const jwt = require(require.resolve('jsonwebtoken', { paths: [path.join(__dirname, '..', 'backend', 'node_modules')] }));
-const { Pool } = require(require.resolve('pg', { paths: [path.join(__dirname, '..', 'backend', 'node_modules')] }));
-require('dotenv').config({ path: 'backend/.env' });
+const jwt = require(require.resolve('jsonwebtoken', { paths: [path.join(__dirname, '..', 'apps', 'api', 'node_modules')] }));
+const { Pool } = require(require.resolve('pg', { paths: [path.join(__dirname, '..', 'apps', 'api', 'node_modules')] }));
+require('dotenv').config({ path: 'apps/api/.env' });
 
-const serverCmd = ['-r', 'dotenv/config', 'backend/server-production.js', 'dotenv_config_path=backend/.env'];
+const serverCmd = ['-r', 'dotenv/config', 'apps/api/server-production.js', 'dotenv_config_path=apps/api/.env'];
 const repoRoot = path.join(__dirname, '..');
 const server = spawn('node', serverCmd, { cwd: repoRoot, env: { ...process.env, PORT: '3001' } });
 
@@ -78,3 +78,4 @@ setTimeout(() => {
     server.kill('SIGINT');
   }
 }, 10000);
+

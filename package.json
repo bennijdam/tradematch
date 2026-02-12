@@ -1,14 +1,14 @@
-{
+﻿{
   "name": "tradematch-frontend",
   "version": "1.0.0",
   "description": "TradeMatch Frontend - Modern UK Trade Services Platform",
   "scripts": {
     "dev": "python -m http.server 8080",
-    "build": "node optimize-images.js && echo 'No other build step needed'",
+    "build": "node scripts/automation/optimize-images.js && echo 'No other build step needed'",
     "start": "python -m http.server 8080",
-    "seo:generate:main": "node generate-pages.js main-pages",
-    "seo:generate:locations": "node generate-pages.js location-pages",
-    "seo:generate:all": "node generate-pages.js all-pages",
+    "seo:generate:main": "node scripts/automation/generate-pages.js main-pages",
+    "seo:generate:locations": "node scripts/automation/generate-pages.js location-pages",
+    "seo:generate:all": "node scripts/automation/generate-pages.js all-pages",
     "seo:sync:s3": "powershell -ExecutionPolicy Bypass -File scripts\\sync-seo-s3.ps1",
     "seo:sync:s3:sh": "bash scripts/sync-seo-s3.sh",
     "test:smoke": "node scripts/smoke-test.js",
@@ -43,3 +43,6 @@
     "sharp": "^0.34.5"
   }
 }
+
+
+

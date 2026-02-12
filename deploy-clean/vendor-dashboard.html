@@ -731,7 +731,7 @@
             const user = localStorage.getItem('user');
             
             if (!token || !user) {
-                window.location.href = 'auth-login.html?redirect=vendor-dashboard.html';
+                window.location.href = '/login?redirect=vendor-dashboard.html';
                 return null;
             }
             
@@ -749,7 +749,7 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.href = 'auth-login.html';
+                window.location.href = '/login';
             }
         }
 

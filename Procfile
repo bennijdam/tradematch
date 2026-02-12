@@ -1,1 +1,2 @@
-web: cd backend && node server-production.js
+﻿web: cd apps/api && node server-production.js
+

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const htmlPath = 'frontend/index.html';
+const htmlPath = 'public/index.html';
 const html = fs.readFileSync(htmlPath, 'utf8');
 const styleStart = html.indexOf('<style>');
 const styleEnd = html.indexOf('</style>');
@@ -36,4 +36,4 @@ if (!updated.includes('/styles/homepage-noncritical.css')) {
 }
 
 fs.writeFileSync(htmlPath, updated);
-fs.writeFileSync('frontend/styles/homepage-noncritical.css', movedCss + '\n');
+fs.writeFileSync('public/styles/homepage-noncritical.css', movedCss + '\n');

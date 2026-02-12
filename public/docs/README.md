@@ -1,12 +1,12 @@
-# 🏗️ TradeMatch UK - Production Platform
+﻿# đźŹ—ď¸Ź TradeMatch UK - Production Platform
 
-> **Status**: ✅ Production Ready  
+> **Status**: âś… Production Ready  
 > **Version**: 3.1.0  
 > **Last Updated**: January 21, 2026
 
 TradeMatch is a comprehensive platform connecting customers with trusted tradespeople across the UK.
 
-## 🚀 Quick Start
+## đźš€ Quick Start
 
 ### Prerequisites
 - Node.js 20.x
@@ -46,74 +46,74 @@ cd ../frontend
 
 Then follow the steps in [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md)
 
-## 📁 Project Structure
+## đź“ Project Structure
 
 ```
 tradematch-fixed/
-├── backend/                 # Node.js Express API
-│   ├── config/             # Configuration files
-│   ├── middleware/         # Express middleware
-│   ├── migrations/         # Database migrations ⭐ NEW
-│   ├── routes/             # API routes
-│   ├── services/           # Business logic
-│   ├── server.js           # Main server file
-│   └── server-production.js # Enhanced production server ⭐ NEW
-├── frontend/               # Static HTML/CSS/JS
-│   ├── components/         # Reusable components
-│   ├── js/                 # JavaScript files
-│   ├── pages/              # Individual pages
-│   └── index.html          # Homepage
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml       # GitHub Actions CI/CD ⭐ NEW
-├── deploy.ps1              # Deployment automation ⭐ NEW
-├── DEPLOYMENT.md           # Deployment guide ⭐ NEW
-├── PRODUCTION-CHECKLIST.md # Launch checklist ⭐ NEW
-└── render.yaml             # Render.com config
+â”śâ”€â”€ apps/api/                 # Node.js Express API
+â”‚   â”śâ”€â”€ config/             # Configuration files
+â”‚   â”śâ”€â”€ middleware/         # Express middleware
+â”‚   â”śâ”€â”€ migrations/         # Database migrations â­ NEW
+â”‚   â”śâ”€â”€ routes/             # API routes
+â”‚   â”śâ”€â”€ services/           # Business logic
+â”‚   â”śâ”€â”€ server.js           # Main server file
+â”‚   â””â”€â”€ server-production.js # Enhanced production server â­ NEW
+â”śâ”€â”€ public/               # Static HTML/CSS/JS
+â”‚   â”śâ”€â”€ components/         # Reusable components
+â”‚   â”śâ”€â”€ js/                 # JavaScript files
+â”‚   â”śâ”€â”€ pages/              # Individual pages
+â”‚   â””â”€â”€ index.html          # Homepage
+â”śâ”€â”€ .github/
+â”‚   â””â”€â”€ workflows/
+â”‚       â””â”€â”€ ci-cd.yml       # GitHub Actions CI/CD â­ NEW
+â”śâ”€â”€ deploy.ps1              # Deployment automation â­ NEW
+â”śâ”€â”€ DEPLOYMENT.md           # Deployment guide â­ NEW
+â”śâ”€â”€ PRODUCTION-CHECKLIST.md # Launch checklist â­ NEW
+â””â”€â”€ render.yaml             # Render.com config
 ```
 
-## ✨ Features
+## âś¨ Features
 
 ### Authentication
-- ✅ Email/password registration & login
-- ✅ Google OAuth integration
-- ✅ Microsoft OAuth integration
-- ✅ JWT token authentication
-- ✅ Password hashing with bcrypt
-- ⭐ Email verification (ready - needs activation)
+- âś… Email/password registration & login
+- âś… Google OAuth integration
+- âś… Microsoft OAuth integration
+- âś… JWT token authentication
+- âś… Password hashing with bcrypt
+- â­ Email verification (ready - needs activation)
 
 ### Payments
-- ✅ Stripe payment processing
-- ✅ Escrow system
-- ✅ Webhook handling with signature verification
-- ✅ Refund support
-- ✅ Payment tracking in database
+- âś… Stripe payment processing
+- âś… Escrow system
+- âś… Webhook handling with signature verification
+- âś… Refund support
+- âś… Payment tracking in database
 
 ### Security
-- ⭐ Helmet.js security headers
-- ⭐ Strict CORS configuration
-- ⭐ Rate limiting on sensitive endpoints
-- ✅ SQL injection prevention
-- ✅ XSS protection
-- ⭐ Structured logging with Winston
+- â­ Helmet.js security headers
+- â­ Strict CORS configuration
+- â­ Rate limiting on sensitive endpoints
+- âś… SQL injection prevention
+- âś… XSS protection
+- â­ Structured logging with Winston
 
 ### Infrastructure
-- ⭐ Database migrations with node-pg-migrate
-- ⭐ CI/CD pipeline with GitHub Actions
-- ✅ Health monitoring endpoint
-- ⭐ Graceful shutdown handling
-- ✅ Error tracking and logging
+- â­ Database migrations with node-pg-migrate
+- â­ CI/CD pipeline with GitHub Actions
+- âś… Health monitoring endpoint
+- â­ Graceful shutdown handling
+- âś… Error tracking and logging
 
-### 🔗 Connection Layer (NEW ⭐)
+### đź”— Connection Layer (NEW â­)
 **Complete two-sided marketplace synchronization between Customer & Vendor dashboards**
 
-- ✅ **Shared Data Model**: 11 core tables (jobs, leads, conversations, messages, quotes, milestones, escrow, reviews, events, notifications)
-- ✅ **RBAC & Privacy**: Strict role-based access control, customer details masked until vendor acceptance, vendor pricing hidden from customers
-- ✅ **Messaging System**: Disabled by default, enabled post-lead-acceptance, immutable history, auto-read tracking
-- ✅ **Event System**: 20 event types, immutable audit trail, idempotency keys prevent duplicates
-- ✅ **State Machines**: Job (draft→live→in_progress→completed), Lead (offered→accepted→quote_sent), Quote (pending→accepted), Milestone (pending→approved→paid)
-- ✅ **Transactional Safety**: ACID transactions, concurrent locking, graceful rollback
-- ✅ **API Endpoints**: 6 core endpoints (job creation/publish, lead viewing/acceptance, messaging)
+- âś… **Shared Data Model**: 11 core tables (jobs, leads, conversations, messages, quotes, milestones, escrow, reviews, events, notifications)
+- âś… **RBAC & Privacy**: Strict role-based access control, customer details masked until vendor acceptance, vendor pricing hidden from customers
+- âś… **Messaging System**: Disabled by default, enabled post-lead-acceptance, immutable history, auto-read tracking
+- âś… **Event System**: 20 event types, immutable audit trail, idempotency keys prevent duplicates
+- âś… **State Machines**: Job (draftâ†’liveâ†’in_progressâ†’completed), Lead (offeredâ†’acceptedâ†’quote_sent), Quote (pendingâ†’accepted), Milestone (pendingâ†’approvedâ†’paid)
+- âś… **Transactional Safety**: ACID transactions, concurrent locking, graceful rollback
+- âś… **API Endpoints**: 6 core endpoints (job creation/publish, lead viewing/acceptance, messaging)
 
 **Documentation**:
 - [CONNECTION-LAYER-COMPLETE.md](CONNECTION-LAYER-COMPLETE.md) - Complete overview & status
@@ -122,12 +122,12 @@ tradematch-fixed/
 - [CONNECTION-LAYER-TESTING.md](CONNECTION-LAYER-TESTING.md) - Test scenarios & benchmarks
 
 **Code**:
-- [backend/database/schema-connection-layer.sql](backend/database/schema-connection-layer.sql) - Database schema (650+ lines)
-- [backend/middleware/rbac.js](backend/middleware/rbac.js) - Access control (350+ lines)
-- [backend/services/event-broker.service.js](backend/services/event-broker.service.js) - Event system (450+ lines)
-- [backend/routes/connection-layer.js](backend/routes/connection-layer.js) - API routes (500+ lines)
+- [apps/api/database/schema-connection-layer.sql](apps/api/database/schema-connection-layer.sql) - Database schema (650+ lines)
+- [apps/api/middleware/rbac.js](apps/api/middleware/rbac.js) - Access control (350+ lines)
+- [apps/api/services/event-broker.service.js](apps/api/services/event-broker.service.js) - Event system (450+ lines)
+- [apps/api/routes/connection-layer.js](apps/api/routes/connection-layer.js) - API routes (500+ lines)
 
-## 🗄️ Database Schema
+## đź—„ď¸Ź Database Schema
 
 ### Tables
 1. **users** - User accounts with OAuth support
@@ -135,9 +135,9 @@ tradematch-fixed/
 3. **payments** - Payment records with escrow status
 4. **email_notifications** - Email tracking and delivery status
 
-See [backend/migrations/](backend/migrations/) for full schema.
+See [apps/api/migrations/](apps/api/migrations/) for full schema.
 
-## 🔧 Configuration
+## đź”§ Configuration
 
 ### Environment Variables
 
@@ -156,7 +156,7 @@ See [backend/migrations/](backend/migrations/) for full schema.
 - `MICROSOFT_CLIENT_ID` - Microsoft OAuth
 - `MICROSOFT_CLIENT_SECRET` - Microsoft OAuth
 
-See [backend/.env.example](backend/.env.example) for full list.
+See [apps/api/.env.example](apps/api/.env.example) for full list.
 
 ### Generating JWT Secret
 
@@ -164,7 +164,7 @@ See [backend/.env.example](backend/.env.example) for full list.
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-## 📊 API Endpoints
+## đź“Š API Endpoints
 
 ### Health & Info
 ```
@@ -186,7 +186,7 @@ GET  /auth/microsoft        - Microsoft OAuth
 POST /api/webhooks/stripe   - Stripe webhook (raw body)
 ```
 
-## 🧪 Testing
+## đź§Ş Testing
 
 ### Backend Tests
 ```bash
@@ -205,7 +205,7 @@ curl -X POST https://your-backend.onrender.com/api/auth/register \
   -d '{"userType":"customer","fullName":"Test User","email":"test@example.com","password":"SecurePass123!"}'
 ```
 
-## 🔄 Database Migrations
+## đź”„ Database Migrations
 
 ### Run Migrations
 ```bash
@@ -223,7 +223,7 @@ npm run migrate:create add-new-table
 npm run migrate:down
 ```
 
-## 🚢 Deployment
+## đźš˘ Deployment
 
 ### Render (Backend)
 1. Connect GitHub repository
@@ -233,13 +233,13 @@ npm run migrate:down
 
 ### Vercel (Frontend)
 1. Connect GitHub repository
-2. Set root directory to `frontend/`
+2. Set root directory to `public/`
 3. Auto-deploys on push to `main`
 
 ### Full Deployment Guide
 See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 
-## 📈 Monitoring
+## đź“ Monitoring
 
 ### Health Monitoring
 - Endpoint: `/api/health`
@@ -248,7 +248,7 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 
 ### Logging
 - Winston structured logging
-- Files: `backend/logs/error.log`, `backend/logs/combined.log`
+- Files: `apps/api/logs/error.log`, `apps/api/logs/combined.log`
 - Console output in development
 - JSON format in production
 
@@ -256,17 +256,17 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 - Sentry integration ready
 - Set `SENTRY_DSN` environment variable
 
-## 🛡️ Security
+## đź›ˇď¸Ź Security
 
 ### Implemented
-- ✅ Helmet security headers
-- ✅ CORS with whitelist
-- ✅ Rate limiting (15 min window)
-- ✅ JWT with expiry
-- ✅ Password hashing (12 rounds)
-- ✅ SQL injection prevention
-- ✅ Webhook signature verification
-- ✅ No secrets in repository
+- âś… Helmet security headers
+- âś… CORS with whitelist
+- âś… Rate limiting (15 min window)
+- âś… JWT with expiry
+- âś… Password hashing (12 rounds)
+- âś… SQL injection prevention
+- âś… Webhook signature verification
+- âś… No secrets in repository
 
 ### Best Practices
 - Rotate JWT_SECRET regularly
@@ -275,14 +275,14 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 - Monitor security advisories: `npm audit`
 - Keep dependencies updated
 
-## 📚 Documentation
+## đź“š Documentation
 
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Complete deployment guide
 - [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md) - Pre-launch checklist
-- [backend/.env.example](backend/.env.example) - Environment variables
-- [backend/migrations/](backend/migrations/) - Database schema
+- [apps/api/.env.example](apps/api/.env.example) - Environment variables
+- [apps/api/migrations/](apps/api/migrations/) - Database schema
 
-## 🤝 Contributing
+## đź¤ť Contributing
 
 1. Create feature branch: `git checkout -b feature/new-feature`
 2. Make changes
@@ -291,13 +291,13 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for complete instructions.
 5. Push: `git push origin feature/new-feature`
 6. Create Pull Request
 
-## 📞 Support
+## đź“ž Support
 
 - **Documentation**: See docs above
 - **Issues**: GitHub Issues
 - **Email**: support@tradematch.uk
 
-## 🎯 Production Checklist
+## đźŽŻ Production Checklist
 
 Before going live, ensure:
 - [ ] All environment variables set
@@ -313,11 +313,11 @@ Before going live, ensure:
 
 See [PRODUCTION-CHECKLIST.md](PRODUCTION-CHECKLIST.md) for complete list.
 
-## 📝 License
+## đź“ť License
 
 MIT License - See LICENSE file for details
 
-## 🙏 Acknowledgments
+## đź™Ź Acknowledgments
 
 - Express.js framework
 - PostgreSQL database
@@ -327,10 +327,11 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Built with ❤️ for the UK trades community**
+**Built with âť¤ď¸Ź for the UK trades community**
 
-**Ready for Production**: ✅  
-**CI/CD**: ✅  
-**Security Hardened**: ✅  
-**Database Migrations**: ✅  
-**Monitoring**: ✅
+**Ready for Production**: âś…  
+**CI/CD**: âś…  
+**Security Hardened**: âś…  
+**Database Migrations**: âś…  
+**Monitoring**: âś…
+

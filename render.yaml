@@ -1,10 +1,10 @@
-services:
+﻿services:
   - type: web
     name: tradematch-api
     env: node
     nodeVersion: 20
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && node server-production.js
+    buildCommand: cd apps/api && npm install
+    startCommand: cd apps/api && node server-production.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -43,3 +43,4 @@ databases:
   - name: tradematch-db
     databaseName: tradematch
     user: tradematch_user
+

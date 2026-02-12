@@ -66,12 +66,11 @@ const server = http.createServer((req, res) => {
         urlPath = `${urlPath}index.html`;
     }
 
-    let filePath;
     if (urlPath.startsWith('/frontend/')) {
-        filePath = path.join('.', urlPath.replace(/^\/+/, ''));
-    } else {
-        filePath = path.join('.', 'frontend', urlPath.replace(/^\/+/, ''));
+        urlPath = urlPath.replace('/frontend', '');
     }
+
+    const filePath = path.join('.', 'public', urlPath.replace(/^\/+/, ''));
 
     fs.stat(filePath, (statError, stats) => {
         if (!statError && stats.isDirectory()) {

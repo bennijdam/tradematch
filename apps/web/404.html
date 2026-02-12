@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TradeMatch | Page Not Found</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@500;700&display=swap");
+
+    :root {
+      --ink: #0b1a24;
+      --mist: #e8f0f4;
+      --ocean: #0e5a7a;
+      --teal: #1aa7a1;
+      --sun: #f4b15c;
+      --glass: rgba(255, 255, 255, 0.78);
+      --shadow: rgba(6, 20, 26, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(900px 600px at 10% 10%, rgba(26, 167, 161, 0.25), transparent 60%),
+        radial-gradient(700px 500px at 90% 10%, rgba(244, 177, 92, 0.22), transparent 60%),
+        linear-gradient(135deg, #f9fcff 0%, #e6f0f6 55%, #d7e8f1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 20px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 960px;
+      position: relative;
+      padding: 56px;
+      border-radius: 28px;
+      background: var(--glass);
+      box-shadow: 0 24px 60px var(--shadow);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+      animation: lift 0.8s ease-out;
+    }
+
+    .shell::before,
+    .shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(0px);
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    .shell::before {
+      width: 260px;
+      height: 260px;
+      background: var(--teal);
+      top: -120px;
+      right: 40px;
+    }
+
+    .shell::after {
+      width: 320px;
+      height: 320px;
+      background: var(--sun);
+      bottom: -140px;
+      left: 40px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 20px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      color: var(--ocean);
+    }
+
+    .badge span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--ocean);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Times New Roman", serif;
+      font-size: clamp(48px, 8vw, 86px);
+      line-height: 1;
+      letter-spacing: -1px;
+      animation: reveal 0.8s ease-out;
+    }
+
+    p {
+      margin: 0;
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.6;
+      color: #334a57;
+      animation: reveal 0.9s ease-out;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+      animation: reveal 1s ease-out;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--ocean);
+      color: white;
+      box-shadow: 0 14px 30px rgba(14, 90, 122, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: rgba(14, 90, 122, 0.08);
+      color: var(--ocean);
+    }
+
+    .meta {
+      font-size: 14px;
+      color: #5c7280;
+      margin-top: 8px;
+      animation: reveal 1.1s ease-out;
+    }
+
+    .countdown {
+      font-weight: 700;
+      color: var(--ocean);
+    }
+
+    @keyframes lift {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 36px 24px;
+      }
+
+      .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="content">
+      <div class="badge"><span></span> TradeMatch Navigator</div>
+      <h1>404</h1>
+      <p>This page moved or never existed. We are rerouting you to the vendor dashboard so you can keep moving.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/dashboard">Go to dashboard</a>
+        <a class="btn btn-ghost" href="/">Return to home</a>
+      </div>
+      <div class="meta">Redirecting in <span class="countdown" id="countdown">6</span> seconds.</div>
+      <noscript>
+        <div class="meta">JavaScript is disabled. Use the dashboard button above.</div>
+      </noscript>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var seconds = 6;
+      var el = document.getElementById("countdown");
+      var timer = setInterval(function () {
+        seconds -= 1;
+        if (el) {
+          el.textContent = String(seconds);
+        }
+        if (seconds <= 0) {
+          clearInterval(timer);
+          window.location.href = "/dashboard";
+        }
+      }, 1000);
+    })();
+  </script>
+</body>
+</html>
+
+

@@ -1,10 +1,10 @@
-services:
+﻿services:
   - type: web
     name: tradematch-backend
     env: node
-    buildCommand: cd frontend && npm install && npm run build
-    startCommand: npm start
-    staticPublishPath: frontend
+    buildCommand: cd public && npm install && npm run build
+    startCommand: cd public && npm start
+    staticPublishPath: public
     routes:
       - path: /services/*
         directory: ./services

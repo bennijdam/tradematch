@@ -4,17 +4,16 @@ TradeMatch is a UK marketplace connecting homeowners with verified tradespeople.
 
 ## What Lives Here
 
-- Frontend (static HTML): frontend/ (public pages in frontend/pages/)
-- Backend API (Node/Express): backend/
-- User dashboard: frontend/user-dashboard/
-- Vendor dashboard: frontend/vendor-dashboard/
-- Super admin dashboard: frontend/super-admin-dashboard/
+- Frontend (static HTML): public/ (public pages in public/pages/)
+- Backend API (Node/Express): apps/api/
+- User dashboard: public/user-dashboard/
+- Vendor dashboard: public/vendor-dashboard/
+- Super admin dashboard: public/super-admin-dashboard/
 
 ## Environments
 
 - Production frontend: https://www.tradematch.uk
 - Production API: https://api.tradematch.uk
-- Local frontend (static dev): http://localhost:8080
 - Local frontend (root server.js): http://localhost:8000
 - Local API: http://localhost:3001
 
@@ -23,7 +22,7 @@ TradeMatch is a UK marketplace connecting homeowners with verified tradespeople.
 ### Backend (API)
 
 ```
-cd backend
+cd apps/api
 npm ci
 npm run dev
 ```
@@ -31,7 +30,7 @@ npm run dev
 ### Frontend (static)
 
 ```
-cd frontend
+cd public
 npm run start
 ```
 
@@ -52,3 +51,4 @@ node server.js
 
 - OAuth callbacks are handled by the backend and redirect to /login with a token.
 - Clean URLs are defined in vercel.json and server.js.
+- The not-found page can be tested directly at /404.

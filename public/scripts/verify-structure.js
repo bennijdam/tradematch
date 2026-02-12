@@ -50,10 +50,10 @@ rootEntries.forEach((entry) => {
   if (!entry.isFile()) return;
   const name = entry.name;
   if (name.endsWith('.html') && !allowedRootHtml.has(name)) {
-    errors.push(`Unexpected HTML in frontend root: ${name}`);
+    errors.push(`Unexpected HTML in public root: ${name}`);
   }
   if (name.endsWith('.md') && !allowedRootMarkdown.has(name)) {
-    errors.push(`Unexpected Markdown in frontend root: ${name}`);
+    errors.push(`Unexpected Markdown in public root: ${name}`);
   }
 });
 
@@ -61,7 +61,7 @@ const pagesDir = path.join(frontendRoot, 'pages');
 if (fs.existsSync(pagesDir)) {
   const pageFiles = fs.readdirSync(pagesDir).filter((file) => file.endsWith('.html'));
   if (pageFiles.length === 0) {
-    warnings.push('No HTML files found in frontend/pages.');
+    warnings.push('No HTML files found in public/pages.');
   }
 }
 
@@ -75,7 +75,7 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log('Frontend structure verified.');
+console.log('Public structure verified.');
 if (warnings.length > 0) {
   console.warn('Warnings:');
   warnings.forEach((message) => console.warn(`- ${message}`));

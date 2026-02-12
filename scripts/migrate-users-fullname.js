@@ -1,6 +1,6 @@
-const path = require('path');
-require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH || 'backend/.env' });
-const { Pool } = require(require.resolve('pg', { paths: [path.join(__dirname, '..', 'backend', 'node_modules')] }));
+﻿const path = require('path');
+require('dotenv').config({ path: process.env.DOTENV_CONFIG_PATH || 'apps/api/.env' });
+const { Pool } = require(require.resolve('pg', { paths: [path.join(__dirname, '..', 'apps', 'api', 'node_modules')] }));
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -21,3 +21,4 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     await pool.end();
   }
 })();
+
