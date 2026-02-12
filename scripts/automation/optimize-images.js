@@ -2,8 +2,8 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 
-const inputDir = path.join("public", "images");
-const outputDir = path.join(inputDir, "optimized");
+const inputDir = path.resolve(__dirname, "../../apps/web/public/images");
+const outputDir = path.resolve(inputDir, "optimized");
 
 if (!fs.existsSync(inputDir)) {
     console.error(`Input directory not found: ${inputDir}`);
