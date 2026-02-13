@@ -1,3 +1,4 @@
+if (document.getElementById('loginForm')) {
 // User Type Toggle
 const userTypeButtons = document.querySelectorAll('.user-type-btn');
 let currentUserType = 'customer';
@@ -39,9 +40,9 @@ const API_BASE = (window.location.hostname === 'localhost' || window.location.ho
     ? 'http://localhost:3001'
     : 'https://api.tradematch.uk';
 
-const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/vendor-dashboard`;
+const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/dashboard`;
 
-const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/user-dashboard`;
+const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/home`;
 
 function setCookie(name, value, days) {
     const maxAge = Number.isFinite(days) ? `; max-age=${Math.floor(days * 24 * 60 * 60)}` : '';
@@ -407,6 +408,7 @@ window.addEventListener('load', () => {
         document.getElementById('remember').checked = true;
     }
 });
+}
 
 
 
