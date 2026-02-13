@@ -91,6 +91,7 @@
             right: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             z-index: 1000;
             padding: 20px 0;
@@ -201,6 +202,7 @@
                 height: calc(100vh - 80px);
                 background: rgba(255, 255, 255, 0.98);
                 backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
                 flex-direction: column;
                 padding: 40px;
                 transition: right 0.3s ease-in-out;
@@ -231,29 +233,31 @@
         
         /* Hero Section with Background Image */
         .hero {
+            background-image:
+                linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%),
+                image-set(
+                    url('/images/optimized/hero-background-optimized-desktop.avif') type('image/avif'),
+                    url('/images/optimized/hero-background-optimized-desktop.webp') type('image/webp'),
+                    url('/images/hero-background-optimized.jpg') type('image/jpeg')
+                );
+            background-position: center, center;
+            background-size: cover, cover;
+            background-repeat: no-repeat;
             padding: 120px 0 140px;
             position: relative;
             overflow: hidden;
         }
 
-        .hero-media {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-
-        .hero-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%);
-            z-index: 1;
+        @media (max-width: 600px) {
+            .hero {
+                background-image:
+                    linear-gradient(135deg, rgba(26, 35, 50, 0.85) 0%, rgba(45, 59, 78, 0.85) 100%),
+                    image-set(
+                        url('/images/optimized/hero-background-optimized-mobile.avif') type('image/avif'),
+                        url('/images/optimized/hero-background-optimized-mobile.webp') type('image/webp'),
+                        url('/images/hero-background-optimized.jpg') type('image/jpeg')
+                    );
+            }
         }
         
         .hero::before {
@@ -1567,25 +1571,6 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-media">
-            <picture>
-                <source type="image/avif" srcset="/images/optimized/hero-background-optimized-mobile.avif" media="(max-width: 600px)">
-                <source type="image/webp" srcset="/images/optimized/hero-background-optimized-mobile.webp" media="(max-width: 600px)">
-                <source type="image/avif" srcset="/images/optimized/hero-background-optimized-desktop.avif" media="(min-width: 601px)">
-                <source type="image/webp" srcset="/images/optimized/hero-background-optimized-desktop.webp" media="(min-width: 601px)">
-                <img
-                    src="/images/hero-background-optimized.jpg"
-                    alt="Trusted tradespeople across the UK"
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async"
-                    width="1600"
-                    height="900"
-                    style="width: 100%; height: 100%; object-fit: cover;"
-                >
-            </picture>
-        </div>
-        <div class="hero-overlay"></div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -1863,13 +1848,7 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=kitchen'">
-                    <picture>
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1556911220-bff31c812dba-mobile.avif" media="(max-width: 600px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1556911220-bff31c812dba-mobile.webp" media="(max-width: 600px)">
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1556911220-bff31c812dba-desktop.avif" media="(min-width: 601px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1556911220-bff31c812dba-desktop.webp" media="(min-width: 601px)">
-                        <img data-src="/images/unsplash-photo-1556911220-bff31c812dba.jpg" alt="Kitchen" class="service-image lazyload" decoding="async" width="400" height="300">
-                    </picture>
+                    <img data-src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=400&q=60" alt="Kitchen" class="service-image lazyload" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Kitchen Fitting</h3>
                         <p>Complete kitchen installations, renovations, and appliance fitting</p>
@@ -1877,13 +1856,7 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=bathroom'">
-                    <picture>
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1552321554-5fefe8c9ef14-mobile.avif" media="(max-width: 600px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1552321554-5fefe8c9ef14-mobile.webp" media="(max-width: 600px)">
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1552321554-5fefe8c9ef14-desktop.avif" media="(min-width: 601px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1552321554-5fefe8c9ef14-desktop.webp" media="(min-width: 601px)">
-                        <img data-src="/images/unsplash-photo-1552321554-5fefe8c9ef14.jpg" alt="Bathroom" class="service-image lazyload" decoding="async" width="400" height="300">
-                    </picture>
+                    <img data-src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=400&q=60" alt="Bathroom" class="service-image lazyload" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Bathroom</h3>
                         <p>Bathroom renovations, wet rooms, and shower installations</p>
@@ -1891,7 +1864,10 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=roofing'">
-                    @@PICTURE_BLOCK_0@@
+                    <picture>
+                        <source type="image/webp" data-srcset="/images/roofing-optimized.webp">
+                        <img data-src="/images/roofing-optimized.jpg" alt="Roofing" class="service-image lazyload" decoding="async" width="800" height="600">
+                    </picture>
                     <div class="service-content">
                         <h3>Roofing</h3>
                         <p>Roof repairs, replacements, guttering, and maintenance services</p>
@@ -1899,13 +1875,7 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=electrical'">
-                    <picture>
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1621905251189-08b45d6a269e-mobile.avif" media="(max-width: 600px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1621905251189-08b45d6a269e-mobile.webp" media="(max-width: 600px)">
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1621905251189-08b45d6a269e-desktop.avif" media="(min-width: 601px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1621905251189-08b45d6a269e-desktop.webp" media="(min-width: 601px)">
-                        <img data-src="/images/unsplash-photo-1621905251189-08b45d6a269e.jpg" alt="Electrical" class="service-image lazyload" decoding="async" width="400" height="300">
-                    </picture>
+                    <img data-src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=60" alt="Electrical" class="service-image lazyload" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Electrical</h3>
                         <p>Rewiring, lighting installation, EV chargers, and electrical safety</p>
@@ -1913,13 +1883,7 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=plumbing'">
-                    <picture>
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1607472586893-edb57bdc0e39-mobile.avif" media="(max-width: 600px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1607472586893-edb57bdc0e39-mobile.webp" media="(max-width: 600px)">
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1607472586893-edb57bdc0e39-desktop.avif" media="(min-width: 601px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1607472586893-edb57bdc0e39-desktop.webp" media="(min-width: 601px)">
-                        <img data-src="/images/unsplash-photo-1607472586893-edb57bdc0e39.jpg" alt="Plumbing" class="service-image lazyload" decoding="async" width="400" height="300">
-                    </picture>
+                    <img data-src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=400&q=60" alt="Plumbing" class="service-image lazyload" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Plumbing</h3>
                         <p>Boiler installation, heating systems, pipe work, and emergency repairs</p>
@@ -1927,13 +1891,7 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=landscaping'">
-                    <picture>
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1558904541-efa843a96f01-mobile.avif" media="(max-width: 600px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1558904541-efa843a96f01-mobile.webp" media="(max-width: 600px)">
-                        <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1558904541-efa843a96f01-desktop.avif" media="(min-width: 601px)">
-                        <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1558904541-efa843a96f01-desktop.webp" media="(min-width: 601px)">
-                        <img data-src="/images/unsplash-photo-1558904541-efa843a96f01.jpg" alt="Landscaping" class="service-image lazyload" decoding="async" width="400" height="300">
-                    </picture>
+                    <img data-src="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=400&q=60" alt="Landscaping" class="service-image lazyload" decoding="async" width="400" height="300">
                     <div class="service-content">
                         <h3>Landscaping</h3>
                         <p>Garden design, patios, decking, fencing, and outdoor spaces</p>
@@ -1941,7 +1899,10 @@
                 </div>
                 
                 <div class="service-card" onclick="window.location.href='/post-job?service=carpentry'">
-                    @@PICTURE_BLOCK_0@@
+                    <picture>
+                        <source type="image/webp" data-srcset="/images/carpentry-optimized.webp">
+                        <img data-src="/images/carpentry-optimized.jpg" alt="Carpentry" class="service-image lazyload" decoding="async" width="800" height="600">
+                    </picture>
                     <div class="service-content">
                         <h3>Carpentry</h3>
                         <p>Bespoke furniture, fitted wardrobes, doors, and joinery work</p>
@@ -2071,13 +2032,7 @@
     <!-- Social Proof Hero Section -->
     <section class="social-proof-hero defer-section">
         <div class="hero-background">
-            <picture>
-                <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1581578731548-c64695cc6952-mobile.avif" media="(max-width: 600px)">
-                <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1581578731548-c64695cc6952-mobile.webp" media="(max-width: 600px)">
-                <source type="image/avif" data-srcset="/images/optimized/unsplash-photo-1581578731548-c64695cc6952-desktop.avif" media="(min-width: 601px)">
-                <source type="image/webp" data-srcset="/images/optimized/unsplash-photo-1581578731548-c64695cc6952-desktop.webp" media="(min-width: 601px)">
-                <img data-src="/images/unsplash-photo-1581578731548-c64695cc6952.jpg" alt="Happy homeowners with tradesperson" class="lazyload" decoding="async" width="2000" height="1333">
-            </picture>
+            <img data-src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=2000&q=60" alt="Happy homeowners with tradesperson" class="lazyload" decoding="async" width="2000" height="1333">
         </div>
         <div class="hero-overlay"></div>
         
@@ -2921,6 +2876,47 @@ function handleQuickSearch(event) {
             }
         });
   
+    </script>
+
+    <script>
+        // Lazy-load images and picture sources with data-src/data-srcset
+        document.addEventListener('DOMContentLoaded', () => {
+            const lazyImages = Array.from(document.querySelectorAll('img[data-src]'));
+
+            const applySource = (element) => {
+                if (element.dataset.srcset) {
+                    element.srcset = element.dataset.srcset;
+                    element.removeAttribute('data-srcset');
+                }
+                if (element.dataset.src) {
+                    element.src = element.dataset.src;
+                    element.removeAttribute('data-src');
+                }
+            };
+
+            const loadImage = (img) => {
+                const picture = img.closest('picture');
+                if (picture) {
+                    picture.querySelectorAll('source[data-srcset]').forEach(applySource);
+                }
+                applySource(img);
+                img.classList.remove('lazyload');
+            };
+
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        loadImage(entry.target);
+                        observer.unobserve(entry.target);
+                    });
+                }, { rootMargin: '200px 0px', threshold: 0.01 });
+
+                lazyImages.forEach(img => imageObserver.observe(img));
+            } else {
+                lazyImages.forEach(loadImage);
+            }
+        });
     </script>
 
     <script>
