@@ -508,23 +508,27 @@
             }
         }
     </style>
-</head>
+    <script>
+        if (window.zaraz && typeof window.zaraz.track === "function") {
+            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
+        }
+    </script></head>
 <body>
     
     <nav class="top-nav">
         <div class="nav-container">
             <a href="/" class="nav-logo">Trade<span>Match</span></a>
-
+            
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-
+            
             <ul class="nav-menu" id="navMenu">
-                <li><a href="/how-it-works">How it works</a></li>
+                <li><a href="/how-it-works-customer">How it works</a></li>
                 <li><a href="/ask-a-trade">Ask a trade</a></li>
-
+                
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
                     <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
@@ -577,7 +581,7 @@
                         </div>
                     </div>
                 </li>
-
+                
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
                     <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
@@ -630,9 +634,9 @@
                         </div>
                     </div>
                 </li>
-
+                
                 <li class="nav-cta">
-                    <a href="/post-job" class="btn-post">Post a Job</a>
+                    <a href="/post-a-job" class="btn-post">Post a Job</a>
                     <a href="/trade-signup" class="btn-signup">Trade Signup</a>
                     <a href="/login" class="btn-login">Login</a>
                 </li>
@@ -1080,6 +1084,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 

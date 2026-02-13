@@ -43,6 +43,37 @@ const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/vendor-dashboard`;
 
 const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/user-dashboard`;
 
+function setCookie(name, value, days) {
+    const maxAge = Number.isFinite(days) ? `; max-age=${Math.floor(days * 24 * 60 * 60)}` : '';
+    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = `${name}=${encodeURIComponent(value || '')}${maxAge}; path=/; SameSite=Lax${secure}`;
+}
+
+function setAuthCookies(token, role, days) {
+    if (token) {
+        setCookie('token', token, days);
+    }
+    if (role) {
+        setCookie('user_role', role, days);
+    }
+}
+
+async function fetchUserRoleFromApi(token) {
+    try {
+        const response = await fetch(`${API_BASE}/api/auth/me`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            return null;
+        }
+        return data.userType || data.user_type || data.type || (data.user && (data.user.userType || data.user.user_type || data.user.type));
+    } catch (error) {
+        console.warn('Failed to fetch user role:', error);
+        return null;
+    }
+}
+
 function openOAuthPopup(url) {
     const width = 520;
     const height = 640;
@@ -163,15 +194,17 @@ async function processOAuthToken(token, source) {
 
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
+        const apiRole = await fetchUserRoleFromApi(token);
         const userData = {
             id: payload.userId,
             email: payload.email,
-            userType: payload.userType || payload.user_type || 'null',
+            userType: apiRole || payload.userType || payload.user_type || 'null',
             authProvider: source || 'google'
         };
 
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('lastEmail', payload.email);
+        setAuthCookies(token, userData.userType, 7);
 
         showNotification(`Successfully logged in with ${source || 'OAuth'}!`, 'success');
 
@@ -236,6 +269,9 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('lastEmail', email);
+        const role = data.user && (data.user.userType || data.user.user_type || data.user.type);
+        const cookieDays = remember ? 30 : null;
+        setAuthCookies(data.token, role, cookieDays);
         
         // Store remember me preference
         if (remember) {
@@ -329,7 +365,7 @@ function handleOAuthCallback() {
     
     if (token) {
         if (window.opener && !window.opener.closed) {
-            window.opener.postMessage({ type: 'oauth', token, source }, window.location.origin);
+            window.opener.postMessage({ type: 'oauth', token, source: source || 'google' }, window.location.origin);
             window.close();
             return;
         }

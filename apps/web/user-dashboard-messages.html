@@ -1,0 +1,1956 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <script defer src="/_vercel/analytics/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - TradeMatch Customer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    
+    <style>
+        :root {
+            --bg-primary: #0A0E14;
+            --bg-secondary: #12161E;
+            --bg-tertiary: #1A1F2B;
+            --bg-card: #1E2430;
+            --accent-primary: #00E5A0;
+            --accent-secondary: #00B383;
+            --accent-danger: #FF4757;
+            --accent-warning: #FFA726;
+            --accent-info: #42A5F5;
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --ambient-gradient-1: rgba(0, 229, 160, 0.08);
+            --ambient-gradient-2: rgba(66, 165, 245, 0.08);
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #F8FAFB;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #F3F4F6;
+            --bg-card: #FFFFFF;
+            --accent-primary: #16A34A;
+            --accent-secondary: #15803D;
+            --accent-danger: #EF4444;
+            --accent-warning: #F59E0B;
+            --accent-info: #3B82F6;
+            --text-primary: #1A2332;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.16);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+            --ambient-gradient-1: rgba(22, 163, 74, 0.04);
+            --ambient-gradient-2: rgba(59, 130, 246, 0.04);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--ambient-gradient-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--ambient-gradient-2) 0%, transparent 50%);
+            animation: ambient 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes ambient {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        /* Layout - Same as other pages */
+        .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 101; }
+        .sidebar-header { height: 72px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-icon { width: 36px; height: 36px; background: var(--accent-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: white; }
+        .logo-text { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+        .sidebar-nav { flex: 1; padding: 24px 16px; overflow-y: auto; }
+        .nav-section { margin-bottom: 32px; }
+        .nav-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); padding: 0 12px; margin-bottom: 8px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--text-secondary); text-decoration: none; border-radius: 12px; cursor: pointer; transition: all 0.2s; margin-bottom: 4px; position: relative; }
+        .nav-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .nav-item.active { background: rgba(0, 229, 160, 0.12); color: var(--accent-primary); }
+        [data-theme="light"] .nav-item.active { background: rgba(22, 163, 74, 0.08); }
+        .nav-item.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 24px; background: var(--accent-primary); border-radius: 0 2px 2px 0; }
+        .nav-icon { width: 20px; height: 20px; flex-shrink: 0; }
+        .nav-label { font-size: 14px; font-weight: 500; }
+        .nav-text { font-size: 14px; font-weight: 500; }
+        .nav-badge { margin-left: auto; padding: 2px 8px; background: var(--accent-danger); color: white; font-size: 11px; font-weight: 700; border-radius: 6px; }
+
+        .top-nav { position: fixed; top: 0; left: 280px; right: 0; height: 72px; background: var(--bg-secondary); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 32px; z-index: 100; box-shadow: var(--shadow-sm); }
+        [data-theme="light"] .top-nav { background: rgba(255, 255, 255, 0.95); }
+        .top-nav-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+        .search-container { position: relative; width: 100%; max-width: 480px; }
+        .search-input { width: 100%; height: 44px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 0 16px 0 48px; color: var(--text-primary); font-size: 14px; font-family: 'Archivo', sans-serif; transition: all 0.2s; }
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-muted); }
+        .top-nav-right { display: flex; align-items: center; gap: 12px; }
+        .theme-toggle { position: relative; width: 56px; height: 28px; background: var(--bg-tertiary); border: 2px solid var(--border); border-radius: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; padding: 0 4px; }
+        .theme-toggle:hover { border-color: var(--border-hover); }
+        .theme-toggle-slider { width: 20px; height: 20px; background: var(--accent-primary); border-radius: 50%; position: absolute; left: 4px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+        [data-theme="light"] .theme-toggle-slider { left: 30px; }
+        .theme-toggle-icon { width: 12px; height: 12px; color: white; }
+        .icon-button { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; position: relative; color: var(--text-secondary); }
+        .icon-button:hover { background: var(--bg-tertiary); border-color: var(--border-hover); }
+        .icon-button svg { width: 20px; height: 20px; color: var(--text-secondary); }
+        .notification-badge { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--accent-danger); border-radius: 50%; border: 2px solid var(--bg-secondary); }
+        .user-menu { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+        .user-menu:hover { border-color: var(--border-hover); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-info)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .user-role { font-size: 12px; color: var(--text-muted); }
+
+        .main-content { position: relative; margin-left: 280px; margin-top: 72px; min-height: calc(100vh - 72px); background: var(--bg-primary); z-index: 1; }
+
+        /* Messages Layout - IDENTICAL to Vendor */
+        .messages-container { display: flex; height: calc(100vh - 72px); }
+        
+        .conversations-sidebar { width: 380px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        
+        .conversations-header { padding: 24px; border-bottom: 1px solid var(--border); }
+        .conversations-title { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; }
+        .conversations-search { position: relative; }
+        .conversations-search input { width: 100%; height: 44px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 0 16px 0 44px; color: var(--text-primary); font-size: 14px; font-family: 'Archivo', sans-serif; }
+        .conversations-search input::placeholder { color: var(--text-muted); }
+        .conversations-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--text-muted); }
+        
+        .conversations-list { flex: 1; overflow-y: auto; }
+        
+        .conversation-item { display: flex; align-items: center; gap: 12px; padding: 16px 24px; cursor: pointer; transition: all 0.2s; border-bottom: 1px solid var(--border); position: relative; }
+        .conversation-item:hover { background: var(--bg-tertiary); }
+        .conversation-item.active { background: rgba(0, 229, 160, 0.08); }
+        [data-theme="light"] .conversation-item.active { background: rgba(22, 163, 74, 0.04); }
+        .conversation-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent-primary); }
+        .conversation-item.locked { opacity: 0.6; cursor: not-allowed; }
+        .conversation-item.locked:hover { background: transparent; }
+        
+        .conversation-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-info)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; flex-shrink: 0; }
+        
+        .conversation-details { flex: 1; min-width: 0; }
+        .conversation-name { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .conversation-rating { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent-warning); }
+        .conversation-rating svg { width: 12px; height: 12px; fill: currentColor; }
+        .conversation-job { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; }
+        .conversation-preview { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .conversation-lock-notice { font-size: 12px; color: var(--accent-warning); font-style: italic; }
+        
+        .conversation-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .conversation-time { font-size: 12px; color: var(--text-muted); }
+        .conversation-unread { min-width: 20px; height: 20px; background: var(--accent-primary); color: white; font-size: 11px; font-weight: 700; border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 0 6px; }
+        
+        /* Chat Panel - IDENTICAL to Vendor */
+        .chat-panel { flex: 1; display: flex; flex-direction: column; background: var(--bg-primary); }
+        
+        .chat-header { height: 80px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .chat-header-info { display: flex; align-items: center; gap: 16px; }
+        .chat-header-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-info)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; }
+        .chat-header-details h3 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .chat-header-job { font-size: 14px; color: var(--text-secondary); }
+        .chat-header-actions { display: flex; gap: 8px; }
+        
+        .chat-messages { flex: 1; overflow-y: auto; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
+        
+        .message { display: flex; gap: 12px; max-width: 70%; }
+        .message.sent { margin-left: auto; flex-direction: row-reverse; }
+        
+        .message-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary), var(--accent-info)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; flex-shrink: 0; }
+        
+        .message-content { display: flex; flex-direction: column; gap: 4px; }
+        .message.sent .message-content { align-items: flex-end; }
+        
+        .message-bubble { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+        .message.sent .message-bubble { background: var(--accent-primary); color: white; border: none; }
+        [data-theme="light"] .message.sent .message-bubble { background: var(--accent-primary); }
+        
+        .message-time { font-size: 12px; color: var(--text-muted); padding: 0 4px; }
+        
+        .chat-input-container { background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 24px 32px; }
+        .chat-input-wrapper { display: flex; gap: 12px; align-items: flex-end; }
+        .chat-textarea { flex: 1; min-height: 48px; max-height: 120px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: var(--text-primary); font-size: 14px; font-family: 'Archivo', sans-serif; resize: none; }
+        .chat-textarea::placeholder { color: var(--text-muted); }
+        .chat-textarea:focus { outline: none; border-color: var(--accent-primary); }
+        .chat-send-btn { width: 48px; height: 48px; background: var(--accent-primary); border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .chat-send-btn:hover { background: var(--accent-secondary); transform: translateY(-2px); }
+        .chat-send-btn:disabled { background: var(--bg-tertiary); cursor: not-allowed; opacity: 0.5; }
+        .chat-send-btn svg { width: 20px; height: 20px; color: white; }
+        
+        /* Empty State */
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 48px; text-align: center; }
+        .empty-state-icon { width: 80px; height: 80px; background: var(--bg-tertiary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+        .empty-state-icon svg { width: 40px; height: 40px; color: var(--text-muted); }
+        .empty-state-title { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+        .empty-state-text { font-size: 14px; color: var(--text-secondary); max-width: 400px; }
+
+        /* Locked State Message */
+        .locked-chat-notice { background: rgba(255, 167, 38, 0.1); border: 1px solid var(--accent-warning); border-radius: 12px; padding: 16px; margin: 16px 32px; display: flex; align-items: center; gap: 12px; }
+        .locked-chat-notice svg { width: 24px; height: 24px; color: var(--accent-warning); flex-shrink: 0; }
+        .locked-chat-notice-text { font-size: 14px; color: var(--text-primary); }
+
+        .chat-notice-area { padding: 16px 32px 0; }
+
+        .conversation-muted,
+        .conversation-archived {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+        }
+
+        .conversation-archived { color: var(--accent-warning); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.08); }
+        .conversation-muted { color: var(--text-secondary); }
+
+        .more-options { position: relative; }
+        .more-options-menu {
+            position: absolute;
+            right: 0;
+            top: 52px;
+            min-width: 220px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            display: none;
+            z-index: 200;
+        }
+        .more-options-menu.open { display: block; }
+        .more-options-menu button {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .more-options-menu button:hover { background: var(--bg-tertiary); }
+        .more-options-menu button:focus { outline: none; box-shadow: 0 0 0 2px rgba(0, 229, 160, 0.2); }
+        .more-options-menu button[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+        .more-options-menu .menu-danger { color: var(--accent-danger); }
+        .menu-divider { height: 1px; background: var(--border); margin: 6px 0; }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 220;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            width: min(520px, 90vw);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+        .modal-title { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+        .modal-subtitle { font-size: 13px; color: var(--text-muted); }
+        .modal-body { padding: 20px 24px; color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; }
+        .modal-close { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; }
+        .modal-close svg { width: 18px; height: 18px; }
+        .modal-field { margin-bottom: 12px; }
+        .modal-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+        .modal-value { font-size: 14px; color: var(--text-primary); }
+        .modal-textarea { width: 100%; min-height: 90px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: var(--text-primary); font-family: 'Archivo', sans-serif; }
+        .modal-input { width: 100%; height: 40px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; color: var(--text-primary); font-family: 'Archivo', sans-serif; }
+        .modal-input:focus, .modal-textarea:focus { outline: none; border-color: var(--accent-primary); }
+        .modal-actions { display: flex; gap: 12px; }
+        .modal-help { font-size: 12px; color: var(--text-muted); }
+        .modal-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .modal-list-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); }
+        .modal-list-item input { accent-color: var(--accent-primary); }
+        .file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; font-size: 13px; color: var(--text-secondary); }
+        .file-list span { display: inline-flex; align-items: center; gap: 6px; }
+        .archived-notice { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px; }
+        .archived-notice svg { width: 22px; height: 22px; color: var(--accent-info); }
+        .archived-notice-text { font-size: 14px; color: var(--text-primary); }
+        .modal-btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .modal-btn.secondary:hover { border-color: var(--border-hover); color: var(--text-primary); }
+        .modal-btn.primary {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+        }
+        .modal-btn.primary:hover { background: var(--accent-secondary); }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/user/dashboard" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="/user/dashboard" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/user/my-jobs" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="nav-text">My Jobs</span>
+                </a>
+                <a href="/user/quotes" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="nav-text">Quotes</span>
+                </a>
+                <a href="/user/messages" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <span class="nav-text">Messages</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Trades</div>
+                <a href="/user/saved-trades" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="nav-text">Saved Trades</span>
+                </a>
+                <a href="/user/reviews" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="nav-text">Reviews</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="/user/notifications" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-text">Notifications</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="/user/billing" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="nav-text">Billing</span>
+                </a>
+                <a href="/user/settings" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="top-nav-left">
+            <div class="search-container">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search conversations...">
+            </div>
+        </div>
+
+        <div class="top-nav-right">
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <div class="theme-toggle-slider">
+                    <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <a class="icon-button" href="/user/notifications" title="Notifications">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span class="notification-badge"></span>
+            </a>
+
+            <div class="user-menu">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Customer</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="messages-container">
+            <!-- Conversations Sidebar -->
+            <div class="conversations-sidebar">
+                <div class="conversations-header">
+                    <h2 class="conversations-title">Messages</h2>
+                    <div class="conversations-search">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" placeholder="Search messages..." id="conversationSearch">
+                    </div>
+                </div>
+                
+                <div class="conversations-list" id="conversationsList">
+                    <!-- Active Conversation -->
+                    <div class="conversation-item active" data-conversation-id="1" data-locked="false">
+                        <div class="conversation-avatar">SM</div>
+                        <div class="conversation-details">
+                            <div class="conversation-name">
+                                Sarah Mitchell
+                                <div class="conversation-rating">
+                                    <svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    4.8
+                                </div>
+                            </div>
+                            <div class="conversation-job">Kitchen Renovation - Quote Accepted</div>
+                            <div class="conversation-preview">Perfect! See you then. One more thing...</div>
+                        </div>
+                        <div class="conversation-meta">
+                            <div class="conversation-time">Today</div>
+                            <div class="conversation-unread">2</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Unlocked Conversation -->
+                    <div class="conversation-item" data-conversation-id="2" data-locked="false">
+                        <div class="conversation-avatar">MP</div>
+                        <div class="conversation-details">
+                            <div class="conversation-name">
+                                Mike Peters
+                                <div class="conversation-rating">
+                                    <svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    4.9
+                                </div>
+                            </div>
+                            <div class="conversation-job">Bathroom Plumbing - Quote Accepted</div>
+                            <div class="conversation-preview">Thanks for accepting! I can start next week.</div>
+                        </div>
+                        <div class="conversation-meta">
+                            <div class="conversation-time">Yesterday</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Locked Conversation (No Quote Accepted) -->
+                    <div class="conversation-item locked" data-conversation-id="3" data-locked="true">
+                        <div class="conversation-avatar">JT</div>
+                        <div class="conversation-details">
+                            <div class="conversation-name">
+                                James Taylor
+                                <div class="conversation-rating">
+                                    <svg viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    4.7
+                                </div>
+                            </div>
+                            <div class="conversation-job">Garden Landscaping - Quote Pending</div>
+                            <div class="conversation-lock-notice">đź”’ Messaging unlocks once you accept a quote</div>
+                        </div>
+                        <div class="conversation-meta">
+                            <div class="conversation-time">2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Panel -->
+            <div class="chat-panel" id="chatPanel">
+                <div class="chat-header">
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar" id="chatHeaderAvatar">SM</div>
+                        <div class="chat-header-details">
+                            <h3 id="chatHeaderName">Sarah Mitchell</h3>
+                            <div class="chat-header-job" id="chatHeaderJob">Kitchen Renovation - Quote Accepted</div>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="icon-button" title="Job Details">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </button>
+                        <a class="icon-button" href="/messages" title="Vendor Messages">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v5"/>
+                            </svg>
+                        </a>
+                        <div class="more-options">
+                            <button class="icon-button" id="moreOptionsBtn" title="More Options" aria-haspopup="true" aria-expanded="false" aria-controls="moreOptionsMenu">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                                </svg>
+                            </button>
+                            <div class="more-options-menu" id="moreOptionsMenu" role="menu">
+                                <button type="button" data-action="view-job" role="menuitem">View Job Details</button>
+                                <button type="button" data-action="view-quote" role="menuitem">View Accepted Quote</button>
+                                <button type="button" data-action="upload-files" role="menuitem">Upload / Share Files</button>
+                                <button type="button" data-action="mute" role="menuitem">Mute Notifications</button>
+                                <div class="menu-divider"></div>
+                                <button type="button" data-action="report" role="menuitem">Report an Issue</button>
+                                <button type="button" data-action="archive" role="menuitem" class="menu-danger">Archive Conversation</button>
+                                <div class="menu-divider" data-conditional="completed"></div>
+                                <button type="button" data-action="review" role="menuitem" data-conditional="completed">Leave a Review</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-notice-area" id="chatNoticeArea"></div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar">SM</div>
+                        <div class="message-content">
+                            <div class="message-bubble">Hi John! Thanks for accepting my quote. I'm excited to work on your kitchen renovation project.</div>
+                            <div class="message-time">Monday at 9:30 AM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message sent">
+                        <div class="message-avatar">JD</div>
+                        <div class="message-content">
+                            <div class="message-bubble">Thanks Sarah! Happy to discuss the details. When would be a good time for a site visit?</div>
+                            <div class="message-time">Monday at 2:45 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message">
+                        <div class="message-avatar">SM</div>
+                        <div class="message-content">
+                            <div class="message-bubble">I'm available this Friday afternoon or Saturday morning. Would either of those work?</div>
+                            <div class="message-time">Monday at 3:12 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message sent">
+                        <div class="message-avatar">JD</div>
+                        <div class="message-content">
+                            <div class="message-bubble">Saturday morning works perfectly. How about 10am?</div>
+                            <div class="message-time">Monday at 3:20 PM</div>
+                        </div>
+                    </div>
+                    
+                    <div class="message">
+                        <div class="message-avatar">SM</div>
+                        <div class="message-content">
+                            <div class="message-bubble">Perfect! See you then. One more thing - when can you start the project?</div>
+                            <div class="message-time">Today at 10:45 AM</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea class="chat-textarea" id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+                        <button class="chat-send-btn" onclick="sendMessage()">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="jobDetailsModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobDetailsTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="jobDetailsTitle">Job Details</div>
+                    <div class="modal-subtitle">Read-only summary</div>
+                </div>
+                <button class="modal-close" data-modal-close="jobDetailsModal" aria-label="Close job details">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="jobDetailsBody"></div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="jobDetailsModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="quoteDetailsModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="quoteDetailsTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="quoteDetailsTitle">Accepted Quote</div>
+                    <div class="modal-subtitle">Read-only quote summary</div>
+                </div>
+                <button class="modal-close" data-modal-close="quoteDetailsModal" aria-label="Close quote details">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="quoteDetailsBody"></div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="quoteDetailsModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="uploadFilesModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="uploadFilesTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="uploadFilesTitle">Upload / Share Files</div>
+                    <div class="modal-subtitle">Share photos, PDFs, or plans with your tradesperson.</div>
+                </div>
+                <button class="modal-close" data-modal-close="uploadFilesModal" aria-label="Close upload dialog">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="file" id="uploadFilesInput" class="modal-input" multiple accept=".pdf,image/*,.png,.jpg,.jpeg,.heic,.doc,.docx" />
+                <div class="modal-help">Files are attached to this conversation and saved with the job record.</div>
+                <div class="file-list" id="uploadFilesList"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="uploadFilesModal">Cancel</button>
+                <button class="modal-btn primary" id="confirmUploadBtn">Share Files</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reportIssueModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reportIssueTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="reportIssueTitle">Report an Issue</div>
+                    <div class="modal-subtitle">This is sent to TradeMatch support only.</div>
+                </div>
+                <button class="modal-close" data-modal-close="reportIssueModal" aria-label="Close report issue dialog">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-label">Select a reason</div>
+                <div class="modal-list" id="reportReasonList">
+                    <label class="modal-list-item"><input type="radio" name="reportReason" value="unresponsive" checked> Unresponsive tradesperson</label>
+                    <label class="modal-list-item"><input type="radio" name="reportReason" value="dispute"> Dispute / concern</label>
+                    <label class="modal-list-item"><input type="radio" name="reportReason" value="inappropriate"> Inappropriate behaviour</label>
+                </div>
+                <div class="modal-field" style="margin-top: 12px;">
+                    <div class="modal-label">Additional details (optional)</div>
+                    <textarea class="modal-textarea" id="reportIssueDetails" placeholder="Share any helpful context..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="reportIssueModal">Cancel</button>
+                <button class="modal-btn primary" id="submitReportBtn">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="archiveConfirmModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="archiveConfirmTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="archiveConfirmTitle">Archive Conversation</div>
+                    <div class="modal-subtitle">You can restore it later.</div>
+                </div>
+                <button class="modal-close" data-modal-close="archiveConfirmModal" aria-label="Close archive confirmation">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="archiveConfirmBody">Archiving hides this conversation from your main inbox. You can restore it anytime.</div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="archiveConfirmModal">Cancel</button>
+                <button class="modal-btn primary" id="confirmArchiveBtn">Archive</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reviewModal" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="reviewModalTitle">Leave a Review</div>
+                    <div class="modal-subtitle">Share feedback about your completed job.</div>
+                </div>
+                <button class="modal-close" data-modal-close="reviewModal" aria-label="Close review dialog">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="reviewModalBody">You can leave a review for this tradesperson in your Reviews area.</div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" data-modal-close="reviewModal">Close</button>
+                <button class="modal-btn primary" id="goToReviewBtn">Go to Reviews</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function getApiBaseUrl() {
+            const stored = localStorage.getItem('apiBaseUrl');
+            if (stored) return stored.replace(/\/$/, '');
+
+            const origin = window.location.origin;
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (isLocalhost && !origin.includes(':3001')) {
+                return 'http://localhost:3001';
+            }
+            return origin;
+        }
+
+        const API_BASE = `${getApiBaseUrl()}/api/messaging`;
+        let activeConversationId = null;
+        let activeConversation = null;
+        let currentUserId = null;
+        let isDemoMode = false;
+        let mutedConversationIds = new Set();
+        let archivedConversationIds = new Set();
+        let currentConversationsCache = [];
+
+        const MUTE_STORAGE_KEY = 'tm_customer_muted_conversations';
+        const ARCHIVE_STORAGE_KEY = 'tm_customer_archived_conversations';
+
+        const DEMO_CONVERSATIONS = [
+            {
+                id: 'conv-demo-1',
+                job_id: 'job-1',
+                conversation_type: 'post_award',
+                job_title: 'Kitchen Renovation',
+                job_status: 'accepted',
+                job_description: 'Full kitchen renovation with new cabinets, worktops, and appliance fit-out.',
+                budget_min: 8000,
+                budget_max: 14000,
+                postcode: 'SW11 3AB',
+                accepted_quote: {
+                    price: 9800,
+                    scope: 'Cabinet installation, quartz worktops, appliance fitting, plumbing adjustments.',
+                    timeline: '3-4 weeks',
+                    vendor_notes: 'We can begin after the site visit and finalize material selections.'
+                },
+                customer_id: 'demo-user',
+                vendor_id: 'vendor-1',
+                vendor_name: 'Sarah Mitchell',
+                last_message: 'Perfect! See you then. One more thing...',
+                last_message_at: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+                unread_count: 2
+            },
+            {
+                id: 'conv-demo-2',
+                job_id: 'job-2',
+                conversation_type: 'post_award',
+                job_title: 'Bathroom Plumbing',
+                job_status: 'completed',
+                job_description: 'Replace shower valve and fix ongoing leak in ensuite bathroom.',
+                budget_min: 300,
+                budget_max: 650,
+                postcode: 'E2 7LP',
+                accepted_quote: {
+                    price: 420,
+                    scope: 'Valve replacement, leak testing, fixture reseal.',
+                    timeline: '2 days',
+                    vendor_notes: 'All parts included. Final inspection after completion.'
+                },
+                customer_id: 'demo-user',
+                vendor_id: 'vendor-2',
+                vendor_name: 'Mike Peters',
+                last_message: 'Thanks for accepting! I can start next week.',
+                last_message_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+                unread_count: 0
+            },
+            {
+                id: 'conv-demo-3',
+                job_id: 'job-3',
+                conversation_type: 'job',
+                job_title: 'Garden Landscaping',
+                job_status: 'open',
+                job_description: 'Back garden redesign with patio area and planting.',
+                budget_min: 2000,
+                budget_max: 4500,
+                postcode: 'M1 2AB',
+                customer_id: 'demo-user',
+                vendor_id: 'vendor-3',
+                vendor_name: 'James Taylor',
+                last_message: 'Messaging unlocks once you accept a quote.',
+                last_message_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                unread_count: 0
+            }
+        ];
+
+        const DEMO_MESSAGES = {
+            'conv-demo-1': [
+                {
+                    id: 'msg-1',
+                    sender_id: 'vendor-1',
+                    sender_role: 'vendor',
+                    body: "Hi John! Thanks for accepting my quote. I'm excited to work on your kitchen renovation project.",
+                    created_at: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 'msg-2',
+                    sender_id: 'demo-user',
+                    sender_role: 'customer',
+                    body: 'Thanks Sarah! Happy to discuss the details. When would be a good time for a site visit?',
+                    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+                },
+                {
+                    id: 'msg-3',
+                    sender_id: 'vendor-1',
+                    sender_role: 'vendor',
+                    body: "I'm available this Friday afternoon or Saturday morning. Would either of those work?",
+                    created_at: new Date(Date.now() - 90 * 60 * 1000).toISOString()
+                }
+            ],
+            'conv-demo-2': [
+                {
+                    id: 'msg-4',
+                    sender_id: 'vendor-2',
+                    sender_role: 'vendor',
+                    body: 'Thanks for accepting! I can start next week. Let me know what day works best.',
+                    created_at: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString()
+                }
+            ],
+            'conv-demo-3': [
+                {
+                    id: 'msg-5',
+                    sender_id: 'vendor-3',
+                    sender_role: 'vendor',
+                    body: 'Messaging unlocks once you accept a quote. Feel free to reach out after you accept.',
+                    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                }
+            ]
+        };
+
+        function getStoredUser() {
+            const rawUser = localStorage.getItem('user');
+            if (!rawUser) return null;
+            try {
+                return JSON.parse(rawUser);
+            } catch (error) {
+                console.warn('Failed to parse stored user data:', error);
+                return null;
+            }
+        }
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        async function apiFetchJson(path, options = {}) {
+            const token = getToken();
+            const headers = new Headers(options.headers || {});
+            if (!headers.has('Content-Type')) {
+                headers.set('Content-Type', 'application/json');
+            }
+            if (token && token !== 'demo-token') {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            const response = await fetch(`${getApiBaseUrl()}${path}`, {
+                ...options,
+                headers
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || `Request failed with ${response.status}`);
+            }
+            return response.json();
+        }
+
+        function redirectToLogin() {
+            const returnUrl = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+            window.location.href = `/login?redirect=${returnUrl}`;
+        }
+
+        function ensureAuth() {
+            const token = getToken();
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (!token) {
+                if (isLocalhost) {
+                    localStorage.setItem('token', 'demo-token');
+                    localStorage.setItem('user', JSON.stringify({
+                        id: 'demo-user',
+                        userType: 'customer',
+                        name: 'Demo Customer'
+                    }));
+                    isDemoMode = true;
+                } else {
+                    redirectToLogin();
+                    return false;
+                }
+            }
+
+            const user = getStoredUser();
+            currentUserId = user?.id || user?.userId || 'demo-user';
+            isDemoMode = isDemoMode || token === 'demo-token';
+            return true;
+        }
+
+        function formatTime(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function getInitials(name) {
+            if (!name) return '--';
+            return name
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(part => part[0].toUpperCase())
+                .join('');
+        }
+
+        function loadPreferenceSet(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                const parsed = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(parsed)) return new Set();
+                return new Set(parsed);
+            } catch (error) {
+                return new Set();
+            }
+        }
+
+        function savePreferenceSet(key, set) {
+            try {
+                localStorage.setItem(key, JSON.stringify(Array.from(set)));
+            } catch (error) {
+                console.warn('Failed to save preferences', error);
+            }
+        }
+
+        function formatCurrency(value) {
+            const amount = Number(value);
+            if (!Number.isFinite(amount)) return 'Not specified';
+            return `ÂŁ${amount.toLocaleString('en-GB')}`;
+        }
+
+        function formatBudgetRange(min, max) {
+            if (min && max) return `${formatCurrency(min)} - ${formatCurrency(max)}`;
+            if (min) return `From ${formatCurrency(min)}`;
+            if (max) return `Up to ${formatCurrency(max)}`;
+            return 'Not specified';
+        }
+
+        function formatPostcodeDistrict(postcode) {
+            if (!postcode) return 'Not specified';
+            const trimmed = String(postcode).trim();
+            const parts = trimmed.split(/\s+/);
+            return parts[0]?.toUpperCase() || trimmed.toUpperCase();
+        }
+
+        function getConversationStatus(conversation) {
+            const rawStatus = String(conversation.job_status || conversation.status || conversation.quote_status || '').toLowerCase();
+            const apiArchived = conversation.is_archived === true;
+            const isArchived = apiArchived || archivedConversationIds.has(conversation.id) || rawStatus === 'archived';
+            const isCompleted = rawStatus === 'completed' || rawStatus === 'closed';
+            const isAccepted = rawStatus === 'accepted' || rawStatus === 'awarded' || conversation.conversation_type === 'post_award';
+            const isUnlocked = isAccepted && !isArchived;
+            return {
+                isArchived,
+                isCompleted,
+                isAccepted,
+                isUnlocked,
+                statusLabel: rawStatus || (isAccepted ? 'accepted' : 'open')
+            };
+        }
+
+        function getAcceptedQuote(conversation) {
+            const quote = conversation.accepted_quote || conversation.acceptedQuote || {};
+            return {
+                price: quote.price ?? conversation.accepted_price ?? conversation.bid_price,
+                scope: quote.scope || conversation.scope || 'Scope details are available in the accepted quote.',
+                timeline: quote.timeline || conversation.timeline || 'Timeline not specified',
+                vendorNotes: quote.vendor_notes || conversation.vendor_notes || 'No additional notes.'
+            };
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const icon = document.querySelector('.theme-toggle-icon');
+            if (icon) {
+                icon.innerHTML = newTheme === 'light'
+                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>'
+                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            const icon = document.querySelector('.theme-toggle-icon');
+            if (icon && savedTheme === 'light') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+            }
+        }
+
+        async function fetchConversations() {
+            if (isDemoMode) return DEMO_CONVERSATIONS;
+            const token = getToken();
+            const response = await fetch(`${API_BASE}/conversations`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to load conversations');
+            }
+            return data.conversations || [];
+        }
+
+        async function fetchConversationPreferences() {
+            if (isDemoMode) return null;
+            try {
+                const data = await apiFetchJson('/api/messaging/conversations/preferences');
+                return data;
+            } catch (error) {
+                console.warn('Failed to load conversation preferences:', error);
+                return null;
+            }
+        }
+
+        async function fetchMessages(conversationId) {
+            if (isDemoMode) return DEMO_MESSAGES[conversationId] || [];
+            const token = getToken();
+            const response = await fetch(`${API_BASE}/conversations/${conversationId}/messages`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to load messages');
+            }
+            return data.messages || [];
+        }
+
+        async function postMessage(conversationId, body) {
+            if (isDemoMode) {
+                const entry = {
+                    id: `demo-${Date.now()}`,
+                    sender_id: currentUserId || 'demo-user',
+                    sender_role: 'customer',
+                    body,
+                    created_at: new Date().toISOString()
+                };
+                if (!DEMO_MESSAGES[conversationId]) {
+                    DEMO_MESSAGES[conversationId] = [];
+                }
+                DEMO_MESSAGES[conversationId].push(entry);
+                return entry.id;
+            }
+            const token = getToken();
+            const response = await fetch(`${API_BASE}/conversations/${conversationId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ body })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to send message');
+            }
+            return data.message_id;
+        }
+
+        function resolveConversationParty(conversation) {
+            const userId = currentUserId;
+            const isCustomer = userId && conversation.customer_id === userId;
+            const isVendor = userId && conversation.vendor_id === userId;
+
+            if (isCustomer) {
+                return {
+                    otherId: conversation.vendor_id,
+                    name: conversation.vendor_name || conversation.vendor_company || conversation.vendor_email || conversation.vendor_id,
+                    roleLabel: 'Vendor'
+                };
+            }
+
+            if (isVendor) {
+                return {
+                    otherId: conversation.customer_id,
+                    name: conversation.customer_name || conversation.customer_email || conversation.customer_id,
+                    roleLabel: 'Customer'
+                };
+            }
+
+            return {
+                otherId: conversation.vendor_id || conversation.customer_id,
+                name: conversation.vendor_name || conversation.customer_name || conversation.vendor_email || conversation.customer_email || conversation.id,
+                roleLabel: 'Participant'
+            };
+        }
+
+        function renderConversations(conversations) {
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = '';
+            currentConversationsCache = conversations;
+
+            if (!conversations.length) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-title">No conversations yet</div><div class="empty-state-text">Once you accept a quote, your messages will appear here.</div></div>';
+                return;
+            }
+
+            const orderedConversations = [...conversations].sort((a, b) => {
+                const archivedA = (a.is_archived === true || archivedConversationIds.has(a.id)) ? 1 : 0;
+                const archivedB = (b.is_archived === true || archivedConversationIds.has(b.id)) ? 1 : 0;
+                return archivedA - archivedB;
+            });
+
+            orderedConversations.forEach((conversation, index) => {
+                const party = resolveConversationParty(conversation);
+                const displayName = party.name || `${party.roleLabel} ${party.otherId ? party.otherId.slice(-4) : ''}`.trim();
+                const previewText = statusMeta.isUnlocked
+                    ? (conversation.last_message || conversation.job_id || conversation.conversation_type || 'Start the conversation')
+                    : 'Messaging unlocks once you accept a quote.';
+                const unreadCount = Number(conversation.unread_count) || 0;
+                const statusMeta = getConversationStatus(conversation);
+                const apiMuted = conversation.notification_pref === 'mute';
+                const apiArchived = conversation.is_archived === true;
+                const isMuted = apiMuted || mutedConversationIds.has(conversation.id);
+                const isArchived = apiArchived || statusMeta.isArchived;
+                const badges = `${isMuted ? '<span class="conversation-muted">Muted</span>' : ''}${isArchived ? '<span class="conversation-archived">Archived</span>' : ''}`;
+
+                const item = document.createElement('div');
+                item.className = `conversation-item${index === 0 ? ' active' : ''}${statusMeta.isUnlocked ? '' : ' locked'}`;
+                item.dataset.conversationId = conversation.id;
+                item.innerHTML = `
+                    <div class="conversation-avatar">${getInitials(displayName)}</div>
+                    <div class="conversation-details">
+                        <div class="conversation-name">${escapeHtml(displayName)} ${badges}</div>
+                        <div class="conversation-job">${escapeHtml(conversation.job_title || conversation.job_id || party.roleLabel)}</div>
+                        <div class="conversation-preview">${escapeHtml(previewText)}</div>
+                    </div>
+                    <div class="conversation-meta">
+                        <div class="conversation-time">${formatTime(conversation.last_message_at)}</div>
+                        ${unreadCount > 0 ? `<span class="nav-badge notification">${unreadCount}</span>` : ''}
+                    </div>
+                `;
+                item.addEventListener('click', () => selectConversation(item, conversation));
+                list.appendChild(item);
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const targetConversationId = params.get('conversation_id');
+            const targetJobId = params.get('job_id');
+            let selectedConversation = orderedConversations[0];
+
+            if (targetConversationId) {
+                selectedConversation = orderedConversations.find(convo => convo.id === targetConversationId) || selectedConversation;
+            } else if (targetJobId) {
+                selectedConversation = orderedConversations.find(convo => convo.job_id === targetJobId) || selectedConversation;
+            } else if (activeConversationId) {
+                selectedConversation = orderedConversations.find(convo => convo.id === activeConversationId) || selectedConversation;
+            }
+
+            const selectedItem = list.querySelector(`[data-conversation-id="${selectedConversation?.id}"]`) || list.querySelector('.conversation-item');
+            if (selectedItem && selectedConversation) {
+                selectConversation(selectedItem, selectedConversation);
+            }
+        }
+
+        async function selectConversation(item, conversation) {
+            document.querySelectorAll('.conversation-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+            activeConversationId = conversation.id;
+            activeConversation = conversation;
+            const party = resolveConversationParty(conversation);
+            const displayName = party.name || party.roleLabel;
+
+            const headerName = document.getElementById('chatHeaderName');
+            const headerJob = document.getElementById('chatHeaderJob');
+            const headerAvatar = document.getElementById('chatHeaderAvatar');
+
+            if (headerName) headerName.textContent = displayName || 'Conversation';
+            if (headerJob) headerJob.textContent = conversation.job_title || conversation.job_id || conversation.conversation_type || 'Conversation';
+            if (headerAvatar) headerAvatar.textContent = getInitials(displayName || '');
+
+            updateChatAccessState(conversation);
+            updateMoreOptionsState(conversation);
+            closeMoreOptionsMenu();
+
+            try {
+                const messages = await fetchMessages(activeConversationId);
+                renderMessages(messages);
+            } catch (error) {
+                console.error(error);
+                renderMessages([]);
+            }
+        }
+
+        function renderMessages(messages) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+
+            if (!messages.length) {
+                chatMessages.innerHTML = '<div class="empty-state"><div class="empty-state-title">No messages yet</div><div class="empty-state-text">Send a message to get the conversation started.</div></div>';
+                return;
+            }
+
+            messages.forEach(message => {
+                const isSent = currentUserId && message.sender_id === currentUserId;
+                const messageEl = document.createElement('div');
+                messageEl.className = `message${isSent ? ' sent' : ''}`;
+                messageEl.innerHTML = `
+                    <div class="message-avatar">${getInitials(isSent ? 'You' : (message.sender_role || 'Vendor'))}</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${escapeHtml(message.body || '')}</div>
+                        <div class="message-time">${formatTime(message.created_at)}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageEl);
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function updateChatAccessState(conversation) {
+            const statusMeta = getConversationStatus(conversation);
+            const noticeArea = document.getElementById('chatNoticeArea');
+            const inputContainer = document.querySelector('.chat-input-container');
+            const textarea = document.getElementById('messageInput');
+
+            if (!noticeArea || !inputContainer || !textarea) return;
+
+            noticeArea.innerHTML = '';
+            inputContainer.style.display = '';
+            textarea.disabled = false;
+            textarea.placeholder = 'Type your message...';
+
+            if (statusMeta.isArchived) {
+                noticeArea.innerHTML = `
+                    <div class="archived-notice">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6m16 0l-2-2m2 2l-2 2m-12 4h12a2 2 0 002-2v-2H4v2a2 2 0 002 2z"/>
+                        </svg>
+                        <div class="archived-notice-text">This conversation is archived. Messaging is read-only.</div>
+                    </div>
+                `;
+                inputContainer.style.display = 'none';
+                textarea.disabled = true;
+                textarea.placeholder = 'This conversation is archived.';
+                return;
+            }
+
+            if (!statusMeta.isUnlocked) {
+                noticeArea.innerHTML = `
+                    <div class="locked-chat-notice">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3 1.343 3 3v3H9v-3c0-1.657 1.343-3 3-3zm6-2V7a6 6 0 10-12 0v2"/>
+                        </svg>
+                        <div class="locked-chat-notice-text">Messaging unlocks once you accept a quote for this job.</div>
+                    </div>
+                `;
+                inputContainer.style.display = 'none';
+                textarea.disabled = true;
+                textarea.placeholder = 'Messaging is locked until a quote is accepted.';
+            }
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                modal.classList.remove('active');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        }
+
+        function closeMoreOptionsMenu() {
+            const menu = document.getElementById('moreOptionsMenu');
+            const button = document.getElementById('moreOptionsBtn');
+            if (!menu || !button) return;
+            menu.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+        }
+
+        function openMoreOptionsMenu() {
+            const menu = document.getElementById('moreOptionsMenu');
+            const button = document.getElementById('moreOptionsBtn');
+            if (!menu || !button) return;
+            menu.classList.add('open');
+            button.setAttribute('aria-expanded', 'true');
+            const firstItem = Array.from(menu.querySelectorAll('button[role="menuitem"]'))
+                .find(item => item.getAttribute('aria-disabled') !== 'true' && item.style.display !== 'none');
+            if (firstItem) firstItem.focus();
+        }
+
+        function toggleMoreOptionsMenu() {
+            const menu = document.getElementById('moreOptionsMenu');
+            if (!menu) return;
+            if (menu.classList.contains('open')) {
+                closeMoreOptionsMenu();
+            } else {
+                openMoreOptionsMenu();
+            }
+        }
+
+        function updateMoreOptionsState(conversation) {
+            const menu = document.getElementById('moreOptionsMenu');
+            if (!menu) return;
+            const statusMeta = getConversationStatus(conversation);
+            const muteBtn = menu.querySelector('[data-action="mute"]');
+            const uploadBtn = menu.querySelector('[data-action="upload-files"]');
+            const quoteBtn = menu.querySelector('[data-action="view-quote"]');
+            const archiveBtn = menu.querySelector('[data-action="archive"]');
+            const reviewBtn = menu.querySelector('[data-action="review"]');
+            const completedItems = menu.querySelectorAll('[data-conditional="completed"]');
+
+            if (muteBtn) {
+                const isMuted = mutedConversationIds.has(conversation.id);
+                muteBtn.textContent = isMuted ? 'Unmute Notifications' : 'Mute Notifications';
+            }
+
+            if (uploadBtn) {
+                const disabled = statusMeta.isCompleted || statusMeta.isArchived || !statusMeta.isUnlocked;
+                uploadBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+            }
+
+            if (quoteBtn) {
+                const disabled = !statusMeta.isAccepted;
+                quoteBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+            }
+
+            if (archiveBtn) {
+                archiveBtn.textContent = statusMeta.isArchived ? 'Restore Conversation' : 'Archive Conversation';
+                archiveBtn.classList.toggle('menu-danger', !statusMeta.isArchived);
+            }
+
+            completedItems.forEach(item => {
+                item.style.display = statusMeta.isCompleted ? 'block' : 'none';
+            });
+
+            if (reviewBtn) {
+                reviewBtn.style.display = statusMeta.isCompleted ? 'block' : 'none';
+            }
+        }
+
+        function renderJobDetails(conversation) {
+            const body = document.getElementById('jobDetailsBody');
+            if (!body) return;
+            const statusMeta = getConversationStatus(conversation);
+            body.innerHTML = `
+                <div class="modal-field">
+                    <div class="modal-label">Job</div>
+                    <div class="modal-value">${escapeHtml(conversation.job_title || conversation.job_id || 'Job')}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Status</div>
+                    <div class="modal-value">${escapeHtml(statusMeta.statusLabel)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Budget Range</div>
+                    <div class="modal-value">${formatBudgetRange(conversation.budget_min, conversation.budget_max)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Postcode</div>
+                    <div class="modal-value">${formatPostcodeDistrict(conversation.postcode)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Description</div>
+                    <div class="modal-value">${escapeHtml(conversation.job_description || 'No description provided.')}</div>
+                </div>
+            `;
+        }
+
+        async function renderJobDetailsFromApi(conversation) {
+            if (isDemoMode) {
+                renderJobDetails(conversation);
+                return;
+            }
+            try {
+                const data = await apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(conversation.id)}/job-details`);
+                const job = data?.job;
+                if (!job) throw new Error('Missing job details');
+                const payload = {
+                    job_title: job.title,
+                    job_description: job.description,
+                    job_status: job.status,
+                    budget_min: job.budget_min,
+                    budget_max: job.budget_max,
+                    postcode: job.postcode_district
+                };
+                renderJobDetails({ ...conversation, ...payload });
+            } catch (error) {
+                renderJobDetails(conversation);
+            }
+        }
+
+        function renderQuoteDetails(conversation) {
+            const body = document.getElementById('quoteDetailsBody');
+            if (!body) return;
+            const quote = getAcceptedQuote(conversation);
+            body.innerHTML = `
+                <div class="modal-field">
+                    <div class="modal-label">Price</div>
+                    <div class="modal-value">${formatCurrency(quote.price)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Scope</div>
+                    <div class="modal-value">${escapeHtml(quote.scope)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Timeline</div>
+                    <div class="modal-value">${escapeHtml(quote.timeline)}</div>
+                </div>
+                <div class="modal-field">
+                    <div class="modal-label">Vendor Notes</div>
+                    <div class="modal-value">${escapeHtml(quote.vendorNotes)}</div>
+                </div>
+            `;
+        }
+
+        async function renderQuoteDetailsFromApi(conversation) {
+            if (isDemoMode) {
+                renderQuoteDetails(conversation);
+                return;
+            }
+            try {
+                const data = await apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(conversation.id)}/accepted-quote`);
+                if (!data?.quote) throw new Error('Missing quote');
+                const acceptedQuote = {
+                    accepted_quote: {
+                        price: data.quote.price,
+                        scope: data.quote.scope,
+                        timeline: data.quote.timeline,
+                        vendor_notes: data.quote.vendor_notes
+                    }
+                };
+                renderQuoteDetails({ ...conversation, ...acceptedQuote });
+            } catch (error) {
+                renderQuoteDetails(conversation);
+            }
+        }
+
+        function handleMenuAction(action) {
+            if (!activeConversation) return;
+            const statusMeta = getConversationStatus(activeConversation);
+
+            if (action === 'view-job') {
+                renderJobDetailsFromApi(activeConversation);
+                openModal('jobDetailsModal');
+                return;
+            }
+
+            if (action === 'view-quote') {
+                if (!statusMeta.isAccepted) return;
+                renderQuoteDetailsFromApi(activeConversation);
+                openModal('quoteDetailsModal');
+                return;
+            }
+
+            if (action === 'upload-files') {
+                if (statusMeta.isCompleted || statusMeta.isArchived || !statusMeta.isUnlocked) return;
+                const fileInput = document.getElementById('uploadFilesInput');
+                const fileList = document.getElementById('uploadFilesList');
+                if (fileInput) fileInput.value = '';
+                if (fileList) fileList.innerHTML = '';
+                openModal('uploadFilesModal');
+                return;
+            }
+
+            if (action === 'mute') {
+                const willMute = !mutedConversationIds.has(activeConversation.id);
+                if (!isDemoMode) {
+                    apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(activeConversation.id)}/mute`, {
+                        method: 'POST',
+                        body: JSON.stringify({ muted: willMute })
+                    }).catch(error => console.warn('Mute update failed:', error));
+                }
+                if (willMute) {
+                    mutedConversationIds.add(activeConversation.id);
+                } else {
+                    mutedConversationIds.delete(activeConversation.id);
+                }
+                savePreferenceSet(MUTE_STORAGE_KEY, mutedConversationIds);
+                updateMoreOptionsState(activeConversation);
+                renderConversations(isDemoMode ? DEMO_CONVERSATIONS : currentConversationsCache);
+                return;
+            }
+
+            if (action === 'report') {
+                openModal('reportIssueModal');
+                return;
+            }
+
+            if (action === 'archive') {
+                const archiveButton = document.getElementById('confirmArchiveBtn');
+                const archiveTitle = document.getElementById('archiveConfirmTitle');
+                const archiveBody = document.getElementById('archiveConfirmBody');
+                if (archiveButton) {
+                    archiveButton.textContent = statusMeta.isArchived ? 'Restore' : 'Archive';
+                }
+                if (archiveTitle) {
+                    archiveTitle.textContent = statusMeta.isArchived ? 'Restore Conversation' : 'Archive Conversation';
+                }
+                if (archiveBody) {
+                    archiveBody.textContent = statusMeta.isArchived
+                        ? 'Restoring will return this conversation to your inbox.'
+                        : 'Archiving hides this conversation from your main inbox. You can restore it anytime.';
+                }
+                openModal('archiveConfirmModal');
+                return;
+            }
+
+            if (action === 'review') {
+                if (!statusMeta.isCompleted) return;
+                openModal('reviewModal');
+            }
+        }
+
+        async function sendMessage() {
+            const textarea = document.getElementById('messageInput');
+            const message = textarea.value.trim();
+            if (!message || !activeConversationId) return;
+            if (activeConversation) {
+                const statusMeta = getConversationStatus(activeConversation);
+                if (statusMeta.isArchived || !statusMeta.isUnlocked) {
+                    return;
+                }
+            }
+
+            textarea.value = '';
+            textarea.style.height = 'auto';
+
+            try {
+                await postMessage(activeConversationId, message);
+                const chatMessages = document.getElementById('chatMessages');
+                const messageEl = document.createElement('div');
+                messageEl.className = 'message sent';
+                messageEl.innerHTML = `
+                    <div class="message-avatar">You</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${escapeHtml(message)}</div>
+                        <div class="message-time">${formatTime(new Date().toISOString())}</div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageEl);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function setupSearch() {
+            const search = document.getElementById('conversationSearch');
+            if (!search) return;
+            search.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll('.conversation-item').forEach(item => {
+                    const name = item.querySelector('.conversation-name')?.textContent.toLowerCase() || '';
+                    const preview = item.querySelector('.conversation-preview')?.textContent.toLowerCase() || '';
+                    item.style.display = name.includes(searchTerm) || preview.includes(searchTerm) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        function setupTextarea() {
+            const textarea = document.getElementById('messageInput');
+            if (!textarea) return;
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = `${this.scrollHeight}px`;
+            });
+            textarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        function setupModalHandlers() {
+            document.querySelectorAll('[data-modal-close]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalId = button.getAttribute('data-modal-close');
+                    closeModal(modalId);
+                });
+            });
+
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) {
+                        closeModal(overlay.id);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeMoreOptionsMenu();
+                    closeAllModals();
+                }
+            });
+        }
+
+        function setupMoreOptionsMenu() {
+            const menu = document.getElementById('moreOptionsMenu');
+            const button = document.getElementById('moreOptionsBtn');
+            if (!menu || !button) return;
+
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                toggleMoreOptionsMenu();
+            });
+
+            button.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggleMoreOptionsMenu();
+                }
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    openMoreOptionsMenu();
+                }
+            });
+
+            menu.addEventListener('click', (event) => {
+                const item = event.target.closest('button[data-action]');
+                if (!item) return;
+                if (item.getAttribute('aria-disabled') === 'true') return;
+                handleMenuAction(item.dataset.action);
+                closeMoreOptionsMenu();
+            });
+
+            menu.addEventListener('keydown', (event) => {
+                const items = Array.from(menu.querySelectorAll('button[role="menuitem"]'))
+                    .filter(btn => btn.getAttribute('aria-disabled') !== 'true' && btn.style.display !== 'none');
+                if (!items.length) return;
+
+                const currentIndex = items.indexOf(document.activeElement);
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    const next = items[(currentIndex + 1) % items.length];
+                    if (next) next.focus();
+                }
+                if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    const prev = items[(currentIndex - 1 + items.length) % items.length];
+                    if (prev) prev.focus();
+                }
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!menu.contains(event.target) && !button.contains(event.target)) {
+                    closeMoreOptionsMenu();
+                }
+            });
+        }
+
+        function setupUploadHandlers() {
+            const fileInput = document.getElementById('uploadFilesInput');
+            const fileList = document.getElementById('uploadFilesList');
+            const confirmButton = document.getElementById('confirmUploadBtn');
+
+            if (fileInput) {
+                fileInput.addEventListener('change', () => {
+                    if (!fileList) return;
+                    fileList.innerHTML = '';
+                    const files = Array.from(fileInput.files || []);
+                    files.forEach(file => {
+                        const entry = document.createElement('span');
+                        entry.textContent = file.name;
+                        fileList.appendChild(entry);
+                    });
+                });
+            }
+
+            if (confirmButton) {
+                confirmButton.addEventListener('click', async () => {
+                    const files = Array.from(fileInput?.files || []);
+                    if (!files.length || !activeConversationId) {
+                        closeModal('uploadFilesModal');
+                        return;
+                    }
+
+                    if (isDemoMode) {
+                        const chatMessages = document.getElementById('chatMessages');
+                        if (chatMessages) {
+                            const messageEl = document.createElement('div');
+                            messageEl.className = 'message sent';
+                            messageEl.innerHTML = `
+                                <div class="message-avatar">You</div>
+                                <div class="message-content">
+                                    <div class="message-bubble">Shared ${files.length} file${files.length > 1 ? 's' : ''}: ${escapeHtml(files.map(f => f.name).join(', '))}</div>
+                                    <div class="message-time">${formatTime(new Date().toISOString())}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(messageEl);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                        closeModal('uploadFilesModal');
+                        return;
+                    }
+
+                    confirmButton.disabled = true;
+                    confirmButton.textContent = 'Uploading...';
+
+                    try {
+                        const attachments = [];
+                        for (const file of files) {
+                            const presign = await apiFetchJson('/api/uploads/presign', {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    filename: file.name,
+                                    contentType: file.type,
+                                    contentLength: file.size,
+                                    folder: `conversations/${activeConversationId}`
+                                })
+                            });
+
+                            await fetch(presign.uploadUrl, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': file.type },
+                                body: file
+                            });
+
+                            attachments.push({
+                                attachment_type: file.type && file.type.startsWith('image/') ? 'image' : 'document',
+                                url: presign.url,
+                                file_name: file.name,
+                                mime_type: file.type,
+                                size_bytes: file.size
+                            });
+                        }
+
+                        await apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(activeConversationId)}/files`, {
+                            method: 'POST',
+                            body: JSON.stringify({ attachments })
+                        });
+
+                        const chatMessages = document.getElementById('chatMessages');
+                        if (chatMessages) {
+                            const messageEl = document.createElement('div');
+                            messageEl.className = 'message sent';
+                            messageEl.innerHTML = `
+                                <div class="message-avatar">You</div>
+                                <div class="message-content">
+                                    <div class="message-bubble">Shared ${files.length} file${files.length > 1 ? 's' : ''}: ${escapeHtml(files.map(f => f.name).join(', '))}</div>
+                                    <div class="message-time">${formatTime(new Date().toISOString())}</div>
+                                </div>
+                            `;
+                            chatMessages.appendChild(messageEl);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                    } catch (error) {
+                        console.warn('File upload failed:', error);
+                    } finally {
+                        confirmButton.disabled = false;
+                        confirmButton.textContent = 'Share Files';
+                        closeModal('uploadFilesModal');
+                    }
+                });
+            }
+        }
+
+        function setupReportHandlers() {
+            const submitButton = document.getElementById('submitReportBtn');
+            if (!submitButton) return;
+            submitButton.addEventListener('click', () => {
+                const selected = document.querySelector('input[name="reportReason"]:checked');
+                const details = document.getElementById('reportIssueDetails')?.value || '';
+                if (!activeConversationId) return;
+                if (!isDemoMode) {
+                    apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(activeConversationId)}/report`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            reason: selected?.value || 'dispute',
+                            details
+                        })
+                    }).catch(error => console.warn('Report submission failed:', error));
+                }
+                closeModal('reportIssueModal');
+            });
+        }
+
+        function setupArchiveHandlers() {
+            const confirmButton = document.getElementById('confirmArchiveBtn');
+            if (!confirmButton) return;
+            confirmButton.addEventListener('click', () => {
+                if (!activeConversation) return;
+                const isArchived = archivedConversationIds.has(activeConversation.id);
+                if (!isDemoMode) {
+                    const endpoint = isArchived ? 'restore' : 'archive';
+                    apiFetchJson(`/api/messaging/conversations/${encodeURIComponent(activeConversation.id)}/${endpoint}`, {
+                        method: 'POST'
+                    }).catch(error => console.warn('Archive update failed:', error));
+                }
+                if (isArchived) {
+                    archivedConversationIds.delete(activeConversation.id);
+                } else {
+                    archivedConversationIds.add(activeConversation.id);
+                }
+                savePreferenceSet(ARCHIVE_STORAGE_KEY, archivedConversationIds);
+                closeModal('archiveConfirmModal');
+                renderConversations(currentConversationsCache || []);
+                updateChatAccessState(activeConversation);
+                updateMoreOptionsState(activeConversation);
+            });
+        }
+
+        function setupReviewHandlers() {
+            const reviewButton = document.getElementById('goToReviewBtn');
+            if (!reviewButton) return;
+            reviewButton.addEventListener('click', () => {
+                const jobId = activeConversation?.job_id ? `?job_id=${encodeURIComponent(activeConversation.job_id)}` : '';
+                window.location.href = `reviews.html${jobId}`;
+            });
+        }
+
+        function setupHeaderActions() {
+            const jobDetailsButton = document.querySelector('.chat-header-actions button[title="Job Details"]');
+            if (jobDetailsButton) {
+                jobDetailsButton.addEventListener('click', () => {
+                    if (!activeConversation) return;
+                    renderJobDetailsFromApi(activeConversation);
+                    openModal('jobDetailsModal');
+                });
+            }
+        }
+
+        async function initMessages() {
+            if (!ensureAuth()) return;
+            initTheme();
+            setupSearch();
+            setupTextarea();
+            setupModalHandlers();
+            setupMoreOptionsMenu();
+            setupUploadHandlers();
+            setupReportHandlers();
+            setupArchiveHandlers();
+            setupReviewHandlers();
+            setupHeaderActions();
+
+            mutedConversationIds = loadPreferenceSet(MUTE_STORAGE_KEY);
+            archivedConversationIds = loadPreferenceSet(ARCHIVE_STORAGE_KEY);
+
+            const preferenceData = await fetchConversationPreferences();
+            if (preferenceData?.mutedConversationIds) {
+                mutedConversationIds = new Set(preferenceData.mutedConversationIds);
+                savePreferenceSet(MUTE_STORAGE_KEY, mutedConversationIds);
+            }
+            if (preferenceData?.archivedConversationIds) {
+                archivedConversationIds = new Set(preferenceData.archivedConversationIds);
+                savePreferenceSet(ARCHIVE_STORAGE_KEY, archivedConversationIds);
+            }
+
+            try {
+                const conversations = await fetchConversations();
+                renderConversations(conversations || []);
+            } catch (error) {
+                console.error(error);
+                isDemoMode = true;
+                renderConversations(DEMO_CONVERSATIONS);
+            }
+        }
+
+        window.addEventListener('load', initMessages);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

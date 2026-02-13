@@ -1,0 +1,2125 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <script defer src="/_vercel/analytics/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - TradeMatch Customer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --color-bg-primary: #0a0e1a;
+            --color-bg-secondary: #0f1420;
+            --color-bg-tertiary: #141825;
+            --color-bg-elevated: #1a1f2e;
+            --color-bg-hover: rgba(255, 255, 255, 0.03);
+            --color-border: rgba(255, 255, 255, 0.06);
+            --color-border-strong: rgba(255, 255, 255, 0.1);
+            
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #a0aec0;
+            --color-text-tertiary: #64748b;
+            
+            --color-accent-primary: #00E5A0;
+            --color-accent-secondary: #42A5F5;
+            --color-accent-gradient: linear-gradient(135deg, #00E5A0 0%, #42A5F5 100%);
+            
+            --color-success: #22c55e;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-danger: #dc2626;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Typography */
+            --font-family-primary: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-family-mono: 'Space Mono', 'Courier New', monospace;
+            
+            /* Layout */
+            --sidebar-width: 260px;
+            --sidebar-width-collapsed: 80px;
+            --top-nav-height: 64px;
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(0, 229, 160, 0.15);
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --color-bg-primary: #f8fafc;
+            --color-bg-secondary: #ffffff;
+            --color-bg-tertiary: #f1f5f9;
+            --color-bg-elevated: #ffffff;
+            --color-bg-hover: rgba(15, 23, 42, 0.04);
+            --color-border: rgba(15, 23, 42, 0.08);
+            --color-border-strong: rgba(15, 23, 42, 0.14);
+            --color-text-primary: #0f172a;
+            --color-text-secondary: #475569;
+            --color-text-tertiary: #64748b;
+            --color-accent-primary: #16a34a;
+            --color-accent-secondary: #3b82f6;
+            --color-accent-gradient: linear-gradient(135deg, #16a34a 0%, #3b82f6 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.08);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.12);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.16);
+            --shadow-glow: 0 0 20px rgba(22, 163, 74, 0.2);
+        }
+
+        body {
+            font-family: var(--font-family-primary);
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 229, 160, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(66, 165, 245, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: var(--color-bg-secondary);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: width var(--transition-base);
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-width-collapsed);
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg) var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            text-decoration: none;
+            color: var(--color-text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent-gradient);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+            white-space: nowrap;
+            transition: opacity var(--transition-base);
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-md) 0;
+        }
+
+        .nav-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .nav-section-title {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-tertiary);
+            transition: opacity var(--transition-base);
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background-color: var(--color-bg-hover);
+            color: var(--color-text-primary);
+        }
+
+        .nav-item.active {
+            color: var(--color-accent-primary);
+            background-color: rgba(0, 229, 160, 0.08);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--color-accent-gradient);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-text {
+            white-space: nowrap;
+            transition: opacity var(--transition-base);
+        }
+
+        .sidebar.collapsed .nav-text {
+            opacity: 0;
+        }
+
+        .sidebar-footer {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .collapse-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: none;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .collapse-btn:hover {
+            background-color: var(--color-bg-hover);
+            border-color: var(--color-border-strong);
+            color: var(--color-text-primary);
+        }
+
+        .collapse-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform var(--transition-base);
+        }
+
+        .sidebar.collapsed .collapse-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--top-nav-height);
+            background-color: var(--color-bg-secondary);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-xl);
+            z-index: 90;
+            transition: left var(--transition-base);
+        }
+
+        .sidebar.collapsed ~ .top-nav {
+            left: var(--sidebar-width-collapsed);
+        }
+
+        .top-nav-left {
+            flex: 1;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--color-text-tertiary);
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 2.5rem;
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-size: 0.875rem;
+            transition: all var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1);
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .theme-toggle {
+            width: 56px;
+            height: 28px;
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--color-border-strong);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: var(--color-accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--transition-base);
+        }
+
+        .theme-toggle-icon {
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .icon-button:hover {
+            background-color: var(--color-bg-elevated);
+            border-color: var(--color-border-strong);
+            color: var(--color-text-primary);
+        }
+
+        .icon-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .user-menu-btn:hover {
+            background-color: var(--color-bg-elevated);
+            border-color: var(--color-border-strong);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--color-accent-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--top-nav-height);
+            padding: var(--spacing-2xl);
+            min-height: calc(100vh - var(--top-nav-height));
+            transition: margin-left var(--transition-base);
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar.collapsed ~ * main {
+            margin-left: var(--sidebar-width-collapsed);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            background: var(--color-accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        /* Settings Sections */
+        .settings-container {
+            max-width: 900px;
+        }
+
+        .settings-section {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--color-accent-primary);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .section-description {
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Setting Item */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: var(--spacing-lg) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .setting-item:first-child {
+            padding-top: 0;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            margin-bottom: var(--spacing-xs);
+            display: block;
+        }
+
+        .setting-description {
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .setting-value {
+            color: var(--color-text-tertiary);
+            font-size: 0.875rem;
+            font-family: var(--font-family-mono);
+        }
+
+        .setting-control {
+            margin-left: var(--spacing-xl);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .toggle-switch:hover {
+            border-color: var(--color-border-strong);
+        }
+
+        .toggle-switch.active {
+            background: var(--color-accent-gradient);
+            border-color: transparent;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(22px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+            border: none;
+            font-family: var(--font-family-primary);
+        }
+
+        .btn-primary {
+            background: var(--color-accent-gradient);
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 30px rgba(0, 229, 160, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-bg-elevated);
+            border-color: var(--color-border-strong);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-bg-hover);
+            border-color: var(--color-border-strong);
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            border: 1px solid var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(220, 38, 38, 0.1);
+        }
+
+        .btn-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Account Info Display */
+        .account-info {
+            display: grid;
+            gap: var(--spacing-lg);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+        }
+
+        .info-label {
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+            font-family: var(--font-family-mono);
+            font-size: 0.875rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-md);
+            background-color: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius-sm);
+            color: var(--color-success);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--color-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Action Buttons Group */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            background-color: rgba(220, 38, 38, 0.05);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .danger-zone .section-icon {
+            color: var(--color-danger);
+        }
+
+        .danger-warning {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: rgba(220, 38, 38, 0.08);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .danger-warning-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--color-danger);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .danger-warning-text {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Billing Preview Card */
+        .billing-preview {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, rgba(0, 229, 160, 0.05) 0%, rgba(66, 165, 245, 0.05) 100%);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .billing-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent-gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .billing-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .billing-info {
+            flex: 1;
+        }
+
+        .billing-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .billing-description {
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-base);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform var(--transition-base);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .modal-body {
+            padding: var(--spacing-xl);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-xl);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            background-color: var(--color-bg-tertiary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-primary);
+            font-size: 0.875rem;
+            font-family: var(--font-family-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1);
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: calc(var(--top-nav-height) + var(--spacing-lg));
+            right: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(34, 197, 94, 0.9) 100%);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all var(--transition-base);
+        }
+
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .success-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .top-nav {
+                left: 0;
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .setting-control {
+                margin-left: 0;
+                align-self: flex-start;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="index" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="index" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/user/my-jobs" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="nav-text">My Jobs</span>
+                </a>
+                <a href="/user/quotes" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="nav-text">Quotes</span>
+                </a>
+                <a href="/user/messages" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <span class="nav-text">Messages</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Trades</div>
+                <a href="/user/saved-trades" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="nav-text">Saved Trades</span>
+                </a>
+                <a href="/user/reviews" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="nav-text">Reviews</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Account</div>
+                <a href="/user/notifications" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <span class="nav-text">Notifications</span>
+                </a>
+                <a href="/user/settings" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="collapse-btn" id="collapseBtn">
+                <svg class="collapse-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Top Navigation -->
+    <header class="top-nav" id="topNav">
+        <div class="top-nav-left">
+            <div class="search-container">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search jobs, quotes, messages...">
+            </div>
+        </div>
+
+        <div class="top-nav-right">
+            <div class="theme-toggle" id="themeToggle">
+                <div class="theme-toggle-slider">
+                    <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <button class="icon-button" id="notificationBtn">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+            </button>
+
+            <button class="user-menu-btn" id="userMenuBtn">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <span id="userMenuName">John Doe</span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your account preferences and security.</p>
+        </div>
+
+        <div class="settings-container">
+            <!-- Account Settings Section -->
+            <section class="settings-section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Account Settings</h2>
+                        <p class="section-description">Manage your personal information and account details.</p>
+                    </div>
+                </div>
+
+                <div class="account-info">
+                    <div class="info-row">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="accountFullName">John Doe</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value" id="accountEmail">john.doe@example.com</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phone Number</span>
+                        <span class="info-value" id="accountPhone">+44 7700 900123</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Account Status</span>
+                        <span class="status-badge">
+                            <span class="status-dot"></span>
+                            Active
+                        </span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/user/profile" class="btn btn-primary">
+                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit Profile
+                    </a>
+                    <button class="btn btn-secondary" id="changeEmailBtn">
+                        Change Email
+                    </button>
+                    <button class="btn btn-secondary" id="changePhoneBtn">
+                        Change Phone
+                    </button>
+                </div>
+            </section>
+
+            <!-- Notification Preferences Section -->
+            <section class="settings-section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Notification Preferences</h2>
+                        <p class="section-description">Choose what updates you want to receive.</p>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Job Updates</label>
+                        <p class="setting-description">Receive notifications when your job status changes or receives activity.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="jobUpdates">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">New Quotes Received</label>
+                        <p class="setting-description">Get notified when vendors submit quotes for your jobs.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="newQuotes">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Messages from Vendors</label>
+                        <p class="setting-description">Receive alerts when vendors send you messages.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="vendorMessages">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Reviews & Reminders</label>
+                        <p class="setting-description">Get reminded to review completed jobs and provide feedback.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="reviewReminders">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Platform Announcements</label>
+                        <p class="setting-description">Stay informed about new features and important platform updates.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" data-toggle="announcements">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Privacy & Communication Section -->
+            <section class="settings-section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Privacy & Communication</h2>
+                        <p class="section-description">Control how we contact you. Critical account messages may still be sent.</p>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Email Notifications</label>
+                        <p class="setting-description">Receive notifications via email.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="emailNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">SMS Notifications</label>
+                        <p class="setting-description">Receive important updates via text message.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch" data-toggle="smsNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">In-Platform Notifications</label>
+                        <p class="setting-description">Show notifications in the dashboard.</p>
+                    </div>
+                    <div class="setting-control">
+                        <div class="toggle-switch active" data-toggle="inPlatformNotifications">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section class="settings-section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Security</h2>
+                        <p class="section-description">Keep your account secure and manage your sessions.</p>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Password</label>
+                        <p class="setting-value">â€˘â€˘â€˘â€˘â€˘â€˘â€˘â€˘â€˘â€˘â€˘â€˘</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-outline" id="changePasswordBtn">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Last Login</label>
+                        <p class="setting-description" id="lastLoginText">Wednesday, 4 February 2026 at 14:32</p>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Active Sessions</label>
+                        <p class="setting-description" id="activeSessionsText">You are currently logged in on 2 devices.</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-outline" id="logoutAllBtn">
+                            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            Log Out All Devices
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Billing & Payments Section -->
+            <section class="settings-section">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Billing & Payments</h2>
+                        <p class="section-description">Manage your payment methods and view billing history.</p>
+                    </div>
+                </div>
+
+                <div class="billing-preview">
+                    <div class="billing-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="billing-info">
+                        <div class="billing-title">View invoices, add-ons, and payment history</div>
+                        <div class="billing-description">Access your complete billing information and transaction records.</div>
+                    </div>
+                    <a href="/user/billing" class="btn btn-primary">
+                        Go to Billing
+                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Danger Zone Section -->
+            <section class="settings-section danger-zone">
+                <div class="section-header">
+                    <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div>
+                        <h2 class="section-title">Danger Zone</h2>
+                        <p class="section-description">Irreversible account actions. Please proceed with caution.</p>
+                    </div>
+                </div>
+
+                <div class="danger-warning">
+                    <svg class="danger-warning-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="danger-warning-text">
+                        <strong>Important:</strong> Deactivation hides your account but keeps records for legal and safety reasons. You can reactivate at any time by logging in.
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <label class="setting-label">Deactivate Account</label>
+                        <p class="setting-description">Temporarily disable your account. Your data will be preserved and you can reactivate later.</p>
+                    </div>
+                    <div class="setting-control">
+                        <button class="btn btn-danger" id="deactivateBtn">
+                            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                            </svg>
+                            Deactivate Account
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Change Email Modal -->
+    <div class="modal-overlay" id="emailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Email Address</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Current Email</label>
+                    <input type="email" class="form-input" id="currentEmail" value="john.doe@example.com" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Email Address</label>
+                    <input type="email" class="form-input" id="newEmail" placeholder="Enter new email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="emailPassword" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelEmailBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveEmailBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Phone Modal -->
+    <div class="modal-overlay" id="phoneModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Phone Number</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Current Phone</label>
+                    <input type="tel" class="form-input" id="currentPhone" value="+44 7700 900123" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Phone Number</label>
+                    <input type="tel" class="form-input" id="newPhone" placeholder="Enter new phone number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="phonePassword" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPhoneBtn">Cancel</button>
+                <button class="btn btn-primary" id="savePhoneBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Password</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" id="newPassword" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPasswordBtn">Cancel</button>
+                <button class="btn btn-primary" id="savePasswordBtn">Change Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Out All Devices Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Log Out All Devices</h3>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--color-text-secondary); line-height: 1.6;">
+                    This will log you out from all devices except this one. You'll need to log in again on those devices.
+                </p>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="logoutPassword" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLogoutBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmLogoutBtn">Log Out All Devices</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deactivate Account Modal -->
+    <div class="modal-overlay" id="deactivateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Deactivate Account</h3>
+            </div>
+            <div class="modal-body">
+                <div class="danger-warning" style="margin-bottom: var(--spacing-lg);">
+                    <svg class="danger-warning-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <div class="danger-warning-text">
+                        <strong>Are you sure?</strong> Your account will be hidden but not deleted. You can reactivate by logging in at any time.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="deactivatePassword" placeholder="Enter your password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelDeactivateBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeactivateBtn">Deactivate Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <span id="successText">Settings saved successfully!</span>
+    </div>
+
+    <script>
+        const API_BASE = (() => {
+            const stored = localStorage.getItem('apiBaseUrl');
+            if (stored) return stored.replace(/\/$/, '') + '/api';
+
+            const origin = window.location.origin;
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            if (isLocalhost && !origin.includes(':3001')) {
+                return 'http://localhost:3001/api';
+            }
+            return `${origin}/api`;
+        })();
+
+        async function apiFetch(path, options = {}) {
+            const token = getToken();
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            };
+
+            if (token) {
+                headers.Authorization = `Bearer ${token}`;
+            }
+
+            const response = await fetch(`${API_BASE}${path}`, {
+                ...options,
+                headers
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                redirectToLogin();
+            }
+
+            return response;
+        }
+
+        async function apiFetchJson(path, options = {}) {
+            const response = await apiFetch(path, options);
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const message = data.error || `Request failed (${response.status})`;
+                throw new Error(message);
+            }
+            return data;
+        }
+
+        function getStoredUser() {
+            const rawUser = localStorage.getItem('user');
+            if (!rawUser) return null;
+            try {
+                return JSON.parse(rawUser);
+            } catch (error) {
+                console.warn('Failed to parse stored user data:', error);
+                return null;
+            }
+        }
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function redirectToLogin() {
+            const returnUrl = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
+            window.location.href = `/login?redirect=${returnUrl}`;
+        }
+
+        function ensureAuth() {
+            const token = getToken();
+            if (!token) {
+                redirectToLogin();
+                return false;
+            }
+            return true;
+        }
+
+        function formatDateTime(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function applyUserProfile() {
+            const user = getStoredUser();
+            const fullName = user?.name || user?.fullName || 'Customer';
+            const email = user?.email || 'Not provided';
+            const phone = user?.phone || 'Not provided';
+
+            const initials = fullName
+                .split(' ')
+                .filter(Boolean)
+                .slice(0, 2)
+                .map(part => part[0].toUpperCase())
+                .join('');
+
+            const userAvatar = document.getElementById('userAvatar');
+            const userMenuName = document.getElementById('userMenuName');
+            const accountFullName = document.getElementById('accountFullName');
+            const accountEmail = document.getElementById('accountEmail');
+            const accountPhone = document.getElementById('accountPhone');
+            const currentEmail = document.getElementById('currentEmail');
+            const currentPhone = document.getElementById('currentPhone');
+            const lastLoginText = document.getElementById('lastLoginText');
+            const activeSessionsText = document.getElementById('activeSessionsText');
+
+            if (userAvatar) userAvatar.textContent = initials || 'TM';
+            if (userMenuName) userMenuName.textContent = fullName;
+            if (accountFullName) accountFullName.textContent = fullName;
+            if (accountEmail) accountEmail.textContent = email;
+            if (accountPhone) accountPhone.textContent = phone;
+            if (currentEmail) currentEmail.value = email;
+            if (currentPhone) currentPhone.value = phone;
+            if (lastLoginText) {
+                const lastLogin = localStorage.getItem('lastLoginAt');
+                lastLoginText.textContent = lastLogin ? formatDateTime(lastLogin) : 'Not available';
+            }
+            if (activeSessionsText) {
+                const sessions = localStorage.getItem('activeSessions') || '1';
+                activeSessionsText.textContent = `You are currently logged in on ${sessions} device${sessions === '1' ? '' : 's'}.`;
+            }
+        }
+
+        async function refreshUserProfile() {
+            if (!ensureAuth()) return;
+            try {
+                const data = await apiFetchJson('/auth/me');
+                const user = getStoredUser() || {};
+                user.id = data.user.id;
+                user.userType = data.user.userType;
+                user.fullName = data.user.fullName;
+                user.name = data.user.fullName;
+                user.email = data.user.email;
+                user.phone = data.user.phone;
+                user.postcode = data.user.postcode;
+                localStorage.setItem('user', JSON.stringify(user));
+            } catch (error) {
+                console.warn('Failed to refresh user profile:', error.message);
+            }
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+            });
+        }
+
+        // Sidebar collapse functionality
+        const sidebar = document.getElementById('sidebar');
+        const collapseBtn = document.getElementById('collapseBtn');
+        
+        collapseBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+        });
+
+        // Restore sidebar state
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            sidebar.classList.add('collapsed');
+        }
+
+        // Toggle switch functionality
+        const toggleSwitches = document.querySelectorAll('.toggle-switch');
+        const settingsState = {
+            jobUpdates: true,
+            newQuotes: true,
+            vendorMessages: true,
+            reviewReminders: true,
+            announcements: false,
+            emailNotifications: true,
+            smsNotifications: false,
+            inPlatformNotifications: true
+        };
+
+        const emailPreferenceMap = {
+            jobUpdates: 'quoteUpdates',
+            newQuotes: 'newQuotes',
+            vendorMessages: 'newBids',
+            reviewReminders: 'reviewReminder',
+            announcements: 'marketing'
+        };
+
+        const emailPreferencesState = {
+            emailNotificationsEnabled: true,
+            preferences: {
+                newBids: true,
+                bidAccepted: true,
+                newQuotes: true,
+                paymentConfirmed: true,
+                reviewReminder: true,
+                quoteUpdates: true,
+                marketing: false,
+                newsletter: false
+            }
+        };
+
+        const notificationPreferencesState = {
+            emailEnabled: true,
+            smsEnabled: false,
+            pushEnabled: false,
+            inAppEnabled: true,
+            quietHoursStart: null,
+            quietHoursEnd: null
+        };
+
+        // Load saved settings from localStorage
+        Object.keys(settingsState).forEach(key => {
+            const saved = localStorage.getItem(`setting_${key}`);
+            if (saved !== null) {
+                settingsState[key] = saved === 'true';
+            }
+        });
+
+        // Initialize toggle states
+        toggleSwitches.forEach(toggle => {
+            const settingKey = toggle.dataset.toggle;
+            if (settingsState[settingKey]) {
+                toggle.classList.add('active');
+            }
+        });
+
+        async function syncToggleSetting(settingKey, value) {
+            const user = getStoredUser();
+            if (!user?.id) return;
+
+            if (settingKey === 'emailNotifications') {
+                emailPreferencesState.emailNotificationsEnabled = value;
+                notificationPreferencesState.emailEnabled = value;
+
+                await apiFetchJson(`/email/preferences/${user.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        emailNotificationsEnabled: value,
+                        preferences: emailPreferencesState.preferences
+                    })
+                });
+
+                await apiFetchJson('/notifications/preferences', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        emailEnabled: value
+                    })
+                });
+                return;
+            }
+
+            if (settingKey === 'smsNotifications') {
+                notificationPreferencesState.smsEnabled = value;
+                await apiFetchJson('/notifications/preferences', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        smsEnabled: value
+                    })
+                });
+                return;
+            }
+
+            if (settingKey === 'inPlatformNotifications') {
+                notificationPreferencesState.inAppEnabled = value;
+                await apiFetchJson('/notifications/preferences', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        inAppEnabled: value
+                    })
+                });
+                return;
+            }
+
+            const mappedKey = emailPreferenceMap[settingKey];
+            if (mappedKey) {
+                emailPreferencesState.preferences[mappedKey] = value;
+                await apiFetchJson(`/email/preferences/${user.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        preferences: emailPreferencesState.preferences
+                    })
+                });
+            }
+        }
+
+        function applyToggleState(settingKey, value) {
+            const toggle = Array.from(toggleSwitches).find(item => item.dataset.toggle === settingKey);
+            if (!toggle) return;
+            if (value) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+
+        async function loadPreferences() {
+            const user = getStoredUser();
+            if (!user?.id) return;
+
+            try {
+                const notificationData = await apiFetchJson('/notifications/preferences');
+                if (notificationData?.preferences) {
+                    notificationPreferencesState.emailEnabled = !!notificationData.preferences.emailEnabled;
+                    notificationPreferencesState.smsEnabled = !!notificationData.preferences.smsEnabled;
+                    notificationPreferencesState.pushEnabled = !!notificationData.preferences.pushEnabled;
+                    notificationPreferencesState.inAppEnabled = !!notificationData.preferences.inAppEnabled;
+                    notificationPreferencesState.quietHoursStart = notificationData.preferences.quietHoursStart || null;
+                    notificationPreferencesState.quietHoursEnd = notificationData.preferences.quietHoursEnd || null;
+                }
+            } catch (error) {
+                console.warn('Failed to load notification preferences:', error.message);
+            }
+
+            try {
+                const emailData = await apiFetchJson(`/email/preferences/${user.id}`);
+                if (typeof emailData.emailNotificationsEnabled === 'boolean') {
+                    emailPreferencesState.emailNotificationsEnabled = emailData.emailNotificationsEnabled;
+                }
+                if (emailData.preferences && typeof emailData.preferences === 'object') {
+                    emailPreferencesState.preferences = {
+                        ...emailPreferencesState.preferences,
+                        ...emailData.preferences
+                    };
+                }
+            } catch (error) {
+                console.warn('Failed to load email preferences:', error.message);
+            }
+
+            settingsState.emailNotifications = emailPreferencesState.emailNotificationsEnabled;
+            settingsState.smsNotifications = notificationPreferencesState.smsEnabled;
+            settingsState.inPlatformNotifications = notificationPreferencesState.inAppEnabled;
+
+            Object.keys(emailPreferenceMap).forEach(key => {
+                const mappedKey = emailPreferenceMap[key];
+                if (typeof emailPreferencesState.preferences[mappedKey] === 'boolean') {
+                    settingsState[key] = emailPreferencesState.preferences[mappedKey];
+                }
+            });
+
+            Object.keys(settingsState).forEach(key => {
+                applyToggleState(key, settingsState[key]);
+                localStorage.setItem(`setting_${key}`, settingsState[key]);
+            });
+        }
+
+        toggleSwitches.forEach(toggle => {
+            toggle.addEventListener('click', async () => {
+                const settingKey = toggle.dataset.toggle;
+                toggle.classList.toggle('active');
+                const newValue = toggle.classList.contains('active');
+                settingsState[settingKey] = newValue;
+
+                localStorage.setItem(`setting_${settingKey}`, settingsState[settingKey]);
+
+                try {
+                    await syncToggleSetting(settingKey, newValue);
+                    showSuccess('Notification preference updated');
+                } catch (error) {
+                    toggle.classList.toggle('active');
+                    settingsState[settingKey] = !newValue;
+                    localStorage.setItem(`setting_${settingKey}`, settingsState[settingKey]);
+                    alert(error.message || 'Failed to update preference');
+                }
+            });
+        });
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Change Email
+        document.getElementById('changeEmailBtn').addEventListener('click', () => {
+            openModal('emailModal');
+        });
+
+        document.getElementById('cancelEmailBtn').addEventListener('click', () => {
+            closeModal('emailModal');
+        });
+
+        document.getElementById('saveEmailBtn').addEventListener('click', async () => {
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const password = document.getElementById('emailPassword').value;
+
+            if (!newEmail || !password) {
+                alert('Please enter your new email and password.');
+                return;
+            }
+
+            try {
+                const data = await apiFetchJson('/users/me/email', {
+                    method: 'POST',
+                    body: JSON.stringify({ newEmail, password })
+                });
+
+                const user = getStoredUser() || {};
+                user.email = data.user.email;
+                user.fullName = data.user.fullName;
+                user.name = data.user.fullName;
+                user.phone = data.user.phone;
+                user.userType = data.user.userType;
+                user.role = data.user.role;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                applyUserProfile();
+                showSuccess('Email updated successfully.');
+                closeModal('emailModal');
+                document.getElementById('newEmail').value = '';
+                document.getElementById('emailPassword').value = '';
+            } catch (error) {
+                alert(error.message || 'Failed to update email');
+            }
+        });
+
+        // Change Phone
+        document.getElementById('changePhoneBtn').addEventListener('click', () => {
+            openModal('phoneModal');
+        });
+
+        document.getElementById('cancelPhoneBtn').addEventListener('click', () => {
+            closeModal('phoneModal');
+        });
+
+        document.getElementById('savePhoneBtn').addEventListener('click', async () => {
+            const newPhone = document.getElementById('newPhone').value.trim();
+            const password = document.getElementById('phonePassword').value;
+
+            if (!newPhone || !password) {
+                alert('Please enter your new phone number and password.');
+                return;
+            }
+
+            try {
+                const data = await apiFetchJson('/users/me/phone', {
+                    method: 'POST',
+                    body: JSON.stringify({ newPhone, password })
+                });
+
+                const user = getStoredUser() || {};
+                user.phone = data.user.phone;
+                user.fullName = data.user.fullName;
+                user.name = data.user.fullName;
+                user.email = data.user.email;
+                user.userType = data.user.userType;
+                user.role = data.user.role;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                applyUserProfile();
+                showSuccess('Phone number updated successfully.');
+                closeModal('phoneModal');
+                document.getElementById('newPhone').value = '';
+                document.getElementById('phonePassword').value = '';
+            } catch (error) {
+                alert(error.message || 'Failed to update phone number');
+            }
+        });
+
+        // Change Password
+        document.getElementById('changePasswordBtn').addEventListener('click', () => {
+            openModal('passwordModal');
+        });
+
+        document.getElementById('cancelPasswordBtn').addEventListener('click', () => {
+            closeModal('passwordModal');
+        });
+
+        document.getElementById('savePasswordBtn').addEventListener('click', async () => {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Please fill in all password fields.');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            try {
+                await apiFetchJson('/users/me/password', {
+                    method: 'POST',
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                showSuccess('Password changed successfully.');
+                closeModal('passwordModal');
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } catch (error) {
+                alert(error.message || 'Failed to change password');
+            }
+        });
+
+        // Log Out All Devices
+        document.getElementById('logoutAllBtn').addEventListener('click', () => {
+            openModal('logoutModal');
+        });
+
+        document.getElementById('cancelLogoutBtn').addEventListener('click', () => {
+            closeModal('logoutModal');
+        });
+
+        document.getElementById('confirmLogoutBtn').addEventListener('click', async () => {
+            const password = document.getElementById('logoutPassword').value;
+
+            if (!password) {
+                alert('Please enter your password.');
+                return;
+            }
+
+            try {
+                await apiFetchJson('/users/me/logout-all', {
+                    method: 'POST',
+                    body: JSON.stringify({ password })
+                });
+
+                localStorage.setItem('activeSessions', '1');
+                showSuccess('All other devices have been logged out.');
+                closeModal('logoutModal');
+                document.getElementById('logoutPassword').value = '';
+                applyUserProfile();
+            } catch (error) {
+                alert(error.message || 'Failed to log out other devices');
+            }
+        });
+
+        // Deactivate Account
+        document.getElementById('deactivateBtn').addEventListener('click', () => {
+            openModal('deactivateModal');
+        });
+
+        document.getElementById('cancelDeactivateBtn').addEventListener('click', () => {
+            closeModal('deactivateModal');
+        });
+
+        document.getElementById('confirmDeactivateBtn').addEventListener('click', async () => {
+            const password = document.getElementById('deactivatePassword').value;
+
+            if (!password) {
+                alert('Please enter your password.');
+                return;
+            }
+
+            try {
+                await apiFetchJson('/users/me/deactivate', {
+                    method: 'POST',
+                    body: JSON.stringify({ password })
+                });
+
+                localStorage.setItem('accountDeactivated', 'true');
+                alert('Account deactivated. You will be redirected to the login page.');
+                closeModal('deactivateModal');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                redirectToLogin();
+            } catch (error) {
+                alert(error.message || 'Failed to deactivate account');
+            }
+        });
+
+        // Success message helper
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            successText.textContent = message;
+            successMessage.classList.add('show');
+            
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        window.addEventListener('load', async () => {
+            if (!ensureAuth()) return;
+            await refreshUserProfile();
+            applyUserProfile();
+            await loadPreferences();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+

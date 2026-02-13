@@ -1,0 +1,2030 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <script defer src="/_vercel/analytics/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing & Payments - TradeMatch Vendor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    
+    <style>
+        :root {
+            /* Dark Theme */
+            --bg-primary: #0A0E14;
+            --bg-secondary: #12161E;
+            --bg-tertiary: #1A1F2B;
+            --bg-card: #1E2430;
+            --accent-primary: #00E5A0;
+            --accent-secondary: #00B383;
+            --accent-danger: #FF4757;
+            --accent-warning: #FFA726;
+            --accent-info: #42A5F5;
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 24px rgba(0, 229, 160, 0.4);
+            --ambient-gradient-1: rgba(0, 229, 160, 0.08);
+            --ambient-gradient-2: rgba(66, 165, 245, 0.08);
+        }
+        
+        [data-theme="light"] {
+            /* Light Theme */
+            --bg-primary: #F8FAFB;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #F3F4F6;
+            --bg-card: #FFFFFF;
+            --accent-primary: #16A34A;
+            --accent-secondary: #15803D;
+            --accent-danger: #EF4444;
+            --accent-warning: #F59E0B;
+            --accent-info: #3B82F6;
+            --text-primary: #1A2332;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.16);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+            --shadow-glow: 0 0 24px rgba(22, 163, 74, 0.3);
+            --ambient-gradient-1: rgba(22, 163, 74, 0.04);
+            --ambient-gradient-2: rgba(59, 130, 246, 0.04);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Background Ambient Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--ambient-gradient-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--ambient-gradient-2) 0%, transparent 50%);
+            animation: ambient 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes ambient {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 60px;
+            height: 32px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--border-hover);
+        }
+        
+        .theme-toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        [data-theme="light"] .theme-toggle-slider {
+            left: 30px;
+        }
+        
+        .theme-toggle-icon {
+            width: 16px;
+            height: 16px;
+            color: white;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-header {
+            padding: 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        
+        .nav-section {
+            margin-bottom: 24px;
+        }
+        
+        .nav-section-title {
+            padding: 8px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+        }
+        
+        .nav-item.active {
+            background: rgba(0, 229, 160, 0.12);
+            color: var(--accent-primary);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 24px;
+            background: var(--accent-primary);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        .nav-label {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar.collapsed .nav-label {
+            opacity: 0;
+        }
+        
+        .nav-badge {
+            margin-left: auto;
+            padding: 2px 8px;
+            background: var(--accent-danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 6px;
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar.collapsed .nav-badge {
+            opacity: 0;
+        }
+        
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .collapse-btn {
+            width: 100%;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .collapse-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+        
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 280px;
+            right: 0;
+            height: 72px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 90;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .top-nav.sidebar-collapsed {
+            left: 80px;
+        }
+        
+        .top-nav-left {
+            flex: 1;
+            max-width: 600px;
+        }
+        
+        .search-container {
+            position: relative;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        
+        .search-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 16px 0 48px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            background: var(--bg-card);
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .icon-button {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .icon-button:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+        
+        .icon-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-danger);
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px 6px 6px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .user-menu:hover {
+            border-color: var(--border-hover);
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 72px;
+            padding: 32px;
+            min-height: calc(100vh - 72px);
+            position: relative;
+            z-index: 1;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .main-content.sidebar-collapsed {
+            margin-left: 80px;
+        }
+        
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 32px;
+        }
+        
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        /* Warning Banner */
+        .warning-banner {
+            background: rgba(255, 167, 38, 0.12);
+            border: 1px solid var(--accent-warning);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        [data-theme="light"] .warning-banner {
+            background: rgba(245, 158, 11, 0.08);
+        }
+        
+        .warning-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .warning-content h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--accent-warning);
+        }
+        
+        .warning-content p {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        
+        /* Overview Cards */
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .overview-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-info));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .overview-card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .card-value {
+            font-size: 36px;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 8px;
+            line-height: 1;
+            color: var(--text-primary);
+        }
+        
+        .card-value.large {
+            font-size: 42px;
+        }
+        
+        .card-value small {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+        
+        .card-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .card-status.success {
+            background: rgba(22, 163, 74, 0.12);
+            color: var(--accent-primary);
+        }
+        
+        .card-status.warning {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent-warning);
+        }
+        
+        /* Section */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 8px;
+            cursor: help;
+        }
+        
+        .tooltip-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 320px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-align: left;
+            border-radius: 12px;
+            padding: 16px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -160px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Pricing Table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .pricing-table thead {
+            background: var(--bg-tertiary);
+        }
+        
+        .pricing-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .pricing-table td {
+            padding: 18px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        
+        .pricing-table tbody tr:hover {
+            background: rgba(0, 229, 160, 0.04);
+        }
+        
+        [data-theme="light"] .pricing-table tbody tr:hover {
+            background: rgba(22, 163, 74, 0.04);
+        }
+        
+        .budget-range {
+            font-weight: 600;
+        }
+        
+        .vendor-count {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+        
+        .fee {
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-size: 16px;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .roi-hint {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-style: italic;
+        }
+        
+        /* Info Note */
+        .info-note {
+            background: rgba(66, 165, 245, 0.08);
+            border: 1px solid rgba(66, 165, 245, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.6;
+        }
+        
+        .info-note .icon {
+            color: var(--accent-info);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        /* Payment Options */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        
+        .payment-option {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .payment-option.popular::after {
+            content: 'POPULAR';
+            position: absolute;
+            top: -10px;
+            right: 12px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        
+        .payment-option .amount {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .payment-option .bonus {
+            font-size: 13px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .payment-option .description {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        /* Auto Top-Up */
+        .auto-topup-section {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        
+        .auto-topup-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 28px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--accent-primary);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.active::after {
+            left: 27px;
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .settings-item label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .settings-item select {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        
+        .settings-item select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        /* Subscription Cards */
+        .subscription-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .subscription-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .subscription-card.active {
+            border-color: var(--accent-primary);
+            background: rgba(0, 229, 160, 0.04);
+        }
+        
+        [data-theme="light"] .subscription-card.active {
+            background: rgba(22, 163, 74, 0.04);
+        }
+        
+        .subscription-card.featured {
+            border-color: var(--accent-info);
+        }
+        
+        .subscription-card.featured::before {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-info);
+            color: white;
+            padding: 5px 16px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        
+        .subscription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .subscription-header h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .subscription-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .subscription-price {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            color: var(--accent-primary);
+        }
+        
+        .subscription-price small {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .subscription-features {
+            list-style: none;
+            margin: 24px 0;
+        }
+        
+        .subscription-features li {
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .subscription-features li::before {
+            content: 'âś“';
+            color: var(--accent-primary);
+            font-weight: 800;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .subscription-footer {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        
+        /* Transactions Table */
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .transactions-table thead {
+            background: var(--bg-tertiary);
+        }
+        
+        .transactions-table th {
+            padding: 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .transactions-table td {
+            padding: 18px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .transactions-table tbody tr:hover {
+            background: rgba(0, 229, 160, 0.04);
+        }
+        
+        [data-theme="light"] .transactions-table tbody tr:hover {
+            background: rgba(22, 163, 74, 0.04);
+        }
+        
+        .transaction-type {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .transaction-type.lead {
+            background: rgba(66, 165, 245, 0.15);
+            color: var(--accent-info);
+        }
+        
+        .transaction-type.subscription {
+            background: rgba(22, 163, 74, 0.15);
+            color: var(--accent-primary);
+        }
+        
+        .transaction-type.topup {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-warning);
+        }
+        
+        .transaction-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .transaction-status.paid {
+            color: var(--accent-primary);
+        }
+        
+        .download-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        
+        .download-link:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 10px 18px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            border-color: var(--accent-primary);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            background: rgba(0, 229, 160, 0.08);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .top-nav {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .subscription-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-table,
+            .transactions-table {
+                font-size: 12px;
+            }
+            
+            .pricing-table th,
+            .pricing-table td,
+            .transactions-table th,
+            .transactions-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="vendor-dashboard-with-modals" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text">TradeMatch</span>
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a href="vendor-dashboard-with-modals" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="vendor-analytics" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span class="nav-label">Analytics</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Leads & Jobs</div>
+                <a href="leads" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span class="nav-label">New Leads</span>
+                    <span class="nav-badge">12</span>
+                </a>
+                <a href="quotes" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="nav-label">Active Quotes</span>
+                </a>
+                <a href="jobs" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="nav-label">Won Jobs</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Communication</div>
+                <a href="/messages" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    <span class="nav-label">Messaging</span>
+                    <span class="nav-badge">3</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Reputation</div>
+                <a href="reviews" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="nav-label">Reviews</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Business</div>
+                <a href="vendor-billing" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span class="nav-label">Billing</span>
+                </a>
+                <a href="vendor-profile" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span class="nav-label">Profile</span>
+                </a>
+                <a href="/settings" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </div>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                </svg>
+            </button>
+        </div>
+    </aside>
+    
+    <!-- Top Navigation -->
+    <nav class="top-nav" id="topNav">
+        <div class="top-nav-left">
+            <div class="search-container">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Search leads, quotes, jobs...">
+            </div>
+        </div>
+        
+        <div class="top-nav-right">
+            <!-- Theme Toggle -->
+            <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                <div class="theme-toggle-slider">
+                    <svg class="theme-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Quick Actions Dropdown -->
+            <button class="icon-button" title="Quick Actions">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                </svg>
+            </button>
+            
+            <!-- Messages -->
+            <a href="/messages" class="icon-button" title="Messages">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                <span class="notification-badge"></span>
+            </a>
+            
+            <!-- Notifications -->
+            <button class="icon-button" title="Notifications">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span class="notification-badge"></span>
+            </button>
+            
+            <!-- User Menu -->
+            <div class="user-menu">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Pro Plan</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Billing & Payments</h1>
+            <p class="dashboard-subtitle">Manage your balance, subscriptions, and payment methods</p>
+        </div>
+        
+        <!-- Warning Banner (conditionally displayed when balance is low) -->
+        <div class="warning-banner" id="lowBalanceWarning" style="display: none;" data-billing-warning>
+            <div class="warning-icon">âš ď¸Ź</div>
+            <div class="warning-content">
+                <h4>Your Balance is Too Low to Receive New Leads</h4>
+                <p>You need at least ÂŁ8.00 to receive the next lead. Top up your balance now to continue receiving quote requests from verified homeowners.</p>
+                <button class="btn btn-primary" onclick="scrollToTopUp()">Top Up Balance</button>
+            </div>
+        </div>
+        
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <!-- Card 1: Available Balance -->
+            <div class="overview-card" id="balanceCard">
+                <div class="card-label">Available Balance</div>
+                <div class="card-value large">
+                    ÂŁ<span id="currentBalance" data-billing-balance>87.50</span>
+                </div>
+                <div class="card-status success" id="balanceStatus" data-billing-status>
+                    <span>âś“</span> Sufficient for leads
+                </div>
+                <div class="card-meta" id="balanceMeta" data-billing-meta>
+                    Can cover ~10 leads at current rates
+                </div>
+                <button class="btn btn-primary" onclick="openTopUpModal()">Top Up Balance</button>
+            </div>
+            
+            <!-- Card 2: Current Plan -->
+            <div class="overview-card">
+                <div class="card-label">Current Plan</div>
+                <div class="card-value">Pro</div>
+                <div class="card-meta">
+                    ÂŁ19.99/month<br>
+                    Next billing: Feb 15, 2026
+                </div>
+                <div class="card-status success">
+                    <span>âś“</span> Active
+                </div>
+                <button class="btn btn-secondary" onclick="managePlan()">Manage Plan</button>
+            </div>
+            
+            <!-- Card 3: This Month's Spend -->
+            <div class="overview-card">
+                <div class="card-label">Leads Purchased (This Month)</div>
+                <div class="card-value" data-billing-leads-count>23</div>
+                <div class="card-meta">
+                    Total spend: ÂŁ<span data-billing-leads-spend>187.50</span><br>
+                    Avg cost per lead: ÂŁ<span data-billing-leads-avg>8.15</span>
+                </div>
+                <button class="btn btn-secondary" onclick="viewLeadHistory()">View Details</button>
+            </div>
+            
+            <!-- Card 4: Auto Top-Up Status -->
+            <div class="overview-card">
+                <div class="card-label">Auto Top-Up</div>
+                <div class="card-value" style="font-size: 20px;">Enabled</div>
+                <div class="card-meta">
+                    Triggers when balance < ÂŁ25.00<br>
+                    Tops up: ÂŁ50.00
+                </div>
+                <button class="btn btn-secondary" onclick="configureAutoTopUp()">Configure</button>
+            </div>
+        </div>
+        
+        <!-- Lead Fee Pricing Table -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Lead Fee Pricing</h2>
+                    <div class="tooltip" style="display: inline-block;">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">
+                            <strong>Pay Per Lead System:</strong><br>
+                            You are only charged when a verified homeowner submits a quote request that matches your services and location. 
+                            The fee depends on the estimated job budget and number of competing vendors. Maximum fee is capped at ÂŁ50.00.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                TradeMatch uses a transparent, budget-based pricing model. You pay a one-time fee when a lead is delivered to you. 
+                Higher-value jobs have higher fees, but also higher potential returns.
+            </p>
+
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Estimated Job Budget</th>
+                        <th>Vendors per Lead</th>
+                        <th>TradeMatch Lead Fee</th>
+                        <th>Your ROI Indicator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="budget-range">ÂŁ0 - ÂŁ500</td>
+                        <td class="vendor-count">3-5 vendors</td>
+                        <td class="fee">ÂŁ8.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~5-6 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ500 - ÂŁ1,000</td>
+                        <td class="vendor-count">3-5 vendors</td>
+                        <td class="fee">ÂŁ12.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~7-8 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ1,000 - ÂŁ2,500</td>
+                        <td class="vendor-count">3-5 vendors</td>
+                        <td class="fee">ÂŁ18.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~10 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ2,500 - ÂŁ5,000</td>
+                        <td class="vendor-count">3-4 vendors</td>
+                        <td class="fee">ÂŁ25.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~12 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ5,000 - ÂŁ10,000</td>
+                        <td class="vendor-count">3-4 vendors</td>
+                        <td class="fee">ÂŁ35.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~15 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ10,000 - ÂŁ25,000</td>
+                        <td class="vendor-count">2-3 vendors</td>
+                        <td class="fee">ÂŁ45.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~20 leads</td>
+                    </tr>
+                    <tr>
+                        <td class="budget-range">ÂŁ25,000+</td>
+                        <td class="vendor-count">2-3 vendors</td>
+                        <td class="fee">ÂŁ50.00</td>
+                        <td class="roi-hint">Win 1 job â†’ covers ~25+ leads</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-note">
+                <div class="icon">â„ąď¸Ź</div>
+                <div>
+                    <strong>How it works:</strong> When a homeowner posts a job, we estimate the budget based on their requirements. 
+                    We then match them with 2-5 qualified vendors in their area. You're only charged if you're selected to receive the lead. 
+                    Fees are automatically deducted from your balance. If your balance is insufficient, you won't receive the lead.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Balance & Payment Options -->
+        <div class="section" id="topUpSection">
+            <div class="section-header">
+                <h2>Top Up Your Balance</h2>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Purchase credits to unlock leads instantly. Payments are processed securely via Stripe.
+            </p>
+
+            <div class="payment-options">
+                <div class="payment-option" onclick="purchaseCredits('starter')">
+                    <div class="amount">ÂŁ4.99</div>
+                    <div class="description">10 credits â€˘ Starter</div>
+                </div>
+
+                <div class="payment-option popular" onclick="purchaseCredits('professional')">
+                    <div class="amount">ÂŁ10.99</div>
+                    <div class="description">25 credits â€˘ Professional</div>
+                </div>
+
+                <div class="payment-option" onclick="purchaseCredits('business')">
+                    <div class="amount">ÂŁ19.99</div>
+                    <div class="description">50 credits â€˘ Business</div>
+                </div>
+
+                <div class="payment-option" onclick="purchaseCredits('premium')">
+                    <div class="amount">ÂŁ79.99</div>
+                    <div class="description">250 credits â€˘ Premium</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <button class="btn btn-secondary" onclick="customTopUp()">Enter Custom Amount</button>
+            </div>
+
+            <!-- Auto Top-Up Configuration -->
+            <div class="auto-topup-section">
+                <h3>Automatic Top-Up</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">
+                    Never miss a lead. We'll automatically top up your balance when it drops below your chosen threshold.
+                </p>
+
+                <div class="toggle-container">
+                    <div>
+                        <strong>Enable Auto Top-Up</strong><br>
+                        <span style="font-size: 13px; color: var(--text-secondary);">Automatically maintain your balance</span>
+                    </div>
+                    <div class="toggle-switch active" onclick="toggleAutoTopUp(this)"></div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-item">
+                        <label>Trigger When Balance Falls Below</label>
+                        <select id="autoTopUpThreshold">
+                            <option value="15">ÂŁ15.00</option>
+                            <option value="25" selected>ÂŁ25.00</option>
+                            <option value="50">ÂŁ50.00</option>
+                            <option value="75">ÂŁ75.00</option>
+                            <option value="100">ÂŁ100.00</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-item">
+                        <label>Top-Up Amount</label>
+                        <select id="autoTopUpAmount">
+                            <option value="25">ÂŁ25.00</option>
+                            <option value="50" selected>ÂŁ50.00</option>
+                            <option value="100">ÂŁ100.00</option>
+                            <option value="150">ÂŁ150.00</option>
+                            <option value="250">ÂŁ250.00</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveAutoTopUpSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Plans & Subscriptions -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Plans & Subscriptions</h2>
+            </div>
+
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Upgrade your account with premium features, verified badges, and expanded coverage.
+            </p>
+
+            <div class="subscription-cards">
+                <!-- Free Plan -->
+                <div class="subscription-card">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Free</h3>
+                            <p>Basic features</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ0<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>Pay-per-lead pricing only</li>
+                        <li>10 postcode districts included</li>
+                        <li>Basic profile features</li>
+                        <li>Standard lead delivery</li>
+                        <li>Email support</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <button class="btn btn-secondary" disabled>Current Plan</button>
+                    </div>
+                </div>
+
+                <!-- Pro Plan (Active) -->
+                <div class="subscription-card active featured">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Pro</h3>
+                            <p>For growing businesses</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ19.99<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>All Free features</li>
+                        <li>Heatmaps & postcode demand insights</li>
+                        <li>CRM features & lead management</li>
+                        <li>Impression analytics dashboard</li>
+                        <li>Priority listing in search results</li>
+                        <li>Priority email support</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <div class="card-status success" style="margin-bottom: 12px;">
+                            <span>âś“</span> Currently Active
+                        </div>
+                        <button class="btn btn-secondary" onclick="managePlan()">Manage Subscription</button>
+                    </div>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="subscription-card">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Premium</h3>
+                            <p>Maximum visibility</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ39.99<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>All Pro features</li>
+                        <li>Featured vendor badge</li>
+                        <li>Top placement in search results</li>
+                        <li>Unlimited postcode coverage</li>
+                        <li>AI-powered lead recommendations</li>
+                        <li>24/7 priority support</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <button class="btn btn-primary" onclick="upgradeToPremium()">Upgrade to Premium</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add-Ons -->
+            <h3 style="font-size: 22px; font-weight: 800; margin-top: 48px; margin-bottom: 24px;">Add-Ons & Enhancements</h3>
+
+            <div class="subscription-cards">
+                <!-- Verified Badge (Active) -->
+                <div class="subscription-card active">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Verified Business Badge</h3>
+                            <p>Build trust with customers</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ4.99<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>Companies House verification</li>
+                        <li>Insurance validation</li>
+                        <li>Trading Standards checks</li>
+                        <li>Trust badge on profile & search</li>
+                        <li>Higher quote acceptance rate</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <div class="card-status success" style="margin-bottom: 12px;">
+                            <span>âś“</span> Active
+                        </div>
+                        <button class="btn btn-secondary" onclick="manageVerifiedBadge()">Manage Badge</button>
+                    </div>
+                </div>
+
+                <!-- Postcode Expansion -->
+                <div class="subscription-card">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Postcode Expansion - Starter</h3>
+                            <p>+5 extra districts</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ9.99<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>15 total postcode districts</li>
+                        <li>Expand your coverage area</li>
+                        <li>Fair lead distribution</li>
+                        <li>Cancel anytime</li>
+                        <li>Immediate activation</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <button class="btn btn-primary" onclick="purchasePostcodeExpansion('starter')">Add to Plan</button>
+                    </div>
+                </div>
+
+                <!-- Postcode Growth -->
+                <div class="subscription-card">
+                    <div class="subscription-header">
+                        <div>
+                            <h3>Postcode Expansion - Growth</h3>
+                            <p>+15 extra districts</p>
+                        </div>
+                        <div class="subscription-price">ÂŁ24.99<small>/mo</small></div>
+                    </div>
+                    <ul class="subscription-features">
+                        <li>25 total postcode districts</li>
+                        <li>Significantly expand coverage</li>
+                        <li>Best for multi-region traders</li>
+                        <li>Saturation warnings included</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <div class="subscription-footer">
+                        <button class="btn btn-primary" onclick="purchasePostcodeExpansion('growth')">Add to Plan</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-note" style="margin-top: 24px;">
+                <div class="icon">â„ąď¸Ź</div>
+                <div>
+                    <strong>Postcode Saturation Warning:</strong> Some postcodes may be saturated with vendors in your trade. 
+                    We'll show you competition levels before you add new areas. Expansion packages are stackable and can be cancelled anytime.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transaction History -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Invoices & Transaction History</h2>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterTransactions('all', this)">All Transactions</button>
+                <button class="filter-btn" onclick="filterTransactions('lead', this)">Lead Charges</button>
+                <button class="filter-btn" onclick="filterTransactions('subscription', this)">Subscriptions</button>
+                <button class="filter-btn" onclick="filterTransactions('topup', this)">Top-Ups</button>
+            </div>
+
+            <table class="transactions-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Invoice</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody" data-billing-transactions>
+                    <tr>
+                        <td>Feb 03, 2026</td>
+                        <td><span class="transaction-type lead">Lead</span></td>
+                        <td>
+                            Kitchen renovation - E2 4RT<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Lead ID: lead_abc123</span>
+                        </td>
+                        <td>-ÂŁ18.00</td>
+                        <td><span class="transaction-status paid">âś“ Paid</span></td>
+                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_001'); return false;">Download</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Feb 02, 2026</td>
+                        <td><span class="transaction-type topup">Top-Up</span></td>
+                        <td>
+                            Balance top-up<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Payment ID: pi_xyz789</span>
+                        </td>
+                        <td>+ÂŁ50.00</td>
+                        <td><span class="transaction-status paid">âś“ Paid</span></td>
+                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_002'); return false;">Download</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Feb 01, 2026</td>
+                        <td><span class="transaction-type subscription">Subscription</span></td>
+                        <td>
+                            Pro Plan - Monthly<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Period: Feb 01 - Mar 01</span>
+                        </td>
+                        <td>-ÂŁ19.99</td>
+                        <td><span class="transaction-status paid">âś“ Paid</span></td>
+                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_003'); return false;">Download</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Feb 01, 2026</td>
+                        <td><span class="transaction-type subscription">Add-On</span></td>
+                        <td>
+                            Verified Business Badge<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Period: Feb 01 - Mar 01</span>
+                        </td>
+                        <td>-ÂŁ4.99</td>
+                        <td><span class="transaction-status paid">âś“ Paid</span></td>
+                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_004'); return false;">Download</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Jan 31, 2026</td>
+                        <td><span class="transaction-type lead">Lead</span></td>
+                        <td>
+                            Bathroom fitting - SW1 2AA<br>
+                            <span style="font-size: 12px; color: var(--text-muted);">Lead ID: lead_def456</span>
+                        </td>
+                        <td>-ÂŁ12.00</td>
+                        <td><span class="transaction-status paid">âś“ Paid</span></td>
+                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_005'); return false;">Download</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="text-align: center; margin-top: 28px;">
+                <button class="btn btn-secondary" onclick="loadMoreTransactions()">Load More</button>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            const icon = document.querySelector('.theme-toggle-icon');
+            if (newTheme === 'light') {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+            }
+        }
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        // Update icon on load
+        if (savedTheme === 'light') {
+            const icon = document.querySelector('.theme-toggle-icon');
+            if (icon) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+            }
+        }
+        
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const topNav = document.getElementById('topNav');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            topNav.classList.toggle('sidebar-collapsed');
+            mainContent.classList.toggle('sidebar-collapsed');
+        }
+        
+        // Top-up functions
+        function scrollToTopUp() {
+            document.getElementById('topUpSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function selectTopUp(amount) {
+            const map = {
+                4.99: 'starter',
+                10.99: 'professional',
+                19.99: 'business',
+                79.99: 'premium'
+            };
+            const pkg = map[Number(amount)] || null;
+            if (!pkg) {
+                alert('Please choose a credit package.');
+                return;
+            }
+            if (typeof window.purchaseCredits === 'function') {
+                window.purchaseCredits(pkg);
+            }
+        }
+        
+        function customTopUp() {
+            alert('Custom top-ups are not available yet. Please choose a package.');
+        }
+        
+        function openTopUpModal() {
+            scrollToTopUp();
+        }
+        
+        function toggleAutoTopUp(element) {
+            element.classList.toggle('active');
+        }
+        
+        function configureAutoTopUp() {
+            scrollToTopUp();
+            document.querySelector('.auto-topup-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function saveAutoTopUpSettings() {
+            alert('Auto top-up settings saved successfully!');
+        }
+        
+        // Subscription functions
+        function managePlan() {
+            alert('Redirecting to subscription management...');
+        }
+        
+        function upgradeToPremium() {
+            if (confirm('Upgrade to Premium plan for ÂŁ39.99/month?')) {
+                alert('Redirecting to upgrade checkout...');
+            }
+        }
+        
+        function manageVerifiedBadge() {
+            alert('Opening verified badge management...');
+        }
+        
+        function purchasePostcodeExpansion(package) {
+            const prices = { starter: 9.99, growth: 24.99, power: 39.99 };
+            const districts = { starter: '+5', growth: '+15', power: '+30' };
+            
+            if (confirm(`Add Postcode Expansion (${package}) - ${districts[package]} districts for ÂŁ${prices[package]}/month?`)) {
+                alert('Redirecting to checkout...');
+            }
+        }
+        
+        // Transaction functions
+        function filterTransactions(type, button) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            if (button) {
+                button.classList.add('active');
+            }
+            
+            console.log('Filtering transactions by type:', type);
+            alert(`Filtering by: ${type}`);
+        }
+        
+        function loadMoreTransactions() {
+            alert('Loading more transactions...');
+        }
+        
+        function downloadInvoice(invoiceId) {
+            console.log('Downloading invoice:', invoiceId);
+            alert(`Downloading invoice ${invoiceId}...`);
+        }
+        
+        function viewLeadHistory() {
+            alert('Opening lead history...');
+        }
+        
+    </script>
+    <script src="/vendor-dashboard/dashboardApp.js" defer></script>
+</body>
+</html>
+
+
+
+
+

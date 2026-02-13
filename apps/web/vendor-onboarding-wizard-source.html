@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script defer src="/_vercel/analytics/script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Onboarding - TradeMatch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/vendor-dashboard/modals/vendor-onboarding-wizard.css">
+</head>
+<body>
+    <div class="modal-overlay" id="onboardingModal">
+        <div class="modal-container">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <svg class="sun-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                </svg>
+            </button>
+
+            <div class="modal-header">
+                <div class="logo">
+                    <div class="logo-icon">T</div>
+                    <span class="logo-text">TradeMatch</span>
+                </div>
+                <div class="step-indicator">
+                    <span class="step-current">Step <span id="currentStep">1</span></span>
+                    <span class="step-total">of 6</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="modal-content">
+                <div class="step active" data-step="1">
+                    <div class="step-inner">
+                        <div class="step-icon-large">đź’°</div>
+                        <h1 class="step-title">What You Can Earn on <span class="gradient-text">TradeMatch</span></h1>
+                        <p class="step-subtitle">Real earnings from vendors like you</p>
+                        <div class="earnings-examples">
+                            <div class="earnings-example-card">
+                                <div class="earnings-example-icon">đź”§</div>
+                                <div class="earnings-example-label">Small Jobs</div>
+                                <div class="earnings-example-range">
+                                    <span class="earnings-min" data-count="150">ÂŁ0</span>
+                                    <span class="earnings-separator">â€“</span>
+                                    <span class="earnings-max" data-count="500">ÂŁ0</span>
+                                </div>
+                                <div class="earnings-example-desc">Emergency repairs, quick fixes, maintenance</div>
+                            </div>
+                            <div class="earnings-example-card">
+                                <div class="earnings-example-icon">đźŹ </div>
+                                <div class="earnings-example-label">Medium Jobs</div>
+                                <div class="earnings-example-range">
+                                    <span class="earnings-min" data-count="1000">ÂŁ0</span>
+                                    <span class="earnings-separator">â€“</span>
+                                    <span class="earnings-max" data-count="5000">ÂŁ0</span>
+                                </div>
+                                <div class="earnings-example-desc">Bathroom refits, kitchen installs, rewiring</div>
+                            </div>
+                            <div class="earnings-example-card highlighted">
+                                <div class="earnings-example-icon">đźŹ—ď¸Ź</div>
+                                <div class="earnings-example-label">Large Jobs</div>
+                                <div class="earnings-example-range">
+                                    <span class="earnings-min" data-count="10000">ÂŁ0</span>
+                                    <span class="earnings-plus">+</span>
+                                </div>
+                                <div class="earnings-example-desc">Extensions, full renovations, new builds</div>
+                            </div>
+                        </div>
+                        <div class="roi-explainer">
+                            <div class="roi-explainer-header">
+                                <div class="roi-explainer-icon">đź“Š</div>
+                                <h3>One Job Covers Months of Leads</h3>
+                            </div>
+                            <div class="roi-flow">
+                                <div class="roi-flow-item">
+                                    <div class="roi-flow-value">ÂŁ5</div>
+                                    <div class="roi-flow-label">Typical lead cost</div>
+                                </div>
+                                <div class="roi-flow-arrow">â†’</div>
+                                <div class="roi-flow-item">
+                                    <div class="roi-flow-value">ÂŁ2,000</div>
+                                    <div class="roi-flow-label">Average job value</div>
+                                </div>
+                                <div class="roi-flow-arrow">â†’</div>
+                                <div class="roi-flow-item highlighted">
+                                    <div class="roi-flow-value">400x</div>
+                                    <div class="roi-flow-label">Return on investment</div>
+                                </div>
+                            </div>
+                            <div class="roi-explainer-note">
+                                <strong>Real example:</strong> A ÂŁ50 wallet top-up covers 8-15 leads. One medium job typically pays for 6+ months of lead costs.
+                            </div>
+                        </div>
+                        <div class="trust-stats-inline">
+                            <div class="trust-stat-inline">
+                                <div class="trust-stat-value">ÂŁ3,200</div>
+                                <div class="trust-stat-label">Avg monthly earnings</div>
+                            </div>
+                            <div class="trust-stat-inline">
+                                <div class="trust-stat-value">67%</div>
+                                <div class="trust-stat-label">Quote acceptance</div>
+                            </div>
+                            <div class="trust-stat-inline">
+                                <div class="trust-stat-value">12,000+</div>
+                                <div class="trust-stat-label">Active vendors</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-inner">
+                        <div class="step-icon-large">âš–ď¸Ź</div>
+                        <h1 class="step-title">How TradeMatch <span class="gradient-text">Compares</span></h1>
+                        <p class="step-subtitle">Honest comparison with other platforms</p>
+                        <div class="comparison-table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Platform</th>
+                                        <th>
+                                            Pricing Model
+                                            <span class="tooltip-trigger" data-tooltip="How you pay for the service">â“</span>
+                                        </th>
+                                        <th>
+                                            Avg Lead Cost
+                                            <span class="tooltip-trigger" data-tooltip="Typical cost per customer contact">â“</span>
+                                        </th>
+                                        <th>
+                                            Contract
+                                            <span class="tooltip-trigger" data-tooltip="Locked into minimum term">â“</span>
+                                        </th>
+                                        <th>
+                                            Transparency
+                                            <span class="tooltip-trigger" data-tooltip="Price clarity before purchase">â“</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="highlighted-row">
+                                        <td class="platform-name">
+                                            <span class="platform-logo">T</span>
+                                            <strong>TradeMatch</strong>
+                                        </td>
+                                        <td>Pay-per-lead</td>
+                                        <td class="positive">ÂŁ3â€“ÂŁ15</td>
+                                        <td class="positive">âťŚ No</td>
+                                        <td class="positive">âś… High</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="platform-name">MyBuilder</td>
+                                        <td>Annual subscription</td>
+                                        <td class="neutral">ÂŁ1,000+/year</td>
+                                        <td class="negative">âś… Yes</td>
+                                        <td class="negative">âťŚ Low</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="platform-name">Bark</td>
+                                        <td>Credit bundles</td>
+                                        <td class="negative">ÂŁ10â€“ÂŁ30</td>
+                                        <td class="positive">âťŚ No</td>
+                                        <td class="negative">âťŚ Low</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="platform-name">Checkatrade</td>
+                                        <td>Membership</td>
+                                        <td class="neutral">ÂŁ1,200+/year</td>
+                                        <td class="negative">âś… Yes</td>
+                                        <td class="negative">âťŚ Low</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="platform-name">Rated People</td>
+                                        <td>Credit packs</td>
+                                        <td class="negative">ÂŁ10â€“ÂŁ40</td>
+                                        <td class="positive">âťŚ No</td>
+                                        <td class="neutral">âš ď¸Ź Medium</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="comparison-highlights">
+                            <div class="comparison-highlight">
+                                <div class="comparison-highlight-icon">đź’ł</div>
+                                <div class="comparison-highlight-content">
+                                    <h4>No Contracts</h4>
+                                    <p>Pay as you go. Pause or stop anytime without penalty.</p>
+                                </div>
+                            </div>
+                            <div class="comparison-highlight">
+                                <div class="comparison-highlight-icon">đź’Ž</div>
+                                <div class="comparison-highlight-content">
+                                    <h4>Lowest Lead Costs</h4>
+                                    <p>Up to 8x cheaper per lead than competitors.</p>
+                                </div>
+                            </div>
+                            <div class="comparison-highlight">
+                                <div class="comparison-highlight-icon">đź‘ď¸Ź</div>
+                                <div class="comparison-highlight-content">
+                                    <h4>Complete Transparency</h4>
+                                    <p>See exact lead price before unlocking. No surprises.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-box-icon">â„ąď¸Ź</div>
+                            <div class="info-box-content">
+                                <p><strong>Note:</strong> All pricing data accurate as of Feb 2025. Competitor pricing may vary by region and membership tier.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-inner">
+                        <div class="step-icon-large">đźŽŻ</div>
+                        <h1 class="step-title">How <span class="gradient-text">TradeMatch</span> Works</h1>
+                        <p class="step-subtitle">Simple, transparent lead system</p>
+                        <div class="flow-diagram">
+                            <div class="flow-step">
+                                <div class="flow-step-number">1</div>
+                                <div class="flow-step-icon">đź“ť</div>
+                                <div class="flow-step-title">Customer Posts Job</div>
+                                <div class="flow-step-desc">Local customers describe their project with verified details</div>
+                            </div>
+                            <div class="flow-connector"></div>
+                            <div class="flow-step">
+                                <div class="flow-step-number">2</div>
+                                <div class="flow-step-icon">đźŽŻ</div>
+                                <div class="flow-step-title">Smart Matching</div>
+                                <div class="flow-step-desc">Our algorithm matches based on trade, location & availability</div>
+                            </div>
+                            <div class="flow-connector"></div>
+                            <div class="flow-step">
+                                <div class="flow-step-number">3</div>
+                                <div class="flow-step-icon">đź‘€</div>
+                                <div class="flow-step-title">You Review Lead</div>
+                                <div class="flow-step-desc">See job details, budget, and exact lead cost upfront</div>
+                            </div>
+                            <div class="flow-connector"></div>
+                            <div class="flow-step highlighted">
+                                <div class="flow-step-number">4</div>
+                                <div class="flow-step-icon">đź”“</div>
+                                <div class="flow-step-title">Choose to Unlock</div>
+                                <div class="flow-step-desc">Only pay if you want the job. Get instant customer contact</div>
+                            </div>
+                        </div>
+                        <div class="guarantees-grid">
+                            <div class="guarantee-card">
+                                <div class="guarantee-icon">đź›ˇď¸Ź</div>
+                                <div class="guarantee-title">Never Auto-Charged</div>
+                                <div class="guarantee-desc">You manually unlock each lead. No surprises.</div>
+                            </div>
+                            <div class="guarantee-card">
+                                <div class="guarantee-icon">âś‹</div>
+                                <div class="guarantee-title">Only Unlock What You Want</div>
+                                <div class="guarantee-desc">Pass on jobs that don't fit your schedule.</div>
+                            </div>
+                            <div class="guarantee-card">
+                                <div class="guarantee-icon">đź’Ż</div>
+                                <div class="guarantee-title">Price Before Purchase</div>
+                                <div class="guarantee-desc">See exact cost before unlocking any lead.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-inner">
+                        <div class="step-icon-large">đźŹ˘</div>
+                        <h1 class="step-title">Your <span class="gradient-text">Business</span> Details</h1>
+                        <p class="step-subtitle">Help customers find and trust you</p>
+                        <form class="onboarding-form">
+                            <div class="form-group">
+                                <label class="form-label">Business Name <span class="required">*</span></label>
+                                <input type="text" class="form-input" placeholder="e.g. John's Plumbing Services" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Trade Categories <span class="required">*</span></label>
+                                <div class="trade-select-compact">
+                                    <select class="form-select" multiple size="8" required>
+                                        <option value="architecture">đź“ Architecture</option>
+                                        <option value="bathroom-fitting">đź› Bathroom Fitting</option>
+                                        <option value="bricklaying">đź§± Bricklaying</option>
+                                        <option value="cad-drawings">đź“‹ CAD / Drawings</option>
+                                        <option value="carpentry">đź”¨ Carpentry</option>
+                                        <option value="carpets-lino">đźŹ  Carpets & Lino</option>
+                                        <option value="central-heating">â™¨ď¸Ź Central Heating</option>
+                                        <option value="cleaning-services">đź§ą Cleaning Services</option>
+                                        <option value="conservatories">đźŹˇ Conservatories</option>
+                                        <option value="conversions">đź”„ Conversions - General</option>
+                                        <option value="damp-proofing">đź’§ Damp Proofing</option>
+                                        <option value="decking">đźŞµ Decking</option>
+                                        <option value="demolition">đź’Ą Demolition</option>
+                                        <option value="driveways-paved">đźš— Driveways (Paved)</option>
+                                        <option value="driveways-tarmac">đź›Łď¸Ź Driveways (Tarmac)</option>
+                                        <option value="electrical">âšˇ Electrical</option>
+                                        <option value="extensions">đźŹ—ď¸Ź Extensions</option>
+                                        <option value="fascias-soffits">đźŹ  Fascias & Soffits</option>
+                                        <option value="fencing">đźš§ Fencing</option>
+                                        <option value="fireplaces-flues">đź”Ą Fireplaces & Flues</option>
+                                        <option value="garden-maintenance">đźŚ» Garden Maintenance</option>
+                                        <option value="gas-work">đź”Ą Gas Work</option>
+                                        <option value="groundwork-foundations">â›Źď¸Ź Groundwork & Foundations</option>
+                                        <option value="guttering">đźŚ§ď¸Ź Guttering</option>
+                                        <option value="handyman">đź› ď¸Ź Handyman</option>
+                                        <option value="hard-flooring">đź”˛ Hard Flooring</option>
+                                        <option value="insulation">đź§Š Insulation</option>
+                                        <option value="joinery-cabinet">đźŞ‘ Joinery & Cabinet Making</option>
+                                        <option value="kitchen-fitting">đźŤł Kitchen Fitting</option>
+                                        <option value="landscaping">đźŚł Landscaping</option>
+                                        <option value="locksmiths">đź” Locksmiths</option>
+                                        <option value="loft-conversion">đźŹšď¸Ź Loft Conversion</option>
+                                        <option value="moving-services">đź“¦ Moving Services</option>
+                                        <option value="new-builds">đźŹď¸Ź New Builds</option>
+                                        <option value="painting-decorating">đźŽ¨ Painting & Decorating</option>
+                                        <option value="plastering">đź§± Plastering</option>
+                                        <option value="plumbing">đźš° Plumbing</option>
+                                        <option value="repointing">đź§± Repointing</option>
+                                        <option value="restoration-refurbishment">â™»ď¸Ź Restoration & Refurbishment</option>
+                                        <option value="roofing-flat">đźŹ—ď¸Ź Roofing (Flat)</option>
+                                        <option value="roofing-pitched">đźŹ  Roofing (Pitched)</option>
+                                        <option value="security-systems">đź“ą Security Systems</option>
+                                        <option value="stonemasonry">đź—ż Stonemasonry</option>
+                                        <option value="tiling">đź”ł Tiling</option>
+                                        <option value="tree-surgery">đźŚ˛ Tree Surgery</option>
+                                        <option value="waste-clearance">đź—‘ď¸Ź Waste Clearance</option>
+                                        <option value="windows-doors-upvc">đźŞź Windows & Doors (uPVC)</option>
+                                        <option value="windows-doors-wooden">đźšŞ Windows & Doors (Wooden)</option>
+                                    </select>
+                                    <p class="form-hint">Hold Ctrl (Cmd on Mac) to select multiple</p>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Years of Experience</label>
+                                    <input type="number" class="form-input" placeholder="e.g. 10" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-input" placeholder="e.g. 07700 900000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Business Description</label>
+                                <textarea class="form-textarea" rows="4" placeholder="Tell customers about your business, experience, and what makes you stand out..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-inner">
+                        <div class="step-icon-large">đź“Ť</div>
+                        <h1 class="step-title">Service <span class="gradient-text">Coverage</span> Area</h1>
+                        <p class="step-subtitle">Where do you work?</p>
+                        <form class="onboarding-form">
+                            <div class="form-group">
+                                <label class="form-label">Base Postcode <span class="required">*</span></label>
+                                <input type="text" class="form-input input-large" placeholder="e.g. SW1A 1AA" required>
+                                <p class="form-hint">đź’ˇ This is your business location or coverage area center</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Service Radius <span class="required">*</span></label>
+                                <div class="radius-options">
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="5">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">5 miles</span>
+                                            <span class="radio-sublabel">Local area</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="10" checked>
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">10 miles</span>
+                                            <span class="radio-sublabel">Recommended</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="15">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">15 miles</span>
+                                            <span class="radio-sublabel">Wide area</span>
+                                        </div>
+                                    </label>
+                                    <label class="radio-card">
+                                        <input type="radio" name="radius" value="25">
+                                        <div class="radio-card-content">
+                                            <span class="radio-label">25 miles</span>
+                                            <span class="radio-sublabel">Extended</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="step" data-step="6">
+                    <div class="step-inner">
+                        <div class="step-icon-large">đź’ł</div>
+                        <h1 class="step-title">Fund Your <span class="gradient-text">Lead Wallet</span></h1>
+                        <p class="step-subtitle">Most vendors start with ÂŁ50</p>
+                        <div class="wallet-psychology">
+                            <div class="wallet-stat">
+                                <div class="wallet-stat-icon">đź‘Ą</div>
+                                <div class="wallet-stat-text">
+                                    <strong>78% of vendors</strong> start with ÂŁ50
+                                </div>
+                            </div>
+                            <div class="wallet-stat">
+                                <div class="wallet-stat-icon">đź“¦</div>
+                                <div class="wallet-stat-text">
+                                    <strong>ÂŁ50 covers</strong> 8-15 quality leads
+                                </div>
+                            </div>
+                            <div class="wallet-stat">
+                                <div class="wallet-stat-icon">âś…</div>
+                                <div class="wallet-stat-text">
+                                    <strong>Average ROI:</strong> 48x your investment
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topup-section">
+                            <h3>Select Your Starting Amount</h3>
+                            <div class="topup-grid">
+                                <label class="topup-card">
+                                    <input type="radio" name="topup" value="25">
+                                    <div class="topup-card-content">
+                                        <div class="topup-amount">ÂŁ25</div>
+                                        <div class="topup-leads">~5-8 leads</div>
+                                        <div class="topup-earning">â‰ ÂŁ1,000 potential</div>
+                                    </div>
+                                </label>
+                                <label class="topup-card recommended">
+                                    <input type="radio" name="topup" value="50" checked>
+                                    <div class="topup-card-content">
+                                        <div class="topup-badge">Most Popular</div>
+                                        <div class="topup-amount">ÂŁ50</div>
+                                        <div class="topup-leads">~12-16 leads</div>
+                                        <div class="topup-bonus">+10% bonus credits</div>
+                                        <div class="topup-earning">â‰ ÂŁ2,400 potential</div>
+                                    </div>
+                                </label>
+                                <label class="topup-card">
+                                    <input type="radio" name="topup" value="100">
+                                    <div class="topup-card-content">
+                                        <div class="topup-amount">ÂŁ100</div>
+                                        <div class="topup-leads">~25-30 leads</div>
+                                        <div class="topup-bonus">+20% bonus credits</div>
+                                        <div class="topup-earning">â‰ ÂŁ5,000 potential</div>
+                                    </div>
+                                </label>
+                                <label class="topup-card">
+                                    <input type="radio" name="topup" value="0">
+                                    <div class="topup-card-content">
+                                        <div class="topup-amount">ÂŁ0</div>
+                                        <div class="topup-leads">Skip for now</div>
+                                        <div class="topup-note">Add funds later</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="trust-signals-payment">
+                            <div class="trust-signal-item">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Secure payments via Stripe</span>
+                            </div>
+                            <div class="trust-signal-item">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <span>Invoices available instantly</span>
+                            </div>
+                            <div class="trust-signal-item">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                                </svg>
+                                <span>Credits never expire</span>
+                            </div>
+                        </div>
+                        <div class="info-box info-box-accent">
+                            <div class="info-box-icon">âś¨</div>
+                            <div class="info-box-content">
+                                <p><strong>100% Risk-Free:</strong> If you're not satisfied with lead quality in your first month, we'll refund unused credits. No questions asked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="skipBtn">Skip for now</button>
+                <div class="footer-actions">
+                    <button class="btn btn-secondary" id="backBtn" disabled>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        Back
+                    </button>
+                    <button class="btn btn-primary btn-pulse" id="nextBtn">
+                        <span id="nextBtnText">Continue</span>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/vendor-dashboard/modals/vendor-onboarding-wizard.js" defer></script>
+</body>
+</html>
+
+
+
+
