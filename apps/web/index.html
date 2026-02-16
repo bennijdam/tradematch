@@ -5422,9 +5422,11 @@
     </footer>
 
 <script>
-        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-            ? 'http://localhost:3001'
-            : 'https://api.tradematch.uk';
+    const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    // Prefer same-origin in production (works on single-domain deployments without CORS).
+    // Keep a fallback API host for split deployments.
+    const API_BASE = IS_LOCAL ? 'http://localhost:3001' : '';
+    const API_FALLBACK_BASE = IS_LOCAL ? 'http://localhost:3001' : 'https://api.tradematch.uk';
         
         // Postcode Autocomplete Implementation
         class PostcodeAutocomplete {
@@ -5526,18 +5528,28 @@
                     let didShowSuggestions = false;
 
                     try {
-                        const proxyResponse = await fetch(`${API_BASE}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`);
-                        const proxyData = await proxyResponse.json();
+                        const tryProxy = async (baseUrl) => {
+                            const url = `${baseUrl}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`;
+                            const resp = await fetch(url);
+                            const data = await resp.json();
+                            if (resp.ok && Array.isArray(data.suggestions) && data.suggestions.length > 0) {
+                                this.currentSuggestions = data.suggestions.map((item) => ({
+                                    postcode: item.postcode,
+                                    admin_district: item.district,
+                                    region: item.region,
+                                    country: item.country
+                                }));
+                                this.displaySuggestions(this.currentSuggestions);
+                                return true;
+                            }
+                            return false;
+                        };
 
-                        if (proxyResponse.ok && Array.isArray(proxyData.suggestions) && proxyData.suggestions.length > 0) {
-                            this.currentSuggestions = proxyData.suggestions.map((item) => ({
-                                postcode: item.postcode,
-                                admin_district: item.district,
-                                region: item.region,
-                                country: item.country
-                            }));
-                            this.displaySuggestions(this.currentSuggestions);
-                            didShowSuggestions = true;
+                        // 1) Same-origin first
+                        didShowSuggestions = await tryProxy(API_BASE);
+                        // 2) Fallback API host
+                        if (!didShowSuggestions) {
+                            didShowSuggestions = await tryProxy(API_FALLBACK_BASE);
                         }
                     } catch (proxyError) {
                         // Fall through to direct postcode API fallback

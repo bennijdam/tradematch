@@ -1079,7 +1079,7 @@ async function processOAuthToken(token, source) {
         const userData = {
             id: payload.userId,
             email: payload.email,
-            userType: normalizedType || 'null',
+            userType: normalizedType || null,
             authProvider: source || 'google'
         };
 
@@ -1101,7 +1101,7 @@ async function processOAuthToken(token, source) {
             return;
         }
 
-        window.location.href = returnTo + '/select-role?token=' + token + '&source=google';
+        window.location.href = returnTo + '/auth-select-role?token=' + token + '&source=google';
     } catch (decodeError) {
         console.error('JWT decode error:', decodeError);
         showNotification('Login successful, but failed to get user data', 'error');
@@ -1201,9 +1201,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 return;
             }
             const userType = resolveUserType(data.user);
-            window.location.href = userType === 'customer'
-                ? '/user-dashboard'
-                : '/vendor-dashboard';
+            if (userType === 'customer') {
+                window.location.href = '/user-dashboard';
+                return;
+            }
+            if (userType === 'vendor') {
+                window.location.href = '/vendor-dashboard';
+                return;
+            }
+            window.location.href = '/auth-select-role';
         }, 1500);
         
     } catch (error) {
@@ -1303,8 +1309,13 @@ function handleOAuthCallback() {
         const opener = window.opener;
         const isPopup = window.name === 'tradematch_oauth' || localStorage.getItem('oauthPopupActive') === '1';
         if (opener && !opener.closed) {
-            const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
-            const targetOrigin = new URL(returnTo).origin;
+            const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo')) || window.location.origin;
+            let targetOrigin = window.location.origin;
+            try {
+                targetOrigin = new URL(returnTo).origin;
+            } catch (_) {
+                // fall back to current origin
+            }
             try {
                 opener.postMessage({ type: 'oauth', token, source }, targetOrigin);
             } catch (postError) {
