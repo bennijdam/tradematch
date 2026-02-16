@@ -29,6 +29,16 @@ function getReturnBase(value) {
     }
 }
 
+function getReturnBaseFromState(stateValue) {
+    if (!stateValue) return getReturnBase(FRONTEND_URL);
+    try {
+        const decoded = JSON.parse(Buffer.from(stateValue, 'base64').toString());
+        return getReturnBase(decoded.returnTo || FRONTEND_URL);
+    } catch (_) {
+        return getReturnBase(FRONTEND_URL);
+    }
+}
+
 /**
  * @route   GET /auth/google
  * @desc    Initiate Google OAuth login
@@ -50,40 +60,68 @@ router.get('/google', (req, res, next) => {
 /**
  * @route   GET /auth/google/callback
  * @desc    Google OAuth callback
- * @access   Public
+ * @access  Public
  */
-router.get('/google/callback', passport.authenticate('google', { 
-    failureRedirect: `${FRONTEND_URL}/login?error=oauth_failed`,
-    session: false 
-}), async (req, res) => {
-    try {
-        // Generate JWT token
-        const token = googleAuth.generateToken(req.user);
-        
-        // Get redirect URL from state
-        let returnTo = FRONTEND_URL;
-        try {
-            const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
-            returnTo = state.returnTo || FRONTEND_URL;
-        } catch (error) {
-            console.warn('Failed to parse OAuth state:', error);
-        }
-        
-        const returnBase = getReturnBase(returnTo);
-        // Redirect to login so the opener can store token and navigate in the original tab
-        const redirectUrl = `${returnBase}/login?token=${token}&source=google`;
-        
-        // Log successful OAuth login
-        console.log(`Google OAuth login successful: ${req.user.email} (${req.user.user_type || 'no role'})`);
-        
-        // Redirect to frontend
-        res.redirect(redirectUrl);
-        
-    } catch (error) {
-        console.error('Google OAuth callback error:', error);
-        res.redirect(`${FRONTEND_URL}/login?error=callback_failed`);
+router.get('/google/callback', (req, res, next) => {
+    // If user denied consent or we got an incomplete callback, avoid hitting the token endpoint.
+    // (Passport otherwise throws TokenError: Bad Request when code is missing.)
+    if (req.query && req.query.error) {
+        const returnBase = getReturnBaseFromState(req.query.state);
+        return res.redirect(`${returnBase}/login?error=google_${encodeURIComponent(String(req.query.error))}`);
     }
+
+    if (!req.query || !req.query.code) {
+        const returnBase = getReturnBaseFromState(req.query && req.query.state);
+        return res.redirect(`${returnBase}/login?error=google_missing_code`);
+    }
+
+    passport.authenticate('google', { session: false }, async (err, user, info) => {
+        const errorId = `oauth_google_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+
+        if (err || !user) {
+            console.error('Google OAuth callback error:', {
+                errorId,
+                hasError: Boolean(err),
+                message: err && err.message ? err.message : String(err || 'No user returned'),
+                info: info && typeof info === 'object' ? {
+                    message: info.message,
+                    name: info.name
+                } : info
+            });
+            return res.redirect(`${FRONTEND_URL}/login?error=google_failed&errorId=${encodeURIComponent(errorId)}`);
+        }
+
+        try {
+            // Generate JWT token
+            const token = googleAuth.generateToken(user);
+
+            // Get redirect URL from state
+            let returnTo = FRONTEND_URL;
+            try {
+                if (req.query.state) {
+                    const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString());
+                    returnTo = state.returnTo || FRONTEND_URL;
+                }
+            } catch (stateError) {
+                console.warn('Failed to parse OAuth state:', stateError);
+            }
+
+            const returnBase = getReturnBase(returnTo);
+            // Redirect to login so the opener can store token and navigate in the original tab
+            const redirectUrl = `${returnBase}/login?token=${token}&source=google`;
+
+            console.log(`Google OAuth login successful: ${user.email} (${user.user_type || 'no role'})`);
+            return res.redirect(redirectUrl);
+        } catch (callbackError) {
+            console.error('Google OAuth callback error:', {
+                errorId,
+                message: callbackError && callbackError.message ? callbackError.message : String(callbackError)
+            });
+            return res.redirect(`${FRONTEND_URL}/login?error=google_callback_failed&errorId=${encodeURIComponent(errorId)}`);
+        }
+    })(req, res, next);
 });
+
 
 /**
  * @route   GET /auth/google/status

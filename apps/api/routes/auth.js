@@ -25,6 +25,15 @@ const authLimiter = rateLimit({
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedUserTypes = ['customer', 'vendor', 'tradesperson'];
 
+function getJwtSecret(res) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ error: 'Server authentication configuration error' });
+    return null;
+  }
+  return secret;
+}
+
 // ==========================================
 // REGISTER ENDPOINT
 // ==========================================
@@ -34,6 +43,9 @@ router.post('/register', authLimiter, async (req, res) => {
   const normalizedUserType = (userType || 'customer').toLowerCase();
 
   try {
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
     if (!email || !normalizedName) {
       return res.status(400).json({
         error: 'Missing required fields',
@@ -90,7 +102,7 @@ router.post('/register', authLimiter, async (req, res) => {
 
           const token = jwt.sign(
             { userId: user.rows[0].id, email: email.toLowerCase() },
-            process.env.JWT_SECRET || 'fallback-secret',
+            jwtSecret,
             { expiresIn: '7d' }
           );
 
@@ -126,7 +138,7 @@ router.post('/register', authLimiter, async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: insertResult.rows[0].id, email: email.toLowerCase() },
-      process.env.JWT_SECRET || 'fallback-secret',
+      jwtSecret,
       { expiresIn: process.env.JWT_EXPIRY || '7d' }
     );
 
@@ -218,6 +230,9 @@ router.post('/login', authLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
     // Find user
     const result = await pool.query(
       'SELECT id, email, password_hash, full_name, name, user_type, role, status FROM users WHERE email = $1',
@@ -248,7 +263,7 @@ router.post('/login', authLimiter, async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email, userType: user.user_type, role },
-      process.env.JWT_SECRET || 'fallback-secret',
+      jwtSecret,
       { expiresIn: process.env.JWT_EXPIRY || '7d' }
     );
 
@@ -287,8 +302,11 @@ router.get('/me', async (req, res) => {
   }
 
   try {
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, jwtSecret);
 
     // Get user from database
     const result = await pool.query(
@@ -328,7 +346,10 @@ router.get('/verify', async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
+    const decoded = jwt.verify(token, jwtSecret);
 
     const result = await pool.query(
       'SELECT id, email, full_name, user_type, role, status FROM users WHERE id = $1',

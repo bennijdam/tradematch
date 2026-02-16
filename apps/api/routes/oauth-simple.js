@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+function getJwtSecret(res) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ error: 'Server authentication configuration error' });
+    return null;
+  }
+  return secret;
+}
+
 // Mock OAuth Routes for Testing
 router.get('/google', (req, res) => {
   console.log('🔧 Google OAuth route called');
@@ -15,6 +24,8 @@ router.get('/microsoft', (req, res) => {
 // Google OAuth Callback (simplified)
 router.post('/google/callback', (req, res) => {
   console.log('🔧 Google OAuth callback called');
+  const jwtSecret = getJwtSecret(res);
+  if (!jwtSecret) return;
   
   // Create mock user data (replace with real OAuth later)
   const mockUser = {
@@ -27,7 +38,7 @@ router.post('/google/callback', (req, res) => {
 
   // Create JWT token
   const jwt = require('jsonwebtoken');
-  const token = jwt.sign(mockUser, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '7d' });
+  const token = jwt.sign(mockUser, jwtSecret, { expiresIn: '7d' });
 
   console.log('✅ Mock Google OAuth success:', mockUser.email);
 
@@ -38,6 +49,8 @@ router.post('/google/callback', (req, res) => {
 // Microsoft OAuth Callback (simplified)
 router.post('/microsoft/callback', (req, res) => {
   console.log('🔧 Microsoft OAuth callback called');
+  const jwtSecret = getJwtSecret(res);
+  if (!jwtSecret) return;
   
   // Create mock user data
   const mockUser = {
@@ -50,7 +63,7 @@ router.post('/microsoft/callback', (req, res) => {
 
   // Create JWT token
   const jwt = require('jsonwebtoken');
-  const token = jwt.sign(mockUser, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '7d' });
+  const token = jwt.sign(mockUser, jwtSecret, { expiresIn: '7d' });
 
   console.log('✅ Mock Microsoft OAuth success:', mockUser.email);
 

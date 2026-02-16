@@ -84,7 +84,13 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
+const jsonParser = express.json({ limit: '10mb' });
+app.use((req, res, next) => {
+    if (req.originalUrl.startsWith('/api/webhooks/stripe')) {
+        return next();
+    }
+    return jsonParser(req, res, next);
+});
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Initialize passport
@@ -306,6 +312,14 @@ try {
     logger.warn('Reviews routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
+try {
+    const postcodeRouter = require('./routes/postcode');
+    app.use('/api/postcode', postcodeRouter);
+    logger.info('Postcode routes mounted at /api/postcode');
+} catch (e) {
+    logger.warn('Postcode routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
 // Payments and milestones routes
 try {
     const paymentsRouter = require('./routes/payments');
@@ -315,6 +329,15 @@ try {
     logger.info('Payments routes mounted at /api/payments');
 } catch (e) {
     logger.warn('Payments routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
+try {
+    const webhooksRouter = require('./routes/webhooks');
+    if (typeof webhooksRouter.setPool === 'function') webhooksRouter.setPool(pool);
+    app.use('/api/webhooks', webhooksRouter);
+    logger.info('Stripe webhook routes mounted at /api/webhooks/stripe');
+} catch (e) {
+    logger.warn('Webhook routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
 try {

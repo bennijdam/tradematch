@@ -40,9 +40,23 @@ const API_BASE = (window.location.hostname === 'localhost' || window.location.ho
     ? 'http://localhost:3001'
     : 'https://api.tradematch.uk';
 
-const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/dashboard`;
+const VENDOR_DASHBOARD_URL = `${FRONTEND_BASE}/vendor-dashboard`;
 
-const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/home`;
+const CUSTOMER_DASHBOARD_URL = `${FRONTEND_BASE}/user-dashboard`;
+
+function normalizeUserType(input) {
+    const value = String(input || '').trim().toLowerCase();
+    if (value === 'vendor' || value === 'tradesperson') return 'vendor';
+    if (value === 'customer' || value === 'user') return 'customer';
+    return null;
+}
+
+function resolveUserTypeFromUser(user) {
+    if (!user) return null;
+    return normalizeUserType(
+        user.userType || user.user_type || user.type || user.role
+    );
+}
 
 function setCookie(name, value, days) {
     const maxAge = Number.isFinite(days) ? `; max-age=${Math.floor(days * 24 * 60 * 60)}` : '';
@@ -196,10 +210,11 @@ async function processOAuthToken(token, source) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
         const apiRole = await fetchUserRoleFromApi(token);
+        const normalizedType = normalizeUserType(apiRole) || normalizeUserType(payload.userType || payload.user_type || payload.role);
         const userData = {
             id: payload.userId,
             email: payload.email,
-            userType: apiRole || payload.userType || payload.user_type || 'null',
+            userType: normalizedType || 'null',
             authProvider: source || 'google'
         };
 
@@ -211,7 +226,7 @@ async function processOAuthToken(token, source) {
 
         const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
 
-        if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
+        if (userData.userType === 'vendor') {
             window.location.href = VENDOR_DASHBOARD_URL + '?source=google';
             return;
         }
@@ -270,7 +285,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('lastEmail', email);
-        const role = data.user && (data.user.userType || data.user.user_type || data.user.type);
+        const role = resolveUserTypeFromUser(data.user);
         const cookieDays = remember ? 30 : null;
         setAuthCookies(data.token, role, cookieDays);
         
@@ -290,7 +305,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 window.location.href = redirect;
                 return;
             }
-            window.location.href = data.user.userType === 'customer'
+            const userType = resolveUserTypeFromUser(data.user);
+            window.location.href = userType === 'customer'
                 ? CUSTOMER_DASHBOARD_URL
                 : VENDOR_DASHBOARD_URL;
         }, 1500);

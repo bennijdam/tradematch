@@ -2,7 +2,18 @@
 const jwt = require('jsonwebtoken');
 const pool = require('../database/postgres-connection');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+function getJwtSecret(res) {
+    if (!JWT_SECRET) {
+        res.status(500).json({
+            error: 'Server authentication configuration error',
+            code: 'AUTH_CONFIG_ERROR'
+        });
+        return null;
+    }
+    return JWT_SECRET;
+}
 
 // Normalise user payload so downstream code can rely on both id and userId
 function buildUserPayload(decoded) {
@@ -21,6 +32,9 @@ function buildUserPayload(decoded) {
  */
 function authenticate(req, res, next) {
     try {
+        const secret = getJwtSecret(res);
+        if (!secret) return;
+
         const authHeader = req.headers.authorization;
         
         if (!authHeader) {
@@ -41,7 +55,7 @@ function authenticate(req, res, next) {
         }
 
         // Verify token
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, secret);
         
         // Attach user info to request
         req.user = buildUserPayload(decoded);
@@ -164,6 +178,10 @@ function requireFinanceAdmin(req, res, next) {
  */
 function optionalAuth(req, res, next) {
     try {
+        if (!JWT_SECRET) {
+            return next();
+        }
+
         const authHeader = req.headers.authorization;
         
         if (!authHeader) {
@@ -193,6 +211,9 @@ function optionalAuth(req, res, next) {
  */
 function refreshToken(req, res, next) {
     try {
+        const secret = getJwtSecret(res);
+        if (!secret) return;
+
         const { refreshToken } = req.body;
         
         if (!refreshToken) {
@@ -202,7 +223,7 @@ function refreshToken(req, res, next) {
             });
         }
 
-        const decoded = jwt.verify(refreshToken, JWT_SECRET);
+        const decoded = jwt.verify(refreshToken, secret);
         
         // Generate new access token
         const newToken = jwt.sign(
@@ -211,7 +232,7 @@ function refreshToken(req, res, next) {
                 email: decoded.email,
                 role: decoded.role
             },
-            JWT_SECRET,
+            secret,
             { expiresIn: '15m' }
         );
 

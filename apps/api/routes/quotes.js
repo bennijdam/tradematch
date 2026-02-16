@@ -295,18 +295,29 @@ router.post('/', authenticate, [
 // ==========================================
 // GET ALL QUOTES
 // ==========================================
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
   try {
     const { status, serviceType, limit = 50, offset = 0 } = req.query;
+    const role = req.user.role || req.user.userType;
+    const userId = req.user.userId;
+    const adminRoles = ['admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin'];
+    const isAdmin = adminRoles.includes(role);
 
     let query = `
-      SELECT q.*, u.name as customer_name, u.email as customer_email
+      SELECT q.*
       FROM quotes q
-      JOIN users u ON q.customer_id = u.id
       WHERE 1=1
     `;
     const params = [];
     let paramCount = 1;
+
+    if (!isAdmin && role === 'customer') {
+      query += ` AND q.customer_id = $${paramCount}`;
+      params.push(userId);
+      paramCount++;
+    } else if (!isAdmin && role !== 'vendor') {
+      return res.status(403).json({ error: 'Not authorized to view quotes' });
+    }
 
     if (status) {
       query += ` AND q.status = $${paramCount}`;
@@ -369,12 +380,16 @@ router.get('/customer/:customerId', authenticate, async (req, res) => {
 // ==========================================
 // GET SINGLE QUOTE
 // ==========================================
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
   try {
+    const role = req.user.role || req.user.userType;
+    const userId = req.user.userId;
+    const adminRoles = ['admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin'];
+    const isAdmin = adminRoles.includes(role);
+
     const result = await pool.query(
-      `SELECT q.*, u.name as customer_name, u.email as customer_email, u.phone as customer_phone
+      `SELECT q.*
        FROM quotes q
-       JOIN users u ON q.customer_id = u.id
        WHERE q.id = $1`,
       [req.params.id]
     );
@@ -383,9 +398,19 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Quote not found' });
     }
 
+    const quote = result.rows[0];
+
+    if (!isAdmin && role === 'customer' && quote.customer_id !== userId) {
+      return res.status(403).json({ error: 'Not authorized to view this quote' });
+    }
+
+    if (!isAdmin && role !== 'customer' && role !== 'vendor') {
+      return res.status(403).json({ error: 'Not authorized to view this quote' });
+    }
+
     res.json({
       success: true,
-      quote: result.rows[0]
+      quote
     });
   } catch (error) {
     console.error('Get quote error:', error);

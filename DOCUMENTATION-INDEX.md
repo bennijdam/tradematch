@@ -42,6 +42,7 @@ This index provides the canonical entry points for TradeMatch documentation.
 - DNS-AND-API-LIST.md
 - NEON-DB-SETUP.md
 - JWT-SECRET-SETUP.md
+- SECURITY-ENV.md
 
 ## Testing and Verification
 

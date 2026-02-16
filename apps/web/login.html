@@ -893,6 +893,27 @@ function resolveRedirectTarget(value) {
     return null;
 }
 
+function normalizeUserType(input) {
+    const value = String(input || '').trim().toLowerCase();
+    if (value === 'vendor' || value === 'tradesperson') return 'vendor';
+    if (value === 'customer' || value === 'user') return 'customer';
+    return null;
+}
+
+function resolveUserType(user, fallbackPayload = null) {
+    const fromUser = normalizeUserType(
+        user && (user.userType || user.user_type || user.type || user.role)
+    );
+    if (fromUser) return fromUser;
+
+    const fromPayload = normalizeUserType(
+        fallbackPayload && (fallbackPayload.userType || fallbackPayload.user_type || fallbackPayload.role)
+    );
+    if (fromPayload) return fromPayload;
+
+    return null;
+}
+
 let oauthPopup = null;
 
 function openOAuthPopup(url) {
@@ -1054,10 +1075,11 @@ async function processOAuthToken(token, source) {
 
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
+        const normalizedType = resolveUserType(null, payload);
         const userData = {
             id: payload.userId,
             email: payload.email,
-            userType: payload.userType || payload.user_type || 'null',
+            userType: normalizedType || 'null',
             authProvider: source || 'google'
         };
 
@@ -1068,7 +1090,7 @@ async function processOAuthToken(token, source) {
 
         const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
 
-        if (userData.userType === 'vendor' || userData.userType === 'tradesperson') {
+        if (userData.userType === 'vendor') {
             window.location.href = returnTo + '/vendor-dashboard?source=google';
             return;
         }
@@ -1178,7 +1200,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 window.location.href = safeRedirect;
                 return;
             }
-            window.location.href = data.user.userType === 'customer'
+            const userType = resolveUserType(data.user);
+            window.location.href = userType === 'customer'
                 ? '/user-dashboard'
                 : '/vendor-dashboard';
         }, 1500);

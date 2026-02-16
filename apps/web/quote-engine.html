@@ -1455,7 +1455,7 @@
 
         <!-- Form Card -->
         <div class="form-card">
-            <form id="quoteForm">
+            <form id="quoteForm" novalidate>
                 <!-- Step 1: Service Selection -->
                 <div class="form-step active" data-step="1">
                     <h2 class="step-title">What service do you need?</h2>
@@ -1688,7 +1688,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="postcode">Your Postcode *</label>
-                            <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required pattern="[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}">
+                            <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required autocomplete="postal-code" pattern="[A-Z]{1,2}[0-9]{1,2}[A-Z]? ?[0-9][A-Z]{2}">
                         </div>
                         <div class="form-group">
                             <label for="propertyType">Property Type</label>
@@ -2144,6 +2144,19 @@
         const preSelectedRegion = urlParams.get('region');
         const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
 
+        function formatUkPostcode(raw) {
+            const cleaned = String(raw || '')
+                .trim()
+                .toUpperCase()
+                .replace(/\s+/g, '');
+
+            if (!cleaned) return '';
+            if (cleaned.length <= 3) return cleaned;
+
+            // Insert a space before the final 3 characters when missing.
+            return cleaned.slice(0, -3) + ' ' + cleaned.slice(-3);
+        }
+
         function restoreProgress() {
             if (!savedProgress.formData) return;
             const data = savedProgress.formData;
@@ -2156,8 +2169,9 @@
 
             // Postcode and property type
             if (data.postcode) {
-                document.getElementById('postcode').value = data.postcode;
-                formData.postcode = data.postcode;
+                const formatted = formatUkPostcode(data.postcode);
+                document.getElementById('postcode').value = formatted;
+                formData.postcode = formatted;
             }
             if (data.propertyType) {
                 document.getElementById('propertyType').value = data.propertyType;
@@ -2192,7 +2206,7 @@
             if (data.phone) document.getElementById('phone').value = data.phone;
 
             if (savedProgress.step) {
-                currentStep = savedProgress.step;
+                currentStep = Math.max(1, Math.min(totalSteps, savedProgress.step));
             }
         }
         
@@ -2393,8 +2407,9 @@
         
         // Auto-fill postcode from homepage
         if (preSelectedPostcode) {
-            document.getElementById('postcode').value = decodeURIComponent(preSelectedPostcode);
-            formData.postcode = decodeURIComponent(preSelectedPostcode);
+            const formatted = formatUkPostcode(decodeURIComponent(preSelectedPostcode));
+            document.getElementById('postcode').value = formatted;
+            formData.postcode = formatted;
             formData.district = preSelectedDistrict ? decodeURIComponent(preSelectedDistrict) : '';
             formData.region = preSelectedRegion ? decodeURIComponent(preSelectedRegion) : '';
         }
@@ -2726,7 +2741,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     }
                     break;
                 case 2:
-                    const postcode = document.getElementById('postcode').value.trim().toUpperCase();
+                    const postcode = formatUkPostcode(document.getElementById('postcode').value);
                     const description = document.getElementById('description').value.trim();
                     
                     if (!postcode || !description) {
@@ -2735,12 +2750,13 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     }
                     
                     // UK postcode validation
-                    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
+                    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]?\s?[0-9][A-Z]{2}$/;
                     if (!postcodeRegex.test(postcode)) {
                         alert('Please enter a valid UK postcode');
                         return false;
                     }
                     
+                    document.getElementById('postcode').value = postcode;
                     formData.postcode = postcode;
                     formData.propertyType = document.getElementById('propertyType').value;
                     formData.description = description;
@@ -2753,6 +2769,73 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     formData.contactPreference = document.getElementById('contactPreference').value;
                     break;
             }
+            return true;
+        }
+
+        function validateContactDetailsForSubmit() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            if (!name) {
+                return { ok: false, fieldId: 'name', message: 'Please enter your name' };
+            }
+            if (!email) {
+                return { ok: false, fieldId: 'email', message: 'Please enter your email' };
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return { ok: false, fieldId: 'email', message: 'Please enter a valid email address' };
+            }
+            if (!phone) {
+                return { ok: false, fieldId: 'phone', message: 'Please enter your phone number' };
+            }
+
+            return { ok: true, name, email, phone };
+        }
+
+        function focusField(fieldId) {
+            const el = document.getElementById(fieldId);
+            if (!el) return;
+            try {
+                el.focus({ preventScroll: true });
+            } catch (_) {
+                el.focus();
+            }
+            try {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (_) {
+                // ignore
+            }
+        }
+
+        function ensureValidStepsBeforeSubmit() {
+            if (!validateStep(1)) {
+                currentStep = 1;
+                updateStep();
+                return false;
+            }
+            if (!validateStep(2)) {
+                currentStep = 2;
+                updateStep();
+                focusField('postcode');
+                return false;
+            }
+            if (!validateStep(3)) {
+                currentStep = 3;
+                updateStep();
+                return false;
+            }
+
+            const contact = validateContactDetailsForSubmit();
+            if (!contact.ok) {
+                currentStep = 4;
+                updateStep();
+                alert(contact.message);
+                focusField(contact.fieldId);
+                return false;
+            }
+
             return true;
         }
 
@@ -2827,7 +2910,21 @@ I'm happy to discuss the project in more detail and answer any questions to help
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + token
                     },
-                    body: JSON.stringify(finalData)
+                    body: JSON.stringify({
+                        serviceType: finalData.service,
+                        title: finalData.serviceName || 'Home project',
+                        description: finalData.description,
+                        postcode: finalData.postcode,
+                        budgetMin: finalData.budgetMin || null,
+                        budgetMax: finalData.budgetMax || null,
+                        urgency: finalData.urgency || null,
+                        additionalDetails: {
+                            propertyType: finalData.propertyType || null,
+                            contactPreference: finalData.contactPreference || null,
+                            addons: finalData.addons || null,
+                            totalAddonsPrice: finalData.totalAddonsPrice || null
+                        }
+                    })
                 });
                 
                 const data = await response.json();
@@ -2836,7 +2933,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     throw new Error(data.error || 'Failed to submit quote');
                 }
                 
-                const quoteId = data.quote.id;
+                const quoteId = data.quoteId || data.quote?.id || 'UNKNOWN';
                 document.getElementById('quoteIdDisplay').textContent = quoteId;
                 document.getElementById('successModal').classList.add('active');
                 localStorage.removeItem('quoteProgress');
@@ -2902,6 +2999,11 @@ I'm happy to discuss the project in more detail and answer any questions to help
         // Form Submission
         document.getElementById('quoteForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Disable native browser validation (multi-step hidden fields can break submission).
+            if (!ensureValidStepsBeforeSubmit()) {
+                return;
+            }
             
             const finalData = {
                 ...formData,
@@ -2919,12 +3021,16 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 return;
             }
 
-            await submitAuthenticated(finalData);
+            await submitAuthenticated(finalDataWithAddons);
         });
 
         // Auto-uppercase postcode
         document.getElementById('postcode').addEventListener('input', (e) => {
             e.target.value = e.target.value.toUpperCase();
+        });
+
+        document.getElementById('postcode').addEventListener('blur', (e) => {
+            e.target.value = formatUkPostcode(e.target.value);
         });
 
         // Initialize

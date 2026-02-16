@@ -29,6 +29,16 @@ function getReturnBase(value) {
     }
 }
 
+function getReturnBaseFromState(stateValue) {
+    if (!stateValue) return getReturnBase(FRONTEND_URL);
+    try {
+        const decoded = JSON.parse(Buffer.from(stateValue, 'base64').toString());
+        return getReturnBase(decoded.returnTo || FRONTEND_URL);
+    } catch (_) {
+        return getReturnBase(FRONTEND_URL);
+    }
+}
+
 /**
  * @route   GET /auth/microsoft
  * @desc    Initiate Microsoft OAuth login
@@ -53,6 +63,16 @@ router.get('/microsoft', (req, res, next) => {
  * @access   Public
  */
 router.get('/microsoft/callback', (req, res, next) => {
+    if (req.query && req.query.error) {
+        const returnBase = getReturnBaseFromState(req.query.state);
+        return res.redirect(`${returnBase}/login?error=microsoft_${encodeURIComponent(String(req.query.error))}`);
+    }
+
+    if (!req.query || !req.query.code) {
+        const returnBase = getReturnBaseFromState(req.query && req.query.state);
+        return res.redirect(`${returnBase}/login?error=microsoft_missing_code`);
+    }
+
     passport.authenticate('microsoft', { session: false }, async (err, user) => {
         if (err || !user) {
             console.error('Microsoft OAuth callback error:', err || 'No user returned');

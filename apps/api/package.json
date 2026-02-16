@@ -5,9 +5,12 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node server-production.js",
-    "start:local": "node scripts/init-server.js",
-    "dev": "nodemon server.js",
+    "env:ensure": "bash scripts/ensure-env.sh",
+    "env:rotate:prepare": "bash scripts/rotate-env.sh prepare",
+    "env:rotate:finalize": "bash scripts/rotate-env.sh finalize",
+    "start": "npm run env:ensure && node server-production.js",
+    "start:local": "npm run env:ensure && node scripts/init-server.js",
+    "dev": "npm run env:ensure && nodemon server.js",
     "test": "jest",
     "smoke:auth": "node scripts/smoke-auth.js",
     "smoke:suite": "node scripts/smoke-suite.js",
@@ -57,7 +60,7 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "node-pg-migrate": "^7.6.1",
+    "node-pg-migrate": "^8.0.4",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.3"
   },

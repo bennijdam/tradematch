@@ -136,21 +136,58 @@ router.post('/create-intent', authenticate, async (req, res) => {
  */
 router.post('/confirm', authenticate, async (req, res) => {
     const { paymentIntentId } = req.body;
+    const userId = req.user.userId;
+    const userRole = req.user.role || req.user.userType;
     
     try {
+        if (!paymentIntentId) {
+            return res.status(400).json({ error: 'paymentIntentId is required' });
+        }
+
+        const paymentResult = await pool.query(
+            `SELECT id, customer_id
+             FROM payments
+             WHERE stripe_payment_intent_id = $1
+             LIMIT 1`,
+            [paymentIntentId]
+        );
+
+        if (paymentResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Payment not found' });
+        }
+
+        const payment = paymentResult.rows[0];
+        const isAdmin = ['admin', 'super_admin'].includes(userRole);
+
+        if (!isAdmin && payment.customer_id !== userId) {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
         // Verify payment with Stripe
         const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
         
         if (paymentIntent.status === 'succeeded') {
             // Update payment record
-            await pool.query(
-                `UPDATE payments 
-                 SET status = 'completed', 
-                     paid_at = CURRENT_TIMESTAMP,
-                     stripe_charge_id = $1
-                 WHERE stripe_payment_intent_id = $2`,
-                [paymentIntent.latest_charge, paymentIntentId]
-            );
+            if (isAdmin) {
+                await pool.query(
+                    `UPDATE payments 
+                     SET status = 'completed', 
+                         paid_at = CURRENT_TIMESTAMP,
+                         stripe_charge_id = $1
+                     WHERE stripe_payment_intent_id = $2`,
+                    [paymentIntent.latest_charge, paymentIntentId]
+                );
+            } else {
+                await pool.query(
+                    `UPDATE payments 
+                     SET status = 'completed', 
+                         paid_at = CURRENT_TIMESTAMP,
+                         stripe_charge_id = $1
+                     WHERE stripe_payment_intent_id = $2
+                       AND customer_id = $3`,
+                    [paymentIntent.latest_charge, paymentIntentId, userId]
+                );
+            }
             
             res.json({ success: true, status: 'completed' });
         } else {

@@ -17,6 +17,21 @@ TradeMatch is a UK marketplace connecting homeowners with verified tradespeople.
 - Local frontend (root server.js): http://localhost:8000
 - Local API: http://localhost:3001
 
+## Node Version
+
+Use Node 20 for this repository.
+
+```bash
+nvm use
+```
+
+If Node 20 is not installed yet:
+
+```bash
+nvm install 20
+nvm use
+```
+
 ## Quick Start
 
 ### Backend (API)
@@ -46,6 +61,7 @@ node server.js
 - API reference: API-REFERENCE.md
 - Route registry: ROUTE-REGISTRY.md
 - Smoke testing: SMOKE-TESTING.md
+- Environment security runbook: SECURITY-ENV.md
 
 ## Notes
 

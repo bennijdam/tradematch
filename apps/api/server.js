@@ -275,6 +275,14 @@ try {
     console.warn('⚠️ Messaging routes not available:', e && e.message ? e.message : e);
 }
 
+try {
+    const postcodeRouter = require('./routes/postcode');
+    app.use('/api/postcode', postcodeRouter);
+    console.log('📮 Postcode routes mounted at /api/postcode');
+} catch (e) {
+    console.warn('⚠️ Postcode routes not available:', e && e.message ? e.message : e);
+}
+
 // Contracts & disputes routes
 try {
     const contractsRouter = require('./routes/contracts');
