@@ -53,3 +53,22 @@ node server.js
 - Clean URLs are defined in vercel.json and server.js.
 - The not-found page can be tested directly at /404.
 - The landing page redirects based on the `user_role` cookie (`vendor`, `user`, `admin`).
+
+## Cloud Dev Environments
+
+### Google Project IDX
+
+- Config file is included at `.idx/dev.nix`.
+- In IDX, import this repo and open the workspace.
+- The environment installs Node + Python and runs `npm install` on first create.
+- Use the built-in preview named `frontend` (runs `npm start` on port 8080).
+
+### GitHub Codespaces
+
+- Config file is included at `.devcontainer/devcontainer.json`.
+- In GitHub, open the repo and choose **Code → Codespaces → Create codespace on main**.
+- First boot runs dependency install (`npm install` and `apps/api` install if present).
+- One-command startup for both services: `npm run dev:codespaces`
+- Individual commands (optional):
+	- `npm start` for frontend (port 8080)
+	- `cd apps/api && npm run dev` for API (port 3001)

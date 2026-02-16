@@ -447,7 +447,7 @@
             .content-section { padding: 60px 24px; }
         }
     </style>
-    <link rel="stylesheet" href="/frontend/shared/styles/profile-menu.css">
+    <link rel="stylesheet" href="/shared/styles/profile-menu.css">
         <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
             window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
@@ -476,7 +476,10 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-media">
-            @@PICTURE_BLOCK_0@@
+            <picture>
+                <source type="image/webp" srcset="/images/construction-worker.webp">
+                <img src="/images/construction-worker.jpg" alt="Tradesperson at work" loading="eager" fetchpriority="high">
+            </picture>
         </div>
         <div class="hero-overlay"></div>
 
@@ -682,8 +685,8 @@
     </section>
     
     <!-- Scripts -->
-    <script src="/frontend/shared/api/api.js" defer></script>
-    <script src="/frontend/shared/api/auth.js" defer></script>
+    <script src="/shared/api/api.js" defer></script>
+    <script src="/shared/api/auth.js" defer></script>
     
     <script>
         // Vendor registration
@@ -796,9 +799,10 @@
         </div>
     </footer>
 
-    <script src="/frontend/shared/ui/profile-menu.js" defer></script>
+    <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>
+
 
 
 

@@ -1,0 +1,31 @@
+{
+  "name": "TradeMatch",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "postCreateCommand": "npm install && if [ -f apps/api/package.json ]; then cd apps/api && npm install; fi",
+  "forwardPorts": [8080, 3001, 8000],
+  "portsAttributes": {
+    "8080": {
+      "label": "TradeMatch Frontend",
+      "onAutoForward": "openBrowser"
+    },
+    "3001": {
+      "label": "TradeMatch API"
+    },
+    "8000": {
+      "label": "Root Static Server"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-playwright.playwright"
+      ]
+    }
+  }
+}

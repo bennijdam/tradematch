@@ -2800,13 +2800,15 @@ I'm happy to discuss the project in more detail and answer any questions to help
         function goLogin() {
             persistProgress(pendingSubmissionData || {});
             localStorage.setItem('quoteAutoSubmit', '1');
-            window.location.href = '/login?redirect=/post-job';
+            const redirectTarget = `${window.location.pathname}${window.location.search}`;
+            window.location.href = `/login?redirect=${encodeURIComponent(redirectTarget)}`;
         }
 
         function goRegister() {
             persistProgress(pendingSubmissionData || {});
             localStorage.setItem('quoteAutoSubmit', '1');
-            window.location.href = '/signup?redirect=/post-job';
+            const redirectTarget = `${window.location.pathname}${window.location.search}`;
+            window.location.href = `/signup?redirect=${encodeURIComponent(redirectTarget)}`;
         }
 
         async function submitAuthenticated(finalData) {
@@ -2945,9 +2947,10 @@ I'm happy to discuss the project in more detail and answer any questions to help
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
-    <script src="/frontend/shared/ui/profile-menu.js" defer></script>
+    <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>
+
 
 
 

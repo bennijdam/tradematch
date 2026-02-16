@@ -4,6 +4,8 @@
   "description": "TradeMatch Frontend - Modern UK Trade Services Platform",
   "scripts": {
     "dev": "python -m http.server 8080",
+    "dev:api": "npm --prefix apps/api run dev",
+    "dev:codespaces": "bash scripts/dev-start-codespaces.sh",
     "build": "node scripts/automation/optimize-images.js && echo 'No other build step needed'",
     "start": "python -m http.server 8080",
     "seo:generate:main": "node scripts/automation/generate-pages.js main-pages",
