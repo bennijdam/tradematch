@@ -113,7 +113,7 @@
                 <span class="profile-initials">TM</span>
             </button>
             <div class="profile-dropdown" role="menu">
-                <a href="/frontend/email-preferences.html" role="menuitem">User Settings</a>
+                <a href="/email-preferences" role="menuitem">User Settings</a>
                 <a href="#" data-logout="true" role="menuitem">Logout</a>
             </div>
         `;
@@ -210,6 +210,12 @@
         }
 
         if (!dashboardLink) return;
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log('Profile menu skipped: user not logged in.');
+            return;
+        }
 
         const menu = createProfileMenu();
         dashboardLink.replaceWith(menu);
