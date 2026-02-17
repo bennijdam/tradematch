@@ -504,6 +504,41 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+// Postcode autocomplete (proxy to postcodes.io)
+app.get("/api/postcode/autocomplete", async (req, res) => {
+  const query = String(req.query.q || "").trim();
+
+  if (query.length < 2) {
+    return res.json({ success: true, suggestions: [] });
+  }
+
+  try {
+    const response = await axios.get("https://api.postcodes.io/postcodes", {
+      params: {
+        q: query,
+        limit: 7,
+      },
+      timeout: 6000,
+    });
+
+    const results = Array.isArray(response.data?.result) ? response.data.result : [];
+    const suggestions = results.map((item) => ({
+      postcode: item.postcode,
+      district: item.admin_district || null,
+      region: item.region || null,
+      country: item.country || null,
+    }));
+
+    return res.json({ success: true, suggestions });
+  } catch (error) {
+    return res.status(502).json({
+      success: false,
+      error: "Postcode lookup failed",
+      suggestions: [],
+    });
+  }
+});
+
 // Companies House verification lookup (REST API)
 app.get("/api/verification/companies-house/:companyNumber", async (req, res) => {
   const apiKey = process.env.COMPANIES_HOUSE_API_KEY;
@@ -3750,6 +3785,7 @@ app.get("/debug/routes", (req, res) => {
     message: "Routes debug info",
     registered_paths: [
       "/api/health",
+      "/api/postcode/autocomplete",
       "/api/auth/register", 
       "/api/auth/login",
       "/auth/google",
@@ -3772,6 +3808,7 @@ app.use((req, res) => {
     available_endpoints: [
       "GET /",
       "GET /api/health",
+      "GET /api/postcode/autocomplete?q=SW1",
       "POST /api/auth/register",
       "POST /api/auth/login",
       "GET /auth",
