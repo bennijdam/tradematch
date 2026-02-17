@@ -854,7 +854,11 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-const FRONTEND_BASES = ['https://www.tradematch.uk', 'https://tradematch.uk'];
+const FRONTEND_BASES = Array.from(new Set([
+    'https://www.tradematch.uk',
+    'https://tradematch.uk',
+    window.location.origin
+]));
 const FRONTEND_BASE = FRONTEND_BASES.includes(window.location.origin)
     ? window.location.origin
     : FRONTEND_BASES[0];
@@ -867,14 +871,13 @@ const API_BASE = isLocal
     : 'https://api.tradematch.uk';
 
 function resolveReturnTo(value) {
-    if (value) {
-        const allowed = FRONTEND_BASES.find((base) => value.startsWith(base));
-        if (allowed) {
-            if (value.includes('/login')) {
-                return allowed;
-            }
-            return value;
-        }
+    if (!value) return FRONTEND_BASE;
+    if (value.startsWith('/')) return FRONTEND_BASE;
+    try {
+        const parsed = new URL(value);
+        if (FRONTEND_BASES.includes(parsed.origin)) return parsed.origin;
+    } catch (_) {
+        // ignore
     }
     return FRONTEND_BASE;
 }
@@ -1088,20 +1091,21 @@ async function processOAuthToken(token, source) {
 
         showNotification(`Successfully logged in with ${source || 'OAuth'}!`, 'success');
 
-        const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo'));
+        const returnBase = resolveReturnTo(localStorage.getItem('oauthReturnTo')) || window.location.origin;
+        const sourceParam = encodeURIComponent(source || 'oauth');
 
         if (userData.userType === 'vendor') {
-            window.location.href = returnTo + '/vendor-dashboard?source=google';
+            window.location.href = `${returnBase}/dashboard?source=${sourceParam}`;
             return;
         }
 
         if (userData.userType === 'customer') {
             await submitPendingQuoteIfAny(token);
-            window.location.href = returnTo + '/user-dashboard?source=google';
+            window.location.href = `${returnBase}/user-dashboard-index?source=${sourceParam}`;
             return;
         }
 
-        window.location.href = returnTo + '/auth-select-role?token=' + token + '&source=google';
+        window.location.href = `${returnBase}/auth-select-role?token=${encodeURIComponent(token)}&source=${sourceParam}`;
     } catch (decodeError) {
         console.error('JWT decode error:', decodeError);
         showNotification('Login successful, but failed to get user data', 'error');
@@ -1202,11 +1206,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             }
             const userType = resolveUserType(data.user);
             if (userType === 'customer') {
-                window.location.href = '/user-dashboard';
+                window.location.href = '/user-dashboard-index';
                 return;
             }
             if (userType === 'vendor') {
-                window.location.href = '/vendor-dashboard';
+                window.location.href = '/dashboard';
                 return;
             }
             window.location.href = '/auth-select-role';
@@ -1234,9 +1238,7 @@ async function loginWithGoogle() {
         }
         
         // Store return URL for callback redirect
-        const defaultReturnTo = isLocal
-            ? window.location.origin
-            : FRONTEND_BASE;
+        const defaultReturnTo = window.location.origin;
         const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         
@@ -1266,9 +1268,7 @@ async function loginWithMicrosoft() {
         }
         
         // Store return URL for callback redirect
-        const defaultReturnTo = isLocal
-            ? window.location.origin
-            : FRONTEND_BASE;
+        const defaultReturnTo = window.location.origin;
         const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
         localStorage.setItem('oauthReturnTo', returnTo);
         

@@ -2044,8 +2044,13 @@ function initializeProfileModal() {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             if (confirm('Are you sure you want to logout?')) {
-                console.log('User logged out');
-                window.location.href = 'login.html';
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('oauthToken');
+                localStorage.removeItem('oauthSource');
+                localStorage.removeItem('oauthReturnTo');
+                localStorage.removeItem('oauthPopupActive');
+                window.location.href = '/login';
             }
         });
     }
