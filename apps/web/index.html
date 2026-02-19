@@ -5587,10 +5587,13 @@
                     // Format the display
                     const mainText = postcode.postcode;
                     const details = `${postcode.admin_district || ''}${postcode.admin_district && postcode.region ? ', ' : ''}${postcode.region || ''}`;
+                                        const district = postcode.admin_district || postcode.district || '';
+                                        const region = postcode.region || '';
+                                        const detailsText = `${district}${district && region ? ', ' : ''}${region}`;
                     
                     suggestion.innerHTML = `
                         <div class="postcode-main">${mainText}</div>
-                        ${details ? `<div class="postcode-details">${details}</div>` : ''}
+                        ${detailsText ? `<div class="postcode-details">${detailsText}</div>` : ''}
                     `;
                     
                     suggestion.addEventListener('click', () => {
@@ -5678,11 +5681,12 @@
         // Handle quote form submission
 function handleQuickSearch(event) {
             event.preventDefault();
-            const service = document.getElementById('serviceType').value;
+            const serviceEl = document.getElementById('serviceType');
+            const service = serviceEl ? serviceEl.value : '';
             const postcode = document.getElementById('postcode').value;
              
-            if (!service || !postcode) {
-                alert('Please select a service and enter your postcode');
+            if (!postcode) {
+                alert('Please enter your postcode');
                 return;
             }
              
@@ -5697,8 +5701,11 @@ function handleQuickSearch(event) {
                 return;
             }
              
-            // Build URL with postcode data
-            let url = `/quote-engine?service=${service}&postcode=${encodeURIComponent(postcodeValue)}`;
+            // Build URL with postcode data (service is optional on the homepage)
+            let url = `/quote-engine?postcode=${encodeURIComponent(postcodeValue)}`;
+            if (service) {
+                url += `&service=${encodeURIComponent(service)}`;
+            }
             
             // Add district and region if available
             if (postcodeData) {

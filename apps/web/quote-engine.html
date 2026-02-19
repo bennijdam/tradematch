@@ -2077,6 +2077,13 @@
 
         // Add-Ons State Management
         const addonsState = {
+                // API Configuration
+                const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const API_BASE = IS_LOCAL ? 'http://localhost:3001' : '';
+                const API_FALLBACK_BASE = IS_LOCAL ? 'http://localhost:3001' : 'https://api.tradematch.uk';
+        
+                // Add-Ons State Management
+                const addonsState = {
             priority: { selected: false, price: 4.99 },
             matching: { selected: false, price: 2.99 }
         };
@@ -2904,7 +2911,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     throw new Error('Missing token');
                 }
 
-                const response = await fetch('https://api.tradematch.uk/api/quotes', {
+                const apiUrl = API_BASE ? `${API_BASE}/api/quotes` : '/api/quotes';
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -2955,7 +2963,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
             submitBtn.textContent = 'Submitting...';
 
             try {
-                const response = await fetch('https://api.tradematch.uk/api/quotes/public', {
+                const apiUrl = API_BASE ? `${API_BASE}/api/quotes/public` : '/api/quotes/public';
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
