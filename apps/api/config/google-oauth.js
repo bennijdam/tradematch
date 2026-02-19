@@ -21,8 +21,9 @@ module.exports = {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: process.env.GOOGLE_CALLBACK_URL || GOOGLE_CALLBACK_FALLBACK,
-            scope: ['profile', 'email']
-        }, async (accessToken, refreshToken, profile, done) => {
+            scope: ['profile', 'email'],
+            passReqToCallback: true
+        }, async (req, accessToken, refreshToken, profile, done) => {
             try {
                 // Extract user info from Google profile
                 const { id, name, email, email_verified } = profile._json;
@@ -43,6 +44,22 @@ module.exports = {
                 };
 
                 const { columns, defaults, nullable } = await getUserColumns();
+
+                const decodeDesiredUserType = () => {
+                    const raw = req?.query?.state;
+                    if (!raw) return null;
+                    try {
+                        const decoded = JSON.parse(Buffer.from(String(raw), 'base64').toString());
+                        const desired = String(decoded?.userType || '').trim().toLowerCase();
+                        if (desired === 'vendor' || desired === 'tradesperson') return 'vendor';
+                        if (desired === 'customer' || desired === 'user') return 'customer';
+                        return null;
+                    } catch (_) {
+                        return null;
+                    }
+                };
+
+                const desiredUserType = decodeDesiredUserType();
                 
                 // Find or create user
                 let user;
@@ -86,6 +103,11 @@ module.exports = {
                     if (columns.has('name')) {
                         updates.push(`name = COALESCE($${idx++}, name)`);
                         values.push(fullName);
+                    }
+
+                    if (columns.has('user_type') && desiredUserType && user.user_type !== desiredUserType) {
+                        updates.push(`user_type = $${idx++}`);
+                        values.push(desiredUserType);
                     }
 
                     if (updates.length) {
@@ -132,7 +154,7 @@ module.exports = {
                     }
 
                     if (columns.has('user_type')) {
-                        addColumn('user_type', 'customer');
+                        addColumn('user_type', desiredUserType || 'customer');
                     }
 
                     if (columns.has('password_hash')) {
@@ -168,6 +190,15 @@ module.exports = {
                     const insertSql = `INSERT INTO users (${insertColumns.join(', ')}) VALUES (${insertValues.join(', ')}) RETURNING *`;
                     const insertResult = await pool.query(insertSql, params);
                     user = insertResult.rows[0];
+                }
+
+                if (desiredUserType && columns.has('user_type') && user && user.user_type !== desiredUserType) {
+                    try {
+                        await pool.query('UPDATE users SET user_type = $1 WHERE id = $2', [desiredUserType, user.id]);
+                        user.user_type = desiredUserType;
+                    } catch (_) {
+                        // best-effort
+                    }
                 }
                 
                 return done(null, user);

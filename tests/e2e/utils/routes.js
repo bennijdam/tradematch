@@ -1,4 +1,6 @@
-const useCleanRoutes = process.env.CLEAN_ROUTES === 'true';
+// Prefer clean routes by default (matches Vercel `cleanUrls: true`).
+// Set CLEAN_ROUTES=false to force explicit .html paths.
+const useCleanRoutes = process.env.CLEAN_ROUTES !== 'false';
 
 const cleanRoutes = {
   home: '/',
@@ -7,23 +9,23 @@ const cleanRoutes = {
   activate: '/activate',
   quoteEngine: '/quote-engine',
   messaging: '/messages',
-  customerDashboard: '/customer-dashboard',
-  vendorDashboard: '/vendor-dashboard',
-  vendorSettings: '/vendor-dashboard/vendor-settings',
+  customerDashboard: '/user-dashboard-index',
+  vendorDashboard: '/dashboard-vendor-profile',
+  vendorSettings: '/dashboard-vendor-settings',
   paymentCheckout: '/payment-checkout'
 };
 
 const fileRoutes = {
   home: '/index.html',
-  login: '/pages/auth-login.html',
-  register: '/pages/auth-register.html',
-  activate: '/pages/activate.html',
-  quoteEngine: '/pages/quote-engine.html',
-  messaging: '/pages/messages.html',
-  customerDashboard: '/user-dashboard/index.html',
-  vendorDashboard: '/vendor-dashboard/index.html',
-  vendorSettings: '/vendor-dashboard/pages/vendor-settings.html',
-  paymentCheckout: '/pages/payment-checkout.html'
+  login: '/login.html',
+  register: '/register.html',
+  activate: '/activate.html',
+  quoteEngine: '/quote-engine.html',
+  messaging: '/messages.html',
+  customerDashboard: '/user-dashboard-index.html',
+  vendorDashboard: '/dashboard-vendor-profile.html',
+  vendorSettings: '/dashboard-vendor-settings.html',
+  paymentCheckout: '/payment-checkout.html'
 };
 
 const routes = useCleanRoutes ? cleanRoutes : fileRoutes;

@@ -903,6 +903,29 @@ function normalizeUserType(input) {
     return null;
 }
 
+function setLoginUserType(nextType) {
+    const normalized = normalizeUserType(nextType);
+    if (!normalized) return;
+    currentUserType = normalized;
+    userTypeButtons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.type === normalized);
+    });
+}
+
+// Initialize user type from URL context if provided.
+(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const explicit = urlParams.get('userType') || urlParams.get('role');
+    if (explicit) {
+        setLoginUserType(explicit);
+        return;
+    }
+    const redirect = urlParams.get('redirect') || urlParams.get('returnTo') || '';
+    if (/dashboard-vendor|vendor-dashboard|\bvendors\b|\btrades\b/i.test(redirect) || /\/dashboard(?:[/?#]|$)/i.test(redirect)) {
+        setLoginUserType('vendor');
+    }
+})();
+
 function resolveUserType(user, fallbackPayload = null) {
     const fromUser = normalizeUserType(
         user && (user.userType || user.user_type || user.type || user.role)
@@ -1243,7 +1266,7 @@ async function loginWithGoogle() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}`;
+        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
         if (oauthPopup && !oauthPopup.closed) {
             oauthPopup.close();
         }
@@ -1273,7 +1296,7 @@ async function loginWithMicrosoft() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}`;
+        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
         if (oauthPopup && !oauthPopup.closed) {
             oauthPopup.close();
         }
@@ -1419,7 +1442,7 @@ document.getElementById('resendActivationBtn').addEventListener('click', async f
         btnText.style.display = 'none';
         btnLoader.style.display = 'inline';
         
-        const response = await fetch('https://api.tradematch.uk/api/auth/resend-activation', {
+        const response = await fetch(`${API_BASE}/api/auth/resend-activation`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })

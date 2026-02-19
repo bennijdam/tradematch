@@ -16,8 +16,9 @@ module.exports = {
             clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
             callbackURL: process.env.MICROSOFT_CALLBACK_URL,
             scope: ['openid', 'email', 'profile'],
-            tenant: 'common'
-        }, async (accessToken, refreshToken, profile, done) => {
+            tenant: 'common',
+            passReqToCallback: true
+        }, async (req, accessToken, refreshToken, profile, done) => {
             try {
                 // Extract user info from Microsoft profile
                 const { id, displayName, userPrincipalName, mail } = profile;
@@ -34,6 +35,22 @@ module.exports = {
                 const nameParts = displayName ? displayName.split(' ') : ['', ''];
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || '';
+
+                const decodeDesiredUserType = () => {
+                    const raw = req?.query?.state;
+                    if (!raw) return null;
+                    try {
+                        const decoded = JSON.parse(Buffer.from(String(raw), 'base64').toString());
+                        const desired = String(decoded?.userType || '').trim().toLowerCase();
+                        if (desired === 'vendor' || desired === 'tradesperson') return 'vendor';
+                        if (desired === 'customer' || desired === 'user') return 'customer';
+                        return null;
+                    } catch (_) {
+                        return null;
+                    }
+                };
+
+                const desiredUserType = decodeDesiredUserType();
                 
                 // Find or create user
                 let user;
@@ -57,10 +74,11 @@ module.exports = {
                              ELSE provider_id || ',' || $1
                          END,
                          email_verified = true,
-                         first_name = COALESCE($2, first_name),
-                         last_name = COALESCE($3, last_name)
-                         WHERE id = $4`,
-                        [id, firstName, lastName, user.id]
+                         user_type = COALESCE($2, user_type),
+                         first_name = COALESCE($3, first_name),
+                         last_name = COALESCE($4, last_name)
+                         WHERE id = $5`,
+                        [id, desiredUserType || null, firstName, lastName, user.id]
                     );
                 } else {
                     // Create new user from Microsoft profile
@@ -70,14 +88,15 @@ module.exports = {
                         `INSERT INTO users (
                             id, email, first_name, last_name, auth_provider, 
                             provider_id, email_verified, user_type, status
-                        ) VALUES ($1, $2, $3, $4, $5, $6, true, null, 'active')`,
+                        ) VALUES ($1, $2, $3, $4, $5, $6, true, $7, 'active')`,
                         [
                             userId,
                             email,
                             firstName,
                             lastName,
                             'microsoft',
-                            id
+                            id,
+                            desiredUserType || null
                         ]
                     );
                     
@@ -88,7 +107,7 @@ module.exports = {
                         last_name: lastName,
                         auth_provider: 'microsoft',
                         email_verified: true,
-                        user_type: null
+                        user_type: desiredUserType || null
                     };
                 }
                 

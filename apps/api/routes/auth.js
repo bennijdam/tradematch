@@ -25,6 +25,70 @@ const authLimiter = rateLimit({
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedUserTypes = ['customer', 'vendor', 'tradesperson'];
 
+let cachedUserColumns = null;
+
+async function getUserColumns() {
+  if (cachedUserColumns) return cachedUserColumns;
+  const result = await pool.query(
+    `SELECT column_name
+     FROM information_schema.columns
+     WHERE table_name = 'users'`
+  );
+  cachedUserColumns = new Set(result.rows.map((row) => row.column_name));
+  return cachedUserColumns;
+}
+
+function normalizeUserType(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'vendor' || normalized === 'tradesperson') return 'vendor';
+  if (normalized === 'customer' || normalized === 'user') return 'customer';
+  return null;
+}
+
+function buildFrontendBase() {
+  return (process.env.FRONTEND_URL || 'https://www.tradematch.uk').replace(/\/$/, '');
+}
+
+function signActivationToken({ userId, email }) {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  return jwt.sign(
+    {
+      purpose: 'email_verification',
+      userId,
+      email
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '24h' }
+  );
+}
+
+async function sendActivationEmail({ email, fullName, userType, token }) {
+  const frontendBase = buildFrontendBase();
+  const activationUrl = `${frontendBase}/activate?token=${encodeURIComponent(token)}`;
+  const emailService = new EmailService();
+  if (!emailService) return { sent: false, activationUrl };
+
+  const displayName = fullName || email;
+  const roleLabel = userType === 'vendor' ? 'vendor' : 'customer';
+
+  await emailService.sendEmail({
+    to: email,
+    subject: 'Activate your TradeMatch account',
+    html: `
+      <h2>Activate your TradeMatch account</h2>
+      <p>Hi ${displayName},</p>
+      <p>Thanks for signing up as a ${roleLabel}. Please activate your account using the link below:</p>
+      <p><a href="${activationUrl}">Activate account</a></p>
+      <p>This link expires in 24 hours.</p>
+    `,
+    text: `Activate your TradeMatch account\n\nHi ${displayName},\n\nActivate your account: ${activationUrl}\n\nThis link expires in 24 hours.`
+  });
+
+  return { sent: true, activationUrl };
+}
+
 function getJwtSecret(res) {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
@@ -135,7 +199,26 @@ router.post('/register', authLimiter, async (req, res) => {
       ]
     );
 
-    // Generate JWT token
+    // Create activation token (email verification) and send activation email
+    const activationToken = signActivationToken({
+      userId: insertResult.rows[0].id,
+      email: email.toLowerCase()
+    });
+
+    let activationEmail = { sent: false, activationUrl: null };
+    try {
+      activationEmail = await sendActivationEmail({
+        email: email.toLowerCase(),
+        fullName: normalizedName,
+        userType: normalizeUserType(normalizedUserType) || 'customer',
+        token: activationToken
+      });
+      console.log(`📧 Activation email ${activationEmail.sent ? 'sent' : 'skipped'} for ${email.toLowerCase()}`);
+    } catch (activationEmailError) {
+      console.error('Activation email error:', activationEmailError);
+    }
+
+    // Generate JWT token (session token)
     const token = jwt.sign(
       { userId: insertResult.rows[0].id, email: email.toLowerCase() },
       jwtSecret,
@@ -206,8 +289,15 @@ router.post('/register', authLimiter, async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: 'User registered successfully. Activation required.',
+      requiresActivation: true,
       token,
+      activation: (process.env.NODE_ENV !== 'production' || process.env.RETURN_ACTIVATION_TOKEN === 'true')
+        ? {
+          token: activationToken,
+          url: activationEmail.activationUrl
+        }
+        : undefined,
       user: {
         id: insertResult.rows[0].id,
         email: insertResult.rows[0].email,
@@ -235,7 +325,7 @@ router.post('/login', authLimiter, async (req, res) => {
 
     // Find user
     const result = await pool.query(
-      'SELECT id, email, password_hash, full_name, name, user_type, role, status FROM users WHERE email = $1',
+      'SELECT id, email, password_hash, full_name, name, user_type, role, status, email_verified FROM users WHERE email = $1',
       [email.toLowerCase()]
     );
 
@@ -244,6 +334,26 @@ router.post('/login', authLimiter, async (req, res) => {
     }
 
     const user = result.rows[0];
+
+    if (user.email_verified === false) {
+      try {
+        const activationToken = signActivationToken({ userId: user.id, email: user.email });
+        await sendActivationEmail({
+          email: user.email,
+          fullName: user.full_name || user.name,
+          userType: normalizeUserType(user.user_type) || 'customer',
+          token: activationToken
+        });
+      } catch (activationError) {
+        console.warn('Activation email send (login) failed:', activationError?.message || activationError);
+      }
+
+      return res.status(403).json({
+        error: 'Account activation required',
+        requiresActivation: true,
+        email: user.email
+      });
+    }
 
     // Check if user is active
     if (user.status && user.status !== 'active' && user.status !== 'confirmed') {
@@ -288,6 +398,120 @@ router.post('/login', authLimiter, async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed', details: error.message });
+  }
+});
+
+// ==========================================
+// ACTIVATE ACCOUNT (Email verification)
+// ==========================================
+router.get('/activate', async (req, res) => {
+  const token = String(req.query.token || '').trim();
+  if (!token) {
+    return res.status(400).json({ success: false, error: 'Missing activation token' });
+  }
+
+  try {
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
+    const decoded = jwt.verify(token, jwtSecret);
+    if (!decoded || decoded.purpose !== 'email_verification' || !decoded.userId || !decoded.email) {
+      return res.status(400).json({ success: false, error: 'Invalid activation token' });
+    }
+
+    const columns = await getUserColumns().catch(() => new Set());
+
+    const updates = [];
+    const values = [];
+    let idx = 1;
+
+    if (columns.has('email_verified')) {
+      updates.push(`email_verified = $${idx++}`);
+      values.push(true);
+    }
+    if (columns.has('status')) {
+      updates.push(`status = $${idx++}`);
+      values.push('active');
+    }
+    if (columns.has('active')) {
+      updates.push(`active = $${idx++}`);
+      values.push(true);
+    }
+
+    if (!updates.length) {
+      return res.json({ success: true, message: 'Activated (no-op)', userId: decoded.userId });
+    }
+
+    values.push(decoded.userId);
+    const updateSql = `UPDATE users SET ${updates.join(', ')} WHERE id = $${idx} AND lower(email) = lower($${idx + 1})`;
+    values.push(decoded.email);
+    const result = await pool.query(updateSql, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Activation error:', error);
+    return res.status(400).json({ success: false, error: 'Activation failed' });
+  }
+});
+
+// ==========================================
+// RESEND ACTIVATION EMAIL
+// ==========================================
+router.post('/resend-activation', authLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  if (!email || !emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT id, email, full_name, name, user_type, email_verified FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    if (user.email_verified === true) {
+      return res.json({ success: true, message: 'Account already activated' });
+    }
+
+    const activationToken = signActivationToken({ userId: user.id, email: user.email });
+    let activationEmail = { sent: false, activationUrl: null };
+
+    try {
+      activationEmail = await sendActivationEmail({
+        email: user.email,
+        fullName: user.full_name || user.name,
+        userType: normalizeUserType(user.user_type) || 'customer',
+        token: activationToken
+      });
+    } catch (sendError) {
+      console.error('Resend activation email error:', sendError);
+    }
+
+    const includeToken = process.env.NODE_ENV !== 'production' || process.env.RETURN_ACTIVATION_TOKEN === 'true';
+    return res.json({
+      success: true,
+      message: 'Activation email sent',
+      ...(includeToken
+        ? {
+          activation: {
+            token: activationToken,
+            url: activationEmail.activationUrl
+          }
+        }
+        : {})
+    });
+  } catch (error) {
+    console.error('Resend activation error:', error);
+    return res.status(500).json({ error: 'Failed to resend activation email' });
   }
 });
 

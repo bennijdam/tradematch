@@ -1,6 +1,6 @@
 const { defineConfig } = require('@playwright/test');
 
-const baseURL = process.env.BASE_URL || 'http://localhost:8080/frontend';
+const baseURL = process.env.BASE_URL || 'http://localhost:8080';
 
 module.exports = defineConfig({
   testDir: './tests/e2e',
@@ -9,6 +9,12 @@ module.exports = defineConfig({
   expect: { timeout: 10000 },
   retries: process.env.CI ? 2 : 0,
   reporter: [['list']],
+  webServer: {
+    command: 'node scripts/e2e-webserver.js',
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000
+  },
   use: {
     baseURL,
     trace: 'on-first-retry',

@@ -1,7 +1,8 @@
 const { chromium, request } = require('@playwright/test');
 
-const baseURL = process.env.BASE_URL || 'http://localhost:8080/frontend';
-const apiBase = process.env.API_BASE_URL || 'http://localhost:3001/api';
+const baseURL = process.env.BASE_URL || 'http://localhost:8080';
+const apiBase =
+  process.env.API_BASE_URL || `${(process.env.BASE_URL || 'http://localhost:8080').replace(/\/$/, '')}/api`;
 
 const authDir = 'tests/e2e/.auth';
 const customerStatePath = `${authDir}/customer.json`;

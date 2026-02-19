@@ -338,7 +338,7 @@ async function loginWithGoogle() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}`;
+        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
         openOAuthPopup(googleAuthUrl);
         
     } catch (error) {
@@ -365,7 +365,7 @@ async function loginWithMicrosoft() {
         localStorage.setItem('oauthReturnTo', returnTo);
         
         // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}`;
+        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
         openOAuthPopup(microsoftAuthUrl);
         
     } catch (error) {

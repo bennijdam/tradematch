@@ -1318,82 +1318,6 @@
         </div>
     </div>
     
-    
-    <!-- Change Password Modal -->
-    <div id="password-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Change Password</h3>
-                <p class="modal-description">Create a strong password with at least 8 characters</p>
-            </div>
-            
-            <form id="password-form" onsubmit="changePassword(event)">
-                <div class="form-group">
-                    <label class="form-label" for="current-password">Current Password</label>
-                    <input type="password" id="current-password" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="new-password">New Password</label>
-                    <input type="password" id="new-password" class="form-input" minlength="8" required>
-                    <span class="form-helper">Minimum 8 characters</span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="confirm-password">Confirm New Password</label>
-                    <input type="password" id="confirm-password" class="form-input" minlength="8" required>
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="submit" class="btn btn-primary">Update Password</button>
-                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    
-    <!-- Delete Account Modal -->
-    <div id="delete-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" style="color: var(--accent-danger);">âš ď¸Ź Delete Account</h3>
-                <p class="modal-description">This action cannot be undone. All your data will be permanently deleted.</p>
-            </div>
-            
-            <div style="background: rgba(255, 71, 87, 0.12); padding: 16px; border-radius: 10px; margin-bottom: 20px;">
-                <div style="font-weight: 700; margin-bottom: 8px;">You will lose:</div>
-                <ul style="margin-left: 20px; font-size: 14px; color: var(--text-secondary);">
-                    <li>All job leads and quotes</li>
-                    <li>Your business profile and reviews</li>
-                    <li>Impression balance and subscription</li>
-                    <li>Message history</li>
-                </ul>
-            </div>
-            
-            <form id="delete-form" onsubmit="deleteAccount(event)">
-                <div class="form-group">
-                    <label class="form-label" for="delete-confirm">Type "DELETE" to confirm</label>
-                    <input type="text" id="delete-confirm" class="form-input" required pattern="DELETE">
-                </div>
-                
-                <div class="modal-actions">
-                    <button type="submit" class="btn btn-danger">Delete My Account</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        <div class="toast-message">Settings saved successfully!</div>
-    </div>
-    
-    
     <!-- Toast Notification -->
     <div id="toast" class="toast">
         <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1428,10 +1352,8 @@
 
         function redirectToLogin() {
             const returnUrl = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-            const authBase = localStorage.getItem('authBaseUrl') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                ? 'http://localhost:3002'
-                : window.location.origin);
-            window.location.href = `${authBase.replace(/\/$/, '')}/login?redirect=${returnUrl}`;
+            const authBase = (localStorage.getItem('authBaseUrl') || window.location.origin).replace(/\/$/, '');
+            window.location.href = `${authBase}/login?redirect=${returnUrl}`;
         }
 
         function ensureAuth() {

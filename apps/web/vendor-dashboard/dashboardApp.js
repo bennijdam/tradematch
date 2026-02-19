@@ -31,11 +31,6 @@ function getApiBaseUrl() {
 function getAuthBaseUrl() {
     const stored = localStorage.getItem('authBaseUrl');
     if (stored) return stored.replace(/\/$/, '');
-
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    if (isLocalhost) {
-        return 'http://localhost:3002';
-    }
     return window.location.origin;
 }
 

@@ -3,7 +3,8 @@ const { routes } = require('./utils/routes');
 const fs = require('fs');
 const path = require('path');
 
-const apiBase = process.env.API_BASE_URL || 'http://localhost:3001/api';
+const apiBase =
+  process.env.API_BASE_URL || `${(process.env.BASE_URL || 'http://localhost:8080').replace(/\/$/, '')}/api`;
 const storageStatePath = path.join(__dirname, '.auth', 'vendor.json');
 const storageState = fs.existsSync(storageStatePath) ? storageStatePath : undefined;
 
@@ -49,6 +50,9 @@ test('@e2e vendor journey', async ({ page, request }) => {
 
   await test.step('Payout', async () => {
     await page.goto(routes.vendorSettings, { waitUntil: 'domcontentloaded' });
+
+    // Stripe status is rendered inside the Billing tab on the vendor settings page.
+    await page.getByRole('button', { name: /^Billing$/ }).click();
     await expect(page.locator('#stripeStatusBadge')).toBeVisible();
   });
 });

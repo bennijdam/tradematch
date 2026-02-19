@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { routes } = require('./utils/routes');
 
-const apiBase = process.env.API_BASE_URL || 'http://localhost:3001/api';
+const apiBase = process.env.API_BASE_URL || `${(process.env.BASE_URL || 'http://localhost:8080').replace(/\/$/, '')}/api`;
 
 test('@sanity OAuth buttons present on login', async ({ page }) => {
   await page.goto(routes.login, { waitUntil: 'domcontentloaded' });

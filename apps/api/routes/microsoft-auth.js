@@ -45,9 +45,10 @@ function getReturnBaseFromState(stateValue) {
  * @access   Public
  */
 router.get('/microsoft', (req, res, next) => {
-    const { returnTo } = req.query;
+    const { returnTo, userType } = req.query;
     const state = JSON.stringify({
         returnTo: returnTo || FRONTEND_URL,
+        userType: userType || null,
         timestamp: Date.now()
     });
     
