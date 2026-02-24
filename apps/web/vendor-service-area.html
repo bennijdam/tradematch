@@ -521,15 +521,16 @@
                 <div class="form-group">
                     <label class="form-label">Add Postcode</label>
                     <div class="postcode-input-group">
-                        <input 
-                            type="text" 
-                            class="form-input" 
-                            id="postcodeInput" 
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="postcodeInput"
                             placeholder="e.g., E6, SW15, W1A"
                             onkeypress="handlePostcodeEnter(event)"
                         >
                         <button class="btn btn-primary" onclick="addPostcode()">Add</button>
                     </div>
+                    <p id="postcodeError" style="display:none;font-size:13px;color:#ef4444;margin-top:6px;padding:6px 10px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;"></p>
                     <p style="font-size: 13px; color: var(--gray); margin-top: 8px;">
                         💡 Tip: You can add full postcodes (SW15 2BX) or partial postcodes (SW15, E6)
                     </p>
@@ -739,15 +740,21 @@ E15, E16, E20"
         // Postcode management
         function addPostcode() {
             const input = document.getElementById('postcodeInput');
+            const errorEl = document.getElementById('postcodeError');
             const postcode = input.value.trim().toUpperCase();
-            
+
             if (postcode && validatePostcode(postcode)) {
                 postcodes.add(postcode);
                 input.value = '';
+                if (errorEl) errorEl.style.display = 'none';
                 updatePostcodeList();
                 updateStats();
             } else {
-                alert('Please enter a valid UK postcode');
+                if (errorEl) {
+                    errorEl.textContent = 'Please enter a valid UK postcode (e.g. SW15, W1A 1AA).';
+                    errorEl.style.display = 'block';
+                }
+                input.focus();
             }
         }
         
@@ -800,7 +807,7 @@ E15, E16, E20"
             textarea.value = '';
             updatePostcodeList();
             updateStats();
-            alert(`Successfully imported ${added} postcodes`);
+            CustomConfirm.toast(`Successfully imported ${added} postcode${added !== 1 ? 's' : ''}.`, 'success');
         }
         
         function handlePostcodeEnter(event) {
@@ -858,7 +865,6 @@ E15, E16, E20"
             };
             
             // In production, send to API
-            console.log('Saving settings:', settings);
             
             // Show success message
             const message = document.getElementById('successMessage');
@@ -871,7 +877,6 @@ E15, E16, E20"
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(settings)
             }).then(response => {
-                console.log('Settings saved successfully');
             }).catch(error => {
                 console.error('Error saving settings:', error);
             });
@@ -939,6 +944,7 @@ E15, E16, E20"
         </div>
     </footer>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/ui/profile-menu.js" defer></script>
     <script src="vendor-dashboard/vendor-dashboard.js" defer></script>
 </body>

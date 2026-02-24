@@ -1605,6 +1605,7 @@
     <!-- ========================================
          JAVASCRIPT - Animations & Interactions
          ======================================== -->
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script>
         // ========================================
         // Animated Counters
@@ -1685,35 +1686,28 @@
         });
 
         // ========================================
-        // Sign Up Handler (Mock)
+        // Sign Up Handler
         // ========================================
-        function handleSignup() {
-            // In production, this would show a sign-up modal or redirect
-            const email = prompt('Enter your email to get started:');
-            if (email) {
-                console.log('Sign up initiated for:', email);
-                alert('Great! Check your email for verification. After verifying, you\'ll access your vendor dashboard and complete onboarding.');
-                
-                // In production:
-                // 1. Send email verification
-                // 2. Redirect to dashboard after verification
-                // 3. Trigger onboarding modal
-                
-                // Simulate redirect to dashboard (where onboarding modal would trigger)
-                // window.location.href = '/vendor/dashboard';
+        async function handleSignup() {
+            if (typeof CustomConfirm !== 'undefined') {
+                const { confirmed, value: email } = await CustomConfirm.prompt(
+                    'Get Started',
+                    'Enter your email address to create your free vendor account.',
+                    'Email address',
+                    'Continue',
+                    'primary'
+                );
+                if (confirmed && email) {
+                    window.location.href = '/vendor-register?email=' + encodeURIComponent(email);
+                }
+            } else {
+                window.location.href = '/vendor-register';
             }
         }
 
         // ========================================
         // Console Helper
         // ========================================
-        console.log('%cTradeMatch Vendor Sign-Up Page', 'font-size: 20px; font-weight: bold; color: #10b981;');
-        console.log('This page demonstrates:');
-        console.log('✓ Earnings-focused messaging');
-        console.log('✓ Competitor comparison');
-        console.log('✓ Animated counters and progress bars');
-        console.log('✓ Fade-in animations on scroll');
-        console.log('✓ Modern, conversion-optimized design');
     </script>
 </body>
 </html>

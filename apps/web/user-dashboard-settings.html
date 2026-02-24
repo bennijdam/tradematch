@@ -915,6 +915,42 @@
             height: 20px;
         }
 
+        /* Error toast (mirrors success-message) */
+        .error-message {
+            position: fixed;
+            top: calc(var(--top-nav-height) + var(--spacing-lg));
+            right: var(--spacing-xl);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.9) 100%);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            z-index: 1002;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all var(--transition-base);
+        }
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        /* Inline modal error */
+        .modal-error-msg {
+            color: #ef4444;
+            font-size: 13px;
+            margin: 8px 0 0;
+            padding: 8px 12px;
+            background: rgba(239,68,68,0.08);
+            border-left: 3px solid #ef4444;
+            border-radius: 4px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -1510,6 +1546,14 @@
         <span id="successText">Settings saved successfully!</span>
     </div>
 
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage">
+        <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <span id="errorText">Something went wrong.</span>
+    </div>
+
     <script>
         const API_BASE = (() => {
             const stored = localStorage.getItem('apiBaseUrl');
@@ -1880,7 +1924,7 @@
                     toggle.classList.toggle('active');
                     settingsState[settingKey] = !newValue;
                     localStorage.setItem(`setting_${settingKey}`, settingsState[settingKey]);
-                    alert(error.message || 'Failed to update preference');
+                    showError(error.message || 'Failed to update preference');
                 }
             });
         });
@@ -1910,6 +1954,7 @@
 
         document.getElementById('cancelEmailBtn').addEventListener('click', () => {
             closeModal('emailModal');
+            clearModalError('emailModal');
         });
 
         document.getElementById('saveEmailBtn').addEventListener('click', async () => {
@@ -1917,7 +1962,7 @@
             const password = document.getElementById('emailPassword').value;
 
             if (!newEmail || !password) {
-                alert('Please enter your new email and password.');
+                showModalError('emailModal', 'Please enter your new email and password.');
                 return;
             }
 
@@ -1939,10 +1984,11 @@
                 applyUserProfile();
                 showSuccess('Email updated successfully.');
                 closeModal('emailModal');
+                clearModalError('emailModal');
                 document.getElementById('newEmail').value = '';
                 document.getElementById('emailPassword').value = '';
             } catch (error) {
-                alert(error.message || 'Failed to update email');
+                showModalError('emailModal', error.message || 'Failed to update email');
             }
         });
 
@@ -1953,6 +1999,7 @@
 
         document.getElementById('cancelPhoneBtn').addEventListener('click', () => {
             closeModal('phoneModal');
+            clearModalError('phoneModal');
         });
 
         document.getElementById('savePhoneBtn').addEventListener('click', async () => {
@@ -1960,7 +2007,7 @@
             const password = document.getElementById('phonePassword').value;
 
             if (!newPhone || !password) {
-                alert('Please enter your new phone number and password.');
+                showModalError('phoneModal', 'Please enter your new phone number and password.');
                 return;
             }
 
@@ -1982,10 +2029,11 @@
                 applyUserProfile();
                 showSuccess('Phone number updated successfully.');
                 closeModal('phoneModal');
+                clearModalError('phoneModal');
                 document.getElementById('newPhone').value = '';
                 document.getElementById('phonePassword').value = '';
             } catch (error) {
-                alert(error.message || 'Failed to update phone number');
+                showModalError('phoneModal', error.message || 'Failed to update phone number');
             }
         });
 
@@ -1996,6 +2044,7 @@
 
         document.getElementById('cancelPasswordBtn').addEventListener('click', () => {
             closeModal('passwordModal');
+            clearModalError('passwordModal');
         });
 
         document.getElementById('savePasswordBtn').addEventListener('click', async () => {
@@ -2004,12 +2053,12 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
 
             if (!currentPassword || !newPassword || !confirmPassword) {
-                alert('Please fill in all password fields.');
+                showModalError('passwordModal', 'Please fill in all password fields.');
                 return;
             }
 
             if (newPassword !== confirmPassword) {
-                alert('Passwords do not match!');
+                showModalError('passwordModal', 'Passwords do not match.');
                 return;
             }
 
@@ -2021,11 +2070,12 @@
 
                 showSuccess('Password changed successfully.');
                 closeModal('passwordModal');
+                clearModalError('passwordModal');
                 document.getElementById('currentPassword').value = '';
                 document.getElementById('newPassword').value = '';
                 document.getElementById('confirmPassword').value = '';
             } catch (error) {
-                alert(error.message || 'Failed to change password');
+                showModalError('passwordModal', error.message || 'Failed to change password');
             }
         });
 
@@ -2036,13 +2086,14 @@
 
         document.getElementById('cancelLogoutBtn').addEventListener('click', () => {
             closeModal('logoutModal');
+            clearModalError('logoutModal');
         });
 
         document.getElementById('confirmLogoutBtn').addEventListener('click', async () => {
             const password = document.getElementById('logoutPassword').value;
 
             if (!password) {
-                alert('Please enter your password.');
+                showModalError('logoutModal', 'Please enter your password.');
                 return;
             }
 
@@ -2055,10 +2106,11 @@
                 localStorage.setItem('activeSessions', '1');
                 showSuccess('All other devices have been logged out.');
                 closeModal('logoutModal');
+                clearModalError('logoutModal');
                 document.getElementById('logoutPassword').value = '';
                 applyUserProfile();
             } catch (error) {
-                alert(error.message || 'Failed to log out other devices');
+                showModalError('logoutModal', error.message || 'Failed to log out other devices');
             }
         });
 
@@ -2069,13 +2121,14 @@
 
         document.getElementById('cancelDeactivateBtn').addEventListener('click', () => {
             closeModal('deactivateModal');
+            clearModalError('deactivateModal');
         });
 
         document.getElementById('confirmDeactivateBtn').addEventListener('click', async () => {
             const password = document.getElementById('deactivatePassword').value;
 
             if (!password) {
-                alert('Please enter your password.');
+                showModalError('deactivateModal', 'Please enter your password.');
                 return;
             }
 
@@ -2086,13 +2139,13 @@
                 });
 
                 localStorage.setItem('accountDeactivated', 'true');
-                alert('Account deactivated. You will be redirected to the login page.');
                 closeModal('deactivateModal');
+                showSuccess('Account deactivated. Redirecting to login…');
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                redirectToLogin();
+                setTimeout(() => redirectToLogin(), 1500);
             } catch (error) {
-                alert(error.message || 'Failed to deactivate account');
+                showModalError('deactivateModal', error.message || 'Failed to deactivate account');
             }
         });
 
@@ -2100,13 +2153,39 @@
         function showSuccess(message) {
             const successMessage = document.getElementById('successMessage');
             const successText = document.getElementById('successText');
-            
             successText.textContent = message;
             successMessage.classList.add('show');
-            
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 3000);
+            setTimeout(() => { successMessage.classList.remove('show'); }, 3000);
+        }
+
+        // Error toast helper
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+            setTimeout(() => { errorMessage.classList.remove('show'); }, 4000);
+        }
+
+        // Inline modal error helper
+        function showModalError(modalId, message) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            let el = modal.querySelector('.modal-error-msg');
+            if (!el) {
+                el = document.createElement('p');
+                el.className = 'modal-error-msg';
+                modal.querySelector('.modal-body').appendChild(el);
+            }
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+
+        function clearModalError(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            const el = modal.querySelector('.modal-error-msg');
+            if (el) el.style.display = 'none';
         }
 
         window.addEventListener('load', async () => {
@@ -2114,6 +2193,14 @@
             await refreshUserProfile();
             applyUserProfile();
             await loadPreferences();
+
+            // Auto-open password modal when arriving via ?section=password
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('section') === 'password') {
+                openModal('passwordModal');
+                // Clean the URL so a refresh doesn't re-open it
+                history.replaceState(null, '', window.location.pathname);
+            }
         });
     </script>
 </body>

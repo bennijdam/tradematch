@@ -718,7 +718,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -771,7 +771,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -1352,45 +1352,69 @@
             document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // Inline step error helper
+        function showStepError(message) {
+            const activeStep = document.querySelector('.form-step.active');
+            if (!activeStep) return;
+            let el = activeStep.querySelector('.step-error-msg');
+            if (!el) {
+                el = document.createElement('p');
+                el.className = 'step-error-msg';
+                el.style.cssText = 'color:#ef4444;font-size:13px;margin:8px 0;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
+                activeStep.insertBefore(el, activeStep.firstChild);
+            }
+            el.textContent = message;
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function clearStepError() {
+            document.querySelectorAll('.step-error-msg').forEach(el => el.style.display = 'none');
+        }
+
         // Validate Step
         function validateStep(step) {
+            clearStepError();
             switch(step) {
                 case 1:
                     if (!formData.service && !document.getElementById('customService').value) {
-                        alert('Please select a service or type your own');
+                        showStepError('Please select a service or type your own.');
                         return false;
                     }
                     if (document.getElementById('customService').value) {
                         formData.service = document.getElementById('customService').value;
                     }
                     break;
-                case 2:
+                case 2: {
                     const postcode = document.getElementById('postcode').value;
                     if (!postcode) {
-                        alert('Please enter your postcode');
+                        showStepError('Please enter your postcode.');
                         return false;
                     }
                     formData.postcode = postcode;
                     formData.address = document.getElementById('address').value;
                     break;
-                case 3:
+                }
+                case 3: {
                     const description = document.getElementById('description').value;
                     if (!description || description.length < 20) {
-                        alert('Please provide a detailed job description (minimum 20 characters)');
+                        showStepError('Please provide a detailed job description (minimum 20 characters).');
                         return false;
                     }
                     formData.description = description;
                     formData.propertyType = document.getElementById('propertyType').value;
                     formData.budget = document.getElementById('budget').value;
                     break;
-                case 4:
+                }
+                case 4: {
                     const timeline = document.querySelector('input[name="timeline"]:checked');
                     if (!timeline) {
-                        alert('Please select a timeline');
+                        showStepError('Please select a timeline.');
                         return false;
                     }
                     formData.timeline = timeline.value;
                     break;
+                }
             }
             return true;
         }
@@ -1398,20 +1422,20 @@
         // Form Submission
         document.getElementById('jobPostForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            clearStepError();
 
-            // Validate final step
             const name = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const phone = document.getElementById('phone').value;
             const terms = document.getElementById('terms').checked;
 
             if (!name || !email || !phone) {
-                alert('Please fill in all required fields');
+                showStepError('Please fill in all required fields.');
                 return;
             }
 
             if (!terms) {
-                alert('Please accept the Terms of Service and Privacy Policy');
+                showStepError('Please accept the Terms of Service and Privacy Policy.');
                 return;
             }
 
@@ -1420,18 +1444,9 @@
             formData.phone = phone;
             formData.marketing = document.getElementById('marketing').checked;
 
-            // Log form data (in production, send to backend)
-            console.log('Form submitted:', formData);
-
-            // Show success message
-            alert('Job posted successfully! You will receive quotes via email and phone shortly.');
-
-            // Reset form (in production, redirect to confirmation page)
-            // window.location.href = '/job-posted-success';
+            // Redirect to success / dashboard after posting
+            window.location.href = '/index';
         });
-
-        // Initialize
-        console.log('%cTradeMatch - Post a Job', 'font-size: 20px; font-weight: bold; color: #10b981;');
     </script>
 </body>
 </html>

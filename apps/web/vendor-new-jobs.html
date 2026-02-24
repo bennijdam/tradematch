@@ -772,7 +772,7 @@
                 <div class="info-banner-title">Pro Vendor Benefits Active</div>
                 <p class="info-banner-text">
                     You're receiving free leads from your local pages! Leads from areas where you're featured on localised pages don't cost impressions. 
-                    <a href="#" class="info-banner-link">Learn more about Pro benefits</a>
+                    <a href="/how-it-works" class="info-banner-link">Learn more about Pro benefits</a>
                 </p>
             </div>
         </div>
@@ -785,44 +785,44 @@
             <div class="filters-grid">
                 <div class="filter-group">
                     <label class="filter-label">Service Type</label>
-                    <select class="filter-select">
-                        <option>All Services</option>
-                        <option>Plumbing</option>
-                        <option>Electrical</option>
-                        <option>Heating</option>
-                        <option>Carpentry</option>
+                    <select class="filter-select" id="filterService">
+                        <option value="">All Services</option>
+                        <option value="Plumbing">Plumbing</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Heating">Heating</option>
+                        <option value="Carpentry">Carpentry</option>
                     </select>
                 </div>
-                
+
                 <div class="filter-group">
                     <label class="filter-label">Location</label>
-                    <select class="filter-select">
-                        <option>All Locations</option>
-                        <option>Central London</option>
-                        <option>North London</option>
-                        <option>South London</option>
-                        <option>East London</option>
-                        <option>West London</option>
+                    <select class="filter-select" id="filterLocation">
+                        <option value="">All Locations</option>
+                        <option value="central">Central London</option>
+                        <option value="north">North London</option>
+                        <option value="south">South London</option>
+                        <option value="east">East London</option>
+                        <option value="west">West London</option>
                     </select>
                 </div>
-                
+
                 <div class="filter-group">
                     <label class="filter-label">Budget Range</label>
-                    <select class="filter-select">
-                        <option>Any Budget</option>
-                        <option>Under ÂŁ200</option>
-                        <option>ÂŁ200 - ÂŁ500</option>
-                        <option>ÂŁ500 - ÂŁ1,000</option>
-                        <option>ÂŁ1,000+</option>
+                    <select class="filter-select" id="filterBudget">
+                        <option value="">Any Budget</option>
+                        <option value="low">Under £200</option>
+                        <option value="mid">£200 – £500</option>
+                        <option value="high">£500 – £1,000</option>
+                        <option value="premium">£1,000+</option>
                     </select>
                 </div>
-                
+
                 <div class="filter-group">
                     <label class="filter-label">Lead Source</label>
-                    <select class="filter-select">
-                        <option>All Sources</option>
-                        <option>Pro Local Page (Free)</option>
-                        <option>Direct Match (Paid)</option>
+                    <select class="filter-select" id="filterSource">
+                        <option value="">All Sources</option>
+                        <option value="local">Pro Local Page (Free)</option>
+                        <option value="direct">Direct Match (Paid)</option>
                     </select>
                 </div>
             </div>
@@ -831,9 +831,9 @@
         <!-- Job Leads Grid -->
         <div class="leads-grid" id="leadsGrid" data-leads-grid>
             <!-- Pro Lead 1 - Featured on local page (FREE) -->
-            <div class="lead-card pro-lead">
+            <div class="lead-card pro-lead" data-service="Heating" data-location="central" data-budget="low" data-source="local">
                 <span class="pro-highlight">Pro Benefit</span>
-                
+
                 <div class="lead-header">
                     <div class="lead-status">
                         <span class="badge badge-new">
@@ -852,7 +852,7 @@
                         Local Page
                     </span>
                 </div>
-                
+
                 <h3 class="lead-title">Emergency Boiler Repair - No Heating</h3>
                 
                 <div class="lead-meta">
@@ -920,7 +920,7 @@
             </div>
             
             <!-- Regular Lead 1 - Direct match (PAID) -->
-            <div class="lead-card">
+            <div class="lead-card" data-service="Plumbing" data-location="east" data-budget="mid" data-source="direct">
                 <div class="lead-header">
                     <div class="lead-status">
                         <span class="badge badge-new">
@@ -993,7 +993,7 @@
             </div>
             
             <!-- Pro Lead 2 - Local page (FREE) -->
-            <div class="lead-card pro-lead">
+            <div class="lead-card pro-lead" data-service="Heating" data-location="central" data-budget="mid" data-source="local">
                 <span class="pro-highlight">Pro Benefit</span>
                 
                 <div class="lead-header">
@@ -1075,7 +1075,7 @@
             </div>
             
             <!-- Regular Lead 2 - Direct match (PAID) -->
-            <div class="lead-card">
+            <div class="lead-card" data-service="Heating" data-location="north" data-budget="mid" data-source="direct">
                 <div class="lead-header">
                     <div class="lead-status">
                         <span class="badge badge-new">
@@ -1149,7 +1149,7 @@
             </div>
             
             <!-- Regular Lead 3 - Direct match (PAID) -->
-            <div class="lead-card">
+            <div class="lead-card" data-service="Plumbing" data-location="north" data-budget="low" data-source="direct">
                 <div class="lead-header">
                     <div class="lead-status">
                         <span class="badge badge-new">
@@ -1270,7 +1270,6 @@
                 window.viewLead(leadId);
                 return;
             }
-            console.log('Viewing lead:', leadId);
             showToast('Opening lead details...', 'success');
         }
         
@@ -1280,7 +1279,6 @@
                 window.sendQuote(leadId);
                 return;
             }
-            console.log('Sending quote for lead:', leadId);
             showToast('Opening quote form...', 'success');
         }
         
@@ -1295,13 +1293,42 @@
             }, 3000);
         }
         
-        // Filter functionality (placeholder)
-        document.querySelectorAll('.filter-select').forEach(select => {
-            select.addEventListener('change', function() {
-                console.log('Filter changed:', this.value);
-                // TODO: Implement filtering logic
-                showToast('Filters applied', 'success');
+        // Live lead filtering
+        function applyLeadFilters() {
+            const service  = document.getElementById('filterService').value;
+            const location = document.getElementById('filterLocation').value;
+            const budget   = document.getElementById('filterBudget').value;
+            const source   = document.getElementById('filterSource').value;
+
+            let visible = 0;
+            document.querySelectorAll('.lead-card').forEach(card => {
+                const match =
+                    (!service  || card.dataset.service  === service)  &&
+                    (!location || card.dataset.location === location) &&
+                    (!budget   || card.dataset.budget   === budget)   &&
+                    (!source   || card.dataset.source   === source);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
             });
+
+            // Empty state
+            const grid = document.getElementById('leadsGrid');
+            let emptyEl = grid ? grid.querySelector('.leads-empty') : null;
+            if (visible === 0) {
+                if (grid && !emptyEl) {
+                    emptyEl = document.createElement('div');
+                    emptyEl.className = 'leads-empty';
+                    emptyEl.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted,#94a3b8);';
+                    emptyEl.innerHTML = '<div style="font-size:16px;font-weight:600;margin-bottom:8px;">No leads match your filters</div><div style="font-size:14px;">Try adjusting your criteria to see more results.</div>';
+                    grid.appendChild(emptyEl);
+                }
+            } else if (emptyEl) {
+                emptyEl.remove();
+            }
+        }
+
+        document.querySelectorAll('.filter-select').forEach(select => {
+            select.addEventListener('change', applyLeadFilters);
         });
     </script>
     <script src="/vendor-dashboard/dashboardApp.js" defer></script>

@@ -236,8 +236,146 @@
                     </div>
                 </div>
 
-                <!-- Step 3: How TradeMatch Works -->
+                <!-- Step 3: Vetting & Credentials -->
                 <div class="step" data-step="3">
+                    <div class="step-inner">
+                        <div class="step-icon-large">🔍</div>
+                        <h1 class="step-title">Verify Your <span class="gradient-text">Credentials</span></h1>
+                        <p class="step-subtitle">Verified profiles get 3x more leads. Complete any section now — you can finish the rest from your dashboard.</p>
+
+                        <!-- Sub-nav tabs -->
+                        <div class="vetting-tabs" role="tablist" aria-label="Verification sections">
+                            <button class="vetting-tab active" role="tab" data-tab="identity"   onclick="switchVettingTab('identity')">Identity</button>
+                            <button class="vetting-tab"        role="tab" data-tab="insurance"  onclick="switchVettingTab('insurance')">Insurance</button>
+                            <button class="vetting-tab"        role="tab" data-tab="trade"      onclick="switchVettingTab('trade')">Trade Reg.</button>
+                            <button class="vetting-tab"        role="tab" data-tab="quiz"       onclick="switchVettingTab('quiz')">Quiz</button>
+                        </div>
+
+                        <!-- ── Identity ─────────────────────────────────────── -->
+                        <div class="vetting-panel active" id="vetting-identity">
+                            <p class="vetting-desc">Verify your identity using the GOV.UK One Login service. This adds 25 points to your vetting score.</p>
+                            <div class="vetting-status-bar" id="identity-status-bar">
+                                <span class="vetting-badge pending">Not verified</span>
+                            </div>
+                            <button class="btn btn-primary" id="btn-verify-identity" onclick="startIdentityVerification()">
+                                Verify with GOV.UK One Login
+                            </button>
+                            <p class="form-hint">You'll be redirected to gov.uk and returned here automatically.</p>
+                        </div>
+
+                        <!-- ── Insurance ─────────────────────────────────────── -->
+                        <div class="vetting-panel" id="vetting-insurance">
+                            <p class="vetting-desc">Upload your insurance documents. Public Liability Insurance is the most important — it adds 35 points to your score.</p>
+                            <form class="onboarding-form" id="form-insurance" onsubmit="submitInsurance(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Insurance Type <span class="required">*</span></label>
+                                    <select class="form-select" id="ins-type" required>
+                                        <option value="">Select type…</option>
+                                        <option value="public_liability">Public Liability</option>
+                                        <option value="employers_liability">Employers' Liability</option>
+                                        <option value="professional_indemnity">Professional Indemnity</option>
+                                        <option value="tools_equipment">Tools & Equipment</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Insurance Provider <span class="required">*</span></label>
+                                    <input type="text" class="form-input" id="ins-provider" placeholder="e.g. Direct Line Business" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Policy Number <span class="required">*</span></label>
+                                        <input type="text" class="form-input" id="ins-policy" placeholder="e.g. DLB-1234567" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Coverage Amount (£) <span class="required">*</span></label>
+                                        <input type="number" class="form-input" id="ins-coverage" placeholder="e.g. 1000000" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Valid From <span class="required">*</span></label>
+                                        <input type="date" class="form-input" id="ins-valid-from" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Expires At <span class="required">*</span></label>
+                                        <input type="date" class="form-input" id="ins-expires" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Document Upload</label>
+                                    <input type="file" class="form-input" id="ins-doc" accept=".pdf,.jpg,.jpeg,.png">
+                                    <p class="form-hint">PDF, JPG or PNG — max 5 MB. Our team will verify within 2–3 business days.</p>
+                                </div>
+                                <div id="ins-error" class="step-error-msg" style="display:none"></div>
+                                <button type="submit" class="btn btn-primary" id="btn-submit-ins">Submit Insurance</button>
+                            </form>
+                        </div>
+
+                        <!-- ── Trade Registration ─────────────────────────────── -->
+                        <div class="vetting-panel" id="vetting-trade">
+                            <p class="vetting-desc">Add your trade registration numbers (Gas Safe, NICEIC, NAPIT etc.). Verified registrations add 20 points to your score.</p>
+                            <form class="onboarding-form" id="form-trade" onsubmit="submitTradeReg(event)">
+                                <div class="form-group">
+                                    <label class="form-label">Registration Type <span class="required">*</span></label>
+                                    <select class="form-select" id="trade-type" required>
+                                        <option value="">Select type…</option>
+                                        <option value="gas_safe">Gas Safe Register</option>
+                                        <option value="niceic">NICEIC</option>
+                                        <option value="napit">NAPIT</option>
+                                        <option value="fgas">F-Gas (REFCOM)</option>
+                                        <option value="oftec">OFTEC</option>
+                                        <option value="checkatrade">Checkatrade</option>
+                                        <option value="trustmark">TrustMark</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Registration Number <span class="required">*</span></label>
+                                        <input type="text" class="form-input" id="trade-number" placeholder="e.g. 123456" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Registered Name</label>
+                                        <input type="text" class="form-input" id="trade-name" placeholder="Name on registration">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Expires At</label>
+                                        <input type="date" class="form-input" id="trade-expires">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Document Upload</label>
+                                        <input type="file" class="form-input" id="trade-doc" accept=".pdf,.jpg,.jpeg,.png">
+                                    </div>
+                                </div>
+                                <div id="trade-error" class="step-error-msg" style="display:none"></div>
+                                <button type="submit" class="btn btn-primary" id="btn-submit-trade">Submit Registration</button>
+                            </form>
+                        </div>
+
+                        <!-- ── Quiz ──────────────────────────────────────────── -->
+                        <div class="vetting-panel" id="vetting-quiz">
+                            <p class="vetting-desc">Answer 5 quick questions about trades, safety and regulation. A score of 80%+ adds 20 points to your vetting score.</p>
+                            <div id="quiz-container">
+                                <button class="btn btn-primary" onclick="loadQuizQuestions()">Start Quiz</button>
+                            </div>
+                        </div>
+
+                        <!-- Score summary bar -->
+                        <div class="vetting-score-summary">
+                            <div class="score-label">Your current vetting score</div>
+                            <div class="score-bar-wrap">
+                                <div class="score-bar-fill" id="vetting-score-bar" style="width:0%"></div>
+                            </div>
+                            <div class="score-value" id="vetting-score-value">0 / 100</div>
+                            <p class="form-hint">You can complete verification steps any time from your dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: How TradeMatch Works -->
+                <div class="step" data-step="4">
                     <div class="step-inner">
                         <div class="step-icon-large">🎯</div>
                         <h1 class="step-title">How <span class="gradient-text">TradeMatch</span> Works</h1>
@@ -296,7 +434,7 @@
                 </div>
 
                 <!-- Step 4: Business Profile -->
-                <div class="step" data-step="4">
+                <div class="step" data-step="5">
                     <div class="step-inner">
                         <div class="step-icon-large">🏢</div>
                         <h1 class="step-title">Your <span class="gradient-text">Business</span> Details</h1>
@@ -385,7 +523,7 @@
                 </div>
 
                 <!-- Step 5: Service Coverage -->
-                <div class="step" data-step="5">
+                <div class="step" data-step="6">
                     <div class="step-inner">
                         <div class="step-icon-large">📍</div>
                         <h1 class="step-title">Service <span class="gradient-text">Coverage</span> Area</h1>
@@ -436,7 +574,7 @@
                 </div>
 
                 <!-- Step 6: Wallet Top-Up -->
-                <div class="step" data-step="6">
+                <div class="step" data-step="7">
                     <div class="step-inner">
                         <div class="step-icon-large">💳</div>
                         <h1 class="step-title">Fund Your <span class="gradient-text">Lead Wallet</span></h1>
@@ -534,6 +672,20 @@
                     </div>
                 </div>
 
+                <!-- Step 8: Professional Knowledge Verification (Quiz) -->
+                <div class="step" data-step="8">
+                    <div class="step-inner" id="quiz-step-inner">
+                        <div class="step-icon-large">🎓</div>
+                        <h1 class="step-title">Professional <span class="gradient-text">Knowledge</span> Verification</h1>
+                        <p class="step-subtitle">
+                            A short trade-specific quiz — questions are tailored to your selected services.<br>
+                            <strong>70%+ to pass</strong> · Unlocks your <em>Knowledge Verified</em> badge.
+                        </p>
+                        <!-- QuizEngine mounts here -->
+                        <div id="quiz-mount" style="margin-top:20px"></div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Modal Footer -->
@@ -557,6 +709,10 @@
         </div>
     </div>
 
+    <link rel="stylesheet" href="/vendor-dashboard/quiz-engine/quiz-engine.css">
+    <script src="/shared/ui/confirm-modal.js" defer></script>
+    <script src="/vendor-dashboard/quiz-engine/questionBanks.js" defer></script>
+    <script src="/vendor-dashboard/quiz-engine/QuizEngine.js" defer></script>
     <script src="vendor-onboarding-wizard.js" defer></script>
 </body>
 </html>

@@ -1398,7 +1398,6 @@
                 this.classList.add('active');
                 
                 // Filter logic would go here
-                console.log('Filter:', this.textContent);
             });
         });
 
@@ -1407,14 +1406,10 @@
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const position = this.closest('.position-card').querySelector('h3').textContent;
-                console.log('Apply for:', position);
-                // In production, open application modal or redirect
-                alert(`Application form for "${position}" would open here.\n\nIn production: careers@tradematch.uk`);
+                window.location.href = 'mailto:careers@tradematch.uk?subject=' + encodeURIComponent('Application: ' + position);
             });
         });
 
-        console.log('%cTradeMatch - Careers', 'font-size: 20px; font-weight: bold; color: #10b981;');
-        console.log('Join us in building the future 🚀');
     </script>
 </body>
 </html>

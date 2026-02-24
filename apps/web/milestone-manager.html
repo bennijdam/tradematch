@@ -414,6 +414,7 @@
             .hero { padding: 80px 24px; }
             .content-section { padding: 60px 24px; }
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
     <link rel="stylesheet" href="/shared/styles/profile-menu.css">
         <script>
@@ -462,20 +463,24 @@
         const quoteId = urlParams.get('quoteId');
         
         async function loadMilestones() {
+            const container = document.getElementById('milestoneTimeline');
+            container.innerHTML = '<div style="text-align:center;padding:3rem;color:#94a3b8;display:flex;align-items:center;justify-content:center;gap:.75rem;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Loading milestones…</div>';
             try {
                 const response = await fetch(`${API_URL}/api/payments/milestones/${quoteId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     displayMilestones(data.milestones);
                     updateProgress(data.milestones);
+                } else {
+                    container.innerHTML = '<div style="text-align:center;padding:3rem;color:#ef4444;">Failed to load milestones. <button onclick="loadMilestones()" style="color:#10b981;background:none;border:none;cursor:pointer;text-decoration:underline;font-size:inherit;">Retry</button></div>';
                 }
-                
+
             } catch (error) {
-                console.error('Load milestones error:', error);
+                container.innerHTML = '<div style="text-align:center;padding:3rem;color:#ef4444;">Failed to load milestones. <button onclick="loadMilestones()" style="color:#10b981;background:none;border:none;cursor:pointer;text-decoration:underline;font-size:inherit;">Retry</button></div>';
             }
         }
         
@@ -554,7 +559,7 @@
                 });
                 
                 if (response.ok) {
-                    alert('Milestone submitted for review!');
+                    CustomConfirm.toast('Milestone submitted for review!', 'success');
                     loadMilestones();
                 }
                 
@@ -564,7 +569,13 @@
         }
         
         async function approveMilestone(milestoneId) {
-            if (!confirm('Approve this milestone and release payment?')) return;
+            const ok = await CustomConfirm.ask(
+                'Release Payment?',
+                'This will immediately transfer funds to the vendor. This action is irreversible.',
+                'Release Funds',
+                'danger'
+            );
+            if (!ok) return;
             
             try {
                 // First, update milestone status
@@ -594,7 +605,7 @@
                     })
                 });
                 
-                alert('Payment released to vendor!');
+                CustomConfirm.toast('Payment released to vendor!', 'success');
                 loadMilestones();
                 
             } catch (error) {
@@ -650,6 +661,7 @@
         </div>
     </footer>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>

@@ -4,33 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Get trusted local tradespeople for home improvements across the UK. Compare quotes from verified professionals in minutes. TradeMatch connects homeowners with reliable, background-checked tradespeople for plumbing, electrical, roofing, and more.">
-    <script>
-        (function() {
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-                return undefined;
-            }
-
-            const token = getCookie('token');
-            const userRole = getCookie('user_role');
-
-            if (token && userRole) {
-                const dashboardRoutes = {
-                    vendor: '/vendor-dashboard',
-                    tradesperson: '/vendor-dashboard',
-                    customer: '/user-dashboard',
-                    user: '/user-dashboard'
-                };
-
-                if (dashboardRoutes[userRole]) {
-                    window.location.replace(dashboardRoutes[userRole]);
-                }
-            }
-        })();
-    </script>
-    <title>TradeMatch - Get Trusted Trade Quotes Fast | Free Quote UK Tradespeople</title>
+    <title>TradeMatch - Get Trusted Trade Quotes Fast</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -55,14 +29,15 @@
             --gray-600: #4B5563;
             --amber: #F59E0B;
             --white: #FFFFFF;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
             --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
             --glass-bg: rgba(255, 255, 255, 0.7);
             --glass-border: rgba(255, 255, 255, 0.18);
         }
         
         * {
-            padding: 0;
             margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
@@ -76,6 +51,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 24px;
         }
         
         /* White Top Navigation */
@@ -130,6 +106,10 @@
         
         .nav-menu a:hover {
             color: var(--emerald);
+        }
+
+        .nav-dashboard-link {
+            display: none;
         }
         
         /* Button Styles */
@@ -4460,7 +4440,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -4513,7 +4493,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -4565,6 +4545,7 @@
                 </li>
                 
                 <li class="nav-cta">
+                    <a href="/vendor-dashboard" class="nav-dashboard-link">Dashboard</a>
                     <a href="/post-job" class="btn-post">Post a Job</a>
                     <a href="/trade-signup" class="btn-signup">Trade Signup</a>
                     <a href="/login" class="btn-login">Login</a>
@@ -4623,7 +4604,8 @@
                                 </button>
                             </div>
                         </form>
-                        
+                        <p id="searchError" style="display:none;color:#ef4444;font-size:13px;margin-top:8px;padding:8px 12px;background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;border-radius:4px;"></p>
+
                         </div>
                     
                     
@@ -5141,7 +5123,7 @@
               </p>
               
               <div class="tm-cta-buttons">
-                <a href="#" class="tm-store-button tm-app-store" aria-label="Download on the App Store">
+                <a href="/coming-soon" class="tm-store-button tm-app-store" aria-label="Download on the App Store">
                   <svg viewBox="0 0 120 40" class="tm-store-badge">
                     <rect width="120" height="40" rx="8" fill="#000"/>
                     <path d="M24.5 20.5c0-2.8 2.3-4.2 2.4-4.3-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.3 1-4.2 1-.9 0-2.2-1-3.6-1-1.9 0-3.6 1.1-4.5 2.7-2 3.4-.5 8.5 1.4 11.3 1 1.4 2 2.9 3.5 2.8 1.4-.1 2-.9 3.6-.9 1.7 0 2.2.9 3.6.9 1.5 0 2.5-1.3 3.4-2.7 1.1-1.6 1.5-3.1 1.5-3.2-.1 0-2.8-1.1-2.8-4.2z" fill="#fff"/>
@@ -5151,7 +5133,7 @@
                   </svg>
                 </a>
                 
-                <a href="#" class="tm-store-button tm-google-play" aria-label="Get it on Google Play">
+                <a href="/coming-soon" class="tm-store-button tm-google-play" aria-label="Get it on Google Play">
                   <svg viewBox="0 0 135 40" class="tm-store-badge">
                     <rect width="135" height="40" rx="8" fill="#000"/>
                     <path d="M8.5 7.5c-.3.3-.5.8-.5 1.4v22.2c0 .6.2 1.1.5 1.4l.1.1L20.8 20v-.3L8.6 7.4l-.1.1z" fill="#00d7fe"/>
@@ -5165,7 +5147,7 @@
               </div>
               
               <p class="tm-secondary-link">
-                Looking for the tradesperson app? <a href="#">Find it here →</a>
+                Looking for the tradesperson app? <a href="/vendor-register">Sign up as a tradesperson →</a>
               </p>
             </div>
           </div>
@@ -5422,11 +5404,7 @@
     </footer>
 
 <script>
-    const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    // Prefer same-origin in production (works on single-domain deployments without CORS).
-    // Keep a fallback API host for split deployments.
-    const API_BASE = IS_LOCAL ? 'http://localhost:3001' : '';
-    const API_FALLBACK_BASE = IS_LOCAL ? 'http://localhost:3001' : 'https://api.tradematch.uk';
+        const API_URL = 'https://api.tradematch.uk';
         
         // Postcode Autocomplete Implementation
         class PostcodeAutocomplete {
@@ -5502,11 +5480,9 @@
                         this.selectPreviousSuggestion(currentIndex, suggestions);
                         break;
                     case 'Enter':
+                        event.preventDefault();
                         if (currentIndex >= 0) {
-                            event.preventDefault();
                             this.selectPostcodeByIndex(currentIndex);
-                        } else {
-                            this.hideSuggestions();
                         }
                         break;
                     case 'Escape':
@@ -5525,47 +5501,15 @@
                 this.showLoading();
                 
                 try {
-                    let didShowSuggestions = false;
-
-                    try {
-                        const tryProxy = async (baseUrl) => {
-                            const url = `${baseUrl}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`;
-                            const resp = await fetch(url);
-                            const data = await resp.json();
-                            if (resp.ok && Array.isArray(data.suggestions) && data.suggestions.length > 0) {
-                                this.currentSuggestions = data.suggestions.map((item) => ({
-                                    postcode: item.postcode,
-                                    admin_district: item.district,
-                                    region: item.region,
-                                    country: item.country
-                                }));
-                                this.displaySuggestions(this.currentSuggestions);
-                                return true;
-                            }
-                            return false;
-                        };
-
-                        // 1) Same-origin first
-                        didShowSuggestions = await tryProxy(API_BASE);
-                        // 2) Fallback API host
-                        if (!didShowSuggestions) {
-                            didShowSuggestions = await tryProxy(API_FALLBACK_BASE);
-                        }
-                    } catch (proxyError) {
-                        // Fall through to direct postcode API fallback
-                    }
-
-                    if (!didShowSuggestions) {
-                        const fallbackResponse = await fetch(`https://api.postcodes.io/postcodes?q=${encodeURIComponent(query)}&limit=5`);
-                        const fallbackData = await fallbackResponse.json();
-
-                        if (fallbackData.status === 200 && Array.isArray(fallbackData.result) && fallbackData.result.length > 0) {
-                            this.currentSuggestions = fallbackData.result;
-                            this.displaySuggestions(this.currentSuggestions);
-                        } else {
-                            this.currentSuggestions = [];
-                            this.hideSuggestions();
-                        }
+                    const response = await fetch(`https://api.postcodes.io/postcodes?q=${encodeURIComponent(query)}&limit=5`);
+                    const data = await response.json();
+                    
+                    if (data.status === 200 && data.result && data.result.length > 0) {
+                        this.currentSuggestions = data.result;
+                        this.displaySuggestions(data.result);
+                    } else {
+                        this.currentSuggestions = [];
+                        this.hideSuggestions();
                     }
                 } catch (error) {
                     console.error('Error fetching postcodes:', error);
@@ -5587,13 +5531,10 @@
                     // Format the display
                     const mainText = postcode.postcode;
                     const details = `${postcode.admin_district || ''}${postcode.admin_district && postcode.region ? ', ' : ''}${postcode.region || ''}`;
-                                        const district = postcode.admin_district || postcode.district || '';
-                                        const region = postcode.region || '';
-                                        const detailsText = `${district}${district && region ? ', ' : ''}${region}`;
                     
                     suggestion.innerHTML = `
                         <div class="postcode-main">${mainText}</div>
-                        ${detailsText ? `<div class="postcode-details">${detailsText}</div>` : ''}
+                        ${details ? `<div class="postcode-details">${details}</div>` : ''}
                     `;
                     
                     suggestion.addEventListener('click', () => {
@@ -5681,31 +5622,33 @@
         // Handle quote form submission
 function handleQuickSearch(event) {
             event.preventDefault();
-            const serviceEl = document.getElementById('serviceType');
-            const service = serviceEl ? serviceEl.value : '';
+            const service = document.getElementById('serviceType').value;
             const postcode = document.getElementById('postcode').value;
              
-            if (!postcode) {
-                alert('Please enter your postcode');
+            const searchErrEl = document.getElementById('searchError');
+            function showSearchError(msg) {
+                if (searchErrEl) { searchErrEl.textContent = msg; searchErrEl.style.display = 'block'; }
+            }
+            if (searchErrEl) searchErrEl.style.display = 'none';
+
+            if (!service || !postcode) {
+                showSearchError('Please select a service and enter your postcode.');
                 return;
             }
-             
+
             // Get postcode data from autocomplete if available
             const postcodeData = postcodeAutocomplete.getSelectedPostcodeData();
             const postcodeValue = postcodeData ? postcodeData.postcode : postcode;
-             
+
             // Validate UK postcode
             const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
             if (!postcodeRegex.test(postcodeValue)) {
-                alert('Please enter a valid UK postcode');
+                showSearchError('Please enter a valid UK postcode (e.g. SW1A 1AA).');
                 return;
             }
              
-            // Build URL with postcode data (service is optional on the homepage)
-            let url = `/quote-engine?postcode=${encodeURIComponent(postcodeValue)}`;
-            if (service) {
-                url += `&service=${encodeURIComponent(service)}`;
-            }
+            // Build URL with postcode data
+            let url = `/quote-engine?service=${service}&postcode=${encodeURIComponent(postcodeValue)}`;
             
             // Add district and region if available
             if (postcodeData) {

@@ -492,7 +492,7 @@
                 <div class="quote-actions">
                     <button class="btn btn-primary" onclick="acceptQuote('quote1')">Accept Quote</button>
                     <button class="btn btn-secondary" onclick="window.location.href='messages?vendor=kitchen-bros'">Message Vendor</button>
-                    <button class="btn btn-secondary" onclick="alert('View vendor profile')">View Profile</button>
+                    <button class="btn btn-secondary" onclick="viewVendorProfile(this)">View Profile</button>
                 </div>
             </div>
 
@@ -557,7 +557,7 @@
                 <div class="quote-actions">
                     <button class="btn btn-primary" onclick="acceptQuote('quote2')">Accept Quote</button>
                     <button class="btn btn-secondary" onclick="window.location.href='messages?vendor=premium-reno'">Message Vendor</button>
-                    <button class="btn btn-secondary" onclick="alert('View vendor profile')">View Profile</button>
+                    <button class="btn btn-secondary" onclick="viewVendorProfile(this)">View Profile</button>
                 </div>
             </div>
 
@@ -622,12 +622,260 @@
                 <div class="quote-actions">
                     <button class="btn btn-primary" onclick="acceptQuote('quote3')">Accept Quote</button>
                     <button class="btn btn-secondary" onclick="window.location.href='messages?vendor=luxury-kitchens'">Message Vendor</button>
-                    <button class="btn btn-secondary" onclick="alert('View vendor profile')">View Profile</button>
+                    <button class="btn btn-secondary" onclick="viewVendorProfile(this)">View Profile</button>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Vendor Profile Slide-over Panel -->
+    <div id="vpp-backdrop" style="display:none" aria-hidden="true"></div>
+    <aside id="vendor-profile-panel" role="dialog" aria-modal="true" aria-labelledby="vpp-name" aria-hidden="true">
+        <div class="vpp-inner">
+            <button class="vpp-close" id="vppCloseBtn" aria-label="Close vendor profile">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="vpp-header">
+                <div class="vpp-avatar" id="vppAvatar"></div>
+                <div>
+                    <h2 class="vpp-name" id="vppName"></h2>
+                    <div class="vpp-meta" id="vppMeta"></div>
+                </div>
+            </div>
+
+            <div class="vpp-section">
+                <div class="vpp-row">
+                    <span class="vpp-label">Quote Price</span>
+                    <span class="vpp-value vpp-price" id="vppPrice"></span>
+                </div>
+                <div class="vpp-row">
+                    <span class="vpp-label">Timeline</span>
+                    <span class="vpp-value" id="vppTimeline"></span>
+                </div>
+                <div class="vpp-row">
+                    <span class="vpp-label">Availability</span>
+                    <span class="vpp-value" id="vppAvailability"></span>
+                </div>
+                <div class="vpp-row">
+                    <span class="vpp-label">Warranty</span>
+                    <span class="vpp-value" id="vppWarranty"></span>
+                </div>
+            </div>
+
+            <div class="vpp-section">
+                <p class="vpp-label" style="margin-bottom:8px">Vendor Message</p>
+                <p class="vpp-message" id="vppMessage"></p>
+            </div>
+
+            <div class="vpp-actions">
+                <button class="btn btn-primary" id="vppAcceptBtn">Accept Quote</button>
+                <button class="btn btn-secondary" id="vppMessageBtn">Message Vendor</button>
+            </div>
+        </div>
+    </aside>
+
+    <style>
+        /* Vendor Profile Panel */
+        #vendor-profile-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 420px;
+            max-width: 100%;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            box-shadow: -8px 0 32px rgba(0,0,0,0.35);
+            z-index: 9000;
+            transform: translateX(100%);
+            transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+        }
+        #vendor-profile-panel.is-open {
+            transform: translateX(0);
+        }
+        #vpp-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 8999;
+        }
+        .vpp-inner {
+            padding: 28px 24px 32px;
+            position: relative;
+        }
+        .vpp-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+        .vpp-close:hover { background: var(--bg-tertiary); }
+        .vpp-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-top: 4px;
+        }
+        .vpp-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .vpp-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 6px;
+        }
+        .vpp-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .vpp-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+        .vpp-section {
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .vpp-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+        .vpp-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .vpp-value {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+        }
+        .vpp-price { font-size: 18px; color: var(--accent-primary); }
+        .vpp-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin: 0;
+        }
+        .vpp-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .vpp-actions .btn { flex: 1; justify-content: center; }
+        @media (max-width: 480px) {
+            #vendor-profile-panel { width: 100%; }
+            .vpp-actions { flex-direction: column; }
+        }
+    </style>
+
+    <script>
+        function viewVendorProfile(btn) {
+            const card    = btn.closest('.quote-card');
+            const quoteId = card.dataset.quoteId;
+
+            // Extract data from card DOM
+            const name         = card.querySelector('.vendor-details h3').textContent.trim();
+            const initials     = card.querySelector('.vendor-avatar').textContent.trim();
+            const ratingText   = card.querySelector('.vendor-rating').textContent.trim();
+            const isVerified   = !!card.querySelector('.verified-badge');
+            const price        = card.querySelector('.price-value').textContent.trim();
+            const detailValues = card.querySelectorAll('.quote-detail-value');
+            const timeline     = detailValues[0]?.textContent.trim() || '—';
+            const availability = detailValues[1]?.textContent.trim() || '—';
+            const warranty     = detailValues[2]?.textContent.trim() || '—';
+            const message      = card.querySelector('.quote-message-text').textContent.trim();
+
+            // Vendor slug for messaging — read from the Message Vendor button's onclick
+            const msgBtn    = card.querySelector('.quote-actions [onclick*="messages"]');
+            const onclickStr = msgBtn?.getAttribute('onclick') || '';
+            const vendorSlug = (onclickStr.match(/vendor=([^'"]+)/) || [])[1] || '';
+
+            // Populate panel
+            document.getElementById('vppAvatar').textContent = initials;
+            document.getElementById('vppName').textContent   = name;
+            document.getElementById('vppPrice').textContent  = price;
+            document.getElementById('vppTimeline').textContent     = timeline;
+            document.getElementById('vppAvailability').textContent = availability;
+            document.getElementById('vppWarranty').textContent     = warranty;
+            document.getElementById('vppMessage').textContent      = message;
+
+            const metaEl = document.getElementById('vppMeta');
+            metaEl.innerHTML = `<span>${ratingText}</span>` +
+                (isVerified ? `<span class="vpp-verified">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg> Verified</span>` : '');
+
+            // Wire action buttons
+            document.getElementById('vppAcceptBtn').onclick  = () => { closeVPP(); acceptQuote(quoteId); };
+            document.getElementById('vppMessageBtn').onclick = () => {
+                if (vendorSlug) window.location.href = `messages?vendor=${vendorSlug}`;
+            };
+
+            openVPP();
+        }
+
+        function openVPP() {
+            const panel    = document.getElementById('vendor-profile-panel');
+            const backdrop = document.getElementById('vpp-backdrop');
+            panel.classList.add('is-open');
+            panel.setAttribute('aria-hidden', 'false');
+            backdrop.style.display = 'block';
+            document.getElementById('vppCloseBtn').focus();
+        }
+
+        function closeVPP() {
+            const panel    = document.getElementById('vendor-profile-panel');
+            const backdrop = document.getElementById('vpp-backdrop');
+            panel.classList.remove('is-open');
+            panel.setAttribute('aria-hidden', 'true');
+            backdrop.style.display = 'none';
+        }
+
+        document.getElementById('vppCloseBtn').addEventListener('click', closeVPP);
+        document.getElementById('vpp-backdrop').addEventListener('click', closeVPP);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeVPP(); });
+    </script>
+
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/user-dashboard/dashboardApp.js" defer></script>
 </body>
 </html>

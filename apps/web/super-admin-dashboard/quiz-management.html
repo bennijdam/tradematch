@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TradeMatch Admin — Quiz Management</title>
+<link rel="stylesheet" href="/vendor-dashboard/quiz-engine/quiz-engine.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7fa; color: #1a202c; min-height: 100vh; }
+  .topbar { background: #1a56db; color: #fff; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar h1 { font-size: 18px; font-weight: 700; }
+  .topbar a  { color: rgba(255,255,255,.8); font-size: 13px; text-decoration: none; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  .page-header { margin-bottom: 28px; }
+  .page-header h2 { font-size: 24px; font-weight: 800; }
+  .page-header p  { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; background: #e2e8f0; border-radius: 10px; padding: 4px; margin-bottom: 24px; width: fit-content; }
+  .tab-btn { padding: 8px 18px; border: none; border-radius: 7px; background: transparent; font-family: inherit; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; }
+  .tab-btn.active { background: #fff; color: #1a56db; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Cards */
+  .card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; text-align: left; background: #f8fafc; }
+  .data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+  .data-table tr:hover td { background: #fafafa; }
+
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label { font-size: 12px; font-weight: 600; color: #475569; }
+  .form-input, .form-select, .form-textarea { border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 12px; font-family: inherit; font-size: 14px; color: #1a202c; outline: none; transition: border-color .15s; background: #fff; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #1a56db; }
+  .form-textarea { resize: vertical; min-height: 70px; }
+  .form-full { grid-column: 1 / -1; }
+  .btn { padding: 10px 20px; border-radius: 8px; border: none; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .btn-primary { background: #1a56db; color: #fff; }
+  .btn-primary:hover { background: #1e40af; }
+  .btn-danger  { background: #dc2626; color: #fff; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+  .btn-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-pass   { background: #d1fae5; color: #065f46; }
+  .badge-fail   { background: #fee2e2; color: #991b1b; }
+  .badge-cond   { background: #fef3c7; color: #92400e; }
+  .badge-flag   { background: #fee2e2; color: #991b1b; border: 1px solid rgba(220,38,38,.3); }
+  .badge-HIGH   { background: #d1fae5; color: #065f46; }
+  .badge-MEDIUM { background: #fef3c7; color: #92400e; }
+  .badge-LOW    { background: #fee2e2; color: #991b1b; }
+
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: #1a56db; }
+  .stat-lbl { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+  .empty-state { text-align: center; padding: 48px 20px; color: #94a3b8; }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #1a56db; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>TradeMatch Admin — Quiz Management</h1>
+  <a href="/super-admin-dashboard/">← Back to Dashboard</a>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <h2>Professional Knowledge Verification</h2>
+    <p>Monitor quiz attempts, review flagged results, and manage the question bank.</p>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-lbl">Total Attempts</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-pass">—</div><div class="stat-lbl">Passed (≥60%)</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-verified">—</div><div class="stat-lbl">Knowledge Verified (≥80%)</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-flagged">—</div><div class="stat-lbl">Flagged for Review</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('attempts')">Attempt Log</button>
+    <button class="tab-btn" onclick="switchTab('flagged')">Flagged</button>
+    <button class="tab-btn" onclick="switchTab('settings')">Pass Thresholds</button>
+  </div>
+
+  <!-- TAB: Attempts -->
+  <div class="tab-panel active" id="tab-attempts">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div class="card-title" style="margin:0">Recent Quiz Attempts</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select class="form-select" id="filter-trade" style="width:160px" onchange="loadAttempts()">
+            <option value="">All trades</option>
+            <option value="gas">Gas</option>
+            <option value="electrical">Electrical</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="roofing">Roofing</option>
+            <option value="building">Building</option>
+            <option value="decorating">Decorating</option>
+            <option value="flooring">Flooring</option>
+            <option value="architecture">Architecture</option>
+            <option value="generic">Generic</option>
+          </select>
+          <select class="form-select" id="filter-result" style="width:140px" onchange="loadAttempts()">
+            <option value="">All results</option>
+            <option value="pass">Pass only</option>
+            <option value="fail">Fail only</option>
+          </select>
+          <button class="btn btn-secondary btn-sm" onclick="loadAttempts()">↻ Refresh</button>
+        </div>
+      </div>
+      <div id="attempts-table-wrap"><div class="empty-state"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+
+  <!-- TAB: Flagged -->
+  <div class="tab-panel" id="tab-flagged">
+    <div class="card">
+      <div class="card-title">Flagged Attempts — Manual Review Required</div>
+      <p style="font-size:13px;color:#64748b;margin-bottom:16px">Vendors with score &lt;40% or fraud flags detected. Approve to allow retake, or reject the application.</p>
+      <div id="flagged-table-wrap"><div class="empty-state"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+
+  <!-- TAB: Settings -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="card" style="max-width:560px">
+      <div class="card-title">Pass Score Thresholds</div>
+      <p style="font-size:13px;color:#64748b;margin-bottom:20px">These settings are used by the quiz engine. Changes take effect immediately for new attempts.</p>
+      <form onsubmit="saveSettings(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Knowledge Verified threshold (%)</label>
+            <input type="number" class="form-input" id="th-verified" value="80" min="50" max="100">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Conditional Approval threshold (%)</label>
+            <input type="number" class="form-input" id="th-cond" value="60" min="30" max="80">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Immediate retake minimum (%)</label>
+            <input type="number" class="form-input" id="th-retake" value="40" min="0" max="70">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max retakes per 24 hours</label>
+            <input type="number" class="form-input" id="th-maxretake" value="3" min="1" max="10">
+          </div>
+          <div class="form-full">
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <span id="settings-saved" style="font-size:13px;color:#16a34a;margin-left:10px;display:none">✓ Saved</span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card" style="max-width:560px">
+      <div class="card-title">Cooldown Rules (read-only reference)</div>
+      <table class="data-table">
+        <thead><tr><th>Score Range</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>≥80%</td><td>🏆 Knowledge Verified badge — dashboard unlocked</td></tr>
+          <tr><td>60–79%</td><td>✓ Conditional Approval — account activated, retake available</td></tr>
+          <tr><td>40–59%</td><td>⏳ Immediate retake allowed (up to daily limit)</td></tr>
+          <tr><td>&lt;40%</td><td>⚠ Flagged for manual review — admin decision required</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Attempt detail modal -->
+<div id="detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:28px;max-width:600px;width:90%;max-height:80vh;overflow-y:auto;position:relative">
+    <button onclick="closeModal()" style="position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:#94a3b8">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const API = '/api/admin/quiz';
+
+// ── Tab switching ─────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    const tabs = ['attempts','flagged','settings'];
+    b.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'attempts') loadAttempts();
+  if (name === 'flagged')  loadFlagged();
+}
+
+// ── Auth headers ──────────────────────────────────────────────────────────
+function ah() {
+  const t = localStorage.getItem('authToken') || localStorage.getItem('token');
+  return { 'Content-Type': 'application/json', ...(t ? { 'Authorization': 'Bearer ' + t } : {}) };
+}
+
+// ── Load stats ────────────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const r = await fetch(API + '/stats', { headers: ah() });
+    const d = await r.json();
+    document.getElementById('stat-total').textContent    = d.total    ?? '—';
+    document.getElementById('stat-pass').textContent     = d.passed   ?? '—';
+    document.getElementById('stat-verified').textContent = d.verified ?? '—';
+    document.getElementById('stat-flagged').textContent  = d.flagged  ?? '—';
+  } catch (_) {}
+}
+
+// ── Load attempts ─────────────────────────────────────────────────────────
+async function loadAttempts() {
+  const wrap   = document.getElementById('attempts-table-wrap');
+  wrap.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  const trade  = document.getElementById('filter-trade').value;
+  const result = document.getElementById('filter-result').value;
+  const params = new URLSearchParams({ limit: 50, ...(trade && { trade }), ...(result && { result }) });
+  try {
+    const r = await fetch(API + '/attempts?' + params, { headers: ah() });
+    const d = await r.json();
+    if (!d.attempts || !d.attempts.length) {
+      wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div>No attempts match the current filter.</div>';
+      return;
+    }
+    wrap.innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Vendor</th><th>Trade</th><th>Score</th><th>Trust</th><th>Time</th><th>Date</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${d.attempts.map((a) => `
+            <tr>
+              <td>${a.vendor_name || a.vendor_id}</td>
+              <td>${a.quiz_version || '—'}</td>
+              <td><span class="badge ${a.passed ? (a.score >= 80 ? 'badge-pass' : 'badge-cond') : 'badge-fail'}">${a.score}%</span></td>
+              <td><span class="badge badge-${a.trust_rating || 'MEDIUM'}">${a.trust_rating || '—'}</span></td>
+              <td>${a.time_taken_secs ? Math.floor(a.time_taken_secs/60)+'m '+pad2(a.time_taken_secs%60)+'s' : '—'}</td>
+              <td>${new Date(a.created_at).toLocaleDateString('en-GB')}</td>
+              <td><button class="btn btn-secondary btn-sm" onclick="viewDetail(${a.id})">View</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">⚠</div>Failed to load attempts: ' + e.message + '</div>';
+  }
+}
+
+// ── Load flagged ──────────────────────────────────────────────────────────
+async function loadFlagged() {
+  const wrap = document.getElementById('flagged-table-wrap');
+  wrap.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  try {
+    const r = await fetch(API + '/flagged', { headers: ah() });
+    const d = await r.json();
+    if (!d.flagged || !d.flagged.length) {
+      wrap.innerHTML = '<div class="empty-state"><div class="icon">✅</div>No flagged attempts — all clear!</div>';
+      return;
+    }
+    wrap.innerHTML = `
+      <table class="data-table">
+        <thead><tr>
+          <th>Vendor</th><th>Score</th><th>Flags</th><th>Date</th><th>Actions</th>
+        </tr></thead>
+        <tbody>
+          ${d.flagged.map((a) => `
+            <tr>
+              <td>${a.vendor_name || a.vendor_id}</td>
+              <td><span class="badge badge-fail">${a.score}%</span></td>
+              <td>${(a.fraud_flags || []).map((f) => `<span class="badge badge-flag" style="margin-right:3px">${f}</span>`).join('') || '—'}</td>
+              <td>${new Date(a.created_at).toLocaleDateString('en-GB')}</td>
+              <td style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-primary btn-sm" onclick="reviewVendor(${a.vendor_id},'allow_retake')">Allow Retake</button>
+                <button class="btn btn-danger btn-sm" onclick="reviewVendor(${a.vendor_id},'reject')">Reject</button>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch (e) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">⚠</div>Failed to load flagged attempts.</div>';
+  }
+}
+
+// ── View attempt detail ───────────────────────────────────────────────────
+async function viewDetail(id) {
+  const modal = document.getElementById('detail-modal');
+  const mc    = document.getElementById('modal-content');
+  mc.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  modal.style.display = 'flex';
+  try {
+    const r = await fetch(API + '/attempt/' + id, { headers: ah() });
+    const d = await r.json();
+    const a = d.attempt;
+    const compData = JSON.parse(a.answers || '{}');
+    const cs = compData.competencyScores || {};
+    mc.innerHTML = `
+      <h3 style="font-size:18px;font-weight:800;margin-bottom:12px">Attempt #${a.id}</h3>
+      <table class="data-table" style="margin-bottom:16px">
+        <tr><td>Vendor</td><td>${a.vendor_name || a.vendor_id}</td></tr>
+        <tr><td>Trade</td><td>${a.quiz_version}</td></tr>
+        <tr><td>Score</td><td><strong>${a.score}%</strong> — ${a.passed ? 'PASS' : 'FAIL'}</td></tr>
+        <tr><td>Trust Rating</td><td>${compData.trustRating || '—'}</td></tr>
+        <tr><td>Fraud Flags</td><td>${(compData.fraudFlags||[]).join(', ') || 'None'}</td></tr>
+        <tr><td>Time</td><td>${a.time_taken_secs ? Math.floor(a.time_taken_secs/60)+'m' : '—'}</td></tr>
+        <tr><td>Attempt #</td><td>${a.attempt_number}</td></tr>
+      </table>
+      ${Object.keys(cs).length ? `
+        <div style="margin-bottom:8px;font-weight:700;font-size:13px">Competency Breakdown</div>
+        <div class="qe-comp-breakdown">
+          ${Object.entries(cs).filter(([,v])=>v!=null).map(([k,v])=>`
+            <div class="qe-comp-row">
+              <span class="qe-comp-label">${k}</span>
+              <div class="qe-comp-bar-bg"><div class="qe-comp-bar-fill" style="width:${v}%;background:${v>=70?'#16a34a':v>=50?'#d97706':'#dc2626'}"></div></div>
+              <span class="qe-comp-pct">${v}%</span>
+            </div>`).join('')}
+        </div>` : ''}`;
+  } catch (e) {
+    mc.innerHTML = '<p style="color:#dc2626">Failed to load detail: ' + e.message + '</p>';
+  }
+}
+function closeModal() {
+  document.getElementById('detail-modal').style.display = 'none';
+}
+
+// ── Admin actions ─────────────────────────────────────────────────────────
+async function reviewVendor(vendorId, action) {
+  try {
+    await fetch(API + '/review', {
+      method:  'POST',
+      headers: ah(),
+      body:    JSON.stringify({ vendorId, action }),
+    });
+    loadFlagged();
+    loadStats();
+    if (typeof showToast === 'function') showToast(action === 'reject' ? 'Vendor rejected' : 'Retake allowed', 'success');
+  } catch (e) {
+    alert('Action failed: ' + e.message);
+  }
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────
+function saveSettings(e) {
+  e.preventDefault();
+  const s = {
+    verifiedThreshold:  parseInt(document.getElementById('th-verified').value),
+    condThreshold:      parseInt(document.getElementById('th-cond').value),
+    retakeThreshold:    parseInt(document.getElementById('th-retake').value),
+    maxRetakesPerDay:   parseInt(document.getElementById('th-maxretake').value),
+  };
+  localStorage.setItem('quizAdminSettings', JSON.stringify(s));
+  const msg = document.getElementById('settings-saved');
+  msg.style.display = 'inline';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadStats();
+loadAttempts();
+</script>
+</body>
+</html>

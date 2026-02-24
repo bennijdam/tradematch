@@ -983,6 +983,11 @@
                     <button type="submit" class="btn-submit">Post Question</button>
                     <p class="form-note">✓ Free forever  ✓ Public answers help others</p>
                 </form>
+                <div id="questionSuccess" style="display:none;text-align:center;padding:2rem;">
+                    <p style="font-size:1.5rem;margin-bottom:0.5rem;">✅ Question posted successfully!</p>
+                    <p style="color:#555;margin-bottom:1.5rem;">Experts will start answering within 24 hours. We'll email you when you get your first answer.</p>
+                    <button class="btn-submit" onclick="document.getElementById('questionSuccess').style.display='none';document.getElementById('questionForm').style.display='';">Ask Another Question</button>
+                </div>
             </div>
         </div>
     </section>
@@ -1496,18 +1501,11 @@
         // ========================================
         document.getElementById('questionForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // In production, this would submit to backend
-            alert('✅ Question posted successfully! Experts will start answering within 24 hours. We\'ll email you when you get your first answer.');
-            
-            // Reset form
             this.reset();
-            
-            // Scroll to recent questions
-            document.querySelector('.questions-section').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+            this.style.display = 'none';
+            const success = document.getElementById('questionSuccess');
+            success.style.display = '';
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
 
         // ========================================
@@ -1515,9 +1513,7 @@
         // ========================================
         document.querySelectorAll('.question-card').forEach(card => {
             card.addEventListener('click', function() {
-                // In production, this would navigate to question detail page
-                console.log('Navigate to question detail page');
-                alert('In production, this would open the full question with all answers.');
+                window.location.href = '/questions-listing';
             });
         });
 
@@ -1527,8 +1523,7 @@
         document.querySelectorAll('.category-card').forEach(card => {
             card.addEventListener('click', function() {
                 const categoryName = this.querySelector('.category-name').textContent;
-                console.log('Filter by category:', categoryName);
-                alert(`In production, this would show all questions in: ${categoryName}`);
+                window.location.href = '/questions-listing?category=' + encodeURIComponent(categoryName);
             });
         });
 
@@ -1551,13 +1546,6 @@
         // ========================================
         // Console Log
         // ========================================
-        console.log('%cTradeMatch - Ask a Trade', 'font-size: 20px; font-weight: bold; color: #7c3aed;');
-        console.log('Features:');
-        console.log('✓ Question submission form');
-        console.log('✓ Recent questions showcase');
-        console.log('✓ Category browsing');
-        console.log('✓ Expert panel display');
-        console.log('✓ Scroll-triggered animations');
     </script>
 </body>
 </html>

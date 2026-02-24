@@ -1822,7 +1822,7 @@
                         </td>
                         <td>-ÂŁ18.00</td>
                         <td><span class="transaction-status paid">âś“ Paid</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_001'); return false;">Download</a></td>
+                        <td><button type="button" class="download-link" onclick="downloadInvoice('inv_001')">Download</button></td>
                     </tr>
 
                     <tr>
@@ -1834,7 +1834,7 @@
                         </td>
                         <td>+ÂŁ50.00</td>
                         <td><span class="transaction-status paid">âś“ Paid</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_002'); return false;">Download</a></td>
+                        <td><button type="button" class="download-link" onclick="downloadInvoice('inv_002')">Download</button></td>
                     </tr>
 
                     <tr>
@@ -1846,7 +1846,7 @@
                         </td>
                         <td>-ÂŁ19.99</td>
                         <td><span class="transaction-status paid">âś“ Paid</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_003'); return false;">Download</a></td>
+                        <td><button type="button" class="download-link" onclick="downloadInvoice('inv_003')">Download</button></td>
                     </tr>
 
                     <tr>
@@ -1858,7 +1858,7 @@
                         </td>
                         <td>-ÂŁ4.99</td>
                         <td><span class="transaction-status paid">âś“ Paid</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_004'); return false;">Download</a></td>
+                        <td><button type="button" class="download-link" onclick="downloadInvoice('inv_004')">Download</button></td>
                     </tr>
 
                     <tr>
@@ -1870,7 +1870,7 @@
                         </td>
                         <td>-ÂŁ12.00</td>
                         <td><span class="transaction-status paid">âś“ Paid</span></td>
-                        <td><a href="#" class="download-link" onclick="downloadInvoice('inv_005'); return false;">Download</a></td>
+                        <td><button type="button" class="download-link" onclick="downloadInvoice('inv_005')">Download</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -1929,94 +1929,113 @@
         }
         
         function selectTopUp(amount) {
-            const map = {
-                4.99: 'starter',
-                10.99: 'professional',
-                19.99: 'business',
-                79.99: 'premium'
-            };
+            const map = { 4.99: 'starter', 10.99: 'professional', 19.99: 'business', 79.99: 'premium' };
             const pkg = map[Number(amount)] || null;
             if (!pkg) {
-                alert('Please choose a credit package.');
+                showBillingToast('Please choose a credit package above.', 'info');
                 return;
             }
             if (typeof window.purchaseCredits === 'function') {
                 window.purchaseCredits(pkg);
+            } else {
+                window.location.href = `/vendor-billing?action=topup&package=${pkg}`;
             }
         }
-        
+
         function customTopUp() {
-            alert('Custom top-ups are not available yet. Please choose a package.');
+            showBillingToast('Custom amounts are not available yet — choose a package above.', 'info');
         }
-        
-        function openTopUpModal() {
-            scrollToTopUp();
-        }
-        
-        function toggleAutoTopUp(element) {
-            element.classList.toggle('active');
-        }
-        
+
+        function openTopUpModal() { scrollToTopUp(); }
+
+        function toggleAutoTopUp(element) { element.classList.toggle('active'); }
+
         function configureAutoTopUp() {
-            scrollToTopUp();
-            document.querySelector('.auto-topup-section').scrollIntoView({ behavior: 'smooth' });
+            document.querySelector('.auto-topup-section')?.scrollIntoView({ behavior: 'smooth' });
         }
-        
+
         function saveAutoTopUpSettings() {
-            alert('Auto top-up settings saved successfully!');
+            showBillingToast('Auto top-up settings saved.', 'success');
         }
-        
+
         // Subscription functions
         function managePlan() {
-            alert('Redirecting to subscription management...');
+            window.location.href = '/vendor-billing?action=manage-plan';
         }
-        
-        function upgradeToPremium() {
-            if (confirm('Upgrade to Premium plan for ÂŁ39.99/month?')) {
-                alert('Redirecting to upgrade checkout...');
-            }
+
+        async function upgradeToPremium() {
+            const ok = await CustomConfirm.ask(
+                'Upgrade to Premium?',
+                'Your plan will change to Premium at £39.99/month, billed monthly. You can cancel at any time.',
+                'Upgrade Now',
+                'primary'
+            );
+            if (ok) window.location.href = '/vendor-billing?action=upgrade&plan=premium';
         }
-        
+
         function manageVerifiedBadge() {
-            alert('Opening verified badge management...');
+            window.location.href = '/dashboard-vendor-profile?section=verification';
         }
-        
-        function purchasePostcodeExpansion(package) {
-            const prices = { starter: 9.99, growth: 24.99, power: 39.99 };
-            const districts = { starter: '+5', growth: '+15', power: '+30' };
-            
-            if (confirm(`Add Postcode Expansion (${package}) - ${districts[package]} districts for ÂŁ${prices[package]}/month?`)) {
-                alert('Redirecting to checkout...');
-            }
+
+        async function purchasePostcodeExpansion(pkg) {
+            const prices    = { starter: 9.99, growth: 24.99, power: 39.99 };
+            const districts = { starter: '+5 districts', growth: '+15 districts', power: '+30 districts' };
+            const ok = await CustomConfirm.ask(
+                'Add Postcode Expansion?',
+                `This adds ${districts[pkg] || ''} to your coverage for £${prices[pkg] || '?'}/month, billed monthly.`,
+                'Add to Plan',
+                'primary'
+            );
+            if (ok) window.location.href = `/vendor-billing?action=postcode-expansion&package=${encodeURIComponent(pkg)}`;
         }
-        
-        // Transaction functions
+
+        // Transaction filter — real DOM filter using .transaction-type class text
         function filterTransactions(type, button) {
-            // Remove active class from all buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (button) button.classList.add('active');
+
+            document.querySelectorAll('#transactionsBody tr').forEach(row => {
+                const typeCell = row.querySelector('.transaction-type');
+                if (!typeCell) return;
+                const rowType = typeCell.textContent.trim().toLowerCase();
+                row.style.display = (type === 'all' || rowType === type) ? '' : 'none';
             });
-            
-            // Add active class to clicked button
-            if (button) {
-                button.classList.add('active');
-            }
-            
-            console.log('Filtering transactions by type:', type);
-            alert(`Filtering by: ${type}`);
         }
-        
+
         function loadMoreTransactions() {
-            alert('Loading more transactions...');
+            showBillingToast('All transactions are loaded.', 'info');
         }
-        
+
         function downloadInvoice(invoiceId) {
-            console.log('Downloading invoice:', invoiceId);
-            alert(`Downloading invoice ${invoiceId}...`);
+            const link  = document.createElement('a');
+            link.href     = `https://api.tradematch.uk/api/invoices/${encodeURIComponent(invoiceId)}/download`;
+            link.download = `${invoiceId}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showBillingToast(`Downloading ${invoiceId}…`, 'success');
         }
-        
+
         function viewLeadHistory() {
-            alert('Opening lead history...');
+            window.location.href = '/vendor-new-leads';
+        }
+
+        function showBillingToast(message, type = 'success') {
+            if (typeof CustomConfirm !== 'undefined') { CustomConfirm.toast(message, type); return; }
+            let el = document.getElementById('billing-toast');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'billing-toast';
+                el.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:600;color:#fff;opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;max-width:320px;pointer-events:none';
+                document.body.appendChild(el);
+            }
+            const colours = { success: '#16a34a', error: '#ef4444', info: '#3b82f6' };
+            el.textContent      = message;
+            el.style.background = colours[type] || colours.info;
+            el.style.opacity    = '1';
+            el.style.transform  = 'translateY(0)';
+            clearTimeout(el._t);
+            el._t = setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; }, 3500);
         }
         
     </script>

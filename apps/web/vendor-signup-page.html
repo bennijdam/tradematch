@@ -1107,7 +1107,7 @@
 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -1160,7 +1160,7 @@
 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -1800,34 +1800,24 @@
         // ========================================
         // Sign Up Handler (Mock)
         // ========================================
-        function handleSignup() {
-            // In production, this would show a sign-up modal or redirect
-            const email = prompt('Enter your email to get started:');
-            if (email) {
-                console.log('Sign up initiated for:', email);
-                alert('Great! Check your email for verification. After verifying, you\'ll access your vendor dashboard and complete onboarding.');
-                
-                // In production:
-                // 1. Send email verification
-                // 2. Redirect to dashboard after verification
-                // 3. Trigger onboarding modal
-                
-                // Simulate redirect to dashboard (where onboarding modal would trigger)
-                // window.location.href = '/vendor/dashboard';
+        async function handleSignup() {
+            const { confirmed, value: email } = await CustomConfirm.prompt(
+                'Get Started',
+                'Enter your email address to create your free vendor account.',
+                'Email address',
+                'Continue',
+                'primary'
+            );
+            if (confirmed && email) {
+                window.location.href = '/vendor-register?email=' + encodeURIComponent(email);
             }
         }
 
         // ========================================
         // Console Helper
         // ========================================
-        console.log('%cTradeMatch Vendor Sign-Up Page', 'font-size: 20px; font-weight: bold; color: #10b981;');
-        console.log('This page demonstrates:');
-        console.log('✓ Earnings-focused messaging');
-        console.log('✓ Competitor comparison');
-        console.log('✓ Animated counters and progress bars');
-        console.log('✓ Fade-in animations on scroll');
-        console.log('✓ Modern, conversion-optimized design');
     </script>
+    <script src="/shared/ui/confirm-modal.js" defer></script>
 </body>
 </html>
 

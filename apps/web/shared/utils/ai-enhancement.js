@@ -9,7 +9,8 @@ async function enhanceWithAI() {
     const serviceType = document.getElementById('serviceType').value;
     
     if (!description) {
-        alert('Please enter a description first');
+        const inp = document.getElementById('quoteDescription');
+        if (inp) { inp.style.borderColor = '#dc2626'; inp.focus(); setTimeout(() => { inp.style.borderColor = ''; }, 2000); }
         return;
     }
     
@@ -37,7 +38,15 @@ async function enhanceWithAI() {
         
     } catch (error) {
         console.error('AI enhancement error:', error);
-        alert('Failed to enhance quote');
+        if (typeof CustomConfirm !== 'undefined') {
+            CustomConfirm.toast('Failed to enhance quote', 'error');
+        } else {
+            const t = document.createElement('div');
+            t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#1e293b;color:#fff;padding:0.75rem 1.25rem;border-radius:8px;z-index:9999;';
+            t.textContent = 'Failed to enhance quote';
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        }
     } finally {
         btn.disabled = false;
         btn.textContent = '✨ Enhance with AI';

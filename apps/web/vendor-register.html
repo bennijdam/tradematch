@@ -685,10 +685,25 @@
     </section>
     
     <!-- Scripts -->
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/api/api.js" defer></script>
     <script src="/shared/api/auth.js" defer></script>
-    
+
     <script>
+        function showRegisterError(message) {
+            const form = document.getElementById('vendorRegisterForm');
+            let el = form.querySelector('.register-error-msg');
+            if (!el) {
+                el = document.createElement('p');
+                el.className = 'register-error-msg';
+                el.style.cssText = 'color:#ef4444;font-size:13px;margin:0 0 16px;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
+                form.insertBefore(el, form.firstChild);
+            }
+            el.textContent = message;
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
         // Vendor registration
         document.getElementById('vendorRegisterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -710,12 +725,12 @@
             
             // Validation
             if (!userData.name || !userData.email || !userData.password || !userData.tradeCategory || !userData.postcode) {
-                alert('Please fill in all required fields');
+                showRegisterError('Please fill in all required fields.');
                 return;
             }
-            
+
             if (userData.password.length < 6) {
-                alert('Password must be at least 6 characters');
+                showRegisterError('Password must be at least 6 characters.');
                 return;
             }
             
@@ -738,17 +753,15 @@
                     // Store authentication
                     localStorage.setItem('authToken', result.token);
                     localStorage.setItem('user', JSON.stringify(result.user));
-                    
-                    alert('Registration successful!');
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/dashboard-vendor-settings';
                 } else {
-                    alert(result.error || 'Registration failed. Please try again.');
+                    showRegisterError(result.error || 'Registration failed. Please try again.');
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalText;
                 }
             } catch (error) {
                 console.error('Registration error:', error);
-                alert('Network error. Please check your connection and try again.');
+                showRegisterError('Network error. Please check your connection and try again.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }

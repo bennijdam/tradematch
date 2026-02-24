@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TradeMatch Admin — Vetting Queue</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7fa; color: #1a202c; min-height: 100vh; }
+
+  /* ── Top bar ── */
+  .topbar { background: #1a56db; color: #fff; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar h1 { font-size: 18px; font-weight: 700; }
+  .topbar a  { color: rgba(255,255,255,.8); font-size: 13px; text-decoration: none; }
+
+  /* ── Page layout ── */
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  .page-header { margin-bottom: 28px; }
+  .page-header h2 { font-size: 24px; font-weight: 800; }
+  .page-header p  { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+  /* ── Stats row ── */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: #1a56db; }
+  .stat-lbl { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 4px; background: #e2e8f0; border-radius: 10px; padding: 4px; margin-bottom: 24px; width: fit-content; }
+  .tab-btn { padding: 8px 18px; border: none; border-radius: 7px; background: transparent; font-family: inherit; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; transition: all .15s; }
+  .tab-btn.active { background: #fff; color: #1a56db; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Filters ── */
+  .filter-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .filter-bar label { font-size: 12px; font-weight: 600; color: #64748b; }
+  .form-select { border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 7px 12px; font-family: inherit; font-size: 13px; background: #fff; outline: none; }
+  .form-select:focus { border-color: #1a56db; }
+
+  /* ── Cards ── */
+  .queue-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px 22px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: box-shadow .15s; }
+  .queue-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,.08); }
+
+  .qc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .qc-vendor { font-size: 16px; font-weight: 700; }
+  .qc-email  { font-size: 12px; color: #64748b; margin-top: 2px; }
+  .qc-meta   { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-pending  { background: #fef3c7; color: #92400e; }
+  .badge-verified { background: #d1fae5; color: #065f46; }
+  .badge-rejected { background: #fee2e2; color: #991b1b; }
+  .badge-ins  { background: #ede9fe; color: #5b21b6; }
+  .badge-trade { background: #e0f2fe; color: #075985; }
+
+  .qc-detail { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; }
+  .qc-field  { font-size: 13px; }
+  .qc-field span { color: #64748b; font-size: 11px; display: block; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 1px; }
+
+  .qc-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f1f5f9; align-items: flex-end; }
+
+  /* ── Buttons ── */
+  .btn { padding: 9px 18px; border-radius: 8px; border: none; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary   { background: #1a56db; color: #fff; }
+  .btn-primary:hover   { background: #1e40af; }
+  .btn-danger    { background: #dc2626; color: #fff; }
+  .btn-danger:hover    { background: #b91c1c; }
+  .btn-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+  .btn-secondary:hover { background: #e2e8f0; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ── Reject form ── */
+  .reject-form { display: none; margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 14px; }
+  .reject-form.open { display: block; }
+  .reject-form label { font-size: 12px; font-weight: 600; color: #92400e; display: block; margin-bottom: 6px; }
+  .reject-form textarea { width: 100%; border: 1.5px solid #fed7aa; border-radius: 6px; padding: 8px 10px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 60px; outline: none; background: #fff; }
+  .reject-form textarea:focus { border-color: #f97316; }
+  .reject-form-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+  /* ── Notes input ── */
+  .notes-input { flex: 1; min-width: 180px; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-family: inherit; font-size: 13px; outline: none; background: #fff; }
+  .notes-input:focus { border-color: #1a56db; }
+
+  /* ── Empty / loading ── */
+  .empty-state { text-align: center; padding: 48px 20px; color: #94a3b8; }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #e2e8f0; border-top-color: #1a56db; border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Toast ── */
+  #toast { position: fixed; bottom: 24px; right: 24px; background: #1a202c; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; box-shadow: 0 6px 20px rgba(0,0,0,.2); opacity: 0; transform: translateY(10px); transition: all .3s; z-index: 9999; pointer-events: none; }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { background: #16a34a; }
+  #toast.error   { background: #dc2626; }
+
+  /* ── Pagination ── */
+  .pagination { display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+  .pagination button { padding: 7px 14px; border: 1.5px solid #e2e8f0; border-radius: 7px; background: #fff; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; color: #475569; }
+  .pagination button:hover:not(:disabled) { border-color: #1a56db; color: #1a56db; }
+  .pagination button:disabled { opacity: .4; cursor: not-allowed; }
+  .pagination .page-info { font-size: 13px; color: #64748b; }
+
+  @media (max-width: 640px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .qc-detail { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>TradeMatch Admin — Vetting Queue</h1>
+  <a href="/super-admin-dashboard/">← Back to Dashboard</a>
+</div>
+
+<div class="page">
+  <div class="page-header">
+    <h2>Document Verification Queue</h2>
+    <p>Review and approve or reject vendor insurance certificates and trade registrations.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="stat-ins-pending">—</div><div class="stat-lbl">Insurance Pending</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-trade-pending">—</div><div class="stat-lbl">Trade Reg Pending</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-ins-verified">—</div><div class="stat-lbl">Insurance Verified</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-trade-verified">—</div><div class="stat-lbl">Trade Reg Verified</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('insurance')">Insurance</button>
+    <button class="tab-btn" onclick="switchTab('trade')">Trade Registrations</button>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <label>Status:</label>
+    <select class="form-select" id="filter-status" onchange="loadQueue()">
+      <option value="pending">Pending</option>
+      <option value="verified">Verified</option>
+      <option value="rejected">Rejected</option>
+    </select>
+    <button class="btn btn-secondary btn-sm" onclick="loadQueue()">↻ Refresh</button>
+  </div>
+
+  <!-- Insurance tab -->
+  <div class="tab-panel active" id="tab-insurance">
+    <div id="ins-list"><div class="empty-state"><div class="spinner"></div></div></div>
+    <div class="pagination" id="ins-pagination" style="display:none">
+      <button id="ins-prev" onclick="changePage('ins', -1)">← Prev</button>
+      <span class="page-info" id="ins-page-info"></span>
+      <button id="ins-next" onclick="changePage('ins', 1)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Trade reg tab -->
+  <div class="tab-panel" id="tab-trade">
+    <div id="trade-list"><div class="empty-state"><div class="spinner"></div></div></div>
+    <div class="pagination" id="trade-pagination" style="display:none">
+      <button id="trade-prev" onclick="changePage('trade', -1)">← Prev</button>
+      <span class="page-info" id="trade-page-info"></span>
+      <button id="trade-next" onclick="changePage('trade', 1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+const API = '/api/admin/vetting';
+let currentTab   = 'insurance';
+let insPage      = 1;
+let tradePage    = 1;
+const PAGE_LIMIT = 10;
+
+// ── Auth headers ──────────────────────────────────────────────────────────
+function ah() {
+  const t = localStorage.getItem('authToken') || localStorage.getItem('token');
+  return { 'Content-Type': 'application/json', ...(t ? { Authorization: 'Bearer ' + t } : {}) };
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['insurance','trade'][i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  loadQueue();
+}
+
+// ── Load queue ────────────────────────────────────────────────────────────
+async function loadQueue() {
+  const status = document.getElementById('filter-status').value;
+  const page   = currentTab === 'insurance' ? insPage : tradePage;
+
+  const listEl  = document.getElementById(currentTab === 'insurance' ? 'ins-list'  : 'trade-list');
+  listEl.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+
+  try {
+    const r = await fetch(
+      `${API}/queue?status=${encodeURIComponent(status)}&page=${page}&limit=${PAGE_LIMIT}`,
+      { headers: ah() }
+    );
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    // Update stats when loading pending
+    if (status === 'pending') {
+      document.getElementById('stat-ins-pending').textContent   = d.totals.insurance;
+      document.getElementById('stat-trade-pending').textContent = d.totals.tradeRegistrations;
+    }
+
+    const items = currentTab === 'insurance' ? d.insurance : d.tradeRegistrations;
+
+    if (!items || !items.length) {
+      listEl.innerHTML = `<div class="empty-state"><div class="icon">${status === 'pending' ? '✅' : '📭'}</div>${status === 'pending' ? 'Queue is empty — nothing to review.' : 'No ' + status + ' submissions found.'}</div>`;
+      hidePagination(currentTab);
+      return;
+    }
+
+    listEl.innerHTML = items.map((item) => renderCard(item)).join('');
+    updatePagination(currentTab, page, d.totals, status);
+
+  } catch (err) {
+    listEl.innerHTML = `<div class="empty-state"><div class="icon">⚠</div>Failed to load queue: ${err.message}</div>`;
+  }
+}
+
+// ── Render card ───────────────────────────────────────────────────────────
+function renderCard(item) {
+  const isIns   = item.item_type === 'insurance';
+  const status  = item.status || 'pending';
+  const created = new Date(item.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  const expires = item.expiry_date
+      ? new Date(item.expiry_date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+      : '—';
+
+  const typeLabel = isIns
+      ? (item.insurance_type  || 'Insurance').replace(/_/g, ' ')
+      : (item.registration_type || 'Trade Reg').replace(/_/g, ' ');
+
+  const ref  = isIns
+      ? (item.policy_number   || item.provider_name || '—')
+      : (item.registration_number || item.provider_name || '—');
+
+  const docUrl = item.document_url
+      ? `<a href="${esc(item.document_url)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">📄 View Document</a>`
+      : '<span style="font-size:12px;color:#94a3b8">No document URL</span>';
+
+  const actionButtons = status === 'pending' ? `
+    <input type="text" class="notes-input" id="notes-${item.id}" placeholder="Optional notes for vendor…">
+    ${docUrl}
+    <button class="btn btn-primary btn-sm" onclick="verifyItem(${item.id}, '${isIns ? 'insurance' : 'trade'}')">✓ Verify</button>
+    <button class="btn btn-secondary btn-sm" onclick="toggleReject(${item.id})">✕ Reject</button>` : docUrl;
+
+  const rejectBlock = status === 'pending' ? `
+    <div class="reject-form" id="reject-${item.id}">
+      <label>Rejection reason (shown to vendor):</label>
+      <textarea id="reason-${item.id}" placeholder="e.g. Document is expired / illegible / wrong type…"></textarea>
+      <div class="reject-form-actions">
+        <button class="btn btn-danger btn-sm" onclick="rejectItem(${item.id}, '${isIns ? 'insurance' : 'trade'}')">Confirm Rejection</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleReject(${item.id})">Cancel</button>
+      </div>
+    </div>` : '';
+
+  return `
+    <div class="queue-card" id="card-${item.id}">
+      <div class="qc-header">
+        <div>
+          <div class="qc-vendor">${esc(item.vendor_name || 'Unknown vendor')}</div>
+          <div class="qc-email">${esc(item.vendor_email || '')}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-${isIns ? 'ins' : 'trade'}">${isIns ? 'Insurance' : 'Trade Reg'}</span>
+          <span class="badge badge-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+        </div>
+      </div>
+
+      <div class="qc-detail">
+        <div class="qc-field"><span>Type</span>${esc(typeLabel)}</div>
+        <div class="qc-field"><span>Reference / Policy No.</span>${esc(ref)}</div>
+        <div class="qc-field"><span>Provider</span>${esc(item.provider_name || '—')}</div>
+        <div class="qc-field"><span>Expiry date</span>${expires}</div>
+        <div class="qc-field"><span>Submitted</span>${created}</div>
+        ${item.rejection_reason ? `<div class="qc-field" style="grid-column:1/-1"><span>Rejection reason</span><span style="color:#dc2626">${esc(item.rejection_reason)}</span></div>` : ''}
+        ${item.admin_notes      ? `<div class="qc-field" style="grid-column:1/-1"><span>Admin notes</span>${esc(item.admin_notes)}</div>` : ''}
+      </div>
+
+      <div class="qc-actions">${actionButtons}</div>
+      ${rejectBlock}
+    </div>`;
+}
+
+// ── Verify ────────────────────────────────────────────────────────────────
+async function verifyItem(id, type) {
+  const notes  = (document.getElementById('notes-' + id) || {}).value || '';
+  const urlSeg = type === 'insurance' ? `insurance/${id}/verify` : `trade/${id}/verify`;
+  try {
+    const r = await fetch(`${API}/${urlSeg}`, {
+      method: 'POST',
+      headers: ah(),
+      body: JSON.stringify({ notes }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Verify failed');
+    showToast('Verified successfully' + (d.newScore ? ` — vendor score now ${d.newScore}%` : ''), 'success');
+    removeCard(id);
+    loadStats();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+// ── Reject ────────────────────────────────────────────────────────────────
+function toggleReject(id) {
+  const el = document.getElementById('reject-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+async function rejectItem(id, type) {
+  const reason = (document.getElementById('reason-' + id) || {}).value || '';
+  if (!reason.trim()) { showToast('Please enter a rejection reason', 'error'); return; }
+  const urlSeg = type === 'insurance' ? `insurance/${id}/reject` : `trade/${id}/reject`;
+  try {
+    const r = await fetch(`${API}/${urlSeg}`, {
+      method: 'POST',
+      headers: ah(),
+      body: JSON.stringify({ reason }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Reject failed');
+    showToast('Document rejected — vendor notified', 'success');
+    removeCard(id);
+    loadStats();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+// ── Remove card from DOM ──────────────────────────────────────────────────
+function removeCard(id) {
+  const el = document.getElementById('card-' + id);
+  if (el) {
+    el.style.transition = 'opacity .3s, transform .3s';
+    el.style.opacity    = '0';
+    el.style.transform  = 'translateX(20px)';
+    setTimeout(() => el.remove(), 320);
+  }
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────
+function updatePagination(tab, page, totals, status) {
+  const total    = tab === 'insurance' ? totals.insurance : totals.tradeRegistrations;
+  const totalPgs = Math.ceil(total / PAGE_LIMIT);
+  const pagEl    = document.getElementById(tab + '-pagination');
+  const prevBtn  = document.getElementById(tab + '-prev');
+  const nextBtn  = document.getElementById(tab + '-next');
+  const info     = document.getElementById(tab + '-page-info');
+
+  if (totalPgs <= 1) { pagEl.style.display = 'none'; return; }
+  pagEl.style.display  = 'flex';
+  prevBtn.disabled     = page <= 1;
+  nextBtn.disabled     = page >= totalPgs;
+  info.textContent     = `Page ${page} of ${totalPgs} (${total} total)`;
+}
+
+function hidePagination(tab) {
+  const el = document.getElementById(tab + '-pagination');
+  if (el) el.style.display = 'none';
+}
+
+function changePage(tab, delta) {
+  if (tab === 'ins') { insPage = Math.max(1, insPage + delta); }
+  else               { tradePage = Math.max(1, tradePage + delta); }
+  loadQueue();
+}
+
+// ── Stats (separate endpoint for verified counts) ─────────────────────────
+async function loadStats() {
+  try {
+    const [insVerR, tradeVerR] = await Promise.all([
+      fetch(`${API}/queue?status=verified&limit=1`, { headers: ah() }),
+      fetch(`${API}/queue?status=verified&limit=1`, { headers: ah() }),
+    ]);
+    const insVer   = await insVerR.json();
+    const tradeVer = await tradeVerR.json();
+    document.getElementById('stat-ins-verified').textContent   = insVer.totals?.insurance          ?? '—';
+    document.getElementById('stat-trade-verified').textContent = tradeVer.totals?.tradeRegistrations ?? '—';
+  } catch (_) {}
+  // Pending counts loaded by loadQueue when status=pending
+  const savedStatus = document.getElementById('filter-status').value;
+  if (savedStatus !== 'pending') {
+    try {
+      const r = await fetch(`${API}/queue?status=pending&limit=1`, { headers: ah() });
+      const d = await r.json();
+      document.getElementById('stat-ins-pending').textContent   = d.totals?.insurance          ?? '—';
+      document.getElementById('stat-trade-pending').textContent = d.totals?.tradeRegistrations ?? '—';
+    } catch (_) {}
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'show ' + type;
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { t.className = ''; }, 3500);
+}
+
+// ── Escape HTML ───────────────────────────────────────────────────────────
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────
+loadQueue();
+loadStats();
+</script>
+</body>
+</html>

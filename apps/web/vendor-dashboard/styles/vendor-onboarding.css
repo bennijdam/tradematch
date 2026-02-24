@@ -940,3 +940,138 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ── Vetting Step 3 ──────────────────────────────────────────────────────── */
+
+.vetting-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-secondary, #f1f5f9);
+    border-radius: 10px;
+    padding: 4px;
+    margin: 20px 0 16px;
+}
+
+.vetting-tab {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-secondary, #64748b);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+
+.vetting-tab.active {
+    background: #fff;
+    color: var(--primary, #1a56db);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.vetting-panel {
+    display: none;
+}
+
+.vetting-panel.active {
+    display: block;
+}
+
+.vetting-desc {
+    font-size: 14px;
+    color: var(--text-secondary, #64748b);
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.vetting-status-bar {
+    margin-bottom: 14px;
+}
+
+.vetting-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.vetting-badge.pending  { background: #fef3c7; color: #92400e; }
+.vetting-badge.verified { background: #d1fae5; color: #065f46; }
+.vetting-badge.rejected { background: #fee2e2; color: #991b1b; }
+
+.vetting-score-summary {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--bg-secondary, #f8fafc);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.score-label {
+    font-size: 13px;
+    color: var(--text-secondary, #64748b);
+    margin-bottom: 8px;
+}
+
+.score-bar-wrap {
+    height: 8px;
+    background: var(--border, #e2e8f0);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.score-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a56db, #0ea5e9);
+    border-radius: 4px;
+    transition: width .4s ease;
+}
+
+.score-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary, #1a56db);
+}
+
+.quiz-question {
+    margin-bottom: 20px;
+}
+
+.quiz-q-text {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: var(--text-primary, #1a202c);
+}
+
+.quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: border-color .15s, background .15s;
+}
+
+.quiz-option:hover {
+    border-color: var(--primary, #1a56db);
+    background: rgba(26,86,219,.04);
+}
+
+.step-error-msg {
+    color: #dc2626;
+    font-size: 13px;
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: #fee2e2;
+    border-radius: 6px;
+}

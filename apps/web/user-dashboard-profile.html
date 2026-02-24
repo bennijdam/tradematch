@@ -232,12 +232,12 @@
                         Billing
                     </a>
                     <div class="profile-menu-divider"></div>
-                    <a href="#" class="profile-menu-item logout" id="logoutBtn">
+                    <button type="button" class="profile-menu-item logout" id="logoutBtn">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
                         Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -406,14 +406,17 @@
         </div>
     </main>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/user-dashboard/dashboardApp.js" defer></script>
     <script>
         function notifySuccess(message) {
-            if (typeof showToast === 'function') {
-                showToast(message, 'success');
-            } else {
-                alert(message);
-            }
+            if (typeof showToast === 'function') { showToast(message, 'success'); return; }
+            if (window.CustomConfirm) { CustomConfirm.toast(message, 'success'); return; }
+        }
+
+        function notifyError(message) {
+            if (typeof showToast === 'function') { showToast(message, 'error'); return; }
+            if (window.CustomConfirm) { CustomConfirm.toast(message, 'error'); return; }
         }
 
         const notificationToggleMap = {
@@ -726,41 +729,8 @@
         }
 
         if (changePasswordBtn) {
-            changePasswordBtn.addEventListener('click', async () => {
-                const token = getAuthToken();
-                if (!token || isDemoToken(token)) {
-                    notifyError('Please log in to change your password.');
-                    return;
-                }
-
-                const currentPassword = window.prompt('Enter your current password:') || '';
-                if (!currentPassword) return;
-
-                const newPassword = window.prompt('Enter your new password:') || '';
-                if (!newPassword) return;
-
-                const confirmPassword = window.prompt('Confirm your new password:') || '';
-                if (newPassword !== confirmPassword) {
-                    notifyError('Passwords do not match.');
-                    return;
-                }
-
-                const originalText = changePasswordBtn.textContent;
-                changePasswordBtn.textContent = 'Updating...';
-                changePasswordBtn.disabled = true;
-
-                try {
-                    await apiFetchJson('/api/users/me/password', {
-                        method: 'POST',
-                        body: JSON.stringify({ currentPassword, newPassword })
-                    });
-                    notifySuccess('Password updated successfully.');
-                } catch (error) {
-                    notifyError(error.message || 'Failed to update password.');
-                } finally {
-                    changePasswordBtn.textContent = originalText;
-                    changePasswordBtn.disabled = false;
-                }
+            changePasswordBtn.addEventListener('click', () => {
+                window.location.href = '/user-dashboard-settings?section=password';
             });
         }
 
@@ -821,11 +791,14 @@
                     return;
                 }
 
-                const confirmDelete = window.confirm('This will deactivate your account. Do you want to continue?');
-                if (!confirmDelete) return;
-
-                const password = window.prompt('Enter your password to confirm:') || '';
-                if (!password) return;
+                const { confirmed, value: password } = await CustomConfirm.prompt(
+                    'Delete Account',
+                    'Please type your password to confirm deactivation. Your account will be hidden but not permanently deleted.',
+                    'Password',
+                    'Deactivate',
+                    'danger'
+                );
+                if (!confirmed || !password) return;
 
                 const originalText = deleteAccountBtn.textContent;
                 deleteAccountBtn.textContent = 'Processing...';

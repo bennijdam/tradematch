@@ -531,7 +531,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -584,7 +584,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -998,9 +998,21 @@
             const sizeValue = parseInt(projectSize.value);
 
             if (!projectTypeValue || !locationValue || !qualityValue) {
-                alert('Please fill in all required fields');
+                let errEl = document.getElementById('calcError');
+                if (!errEl) {
+                    errEl = document.createElement('p');
+                    errEl.id = 'calcError';
+                    errEl.style.cssText = 'color:#ef4444;font-size:13px;margin:0 0 12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
+                    const form = document.getElementById('costCalculator');
+                    form.insertBefore(errEl, form.firstChild);
+                }
+                errEl.textContent = 'Please fill in all required fields.';
+                errEl.style.display = 'block';
+                errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 return;
             }
+            const calcErr = document.getElementById('calcError');
+            if (calcErr) calcErr.style.display = 'none';
 
             const project = PRICING_DATA[projectTypeValue];
             const locationMultiplier = LOCATION_MULTIPLIERS[locationValue];
@@ -1080,7 +1092,6 @@
             }, 500);
         }
 
-        console.log('%cTradeMatch Cost Calculator', 'font-size: 20px; font-weight: bold; color: #10b981;');
     </script>
 </body>
 </html>

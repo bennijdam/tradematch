@@ -11,6 +11,10 @@ module.exports = {
 
     // Configure Microsoft OAuth Strategy
     initialize: () => {
+        if (!process.env.MICROSOFT_CLIENT_ID || !process.env.MICROSOFT_CLIENT_SECRET) {
+            console.warn('⚠️  Microsoft OAuth disabled — MICROSOFT_CLIENT_ID/SECRET not set.');
+            return;
+        }
         passport.use('microsoft', new MicrosoftStrategy({
             clientID: process.env.MICROSOFT_CLIENT_ID,
             clientSecret: process.env.MICROSOFT_CLIENT_SECRET,

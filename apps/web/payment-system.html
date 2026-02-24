@@ -809,7 +809,7 @@
         // Copy to clipboard
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Copied to clipboard!');
+                CustomConfirm.toast('Copied to clipboard!', 'success');
             });
         }
         
@@ -879,7 +879,7 @@
             } catch (error) {
                 console.error('Payment error:', error);
                 document.getElementById('processingOverlay').classList.remove('active');
-                alert('Payment failed: ' + error.message);
+                CustomConfirm.toast('Payment failed: ' + (error.message || 'Please try again.'), 'error');
                 
                 const button = document.getElementById('payButton');
                 button.disabled = false;
@@ -893,7 +893,7 @@
             
             setTimeout(() => {
                 document.getElementById('processingOverlay').classList.remove('active');
-                alert('Bank transfer instructions have been sent to your email. Please complete the transfer within 24 hours.');
+                CustomConfirm.toast('Bank transfer instructions have been sent to your email. Please complete within 24 hours.', 'success');
                 
                 const button = document.getElementById('payButton');
                 button.disabled = false;
@@ -958,6 +958,7 @@
         </div>
     </footer>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>

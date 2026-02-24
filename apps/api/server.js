@@ -13,6 +13,7 @@ const crypto = require('crypto');
 const { apiLimiter, emailLimiter, quoteLimiter, paymentLimiter, uploadLimiter } = require('./middleware/rate-limit');
 const { startCreditExpiryJob } = require('./services/credit-expiry-job');
 const { startVendorScoreRecoveryJob } = require('./services/vendor-score-recovery');
+const { startVettingExpiryMonitor } = require('./services/vetting-expiry-monitor');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -148,6 +149,7 @@ pool.connect().then((client) => {
     // Background jobs only after DB is reachable
     startCreditExpiryJob(pool);
     startVendorScoreRecoveryJob(pool);
+    startVettingExpiryMonitor(pool);
 }).catch(err => {
     console.error("❌ Database connection failed:", err.message);
 });
@@ -362,6 +364,27 @@ try {
     console.log('🛡️ Super Admin routes mounted at /api/admin');
 } catch (e) {
     console.warn('⚠️ Admin routes not available:', e && e.message ? e.message : e);
+}
+
+// Vendor Vetting routes
+try {
+    const vettingRouter = require('./routes/vetting');
+    if (typeof vettingRouter.setPool === 'function') vettingRouter.setPool(pool);
+    app.use('/api/vetting', vettingRouter);
+    app.use('/api/admin/vetting', vettingRouter);   // admin sub-routes use /admin/* paths internally
+    console.log('🔍 Vetting routes mounted at /api/vetting and /api/admin/vetting');
+} catch (e) {
+    console.warn('⚠️ Vetting routes not available:', e && e.message ? e.message : e);
+}
+
+// Admin Quiz routes
+try {
+    const adminQuizRouter = require('./routes/admin-quiz');
+    if (typeof adminQuizRouter.setPool === 'function') adminQuizRouter.setPool(pool);
+    app.use('/api/admin/quiz', adminQuizRouter);
+    console.log('🎓 Admin Quiz routes mounted at /api/admin/quiz');
+} catch (e) {
+    console.warn('⚠️ Admin Quiz routes not available:', e && e.message ? e.message : e);
 }
 
 // Debug endpoint

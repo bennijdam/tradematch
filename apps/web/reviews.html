@@ -745,7 +745,7 @@
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <a href="#" class="logo">
+        <a href="/" class="logo">
             <div class="logo-icon">T</div>
             <span class="logo-text">TradeMatch</span>
         </a>
@@ -768,16 +768,16 @@
         <!-- Leads & Jobs -->
         <div class="nav-section">
             <div class="nav-section-title">Leads & Jobs</div>
-            <a href="#" class="nav-item">
+            <a href="/vendor/new-jobs" class="nav-item">
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 <span class="nav-label">New Leads</span>
                 <span class="nav-badge">12</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="/vendor/active-quotes" class="nav-item">
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <span class="nav-label">Active Quotes</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="/vendor/won-jobs" class="nav-item">
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span class="nav-label">Won Jobs</span>
             </a>
@@ -804,7 +804,7 @@
         <!-- Billing -->
         <div class="nav-section">
             <div class="nav-section-title">Billing</div>
-            <a href="#" class="nav-item">
+            <a href="/vendor/billing" class="nav-item">
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-3m-1 4H8m0 0v.01M8 8v.01M8 11v.01M8 14v.01"/></svg>
                 <span class="nav-label">Billing</span>
             </a>
@@ -1095,7 +1095,7 @@
                 <div class="cta-banner-title">Improve your rating to unlock priority placement</div>
                 <div class="cta-banner-desc">Maintain a 4.5â… average to appear higher in customer search results and earn the <strong>Elite</strong> badge.</div>
             </div>
-            <button class="btn btn-primary btn-sm" style="flex-shrink:0;" onclick="alert('Navigating to tipsâ€¦')">Learn more</button>
+            <a class="btn btn-primary btn-sm" style="flex-shrink:0;" href="/help-centre">Learn more</a>
         </div>
     </div>
 </main>
@@ -1290,7 +1290,7 @@ function renderReviews(list) {
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11M3 14h8m10 6l-4-4m0 0l4-4m-4 4H9a4 4 0 00-4-4V5"/></svg>
                     Reply
                 </button>
-                <button class="btn btn-ghost btn-ghost--danger btn-sm" onclick="alert('Opening support flow for review ${r.id}â€¦')">
+                <button class="btn btn-ghost btn-ghost--danger btn-sm" onclick="window.location.href='/contact?review=${r.id}'">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9.303 3.376a12.02 12.02 0 01-2.494 3.748m-3.44-.791a3.375 3.375 0 00-4.476 0m4.476 0a4.5 4.5 0 0110.233-2.33m0 0a4.5 4.5 0 01-.233 10.233m-10 0A4.5 4.5 0 0112 21.75m0 0a12.02 12.02 0 01-3.748-2.494M2.25 18c0-2.278.859-4.3 2.278-5.853m0 0A7.5 7.5 0 0112 4.5m0 0a7.5 7.5 0 015.853 2.778m0 0A12.02 12.02 0 0121.75 12M12 21.75a9.75 9.75 0 100-19.5 9.75 9.75 0 000 19.5z"/></svg>
                     Report issue
                 </button>
@@ -1412,8 +1412,10 @@ function submitReply() {
     const text = document.getElementById('replyTextarea').value.trim();
     if (!text) return;
     // HOOK: POST /api/vendor/reviews/:id/reply  { message: text }
-    alert('Reply posted successfully! (Hook: POST /api/vendor/reviews/' + currentReplyId + '/reply)');
     closeReplyModal();
+    if (window.CustomConfirm) {
+        CustomConfirm.toast('Reply posted successfully!', 'success');
+    }
 }
 
 // Close modal on backdrop click
@@ -1442,6 +1444,7 @@ renderReviews(REVIEWS);
 renderPendingJobs();
 renderBadges();
 </script>
+<script src="/shared/ui/confirm-modal.js" defer></script>
 </body>
 </html>
 

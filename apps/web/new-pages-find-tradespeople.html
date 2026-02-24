@@ -1460,27 +1460,55 @@
         });
 
         // ========================================
+        // Client-side card filter
+        // ========================================
+        function nameToSlug(name) {
+            return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        }
+
+        function filterCards(keyword) {
+            const kw = (keyword || '').toLowerCase().trim();
+            const cards = document.querySelectorAll('.tradesperson-card');
+            let visible = 0;
+            cards.forEach(card => {
+                const trade = (card.querySelector('.tradesperson-trade') || card.querySelector('.tradesperson-name') || card).textContent.toLowerCase();
+                const name = (card.querySelector('.tradesperson-name') || card).textContent.toLowerCase();
+                const match = !kw || trade.includes(kw) || name.includes(kw);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            const countEl = document.querySelector('.results-count strong');
+            if (countEl) countEl.textContent = visible;
+            let noResults = document.getElementById('noResultsState');
+            if (!noResults) {
+                noResults = document.createElement('div');
+                noResults.id = 'noResultsState';
+                noResults.style.cssText = 'grid-column:1/-1;text-align:center;padding:3rem;color:#6b7280;';
+                noResults.innerHTML = '<p style="font-size:1.1rem;">No tradespeople found matching your search.</p><p>Try a different keyword or <a href="/find-tradespeople" style="color:#10b981;">browse all trades</a>.</p>';
+                if (cards.length > 0) cards[0].parentNode.appendChild(noResults);
+            }
+            noResults.style.display = visible === 0 ? '' : 'none';
+        }
+
+        // ========================================
         // Search Form Handler
         // ========================================
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const what = this.querySelector('input[placeholder*="What"]').value;
-            const where = this.querySelector('input[placeholder*="postcode"]').value;
-            
-            console.log('Searching for:', what, 'in', where);
-            alert(`Searching for "${what}" in ${where}\n\nIn production, this would show filtered results.`);
+            const what = this.querySelector('input[placeholder*="What"]').value.trim();
+            filterCards(what);
+            const grid = document.querySelector('.tradesperson-card');
+            if (grid) grid.closest('section, div').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
         // ========================================
         // Category Filter
         // ========================================
         function filterByCategory(category) {
-            console.log('Filter by category:', category);
-            
             if (category === 'more') {
-                alert('In production, this would show all 48+ trade categories in a modal or expanded view.');
+                window.location.href = '/find-tradespeople?category=all';
             } else {
-                alert(`Filtering results to show ${category} professionals.\n\nIn production, the results would update below.`);
+                filterCards(category);
             }
         }
 
@@ -1502,10 +1530,6 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                
-                const filter = this.textContent;
-                console.log('Filter applied:', filter);
-                alert(`Filtering by: ${filter}\n\nIn production, results would re-sort below.`);
             });
         });
 
@@ -1517,9 +1541,7 @@
                 e.stopPropagation();
                 const card = this.closest('.tradesperson-card');
                 const name = card.querySelector('.tradesperson-name').textContent;
-                
-                console.log('View profile:', name);
-                alert(`Opening full profile for ${name}\n\nIn production, this would navigate to their detailed profile page.`);
+                window.location.href = '/vendor-public-profile?id=' + nameToSlug(name);
             });
         });
 
@@ -1528,9 +1550,8 @@
                 e.stopPropagation();
                 const card = this.closest('.tradesperson-card');
                 const name = card.querySelector('.tradesperson-name').textContent;
-                
-                console.log('Get quote from:', name);
-                alert(`Requesting quote from ${name}\n\nIn production, this would open a quote request form or direct message.`);
+                const trade = (card.querySelector('.tradesperson-trade') || {textContent: ''}).textContent;
+                window.location.href = '/post-job?trade=' + encodeURIComponent(trade) + '&vendor=' + nameToSlug(name);
             });
         });
 
@@ -1540,22 +1561,13 @@
         document.querySelectorAll('.tradesperson-card').forEach(card => {
             card.addEventListener('click', function() {
                 const name = this.querySelector('.tradesperson-name').textContent;
-                console.log('Card clicked:', name);
-                // Could navigate to profile page
+                window.location.href = '/vendor-public-profile?id=' + nameToSlug(name);
             });
         });
 
         // ========================================
         // Console Log
         // ========================================
-        console.log('%cTradeMatch - Find Tradespeople', 'font-size: 20px; font-weight: bold; color: #10b981;');
-        console.log('Features:');
-        console.log('✓ Advanced search with location');
-        console.log('✓ Category filtering');
-        console.log('✓ Featured tradesperson cards');
-        console.log('✓ Rating and review display');
-        console.log('✓ Verification badges');
-        console.log('✓ Interactive filters');
     </script>
 </body>
 </html>

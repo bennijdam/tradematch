@@ -600,8 +600,14 @@ function initializeSpaNavigation() {
 function notifyError(message) {
     if (typeof showToast === 'function') {
         showToast(message, 'error');
+    } else if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast(message, 'error');
     } else {
-        alert(message);
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#dc2626;color:#fff;padding:0.75rem 1.25rem;border-radius:8px;z-index:9999;font-size:0.9rem;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        t.textContent = message;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
     }
 }
 
@@ -1792,10 +1798,14 @@ function goToQuoteReview(payload) {
     navigateTo('billing-addons.html', { job_id: payload.jobId, quote_id: payload.bidId });
 }
 
-function acceptQuote(quoteId) {
-    if (!confirm('Are you sure you want to accept this quote? This will lock the job to this vendor and unlock messaging. Other quotes will be declined.')) {
-        return;
-    }
+async function acceptQuote(quoteId) {
+    const { confirmed } = await CustomConfirm.ask(
+        'Accept Quote',
+        'This will lock the job to this vendor and unlock messaging. Other quotes will be declined.',
+        'Accept Quote',
+        'primary'
+    );
+    if (!confirmed) return;
 
     const jobId = getJobIdFromUrl();
     const selectedQuote = document.querySelector(`[data-quote-id="${quoteId}"]`);
@@ -1856,8 +1866,14 @@ function finalizeAcceptedQuote(allQuotes, selectedQuote, quoteId) {
 
     if (typeof showToast === 'function') {
         showToast('Quote accepted successfully! Messaging is now unlocked with this vendor.', 'success');
+    } else if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast('Quote accepted successfully! Messaging is now unlocked with this vendor.', 'success');
     } else {
-        alert('Quote accepted successfully! Messaging is now unlocked with this vendor.');
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#10b981;color:#fff;padding:0.75rem 1.25rem;border-radius:8px;z-index:9999;font-size:0.9rem;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        t.textContent = 'Quote accepted successfully! Messaging is now unlocked with this vendor.';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
     }
 }
 
@@ -2041,15 +2057,10 @@ function initializeProfileModal() {
     // Logout confirmation
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
+        logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.removeItem('oauthToken');
-                localStorage.removeItem('oauthSource');
-                localStorage.removeItem('oauthReturnTo');
-                localStorage.removeItem('oauthPopupActive');
+            const { confirmed } = await CustomConfirm.ask('Log Out', 'Are you sure you want to log out?', 'Log Out', 'warning');
+            if (confirmed) {
                 window.location.href = '/login';
             }
         });
@@ -2094,6 +2105,23 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('popstate', () => {
     closeAllModals();
+});
+
+// ── Global error boundary ─────────────────────────────────────────────────
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+    const msg = (event.reason && event.reason.message) ? event.reason.message : 'Something went wrong. Please refresh.';
+    if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast(msg, 'error');
+    } else if (typeof notifyError === 'function') {
+        notifyError(msg);
+    }
+});
+
+window.addEventListener('error', (event) => {
+    if (event.filename && event.filename.includes(window.location.origin)) {
+        console.error('JS error:', event.message, event.filename, event.lineno);
+    }
 });
 
 

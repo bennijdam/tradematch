@@ -325,6 +325,21 @@
             color: var(--slate-600);
         }
 
+        .error-message {
+            display: none;
+            background: rgba(239, 68, 68, 0.08);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .error-message.active { display: flex; align-items: flex-start; gap: 12px; }
+        .error-message-icon { font-size: 1.25rem; flex-shrink: 0; }
+        .error-message-body { font-size: 0.95rem; color: #ef4444; }
+        .error-message-body strong { display: block; margin-bottom: 4px; }
+        .error-message-body a { color: inherit; text-decoration: underline; }
+
         /* Loading Spinner */
         .spinner {
             display: inline-block;
@@ -446,10 +461,10 @@
                 <div class="info-section">
                     <h3>Follow Us</h3>
                     <div class="social-links">
-                        <a href="#" class="social-link" title="Facebook">📘</a>
-                        <a href="#" class="social-link" title="Twitter">🐦</a>
-                        <a href="#" class="social-link" title="LinkedIn">💼</a>
-                        <a href="#" class="social-link" title="Instagram">📷</a>
+                        <a href="https://facebook.com/tradematchuk" class="social-link" title="Facebook" target="_blank" rel="noopener">📘</a>
+                        <a href="https://twitter.com/tradematchuk" class="social-link" title="Twitter / X" target="_blank" rel="noopener">🐦</a>
+                        <a href="https://linkedin.com/company/tradematchuk" class="social-link" title="LinkedIn" target="_blank" rel="noopener">💼</a>
+                        <a href="https://instagram.com/tradematchuk" class="social-link" title="Instagram" target="_blank" rel="noopener">📷</a>
                     </div>
                 </div>
             </div>
@@ -458,6 +473,15 @@
             <div class="contact-form-wrapper">
                 <h2>Send us a Message</h2>
                 <p class="subtitle">Fill out the form below and we'll get back to you within 24 hours.</p>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage">
+                    <span class="error-message-icon">⚠️</span>
+                    <div class="error-message-body">
+                        <strong>Message not sent</strong>
+                        Something went wrong. Please try again or email us at <a href="mailto:hello@tradematch.co.uk">hello@tradematch.co.uk</a>
+                    </div>
+                </div>
 
                 <!-- Success Message -->
                 <div class="success-message" id="successMessage">
@@ -566,7 +590,8 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to send message. Please try again or email us directly at hello@tradematch.co.uk');
+                document.getElementById('errorMessage').classList.add('active');
+                setTimeout(() => document.getElementById('errorMessage').classList.remove('active'), 8000);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;

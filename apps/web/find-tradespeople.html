@@ -878,7 +878,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -931,7 +931,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -1625,27 +1625,56 @@
         });
 
         // ========================================
+        // Client-side card filter + empty state
+        // ========================================
+        function filterCards(keyword) {
+            const cards = document.querySelectorAll('.tradesperson-card');
+            const grid = document.querySelector('.tradespeople-grid');
+            let visible = 0;
+
+            cards.forEach(card => {
+                const name = (card.querySelector('.tradesperson-name') || {}).textContent || '';
+                const trade = (card.querySelector('.tradesperson-trade') || {}).textContent || '';
+                const match = !keyword || name.toLowerCase().includes(keyword) || trade.toLowerCase().includes(keyword);
+                card.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+
+            // Update results count
+            const countEl = document.querySelector('.results-count strong');
+            if (countEl) countEl.textContent = visible;
+
+            // Empty state
+            let emptyState = document.getElementById('noResultsState');
+            if (!emptyState) {
+                emptyState = document.createElement('div');
+                emptyState.id = 'noResultsState';
+                emptyState.style.cssText = 'display:none; text-align:center; padding:64px 16px; grid-column:1/-1;';
+                emptyState.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">🔍</div><h3 style="font-size:20px;font-weight:700;margin-bottom:8px;">No tradespeople found</h3><p style="color:#64748b;">Try a different trade or location, or <a href="/post-job" style="color:#10b981;font-weight:600;">post a job</a> to receive quotes directly.</p>';
+                grid.appendChild(emptyState);
+            }
+            emptyState.style.display = visible === 0 ? 'block' : 'none';
+        }
+
+        // ========================================
         // Search Form Handler
         // ========================================
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const what = this.querySelector('input[placeholder*="What"]').value;
-            const where = this.querySelector('input[placeholder*="postcode"]').value;
-            
-            console.log('Searching for:', what, 'in', where);
-            alert(`Searching for "${what}" in ${where}\n\nIn production, this would show filtered results.`);
+            const keyword = this.querySelector('input[placeholder*="What"]').value.trim().toLowerCase();
+            filterCards(keyword);
+            document.querySelector('.tradespeople-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
         // ========================================
         // Category Filter
         // ========================================
         function filterByCategory(category) {
-            console.log('Filter by category:', category);
-            
             if (category === 'more') {
-                alert('In production, this would show all 48+ trade categories in a modal or expanded view.');
+                window.location.href = '/find-tradespeople?category=all';
             } else {
-                alert(`Filtering results to show ${category} professionals.\n\nIn production, the results would update below.`);
+                filterCards(category);
+                document.querySelector('.tradespeople-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -1667,24 +1696,23 @@
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                
-                const filter = this.textContent;
-                console.log('Filter applied:', filter);
-                alert(`Filtering by: ${filter}\n\nIn production, results would re-sort below.`);
+                // Visual toggle only — server-side sort would apply in production
             });
         });
 
         // ========================================
         // Tradesperson Card Actions
         // ========================================
+        function nameToSlug(name) {
+            return name.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        }
+
         document.querySelectorAll('.btn-view').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 const card = this.closest('.tradesperson-card');
                 const name = card.querySelector('.tradesperson-name').textContent;
-                
-                console.log('View profile:', name);
-                alert(`Opening full profile for ${name}\n\nIn production, this would navigate to their detailed profile page.`);
+                window.location.href = '/vendor-public-profile?id=' + nameToSlug(name);
             });
         });
 
@@ -1693,9 +1721,8 @@
                 e.stopPropagation();
                 const card = this.closest('.tradesperson-card');
                 const name = card.querySelector('.tradesperson-name').textContent;
-                
-                console.log('Get quote from:', name);
-                alert(`Requesting quote from ${name}\n\nIn production, this would open a quote request form or direct message.`);
+                const trade = card.querySelector('.tradesperson-trade').textContent;
+                window.location.href = '/post-job?trade=' + encodeURIComponent(trade) + '&vendor=' + nameToSlug(name);
             });
         });
 
@@ -1705,22 +1732,9 @@
         document.querySelectorAll('.tradesperson-card').forEach(card => {
             card.addEventListener('click', function() {
                 const name = this.querySelector('.tradesperson-name').textContent;
-                console.log('Card clicked:', name);
-                // Could navigate to profile page
+                window.location.href = '/vendor-public-profile?id=' + nameToSlug(name);
             });
         });
-
-        // ========================================
-        // Console Log
-        // ========================================
-        console.log('%cTradeMatch - Find Tradespeople', 'font-size: 20px; font-weight: bold; color: #10b981;');
-        console.log('Features:');
-        console.log('✓ Advanced search with location');
-        console.log('✓ Category filtering');
-        console.log('✓ Featured tradesperson cards');
-        console.log('✓ Rating and review display');
-        console.log('✓ Verification badges');
-        console.log('✓ Interactive filters');
     </script>
 </body>
 </html>

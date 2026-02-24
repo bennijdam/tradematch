@@ -996,7 +996,7 @@
             
             <div class="nav-section">
                 <div class="nav-section-title">Reputation</div>
-                <a href="#" class="nav-item">
+                <a href="/reviews" class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                     </svg>
@@ -1255,7 +1255,7 @@
                         Postcodes within <strong>5 miles</strong> of your current coverage show high demand. 
                         Consider expanding to SW1, SW3, and SW7 for increased leads.
                     </p>
-                    <a href="#" class="insight-action">
+                    <a href="/vendor/analytics" class="insight-action">
                         Expand coverage â†’
                     </a>
                 </div>
@@ -1270,7 +1270,7 @@
                         Demand for plumbing services has increased <strong>18%</strong> in the last 30 days 
                         in the Greater London area. Peak quote times: Tuesday-Thursday 10am-2pm.
                     </p>
-                    <a href="#" class="insight-action">
+                    <a href="/vendor/analytics" class="insight-action">
                         View analytics â†’
                     </a>
                 </div>
@@ -1285,7 +1285,7 @@
                         You may be underexposed in nearby high-activity zones. 
                         Increasing impressions in hot areas could boost your quote volume by up to 35%.
                     </p>
-                    <a href="#" class="insight-action">
+                    <a href="/vendor/analytics" class="insight-action">
                         Buy impressions â†’
                     </a>
                 </div>
@@ -1323,31 +1323,15 @@
 
         // Upgrade to Heatmaps
         function upgradeToHeatmaps() {
-            // In production, this would redirect to Stripe Checkout
-            alert('Redirecting to Stripe checkout for ÂŁ19.99/month subscription...');
-            
-            // Example: Stripe integration
-            // const stripe = Stripe('pk_live_YOUR_KEY');
-            // fetch('/api/create-heatmap-subscription', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         vendorId: 'vendor_123',
-            //         priceId: 'price_heatmaps_monthly'
-            //     })
-            // })
-            // .then(res => res.json())
-            // .then(session => stripe.redirectToCheckout({ sessionId: session.id }));
+            window.location.href = '/vendor-billing?action=upgrade&plan=heatmaps';
         }
 
         // Filter changes (would fetch new heatmap data in production)
         document.getElementById('tradeFilter').addEventListener('change', function(e) {
-            console.log('Trade filter changed to:', e.target.value);
             // fetch('/api/heatmap/data?trade=' + e.target.value);
         });
 
         document.getElementById('timeRange').addEventListener('change', function(e) {
-            console.log('Time range changed to:', e.target.value);
             // fetch('/api/heatmap/data?range=' + e.target.value);
         });
     </script>

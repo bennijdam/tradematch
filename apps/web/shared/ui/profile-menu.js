@@ -114,7 +114,7 @@
             </button>
             <div class="profile-dropdown" role="menu">
                 <a href="/email-preferences" role="menuitem">User Settings</a>
-                <a href="#" data-logout="true" role="menuitem">Logout</a>
+                <button type="button" data-logout="true" role="menuitem" class="profile-menu-logout">Logout</button>
             </div>
         `;
         return menu;
@@ -193,7 +193,13 @@
         const findDashboardLink = (scope) => Array.from(scope.querySelectorAll('a')).find((anchor) => {
             const href = anchor.getAttribute('href') || '';
             const text = anchor.textContent.trim().toLowerCase();
-            return href.includes('vendor-dashboard.html') || text === 'vendor dashboard' || text === 'dashboard';
+            return (
+                href.includes('vendor-dashboard') ||
+                href.includes('user-dashboard') ||
+                href.includes('dashboard.html') ||
+                text === 'vendor dashboard' ||
+                text === 'dashboard'
+            );
         });
 
         let dashboardLink = null;

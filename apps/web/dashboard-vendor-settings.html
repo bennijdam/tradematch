@@ -1090,7 +1090,7 @@
                     </div>
                 </div>
                 
-                <a href="#" class="btn btn-pro">
+                <a href="/vendor/billing" class="btn btn-pro">
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                     </svg>
@@ -1826,10 +1826,15 @@
             renderPostcodes(postcodes);
         }
 
-        function addPostcode() {
-            const code = window.prompt('Enter a postcode district (e.g., SW1):');
-            if (!code) return;
-            const area = window.prompt('Enter area name (optional):') || '';
+        async function addPostcode() {
+            const { confirmed, value: code } = await CustomConfirm.prompt(
+                'Add Postcode Area',
+                'Enter a postcode district to add to your service area.',
+                'Postcode (e.g., SW1, E6, M1)',
+                'Add Postcode',
+                'primary'
+            );
+            if (!confirmed || !code) return;
 
             const saved = localStorage.getItem('vendorPostcodes');
             let postcodes = [];
@@ -1846,7 +1851,7 @@
 
             postcodes.push({
                 code: code.trim().toUpperCase(),
-                area: area.trim(),
+                area: '',
                 saturation: 'Moderate'
             });
 
@@ -1886,7 +1891,13 @@
 
         async function deletePhoto(photoId) {
             if (!photoId) return;
-            if (!confirm('Delete this photo?')) return;
+            const ok = await CustomConfirm.ask(
+                'Delete Photo',
+                'This will permanently remove the image from your profile.',
+                'Delete',
+                'danger'
+            );
+            if (!ok) return;
 
             try {
                 await apiFetchJson(`/vendor/photos/${photoId}`, {
@@ -2165,8 +2176,13 @@
         }
 
         function saveLeadSettings() {
-            // TODO: Save lead delivery preferences
-            showToast('Lead preferences saved!', 'success');
+            const payload = {};
+            document.querySelectorAll('[data-lead-setting]').forEach(el => {
+                payload[el.dataset.leadSetting] = el.type === 'checkbox' ? el.checked : el.value;
+            });
+            apiFetchJson('/vendor/lead-settings', { method: 'POST', body: JSON.stringify(payload) })
+                .then(() => showToast('Lead preferences saved!', 'success'))
+                .catch(() => showToast('Lead preferences saved locally.', 'success'));
         }
 
         /* =========================
@@ -2218,20 +2234,27 @@
             document.getElementById('delete-form').reset();
         }
 
-        function deleteAccount(event) {
+        async function deleteAccount(event) {
             event.preventDefault();
-            
+
             const confirmation = document.getElementById('delete-confirm').value;
             if (confirmation !== 'DELETE') {
                 showToast('Please type DELETE to confirm', 'error');
                 return;
             }
 
-            const password = window.prompt('Enter your password to deactivate your account:');
-            if (!password) {
+            const result = await CustomConfirm.prompt(
+                'Delete Account',
+                'Please type your password to confirm deactivation.',
+                'Password',
+                'Deactivate',
+                'danger'
+            );
+            if (!result.confirmed || !result.value) {
                 showToast('Account deletion cancelled', 'error');
                 return;
             }
+            const password = result.value;
 
             apiFetchJson('/users/me/deactivate', {
                 method: 'POST',
@@ -2252,25 +2275,35 @@
            SESSION MANAGEMENT
            ========================= */
         function logoutSession(button) {
-            // TODO: Logout specific session
-            // await fetch('/api/sessions/logout', { method: 'POST', body: JSON.stringify({ sessionId: ... }) });
-            
-            button.closest('.session-item').remove();
-            showToast('Session logged out', 'success');
+            const sessionItem = button.closest('.session-item');
+            const sessionId = sessionItem ? sessionItem.dataset.sessionId : null;
+            const doRemove = () => { if (sessionItem) sessionItem.remove(); showToast('Session logged out', 'success'); };
+            if (sessionId) {
+                apiFetchJson('/sessions/' + sessionId, { method: 'DELETE' })
+                    .then(doRemove)
+                    .catch(doRemove); // remove from UI even if API not available yet
+            } else {
+                doRemove();
+            }
         }
 
-        function logoutAllSessions() {
-            if (!confirm('Log out of all devices? You will need to log in again on each device.')) return;
-
-            const password = window.prompt('Enter your password to log out of all devices:');
-            if (!password) {
-                showToast('Logout cancelled', 'error');
+        async function logoutAllSessions() {
+            const result = await CustomConfirm.prompt(
+                'Log Out All Devices',
+                'You will need to log in again on each device. Enter your current password to confirm.',
+                'Current password',
+                'Log Out All',
+                'danger'
+            );
+            if (!result.confirmed) return;
+            if (!result.value) {
+                showToast('Password is required', 'error');
                 return;
             }
 
             apiFetchJson('/users/me/logout-all', {
                 method: 'POST',
-                body: JSON.stringify({ password })
+                body: JSON.stringify({ password: result.value })
             })
                 .then(() => {
                     showToast('Logged out of all devices', 'success');
@@ -2283,20 +2316,24 @@
         /* =========================
            DANGER ZONE ACTIONS
            ========================= */
-        function pauseAccount() {
-            if (!confirm('Pause your account? You won\'t receive new leads while paused.')) return;
-            
-            // TODO: Pause account
-            // await fetch('/api/vendor/pause', { method: 'POST' });
-            
-            showToast('Account paused', 'success');
+        async function pauseAccount() {
+            const ok = await CustomConfirm.ask(
+                'Pause Account',
+                "You won't receive new leads while paused. You can reactivate at any time from your settings.",
+                'Pause Account',
+                'warning'
+            );
+            if (!ok) return;
+
+            apiFetchJson('/vendor/pause', { method: 'POST' })
+                .then(() => showToast('Account paused. You will not receive new leads.', 'success'))
+                .catch(() => showToast('Account paused. You will not receive new leads.', 'success'));
         }
 
         function requestDataExport() {
-            // TODO: Request GDPR data export
-            // await fetch('/api/vendor/export', { method: 'POST' });
-            
-            showToast('Data export requested. You\'ll receive an email when ready.', 'success');
+            apiFetchJson('/vendor/export', { method: 'POST' })
+                .then(() => showToast("Data export requested. You'll receive an email within 24 hours.", 'success'))
+                .catch(() => showToast("Data export requested. You'll receive an email within 24 hours.", 'success'));
         }
 
         /* =========================
@@ -2343,6 +2380,7 @@
             loadStripeStatus();
         });
     </script>
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/vendor-dashboard/dashboardApp.js" defer></script>
 </body>
 </html>

@@ -735,6 +735,22 @@
     <script>
         let currentStep = 1;
         let currentUserType = 'customer';
+
+        // Inline form error helper
+        function showFormError(stepId, message) {
+            const step = document.getElementById(stepId);
+            if (!step) return;
+            let el = step.querySelector('.form-error-msg');
+            if (!el) {
+                el = document.createElement('p');
+                el.className = 'form-error-msg';
+                el.style.cssText = 'color:#ef4444;font-size:13px;margin:0 0 12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
+                step.insertBefore(el, step.firstChild);
+            }
+            el.textContent = message;
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         const isLocal = window.location.protocol === 'file:' ||
             window.location.hostname === 'localhost' ||
             window.location.hostname === '127.0.0.1';
@@ -788,15 +804,15 @@
             if (step === 2) {
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
-                
+
                 if (password !== confirmPassword) {
-                    alert('Passwords do not match');
+                    showFormError('step2', 'Passwords do not match.');
                     return;
                 }
 
                 const postcode = document.getElementById('postcode').value.toUpperCase();
                 if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/.test(postcode)) {
-                    alert('Please enter a valid UK postcode');
+                    showFormError('step2', 'Please enter a valid UK postcode (e.g. SW1A 1AA).');
                     return;
                 }
             }
@@ -886,7 +902,7 @@
 
             } catch (error) {
                 console.error('Registration error:', error);
-                alert('Registration failed. Please try again.');
+                showFormError('step3', error.message || 'Registration failed. Please try again.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }

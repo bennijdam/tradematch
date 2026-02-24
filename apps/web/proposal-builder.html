@@ -502,24 +502,33 @@
         
         // Load available quotes
         async function loadQuotes() {
+            const select = document.getElementById('quoteId');
+            select.disabled = true;
+            select.innerHTML = '<option value="">Loading quotes…</option>';
             try {
                 const response = await fetch(`${API_URL}/api/quotes/vendor`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     }
                 });
-                
+
                 const data = await response.json();
-                const select = document.getElementById('quoteId');
-                
-                data.quotes.forEach(quote => {
-                    const option = document.createElement('option');
-                    option.value = quote.id;
-                    option.textContent = `${quote.title} - £${quote.budget}`;
-                    select.appendChild(option);
-                });
+                select.innerHTML = '<option value="">Select a quote to respond to...</option>';
+
+                if (data.quotes && data.quotes.length > 0) {
+                    data.quotes.forEach(quote => {
+                        const option = document.createElement('option');
+                        option.value = quote.id;
+                        option.textContent = `${quote.title} - £${quote.budget}`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No quotes available</option>';
+                }
             } catch (error) {
-                console.error('Load quotes error:', error);
+                select.innerHTML = '<option value="">Failed to load quotes — <a href="" onclick="event.preventDefault();loadQuotes()">retry</a></option>';
+            } finally {
+                select.disabled = false;
             }
         }
         
@@ -575,17 +584,17 @@
                 
                 const data = await response.json();
                 if (data.success) {
-                    alert('Proposal saved as draft!');
+                    CustomConfirm.toast('Proposal saved as draft!', 'success');
                 }
             } catch (error) {
                 console.error('Save draft error:', error);
-                alert('Failed to save draft');
+                CustomConfirm.toast('Failed to save draft. Please try again.', 'error');
             }
         }
-        
+
         async function generateProposal() {
             const proposalData = collectFormData();
-            
+
             try {
                 const response = await fetch(`${API_URL}/api/proposals`, {
                     method: 'POST',
@@ -595,15 +604,15 @@
                     },
                     body: JSON.stringify(proposalData)
                 });
-                
+
                 const data = await response.json();
                 if (data.success) {
-                    alert('Proposal generated successfully!');
+                    CustomConfirm.toast('Proposal generated successfully!', 'success');
                     window.open(data.pdfUrl, '_blank');
                 }
             } catch (error) {
                 console.error('Generate proposal error:', error);
-                alert('Failed to generate proposal');
+                CustomConfirm.toast('Failed to generate proposal. Please try again.', 'error');
             }
         }
         
@@ -662,8 +671,29 @@
         }
         
         // Initialize
-        loadQuotes();
-        
+        loadQuotes().then(() => {
+            // Pre-select a quote if ?lead= param is present (from vendor-dashboard sendQuote redirect)
+            const leadId = new URLSearchParams(window.location.search).get('lead');
+            if (leadId) {
+                const select = document.getElementById('quoteId');
+                if (select) {
+                    // Try exact match first, then partial
+                    const opt = Array.from(select.options).find(o => o.value === leadId || o.value.includes(leadId));
+                    if (opt) {
+                        select.value = opt.value;
+                    } else {
+                        // Quote not in list yet — store for when list finishes populating
+                        select.dataset.pendingLead = leadId;
+                    }
+                }
+                // Pre-fill project title hint if we can derive it from the select label
+                const titleInput = document.getElementById('projectTitle');
+                if (titleInput && !titleInput.value) {
+                    titleInput.placeholder = 'Proposal for Lead #' + leadId;
+                }
+            }
+        });
+
         // Add event listeners for total calculation
         document.addEventListener('input', (e) => {
             if (e.target.type === 'number') {
@@ -716,6 +746,7 @@
         </div>
     </footer>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>

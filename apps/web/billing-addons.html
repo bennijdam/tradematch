@@ -220,12 +220,12 @@
                         Account Settings
                     </a>
                     <div class="profile-menu-divider"></div>
-                    <a href="#" class="profile-menu-item logout" id="logoutBtn">
+                    <button type="button" class="profile-menu-item logout" id="logoutBtn">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
                         Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -469,6 +469,7 @@
         </div>
     </main>
 
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/user-dashboard/dashboardApp.js" defer></script>
     <script>
         const QUOTE_REVIEW_STORAGE_KEY = 'tm_quote_review_payload';
@@ -577,32 +578,50 @@
 
         // Accept quote button
         document.getElementById('acceptQuoteBtn').addEventListener('click', async () => {
-            const payload = loadQuoteReviewPayload();
-            const bidId = payload?.bidId || payload?.quoteId;
-            const quoteId = payload?.quoteId || payload?.jobId;
-            const jobId = payload?.jobId || payload?.quoteId;
+            const acceptBtn = document.getElementById('acceptQuoteBtn');
+            const payload   = loadQuoteReviewPayload();
+            const bidId     = payload?.bidId   || payload?.quoteId;
+            const quoteId   = payload?.quoteId || payload?.jobId;
+            const jobId     = payload?.jobId   || payload?.quoteId;
+
+            // Loading state
+            acceptBtn.disabled    = true;
+            acceptBtn.textContent = 'Processing…';
 
             if (typeof acceptBidApi === 'function' && bidId && quoteId) {
                 const accepted = await acceptBidApi(bidId, quoteId);
                 if (!accepted) {
-                    alert('Failed to accept quote. Please try again.');
+                    showBillingNotice('Failed to accept quote. Please try again.', 'error');
+                    acceptBtn.disabled    = false;
+                    acceptBtn.textContent = 'Accept & Continue';
                     return;
                 }
             }
 
             localStorage.removeItem(QUOTE_REVIEW_STORAGE_KEY);
-            alert('Quote accepted! Redirecting to confirmation...');
+            showBillingNotice('Quote accepted! Redirecting…', 'success');
 
-            if (jobId) {
-                window.location.href = `messages.html?job=${encodeURIComponent(jobId)}`;
-                return;
-            }
-            if (payload?.vendorSlug) {
-                window.location.href = `messages.html?vendor=${encodeURIComponent(payload.vendorSlug)}`;
-                return;
-            }
-            window.location.href = 'index.html';
+            setTimeout(() => {
+                if (jobId) { window.location.href = `messages.html?job=${encodeURIComponent(jobId)}`; return; }
+                if (payload?.vendorSlug) { window.location.href = `messages.html?vendor=${encodeURIComponent(payload.vendorSlug)}`; return; }
+                window.location.href = 'index.html';
+            }, 1200);
         });
+
+        function showBillingNotice(message, type) {
+            let notice = document.getElementById('billing-notice');
+            if (!notice) {
+                notice = document.createElement('div');
+                notice.id = 'billing-notice';
+                notice.style.cssText = 'margin:16px 0;padding:14px 18px;border-radius:10px;font-size:14px;font-weight:600;display:none';
+                document.getElementById('acceptQuoteBtn').closest('section,div').prepend(notice);
+            }
+            notice.textContent   = message;
+            notice.style.display = 'block';
+            notice.style.background = type === 'error' ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)';
+            notice.style.color      = type === 'error' ? 'var(--accent-danger,#ef4444)' : 'var(--accent-success,#10b981)';
+            notice.style.border     = `1px solid ${type === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(16,185,129,0.25)'}`;
+        }
 
         // Skip add-ons button
         document.getElementById('skipAddonsBtn').addEventListener('click', () => {

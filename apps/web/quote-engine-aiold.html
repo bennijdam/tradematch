@@ -1669,6 +1669,30 @@
     </div>
 
     <script>
+        // ── Error helpers ──────────────────────────────────────────────
+        function showStepError(message) {
+            clearStepError();
+            const active = document.querySelector('.form-step.active');
+            if (!active) return;
+            const p = document.createElement('p');
+            p.className = 'step-error-msg';
+            p.style.cssText = 'color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:0.6rem 1rem;margin-bottom:1rem;font-size:0.9rem;';
+            p.textContent = message;
+            active.insertBefore(p, active.firstChild);
+        }
+        function clearStepError() {
+            document.querySelectorAll('.step-error-msg').forEach(el => el.remove());
+        }
+        function showQEToast(message, type) {
+            if (typeof CustomConfirm !== 'undefined') { CustomConfirm.toast(message, type || 'info'); return; }
+            const d = document.createElement('div');
+            d.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#1e293b;color:#fff;padding:0.75rem 1.25rem;border-radius:8px;font-size:0.9rem;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+            d.textContent = message;
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 3500);
+        }
+        // ──────────────────────────────────────────────────────────────
+
         // Form State
         let currentStep = 1;
         const totalSteps = 4;
@@ -1856,7 +1880,9 @@
             const prompt = aiInput.value.trim();
             
             if (!prompt) {
-                alert('Please enter a brief description of your project');
+                aiInput.style.borderColor = '#dc2626';
+                aiInput.focus();
+                setTimeout(() => { aiInput.style.borderColor = ''; }, 2000);
                 return;
             }
 
@@ -1874,7 +1900,7 @@
                 aiOutput.classList.add('active');
                 
             } catch (error) {
-                alert('Failed to generate description. Please try again.');
+                showQEToast('Failed to generate description. Please try again.', 'error');
                 console.error(error);
             } finally {
                 generateBtn.disabled = false;
@@ -1887,8 +1913,18 @@ async function generateAIDescription(prompt) {
             const service = formData.serviceName || 'home improvement';
             const propertyType = document.getElementById('propertyType').value;
             
-            // For now, return a template-based description
-            // TODO: Integrate with Claude API when ready
+            // Uses smart template-based generation; Claude AI integration is configured server-side via /api/ai/describe
+            try {
+                const res = await fetch('/api/ai/describe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, service, propertyType })
+                });
+                if (res.ok) {
+                    const d = await res.json();
+                    if (d.description) return d.description;
+                }
+            } catch (_) { /* fall through to template */ }
             return generateSmartDescription(prompt, service, propertyType);
         }
 
@@ -2032,7 +2068,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     copyBtn.textContent = originalText;
                 }, 2000);
             } catch (error) {
-                alert('Failed to copy to clipboard');
+                showQEToast('Failed to copy to clipboard', 'error');
             }
         });
 
@@ -2116,36 +2152,38 @@ I'm happy to discuss the project in more detail and answer any questions to help
         }
 
         function validateStep(step) {
+            clearStepError();
             switch(step) {
                 case 1:
                     if (!formData.service) {
-                        alert('Please select a service');
+                        showStepError('Please select a service');
                         return false;
                     }
                     break;
-                case 2:
+                case 2: {
                     const postcode = document.getElementById('postcode').value.trim().toUpperCase();
                     const description = document.getElementById('description').value.trim();
-                    
+
                     if (!postcode || !description) {
-                        alert('Please fill in all required fields');
+                        showStepError('Please fill in all required fields');
                         return false;
                     }
-                    
+
                     // UK postcode validation
                     const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
                     if (!postcodeRegex.test(postcode)) {
-                        alert('Please enter a valid UK postcode');
+                        showStepError('Please enter a valid UK postcode');
                         return false;
                     }
-                    
+
                     formData.postcode = postcode;
                     formData.propertyType = document.getElementById('propertyType').value;
                     formData.description = description;
                     break;
+                }
                 case 3:
                     if (!formData.urgency) {
-                        alert('Please select a timeline');
+                        showStepError('Please select a timeline');
                         return false;
                     }
                     formData.contactPreference = document.getElementById('contactPreference').value;
@@ -2238,7 +2276,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Quote submission error:', error);
-                alert(error.message || 'Failed to submit quote request. Please try again.');
+                showQEToast(error.message || 'Failed to submit quote request. Please try again.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Quote Request';
@@ -2247,7 +2285,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
         async function submitGuest(finalData) {
             if (!finalData) {
-                alert('Please complete the form before posting as a guest.');
+                showQEToast('Please complete the form before posting as a guest.', 'error');
                 return;
             }
             submitBtn.disabled = true;
@@ -2287,7 +2325,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Guest quote submission error:', error);
-                alert(error.message || 'Failed to submit quote request. Please try again.');
+                showQEToast(error.message || 'Failed to submit quote request. Please try again.', 'error');
             } finally {
                 closeAuthModal();
                 submitBtn.disabled = false;
@@ -2342,6 +2380,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>

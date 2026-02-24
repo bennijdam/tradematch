@@ -1135,6 +1135,21 @@
         const totalSteps = 5;
         let formData = {};
 
+        function showStepError(message) {
+            clearStepError();
+            const active = document.querySelector('.form-step.active') || document.querySelector('.form-step[data-step="' + currentStep + '"]');
+            if (!active) { return; }
+            const p = document.createElement('p');
+            p.className = 'step-error-msg';
+            p.style.cssText = 'color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:0.6rem 1rem;margin-bottom:1rem;font-size:0.9rem;';
+            p.textContent = message;
+            active.insertBefore(p, active.firstChild);
+        }
+
+        function clearStepError() {
+            document.querySelectorAll('.step-error-msg').forEach(el => el.remove());
+        }
+
         // Service Card Selection
         document.querySelectorAll('.service-card').forEach(card => {
             card.addEventListener('click', function() {
@@ -1188,43 +1203,47 @@
 
         // Validate Step
         function validateStep(step) {
+            clearStepError();
             switch(step) {
                 case 1:
                     if (!formData.service && !document.getElementById('customService').value) {
-                        alert('Please select a service or type your own');
+                        showStepError('Please select a service or type your own');
                         return false;
                     }
                     if (document.getElementById('customService').value) {
                         formData.service = document.getElementById('customService').value;
                     }
                     break;
-                case 2:
+                case 2: {
                     const postcode = document.getElementById('postcode').value;
                     if (!postcode) {
-                        alert('Please enter your postcode');
+                        showStepError('Please enter your postcode');
                         return false;
                     }
                     formData.postcode = postcode;
                     formData.address = document.getElementById('address').value;
                     break;
-                case 3:
+                }
+                case 3: {
                     const description = document.getElementById('description').value;
                     if (!description || description.length < 20) {
-                        alert('Please provide a detailed job description (minimum 20 characters)');
+                        showStepError('Please provide a detailed job description (minimum 20 characters)');
                         return false;
                     }
                     formData.description = description;
                     formData.propertyType = document.getElementById('propertyType').value;
                     formData.budget = document.getElementById('budget').value;
                     break;
-                case 4:
+                }
+                case 4: {
                     const timeline = document.querySelector('input[name="timeline"]:checked');
                     if (!timeline) {
-                        alert('Please select a timeline');
+                        showStepError('Please select a timeline');
                         return false;
                     }
                     formData.timeline = timeline.value;
                     break;
+                }
             }
             return true;
         }
@@ -1240,12 +1259,12 @@
             const terms = document.getElementById('terms').checked;
 
             if (!name || !email || !phone) {
-                alert('Please fill in all required fields');
+                showStepError('Please fill in all required fields');
                 return;
             }
 
             if (!terms) {
-                alert('Please accept the Terms of Service and Privacy Policy');
+                showStepError('Please accept the Terms of Service and Privacy Policy');
                 return;
             }
 
@@ -1254,18 +1273,10 @@
             formData.phone = phone;
             formData.marketing = document.getElementById('marketing').checked;
 
-            // Log form data (in production, send to backend)
-            console.log('Form submitted:', formData);
-
-            // Show success message
-            alert('Job posted successfully! You will receive quotes via email and phone shortly.');
-
-            // Reset form (in production, redirect to confirmation page)
-            // window.location.href = '/job-posted-success';
+            window.location.href = '/index';
         });
 
         // Initialize
-        console.log('%cTradeMatch - Post a Job', 'font-size: 20px; font-weight: bold; color: #10b981;');
     </script>
 </body>
 </html>

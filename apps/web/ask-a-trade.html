@@ -935,7 +935,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -988,7 +988,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -1100,6 +1100,12 @@
                     <button type="submit" class="btn-submit">Post Question</button>
                     <p class="form-note">✓ Free forever  ✓ Public answers help others</p>
                 </form>
+                <div id="questionSuccess" style="display:none; text-align:center; padding:32px 16px;">
+                    <div style="font-size:48px; margin-bottom:16px;">✅</div>
+                    <h3 style="font-size:20px; font-weight:700; margin-bottom:8px; color:var(--slate-900,#0f172a);">Question posted!</h3>
+                    <p style="color:var(--slate-600,#475569); margin-bottom:24px;">Experts will start answering within 24 hours.<br>We'll email you when you get your first answer.</p>
+                    <button class="btn-primary" onclick="document.getElementById('questionSuccess').style.display='none'; document.getElementById('questionForm').style.display='block';">Ask Another Question</button>
+                </div>
             </div>
         </div>
     </section>
@@ -1661,18 +1667,17 @@
         // ========================================
         document.getElementById('questionForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // In production, this would submit to backend
-            alert('✅ Question posted successfully! Experts will start answering within 24 hours. We\'ll email you when you get your first answer.');
-            
-            // Reset form
+
+            // Show inline success state
+            this.style.display = 'none';
+            const success = document.getElementById('questionSuccess');
+            success.style.display = 'block';
+
+            // Reset form so "Ask Another" starts fresh
             this.reset();
-            
-            // Scroll to recent questions
-            document.querySelector('.questions-section').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+
+            // Scroll success into view
+            success.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
 
         // ========================================
@@ -1680,9 +1685,7 @@
         // ========================================
         document.querySelectorAll('.question-card').forEach(card => {
             card.addEventListener('click', function() {
-                // In production, this would navigate to question detail page
-                console.log('Navigate to question detail page');
-                alert('In production, this would open the full question with all answers.');
+                window.location.href = '/questions-listing';
             });
         });
 
@@ -1691,9 +1694,8 @@
         // ========================================
         document.querySelectorAll('.category-card').forEach(card => {
             card.addEventListener('click', function() {
-                const categoryName = this.querySelector('.category-name').textContent;
-                console.log('Filter by category:', categoryName);
-                alert(`In production, this would show all questions in: ${categoryName}`);
+                const categoryName = this.querySelector('.category-name').textContent.trim();
+                window.location.href = '/questions-listing?category=' + encodeURIComponent(categoryName);
             });
         });
 
@@ -1713,16 +1715,6 @@
             });
         });
 
-        // ========================================
-        // Console Log
-        // ========================================
-        console.log('%cTradeMatch - Ask a Trade', 'font-size: 20px; font-weight: bold; color: #7c3aed;');
-        console.log('Features:');
-        console.log('✓ Question submission form');
-        console.log('✓ Recent questions showcase');
-        console.log('✓ Category browsing');
-        console.log('✓ Expert panel display');
-        console.log('✓ Scroll-triggered animations');
     </script>
 </body>
 </html>

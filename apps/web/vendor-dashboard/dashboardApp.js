@@ -251,7 +251,15 @@ function showVendorToast(message, type = 'success', subtitle = '') {
         return;
     }
 
-    alert(message);
+    if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast(message, type);
+    } else {
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:#1e293b;color:#fff;padding:0.75rem 1.25rem;border-radius:8px;z-index:9999;font-size:0.9rem;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        t.textContent = message;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3500);
+    }
 }
 
 function renderLoading(container, message = 'Loading...') {
@@ -1149,43 +1157,8 @@ window.viewLead = function viewLead(leadId) {
     showVendorToast('Lead not found.', 'error');
 };
 
-window.sendQuote = async function sendQuote(leadId) {
-    const price = window.prompt('Enter your quote price (£):');
-    if (!price) return;
-    const numericPrice = Number(price);
-    if (Number.isNaN(numericPrice) || numericPrice <= 0) {
-        showVendorToast('Enter a valid quote price.', 'error');
-        return;
-    }
-    const message = window.prompt('Add a brief message for the customer:') || '';
-    if (message.length > 2000) {
-        showVendorToast('Message is too long (max 2000 characters).', 'error');
-        return;
-    }
-    const estimatedDuration = window.prompt('Estimated duration (e.g. 2 days):') || '';
-    const availability = window.prompt('Your earliest availability (e.g. Next week):') || '';
-
-    if (estimatedDuration.length > 120 || availability.length > 120) {
-        showVendorToast('Duration/availability is too long (max 120 characters).', 'error');
-        return;
-    }
-
-    try {
-        await apiFetchJson('/api/bids', {
-            method: 'POST',
-            body: JSON.stringify({
-                quoteId: leadId,
-                price: numericPrice,
-                message: clampText(message, 2000),
-                estimatedDuration: clampText(estimatedDuration, 120),
-                availability: clampText(availability, 120)
-            })
-        });
-        showVendorToast('Quote sent successfully!', 'success');
-        window.location.href = 'vendor-active-quotes.html';
-    } catch (error) {
-        showVendorToast(error.message || 'Failed to send quote', 'error');
-    }
+window.sendQuote = function sendQuote(leadId) {
+    window.location.href = '/proposal-builder?lead=' + encodeURIComponent(leadId);
 };
 
 async function hydrateNotifications() {
@@ -1365,6 +1338,23 @@ function initSettingsTabs() {
         });
     });
 }
+
+// ── Global error boundary ─────────────────────────────────────────────────
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled promise rejection:', event.reason);
+    const msg = (event.reason && event.reason.message) ? event.reason.message : 'Something went wrong. Please refresh.';
+    if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast(msg, 'error');
+    } else {
+        showVendorToast(msg, 'error');
+    }
+});
+
+window.addEventListener('error', (event) => {
+    if (event.filename && event.filename.includes(window.location.origin)) {
+        console.error('JS error:', event.message, event.filename, event.lineno);
+    }
+});
 
 
 

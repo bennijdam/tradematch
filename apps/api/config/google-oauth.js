@@ -17,6 +17,10 @@ module.exports = {
 
     // Configure Google OAuth Strategy
     initialize: () => {
+        if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+            console.warn('⚠️  Google OAuth disabled — GOOGLE_CLIENT_ID/SECRET not set.');
+            return;
+        }
         passport.use(new GoogleStrategy({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,

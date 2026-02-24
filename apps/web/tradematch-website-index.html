@@ -4469,7 +4469,7 @@
                 
                 <!-- Services Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -4522,7 +4522,7 @@
                 
                 <!-- Locations Mega Menu -->
                 <li class="has-mega-menu">
-                    <a href="#" class="mega-trigger">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></a>
+                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
                     <div class="mega-menu">
                         <div class="mega-menu-content">
                             <div class="mega-column">
@@ -4628,11 +4628,12 @@
                                 </button>
                             </div>
                         </form>
-                        
+                        <p id="searchError" style="display:none;color:#ef4444;font-size:13px;margin-top:8px;padding:8px 12px;background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;border-radius:4px;"></p>
+
                         </div>
-                    
-                    
-                    
+
+
+
                     <!-- Trustpilot Badge - Transparent, Outside Widget -->
                     <div class="trustpilot-badge">
                         <span class="tp-text">Excellent</span>
@@ -5116,7 +5117,7 @@
               </p>
               
               <div class="tm-cta-buttons">
-                <a href="#" class="tm-store-button tm-app-store" aria-label="Download on the App Store">
+                <a href="/coming-soon" class="tm-store-button tm-app-store" aria-label="Download on the App Store">
                   <svg viewBox="0 0 120 40" class="tm-store-badge">
                     <rect width="120" height="40" rx="8" fill="#000"/>
                     <path d="M24.5 20.5c0-2.8 2.3-4.2 2.4-4.3-1.3-1.9-3.3-2.2-4-2.2-1.7-.2-3.3 1-4.2 1-.9 0-2.2-1-3.6-1-1.9 0-3.6 1.1-4.5 2.7-2 3.4-.5 8.5 1.4 11.3 1 1.4 2 2.9 3.5 2.8 1.4-.1 2-.9 3.6-.9 1.7 0 2.2.9 3.6.9 1.5 0 2.5-1.3 3.4-2.7 1.1-1.6 1.5-3.1 1.5-3.2-.1 0-2.8-1.1-2.8-4.2z" fill="#fff"/>
@@ -5126,7 +5127,7 @@
                   </svg>
                 </a>
                 
-                <a href="#" class="tm-store-button tm-google-play" aria-label="Get it on Google Play">
+                <a href="/coming-soon" class="tm-store-button tm-google-play" aria-label="Get it on Google Play">
                   <svg viewBox="0 0 135 40" class="tm-store-badge">
                     <rect width="135" height="40" rx="8" fill="#000"/>
                     <path d="M8.5 7.5c-.3.3-.5.8-.5 1.4v22.2c0 .6.2 1.1.5 1.4l.1.1L20.8 20v-.3L8.6 7.4l-.1.1z" fill="#00d7fe"/>
@@ -5140,7 +5141,7 @@
               </div>
               
               <p class="tm-secondary-link">
-                Looking for the tradesperson app? <a href="#">Find it here →</a>
+                Looking for the tradesperson app? <a href="/vendor-register">Sign up as a tradesperson →</a>
               </p>
             </div>
           </div>
@@ -5642,19 +5643,25 @@ function handleQuickSearch(event) {
             const service = document.getElementById('serviceType').value;
             const postcode = document.getElementById('postcode').value;
              
+            const searchErrEl = document.getElementById('searchError');
+            function showSearchError(msg) {
+                if (searchErrEl) { searchErrEl.textContent = msg; searchErrEl.style.display = 'block'; }
+            }
+            if (searchErrEl) searchErrEl.style.display = 'none';
+
             if (!service || !postcode) {
-                alert('Please select a service and enter your postcode');
+                showSearchError('Please select a service and enter your postcode.');
                 return;
             }
-             
+
             // Get postcode data from autocomplete if available
             const postcodeData = postcodeAutocomplete.getSelectedPostcodeData();
             const postcodeValue = postcodeData ? postcodeData.postcode : postcode;
-             
+
             // Validate UK postcode
             const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
             if (!postcodeRegex.test(postcodeValue)) {
-                alert('Please enter a valid UK postcode');
+                showSearchError('Please enter a valid UK postcode (e.g. SW1A 1AA).');
                 return;
             }
             
@@ -5672,7 +5679,6 @@ function handleQuickSearch(event) {
             if (typeof BookingAPI !== 'undefined') {
                 BookingAPI.create(bookingData)
                     .then(response => {
-                        console.log('Booking tracked:', response);
                         // Store booking ID for later use
                         if (response.id) {
                             sessionStorage.setItem('pending_booking_id', response.id);
@@ -5800,7 +5806,6 @@ function handleQuickSearch(event) {
             try {
                 // Try to fetch from API
                 if (typeof ReviewsAPI !== 'undefined') {
-                    console.log('Fetching reviews from API...');
                     const response = await ReviewsAPI.getFeatured();
                     return response.data || response;
                 }
@@ -5809,7 +5814,6 @@ function handleQuickSearch(event) {
             }
             
             // Fallback to mock data
-            console.log('Using mock reviews data');
             return mockReviewsData;
         }
 

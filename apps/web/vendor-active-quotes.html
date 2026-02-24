@@ -1332,7 +1332,7 @@
                     </svg>
                     <span class="nav-label">Active Quotes</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="/vendor/won-jobs" class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -1389,7 +1389,7 @@
 
             <div class="nav-section">
                 <div class="nav-section-title">Reputation</div>
-                <a href="#" class="nav-item">
+                <a href="/reviews" class="nav-item">
                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                     </svg>
@@ -1926,33 +1926,62 @@
             });
         }
 
+        // Toast helper (delegates to CustomConfirm if loaded)
+        function showQuoteToast(message, type = 'success') {
+            if (window.CustomConfirm) { CustomConfirm.toast(message, type); return; }
+            const t = document.createElement('div');
+            t.textContent = message;
+            Object.assign(t.style, {
+                position:'fixed', bottom:'24px', right:'24px', zIndex:9999,
+                padding:'12px 20px', borderRadius:'8px', fontSize:'14px',
+                background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6',
+                color:'#fff', boxShadow:'0 4px 12px rgba(0,0,0,0.2)', transition:'opacity .3s'
+            });
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+        }
+
         // Action handlers
         function viewJob(id) {
-            console.log('View job:', id);
-            alert(`Opening job details for quote ${id}`);
+            window.location.href = '/job-details?id=' + encodeURIComponent(id);
         }
 
         function openChat(id) {
-            console.log('Open chat:', id);
-            alert(`Opening conversation for quote ${id}`);
+            window.location.href = '/vendor-messages?quote=' + encodeURIComponent(id);
         }
 
-        function editQuote(id) {
-            if (confirm('Edit this quote? The customer hasn\'t viewed it yet.')) {
-                alert(`Opening editor for quote ${id}`);
+        async function editQuote(id) {
+            const ok = await CustomConfirm.ask(
+                'Edit Quote',
+                "Are you sure you want to edit this quote? The customer will be notified of any changes.",
+                'Edit Quote',
+                'warning'
+            );
+            if (ok) {
+                window.location.href = '/proposal-builder?quote=' + encodeURIComponent(id);
             }
         }
 
-        function withdrawQuote(id) {
-            if (confirm('âš ď¸Ź Warning: Withdrawing this quote will NOT refund your lead fee. Continue?')) {
-                const row = document.querySelector(`tr[data-quote-id="${id}"]`);
-                if (row) row.remove();
-                alert(`Quote ${id} withdrawn`);
+        async function withdrawQuote(id) {
+            const ok = await CustomConfirm.ask(
+                'Withdraw Quote',
+                'Warning: Withdrawing this quote will NOT refund your lead fee. This action cannot be undone.',
+                'Withdraw Quote',
+                'danger'
+            );
+            if (ok) {
+                const row = document.querySelector();
+                if (row) {
+                    row.style.transition = 'opacity 0.3s';
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 300);
+                }
+                showQuoteToast('Quote withdrawn successfully.', 'success');
             }
         }
 
         function openFollowUpModal() {
-            alert('Follow-up modal would open here with professional message templates');
+            window.location.href = '/vendor-messages';
         }
 
         function dismissAlert(btn) {
@@ -1960,9 +1989,45 @@
         }
 
         function applyFilters() {
-            console.log('Applying filters...');
-            // TODO: Implement filter logic
-            renderQuotes(quotesData);
+            const status  = document.getElementById('filterStatus').value;
+            const dateRng = document.getElementById('filterDate').value;
+            const value   = document.getElementById('filterValue').value;
+            const trade   = document.getElementById('filterTrade').value;
+            const sort    = document.getElementById('sortBy').value;
+
+            const now = new Date();
+            let filtered = quotesData.filter(q => {
+                // Status
+                if (status !== 'all' && q.status !== status) return false;
+                // Trade
+                if (trade !== 'all' && q.tradeType.toLowerCase() !== trade) return false;
+                // Value
+                if (value === 'low'  && q.quotedPrice >= 500)  return false;
+                if (value === 'mid'  && (q.quotedPrice < 500 || q.quotedPrice > 2000)) return false;
+                if (value === 'high' && q.quotedPrice <= 2000) return false;
+                // Date
+                const sent = new Date(q.dateSent);
+                const diffDays = (now - sent) / (1000 * 60 * 60 * 24);
+                if (dateRng === 'today' && diffDays > 1) return false;
+                if (dateRng === 'week'  && diffDays > 7) return false;
+                if (dateRng === 'month' && diffDays > 30) return false;
+                return true;
+            });
+
+            // Sort
+            if (sort === 'oldest')     filtered.sort((a,b) => new Date(a.dateSent) - new Date(b.dateSent));
+            else if (sort === 'value-high') filtered.sort((a,b) => b.quotedPrice - a.quotedPrice);
+            else if (sort === 'value-low')  filtered.sort((a,b) => a.quotedPrice - b.quotedPrice);
+            else if (sort === 'urgency')    filtered.sort((a,b) => (b.urgentAfterDays||0) - (a.urgentAfterDays||0));
+            else filtered.sort((a,b) => new Date(b.dateSent) - new Date(a.dateSent)); // recent
+
+            renderQuotes(filtered);
+
+            // Show empty state if nothing matches
+            const tbody = document.getElementById('quotesTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--slate-400);">No quotes match your current filters.</td></tr>';
+            }
         }
 
         // Theme toggle
@@ -1995,6 +2060,7 @@
             renderQuotes();
         });
     </script>
+    <script src="/shared/ui/confirm-modal.js" defer></script>
     <script src="/vendor-dashboard/dashboardApp.js" defer></script>
 </body>
 </html>

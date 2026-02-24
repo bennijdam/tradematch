@@ -986,7 +986,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-001')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-001', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-001')">Send Quote</button>
                     </div>
                 </div>
@@ -1038,7 +1038,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-002')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-002', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-002')">Send Quote</button>
                     </div>
                 </div>
@@ -1090,7 +1090,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-003')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-003', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-003')">Send Quote</button>
                     </div>
                 </div>
@@ -1142,7 +1142,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-004')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-004', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-004')">Send Quote</button>
                     </div>
                 </div>
@@ -1194,7 +1194,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-005')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-005', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-005')">Send Quote</button>
                     </div>
                 </div>
@@ -1246,7 +1246,7 @@
                         <span class="cost-value">1 impression</span>
                     </div>
                     <div class="lead-actions">
-                        <button class="btn btn-secondary" onclick="viewLead('lead-006')">View Details</button>
+                        <button class="btn btn-secondary" onclick="viewLead('lead-006', this)">View Details</button>
                         <button class="btn btn-primary" onclick="sendQuote('lead-006')">Send Quote</button>
                     </div>
                 </div>
@@ -1280,50 +1280,242 @@
     
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
-    
+
+    <!-- Lead Detail Slide-over Panel -->
+    <div id="ldp-backdrop" style="display:none" aria-hidden="true"></div>
+    <aside id="lead-detail-panel" role="dialog" aria-modal="true" aria-labelledby="ldpTitle" aria-hidden="true">
+        <div class="ldp-inner">
+            <div class="ldp-toolbar">
+                <div class="ldp-badges" id="ldpBadges"></div>
+                <button class="ldp-close" id="ldpCloseBtn" aria-label="Close lead details">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <h2 class="ldp-title" id="ldpTitle"></h2>
+
+            <div class="ldp-meta" id="ldpMeta"></div>
+
+            <div class="ldp-section">
+                <p class="ldp-section-label">Job Description</p>
+                <p class="ldp-description" id="ldpDescription"></p>
+            </div>
+
+            <div class="ldp-section ldp-cost-row">
+                <span class="ldp-section-label">Credit Cost</span>
+                <span class="ldp-cost-value" id="ldpCost"></span>
+            </div>
+
+            <div class="ldp-actions">
+                <button class="btn btn-primary ldp-btn-send" id="ldpSendQuoteBtn">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                    Send Quote
+                </button>
+                <button class="btn btn-secondary" id="ldpCloseAction">Close</button>
+            </div>
+        </div>
+    </aside>
+
+    <style>
+        /* Lead Detail Panel */
+        #lead-detail-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 440px;
+            max-width: 100%;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            box-shadow: -8px 0 32px rgba(0,0,0,0.35);
+            z-index: 9000;
+            transform: translateX(100%);
+            transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+        }
+        #lead-detail-panel.is-open {
+            transform: translateX(0);
+        }
+        #ldp-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 8999;
+        }
+        .ldp-inner {
+            padding: 24px 24px 32px;
+        }
+        .ldp-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .ldp-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ldp-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+        .ldp-close:hover { background: var(--bg-tertiary, #1a1f2b); }
+        .ldp-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 16px;
+            line-height: 1.3;
+        }
+        .ldp-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .ldp-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .ldp-meta-row svg { flex-shrink: 0; color: var(--accent-primary); }
+        .ldp-section {
+            border-top: 1px solid var(--border);
+            padding: 20px 0;
+        }
+        .ldp-section-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted, #6b7280);
+            margin: 0 0 10px;
+        }
+        .ldp-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin: 0;
+        }
+        .ldp-cost-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ldp-cost-row .ldp-section-label { margin: 0; }
+        .ldp-cost-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+        .ldp-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .ldp-btn-send { flex: 2; justify-content: center; display: flex; align-items: center; }
+        .ldp-actions .btn:last-child { flex: 1; justify-content: center; }
+        @media (max-width: 480px) {
+            #lead-detail-panel { width: 100%; }
+            .ldp-actions { flex-direction: column; }
+        }
+    </style>
+
     <script>
-        // Theme Toggle
+        // ── Theme ─────────────────────────────────────────────────────────────
         function toggleTheme() {
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         }
-        
-        // Initialize theme
         const savedTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        
-        // View Lead Details
-        function viewLead(leadId) {
-            if (typeof window.viewLead === 'function') {
-                window.viewLead(leadId);
-                return;
+
+        // ── Lead Detail Panel ─────────────────────────────────────────────────
+        function viewLead(leadId, triggerEl) {
+            if (typeof window.viewLead === 'function' && !triggerEl) {
+                window.viewLead(leadId); return;
             }
-            console.log('Viewing lead:', leadId);
-            showToast('Opening lead details...', 'success');
+
+            const card = triggerEl ? triggerEl.closest('.lead-card') : null;
+            if (!card) { showToast('Could not load lead details', 'error'); return; }
+
+            // Extract from card DOM
+            const title       = card.querySelector('.lead-title')?.textContent.trim() || '—';
+            const description = card.querySelector('.lead-description')?.textContent.trim() || '';
+            const cost        = card.querySelector('.cost-value')?.textContent.trim() || '1 impression';
+            const statusBadge = card.querySelector('.lead-status')?.innerHTML || '';
+            const sourceBadge = card.querySelector('.badge-source')?.outerHTML || '';
+
+            // Meta rows: trade, location, budget
+            const metaItems = card.querySelectorAll('.lead-meta .lead-meta-item');
+            const metaHTML  = Array.from(metaItems).map(item => {
+                const svg  = item.querySelector('svg')?.outerHTML || '';
+                const text = item.querySelector('span')?.textContent.trim() || '';
+                return `<div class="ldp-meta-row">${svg}<span>${text}</span></div>`;
+            }).join('');
+
+            // Populate panel
+            document.getElementById('ldpTitle').textContent       = title;
+            document.getElementById('ldpDescription').textContent = description;
+            document.getElementById('ldpCost').textContent        = cost;
+            document.getElementById('ldpBadges').innerHTML        = statusBadge + sourceBadge;
+            document.getElementById('ldpMeta').innerHTML          = metaHTML;
+            document.getElementById('ldpSendQuoteBtn').onclick    = () => { closeLDP(); sendQuote(leadId); };
+
+            openLDP();
         }
-        
-        // Send Quote
+
+        function openLDP() {
+            const panel    = document.getElementById('lead-detail-panel');
+            const backdrop = document.getElementById('ldp-backdrop');
+            panel.classList.add('is-open');
+            panel.setAttribute('aria-hidden', 'false');
+            backdrop.style.display = 'block';
+            document.getElementById('ldpCloseBtn').focus();
+        }
+
+        function closeLDP() {
+            const panel    = document.getElementById('lead-detail-panel');
+            const backdrop = document.getElementById('ldp-backdrop');
+            panel.classList.remove('is-open');
+            panel.setAttribute('aria-hidden', 'true');
+            backdrop.style.display = 'none';
+        }
+
+        document.getElementById('ldpCloseBtn').addEventListener('click', closeLDP);
+        document.getElementById('ldpCloseAction').addEventListener('click', closeLDP);
+        document.getElementById('ldp-backdrop').addEventListener('click', closeLDP);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLDP(); });
+
+        // ── Send Quote — navigate to proposal builder ─────────────────────────
         function sendQuote(leadId) {
-            if (typeof window.sendQuote === 'function') {
-                window.sendQuote(leadId);
-                return;
-            }
-            console.log('Sending quote for lead:', leadId);
-            showToast('Redirecting to quote form...', 'success');
+            if (typeof window.sendQuote === 'function') { window.sendQuote(leadId); return; }
+            window.location.href = `/proposal-builder?lead=${encodeURIComponent(leadId)}`;
         }
-        
-        // Toast Notification
+
+        // ── Toast ─────────────────────────────────────────────────────────────
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = `toast ${type} show`;
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
     </script>
     <script src="/vendor-dashboard/dashboardApp.js" defer></script>

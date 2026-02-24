@@ -1059,7 +1059,6 @@
                 this.classList.add('active');
                 
                 const category = this.dataset.category;
-                console.log('Filter by:', category);
                 // In production, filter posts here
             });
         });
@@ -1068,17 +1067,18 @@
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
-            console.log('Search for:', searchTerm);
             // In production, filter posts here
         });
 
         // Newsletter form
         document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const email = this.querySelector('input').value;
-            console.log('Subscribe:', email);
-            alert('Thank you for subscribing! Check your email for confirmation.');
             this.reset();
+            const msg = document.createElement('p');
+            msg.style.cssText = 'color:#10b981;font-weight:600;margin-top:0.75rem;text-align:center;';
+            msg.textContent = 'Thank you for subscribing! Check your email for confirmation.';
+            this.parentNode.insertBefore(msg, this.nextSibling);
+            this.style.display = 'none';
         });
 
         // Pagination
@@ -1088,7 +1088,6 @@
                     document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                 }
-                console.log('Go to page:', this.textContent);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
@@ -1112,7 +1111,6 @@
             observer.observe(el);
         });
 
-        console.log('%cTradeMatch - Blog', 'font-size: 20px; font-weight: bold; color: #10b981;');
     </script>
 </body>
 </html>
