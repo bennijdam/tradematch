@@ -1,7 +1,9 @@
 {
-  "name": "tradematch-frontend",
+  "name": "tradematch-workspace",
   "version": "1.0.0",
+  "private": true,
   "description": "TradeMatch Frontend - Modern UK Trade Services Platform",
+  "packageManager": "pnpm@10.8.1",
   "scripts": {
     "dev": "python -m http.server 8080",
     "dev:api": "npm --prefix apps/api run dev",
@@ -13,6 +15,10 @@
     "seo:generate:all": "node scripts/automation/generate-pages.js all-pages",
     "seo:sync:s3": "powershell -ExecutionPolicy Bypass -File scripts\\sync-seo-s3.ps1",
     "seo:sync:s3:sh": "bash scripts/sync-seo-s3.sh",
+    "repo:cleanup:deps": "powershell -ExecutionPolicy Bypass -File scripts\\cleanup-node-modules.ps1",
+    "lint": "pnpm run lint:html && pnpm run lint:css",
+    "lint:html": "htmlhint \"apps/web/**/*.html\"",
+    "lint:css": "stylelint \"apps/web/**/*.css\"",
     "test:smoke": "node scripts/smoke-test.js",
     "test:security": "node scripts/security-check.js",
     "test:ui-smoke": "node scripts/ui-smoke.js",
@@ -34,8 +40,11 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.50.1",
+    "htmlhint": "^1.7.1",
     "playwright": "1.50.1",
     "serve": "14.2.1",
+    "stylelint": "^16.25.0",
+    "stylelint-config-standard": "^39.0.0",
     "wrangler": "^4.61.0"
   },
   "dependencies": {
