@@ -36,6 +36,8 @@
             --emerald-500: #10b981;
             --emerald-600: #059669;
             --emerald-400: #34d399;
+            --error-500: #ef4444;
+            --error-100: rgba(239, 68, 68, 0.12);
             --slate-900: #0f172a;
             --slate-800: #1e293b;
             --slate-700: #334155;
@@ -484,6 +486,35 @@
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
         }
 
+        .form-control.is-valid {
+            border-color: var(--emerald-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--error-500);
+            box-shadow: 0 0 0 3px var(--error-100);
+        }
+
+        .field-feedback {
+            display: none;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .field-feedback.active {
+            display: block;
+        }
+
+        .field-feedback.success {
+            color: var(--emerald-600);
+        }
+
+        .field-feedback.error {
+            color: var(--error-500);
+        }
+
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
@@ -867,10 +898,12 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(12px);
             z-index: 10000;
             align-items: center;
             justify-content: center;
+            padding: 1.25rem;
         }
 
         .modal.active {
@@ -878,11 +911,15 @@
         }
 
         .modal-content {
-            background: white;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
             border-radius: 24px;
             padding: 3rem;
             max-width: 500px;
+            width: 100%;
             text-align: center;
+            box-shadow: 0 18px 48px rgba(15, 23, 42, 0.22);
             animation: modalSlideIn 0.4s ease;
         }
 
@@ -915,7 +952,7 @@
             line-height: 1.7;
         }
 
-        .quote-id {
+        .quote-reference {
             background: var(--slate-50);
             padding: 1rem;
             border-radius: 12px;
@@ -923,6 +960,17 @@
             font-weight: 700;
             color: var(--emerald-600);
             margin-bottom: 2rem;
+            border: 1px solid var(--slate-200);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .modal-footer .btn {
+            padding: 0.75rem 1.5rem;
         }
 
         /* Auth Save Modal */
@@ -1689,6 +1737,7 @@
                         <div class="form-group">
                             <label for="postcode">Your Postcode *</label>
                             <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required pattern="[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}">
+                            <p id="postcodeFeedback" class="field-feedback"></p>
                         </div>
                         <div class="form-group">
                             <label for="propertyType">Property Type</label>
@@ -1994,10 +2043,13 @@
         <div class="modal-content">
             <div class="success-icon">✅</div>
             <h2>Quote Request Submitted!</h2>
-            <p>We've received your quote request and will match you with verified tradespeople in your area.</p>
-            <div class="quote-id">Quote ID: <span id="quoteIdDisplay">LOADING...</span></div>
-            <p style="font-size: 0.9375rem;">You'll receive quotes within 24 hours via email and SMS.</p>
-            <button class="btn btn-primary" onclick="window.location.href=''">Go to Dashboard</button>
+            <p>We've received your request and locked your price for 30 days while we match verified tradespeople.</p>
+            <div class="quote-reference">Your reference: <span id="displayQuoteRef">LOADING...</span></div>
+            <p style="font-size: 0.9375rem; margin-bottom: 0;">You'll start receiving quotes within 24 hours via email and SMS.</p>
+            <div class="modal-footer">
+                <button id="saveQuoteBtn" class="btn btn-primary" type="button">Save to Account</button>
+                <button class="btn btn-secondary" type="button" onclick="closeSuccessModal()">Dismiss</button>
+            </div>
         </div>
     </div>
 
@@ -2135,6 +2187,7 @@
         const totalSteps = 4;
         const formData = {};
         let pendingSubmissionData = null;
+        let latestSubmittedQuoteId = null;
         
         // Auto-fill from homepage parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -2748,6 +2801,134 @@ I'm happy to discuss the project in more detail and answer any questions to help
             document.querySelectorAll('.step-error-msg').forEach(el => el.style.display = 'none');
         }
 
+        function setFieldValidationState(inputEl, isValid, feedbackEl, successMessage, errorMessage) {
+            if (!inputEl) return;
+            inputEl.classList.remove('is-valid', 'is-invalid');
+
+            if (typeof isValid !== 'boolean') {
+                if (feedbackEl) {
+                    feedbackEl.classList.remove('active', 'success', 'error');
+                    feedbackEl.textContent = '';
+                }
+                return;
+            }
+
+            inputEl.classList.add(isValid ? 'is-valid' : 'is-invalid');
+
+            if (feedbackEl) {
+                feedbackEl.classList.add('active');
+                feedbackEl.classList.toggle('success', isValid);
+                feedbackEl.classList.toggle('error', !isValid);
+                feedbackEl.textContent = isValid ? (successMessage || '') : (errorMessage || 'Please check this field.');
+            }
+        }
+
+        function validatePostcodeRealtime() {
+            const postcodeInput = document.getElementById('postcode');
+            const postcodeFeedback = document.getElementById('postcodeFeedback');
+            if (!postcodeInput) return false;
+
+            const postcodeValue = postcodeInput.value.trim().toUpperCase();
+            if (!postcodeValue) {
+                setFieldValidationState(postcodeInput, null, postcodeFeedback);
+                return false;
+            }
+
+            const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
+            const isValid = postcodeRegex.test(postcodeValue);
+            setFieldValidationState(
+                postcodeInput,
+                isValid,
+                postcodeFeedback,
+                'Valid UK postcode',
+                'Please enter a valid UK postcode (e.g. SW1A 1AA).'
+            );
+            return isValid;
+        }
+
+        function setupRealtimeValidation() {
+            const requiredFields = document.querySelectorAll('#quoteForm .form-control[required]');
+            requiredFields.forEach((field) => {
+                if (field.id === 'postcode') return;
+
+                const validateRequiredField = () => {
+                    const value = field.value.trim();
+                    if (!value) {
+                        field.classList.remove('is-valid');
+                        field.classList.add('is-invalid');
+                        return;
+                    }
+
+                    if (field.type === 'email') {
+                        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                        field.classList.toggle('is-valid', emailOk);
+                        field.classList.toggle('is-invalid', !emailOk);
+                        return;
+                    }
+
+                    field.classList.add('is-valid');
+                    field.classList.remove('is-invalid');
+                };
+
+                field.addEventListener('blur', validateRequiredField);
+                field.addEventListener('input', () => {
+                    if (!field.classList.contains('is-invalid')) return;
+                    validateRequiredField();
+                });
+            });
+        }
+
+        function extractQuoteReference(payload) {
+            if (!payload || typeof payload !== 'object') return 'Pending';
+            return payload.quoteReference
+                || payload.quote_reference
+                || payload.reference
+                || payload.quote?.quoteReference
+                || payload.quote?.quote_reference
+                || payload.quote?.reference
+                || payload.quote?.id
+                || 'Pending';
+        }
+
+        function extractQuoteId(payload) {
+            if (!payload || typeof payload !== 'object') return null;
+            return payload.quote?.id || payload.quoteId || payload.quote_id || null;
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        function buildSignupUrlWithQuote(quoteId) {
+            const signupUrl = new URL('/signup', window.location.origin);
+            if (quoteId) {
+                signupUrl.searchParams.set('quoteId', quoteId);
+            }
+            signupUrl.searchParams.set('redirect', '/quote-engine');
+            return `${signupUrl.pathname}${signupUrl.search}`;
+        }
+
+        function openSuccessModal(responseData, isGuestFlow) {
+            const quoteReference = extractQuoteReference(responseData);
+            latestSubmittedQuoteId = extractQuoteId(responseData);
+
+            document.getElementById('displayQuoteRef').textContent = quoteReference;
+
+            const saveQuoteBtn = document.getElementById('saveQuoteBtn');
+            if (saveQuoteBtn) {
+                saveQuoteBtn.style.display = isGuestFlow ? 'inline-flex' : 'none';
+                saveQuoteBtn.onclick = () => {
+                    const quoteIdForClaim = latestSubmittedQuoteId;
+                    if (quoteIdForClaim) {
+                        localStorage.setItem('pendingQuoteClaimId', quoteIdForClaim);
+                    }
+                    window.location.href = buildSignupUrlWithQuote(quoteIdForClaim);
+                };
+            }
+
+            document.getElementById('successModal').classList.add('active');
+        }
+
         function validateStep(step) {
             clearStepError();
             switch(step) {
@@ -2867,10 +3048,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 if (!response.ok) {
                     throw new Error(data.error || 'Failed to submit quote');
                 }
-                
-                const quoteId = data.quote.id;
-                document.getElementById('quoteIdDisplay').textContent = quoteId;
-                document.getElementById('successModal').classList.add('active');
+
+                openSuccessModal(data, false);
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Quote submission error:', error);
@@ -2917,9 +3096,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     throw new Error(data.error || 'Failed to submit quote');
                 }
 
-                const quoteId = data.quote?.id || 'GUEST';
-                document.getElementById('quoteIdDisplay').textContent = quoteId;
-                document.getElementById('successModal').classList.add('active');
+                openSuccessModal(data, true);
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Guest quote submission error:', error);
@@ -2954,13 +3131,16 @@ I'm happy to discuss the project in more detail and answer any questions to help
             await submitAuthenticated(finalData);
         });
 
-        // Auto-uppercase postcode
+        // Auto-uppercase postcode + realtime validation
         document.getElementById('postcode').addEventListener('input', (e) => {
             e.target.value = e.target.value.toUpperCase();
+            validatePostcodeRealtime();
         });
+        document.getElementById('postcode').addEventListener('blur', validatePostcodeRealtime);
 
         // Initialize
         restoreProgress();
+        setupRealtimeValidation();
         updateStep();
 
         const autoSubmitFlag = localStorage.getItem('quoteAutoSubmit');

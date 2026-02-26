@@ -102,9 +102,10 @@ function getJwtSecret(res) {
 // REGISTER ENDPOINT
 // ==========================================
 router.post('/register', authLimiter, async (req, res) => {
-  const { userType, fullName, name, email, phone, password, postcode, oauth_provider, oauth_id } = req.body;
+  const { userType, fullName, name, email, phone, password, postcode, oauth_provider, oauth_id, claimQuoteId } = req.body;
   const normalizedName = (fullName || name || '').trim();
   const normalizedUserType = (userType || 'customer').toLowerCase();
+  const normalizedClaimQuoteId = String(claimQuoteId || '').trim();
 
   try {
     const jwtSecret = getJwtSecret(res);
@@ -198,6 +199,27 @@ router.post('/register', authLimiter, async (req, res) => {
         authProvider
       ]
     );
+
+    let claimedQuoteId = null;
+    if (normalizedClaimQuoteId && normalizeUserType(normalizedUserType) === 'customer') {
+      try {
+        const claimResult = await pool.query(
+          `UPDATE quotes q
+           SET customer_id = $1, updated_at = NOW()
+           FROM users u
+           WHERE q.id = $2
+             AND q.customer_id = u.id
+             AND (u.id LIKE 'guest_%' OR u.email LIKE 'guest_%@guest.tradematch.uk')
+           RETURNING q.id`,
+          [insertResult.rows[0].id, normalizedClaimQuoteId]
+        );
+        if (claimResult.rows.length > 0) {
+          claimedQuoteId = claimResult.rows[0].id;
+        }
+      } catch (claimError) {
+        console.error('Quote claim error during registration:', claimError);
+      }
+    }
 
     // Create activation token (email verification) and send activation email
     const activationToken = signActivationToken({
@@ -305,7 +327,8 @@ router.post('/register', authLimiter, async (req, res) => {
         fullName: insertResult.rows[0].full_name,
         userType: insertResult.rows[0].user_type,
         oauth_provider: insertResult.rows[0].oauth_provider
-      }
+      },
+      claimedQuoteId
     });
   } catch (error) {
     console.error('Register error:', error);

@@ -757,6 +757,10 @@
         const API_BASE = isLocal
             ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
             : 'https://api.tradematch.uk';
+        const registerUrlParams = new URLSearchParams(window.location.search);
+        const claimQuoteIdFromUrl = (registerUrlParams.get('quoteId') || '').trim();
+        const claimQuoteIdFromStorage = (localStorage.getItem('pendingQuoteClaimId') || '').trim();
+        const claimQuoteId = claimQuoteIdFromUrl || claimQuoteIdFromStorage;
 
         // Switch User Type
         function switchUserType(type) {
@@ -873,6 +877,10 @@
                 marketing: document.getElementById('marketing').checked
             };
 
+            if (claimQuoteId && currentUserType === 'customer') {
+                formData.claimQuoteId = claimQuoteId;
+            }
+
             if (currentUserType === 'vendor') {
                 formData.companyName = document.getElementById('companyName').value;
                 const servicesSelect = document.getElementById('services');
@@ -899,6 +907,9 @@
                 document.getElementById('registrationForm').style.display = 'none';
                 document.getElementById('successMessage').classList.add('active');
                 document.querySelector('.step-indicator').style.display = 'none';
+                if (claimQuoteId) {
+                    localStorage.removeItem('pendingQuoteClaimId');
+                }
 
             } catch (error) {
                 console.error('Registration error:', error);
