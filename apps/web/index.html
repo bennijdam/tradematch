@@ -5404,7 +5404,7 @@
     </footer>
 
 <script>
-        const API_URL = 'https://api.tradematch.uk';
+        const POSTCODE_AUTOCOMPLETE_ENDPOINT = '/api/postcode/autocomplete';
         
         // Postcode Autocomplete Implementation
         class PostcodeAutocomplete {
@@ -5501,12 +5501,12 @@
                 this.showLoading();
                 
                 try {
-                    const response = await fetch(`https://api.postcodes.io/postcodes?q=${encodeURIComponent(query)}&limit=5`);
+                    const response = await fetch(`${POSTCODE_AUTOCOMPLETE_ENDPOINT}?q=${encodeURIComponent(query)}`);
                     const data = await response.json();
                     
-                    if (data.status === 200 && data.result && data.result.length > 0) {
-                        this.currentSuggestions = data.result;
-                        this.displaySuggestions(data.result);
+                    if (data.success && Array.isArray(data.suggestions) && data.suggestions.length > 0) {
+                        this.currentSuggestions = data.suggestions;
+                        this.displaySuggestions(data.suggestions);
                     } else {
                         this.currentSuggestions = [];
                         this.hideSuggestions();
@@ -5530,7 +5530,7 @@
                     
                     // Format the display
                     const mainText = postcode.postcode;
-                    const details = `${postcode.admin_district || ''}${postcode.admin_district && postcode.region ? ', ' : ''}${postcode.region || ''}`;
+                    const details = `${postcode.district || ''}${postcode.district && postcode.region ? ', ' : ''}${postcode.region || ''}`;
                     
                     suggestion.innerHTML = `
                         <div class="postcode-main">${mainText}</div>
@@ -5555,7 +5555,7 @@
                 // Store additional data for form submission
                 this.input.dataset.postcodeData = JSON.stringify({
                     postcode: postcode.postcode,
-                    district: postcode.admin_district,
+                    district: postcode.district,
                     region: postcode.region,
                     country: postcode.country
                 });
@@ -5607,7 +5607,7 @@
                 if (this.selectedPostcode) {
                     return {
                         postcode: this.selectedPostcode.postcode,
-                        district: this.selectedPostcode.admin_district,
+                        district: this.selectedPostcode.district,
                         region: this.selectedPostcode.region,
                         country: this.selectedPostcode.country
                     };
@@ -5850,152 +5850,6 @@ function handleQuickSearch(event) {
             const acceptBtn = document.getElementById('acceptCookies');
             const settingsBtn = document.getElementById('cookieSettings');
             
-            // Check if user already accepted
-            if (!localStorage.getItem('cookiesAccepted')) {
-                setTimeout(() => {
-                    gdprNotice.classList.add('show');
-                }, 1000);
-            } else {
-                gdprNotice.classList.add('hidden');
-            }
-            
-            // Accept cookies
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-            
-            // Settings (for now, just accepts)
-            settingsBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                gdprNotice.classList.remove('show');
-                setTimeout(() => {
-                    gdprNotice.classList.add('hidden');
-                }, 400);
-            });
-        })();
-        
-        // Social Proof Notifications
-        (function() {
-            const container = document.getElementById('socialProofContainer');
-            
-            // Realistic quote requests data
-            const notifications = [
-                { service: 'Architecture design', location: 'E6 6DR', time: '30 seconds ago' },
-                { service: 'Plumbing repair', location: 'SW1A 1AA', time: '2 minutes ago' },
-                { service: 'Electrical rewiring', location: 'M1 1AE', time: '5 minutes ago' },
-                { service: 'Kitchen installation', location: 'B1 1BB', time: '8 minutes ago' },
-                { service: 'Bathroom fitting', location: 'LS1 1UR', time: '12 minutes ago' },
-                { service: 'Roof repair', location: 'L1 8JQ', time: '15 minutes ago' },
-                { service: 'Garden landscaping', location: 'BS1 1AA', time: '18 minutes ago' },
-                { service: 'Extension build', location: 'EH1 1YZ', time: '22 minutes ago' },
-                { service: 'Plastering work', location: 'G1 1AA', time: '25 minutes ago' },
-                { service: 'Carpet fitting', location: 'CF10 1DD', time: '28 minutes ago' },
-                { service: 'Boiler installation', location: 'NE1 1EE', time: '32 minutes ago' },
-                { service: 'Painting & decorating', location: 'SO14 0AA', time: '35 minutes ago' }
-            ];
-            
-            let currentIndex = 0;
-            let activeNotifications = [];
-            
-            function createNotification(data) {
-                const notification = document.createElement('div');
-                notification.className = 'social-proof-notification';
-                
-                notification.innerHTML = `
-                    <div class="notification-content">
-                        <div class="notification-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 12l2 2 4-4"/>
-                                <circle cx="12" cy="12" r="10"/>
-                            </svg>
-                        </div>
-                        <div class="notification-text">
-                            <div class="notification-service">Quote for ${data.service} requested</div>
-                            <div class="notification-location">in ${data.location}</div>
-                            <div class="notification-time">${data.time}</div>
-                        </div>
-                        <button class="notification-close" aria-label="Close notification">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-                
-                // Close button
-                const closeBtn = notification.querySelector('.notification-close');
-                closeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => {
-                        notification.remove();
-                        activeNotifications = activeNotifications.filter(n => n !== notification);
-                    }, 400);
-                });
-                
-                // Click to close
-                notification.addEventListener('click', () => {
-                    notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => {
-                        notification.remove();
-                        activeNotifications = activeNotifications.filter(n => n !== notification);
-                    }, 400);
-                });
-                
-                return notification;
-            }
-            
-            function showNotification() {
-                // Remove old notifications if more than 2
-                if (activeNotifications.length >= 2) {
-                    const oldest = activeNotifications.shift();
-                    oldest.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                    setTimeout(() => oldest.remove(), 400);
-                }
-                
-                const data = notifications[currentIndex];
-                const notification = createNotification(data);
-                
-                container.appendChild(notification);
-                activeNotifications.push(notification);
-                
-                currentIndex = (currentIndex + 1) % notifications.length;
-                
-                // Auto-remove after 7 seconds
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.style.animation = 'slideOutNotification 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                        setTimeout(() => {
-                            notification.remove();
-                            activeNotifications = activeNotifications.filter(n => n !== notification);
-                        }, 400);
-                    }
-                }, 7000);
-            }
-            
-            // Show first notification after 3 seconds
-            setTimeout(() => {
-                showNotification();
-                // Then show new one every 8-12 seconds
-                setInterval(showNotification, 10000);
-            }, 3000);
-        })();
-
-    </script>
-
-    <script>
-
-        // GDPR Cookie Notice
-        (function() {
-            const gdprNotice = document.getElementById('gdprNotice');
-            const acceptBtn = document.getElementById('acceptCookies');
-            const settingsBtn = document.getElementById('cookieSettings');
-            
             if (!gdprNotice || !acceptBtn || !settingsBtn) return;
             
             // Check if user already accepted
@@ -6185,29 +6039,6 @@ function handleQuickSearch(event) {
     <!-- Social Proof Notifications Container -->
     <div class="social-proof-container" id="socialProofContainer"></div>
 
-
-    <!-- GDPR Cookie Notice -->
-    <div class="gdpr-notice" id="gdprNotice">
-        <div class="gdpr-header">
-            <div class="gdpr-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-            </div>
-            <h4 class="gdpr-title">Cookie Consent</h4>
-        </div>
-        <p class="gdpr-text">
-            We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
-            <a href="/privacy-policy">Privacy Policy</a>
-        </p>
-        <div class="gdpr-actions">
-            <button class="gdpr-btn gdpr-accept" id="acceptCookies">Accept All</button>
-            <button class="gdpr-btn gdpr-settings" id="cookieSettings">Settings</button>
-        </div>
-    </div>
-    
-    <!-- Social Proof Notifications Container -->
-    <div class="social-proof-container" id="socialProofContainer"></div>
 
     <div id="notification-container"></div>
 

@@ -40,6 +40,15 @@ const sendEmailNotification = async (to, subject, html, text) => {
   }
 };
 
+const formatQuoteResponse = (quoteId, payload = {}, message = 'Quote created successfully') => ({
+  success: true,
+  message,
+  quote: {
+    ...payload,
+    id: quoteId
+  }
+});
+
 // ==========================================
 // PUBLIC QUOTE ENDPOINT (No Auth Required)
 // ==========================================
@@ -124,11 +133,13 @@ router.post('/public', [
       ]
     );
 
-    res.json({
-      success: true,
-      message: 'Quote request received. We will match you with tradespeople.',
-      quote: { id: quoteId, ...req.body }
-    });
+    res.status(201).json(
+      formatQuoteResponse(
+        quoteId,
+        req.body,
+        'Quote request received. We will match you with tradespeople.'
+      )
+    );
 
     // ==========================================
     // LEAD SYSTEM: Auto-process public quotes
@@ -242,11 +253,7 @@ router.post('/', authenticate, [
       ]
     );
 
-    res.status(201).json({
-      success: true,
-      message: 'Quote created successfully',
-      quoteId
-    });
+    res.status(201).json(formatQuoteResponse(quoteId, req.body, 'Quote created successfully'));
 
     // ==========================================
     // LEAD SYSTEM: Auto-process through pipeline
