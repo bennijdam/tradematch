@@ -115,14 +115,13 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 /* ── HERO — always dark ── */
 .hero{position:relative;overflow:hidden;background:#0d1117}
 .hero-bg{position:absolute;inset:0;z-index:0}
-.hero-slide{position:absolute;inset:0;opacity:0;animation:heroFade 40s infinite}
+.hero-slide{position:absolute;inset:0;opacity:0;animation:heroFade 32s infinite}
 .hero-slide:nth-child(1){animation-delay:0s}
 .hero-slide:nth-child(2){animation-delay:8s}
 .hero-slide:nth-child(3){animation-delay:16s}
 .hero-slide:nth-child(4){animation-delay:24s}
-.hero-slide:nth-child(5){animation-delay:32s}
-.hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center 35%;filter:brightness(.62) saturate(.8)}
-@keyframes heroFade{0%,100%{opacity:0}5%,15%{opacity:.82}20%{opacity:0}}
+.hero-slide picture,.hero-slide img{width:100%;height:100%;object-fit:cover;object-position:center 35%;filter:brightness(.62) saturate(.8)}
+@keyframes heroFade{0%,100%{opacity:0}6%,19%{opacity:.82}25%{opacity:0}}
 .hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,40,16,.5) 0%,rgba(10,15,25,.6) 55%,rgba(10,15,25,.82) 100%)}
 .hero::before{content:'';position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 80% 60% at 5% 55%,rgba(0,194,104,.1) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 95% 70%,rgba(0,122,61,.06) 0%,transparent 55%);pointer-events:none}
 .hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(0,194,104,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.022) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black 10%,transparent 70%)}
@@ -148,13 +147,13 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 
 /* Hero search bar — matches find-tradespeople exactly, left-aligned */
 .hero-search-wrap{animation:fadeIn .8s .5s both;max-width:700px;margin-bottom:0}
-.search-bar{display:flex;gap:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--r3);overflow:visible;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
-.search-bar:focus-within{border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.12)}
-.search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.08);position:relative}
+.search-bar{display:flex;gap:0;background:rgba(8,12,22,.78);border:1px solid rgba(255,255,255,.18);border-radius:var(--r3);overflow:visible;backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);transition:border-color .25s,box-shadow .25s}
+.search-bar:focus-within{border-color:rgba(0,194,104,.5);box-shadow:0 0 0 3px rgba(0,194,104,.14)}
+.search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.1);position:relative}
 .search-field:last-of-type{border-right:none}
-.search-field svg{width:16px;height:16px;color:#5a6478;flex-shrink:0}
+.search-field svg{width:16px;height:16px;color:#6b7a96;flex-shrink:0}
 .search-field input,.search-field select{flex:1;background:none;border:none;outline:none;font-family:var(--fb);font-size:14.5px;color:#f0f4ff;padding:18px 0;-webkit-appearance:none;cursor:text}
-.search-field input::placeholder{color:#3d4a60}
+.search-field input::placeholder{color:#6b7a96}
 .search-field select option{background:#161c28;color:#f0f4ff}
 .postcode-suggestions-hero{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:40;background:#161c28;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 28px rgba(0,0,0,.35);max-height:260px;overflow-y:auto;display:none}
 .postcode-suggestions-hero.open{display:block}
@@ -783,19 +782,28 @@ a,button{touch-action:manipulation}
 <section class="hero">
   <div class="hero-bg">
     <div class="hero-slide">
-      <img src="images/hero-background-optimized.webp" alt="UK tradespeople at work" fetchpriority="high" decoding="sync" width="1400" height="900">
+      <picture>
+        <source srcset="images/hero-trade-1.avif" type="image/avif">
+        <img src="images/hero-trade-1.webp" alt="Construction worker on site" fetchpriority="high" decoding="sync" width="1600" height="1067">
+      </picture>
     </div>
     <div class="hero-slide">
-      <img src="images/construction-worker.webp" alt="Construction worker on site" decoding="async" loading="lazy" width="1400" height="900">
+      <picture>
+        <source srcset="images/hero-trade-2.avif" type="image/avif">
+        <img src="images/hero-trade-2.webp" alt="Roofer at work" decoding="async" loading="lazy" width="1600" height="1157">
+      </picture>
     </div>
     <div class="hero-slide">
-      <img src="images/roofing-optimized.webp" alt="Roofing work" decoding="async" loading="lazy" width="1400" height="900">
+      <picture>
+        <source srcset="images/hero-trade-3.avif" type="image/avif">
+        <img src="images/hero-trade-3.webp" alt="Tradespeople on site with helmets" decoding="async" loading="lazy" width="1600" height="1067">
+      </picture>
     </div>
     <div class="hero-slide">
-      <img src="images/extension.avif" alt="Home extension build" decoding="async" loading="lazy" width="1400" height="900">
-    </div>
-    <div class="hero-slide">
-      <img src="images/kitchenfitting.avif" alt="Kitchen fitting" decoding="async" loading="lazy" width="1400" height="900">
+      <picture>
+        <source srcset="images/hero-trade-4.avif" type="image/avif">
+        <img src="images/hero-trade-4.webp" alt="Engineer reviewing building plans" decoding="async" loading="lazy" width="1600" height="1067">
+      </picture>
     </div>
   </div>
   <div class="wrap">
