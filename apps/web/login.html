@@ -1,1495 +1,666 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - TradeMatch UK | Access Your Account</title>
-    <meta name="description" content="Sign in to your TradeMatch account. Manage quotes, view bids, and connect with trusted local tradespeople.">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://accounts.google.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/shared/styles/profile-menu.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --emerald-400: #34d399;
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-400: #94a3b8;
-            --slate-200: #e2e8f0;
-        }
-
-        /* Navigation */
-        .navbar {
-            background: white;
-            border-bottom: 1px solid var(--slate-200);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-
-        .navbar .logo {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: var(--slate-900);
-            text-decoration: none;
-        }
-
-        .navbar .logo span {
-            color: var(--emerald-500);
-        }
-
-        .navbar .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-        }
-
-        .navbar .nav-links a {
-            text-decoration: none;
-            color: var(--slate-600);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .navbar .nav-links a:hover {
-            color: var(--emerald-500);
-        }
-
-        .navbar .btn-secondary {
-            padding: 0.625rem 1.25rem;
-            background: transparent;
-            color: var(--slate-700);
-            border: 1px solid var(--slate-200);
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .navbar .btn-secondary:hover {
-            background: #f8fafc;
-            border-color: var(--slate-400);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--slate-900);
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            padding: 0;
-            position: relative;
-            overflow-x: hidden;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .auth-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('/images/hero-background-optimized.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -2;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg,
-                rgba(15, 23, 42, 0.92) 0%,
-                rgba(30, 41, 59, 0.88) 50%,
-                rgba(15, 23, 42, 0.92) 100%);
-            z-index: -1;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1100px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5),
-                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        .left-side {
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            padding: 4rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .left-side::before {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, var(--emerald-500) 0%, transparent 70%);
-            opacity: 0.15;
-            top: -100px;
-            right: -100px;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 900;
-            color: white;
-            text-decoration: none;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo span {
-            color: var(--emerald-400);
-        }
-
-        .left-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .left-content h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .left-content p {
-            font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2.5rem;
-            line-height: 1.7;
-        }
-
-        .features {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(16, 185, 129, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .feature-text {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .stats {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 2.5rem;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: white;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .right-side {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 4rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-header {
-            margin-bottom: 2.5rem;
-        }
-
-        .form-header h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 0.75rem;
-        }
-
-        .form-header p {
-            color: var(--slate-600);
-            font-size: 1rem;
-        }
-
-        .form-header p a {
-            color: var(--emerald-600);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .form-header p a:hover {
-            text-decoration: underline;
-        }
-
-        .user-type-toggle {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .user-type-btn {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            border: 2px solid var(--slate-200);
-            background: white;
-            color: var(--slate-700);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .user-type-btn.active {
-            background: var(--emerald-500);
-            color: white;
-            border-color: var(--emerald-500);
-            box-shadow: 0 8px 18px rgba(16, 185, 129, 0.25);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: var(--slate-700);
-            margin-bottom: 0.625rem;
-            font-size: 0.9375rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--slate-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
-            color: var(--slate-900);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--emerald-500);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        .form-control::placeholder {
-            color: var(--slate-400);
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.9375rem;
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--slate-600);
-        }
-
-        .forgot-password {
-            color: var(--emerald-600);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 1.125rem;
-            background: var(--emerald-500);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.0625rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            margin-bottom: 1.25rem;
-        }
-
-        .btn-submit:hover {
-            background: var(--emerald-600);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: var(--slate-400);
-            font-size: 0.9375rem;
-            margin: 1.5rem 0;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--slate-200);
-        }
-
-        .social-login {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .btn-social {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem;
-            border: 1px solid var(--slate-200);
-            border-radius: 10px;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--slate-700);
-            transition: all 0.2s;
-        }
-
-        .btn-social:hover {
-            border-color: var(--emerald-500);
-            color: var(--emerald-600);
-            box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
-        }
-
-        .notification {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 12px 16px;
-            border-radius: 10px;
-            background: #0f172a;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.2s ease;
-            z-index: 9999;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .notification.success {
-            background: #16a34a;
-        }
-
-        .notification.error {
-            background: #dc2626;
-        }
-
-        .modal-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--neutral-900);
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .modal-body p {
-            margin: 0 0 1rem 0;
-            color: var(--neutral-700);
-            line-height: 1.6;
-        }
-
-        .email-display {
-            background: #f0f9ff;
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 3px solid #0ea5e9;
-        }
-
-        .info-text {
-            font-size: 0.875rem;
-            color: var(--neutral-600);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--emerald-500);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #f3f4f6;
-            color: var(--neutral-700);
-        }
-
-        .btn-secondary:hover {
-            background: #e5e7eb;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .container {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-            }
-
-            .left-side {
-                display: none;
-            }
-
-            .auth-container {
-                padding: 1rem;
-            }
-
-            .right-side {
-                padding: 3rem 2rem;
-            }
-
-            .navbar .nav-links {
-                display: none;
-            }
-
-            .auth-container {
-                align-items: stretch;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .right-side {
-                padding: 2rem 1.5rem;
-            }
-
-            .form-header h2 {
-                font-size: 1.75rem;
-            }
-
-            .social-login {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-        <script>
-        if (window.zaraz && typeof window.zaraz.track === "function") {
-            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
-        }
-    </script></head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In | TradeMatch UK</title>
+<meta name="description" content="Sign in to your TradeMatch UK account — homeowners and tradespeople.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── DESIGN TOKENS ── */
+:root{
+  --neon:#00c268;--neon2:#00a855;--neon3:#007a3d;
+  --neon-glow:0 4px 24px rgba(0,194,104,.28),0 1px 8px rgba(0,194,104,.14);
+  --neon-glow-sm:0 2px 14px rgba(0,194,104,.22);
+  --amber2:#fbbf24;
+  --dk-bg:#0d1117;--dk-bg2:#111620;
+  --dk-t1:#f0f4ff;--dk-t2:#8b95aa;--dk-t3:#5a6478;
+  --dk-border:rgba(255,255,255,.07);--dk-border2:rgba(255,255,255,.12);
+  --dk-glass1:rgba(255,255,255,.03);--dk-glass2:rgba(255,255,255,.06);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+  --border-neon:rgba(0,194,104,.3);
+  --deep-shadow:0 16px 48px rgba(0,0,0,.10);
+}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ══════════════════ NAVBAR ══════════════════ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.88);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:all .4s}
+.nav.scrolled .nav-inner{background:rgba(255,255,255,.97);box-shadow:0 4px 32px rgba(0,0,0,.11)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-pill{display:flex;align-items:center;gap:9px;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.08);border-radius:50px;padding:5px 14px 5px 5px;transition:all .25s}
+.nav-logo:hover .nav-logo-pill{background:rgba(0,194,104,.06);border-color:rgba(0,194,104,.2)}
+.nav-logo-icon-wrap{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;box-shadow:var(--neon-glow-sm);flex-shrink:0}
+.nav-logo-icon-wrap svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.nav-wordmark-pill{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.04em;color:#0f1923}
+.nav-wordmark-pill span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{font-family:var(--fb);font-size:13px;font-weight:500;color:#3d5060;text-decoration:none;padding:8px 14px;border-radius:var(--r5);white-space:nowrap;transition:color .2s,background .2s}
+.nav-link:hover{color:#0f1923;background:rgba(0,0,0,.05)}
+.nav-link.active{color:var(--neon3)}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-btn-ghost{font-family:var(--ff);font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.11);padding:8px 18px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-btn-ghost:hover{border-color:var(--border-neon);color:var(--neon3)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
+
+/* ══════════════════ PAGE MAIN ══════════════════ */
+.page-main{flex:1;padding:100px 20px 56px;background:#f3f7f4;position:relative;overflow:hidden}
+.page-main::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 45% at 20% 30%,rgba(0,194,104,.08) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 80% 65%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.page-main::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,194,104,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 65% at 50% 40%,black 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 40%,black 0%,transparent 70%)}
+
+/* Breadcrumb */
+.page-breadcrumb{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9fb0bc;margin-bottom:24px;position:relative;z-index:1}
+.page-breadcrumb a{color:#9fb0bc;text-decoration:none;transition:color .2s}
+.page-breadcrumb a:hover{color:var(--neon3)}
+.page-breadcrumb svg{width:12px;height:12px;opacity:.5}
+
+/* Layout */
+.page-inner{position:relative;z-index:1;display:flex;align-items:flex-start;max-width:900px;margin:0 auto;animation:cardIn .65s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* Trust strip */
+.trust-strip-wrap{position:relative;z-index:1;max-width:900px;margin:22px auto 0;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#9fb0bc}
+.trust-item svg{width:12px;height:12px;color:var(--neon3)}
+.trust-sep{width:3px;height:3px;border-radius:50%;background:rgba(0,0,0,.12)}
+
+/* ══════════════════ SIDE PANEL ══════════════════ */
+.login-side{flex:0 0 310px;background:linear-gradient(160deg,#e8f5ee 0%,#f0f9f4 100%);border:1px solid rgba(0,194,104,.15);border-right:none;border-radius:24px 0 0 24px;padding:40px 32px;display:flex;flex-direction:column;gap:22px;position:relative;overflow:hidden}
+.login-side::before{content:'';position:absolute;top:-60px;left:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(0,194,104,.18) 0%,transparent 65%);pointer-events:none}
+.login-side::after{content:'';position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,194,104,.1) 0%,transparent 65%);pointer-events:none}
+
+.side-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--neon3);padding:5px 13px 5px 9px;border-radius:var(--r5);background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.25);width:fit-content}
+.side-tag-dot{width:5px;height:5px;border-radius:50%;background:var(--neon);box-shadow:0 0 7px var(--neon);animation:pulse 2s infinite}
+.side-headline{font-family:var(--ff);font-weight:900;font-size:clamp(1.3rem,2.2vw,1.75rem);letter-spacing:-.05em;line-height:1.09;color:#0f1923}
+.side-headline em{font-style:normal;background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.side-body{font-size:13px;color:#3d5060;line-height:1.78;font-weight:300}
+
+.side-stats{display:flex;flex-direction:column;gap:9px}
+.side-stat{display:flex;align-items:center;gap:12px;padding:11px 13px;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.side-stat-icon{width:32px;height:32px;border-radius:9px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.side-stat-icon svg{width:15px;height:15px;color:var(--neon3)}
+.side-stat-val{font-family:var(--ff);font-size:.95rem;font-weight:800;letter-spacing:-.04em;color:#0f1923;line-height:1}
+.side-stat-lbl{font-size:11px;color:#6b7f8e;font-weight:300;margin-top:2px}
+
+.side-quote-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.side-quote-text{font-size:12.5px;color:#3d5060;line-height:1.72;font-style:italic;margin-bottom:12px;font-weight:300}
+.side-quote-author{display:flex;align-items:center;gap:9px}
+.side-quote-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.side-quote-name{font-size:12px;font-weight:600;color:#0f1923}
+.side-quote-role{font-size:11px;color:#6b7f8e}
+.side-quote-stars{display:flex;gap:2px;margin-left:auto}
+.side-quote-stars svg{width:11px;height:11px;fill:var(--amber2);color:var(--amber2)}
+
+/* ══════════════════ LOGIN CARD ══════════════════ */
+.login-card{flex:1;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:0 24px 24px 0;box-shadow:var(--deep-shadow);overflow:hidden;min-width:0}
+
+/* Role tabs */
+.role-tabs{display:grid;grid-template-columns:1fr 1fr;background:#f8faf8;border-bottom:1px solid rgba(0,0,0,.07)}
+.role-tab{display:flex;align-items:center;justify-content:center;gap:7px;padding:15px 16px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#6b7f8e;cursor:pointer;transition:all .3s;border:none;background:none;position:relative;white-space:nowrap}
+.role-tab svg{width:14px;height:14px;flex-shrink:0}
+.role-tab.active{color:#0f1923;background:#fff}
+.role-tab.active::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;background:linear-gradient(90deg,var(--neon3),var(--neon));border-radius:2px 2px 0 0}
+.role-tab-badge{display:inline-flex;align-items:center;font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:20px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);color:var(--neon3);flex-shrink:0}
+
+/* Card body */
+.card-body{padding:32px 32px 28px}
+
+/* Header */
+.login-header{margin-bottom:24px;text-align:center}
+.login-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;margin:0 auto 13px;box-shadow:var(--neon-glow)}
+.login-icon svg{width:21px;height:21px;color:#fff;stroke-width:2.5}
+.login-title{font-family:var(--ff);font-size:1.5rem;font-weight:800;letter-spacing:-.045em;color:#0f1923;margin-bottom:5px;line-height:1.1}
+.login-title em{font-style:normal;background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.login-sub{font-size:13.5px;color:#6b7f8e;font-weight:300}
+
+/* Alert */
+.login-alert{padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:16px;align-items:center;gap:9px;display:none}
+.login-alert.error{display:flex;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);color:#c0392b}
+.login-alert.info{display:flex;background:rgba(0,194,104,.06);border:1px solid rgba(0,194,104,.2);color:var(--neon3)}
+.login-alert svg{width:15px;height:15px;flex-shrink:0}
+
+/* OAuth */
+.oauth-stack{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.oauth-btn{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;border-radius:10px;font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;border:1px solid rgba(0,0,0,.1);background:#fff;color:#0f1923;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.oauth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.oauth-btn:active{transform:none}
+.oauth-logo{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center}
+.oauth-text{flex:1;text-align:center;letter-spacing:-.01em}
+.oauth-btn.google:hover{border-color:rgba(66,133,244,.3);background:rgba(66,133,244,.03)}
+.oauth-btn.microsoft:hover{border-color:rgba(0,120,215,.3);background:rgba(0,120,215,.03)}
+
+/* Divider */
+.or-divider{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.or-line{flex:1;height:1px;background:rgba(0,0,0,.08)}
+.or-text{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9fb0bc}
+
+/* Vendor perks */
+.vendor-perks{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:18px}
+.vendor-perk{display:flex;align-items:flex-start;gap:6px;padding:9px 11px;border-radius:9px;background:rgba(0,194,104,.04);border:1px solid rgba(0,194,104,.12);font-size:12px;color:#3d5060;line-height:1.5}
+.vendor-perk svg{width:13px;height:13px;color:var(--neon3);flex-shrink:0;margin-top:1px}
+.vendor-perk span{font-weight:600;color:#0f1923}
+
+/* Form */
+.form-group{margin-bottom:14px}
+.form-label{display:flex;align-items:center;justify-content:space-between;font-family:var(--fm);font-size:10px;font-weight:600;color:#6b7f8e;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.form-label a{color:var(--neon3);text-decoration:none;font-weight:500;text-transform:none;letter-spacing:0;font-size:12px;transition:color .2s}
+.form-label a:hover{color:var(--neon2)}
+.form-input-wrap{position:relative}
+.form-input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#9fb0bc;pointer-events:none;display:flex}
+.form-input-icon svg{width:15px;height:15px}
+.form-input{width:100%;background:#f9fafb;border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:12px 13px 12px 40px;font-family:var(--fb);font-size:14.5px;color:#0f1923;transition:all .25s;outline:none;-webkit-appearance:none;appearance:none}
+.form-input::placeholder{color:#9fb0bc;font-weight:300}
+.form-input:hover:not(:focus){border-color:rgba(0,0,0,.17)}
+.form-input:focus{background:#f0f9f5;border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+.form-input.error{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.02)}
+.form-input.error:focus{box-shadow:0 0 0 3px rgba(239,68,68,.1);border-color:rgba(239,68,68,.55)}
+.input-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#9fb0bc;cursor:pointer;padding:4px;transition:color .2s;display:flex;align-items:center}
+.input-toggle:hover{color:#3d5060}
+.input-toggle svg{width:15px;height:15px}
+.field-error{font-size:11.5px;color:#ef4444;margin-top:4px;display:none}
+
+/* Remember */
+.remember-row{margin-bottom:18px}
+.remember-check{display:flex;align-items:center;gap:8px;cursor:pointer;width:fit-content}
+.remember-check input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:17px;height:17px;border-radius:5px;border:1px solid rgba(0,0,0,.15);background:#f9fafb;cursor:pointer;position:relative;transition:all .2s;flex-shrink:0}
+.remember-check input[type="checkbox"]:checked{background:var(--neon3);border-color:var(--neon3)}
+.remember-check input[type="checkbox"]:checked::after{content:'';position:absolute;left:4px;top:1.5px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(42deg)}
+.remember-label{font-size:13px;color:#6b7f8e;cursor:pointer;user-select:none}
+
+/* Submit */
+.btn-submit{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 24px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.025em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);border:none;border-radius:12px;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s;position:relative;overflow:hidden;margin-bottom:18px}
+.btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);opacity:0;transition:opacity .25s}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,194,104,.4)}
+.btn-submit:hover::before{opacity:1}
+.btn-submit:active{transform:none}
+.btn-submit-inner{display:flex;align-items:center;gap:8px}
+.btn-submit svg{width:16px;height:16px}
+.btn-submit.loading .btn-submit-inner{opacity:0}
+.btn-submit.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Signup row */
+.signup-row{text-align:center;padding-top:16px;border-top:1px solid rgba(0,0,0,.07)}
+.signup-row p{font-size:13px;color:#6b7f8e}
+.signup-row a{color:var(--neon3);text-decoration:none;font-weight:600;transition:color .2s}
+.signup-row a:hover{color:var(--neon2)}
+
+/* ══════════════════ FOOTER ══════════════════ */
+.footer{background:var(--dk-bg);border-top:1px solid rgba(255,255,255,.05);padding:72px 0 36px;position:relative;overflow:hidden}
+.footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 10% 50%,rgba(0,194,104,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 90% 50%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.footer .wrap{position:relative;z-index:1}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:52px}
+.footer-brand-name{font-family:var(--ff);font-size:1.25rem;font-weight:800;letter-spacing:-.04em;color:var(--dk-t1);margin-bottom:10px}
+.footer-brand-name span{background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-brand p{font-size:13px;color:var(--dk-t3);line-height:1.8;font-weight:300;max-width:240px;margin-bottom:20px}
+.footer-socials{display:flex;gap:8px}
+.fsoc{width:36px;height:36px;background:var(--dk-glass2);border:1px solid var(--dk-border);border-radius:var(--r1);display:flex;align-items:center;justify-content:center;color:var(--dk-t3);text-decoration:none;transition:all .25s}
+.fsoc:hover{background:rgba(0,194,104,.1);border-color:var(--border-neon);color:var(--neon);transform:translateY(-2px)}
+.fsoc svg{width:15px;height:15px}
+.footer-col h4{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dk-t3);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col a{font-size:13px;color:var(--dk-t2);text-decoration:none;font-weight:300;transition:color .2s}
+.footer-col a:hover{color:var(--neon)}
+.footer-bottom{border-top:1px solid var(--dk-border);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-family:var(--fm);font-size:10px;color:var(--dk-t3);letter-spacing:.04em}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{font-family:var(--fm);font-size:10px;color:var(--dk-t3);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--neon)}
+
+/* ══════════════════ RESPONSIVE ══════════════════ */
+@media(max-width:820px){
+  .page-inner{max-width:460px}
+  .login-side{display:none}
+  .login-card{border-radius:24px}
+}
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr 1fr;gap:32px}}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){
+  .card-body{padding:26px 20px 22px}
+  .vendor-perks{grid-template-columns:1fr}
+  .wrap{padding:0 18px}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="logo">Trade<span>Match</span></a>
-            <ul class="nav-links">
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/help">Help</a></li>
-                <li><a href="/signup" class="btn btn-secondary">Sign Up</a></li>
-            </ul>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-pill">
+        <div class="nav-logo-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
+        <span class="nav-wordmark-pill">Trade<span>Match</span></span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#how" class="nav-link">How It Works</a>
+      <a href="index.html#homeowners" class="nav-link">Post a Job</a>
+      <a href="index.html#trust" class="nav-link">Why TradeMatch</a>
+      <a href="index.html#trades" class="nav-link">For Tradespeople</a>
+      <a href="index.html#pricing" class="nav-link">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-btn-ghost" style="color:var(--neon3);border-color:rgba(0,194,104,.28)">Sign In</a>
+      <a href="quote-engine.html" class="nav-cta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main class="page-main">
+  <div class="wrap">
+    <nav class="page-breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>Sign In</span>
     </nav>
+  </div>
 
-    <div class="auth-container">
-        <div class="container">
-        <!-- Left Side - Branding -->
-        <div class="left-side">
-            <div>
-                <a href="/" class="logo">Trade<span>Match</span></a>
-            </div>
+  <div class="page-inner">
 
-            <div class="left-content">
-                <h1>Welcome Back!</h1>
-                <p>Access your account to manage quotes, connect with tradespeople, and track your projects.</p>
+    <!-- Side panel -->
+    <aside class="login-side">
+      <div class="side-tag"><span class="side-tag-dot"></span>Live platform</div>
+      <div>
+        <h2 class="side-headline" id="sideHeadline">The smarter way to <em>find tradespeople</em> you trust.</h2>
+        <p class="side-body" id="sideBody">Join thousands of homeowners who get verified, insured tradespeople — with escrow-protected payments and zero fake reviews.</p>
+      </div>
+      <div class="side-stats">
+        <div class="side-stat">
+          <div class="side-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><div class="side-stat-val">42,800+</div><div class="side-stat-lbl">Verified tradespeople</div></div>
+        </div>
+        <div class="side-stat">
+          <div class="side-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+          <div><div class="side-stat-val">218,000+</div><div class="side-stat-lbl">Jobs posted this year</div></div>
+        </div>
+        <div class="side-stat">
+          <div class="side-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div><div class="side-stat-val">£2.4m</div><div class="side-stat-lbl">Safely held in escrow</div></div>
+        </div>
+      </div>
+      <div class="side-quote-card">
+        <p class="side-quote-text" id="quoteText">"TradeMatch saved me from a nightmare cowboy builder. The escrow feature gave me total peace of mind — couldn't recommend it more."</p>
+        <div class="side-quote-author">
+          <div class="side-quote-avatar" id="quoteAvatar">SL</div>
+          <div><div class="side-quote-name" id="quoteName">Sarah L.</div><div class="side-quote-role" id="quoteRole">Homeowner · London</div></div>
+          <div class="side-quote-stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+      </div>
+    </aside>
 
-                <div class="features">
-                    <div class="feature-item">
-                        <div class="feature-icon">✓</div>
-                        <div class="feature-text">Manage all your quotes in one place</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">💬</div>
-                        <div class="feature-text">Direct messaging with tradespeople</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">📊</div>
-                        <div class="feature-text">Track project progress & payments</div>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">⭐</div>
-                        <div class="feature-text">Leave reviews & build reputation</div>
-                    </div>
-                </div>
-            </div>
+    <!-- Login card -->
+    <div class="login-card">
+      <div class="role-tabs">
+        <button class="role-tab active" id="tabUser" onclick="switchTab('user')" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Homeowner
+        </button>
+        <button class="role-tab" id="tabVendor" onclick="switchTab('vendor')" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Tradesperson
+          <span class="role-tab-badge">Pro</span>
+        </button>
+      </div>
 
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">50K+</div>
-                    <div class="stat-label">Projects</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">10K+</div>
-                    <div class="stat-label">Tradespeople</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">4.8★</div>
-                    <div class="stat-label">Rating</div>
-                </div>
-            </div>
+      <div class="card-body">
+
+        <div class="login-alert" id="loginAlert" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="alertText"></span>
         </div>
 
-        <!-- Right Side - Login Form -->
-        <div class="right-side">
-            <div class="form-header">
-                <h2>Sign In</h2>
-                <p>Don't have an account? <a href="/signup">Sign up free</a></p>
-            </div>
-
-            <!-- User Type Toggle -->
-            <div class="user-type-toggle">
-                <button type="button" class="user-type-btn active" data-type="customer">Customer</button>
-                <button type="button" class="user-type-btn" data-type="vendor">Tradesperson</button>
-            </div>
-
-            <form id="loginForm" method="post">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        class="form-control" 
-                        placeholder="your.email@example.com"
-                        required
-                        autocomplete="email"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="form-control" 
-                            placeholder="Enter your password"
-                            required
-                            autocomplete="current-password"
-                        >
-                        <button type="button" class="toggle-password" id="togglePassword">
-                            👁️
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Remember me</label>
-                    </div>
-                    <a href="/forgot-password" class="forgot-password">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="btn-submit" id="submitBtn">
-                    Sign In
-                </button>
-            </form>
-
-            <div class="divider">
-                <span>or continue with</span>
-            </div>
-
-            <div class="social-login">
-                <button type="button" class="btn-social" id="googleLoginBtn">
-                    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                        <path fill="#4285F4" d="M19.6 10.23c0-.82-.07-1.58-.2-2.33H10v4.41h5.38c-.23 1.22-.93 2.25-1.98 2.95v2.45h3.2c1.87-1.72 2.95-4.25 2.95-7.48z"/>
-                        <path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.2-2.45c-.9.6-2.05.96-3.42.96-2.62 0-4.84-1.77-5.63-4.15H1.07v2.6C2.72 17.75 6.09 20 10 20z"/>
-                        <path fill="#FBBC05" d="M4.37 11.94A5.99 5.99 0 0 1 4.04 10c0-.68.12-1.34.33-1.94V5.46H1.07A9.99 9.99 0 0 0 0 10c0 1.64.4 3.19 1.07 4.54l3.3-2.6z"/>
-                        <path fill="#EA4335" d="M10 3.96c1.47 0 2.8.51 3.84 1.51l2.88-2.88C14.96.93 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.46l3.3 2.6C5.16 5.72 7.38 3.96 10 3.96z"/>
-                    </svg>
-                    Continue with Google
-                </button>
-                <button type="button" class="btn-social" id="microsoftLoginBtn">
-                    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                        <path fill="#f35325" d="M0 0h9.5v9.5H0z"/>
-                        <path fill="#81bc06" d="M10.5 0H20v9.5h-9.5z"/>
-                        <path fill="#05a6f0" d="M0 10.5h9.5V20H0z"/>
-                        <path fill="#ffba08" d="M10.5 10.5H20V20h-9.5z"/>
-                    </svg>
-                    Continue with Microsoft
-                </button>
-            </div>
+        <div class="login-header">
+          <div class="login-icon" id="loginIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h1 class="login-title" id="loginTitle">Welcome <em>back</em></h1>
+          <p class="login-sub" id="loginSub">Sign in to your homeowner account</p>
         </div>
-    </div>
 
-    <!-- Notification Toast -->
-    <div class="notification" id="notification">
-        <span id="notificationText"></span>
-    </div>
-
-    <!-- Activation Required Modal -->
-    <div class="modal-overlay" id="activationModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📧 Activation Required</h2>
-            </div>
-            <div class="modal-body">
-                <p>Your account needs to be activated before you can log in.</p>
-                <p class="email-display">Activation email sent to: <strong id="userEmail"></strong></p>
-                <p class="info-text">Please check your inbox and click the activation link. The link expires in 24 hours.</p>
-                <div class="modal-actions">
-                    <button id="resendActivationBtn" class="btn-primary">
-                        <span id="resendBtnText">Resend Activation Email</span>
-                        <span id="resendBtnLoader" style="display: none;">Sending...</span>
-                    </button>
-                    <button id="closeModalBtn" class="btn-secondary">Close</button>
-                </div>
-            </div>
+        <div class="oauth-stack">
+          <button class="oauth-btn google" type="button" onclick="handleOAuth('google',event)">
+            <span class="oauth-logo">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            </span>
+            <span class="oauth-text">Continue with Google</span>
+          </button>
+          <button class="oauth-btn microsoft" type="button" onclick="handleOAuth('microsoft',event)">
+            <span class="oauth-logo">
+              <svg viewBox="0 0 23 23" width="20" height="20"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg>
+            </span>
+            <span class="oauth-text">Continue with Microsoft</span>
+          </button>
         </div>
-    </div>
+
+        <div class="or-divider">
+          <div class="or-line"></div>
+          <span class="or-text">or email</span>
+          <div class="or-line"></div>
+        </div>
+
+        <div class="vendor-perks" id="vendorPerks" style="display:none">
+          <div class="vendor-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><div><span>Verified badge</span> on profile</div></div>
+          <div class="vendor-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div><span>Escrow</span> protection</div></div>
+          <div class="vendor-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg><div><span>Pro dashboard</span> &amp; analytics</div></div>
+          <div class="vendor-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><div><span>5 real leads</span> per month</div></div>
+        </div>
+
+        <form id="loginForm" onsubmit="handleSubmit(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="emailInput">Email address</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <input type="email" class="form-input" id="emailInput" placeholder="you@example.com" autocomplete="email" required>
+            </div>
+            <div class="field-error" id="emailError">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="passwordInput">
+              Password
+              <a href="/forgot-password">Forgot password?</a>
+            </label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+              <input type="password" class="form-input" id="passwordInput" placeholder="••••••••••" autocomplete="current-password" required>
+              <button type="button" class="input-toggle" onclick="togglePassword()" aria-label="Toggle password">
+                <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg id="eyeClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <div class="field-error" id="passwordError">Password must be at least 8 characters.</div>
+          </div>
+          <div class="remember-row">
+            <label class="remember-check">
+              <input type="checkbox" id="rememberMe">
+              <span class="remember-label">Keep me signed in</span>
+            </label>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span class="btn-submit-inner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              <span id="submitText">Sign in to your account</span>
+            </span>
+          </button>
+        </form>
+
+        <div class="signup-row">
+          <p id="signupText">Don't have an account? <a href="/register">Create one free →</a></p>
+        </div>
+
+      </div>
     </div>
 
-    <script>
-// User Type Toggle
-const userTypeButtons = document.querySelectorAll('.user-type-btn');
-let currentUserType = 'customer';
+  </div><!-- /page-inner -->
 
-userTypeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        userTypeButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentUserType = btn.dataset.type;
-    });
+  <!-- Trust strip -->
+  <div class="trust-strip-wrap">
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>256-bit SSL</div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>GDPR Compliant</div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2FA Available</div>
+    <div class="trust-sep"></div>
+    <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>ICO Registered</div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="#">Post a Job</a></li>
+          <li><a href="#">How Escrow Works</a></li>
+          <li><a href="#">Browse Trades</a></li>
+          <li><a href="#">Cost Guides</a></li>
+          <li><a href="#">Safety &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="#">Create a Profile</a></li>
+          <li><a href="#">Pricing &amp; Fees</a></li>
+          <li><a href="#">Trade Accreditations</a></li>
+          <li><a href="#">TradeMatch Pro</a></li>
+          <li><a href="#">Tradesperson Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="#">Plumbers</a></li>
+          <li><a href="#">Electricians</a></li>
+          <li><a href="#">Builders</a></li>
+          <li><a href="#">Gas Engineers</a></li>
+          <li><a href="#">Roofers</a></li>
+          <li><a href="#">All 48 Trades →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About TradeMatch</a></li>
+          <li><a href="#">Why We're Different</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Complaints</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  if (navEl) navEl.classList.toggle('scrolled', window.scrollY > 30);
 });
 
-// Toggle Password Visibility
-document.getElementById('togglePassword').addEventListener('click', function() {
-    const passwordInput = document.getElementById('password');
-    const type = passwordInput.type === 'password' ? 'text' : 'password';
-    passwordInput.type = type;
-    this.textContent = type === 'password' ? '👁️' : '🙈';
-});
+// Tab content
+const tabs = {
+  user: {
+    headline:'The smarter way to <em>find tradespeople</em> you trust.',
+    body:'Join thousands of homeowners who get verified, insured tradespeople — with escrow-protected payments and zero fake reviews.',
+    loginTitle:'Welcome <em>back</em>', loginSub:'Sign in to your homeowner account',
+    submitText:'Sign in to your account',
+    signupText:"Don't have an account? <a href='/register'>Create one free →</a>",
+    quoteText:'"TradeMatch saved me from a nightmare cowboy builder. The escrow feature gave me total peace of mind — couldn\'t recommend it more."',
+    quoteName:'Sarah L.', quoteRole:'Homeowner · London', quoteAvatar:'SL',
+    iconSvg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+  },
+  vendor:{
+    headline:'Win more jobs, <em>grow your trade</em> business.',
+    body:'Access genuine verified leads, showcase your qualifications, and get paid safely every time with our milestone escrow system.',
+    loginTitle:'Tradesperson <em>portal</em>', loginSub:'Sign in to your pro vendor account',
+    submitText:'Sign in to Pro dashboard',
+    signupText:"Not yet a vendor? <a href='/vendor/register'>Apply to join →</a>",
+    quoteText:'"I\'ve doubled my monthly turnover since joining TradeMatch. The leads are real — not tyre kickers."',
+    quoteName:'Mike T.', quoteRole:'Electrician · Manchester', quoteAvatar:'MT',
+    iconSvg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
+  }
+};
 
-// Show Notification
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    const notificationText = document.getElementById('notificationText');
-    
-    notificationText.textContent = message;
-    notification.className = `notification ${type} show`;
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
+let currentTab = 'user';
+
+function switchTab(tab) {
+  currentTab = tab;
+  const d = tabs[tab], isV = tab === 'vendor';
+  document.getElementById('tabUser').classList.toggle('active', !isV);
+  document.getElementById('tabVendor').classList.toggle('active', isV);
+  document.getElementById('sideHeadline').innerHTML = d.headline;
+  document.getElementById('sideBody').textContent = d.body;
+  document.getElementById('quoteText').textContent = d.quoteText;
+  document.getElementById('quoteName').textContent = d.quoteName;
+  document.getElementById('quoteRole').textContent = d.quoteRole;
+  document.getElementById('quoteAvatar').textContent = d.quoteAvatar;
+  document.getElementById('loginTitle').innerHTML = d.loginTitle;
+  document.getElementById('loginSub').textContent = d.loginSub;
+  document.getElementById('submitText').textContent = d.submitText;
+  document.getElementById('signupText').innerHTML = d.signupText;
+  document.getElementById('loginIcon').innerHTML = d.iconSvg;
+  document.getElementById('vendorPerks').style.display = isV ? 'grid' : 'none';
+  document.getElementById('loginAlert').className = 'login-alert';
+}
+
+function togglePassword() {
+  const inp = document.getElementById('passwordInput');
+  const isText = inp.type === 'text';
+  inp.type = isText ? 'password' : 'text';
+  document.getElementById('eyeOpen').style.display = isText ? '' : 'none';
+  document.getElementById('eyeClosed').style.display = isText ? 'none' : '';
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('loginAlert');
+  document.getElementById('alertText').textContent = msg;
+  el.className = 'login-alert ' + type;
 }
 
 const FRONTEND_BASES = Array.from(new Set([
-    'https://www.tradematch.uk',
-    'https://tradematch.uk',
-    window.location.origin
+  'https://www.tradematch.uk',
+  'https://tradematch.uk',
+  window.location.origin
 ]));
 const FRONTEND_BASE = FRONTEND_BASES.includes(window.location.origin)
-    ? window.location.origin
-    : FRONTEND_BASES[0];
+  ? window.location.origin
+  : FRONTEND_BASES[0];
 const isLocal = window.location.protocol === 'file:' ||
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1';
-
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1';
 const API_BASE = isLocal
-    ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
-    : 'https://api.tradematch.uk';
+  ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+  : 'https://api.tradematch.uk';
 
-function resolveReturnTo(value) {
-    if (!value) return FRONTEND_BASE;
-    if (value.startsWith('/')) return FRONTEND_BASE;
-    try {
-        const parsed = new URL(value);
-        if (FRONTEND_BASES.includes(parsed.origin)) return parsed.origin;
-    } catch (_) {
-        // ignore
-    }
-    return FRONTEND_BASE;
+function getRedirectTarget() {
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get('redirect');
+  if (redirect && redirect.startsWith('/')) return redirect;
+  return currentTab === 'vendor' ? '/vendor-dashboard.html' : '/dashboard.html';
 }
 
-function resolveRedirectTarget(value) {
-    if (!value) return null;
-    if (value.startsWith('/')) return value;
-    try {
-        const targetUrl = new URL(value);
-        if (FRONTEND_BASES.includes(targetUrl.origin)) {
-            return `${targetUrl.origin}${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`;
-        }
-    } catch (error) {
-        return null;
-    }
-    return null;
-}
-
-function normalizeUserType(input) {
-    const value = String(input || '').trim().toLowerCase();
-    if (value === 'vendor' || value === 'tradesperson') return 'vendor';
-    if (value === 'customer' || value === 'user') return 'customer';
-    return null;
-}
-
-function setLoginUserType(nextType) {
-    const normalized = normalizeUserType(nextType);
-    if (!normalized) return;
-    currentUserType = normalized;
-    userTypeButtons.forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.type === normalized);
+async function handleSubmit(e) {
+  e.preventDefault();
+  document.getElementById('loginAlert').className = 'login-alert';
+  const email = document.getElementById('emailInput');
+  const password = document.getElementById('passwordInput');
+  let valid = true;
+  email.classList.remove('error'); password.classList.remove('error');
+  document.getElementById('emailError').style.display = 'none';
+  document.getElementById('passwordError').style.display = 'none';
+  if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    email.classList.add('error'); document.getElementById('emailError').style.display = 'block'; valid = false;
+  }
+  if (!password.value || password.value.length < 8) {
+    password.classList.add('error'); document.getElementById('passwordError').style.display = 'block'; valid = false;
+  }
+  if (!valid) return;
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  try {
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email.value.trim(),
+        password: password.value,
+        role: currentTab === 'vendor' ? 'vendor' : 'customer'
+      })
     });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || data.message || 'Login failed. Please check your credentials.');
+    }
+
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('authToken', data.token);
+    }
+    if (data.user) {
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+
+    window.location.href = getRedirectTarget();
+  } catch (error) {
+    showAlert(error.message || 'Unable to sign in right now. Please try again.', 'error');
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
 }
 
-// Initialize user type from URL context if provided.
-(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const explicit = urlParams.get('userType') || urlParams.get('role');
-    if (explicit) {
-        setLoginUserType(explicit);
-        return;
-    }
-    const redirect = urlParams.get('redirect') || urlParams.get('returnTo') || '';
-    if (/dashboard-vendor|vendor-dashboard|\bvendors\b|\btrades\b/i.test(redirect) || /\/dashboard(?:[/?#]|$)/i.test(redirect)) {
-        setLoginUserType('vendor');
-    }
-})();
-
-function resolveUserType(user, fallbackPayload = null) {
-    const fromUser = normalizeUserType(
-        user && (user.userType || user.user_type || user.type || user.role)
-    );
-    if (fromUser) return fromUser;
-
-    const fromPayload = normalizeUserType(
-        fallbackPayload && (fallbackPayload.userType || fallbackPayload.user_type || fallbackPayload.role)
-    );
-    if (fromPayload) return fromPayload;
-
-    return null;
+function handleOAuth(provider, e) {
+  const btn = e.currentTarget;
+  const textEl = btn.querySelector('.oauth-text');
+  const orig = textEl.textContent;
+  btn.style.opacity = '0.6'; btn.style.pointerEvents = 'none';
+  textEl.textContent = 'Connecting…';
+  const returnTo = encodeURIComponent(FRONTEND_BASE + getRedirectTarget());
+  window.location.href = `${API_BASE}/auth/${provider}?role=${encodeURIComponent(currentTab)}&returnTo=${returnTo}`;
+  setTimeout(() => {
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+    textEl.textContent = orig;
+  }, 1200);
 }
 
-let oauthPopup = null;
-
-function openOAuthPopup(url) {
-    localStorage.setItem('oauthPopupActive', '1');
-    const width = 520;
-    const height = 640;
-    const left = window.screenX + (window.outerWidth - width) / 2;
-    const top = window.screenY + (window.outerHeight - height) / 2;
-    const popup = window.open(
-        url,
-        'tradematch_oauth',
-        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-    );
-    if (!popup) {
-        window.location.href = url;
-        return null;
-    }
-    popup.focus();
-    oauthPopup = popup;
-    return popup;
-}
-
-function showPopupCloseNotice() {
-    const existing = document.getElementById('oauthCloseNotice');
-    if (existing) return;
-    const notice = document.createElement('div');
-    notice.id = 'oauthCloseNotice';
-    notice.style.cssText = [
-        'position:fixed',
-        'top:16px',
-        'right:16px',
-        'background:#0f172a',
-        'color:#fff',
-        'padding:12px 16px',
-        'border-radius:10px',
-        'box-shadow:0 8px 20px rgba(0,0,0,0.25)',
-        'z-index:9999',
-        'font-size:14px'
-    ].join(';');
-    notice.innerHTML = 'Login complete. <button id="oauthCloseBtn" style="margin-left:10px;padding:6px 10px;border:none;border-radius:6px;background:#10b981;color:#fff;font-weight:600;cursor:pointer;">Close</button>';
-    document.body.appendChild(notice);
-    const closeBtn = document.getElementById('oauthCloseBtn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            try {
-                window.close();
-            } catch (_) {
-                // ignore
-            }
-        });
-    }
-}
-
-function attemptClosePopup() {
-    try {
-        window.close();
-    } catch (_) {
-        // ignore
-    }
-    setTimeout(() => {
-        if (!window.closed) {
-            showPopupCloseNotice();
-        }
-    }, 500);
-}
-
-function generateQuoteTitle(serviceType) {
-    const titles = {
-        'extension': 'House Extension Quote Request',
-        'loft': 'Loft Conversion Quote Request',
-        'kitchen': 'Kitchen Fitting Quote Request',
-        'bathroom': 'Bathroom Installation Quote Request',
-        'roofing': 'Roofing Quote Request',
-        'electrical': 'Electrical Work Quote Request',
-        'plumbing': 'Plumbing Quote Request',
-        'flooring': 'Flooring Quote Request',
-        'painting': 'Painting & Decorating Quote Request',
-        'landscaping': 'Landscaping Quote Request'
-    };
-
-    return titles[serviceType] || 'Home Improvement Quote Request';
-}
-
-function generateQuoteDescription(serviceType) {
-    const descriptions = {
-        'extension': 'Looking for quotes for house extension work. Please provide detailed quotes including timeline and materials.',
-        'loft': 'Requesting quotes for loft conversion. Need experienced professionals with relevant certifications.',
-        'kitchen': 'Need kitchen fitting and installation services. Looking for complete solution from design to installation.',
-        'bathroom': 'Bathroom installation and renovation required. Need plumbing, tiling, and fitting services.',
-        'roofing': 'Roofing work needed - either repair or replacement. Looking for certified roofers with guarantees.',
-        'electrical': 'Electrical work required. Need certified electricians for safe and compliant installation.',
-        'plumbing': 'Plumbing services needed. Looking for experienced plumbers for installation and repair work.',
-        'flooring': 'Flooring installation required. Need quotes for materials and labor for various flooring options.',
-        'painting': 'Painting and decorating services needed. Looking for professional painters for interior/exterior work.',
-        'landscaping': 'Landscaping work required. Need quotes for garden design, patio, or outdoor improvements.'
-    };
-
-    return descriptions[serviceType] || 'Home improvement work required. Please provide a detailed quote.';
-}
-
-async function submitPendingQuoteIfAny(token) {
-    const pendingRaw = localStorage.getItem('pendingQuote');
-    if (!pendingRaw) return false;
-
-    let pendingQuote;
-    try {
-        pendingQuote = JSON.parse(pendingRaw);
-    } catch (error) {
-        console.warn('Failed to parse pending quote:', error);
-        return false;
-    }
-
-    const serviceType = pendingQuote.serviceType || pendingQuote.service;
-    const postcode = pendingQuote.postcode;
-
-    if (!serviceType || !postcode) {
-        console.warn('Pending quote missing required fields');
-        return false;
-    }
-
-    const payload = {
-        serviceType,
-        title: generateQuoteTitle(serviceType),
-        description: generateQuoteDescription(serviceType),
-        postcode,
-        urgency: pendingQuote.urgency || 'asap',
-        additionalDetails: {
-            source: 'auth-login',
-            userAgent: navigator.userAgent,
-            timestamp: new Date().toISOString()
-        }
-    };
-
-    try {
-        const response = await fetch(`${API_BASE}/api/quotes`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok || data.error) {
-            throw new Error(data.error || 'Failed to submit quote');
-        }
-
-        localStorage.removeItem('pendingQuote');
-        return true;
-    } catch (error) {
-        console.error('Pending quote submission error:', error);
-        return false;
-    }
-}
-
-async function processOAuthToken(token, source) {
-    localStorage.setItem('token', token);
-
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const normalizedType = resolveUserType(null, payload);
-        const userData = {
-            id: payload.userId,
-            email: payload.email,
-            userType: normalizedType || null,
-            authProvider: source || 'google'
-        };
-
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('lastEmail', payload.email);
-
-        showNotification(`Successfully logged in with ${source || 'OAuth'}!`, 'success');
-
-        const returnBase = resolveReturnTo(localStorage.getItem('oauthReturnTo')) || window.location.origin;
-        const sourceParam = encodeURIComponent(source || 'oauth');
-
-        if (userData.userType === 'vendor') {
-            window.location.href = `${returnBase}/dashboard?source=${sourceParam}`;
-            return;
-        }
-
-        if (userData.userType === 'customer') {
-            await submitPendingQuoteIfAny(token);
-            window.location.href = `${returnBase}/user-dashboard-index?source=${sourceParam}`;
-            return;
-        }
-
-        window.location.href = `${returnBase}/auth-select-role?token=${encodeURIComponent(token)}&source=${sourceParam}`;
-    } catch (decodeError) {
-        console.error('JWT decode error:', decodeError);
-        showNotification('Login successful, but failed to get user data', 'error');
-    }
-}
-
-    function consumeStoredOAuthToken() {
-        const storedToken = localStorage.getItem('oauthToken');
-        if (!storedToken) return false;
-        const storedSource = localStorage.getItem('oauthSource') || 'oauth';
-        localStorage.removeItem('oauthToken');
-        localStorage.removeItem('oauthSource');
-        processOAuthToken(storedToken, storedSource);
-        return true;
-    }
-
-window.addEventListener('message', (event) => {
-    if (!FRONTEND_BASES.includes(event.origin)) return;
-    const { type, token, source } = event.data || {};
-    if (type === 'oauth' && token) {
-        processOAuthToken(token, source);
-        if (oauthPopup && !oauthPopup.closed) {
-            oauthPopup.close();
-            oauthPopup = null;
-        }
-        localStorage.removeItem('oauthPopupActive');
-    }
-});
-
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'oauthToken' && event.newValue) {
-            consumeStoredOAuthToken();
-        }
-    });
-
-// Form Submission
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    const originalText = submitBtn.textContent;
-    
-    // Get form data
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const remember = document.getElementById('remember').checked;
-    
-    try {
-        // Disable button and show loading
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner"></span> Signing in...';
-        
-        // Real API call to backend
-        const response = await fetch(`${API_BASE}/api/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, userType: currentUserType })
-        });
-        const data = await response.json();
-        
-        // Check if activation is required
-        if (!response.ok && data.requiresActivation) {
-            showActivationModal(data.email);
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-            return;
-        }
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Invalid credentials');
-        }
-
-        if (!data.token || !data.user) {
-            throw new Error(data.error || 'Login response missing token');
-        }
-        
-        // Store token and user data
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('lastEmail', email);
-        
-        // Store remember me preference
-        if (remember) {
-            localStorage.setItem('rememberMe', 'true');
-        }
-        
-        // Show success
-        showNotification('Login successful! Redirecting...', 'success');
-        
-        // Redirect based on user type or explicit redirect
-        setTimeout(() => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirect = urlParams.get('redirect');
-            const safeRedirect = resolveRedirectTarget(redirect);
-            if (safeRedirect) {
-                window.location.href = safeRedirect;
-                return;
-            }
-            const userType = resolveUserType(data.user);
-            if (userType === 'customer') {
-                window.location.href = '/user-dashboard-index';
-                return;
-            }
-            if (userType === 'vendor') {
-                window.location.href = '/dashboard';
-                return;
-            }
-            window.location.href = '/auth-select-role';
-        }, 1500);
-        
-    } catch (error) {
-        console.error('Login error:', error);
-        showNotification(error.message || 'Login failed. Please check your credentials.', 'error');
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    }
-});
-
-// Social Login
-// Login with Google OAuth
-async function loginWithGoogle() {
-    try {
-        showNotification('Connecting to Google...', 'info');
-        
-        // Check URL parameters for callback errors
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('error')) {
-            showNotification('Google login failed: ' + urlParams.get('error'), 'error');
-            return;
-        }
-        
-        // Store return URL for callback redirect
-        const defaultReturnTo = window.location.origin;
-        const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
-        localStorage.setItem('oauthReturnTo', returnTo);
-        
-        // Redirect to backend OAuth initiation
-        const googleAuthUrl = `${API_BASE}/auth/google?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
-        if (oauthPopup && !oauthPopup.closed) {
-            oauthPopup.close();
-        }
-        openOAuthPopup(googleAuthUrl);
-        
-    } catch (error) {
-        console.error('Google login error:', error);
-        showNotification('Failed to connect to Google', 'error');
-    }
-}
-
-// Login with Microsoft OAuth
-async function loginWithMicrosoft() {
-    try {
-        showNotification('Connecting to Microsoft...', 'info');
-        
-        // Check URL parameters for callback errors
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('error')) {
-            showNotification('Microsoft login failed: ' + urlParams.get('error'), 'error');
-            return;
-        }
-        
-        // Store return URL for callback redirect
-        const defaultReturnTo = window.location.origin;
-        const returnTo = resolveReturnTo(urlParams.get('returnTo') || defaultReturnTo);
-        localStorage.setItem('oauthReturnTo', returnTo);
-        
-        // Redirect to backend OAuth initiation
-        const microsoftAuthUrl = `${API_BASE}/auth/microsoft?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(currentUserType || '')}`;
-        if (oauthPopup && !oauthPopup.closed) {
-            oauthPopup.close();
-        }
-        openOAuthPopup(microsoftAuthUrl);
-        
-    } catch (error) {
-        console.error('Microsoft login error:', error);
-        showNotification('Failed to connect to Microsoft', 'error');
-    }
-}
-
-// Expose handlers and attach button listeners
-window.loginWithGoogle = loginWithGoogle;
-window.loginWithMicrosoft = loginWithMicrosoft;
-
-const googleLoginBtn = document.getElementById('googleLoginBtn');
-if (googleLoginBtn) {
-    googleLoginBtn.addEventListener('click', loginWithGoogle);
-}
-
-const microsoftLoginBtn = document.getElementById('microsoftLoginBtn');
-if (microsoftLoginBtn) {
-    microsoftLoginBtn.addEventListener('click', loginWithMicrosoft);
-}
-
-// Handle OAuth callback
-function handleOAuthCallback() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const source = urlParams.get('source');
-    
-    if (token) {
-        const opener = window.opener;
-        const isPopup = window.name === 'tradematch_oauth' || localStorage.getItem('oauthPopupActive') === '1';
-        if (opener && !opener.closed) {
-            const returnTo = resolveReturnTo(localStorage.getItem('oauthReturnTo')) || window.location.origin;
-            let targetOrigin = window.location.origin;
-            try {
-                targetOrigin = new URL(returnTo).origin;
-            } catch (_) {
-                // fall back to current origin
-            }
-            try {
-                opener.postMessage({ type: 'oauth', token, source }, targetOrigin);
-            } catch (postError) {
-                console.warn('OAuth opener handoff failed:', postError);
-            }
-            try {
-                window.close();
-            } catch (closeError) {
-                console.warn('Popup close blocked:', closeError);
-            }
-            return;
-        }
-            if (isPopup) {
-            localStorage.removeItem('oauthPopupActive');
-                localStorage.setItem('oauthToken', token);
-                localStorage.setItem('oauthSource', source || 'oauth');
-                showNotification('Login complete. You can close this window.', 'success');
-                attemptClosePopup();
-                return;
-            }
-        processOAuthToken(token, source);
-    } else if (urlParams.get('error')) {
-        const error = urlParams.get('error');
-        const source = urlParams.get('source') || 'OAuth';
-        showNotification(`${source} login failed: ${error}`, 'error');
-    }
-}
-
-// Check if already logged in and pre-fill email
-window.addEventListener('load', () => {
-    // Handle OAuth callback first
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('token') || urlParams.get('error')) {
-        handleOAuthCallback();
-        return;
-    }
-
-        if (consumeStoredOAuthToken()) {
-            return;
-        }
-    
-    const lastEmail = localStorage.getItem('lastEmail');
-    const emailInput = document.getElementById('email');
-    
-    if (lastEmail && emailInput) {
-        emailInput.value = lastEmail;
-        emailInput.style.backgroundColor = '#e8f5ea';
-        emailInput.style.border = '1px solid #16a34a';
-        
-        // Add small hint
-        const emailHint = document.createElement('small');
-        emailHint.textContent = 'Last email used: ' + lastEmail;
-        emailHint.style.cssText = 'color: #6b7280; font-size: 12px; margin-top: 5px;';
-        emailInput.parentNode.appendChild(emailHint);
-    }
-    
-    // Check remember me
-    const rememberMe = localStorage.getItem('rememberMe');
-    if (rememberMe) {
-        document.getElementById('remember').checked = true;
-    }
-});
-
-// Activation Modal Functions
-function showActivationModal(email) {
-    const modal = document.getElementById('activationModal');
-    const userEmailElement = document.getElementById('userEmail');
-    
-    userEmailElement.textContent = email;
-    modal.style.display = 'flex';
-    
-    // Store email for resend functionality
-    modal.dataset.email = email;
-}
-
-function hideActivationModal() {
-    const modal = document.getElementById('activationModal');
-    modal.style.display = 'none';
-}
-
-// Close modal button
-document.getElementById('closeModalBtn').addEventListener('click', hideActivationModal);
-
-// Close modal when clicking outside
-document.getElementById('activationModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        hideActivationModal();
-    }
-});
-
-// Resend activation email
-document.getElementById('resendActivationBtn').addEventListener('click', async function() {
-    const modal = document.getElementById('activationModal');
-    const email = modal.dataset.email;
-    const btn = this;
-    const btnText = document.getElementById('resendBtnText');
-    const btnLoader = document.getElementById('resendBtnLoader');
-    
-    try {
-        btn.disabled = true;
-        btnText.style.display = 'none';
-        btnLoader.style.display = 'inline';
-        
-        const response = await fetch(`${API_BASE}/api/auth/resend-activation`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to resend activation email');
-        }
-        
-        hideActivationModal();
-        showNotification('Activation email sent! Please check your inbox.', 'success');
-        
-    } catch (error) {
-        console.error('Resend error:', error);
-        showNotification(error.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btnText.style.display = 'inline';
-        btnLoader.style.display = 'none';
-    }
-});
-
-    </script>
-
-    <!-- Footer -->
-    <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
-        <div class="container" style="max-width: 1200px; margin: 0 auto;">
-            <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
-        </div>
-    </footer>
-    <script src="/shared/ui/profile-menu.js" defer></script>
-    <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+if (window.lucide) lucide.createIcons();
+document.addEventListener('DOMContentLoaded', () => { if (window.lucide) lucide.createIcons(); });
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
