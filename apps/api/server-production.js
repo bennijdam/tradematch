@@ -320,6 +320,14 @@ try {
     logger.warn('Postcode routes not available', { error: e && e.message ? e.message : String(e) });
 }
 
+try {
+    const verifyRouter = require('./routes/verify');
+    app.use('/api/verify', verifyRouter);
+    logger.info('Verify routes mounted at /api/verify');
+} catch (e) {
+    logger.warn('Verify routes not available', { error: e && e.message ? e.message : String(e) });
+}
+
 // Payments and milestones routes
 try {
     const paymentsRouter = require('./routes/payments');

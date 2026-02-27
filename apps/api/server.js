@@ -285,6 +285,14 @@ try {
     console.warn('⚠️ Postcode routes not available:', e && e.message ? e.message : e);
 }
 
+try {
+    const verifyRouter = require('./routes/verify');
+    app.use('/api/verify', verifyRouter);
+    console.log('📱 Verify routes mounted at /api/verify');
+} catch (e) {
+    console.warn('⚠️ Verify routes not available:', e && e.message ? e.message : e);
+}
+
 // Contracts & disputes routes
 try {
     const contractsRouter = require('./routes/contracts');

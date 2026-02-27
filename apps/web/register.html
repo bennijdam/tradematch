@@ -1,966 +1,1473 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - TradeMatch UK | Join Now</title>
-    <meta name="description" content="Join TradeMatch as a customer or tradesperson. Get quotes, submit bids, and connect with verified professionals.">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --emerald-400: #34d399;
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-400: #94a3b8;
-            --slate-200: #e2e8f0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--slate-900);
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            position: relative;
-            overflow-x: hidden;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Background with Image */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('/images/hero-background-optimized.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: -2;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, 
-                rgba(15, 23, 42, 0.92) 0%, 
-                rgba(30, 41, 59, 0.88) 50%, 
-                rgba(15, 23, 42, 0.92) 100%);
-            z-index: -1;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1100px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 
-                        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Left Side */
-        .left-side {
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            padding: 4rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .left-side::before {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, var(--emerald-500) 0%, transparent 70%);
-            opacity: 0.15;
-            top: -100px;
-            right: -100px;
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: 900;
-            color: white;
-            text-decoration: none;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo span {
-            color: var(--emerald-400);
-        }
-
-        .left-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .left-content h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-
-        .left-content p {
-            font-size: 1.125rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2.5rem;
-            line-height: 1.7;
-        }
-
-        .benefits {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .benefit-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(16, 185, 129, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .testimonial {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin-top: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .testimonial-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-style: italic;
-            margin-bottom: 1rem;
-            line-height: 1.7;
-        }
-
-        .testimonial-author {
-            color: var(--emerald-400);
-            font-weight: 600;
-        }
-
-        /* Right Side */
-        .right-side {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 4rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-header {
-            margin-bottom: 2rem;
-        }
-
-        .form-header h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 0.75rem;
-        }
-
-        .form-header p {
-            color: var(--slate-600);
-            font-size: 1rem;
-        }
-
-        .form-header p a {
-            color: var(--emerald-600);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .form-header p a:hover {
-            text-decoration: underline;
-        }
-
-        /* User Type Toggle */
-        .user-type-toggle {
-            background: var(--slate-100);
-            border-radius: 12px;
-            padding: 0.5rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .user-type-btn {
-            padding: 0.875rem;
-            border: none;
-            background: transparent;
-            color: var(--slate-600);
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9375rem;
-        }
-
-        .user-type-btn.active {
-            background: white;
-            color: var(--slate-900);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Step Indicator */
-        .step-indicator {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            position: relative;
-        }
-
-        .step::after {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            width: 100%;
-            height: 2px;
-            background: var(--slate-200);
-            z-index: -1;
-        }
-
-        .step:last-child::after {
-            display: none;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--slate-200);
-            color: var(--slate-600);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s;
-        }
-
-        .step.active .step-number {
-            background: var(--emerald-500);
-            color: white;
-        }
-
-        .step.completed .step-number {
-            background: var(--emerald-600);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.75rem;
-            color: var(--slate-600);
-            font-weight: 600;
-        }
-
-        /* Form Steps */
-        .form-step {
-            display: none;
-        }
-
-        .form-step.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: var(--slate-700);
-            margin-bottom: 0.625rem;
-            font-size: 0.9375rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--slate-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
-            color: var(--slate-900);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--emerald-500);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--slate-400);
-            cursor: pointer;
-            font-size: 1.25rem;
-            padding: 0.5rem;
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: start;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .checkbox-wrapper input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            margin-top: 2px;
-        }
-
-        .checkbox-wrapper label {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-            cursor: pointer;
-            margin: 0;
-            font-weight: 400;
-            line-height: 1.6;
-        }
-
-        .checkbox-wrapper label a {
-            color: var(--emerald-600);
-            text-decoration: none;
-        }
-
-        .checkbox-wrapper label a:hover {
-            text-decoration: underline;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1.125rem 2rem;
-            border-radius: 12px;
-            font-size: 1.0625rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            flex: 1;
-        }
-
-        .btn-primary {
-            background: var(--emerald-500);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--emerald-600);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-primary:disabled {
-            background: var(--slate-400);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--slate-700);
-            border: 2px solid var(--slate-300);
-        }
-
-        .btn-secondary:hover {
-            background: var(--slate-50);
-        }
-
-        /* Success Message */
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 3rem 2rem;
-        }
-
-        .success-message.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .success-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .success-message h3 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 1rem;
-        }
-
-        .success-message p {
-            font-size: 1.125rem;
-            color: var(--slate-600);
-            margin-bottom: 2rem;
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .container {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-            }
-
-            .left-side {
-                display: none;
-            }
-
-            body {
-                padding: 1rem;
-                align-items: stretch;
-                justify-content: flex-start;
-            }
-
-            .right-side {
-                padding: 3rem 2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-        <script>
-        if (window.zaraz && typeof window.zaraz.track === "function") {
-            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
-        }
-    </script></head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Your Free Account | TradeMatch UK</title>
+<meta name="description" content="Create a free TradeMatch UK account. Homeowners post jobs free. Tradespeople join and access verified leads.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<meta name="theme-color" content="#007a3d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── TOKENS ── */
+:root{
+  --neon:#00c268;--neon2:#00a855;--neon3:#007a3d;
+  --neon-glow:0 4px 24px rgba(0,194,104,.28),0 1px 8px rgba(0,194,104,.14);
+  --neon-glow-sm:0 2px 14px rgba(0,194,104,.22);
+  --amber2:#fbbf24;--red:#ef4444;
+  --dk-bg:#0d1117;--dk-t1:#f0f4ff;--dk-t2:#8b95aa;--dk-t3:#5a6478;
+  --dk-border:rgba(255,255,255,.07);--dk-glass1:rgba(255,255,255,.03);--dk-glass2:rgba(255,255,255,.06);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+  --border-neon:rgba(0,194,104,.3);
+  --deep-shadow:0 16px 48px rgba(0,0,0,.10);
+}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ══ NAVBAR ══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.88);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:all .4s}
+.nav.scrolled .nav-inner{background:rgba(255,255,255,.97);box-shadow:0 4px 32px rgba(0,0,0,.11)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-pill{display:flex;align-items:center;gap:9px;background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.08);border-radius:50px;padding:5px 14px 5px 5px;transition:all .25s}
+.nav-logo:hover .nav-logo-pill{background:rgba(0,194,104,.06);border-color:rgba(0,194,104,.2)}
+.nav-logo-icon-wrap{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;box-shadow:var(--neon-glow-sm);flex-shrink:0}
+.nav-logo-icon-wrap svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.nav-wordmark-pill{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.04em;color:#0f1923}
+.nav-wordmark-pill span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{font-family:var(--fb);font-size:13px;font-weight:500;color:#3d5060;text-decoration:none;padding:8px 14px;border-radius:var(--r5);white-space:nowrap;transition:color .2s,background .2s}
+.nav-link:hover{color:#0f1923;background:rgba(0,0,0,.05)}
+.nav-link.active{color:var(--neon3)}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-btn-ghost{font-family:var(--ff);font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.11);padding:8px 18px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-btn-ghost:hover{border-color:var(--border-neon);color:var(--neon3)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
+
+/* ══ PAGE LAYOUT ══ */
+.page-main{flex:1;padding:96px 20px 56px;background:#f3f7f4;position:relative;overflow:hidden}
+.page-main::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 45% at 15% 25%,rgba(0,194,104,.08) 0%,transparent 55%),radial-gradient(ellipse 40% 35% at 85% 65%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.page-main::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(0,194,104,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.025) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,black 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 35%,black 0%,transparent 70%)}
+
+.page-wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto}
+
+/* Breadcrumb */
+.page-breadcrumb{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9fb0bc;margin-bottom:28px}
+.page-breadcrumb a{color:#9fb0bc;text-decoration:none;transition:color .2s}
+.page-breadcrumb a:hover{color:var(--neon3)}
+.page-breadcrumb svg{width:12px;height:12px;opacity:.5}
+
+/* ══ ROLE CHOOSER ══ */
+.role-chooser{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
+.role-card{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 20px;background:#fff;border:2px solid rgba(0,0,0,.08);border-radius:18px;cursor:pointer;transition:all .3s;text-align:center;position:relative;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.role-card:hover{border-color:rgba(0,194,104,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.role-card.selected{border-color:var(--neon);box-shadow:0 0 0 3px rgba(0,194,104,.12),0 8px 28px rgba(0,0,0,.08)}
+.role-card-check{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;background:var(--neon);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.6);transition:all .25s}
+.role-card.selected .role-card-check{opacity:1;transform:scale(1)}
+.role-card-check svg{width:11px;height:11px;color:#fff;stroke-width:3}
+.role-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.role-card.home .role-icon{background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2)}
+.role-card.trade .role-icon{background:rgba(0,122,61,.08);border:1px solid rgba(0,122,61,.2)}
+.role-card.selected.home .role-icon,.role-card:hover.home .role-icon{background:rgba(0,194,104,.15);border-color:var(--neon)}
+.role-card.selected.trade .role-icon,.role-card:hover.trade .role-icon{background:rgba(0,122,61,.15);border-color:var(--neon3)}
+.role-icon svg{width:24px;height:24px;color:var(--neon3)}
+.role-card-title{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.03em;color:#0f1923}
+.role-card-sub{font-size:12.5px;color:#6b7f8e;font-weight:300;line-height:1.55}
+.role-card-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.15);color:var(--neon3);margin-top:2px}
+
+/* ══ REGISTER CARD ══ */
+.reg-card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:24px;box-shadow:var(--deep-shadow);overflow:hidden;animation:cardIn .65s cubic-bezier(.22,1,.36,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ── PROGRESS BAR ── */
+.progress-header{padding:24px 36px 0;border-bottom:1px solid rgba(0,0,0,.07)}
+.progress-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.progress-role-pill{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--neon3);padding:5px 12px 5px 8px;border-radius:var(--r5);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2)}
+.progress-role-pill svg{width:13px;height:13px}
+.progress-step-label{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9fb0bc}
+.progress-steps{display:flex;align-items:center;gap:0;margin-bottom:0;padding-bottom:0}
+.step-item{display:flex;align-items:center;flex:1;position:relative}
+.step-item:last-child{flex:0}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;flex-shrink:0;transition:all .35s;position:relative;z-index:1;cursor:default}
+.step-dot.done{background:var(--neon3);color:#fff;box-shadow:var(--neon-glow-sm)}
+.step-dot.done svg{width:13px;height:13px;stroke-width:3}
+.step-dot.active{background:linear-gradient(135deg,var(--neon3),var(--neon));color:#fff;box-shadow:var(--neon-glow)}
+.step-dot.pending{background:#f3f7f4;border:2px solid rgba(0,0,0,.1);color:#9fb0bc}
+.step-line{flex:1;height:2px;background:rgba(0,0,0,.08);margin:0 6px;transition:background .4s}
+.step-line.done{background:linear-gradient(90deg,var(--neon3),var(--neon))}
+.step-label-row{display:flex;justify-content:space-between;padding:8px 0 16px}
+.step-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9fb0bc;transition:color .3s;flex:1;text-align:center}
+.step-lbl:first-child{text-align:left}
+.step-lbl:last-child{text-align:right}
+.step-lbl.active{color:var(--neon3);font-weight:600}
+.step-lbl.done{color:var(--neon3)}
+
+/* ── STEP PANELS ── */
+.step-panels{padding:32px 36px 28px;min-height:380px}
+.step-panel{display:none;animation:fadeStep .4s cubic-bezier(.22,1,.36,1) both}
+.step-panel.active{display:block}
+@keyframes fadeStep{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.step-panel.back{animation:fadeStepBack .4s cubic-bezier(.22,1,.36,1) both}
+@keyframes fadeStepBack{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+
+.step-title{font-family:var(--ff);font-size:1.35rem;font-weight:800;letter-spacing:-.04em;color:#0f1923;margin-bottom:5px}
+.step-title em{font-style:normal;background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.step-sub{font-size:13.5px;color:#6b7f8e;font-weight:300;margin-bottom:26px}
+
+/* Form elements */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{margin-bottom:14px}
+.form-label{display:flex;align-items:center;justify-content:space-between;font-family:var(--fm);font-size:10px;font-weight:600;color:#6b7f8e;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.form-label span{font-family:var(--fb);font-size:11px;color:#9fb0bc;text-transform:none;letter-spacing:0;font-weight:400}
+.form-input-wrap{position:relative}
+.form-input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#9fb0bc;pointer-events:none;display:flex}
+.form-input-icon svg{width:15px;height:15px}
+.form-input{width:100%;background:#f9fafb;border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:12px 13px 12px 40px;font-family:var(--fb);font-size:14.5px;color:#0f1923;transition:all .25s;outline:none;-webkit-appearance:none;appearance:none}
+.form-input.no-icon{padding-left:13px}
+.form-input::placeholder{color:#9fb0bc;font-weight:300}
+.form-input:hover:not(:focus){border-color:rgba(0,0,0,.17)}
+.form-input:focus{background:#f0f9f5;border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+.form-input.error{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.02)}
+.form-input.error:focus{box-shadow:0 0 0 3px rgba(239,68,68,.1)}
+.field-error{font-size:11.5px;color:#ef4444;margin-top:4px;display:none}
+.form-select{width:100%;background:#f9fafb;border:1px solid rgba(0,0,0,.1);border-radius:10px;padding:12px 36px 12px 40px;font-family:var(--fb);font-size:14.5px;color:#0f1923;transition:all .25s;outline:none;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%239fb0bc' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
+.form-select:focus{background-color:#f0f9f5;border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+.form-select option{color:#0f1923}
+.input-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#9fb0bc;cursor:pointer;padding:4px;transition:color .2s;display:flex;align-items:center}
+.input-toggle:hover{color:#3d5060}
+.input-toggle svg{width:15px;height:15px}
+
+/* Password strength */
+.pw-strength{margin-top:8px}
+.pw-bars{display:flex;gap:4px;margin-bottom:5px}
+.pw-bar{flex:1;height:3px;border-radius:3px;background:rgba(0,0,0,.08);transition:background .35s}
+.pw-bar.weak{background:#ef4444}
+.pw-bar.fair{background:var(--amber2)}
+.pw-bar.good{background:var(--neon)}
+.pw-bar.strong{background:var(--neon3)}
+.pw-text{font-size:11.5px;color:#9fb0bc;transition:color .3s}
+
+/* Checkbox group */
+.checkbox-group{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,0,0,.08);background:#f9fafb;cursor:pointer;transition:all .25s}
+.check-item:hover{border-color:rgba(0,194,104,.25);background:#f0f9f5}
+.check-item.checked{border-color:rgba(0,194,104,.35);background:rgba(0,194,104,.04)}
+.check-item input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(0,0,0,.15);background:#fff;cursor:pointer;position:relative;transition:all .2s;flex-shrink:0;margin-top:1px}
+.check-item input[type="checkbox"]:checked{background:var(--neon3);border-color:var(--neon3)}
+.check-item input[type="checkbox"]:checked::after{content:'';position:absolute;left:4px;top:1.5px;width:7px;height:11px;border:2.5px solid #fff;border-top:none;border-left:none;transform:rotate(42deg)}
+.check-item-body{flex:1}
+.check-item-title{font-family:var(--ff);font-size:.88rem;font-weight:700;letter-spacing:-.02em;color:#0f1923;margin-bottom:2px}
+.check-item-sub{font-size:12px;color:#6b7f8e;font-weight:300}
+
+/* Trade selection grid */
+.trade-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.trade-chip{display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:9px;border:1px solid rgba(0,0,0,.09);background:#f9fafb;font-size:13px;color:#3d5060;cursor:pointer;transition:all .2s;font-weight:400}
+.trade-chip:hover{border-color:rgba(0,194,104,.3);background:#f0f9f5;color:#0f1923}
+.trade-chip.selected{border-color:var(--neon);background:rgba(0,194,104,.06);color:var(--neon3);font-weight:600}
+.trade-chip svg{width:14px;height:14px;flex-shrink:0;color:var(--neon3)}
+.trade-chip .chip-check{width:14px;height:14px;border-radius:50%;background:var(--neon3);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s}
+.trade-chip.selected .chip-check{opacity:1}
+.trade-chip .chip-check svg{width:9px;height:9px;color:#fff;stroke-width:3}
+.trade-chip .chip-icon{width:14px;height:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.trade-chip.selected .chip-icon{opacity:0;width:0;overflow:hidden}
+
+/* Upload area */
+.upload-area{border:2px dashed rgba(0,0,0,.12);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .3s;background:#f9fafb;position:relative;margin-bottom:14px}
+.upload-area:hover{border-color:rgba(0,194,104,.4);background:rgba(0,194,104,.03)}
+.upload-area.has-file{border-color:rgba(0,194,104,.4);background:rgba(0,194,104,.04);border-style:solid}
+.upload-icon{width:40px;height:40px;border-radius:12px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.upload-icon svg{width:20px;height:20px;color:var(--neon3)}
+.upload-title{font-family:var(--ff);font-size:.88rem;font-weight:700;color:#0f1923;margin-bottom:4px;letter-spacing:-.02em}
+.upload-sub{font-size:12px;color:#9fb0bc;font-weight:300}
+.upload-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* Accreditations */
+.accred-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.accred-chip{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:9px;border:1px solid rgba(0,0,0,.09);background:#f9fafb;cursor:pointer;transition:all .2s}
+.accred-chip:hover{border-color:rgba(0,194,104,.3);background:#f0f9f5}
+.accred-chip.selected{border-color:var(--neon);background:rgba(0,194,104,.05)}
+.accred-check{width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(0,0,0,.15);background:#fff;flex-shrink:0;position:relative;transition:all .2s}
+.accred-chip.selected .accred-check{background:var(--neon3);border-color:var(--neon3)}
+.accred-chip.selected .accred-check::after{content:'';position:absolute;left:3px;top:1px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(42deg)}
+.accred-name{font-size:13px;font-weight:600;color:#0f1923}
+.accred-sub{font-size:11px;color:#9fb0bc;font-weight:300}
+
+/* Agree row */
+.agree-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:4px}
+.agree-row input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(0,0,0,.15);background:#f9fafb;cursor:pointer;position:relative;transition:all .2s;flex-shrink:0;margin-top:1px}
+.agree-row input[type="checkbox"]:checked{background:var(--neon3);border-color:var(--neon3)}
+.agree-row input[type="checkbox"]:checked::after{content:'';position:absolute;left:3px;top:1px;width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(42deg)}
+.agree-label{font-size:13px;color:#6b7f8e;line-height:1.6}
+.agree-label a{color:var(--neon3);text-decoration:none;font-weight:500}
+.agree-label a:hover{color:var(--neon2)}
+
+/* ── STEP FOOTER ── */
+.step-footer{padding:20px 36px 28px;border-top:1px solid rgba(0,0,0,.07);display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fafcfa}
+.btn-back{display:flex;align-items:center;gap:7px;font-family:var(--ff);font-size:14px;font-weight:700;color:#6b7f8e;background:none;border:1px solid rgba(0,0,0,.1);padding:12px 20px;border-radius:10px;cursor:pointer;transition:all .25s;text-decoration:none}
+.btn-back:hover{color:#0f1923;border-color:rgba(0,0,0,.18);background:#f3f3f3}
+.btn-back svg{width:15px;height:15px}
+.btn-next{display:flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.025em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);border:none;border-radius:10px;padding:13px 28px;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s;position:relative;overflow:hidden}
+.btn-next::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);opacity:0;transition:opacity .25s}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,194,104,.4)}
+.btn-next:hover::before{opacity:1}
+.btn-next:active{transform:none}
+.btn-next svg{width:16px;height:16px}
+.btn-next.loading .btn-next-inner{opacity:0}
+.btn-next.loading::after{content:'';position:absolute;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-next-inner{display:flex;align-items:center;gap:8px}
+.step-footer-meta{font-size:12px;color:#9fb0bc;display:flex;align-items:center;gap:5px}
+.step-footer-meta svg{width:12px;height:12px;color:var(--neon3)}
+
+/* ── SUCCESS STATE ── */
+.success-panel{text-align:center;padding:20px 0 8px;display:none;animation:fadeStep .5s cubic-bezier(.22,1,.36,1) both}
+.success-panel.active{display:block}
+.success-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:var(--neon-glow)}
+.success-icon svg{width:34px;height:34px;color:#fff;stroke-width:2.5}
+.success-title{font-family:var(--ff);font-size:1.8rem;font-weight:900;letter-spacing:-.05em;color:#0f1923;margin-bottom:8px}
+.success-title em{font-style:normal;background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.success-sub{font-size:15px;color:#6b7f8e;font-weight:300;line-height:1.75;max-width:400px;margin:0 auto 32px}
+.success-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);padding:14px 28px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,194,104,.4)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:700;letter-spacing:-.02em;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.15);padding:14px 26px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-secondary:hover{border-color:var(--border-neon);color:var(--neon3);background:rgba(0,194,104,.05)}
+
+/* ── OAUTH ── */
+.oauth-divider{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.oauth-line{flex:1;height:1px;background:rgba(0,0,0,.08)}
+.oauth-text-d{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9fb0bc}
+.oauth-row{display:flex;gap:10px;margin-bottom:20px}
+.oauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;flex:1;padding:11px 14px;border-radius:10px;font-family:var(--fb);font-size:13.5px;font-weight:600;cursor:pointer;transition:all .25s;border:1px solid rgba(0,0,0,.1);background:#fff;color:#0f1923;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.oauth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.oauth-logo{width:18px;height:18px;flex-shrink:0;display:flex}
+.oauth-btn.google:hover{border-color:rgba(66,133,244,.3);background:rgba(66,133,244,.03)}
+.oauth-btn.microsoft:hover{border-color:rgba(0,120,215,.3);background:rgba(0,120,215,.03)}
+.or-divider-full{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.or-divider-full .or-line{flex:1;height:1px;background:rgba(0,0,0,.08)}
+.or-divider-full .or-txt{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#9fb0bc}
+
+/* ── SIGN IN LINK ── */
+.signin-row{text-align:center;padding-top:14px;border-top:1px solid rgba(0,0,0,.07)}
+.signin-row p{font-size:13px;color:#6b7f8e}
+.signin-row a{color:var(--neon3);text-decoration:none;font-weight:600;transition:color .2s}
+.signin-row a:hover{color:var(--neon2)}
+
+/* ── HINT BOX ── */
+.hint-box{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:10px;background:rgba(0,194,104,.05);border:1px solid rgba(0,194,104,.15);margin-bottom:18px}
+.hint-box svg{width:15px;height:15px;color:var(--neon3);flex-shrink:0;margin-top:1px}
+.hint-box p{font-size:12.5px;color:#3d5060;line-height:1.6;font-weight:300}
+.hint-box strong{font-weight:600;color:#0f1923}
+
+/* Alert */
+.form-alert{padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:16px;align-items:center;gap:9px;display:none}
+.form-alert.error{display:flex;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);color:#c0392b}
+.form-alert svg{width:15px;height:15px;flex-shrink:0}
+
+/* ══ FOOTER ══ */
+.footer{background:var(--dk-bg);border-top:1px solid rgba(255,255,255,.05);padding:72px 0 36px;position:relative;overflow:hidden}
+.footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 10% 50%,rgba(0,194,104,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 90% 50%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.footer .wrap{position:relative;z-index:1}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:52px}
+.footer-brand-name{font-family:var(--ff);font-size:1.25rem;font-weight:800;letter-spacing:-.04em;color:var(--dk-t1);margin-bottom:10px}
+.footer-brand-name span{background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-brand p{font-size:13px;color:var(--dk-t3);line-height:1.8;font-weight:300;max-width:240px;margin-bottom:20px}
+.footer-socials{display:flex;gap:8px}
+.fsoc{width:36px;height:36px;background:var(--dk-glass2);border:1px solid var(--dk-border);border-radius:var(--r1);display:flex;align-items:center;justify-content:center;color:var(--dk-t3);text-decoration:none;transition:all .25s}
+.fsoc:hover{background:rgba(0,194,104,.1);border-color:var(--border-neon);color:var(--neon);transform:translateY(-2px)}
+.fsoc svg{width:15px;height:15px}
+.footer-col h4{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dk-t3);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col a{font-size:13px;color:var(--dk-t2);text-decoration:none;font-weight:300;transition:color .2s}
+.footer-col a:hover{color:var(--neon)}
+.footer-bottom{border-top:1px solid var(--dk-border);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-family:var(--fm);font-size:10px;color:var(--dk-t3);letter-spacing:.04em}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{font-family:var(--fm);font-size:10px;color:var(--dk-t3);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--neon)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:680px){
+  .form-row{grid-template-columns:1fr}
+  .trade-grid{grid-template-columns:1fr 1fr}
+  .accred-grid{grid-template-columns:1fr}
+  .step-panels{padding:24px 22px 20px}
+  .progress-header{padding:20px 22px 0}
+  .step-footer{padding:16px 22px 22px;flex-direction:column-reverse;gap:10px}
+  .btn-next{width:100%;justify-content:center}
+  .btn-back{width:100%;justify-content:center}
+  .oauth-row{flex-direction:column}
+}
+@media(max-width:480px){
+  .wrap{padding:0 18px}
+  .role-chooser{grid-template-columns:1fr;max-width:340px}
+  .trade-grid{grid-template-columns:1fr 1fr}
+  .success-actions{flex-direction:column;align-items:stretch;max-width:280px;margin:0 auto 32px}
+}
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr 1fr;gap:32px}}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
-    <div class="container">
-        <!-- Left Side -->
-        <div class="left-side">
-            <div>
-                <a href="/" class="logo">Trade<span>Match</span></a>
-            </div>
 
-            <div class="left-content">
-                <h1>Join the UK's Leading Trades Platform</h1>
-                <p>Connect with thousands of verified customers and tradespeople. Start your journey today.</p>
-
-                <div class="benefits">
-                    <div class="benefit-item">
-                        <div class="benefit-icon">✓</div>
-                        <div>Free to join • No credit card required</div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon">🔒</div>
-                        <div>Verified profiles • Secure platform</div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon">⭐</div>
-                        <div>Trusted by 50,000+ users nationwide</div>
-                    </div>
-                    <div class="benefit-item">
-                        <div class="benefit-icon">💼</div>
-                        <div>Professional tools & support</div>
-                    </div>
-                </div>
-
-                <div class="testimonial">
-                    <p class="testimonial-text">"TradeMatch helped me find the perfect builder for my extension. Received 5 competitive quotes within 24 hours!"</p>
-                    <p class="testimonial-author">— Sarah M., London</p>
-                </div>
-            </div>
-
-            <div></div>
+<!-- ══ NAVBAR ══ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-pill">
+        <div class="nav-logo-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
+        <span class="nav-wordmark-pill">Trade<span>Match</span></span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/#how" class="nav-link">How It Works</a>
+      <a href="/quote-engine" class="nav-link">Post a Job</a>
+      <a href="/#trust" class="nav-link">Why TradeMatch</a>
+      <a href="/trade-signup" class="nav-link">For Tradespeople</a>
+      <a href="/vendor-billing" class="nav-link">Pricing</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/login" class="nav-btn-ghost">Sign In</a>
+      <a href="/register" class="nav-cta" style="background:linear-gradient(135deg,var(--neon3),var(--neon));box-shadow:var(--neon-glow)">
+        <span class="nav-cta-pip"></span>
+        Create Free Account
+      </a>
+    </div>
+  </div>
+</nav>
 
-        <!-- Right Side -->
-        <div class="right-side">
-            <div class="form-header">
-                <h2>Create Your Account</h2>
-                <p>Already have an account? <a href="/login">Sign in</a></p>
-            </div>
+<!-- ══ MAIN ══ -->
+<main class="page-main">
+  <div class="page-wrap">
 
-            <!-- User Type Toggle -->
-            <div class="user-type-toggle">
-                <button type="button" class="user-type-btn active" data-type="customer" onclick="switchUserType('customer')">
-                    🏠 Customer
-                </button>
-                <button type="button" class="user-type-btn" data-type="vendor" onclick="switchUserType('vendor')">
-                    🔧 Tradesperson
-                </button>
-            </div>
+    <!-- Breadcrumb -->
+    <nav class="page-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>Create Account</span>
+    </nav>
 
-            <!-- Step Indicator -->
-            <div class="step-indicator">
-                <div class="step active" id="stepIndicator1">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Account</div>
-                </div>
-                <div class="step" id="stepIndicator2">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Details</div>
-                </div>
-                <div class="step" id="stepIndicator3">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Verify</div>
-                </div>
-            </div>
-
-            <!-- Registration Form -->
-            <form id="registrationForm">
-                <input type="hidden" id="userType" name="userType" value="customer">
-
-                <!-- Step 1: Account Info -->
-                <div class="form-step active" id="step1">
-                    <div class="form-group">
-                        <label for="fullName">Full Name *</label>
-                        <input type="text" id="fullName" name="fullName" class="form-control" placeholder="John Smith" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email Address *</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="07700 900000" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-primary" onclick="nextStep(1)">
-                            Continue →
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Step 2: Password & Location -->
-                <div class="form-step" id="step2">
-                    <div class="form-group">
-                        <label for="password">Password *</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password" name="password" class="form-control" placeholder="Min. 8 characters" required minlength="8">
-                            <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password *</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Re-enter password" required minlength="8">
-                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="postcode">Postcode *</label>
-                        <input type="text" id="postcode" name="postcode" class="form-control" placeholder="SW1A 1AA" required pattern="^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$">
-                    </div>
-
-                    <!-- Vendor-specific fields -->
-                    <div id="vendorFields" style="display: none;">
-                        <div class="form-group">
-                            <label for="companyName">Company Name *</label>
-                            <input type="text" id="companyName" name="companyName" class="form-control" placeholder="Smith & Sons Builders">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="services">Primary Services *</label>
-                            <select id="services" name="services" class="form-control" multiple>
-                                <option value="bathroom">Bathroom Installation</option>
-                                <option value="kitchen">Kitchen Fitting</option>
-                                <option value="extension">Extensions</option>
-                                <option value="loft">Loft Conversions</option>
-                                <option value="electrical">Electrical Work</option>
-                                <option value="plumbing">Plumbing</option>
-                                <option value="roofing">Roofing</option>
-                                <option value="landscaping">Landscaping</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="previousStep(2)">
-                            ← Back
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="nextStep(2)">
-                            Continue →
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Step 3: Terms & Submit -->
-                <div class="form-step" id="step3">
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="terms" name="terms" required>
-                        <label for="terms">
-                            I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
-                        </label>
-                    </div>
-
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="marketing" name="marketing">
-                        <label for="marketing">
-                            Send me updates, tips, and promotional emails
-                        </label>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="previousStep(3)">
-                            ← Back
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn">
-                            Create Account
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <!-- Success Message -->
-            <div class="success-message" id="successMessage">
-                <div class="success-icon">📧</div>
-                <h3>Check Your Email!</h3>
-                <p>We've sent an activation link to your email address.</p>
-                <p style="font-size: 0.9rem; margin-top: 0.5rem; color: #6b7280;">Please click the link to activate your account before logging in. The link expires in 24 hours.</p>
-                <button onclick="window.location.href='/login'" style="margin-top: 1.5rem; padding: 0.75rem 2rem; background: var(--emerald-500); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                    Go to Login
-                </button>
-            </div>
-        </div>
+    <!-- Page heading -->
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--neon3);padding:5px 13px 5px 9px;border-radius:var(--r5);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);margin-bottom:14px">
+        <span style="width:5px;height:5px;border-radius:50%;background:var(--neon);box-shadow:0 0 7px var(--neon);animation:pulse 2s infinite;flex-shrink:0;display:inline-block"></span>
+        Free · No credit card required
+      </div>
+      <h1 style="font-family:var(--ff);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;letter-spacing:-.055em;color:#0f1923;line-height:1.06;margin-bottom:8px">Create your <em style="font-style:normal;background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">free account</em></h1>
+      <p style="font-size:15px;color:#6b7f8e;font-weight:300;max-width:460px;margin:0 auto">Join 42,800+ verified tradespeople and thousands of homeowners already using TradeMatch.</p>
     </div>
 
-    <script>
-        let currentStep = 1;
-        let currentUserType = 'customer';
+    <!-- Role chooser (shown before card) -->
+    <div id="roleChooser">
+      <div class="role-chooser">
+        <div class="role-card home" id="roleHome" onclick="selectRole('homeowner')">
+          <div class="role-card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="role-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="role-card-title">Homeowner</div>
+          <div class="role-card-sub">Post jobs free, get up to 5 verified quotes, pay safely with escrow</div>
+          <div class="role-card-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><polyline points="20 6 9 17 4 12"/></svg>
+            Always free to post
+          </div>
+        </div>
+        <div class="role-card trade" id="roleTrade" onclick="selectRole('tradesperson')">
+          <div class="role-card-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="role-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="role-card-title">Tradesperson</div>
+          <div class="role-card-sub">Win verified leads, build your reputation, get paid securely</div>
+          <div class="role-card-tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Pro verified
+          </div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:13px;color:#9fb0bc;margin-top:4px">Already have an account? <a href="/login" style="color:var(--neon3);text-decoration:none;font-weight:600">Sign in →</a></p>
+    </div>
 
-        // Inline form error helper
-        function showFormError(stepId, message) {
-            const step = document.getElementById(stepId);
-            if (!step) return;
-            let el = step.querySelector('.form-error-msg');
-            if (!el) {
-                el = document.createElement('p');
-                el.className = 'form-error-msg';
-                el.style.cssText = 'color:#ef4444;font-size:13px;margin:0 0 12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
-                step.insertBefore(el, step.firstChild);
-            }
-            el.textContent = message;
-            el.style.display = 'block';
-            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        const isLocal = window.location.protocol === 'file:' ||
-            window.location.hostname === 'localhost' ||
-            window.location.hostname === '127.0.0.1';
-        const API_BASE = isLocal
-            ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
-            : 'https://api.tradematch.uk';
-        const registerUrlParams = new URLSearchParams(window.location.search);
-        const claimQuoteIdFromUrl = (registerUrlParams.get('quoteId') || '').trim();
-        const claimQuoteIdFromStorage = (localStorage.getItem('pendingQuoteClaimId') || '').trim();
-        const claimQuoteId = claimQuoteIdFromUrl || claimQuoteIdFromStorage;
+    <!-- Multi-step register card (hidden until role chosen) -->
+    <div class="reg-card" id="regCard" style="display:none">
 
-        // Switch User Type
-        function switchUserType(type) {
-            currentUserType = type;
-            document.getElementById('userType').value = type;
-            
-            // Update buttons
-            document.querySelectorAll('.user-type-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.type === type) {
-                    btn.classList.add('active');
-                }
-            });
+      <!-- Progress header -->
+      <div class="progress-header">
+        <div class="progress-top">
+          <div class="progress-role-pill" id="progressRolePill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="progressRoleLabel">Homeowner</span>
+          </div>
+          <span class="progress-step-label" id="progressStepLabel">Step 1 of 3</span>
+        </div>
+        <div class="progress-steps" id="progressSteps">
+          <!-- Generated by JS -->
+        </div>
+        <div class="step-label-row" id="stepLabelRow">
+          <!-- Generated by JS -->
+        </div>
+      </div>
 
-            // Show/hide vendor fields
-            const vendorFields = document.getElementById('vendorFields');
-            if (type === 'vendor') {
-                vendorFields.style.display = 'block';
-                document.getElementById('companyName').required = true;
-                document.getElementById('services').required = true;
-            } else {
-                vendorFields.style.display = 'none';
-                document.getElementById('companyName').required = false;
-                document.getElementById('services').required = false;
-            }
-        }
+      <!-- Step panels -->
+      <div class="step-panels" id="stepPanels">
+        <!-- Rendered by JS -->
+      </div>
 
-        // Next Step
-        function nextStep(step) {
-            // Validate current step
-            const currentStepElement = document.getElementById('step' + step);
-            const inputs = currentStepElement.querySelectorAll('input[required], select[required]');
-            
-            let valid = true;
-            inputs.forEach(input => {
-                if (!input.checkValidity()) {
-                    input.reportValidity();
-                    valid = false;
-                }
-            });
+      <!-- Step footer -->
+      <div class="step-footer" id="stepFooter">
+        <button class="btn-back" id="btnBack" onclick="goBack()" type="button" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          Back
+        </button>
+        <div class="step-footer-meta" id="footerMeta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Secure 256-bit SSL
+        </div>
+        <button class="btn-next" id="btnNext" onclick="goNext()" type="button">
+          <span class="btn-next-inner">
+            <span id="btnNextText">Continue</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </span>
+        </button>
+      </div>
 
-            if (!valid) return;
+    </div><!-- /reg-card -->
 
-            // Additional validation for step 2
-            if (step === 2) {
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
+  </div><!-- /page-wrap -->
+</main>
 
-                if (password !== confirmPassword) {
-                    showFormError('step2', 'Passwords do not match.');
-                    return;
-                }
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>For Homeowners</h4><ul><li><a href="#">Post a Job</a></li><li><a href="#">How Escrow Works</a></li><li><a href="#">Browse Trades</a></li><li><a href="#">Cost Guides</a></li><li><a href="#">Safety &amp; Verification</a></li></ul></div>
+      <div class="footer-col"><h4>For Tradespeople</h4><ul><li><a href="#">Create a Profile</a></li><li><a href="#">Pricing &amp; Fees</a></li><li><a href="#">Trade Accreditations</a></li><li><a href="#">TradeMatch Pro</a></li><li><a href="#">Tradesperson Forum</a></li></ul></div>
+      <div class="footer-col"><h4>Find Trades</h4><ul><li><a href="#">Plumbers</a></li><li><a href="#">Electricians</a></li><li><a href="#">Builders</a></li><li><a href="#">Gas Engineers</a></li><li><a href="#">Roofers</a></li><li><a href="#">All 48 Trades →</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About TradeMatch</a></li><li><a href="#">Why We're Different</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li><li><a href="#">Contact</a></li><li><a href="#"><span class="__cf_email__" data-cfemail="1078757c7c7f5064627174757d716473783e657b">[email&#160;protected]</span></a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <div class="footer-legal"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cookies">Cookie Policy</a><a href="/contact">Complaints</a></div>
+    </div>
+  </div>
+</footer>
 
-                const postcode = document.getElementById('postcode').value.toUpperCase();
-                if (!/^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/.test(postcode)) {
-                    showFormError('step2', 'Please enter a valid UK postcode (e.g. SW1A 1AA).');
-                    return;
-                }
-            }
+<script>
+// ════════════════════════════════════════════════
+// TWILIO VERIFY — API CONFIGURATION
+// ════════════════════════════════════════════════
+const isLocalApi = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const VERIFY_API = isLocalApi
+  ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+  : 'https://api.tradematch.uk';
+const registerUrlParams = new URLSearchParams(window.location.search);
+const claimQuoteIdFromUrl = (registerUrlParams.get('quoteId') || '').trim();
+const claimQuoteIdFromStorage = (localStorage.getItem('pendingQuoteClaimId') || '').trim();
+const claimQuoteId = claimQuoteIdFromUrl || claimQuoteIdFromStorage;
+// ════════════════════════════════════════════════
 
-            // Hide current step
-            document.getElementById('step' + step).classList.remove('active');
-            document.getElementById('stepIndicator' + step).classList.add('completed');
-            document.getElementById('stepIndicator' + step).classList.remove('active');
-
-            // Show next step
-            currentStep = step + 1;
-            document.getElementById('step' + currentStep).classList.add('active');
-            document.getElementById('stepIndicator' + currentStep).classList.add('active');
-        }
-
-        // Previous Step
-        function previousStep(step) {
-            // Hide current step
-            document.getElementById('step' + step).classList.remove('active');
-            document.getElementById('stepIndicator' + step).classList.remove('active');
-
-            // Show previous step
-            currentStep = step - 1;
-            document.getElementById('step' + currentStep).classList.add('active');
-            document.getElementById('stepIndicator' + currentStep).classList.add('active');
-            document.getElementById('stepIndicator' + currentStep).classList.remove('completed');
-        }
-
-        // Toggle Password
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const button = field.nextElementSibling;
-            
-            if (field.type === 'password') {
-                field.type = 'text';
-                button.textContent = '🙈';
-            } else {
-                field.type = 'password';
-                button.textContent = '👁️';
-            }
-        }
-
-        // Form Submission
-        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.textContent;
-
-            const formData = {
-                userType: currentUserType,
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                password: document.getElementById('password').value,
-                postcode: document.getElementById('postcode').value.toUpperCase(),
-                terms: document.getElementById('terms').checked,
-                marketing: document.getElementById('marketing').checked
-            };
-
-            if (claimQuoteId && currentUserType === 'customer') {
-                formData.claimQuoteId = claimQuoteId;
-            }
-
-            if (currentUserType === 'vendor') {
-                formData.companyName = document.getElementById('companyName').value;
-                const servicesSelect = document.getElementById('services');
-                formData.services = Array.from(servicesSelect.selectedOptions).map(opt => opt.value);
-            }
-
-            try {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner"></span> Creating account...';
-
-                // Live API call to TradeMatch backend
-                const response = await fetch(`${API_BASE}/api/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Registration failed');
-                }
-
-                // Store JWT so the user is logged in after activation
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                }
-                // Persist claimed quote ID so dashboard can highlight it
-                if (data.claimedQuoteId) {
-                    localStorage.setItem('claimedQuoteId', data.claimedQuoteId);
-                }
-
-                // Show success message - NO auto-redirect, user must activate first
-                document.getElementById('registrationForm').style.display = 'none';
-                document.getElementById('successMessage').classList.add('active');
-                document.querySelector('.step-indicator').style.display = 'none';
-                if (claimQuoteId) {
-                    localStorage.removeItem('pendingQuoteClaimId');
-                }
-
-            } catch (error) {
-                console.error('Registration error:', error);
-                showFormError('step3', error.message || 'Registration failed. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
-            }
-        });
-
-        // Auto-format postcode
-        document.getElementById('postcode').addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase();
-        });
-
-        // Auto-format phone
-        document.getElementById('phone').addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 11) value = value.substring(0, 11);
-            
-            if (value.length >= 7) {
-                value = value.substring(0, 5) + ' ' + value.substring(5);
-            }
-            
-            e.target.value = value;
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
 });
 
-        // Import TradeMatch API
-        if (typeof window.api === 'undefined') {
-            const script = document.createElement('script');
-            script.src = '/shared/api/api.js';
-            document.head.appendChild(script);
-        }
-    </script>
-    <script src="/auth.js" defer></script>
-    <script src="/shared/ui/profile-menu.js" defer></script>
+// ── STATE ──
+let currentRole = null;
+let currentStep = 0;
+let selectedTrades = [];
+let selectedAccreds = [];
+let phoneVerified = false;       // true once Twilio confirms the OTP
+let verifiedPhone = '';          // the E.164 number that was confirmed
+let otpSent = false;             // true once we've called /api/verify/send
+let resendCooldown = false;      // prevents rapid resend spam
+
+// ── STEP DEFINITIONS ──
+const steps = {
+  homeowner: [
+    { id:'account', label:'Account', icon:'user' },
+    { id:'verify',  label:'Verify',  icon:'phone' },
+    { id:'done',    label:'Done',    icon:'check' }
+  ],
+  tradesperson: [
+    { id:'account', label:'Account',   icon:'user' },
+    { id:'trade',   label:'Your Trade',icon:'wrench' },
+    { id:'docs',    label:'Documents', icon:'file' },
+    { id:'done',    label:'Done',      icon:'check' }
+  ]
+};
+
+const tradeOptions = [
+  'Plumber','Electrician','Gas Engineer','Roofer','Builder','Carpenter',
+  'Tiler','Plasterer','Painter','Landscaper','Bathroom Fitter','Kitchen Fitter',
+  'Flooring','Handyman','Drainage','Solar Panels'
+];
+
+const accredOptions = [
+  {name:'Gas Safe Register',sub:'For gas work'},
+  {name:'NICEIC',sub:'Electrical'},
+  {name:'NAPIT',sub:'Electrical'},
+  {name:'OFTEC',sub:'Oil heating'},
+  {name:'TrustMark',sub:'General trades'},
+  {name:'FENSA',sub:'Windows & doors'},
+  {name:'CHAS',sub:'Health & safety'},
+  {name:'Checkatrade',sub:'General'}
+];
+
+// ── ROLE SELECTION ──
+function selectRole(role) {
+  currentRole = role;
+  document.getElementById('roleHome').classList.toggle('selected', role === 'homeowner');
+  document.getElementById('roleTrade').classList.toggle('selected', role === 'tradesperson');
+
+  setTimeout(() => {
+    document.getElementById('roleChooser').style.display = 'none';
+    document.getElementById('regCard').style.display = 'block';
+    currentStep = 0;
+    buildProgress();
+    renderStep();
+  }, 250);
+}
+
+// ── BUILD PROGRESS BAR ──
+function buildProgress() {
+  const ss = steps[currentRole];
+  const stepsEl = document.getElementById('progressSteps');
+  const labelsEl = document.getElementById('stepLabelRow');
+  const roleLabel = document.getElementById('progressRoleLabel');
+  const rolePill = document.getElementById('progressRolePill');
+  roleLabel.textContent = currentRole === 'homeowner' ? 'Homeowner' : 'Tradesperson';
+  rolePill.querySelector('svg').innerHTML = currentRole === 'homeowner'
+    ? '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'
+    : '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>';
+
+  stepsEl.innerHTML = ss.map((s, i) => {
+    const isLast = i === ss.length - 1;
+    return `<div class="step-item">
+      <div class="step-dot ${i < currentStep ? 'done' : i === currentStep ? 'active' : 'pending'}" id="dot${i}">
+        ${i < currentStep ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : (i + 1)}
+      </div>
+      ${!isLast ? `<div class="step-line ${i < currentStep ? 'done' : ''}" id="line${i}"></div>` : ''}
+    </div>`;
+  }).join('');
+
+  labelsEl.innerHTML = ss.map((s, i) =>
+    `<span class="step-lbl ${i === currentStep ? 'active' : i < currentStep ? 'done' : ''}" id="lbl${i}">${s.label}</span>`
+  ).join('');
+}
+
+function updateProgress() {
+  const ss = steps[currentRole];
+  document.getElementById('progressStepLabel').textContent = `Step ${currentStep + 1} of ${ss.length}`;
+  ss.forEach((s, i) => {
+    const dot = document.getElementById(`dot${i}`);
+    const lbl = document.getElementById(`lbl${i}`);
+    const line = document.getElementById(`line${i}`);
+    if (dot) {
+      dot.className = `step-dot ${i < currentStep ? 'done' : i === currentStep ? 'active' : 'pending'}`;
+      dot.innerHTML = i < currentStep
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+        : (i + 1);
+    }
+    if (lbl) lbl.className = `step-lbl ${i === currentStep ? 'active' : i < currentStep ? 'done' : ''}`;
+    if (line) line.className = `step-line ${i < currentStep ? 'done' : ''}`;
+  });
+}
+
+// ── RENDER STEP ──
+function renderStep() {
+  const ss = steps[currentRole];
+  const step = ss[currentStep];
+  const isLast = currentStep === ss.length - 1;
+  const panels = document.getElementById('stepPanels');
+
+  document.getElementById('btnBack').style.display = currentStep > 0 ? 'flex' : 'none';
+  document.getElementById('btnNextText').textContent = isLast ? 'Create Account' : 'Continue';
+
+  // Determine if last non-done step
+  const isSubmit = currentStep === ss.length - 2;
+  document.getElementById('btnNextText').textContent = isSubmit ? 'Create Account' : isLast ? '' : 'Continue';
+
+  updateProgress();
+
+  // ── Step: ACCOUNT (both roles) ──
+  if (step.id === 'account') {
+    document.getElementById('btnNext').style.display = 'flex';
+    document.getElementById('stepFooter').style.display = 'flex';
+    panels.innerHTML = `
+      <div class="step-panel active" id="panelAccount">
+        <h2 class="step-title">Your <em>account</em> details</h2>
+        <p class="step-sub">Takes about 60 seconds. No credit card needed.</p>
+
+        <div class="oauth-row">
+          <button class="oauth-btn google" type="button" onclick="handleOAuth('google')">
+            <span class="oauth-logo"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></span>
+            Sign up with Google
+          </button>
+          <button class="oauth-btn microsoft" type="button" onclick="handleOAuth('microsoft')">
+            <span class="oauth-logo"><svg viewBox="0 0 23 23" width="18" height="18"><rect x="1" y="1" width="10" height="10" fill="#F25022"/><rect x="12" y="1" width="10" height="10" fill="#7FBA00"/><rect x="1" y="12" width="10" height="10" fill="#00A4EF"/><rect x="12" y="12" width="10" height="10" fill="#FFB900"/></svg></span>
+            Sign up with Microsoft
+          </button>
+        </div>
+
+        <div class="or-divider-full">
+          <div class="or-line"></div>
+          <span class="or-txt">or fill in your details</span>
+          <div class="or-line"></div>
+        </div>
+
+        <div class="form-alert" id="accountAlert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="accountAlertText"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First name</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <input type="text" class="form-input" id="firstName" placeholder="Jane" autocomplete="given-name" required>
+            </div>
+            <div class="field-error" id="errFirstName">Please enter your first name.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last name</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+              <input type="text" class="form-input" id="lastName" placeholder="Smith" autocomplete="family-name" required>
+            </div>
+            <div class="field-error" id="errLastName">Please enter your last name.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <div class="form-input-wrap">
+            <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <input type="email" class="form-input" id="email" placeholder="jane@example.com" autocomplete="email" required>
+          </div>
+          <div class="field-error" id="errEmail">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone number <span>Verified via SMS</span></label>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <div class="form-input-wrap" style="flex:1">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.1 6.1l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17.21z"/></svg></div>
+              <input type="tel" class="form-input" id="phone" placeholder="+44 7700 900000" autocomplete="tel" required>
+            </div>
+            <button type="button" id="btnSendCode" onclick="sendVerifyCode()" style="white-space:nowrap;flex-shrink:0;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));border:none;border-radius:10px;padding:0 16px;height:46px;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s;position:relative;overflow:hidden">
+              <span id="btnSendCodeText">Send Code</span>
+            </button>
+          </div>
+          <!-- Phone verified badge — hidden until confirmed -->
+          <div id="phoneVerifiedBadge" style="display:none;margin-top:7px;display:none;align-items:center;gap:6px;font-size:12.5px;color:var(--neon3);font-weight:600">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Phone verified ✓
+          </div>
+          <div class="field-error" id="errPhone">Please enter a valid UK phone number.</div>
+          <div class="field-error" id="errPhoneNotVerified" style="display:none">Please verify your phone number before continuing.</div>
+        </div>
+
+        <!-- OTP INLINE (shown after Send Code is clicked) -->
+        <div id="otpInlineWrap" style="display:none;background:rgba(0,194,104,.04);border:1px solid rgba(0,194,104,.15);border-radius:12px;padding:16px 18px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-family:var(--ff);font-size:.88rem;font-weight:700;color:#0f1923;letter-spacing:-.02em">Enter the 6-digit code</span>
+            <span id="otpSentTo" style="font-size:12px;color:#9fb0bc"></span>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:10px">
+            ${[1,2,3,4,5,6].map(i => `<input type="text" inputmode="numeric" maxlength="1" class="form-input no-icon" id="otp${i}" style="text-align:center;font-family:var(--ff);font-size:1.3rem;font-weight:800;padding:10px 4px;letter-spacing:0" oninput="otpMove(this,${i})" onkeydown="otpBack(event,${i})">`).join('')}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div id="otpStatusMsg" style="font-size:12px;color:#9fb0bc"></div>
+            <button type="button" id="btnResend" onclick="resendOTP()" style="font-size:12px;color:var(--neon3);background:none;border:none;cursor:pointer;font-weight:600;font-family:var(--fb)">Resend code</button>
+          </div>
+          <div id="otpError" style="display:none;font-size:12px;color:#ef4444;margin-top:6px"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Create password</label>
+          <div class="form-input-wrap">
+            <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <input type="password" class="form-input" id="password" placeholder="Min. 8 characters" autocomplete="new-password" required oninput="checkPwStrength(this.value)">
+            <button type="button" class="input-toggle" onclick="togglePw('password','eyeO','eyeC')" aria-label="Toggle password">
+              <svg id="eyeO" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeC" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <div class="pw-strength" id="pwStrength" style="display:none">
+            <div class="pw-bars"><div class="pw-bar" id="b1"></div><div class="pw-bar" id="b2"></div><div class="pw-bar" id="b3"></div><div class="pw-bar" id="b4"></div></div>
+            <span class="pw-text" id="pwLabel"></span>
+          </div>
+          <div class="field-error" id="errPassword">Password must be at least 8 characters.</div>
+        </div>
+
+        <div class="agree-row">
+          <input type="checkbox" id="agreeTerms">
+          <label class="agree-label" for="agreeTerms">I agree to TradeMatch's <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. I consent to receiving service-related emails.</label>
+        </div>
+        <div class="field-error" id="errTerms" style="margin-top:6px">Please agree to the terms to continue.</div>
+
+        <div class="signin-row" style="margin-top:20px">
+          <p>Already have an account? <a href="/login">Sign in →</a></p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // ── Step: VERIFY (homeowner) — now just postcode + preferences ──
+  if (step.id === 'verify' && currentRole === 'homeowner') {
+    document.getElementById('btnNext').style.display = 'flex';
+    document.getElementById('stepFooter').style.display = 'flex';
+    document.getElementById('btnNextText').textContent = 'Create Account';
+    panels.innerHTML = `
+      <div class="step-panel active">
+        <h2 class="step-title">Almost <em>done!</em></h2>
+        <p class="step-sub">Just a couple more details so we can find the best tradespeople near you.</p>
+
+        <div class="hint-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <p><strong>Phone verified ✓</strong> — Your number ending in <strong id="verifiedPhoneSuffix"></strong> has been confirmed via SMS.</p>
+        </div>
+
+        <div class="form-group" style="max-width:320px">
+          <label class="form-label" for="postcode">Your postcode <span>Matches nearby tradespeople</span></label>
+          <div class="form-input-wrap">
+            <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <input type="text" class="form-input" id="postcode" placeholder="e.g. SW1A 1AA" autocomplete="postal-code">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">How did you hear about TradeMatch? <span>Optional</span></label>
+          <div class="form-input-wrap">
+            <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <select class="form-select" id="hearAbout" style="padding-left:40px">
+              <option value="">Select an option</option>
+              <option>Google search</option>
+              <option>Word of mouth</option>
+              <option>Social media</option>
+              <option>TV / Radio</option>
+              <option>A tradesperson told me</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>`;
+    // Show the verified phone suffix
+    const suffixEl = document.getElementById('verifiedPhoneSuffix');
+    if (suffixEl && verifiedPhone) suffixEl.textContent = '…' + verifiedPhone.slice(-4);
+    return;
+  }
+
+  // ── Step: TRADE INFO (tradesperson) ──
+  if (step.id === 'trade') {
+    document.getElementById('btnNext').style.display = 'flex';
+    document.getElementById('stepFooter').style.display = 'flex';
+    document.getElementById('btnNextText').textContent = 'Continue';
+    panels.innerHTML = `
+      <div class="step-panel active">
+        <h2 class="step-title">Your <em>trade</em></h2>
+        <p class="step-sub">Tell us what you do so we can match you to the right jobs.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="bizName">Business name</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+              <input type="text" class="form-input" id="bizName" placeholder="Smith Plumbing Ltd" autocomplete="organization">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="yearsExp">Years of experience</label>
+            <div class="form-input-wrap">
+              <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <select class="form-select" id="yearsExp" style="padding-left:40px">
+                <option value="">Select…</option>
+                <option>Less than 1 year</option>
+                <option>1–3 years</option>
+                <option>3–5 years</option>
+                <option>5–10 years</option>
+                <option>10+ years</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="coverPostcode">Main postcode / area <span>Determines your lead radius</span></label>
+          <div class="form-input-wrap">
+            <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <input type="text" class="form-input" id="coverPostcode" placeholder="e.g. M1 or Manchester" autocomplete="postal-code">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Trades offered <span>Select all that apply</span></label>
+          <div class="trade-grid" id="tradeGrid">
+            ${tradeOptions.map(t => `
+              <div class="trade-chip" onclick="toggleTrade(this,'${t}')">
+                <span class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+                <span class="chip-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="9" height="9"><polyline points="20 6 9 17 4 12"/></svg></span>
+                ${t}
+              </div>`).join('')}
+          </div>
+          <div class="field-error" id="errTrades">Please select at least one trade.</div>
+        </div>
+      </div>`;
+    // Re-apply selected state
+    selectedTrades.forEach(t => {
+      document.querySelectorAll('.trade-chip').forEach(el => {
+        if (el.textContent.trim() === t) el.classList.add('selected');
+      });
+    });
+    return;
+  }
+
+  // ── Step: DOCS (tradesperson) ──
+  if (step.id === 'docs') {
+    document.getElementById('btnNext').style.display = 'flex';
+    document.getElementById('stepFooter').style.display = 'flex';
+    document.getElementById('btnNextText').textContent = 'Create Account';
+    panels.innerHTML = `
+      <div class="step-panel active">
+        <h2 class="step-title">Verify your <em>credentials</em></h2>
+        <p class="step-sub">Upload your documents to get the TradeMatch Verified badge. You can skip for now and add them from your dashboard.</p>
+        <div class="hint-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <p><strong>Get verified sooner:</strong> Verified tradespeople win <strong>3× more</strong> leads. We review all documents within 24 hours.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Professional indemnity / public liability insurance</label>
+          <div class="upload-area" id="uploadInsurance" onclick="triggerUpload('fileInsurance')">
+            <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="upload-title" id="uploadInsuranceTitle">Upload insurance certificate</div>
+            <div class="upload-sub">PDF, JPG or PNG · Max 10MB</div>
+            <input type="file" id="fileInsurance" class="upload-input" accept=".pdf,.jpg,.jpeg,.png" onchange="fileChosen('fileInsurance','uploadInsurance','uploadInsuranceTitle')">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Photo ID <span>Passport, driving licence or ID card</span></label>
+          <div class="upload-area" id="uploadID" onclick="triggerUpload('fileID')">
+            <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div class="upload-title" id="uploadIDTitle">Upload photo ID</div>
+            <div class="upload-sub">PDF, JPG or PNG · Max 10MB</div>
+            <input type="file" id="fileID" class="upload-input" accept=".pdf,.jpg,.jpeg,.png" onchange="fileChosen('fileID','uploadID','uploadIDTitle')">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Accreditations &amp; memberships <span>Optional</span></label>
+          <div class="accred-grid">
+            ${accredOptions.map((a,i) => `
+              <div class="accred-chip" id="accred${i}" onclick="toggleAccred(${i},'${a.name}')">
+                <div class="accred-check" id="accredCheck${i}"></div>
+                <div><div class="accred-name">${a.name}</div><div class="accred-sub">${a.sub}</div></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="agree-row">
+          <input type="checkbox" id="agreeVerify">
+          <label class="agree-label" for="agreeVerify">I confirm the documents I upload are genuine and my work complies with applicable UK regulations. I understand false declarations result in immediate removal.</label>
+        </div>
+      </div>`;
+    // Re-apply selected accreds
+    selectedAccreds.forEach(a => {
+      const idx = accredOptions.findIndex(o => o.name === a);
+      if (idx > -1) document.getElementById(`accred${idx}`).classList.add('selected');
+    });
+    return;
+  }
+
+  // ── Step: DONE ──
+  if (step.id === 'done') {
+    document.getElementById('btnNext').style.display = 'none';
+    document.getElementById('btnBack').style.display = 'none';
+    document.getElementById('stepFooter').style.display = 'none';
+    panels.innerHTML = `
+      <div class="step-panel active success-panel" style="display:block">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="success-title">You're <em>all set!</em></h2>
+        <p class="success-sub">${currentRole === 'homeowner'
+          ? 'Your account is ready. Post your first job in under 3 minutes and get up to 5 verified quotes.'
+          : 'Your account is created. Our team will review your documents within 24 hours. In the meantime, start browsing available jobs near you.'
+        }</p>
+        <div class="success-actions">
+          <a href="${currentRole === 'homeowner' ? '/quote-engine' : '/dashboard'}" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            ${currentRole === 'homeowner' ? 'Post My First Job' : 'Go to My Dashboard'}
+          </a>
+          <a href="/" class="btn-secondary">Back to home</a>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:8px">
+          <div style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#9fb0bc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>256-bit SSL
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#9fb0bc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>GDPR Compliant
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#9fb0bc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>ICO Registered
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+// ── STEP NAV ──
+async function goNext() {
+  const ss = steps[currentRole];
+  const step = ss[currentStep];
+
+  if (step.id === 'account') {
+    // If OTP was sent but not yet verified, try to check it now
+    if (otpSent && !phoneVerified) {
+      const verified = await checkOTPCode();
+      if (!verified) return;
+    }
+    if (!validateAccount()) return;
+  }
+  if (step.id === 'trade' && !validateTrade()) return;
+
+  const isSubmissionStep = step.id === 'verify' || step.id === 'docs';
+  if (isSubmissionStep) {
+    const created = await submitRegistration();
+    if (!created) return;
+  }
+
+  if (currentStep < ss.length - 1) {
+    currentStep++;
+    renderStep();
+    document.getElementById('regCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function goBack() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderStep();
+    document.getElementById('regCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    // Back to role chooser
+    document.getElementById('regCard').style.display = 'none';
+    document.getElementById('roleChooser').style.display = 'block';
+    currentRole = null;
+    document.getElementById('roleHome').classList.remove('selected');
+    document.getElementById('roleTrade').classList.remove('selected');
+  }
+}
+
+async function submitRegistration() {
+  const submitBtn = document.getElementById('btnNext');
+  if (submitBtn) {
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+  }
+
+  const firstName = (document.getElementById('firstName')?.value || '').trim();
+  const lastName = (document.getElementById('lastName')?.value || '').trim();
+  const email = (document.getElementById('email')?.value || '').trim();
+  const phone = (document.getElementById('phone')?.value || '').trim();
+  const password = document.getElementById('password')?.value || '';
+
+  const payload = {
+    userType: currentRole === 'tradesperson' ? 'vendor' : 'customer',
+    fullName: `${firstName} ${lastName}`.trim(),
+    email,
+    phone,
+    password,
+    terms: Boolean(document.getElementById('agreeTerms')?.checked),
+    marketing: false
+  };
+
+  if (payload.userType === 'customer') {
+    payload.postcode = (document.getElementById('postcode')?.value || '').trim().toUpperCase();
+    payload.hearAbout = (document.getElementById('hearAbout')?.value || '').trim();
+    if (claimQuoteId) {
+      payload.claimQuoteId = claimQuoteId;
+    }
+  } else {
+    payload.companyName = (document.getElementById('bizName')?.value || '').trim();
+    payload.postcode = (document.getElementById('coverPostcode')?.value || '').trim().toUpperCase();
+    payload.yearsExperience = (document.getElementById('yearsExp')?.value || '').trim();
+    payload.services = selectedTrades.slice();
+    payload.accreditations = selectedAccreds.slice();
+  }
+
+  try {
+    const response = await fetch(`${VERIFY_API}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
+    }
+
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+    if (data.user) {
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+    if (data.claimedQuoteId) {
+      localStorage.setItem('claimedQuoteId', data.claimedQuoteId);
+    }
+    localStorage.setItem('lastEmail', email);
+    if (claimQuoteId) {
+      localStorage.removeItem('pendingQuoteClaimId');
+    }
+
+    return true;
+  } catch (error) {
+    const alertEl = document.getElementById('accountAlert');
+    if (alertEl) {
+      document.getElementById('accountAlertText').textContent = error.message || 'Registration failed. Please try again.';
+      alertEl.className = 'form-alert error';
+    }
+    return false;
+  } finally {
+    if (submitBtn) {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }
+  }
+}
+
+// ── VALIDATION ──
+function validateAccount() {
+  let ok = true;
+  const checks = [
+    ['firstName', v => v.trim().length > 0, 'errFirstName'],
+    ['lastName',  v => v.trim().length > 0, 'errLastName'],
+    ['email',     v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'errEmail'],
+    ['phone',     v => v.trim().length > 6, 'errPhone'],
+    ['password',  v => v.length >= 8, 'errPassword'],
+  ];
+  checks.forEach(([id, fn, errId]) => {
+    const el = document.getElementById(id);
+    const errEl = document.getElementById(errId);
+    if (!el) return;
+    const valid = fn(el.value);
+    el.classList.toggle('error', !valid);
+    if (errEl) errEl.style.display = valid ? 'none' : 'block';
+    if (!valid) ok = false;
+  });
+
+  // Must have verified phone via Twilio
+  const errNotVerified = document.getElementById('errPhoneNotVerified');
+  if (!phoneVerified) {
+    if (errNotVerified) errNotVerified.style.display = 'block';
+    // Scroll OTP area into view
+    const wrap = document.getElementById('otpInlineWrap');
+    if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    ok = false;
+  } else {
+    if (errNotVerified) errNotVerified.style.display = 'none';
+  }
+
+  const terms = document.getElementById('agreeTerms');
+  const errTerms = document.getElementById('errTerms');
+  if (terms && !terms.checked) {
+    if (errTerms) errTerms.style.display = 'block';
+    ok = false;
+  } else if (errTerms) errTerms.style.display = 'none';
+
+  return ok;
+}
+
+function validateTrade() {
+  if (selectedTrades.length === 0) {
+    document.getElementById('errTrades').style.display = 'block';
+    return false;
+  }
+  document.getElementById('errTrades').style.display = 'none';
+  return true;
+}
+
+// ── UTILITIES ──
+function togglePw(inputId, openId, closeId) {
+  const inp = document.getElementById(inputId);
+  const isText = inp.type === 'text';
+  inp.type = isText ? 'password' : 'text';
+  document.getElementById(openId).style.display = isText ? '' : 'none';
+  document.getElementById(closeId).style.display = isText ? 'none' : '';
+}
+
+function checkPwStrength(v) {
+  const el = document.getElementById('pwStrength');
+  if (!el) return;
+  el.style.display = v.length ? 'block' : 'none';
+  let score = 0;
+  if (v.length >= 8) score++;
+  if (/[A-Z]/.test(v)) score++;
+  if (/[0-9]/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  const labels = ['Weak','Fair','Good','Strong'];
+  const classes = ['weak','fair','good','strong'];
+  const bars = ['b1','b2','b3','b4'];
+  bars.forEach((b, i) => {
+    const bar = document.getElementById(b);
+    if (bar) bar.className = `pw-bar ${i < score ? classes[score - 1] : ''}`;
+  });
+  const lbl = document.getElementById('pwLabel');
+  if (lbl) { lbl.textContent = labels[score - 1] || 'Too short'; lbl.style.color = score > 2 ? 'var(--neon3)' : score === 2 ? 'var(--amber2)' : '#ef4444'; }
+}
+
+function toggleTrade(el, trade) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    if (!selectedTrades.includes(trade)) selectedTrades.push(trade);
+  } else {
+    selectedTrades = selectedTrades.filter(t => t !== trade);
+  }
+  if (selectedTrades.length > 0) {
+    const errEl = document.getElementById('errTrades');
+    if (errEl) errEl.style.display = 'none';
+  }
+}
+
+function toggleAccred(i, name) {
+  const chip = document.getElementById(`accred${i}`);
+  chip.classList.toggle('selected');
+  if (chip.classList.contains('selected')) {
+    if (!selectedAccreds.includes(name)) selectedAccreds.push(name);
+  } else {
+    selectedAccreds = selectedAccreds.filter(a => a !== name);
+  }
+}
+
+function otpMove(el, i) {
+  el.value = el.value.replace(/\D/g, '');
+  if (el.value && i < 6) {
+    const next = document.getElementById(`otp${i + 1}`);
+    if (next) next.focus();
+  }
+  // Auto-proceed if all 6 filled
+  const all = [1,2,3,4,5,6].every(n => { const e = document.getElementById(`otp${n}`); return e && e.value; });
+  if (all) setTimeout(() => document.getElementById('btnNext').focus(), 100);
+}
+
+function otpBack(e, i) {
+  if (e.key === 'Backspace' && !e.target.value && i > 1) {
+    document.getElementById(`otp${i - 1}`).focus();
+  }
+}
+
+// ════════════════════════════════════════════════
+// TWILIO VERIFY — FRONTEND API CALLS
+// ════════════════════════════════════════════════
+
+/**
+ * Called when user clicks "Send Code".
+ * Hits POST /api/verify/send on the backend.
+ */
+async function sendVerifyCode() {
+  const phoneInput = document.getElementById('phone');
+  const btn = document.getElementById('btnSendCode');
+  const btnText = document.getElementById('btnSendCodeText');
+  const errEl = document.getElementById('errPhone');
+  const otpWrap = document.getElementById('otpInlineWrap');
+  const sentTo = document.getElementById('otpSentTo');
+  const statusMsg = document.getElementById('otpStatusMsg');
+
+  // Clear previous errors
+  errEl.style.display = 'none';
+  phoneInput.classList.remove('error');
+
+  const raw = phoneInput.value.trim();
+  if (!raw || raw.length < 7) {
+    phoneInput.classList.add('error');
+    errEl.textContent = 'Please enter a valid phone number first.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btnText.textContent = 'Sending…';
+  btn.style.opacity = '0.7';
+
+  try {
+    const res = await fetch(`${VERIFY_API}/api/verify/send`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: raw })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      otpSent = true;
+      verifiedPhone = data.to || raw;
+
+      // Show OTP input box
+      otpWrap.style.display = 'block';
+      sentTo.textContent = `Sent to ${verifiedPhone.replace(/(\+44)(\d{4})(\d{3})(\d{3})/, '$1 $2 $3 $4')}`;
+      statusMsg.textContent = 'Enter the 6-digit code below';
+      statusMsg.style.color = '#9fb0bc';
+
+      // Lock the phone field while waiting for OTP
+      phoneInput.readOnly = true;
+      phoneInput.style.color = '#6b7f8e';
+
+      // Change button to "Change Number"
+      btnText.textContent = 'Change';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      btn.onclick = changePhoneNumber;
+
+      // Focus first OTP digit
+      setTimeout(() => { const el = document.getElementById('otp1'); if (el) el.focus(); }, 150);
+
+      // Start resend cooldown (60s)
+      startResendCooldown();
+
+    } else {
+      // API error
+      phoneInput.classList.add('error');
+      errEl.textContent = data.error || 'Failed to send code. Please try again.';
+      errEl.style.display = 'block';
+      btnText.textContent = 'Send Code';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  } catch (err) {
+    console.error('Send verify error:', err);
+    errEl.textContent = 'Could not reach verification server. Check your connection.';
+    errEl.style.display = 'block';
+    phoneInput.classList.add('error');
+    btnText.textContent = 'Retry';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
+}
+
+/**
+ * Auto-called when all 6 OTP digits are filled.
+ * Also called by goNext() — so "Continue" button works too.
+ * Hits POST /api/verify/check on the backend.
+ */
+async function checkOTPCode() {
+  if (phoneVerified) return true; // Already verified — skip
+
+  const code = [1,2,3,4,5,6].map(i => {
+    const el = document.getElementById(`otp${i}`);
+    return el ? el.value : '';
+  }).join('');
+
+  if (code.length < 6) {
+    const errEl = document.getElementById('otpError');
+    if (errEl) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; }
+    return false;
+  }
+
+  const statusMsg = document.getElementById('otpStatusMsg');
+  const otpError = document.getElementById('otpError');
+  const otpWrap = document.getElementById('otpInlineWrap');
+  if (otpError) otpError.style.display = 'none';
+  if (statusMsg) { statusMsg.textContent = 'Checking…'; statusMsg.style.color = '#9fb0bc'; }
+
+  // Dim OTP boxes while checking
+  [1,2,3,4,5,6].forEach(i => {
+    const el = document.getElementById(`otp${i}`);
+    if (el) el.style.opacity = '0.5';
+  });
+
+  try {
+    const res = await fetch(`${VERIFY_API}/api/verify/check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: verifiedPhone, code })
+    });
+    const data = await res.json();
+
+    if (data.verified) {
+      phoneVerified = true;
+
+      // Success: replace OTP box with green badge
+      otpWrap.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;padding:4px 0">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--neon3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--ff);font-size:.88rem;font-weight:800;color:var(--neon3);letter-spacing:-.02em">Phone verified ✓</div>
+            <div style="font-size:11.5px;color:#6b7f8e">${verifiedPhone}</div>
+          </div>
+        </div>`;
+      otpWrap.style.background = 'rgba(0,194,104,.04)';
+      otpWrap.style.border = '1px solid rgba(0,194,104,.25)';
+
+      // Show verified badge under phone input
+      const badge = document.getElementById('phoneVerifiedBadge');
+      if (badge) badge.style.display = 'flex';
+
+      // Hide error messages
+      const errNotVerified = document.getElementById('errPhoneNotVerified');
+      if (errNotVerified) errNotVerified.style.display = 'none';
+
+      return true;
+
+    } else {
+      // Wrong code
+      [1,2,3,4,5,6].forEach(i => {
+        const el = document.getElementById(`otp${i}`);
+        if (el) { el.style.opacity = '1'; el.value = ''; el.classList.add('error'); }
+      });
+      if (otpError) { otpError.textContent = data.error || 'Incorrect code. Please try again.'; otpError.style.display = 'block'; }
+      if (statusMsg) statusMsg.textContent = '';
+      setTimeout(() => { const el = document.getElementById('otp1'); if (el) { el.classList.remove('error'); el.focus(); } }, 100);
+      return false;
+    }
+  } catch (err) {
+    console.error('Check OTP error:', err);
+    [1,2,3,4,5,6].forEach(i => {
+      const el = document.getElementById(`otp${i}`);
+      if (el) el.style.opacity = '1';
+    });
+    if (otpError) { otpError.textContent = 'Verification server unreachable. Please try again.'; otpError.style.display = 'block'; }
+    if (statusMsg) statusMsg.textContent = '';
+    return false;
+  }
+}
+
+/**
+ * Allow user to change their phone number before verifying.
+ */
+function changePhoneNumber() {
+  const phoneInput = document.getElementById('phone');
+  const otpWrap = document.getElementById('otpInlineWrap');
+  const btn = document.getElementById('btnSendCode');
+  const btnText = document.getElementById('btnSendCodeText');
+
+  phoneInput.readOnly = false;
+  phoneInput.style.color = '';
+  phoneInput.value = '';
+  phoneInput.focus();
+
+  otpWrap.style.display = 'none';
+  [1,2,3,4,5,6].forEach(i => {
+    const el = document.getElementById(`otp${i}`);
+    if (el) { el.value = ''; el.classList.remove('error'); el.style.opacity = '1'; }
+  });
+
+  otpSent = false;
+  phoneVerified = false;
+  verifiedPhone = '';
+  resendCooldown = false;
+
+  btnText.textContent = 'Send Code';
+  btn.disabled = false;
+  btn.style.opacity = '1';
+  btn.onclick = sendVerifyCode;
+
+  const badge = document.getElementById('phoneVerifiedBadge');
+  if (badge) badge.style.display = 'none';
+}
+
+/**
+ * Auto-submit OTP when all 6 digits are typed.
+ */
+function otpMove(el, i) {
+  el.value = el.value.replace(/\D/g, '');
+  el.classList.remove('error');
+  if (el.value && i < 6) {
+    const next = document.getElementById(`otp${i + 1}`);
+    if (next) next.focus();
+  }
+  // Auto-check when all filled
+  const all = [1,2,3,4,5,6].every(n => { const e = document.getElementById(`otp${n}`); return e && e.value.length === 1; });
+  if (all) {
+    setTimeout(() => checkOTPCode(), 200);
+  }
+}
+
+function otpBack(e, i) {
+  const el = e.target;
+  el.classList.remove('error');
+  if (e.key === 'Backspace' && !el.value && i > 1) {
+    document.getElementById(`otp${i - 1}`).focus();
+  }
+}
+
+/**
+ * Resend OTP with 60-second cooldown.
+ */
+async function resendOTP() {
+  if (resendCooldown) return;
+  await sendVerifyCode();
+}
+
+function startResendCooldown() {
+  resendCooldown = true;
+  let secs = 60;
+  const btn = document.getElementById('btnResend');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.style.opacity = '0.4';
+  btn.textContent = `Resend (${secs}s)`;
+  const timer = setInterval(() => {
+    secs--;
+    if (btn) btn.textContent = `Resend (${secs}s)`;
+    if (secs <= 0) {
+      clearInterval(timer);
+      resendCooldown = false;
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = 'Resend code'; }
+    }
+  }, 1000);
+}
+
+function triggerUpload(id) {
+  event.stopPropagation();
+  document.getElementById(id).click();
+}
+
+function fileChosen(inputId, areaId, titleId) {
+  const file = document.getElementById(inputId).files[0];
+  if (!file) return;
+  document.getElementById(areaId).classList.add('has-file');
+  document.getElementById(titleId).textContent = '✓ ' + file.name;
+}
+
+function handleOAuth(provider) {
+  const role = currentRole === 'tradesperson' ? 'vendor' : 'customer';
+  const returnTo = window.location.origin;
+  const url = `${VERIFY_API}/auth/${provider}?returnTo=${encodeURIComponent(returnTo)}&userType=${encodeURIComponent(role)}`;
+  window.location.href = url;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.lucide) lucide.createIcons();
+});
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
