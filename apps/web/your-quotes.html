@@ -3833,6 +3833,37 @@
     margin-bottom: 40px;
 }
 
+/* Claimed quote highlight */
+.job-section.claimed-job {
+    border: 2px solid var(--accent-primary);
+    border-radius: 14px;
+    box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.08), var(--shadow-md);
+    animation: claimedPulse 1.8s ease 0.3s 2;
+}
+[data-theme="light"] .job-section.claimed-job {
+    border-color: #16A34A;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.08), var(--shadow-md);
+}
+@keyframes claimedPulse {
+    0%,100% { box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.08), var(--shadow-md); }
+    50%     { box-shadow: 0 0 0 8px rgba(0, 229, 160, 0.18), var(--shadow-lg); }
+}
+.claimed-banner {
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, rgba(0,229,160,0.12) 0%, rgba(0,229,160,0.04) 100%);
+    border-bottom: 1px solid rgba(0,229,160,0.2);
+    padding: 10px 20px;
+    font-size: 13px; font-weight: 700; color: var(--accent-primary);
+    border-radius: 12px 12px 0 0;
+    letter-spacing: 0.02em;
+}
+[data-theme="light"] .claimed-banner {
+    background: linear-gradient(90deg, rgba(22,163,74,0.08) 0%, rgba(22,163,74,0.02) 100%);
+    border-bottom-color: rgba(22,163,74,0.2);
+    color: #15803d;
+}
+.claimed-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+
 .job-header {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -5484,22 +5515,30 @@ function renderQuoteCard(quote, job) {
 /**
  * Render job section with quotes
  */
-function renderJobSection(job) {
+function renderJobSection(job, isClaimed) {
     if (job.quotes.length === 0) return '';
-    
+
     // Apply filter
     let filteredQuotes = job.quotes;
     if (currentFilter !== 'all') {
         filteredQuotes = job.quotes.filter(q => q.status === currentFilter);
     }
-    
+
     if (filteredQuotes.length === 0) return '';
-    
+
     const jobTitle = escapeHtml(job.title);
     const jobPostcode = escapeHtml(job.postcode);
     const jobStatus = escapeHtml(job.status);
+    const claimedBanner = isClaimed ? `
+        <div class="claimed-banner">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Quote claimed — your guest request is now linked to your account
+        </div>` : '';
     return `
-        <div class="job-section">
+        <div class="job-section${isClaimed ? ' claimed-job' : ''}" data-job-id="${job.id}">
+            ${claimedBanner}
             <div class="job-header">
                 <div class="job-info">
                     <div class="job-title-row">
@@ -5568,7 +5607,18 @@ function renderContent() {
         return;
     }
     
-    container.innerHTML = jobsWithQuotes.map(job => renderJobSection(job)).join('');
+    const claimedQuoteId = localStorage.getItem('claimedQuoteId') || '';
+    container.innerHTML = jobsWithQuotes.map(job => renderJobSection(job, claimedQuoteId && String(job.id) === String(claimedQuoteId))).join('');
+
+    // Scroll to and briefly highlight the claimed job section
+    if (claimedQuoteId) {
+        const claimedEl = container.querySelector('.claimed-job');
+        if (claimedEl) {
+            setTimeout(() => claimedEl.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+            // Clear after first view so the badge only shows once
+            localStorage.removeItem('claimedQuoteId');
+        }
+    }
 }
 
 /**

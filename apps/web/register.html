@@ -903,6 +903,15 @@
                     throw new Error(data.error || 'Registration failed');
                 }
 
+                // Store JWT so the user is logged in after activation
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                }
+                // Persist claimed quote ID so dashboard can highlight it
+                if (data.claimedQuoteId) {
+                    localStorage.setItem('claimedQuoteId', data.claimedQuoteId);
+                }
+
                 // Show success message - NO auto-redirect, user must activate first
                 document.getElementById('registrationForm').style.display = 'none';
                 document.getElementById('successMessage').classList.add('active');
