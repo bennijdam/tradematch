@@ -12,8 +12,64 @@ const router = express.Router();
 let pool;
 let emailTransporter;
 
+// ── UK postcode validation ─────────────────────────────────────────────────
+const UK_POSTCODE_RE = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]? ?[0-9][A-Z]{2}$/i;
+
+async function verifyPostcode(postcode) {
+    const normalised = postcode.trim().toUpperCase().replace(/\s+/g, ' ');
+    if (!UK_POSTCODE_RE.test(normalised)) {
+        return { valid: false, normalised, reason: 'Invalid UK postcode format' };
+    }
+    try {
+        const encoded = encodeURIComponent(normalised.replace(' ', ''));
+        const r = await axios.get(`https://api.postcodes.io/postcodes/${encoded}`, { timeout: 4000 });
+        if (r.data?.status === 200) return { valid: true, normalised };
+        return { valid: false, normalised, reason: 'Postcode does not exist' };
+    } catch (_) {
+        // postcodes.io unreachable — accept format-valid postcode to avoid blocking submissions
+        return { valid: true, normalised };
+    }
+}
+
+// ── Standardised error helper ──────────────────────────────────────────────
+function apiError(res, status, error, code, details) {
+    return res.status(status).json({ error, code: code || String(status), ...(details ? { details } : {}) });
+}
+
+// ── In-memory idempotency cache (5-min TTL) ────────────────────────────────
+const _idempotencyCache = new Map();
+const IDEMPOTENCY_TTL_MS = 5 * 60 * 1000;
+
+function checkIdempotency(key, customerId) {
+    if (!key) return null;
+    const cacheKey = `${customerId}:${key}`;
+    const cached = _idempotencyCache.get(cacheKey);
+    if (cached && Date.now() - cached.ts < IDEMPOTENCY_TTL_MS) return cached.quoteId;
+    return null;
+}
+
+function storeIdempotency(key, customerId, quoteId) {
+    if (!key) return;
+    const cacheKey = `${customerId}:${key}`;
+    _idempotencyCache.set(cacheKey, { quoteId, ts: Date.now() });
+    if (_idempotencyCache.size > 500) {
+        const now = Date.now();
+        for (const [k, v] of _idempotencyCache) {
+            if (now - v.ts > IDEMPOTENCY_TTL_MS) _idempotencyCache.delete(k);
+        }
+    }
+}
+
+// Lazily create one EmailService instance per pool initialisation
+let _emailService = null;
+
 router.setPool = (p) => {
   pool = p;
+  try {
+    _emailService = new EmailService(p);
+  } catch (_) {
+    _emailService = null;
+  }
 };
 
 router.setEmailTransporter = (transporter) => {
@@ -60,7 +116,8 @@ router.post('/public', [
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return apiError(res, 400, 'Validation failed', 'VALIDATION_ERROR',
+      errors.array().map((e) => ({ field: e.path, message: e.msg })));
   }
 
   const {
@@ -74,6 +131,24 @@ router.post('/public', [
     additionalDetails,
     photos
   } = req.body;
+
+  // Server-side postcode verification
+  const postcodeResult = await verifyPostcode(postcode);
+  if (!postcodeResult.valid) {
+    return apiError(res, 422, postcodeResult.reason || 'Invalid postcode', 'INVALID_POSTCODE');
+  }
+  const normalisedPostcode = postcodeResult.normalised;
+
+  // Idempotency: derive a temporary customer key from email (before user lookup)
+  const idempotencyKey = req.headers['x-idempotency-key'] || null;
+  const guestEmailRaw = ((additionalDetails || {}).email || '').trim().toLowerCase();
+  const tempCustomerKey = `guest:${guestEmailRaw || normalisedPostcode}`;
+  if (idempotencyKey) {
+    const existing = checkIdempotency(idempotencyKey, tempCustomerKey);
+    if (existing) {
+      return res.status(200).json(formatQuoteResponse(existing, req.body, 'Duplicate request — returning existing quote.'));
+    }
+  }
 
   try {
     const quoteId = `quote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -108,7 +183,7 @@ router.post('/public', [
           guestName,
           guestName,
           guestPhone,
-          postcode
+          normalisedPostcode
         ]
       );
     }
@@ -124,7 +199,7 @@ router.post('/public', [
         serviceType,
         title,
         description,
-        postcode,
+        normalisedPostcode,
         budgetMin || null,
         budgetMax || null,
         urgency || null,
@@ -132,6 +207,8 @@ router.post('/public', [
         photos ? JSON.stringify(photos) : null
       ]
     );
+
+    storeIdempotency(idempotencyKey, tempCustomerKey, quoteId);
 
     res.status(201).json(
       formatQuoteResponse(
@@ -169,7 +246,7 @@ router.post('/public', [
         };
 
         // Process through lead system (qualify → price → distribute → notify)
-        const leadService = new LeadSystemIntegrationService(pool, null);
+        const leadService = new LeadSystemIntegrationService(pool, _emailService);
         await leadService.processNewLead(quoteData, guestCustomer);
 
         console.log(`✅ Public quote ${quoteId} processed successfully through lead system`);
@@ -181,7 +258,8 @@ router.post('/public', [
     })();
   } catch (error) {
     console.error('Create public quote error:', error);
-    res.status(500).json({ error: 'Failed to create quote', details: error.message });
+    return apiError(res, 500, 'Failed to create quote', 'SERVER_ERROR',
+      process.env.NODE_ENV !== 'production' ? error.message : undefined);
   }
 });
 
@@ -205,7 +283,7 @@ const authenticate = (req, res, next) => {
 };
 
 // ==========================================
-// CREATE QUOTE
+// CREATE QUOTE (Authenticated)
 // ==========================================
 router.post('/', authenticate, [
   body('serviceType').notEmpty().withMessage('Service type is required'),
@@ -215,7 +293,8 @@ router.post('/', authenticate, [
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return apiError(res, 400, 'Validation failed', 'VALIDATION_ERROR',
+      errors.array().map((e) => ({ field: e.path, message: e.msg })));
   }
 
   const {
@@ -229,6 +308,20 @@ router.post('/', authenticate, [
     additionalDetails,
     photos
   } = req.body;
+
+  // Server-side postcode verification
+  const postcodeResult = await verifyPostcode(postcode);
+  if (!postcodeResult.valid) {
+    return apiError(res, 422, postcodeResult.reason || 'Invalid postcode', 'INVALID_POSTCODE');
+  }
+  const normalisedPostcode = postcodeResult.normalised;
+
+  // Idempotency
+  const idempotencyKey = req.headers['x-idempotency-key'] || null;
+  const existing = checkIdempotency(idempotencyKey, req.user.userId);
+  if (existing) {
+    return res.status(200).json(formatQuoteResponse(existing, req.body, 'Duplicate request — returning existing quote.'));
+  }
 
   try {
     const quoteId = `quote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -244,7 +337,7 @@ router.post('/', authenticate, [
         serviceType,
         title,
         description,
-        postcode,
+        normalisedPostcode,
         budgetMin || null,
         budgetMax || null,
         urgency || null,
@@ -253,6 +346,7 @@ router.post('/', authenticate, [
       ]
     );
 
+    storeIdempotency(idempotencyKey, req.user.userId, quoteId);
     res.status(201).json(formatQuoteResponse(quoteId, req.body, 'Quote created successfully'));
 
     // ==========================================
@@ -282,7 +376,7 @@ router.post('/', authenticate, [
         };
 
         // Process through lead system (qualify → price → distribute → notify)
-        const leadService = new LeadSystemIntegrationService(pool, null);
+        const leadService = new LeadSystemIntegrationService(pool, _emailService);
         await leadService.processNewLead(quoteData, customer);
 
         console.log(`✅ Quote ${quoteId} processed successfully through lead system`);
@@ -295,7 +389,8 @@ router.post('/', authenticate, [
 
   } catch (error) {
     console.error('Create quote error:', error);
-    res.status(500).json({ error: 'Failed to create quote', details: error.message });
+    return apiError(res, 500, 'Failed to create quote', 'SERVER_ERROR',
+      process.env.NODE_ENV !== 'production' ? error.message : undefined);
   }
 });
 

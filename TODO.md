@@ -32,7 +32,7 @@ This TODO covers missing logic and integration gaps required to make the Quick Q
 
 ## 2) P0 (Blockers) — Fix Immediately
 
-- [ ] **Fix API contract mismatch for authenticated quote submit**
+- [x] **Fix API contract mismatch for authenticated quote submit**
   - Problem: frontend expects `data.quote.id`, backend returns `data.quoteId` for auth path.
   - Risk: authenticated quote success modal can fail or show broken quote ID.
   - Target files: `apps/web/quote-engine.html`, `apps/api/routes/quotes.js`
@@ -40,7 +40,7 @@ This TODO covers missing logic and integration gaps required to make the Quick Q
     - Auth and guest submissions both resolve a valid displayed quote ID.
     - Response schema is consistent across both endpoints (prefer `quote.id` in both).
 
-- [ ] **Stop duplicate GDPR/cookie DOM blocks and duplicate script execution**
+- [x] **Stop duplicate GDPR/cookie DOM blocks and duplicate script execution**
   - Problem: duplicate `gdprNotice`, `acceptCookies`, `cookieSettings`, `socialProofContainer` IDs and duplicated script blocks in homepage.
   - Risk: non-deterministic DOM behavior and compliance UI instability.
   - Target file: `apps/web/index.html`
@@ -48,7 +48,7 @@ This TODO covers missing logic and integration gaps required to make the Quick Q
     - Each consent element ID appears once.
     - Consent script initializes once and behaves deterministically.
 
-- [ ] **Use first-party backend postcode endpoint for validation/autocomplete**
+- [x] **Use first-party backend postcode endpoint for validation/autocomplete**
   - Problem: homepage autocomplete currently calls `api.postcodes.io` directly from browser.
   - Risk: client-side dependency leakage, inconsistent behavior, harder observability/rate control.
   - Target files: `apps/web/index.html`, `apps/api/routes/postcode.js`
@@ -60,32 +60,32 @@ This TODO covers missing logic and integration gaps required to make the Quick Q
 
 ## 3) P1 (High Priority) — Operational Hardening
 
-- [ ] **Add server-side postcode verification in quote creation routes**
+- [x] **Add server-side postcode verification in quote creation routes**
   - Problem: only required-field + regex-level checks; no authoritative postcode existence verification.
   - Target file: `apps/api/routes/quotes.js`
   - Acceptance:
     - `POST /api/quotes` and `/api/quotes/public` reject invalid/non-existent postcodes with clear error code.
 
-- [ ] **Standardize error payloads for frontend handling**
+- [x] **Standardize error payloads for frontend handling**
   - Problem: mixed error shapes (`error`, `errors[]`, and route-specific structures).
   - Target files: `apps/api/routes/quotes.js`, shared error helpers if present
   - Acceptance:
     - Errors follow one envelope (e.g., `{ error, code, details }`) across quote endpoints.
     - Frontend displays field-level and global errors consistently.
 
-- [ ] **Make quote API base URL environment-driven**
+- [x] **Make quote API base URL environment-driven**
   - Problem: hardcoded `https://api.tradematch.uk` in frontend submit calls.
   - Target file: `apps/web/quote-engine.html`
   - Acceptance:
     - Dev/staging/prod API base selectable without code edits.
 
-- [ ] **Add idempotency/duplicate submission protection**
+- [x] **Add idempotency/duplicate submission protection**
   - Problem: repeated clicks/network retries can create duplicate quotes.
   - Target files: `apps/web/quote-engine.html`, `apps/api/routes/quotes.js`
   - Acceptance:
     - Duplicate submissions within short window are safely ignored or merged.
 
-- [ ] **Confirm transactional notification wiring for quote creation**
+- [x] **Confirm transactional notification wiring for quote creation**
   - Problem: lead pipeline exists, but explicit quote-created notification coverage should be verified and enforced.
   - Target files: `apps/api/routes/quotes.js`, `apps/api/routes/email.js` and/or email service
   - Acceptance:
@@ -95,19 +95,19 @@ This TODO covers missing logic and integration gaps required to make the Quick Q
 
 ## 4) P2 (Medium Priority) — UX/Data Quality/Consistency
 
-- [ ] **Normalize GBP formatting to UK locale**
+- [x] **Normalize GBP formatting to UK locale**
   - Problem: `toLocaleString()` used without explicit `en-GB` in budget displays.
   - Target file: `apps/web/quote-engine.html`
   - Acceptance:
     - All currency formatting uses a single helper with UK locale.
 
-- [ ] **Centralize UK postcode validation regex/helper**
+- [x] **Centralize UK postcode validation regex/helper**
   - Problem: postcode validation logic duplicated across forms.
   - Target files: `apps/web/index.html`, `apps/web/quote-engine.html`, `apps/api/routes/quotes.js`
   - Acceptance:
     - Shared validator pattern used consistently frontend + backend.
 
-- [ ] **Add analytics events at key funnel steps**
+- [x] **Add analytics events at key funnel steps**
   - Events: quick quote start, step completion, submit success, submit failure (with reason category).
   - Target files: `apps/web/index.html`, `apps/web/quote-engine.html`, backend logging hooks
   - Acceptance:
