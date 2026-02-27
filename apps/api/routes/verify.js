@@ -1,11 +1,24 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const twilio = require('twilio');
+const { Resend } = require('resend');
 
 const router = express.Router();
 
 const SEND_WINDOW_MS = 10 * 60 * 1000;
 const CHECK_WINDOW_MS = 10 * 60 * 1000;
+
+// ── Email OTP store (in-memory, TTL 10 min) ────────────────────────────────
+const EMAIL_OTP_TTL_MS = 10 * 60 * 1000;
+const MAX_EMAIL_CHECK_ATTEMPTS = 5;
+const emailOtpStore = new Map(); // key: email → { code, expiresAt, attempts }
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [email, entry] of emailOtpStore) {
+    if (entry.expiresAt < now) emailOtpStore.delete(email);
+  }
+}, 60_000);
 
 const sendLimiter = rateLimit({
   windowMs: SEND_WINDOW_MS,
@@ -28,6 +41,30 @@ const checkLimiter = rateLimit({
     success: false,
     error: 'Too many code verification attempts. Please wait before trying again.',
     code: 'VERIFY_CHECK_RATE_LIMIT'
+  }
+});
+
+const emailSendLimiter = rateLimit({
+  windowMs: SEND_WINDOW_MS,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many email verification requests. Please wait before trying again.',
+    code: 'VERIFY_EMAIL_SEND_RATE_LIMIT'
+  }
+});
+
+const emailCheckLimiter = rateLimit({
+  windowMs: CHECK_WINDOW_MS,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many email code attempts. Please wait before trying again.',
+    code: 'VERIFY_EMAIL_CHECK_RATE_LIMIT'
   }
 });
 
@@ -210,6 +247,129 @@ router.post('/check', checkLimiter, async (req, res) => {
     const mapped = mapTwilioError(error, 'Unable to verify code right now.');
     return res.status(mapped.status).json(mapped.payload);
   }
+});
+
+// ── Email OTP endpoints ────────────────────────────────────────────────────
+
+router.post('/email/send', emailSendLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase();
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Please enter a valid email address.',
+      code: 'INVALID_EMAIL'
+    });
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return res.status(503).json({
+      success: false,
+      error: 'Email verification service is not configured.',
+      code: 'VERIFY_EMAIL_NOT_CONFIGURED'
+    });
+  }
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  emailOtpStore.set(email, {
+    code,
+    expiresAt: Date.now() + EMAIL_OTP_TTL_MS,
+    attempts: 0
+  });
+
+  try {
+    const resend = new Resend(apiKey);
+    const fromAddress = process.env.EMAIL_FROM || 'noreply@tradematch.uk';
+
+    await resend.emails.send({
+      from: fromAddress,
+      to: email,
+      subject: 'Your TradeMatch verification code',
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px">
+          <h2 style="color:#007a3d;margin:0 0 8px">Verify your email</h2>
+          <p style="color:#374151;margin:0 0 24px">Use the code below to complete your TradeMatch quote submission. It expires in 10 minutes.</p>
+          <div style="background:#f0fdf4;border:2px solid #007a3d;border-radius:10px;padding:20px 24px;text-align:center;margin:0 0 24px">
+            <span style="font-size:36px;font-weight:700;letter-spacing:8px;color:#007a3d">${code}</span>
+          </div>
+          <p style="color:#6b7280;font-size:13px;margin:0">If you didn't request this, you can safely ignore this email.</p>
+        </div>
+      `
+    });
+
+    return res.json({ success: true, email });
+  } catch (error) {
+    console.error('Email OTP send error:', error?.message);
+    return res.status(502).json({
+      success: false,
+      error: 'Unable to send verification email right now.',
+      code: 'EMAIL_SEND_FAILED'
+    });
+  }
+});
+
+router.post('/email/check', emailCheckLimiter, async (req, res) => {
+  const email = String(req.body?.email || '').trim().toLowerCase();
+  const code = String(req.body?.code || '').trim();
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Please enter a valid email address.',
+      code: 'INVALID_EMAIL'
+    });
+  }
+
+  if (!/^\d{6}$/.test(code)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Verification code must be 6 digits.',
+      code: 'INVALID_CODE'
+    });
+  }
+
+  const entry = emailOtpStore.get(email);
+
+  if (!entry) {
+    return res.status(400).json({
+      success: false,
+      error: 'No verification code found. Please request a new one.',
+      code: 'CODE_NOT_FOUND'
+    });
+  }
+
+  if (Date.now() > entry.expiresAt) {
+    emailOtpStore.delete(email);
+    return res.status(400).json({
+      success: false,
+      error: 'Verification code has expired. Please request a new one.',
+      code: 'CODE_EXPIRED'
+    });
+  }
+
+  entry.attempts += 1;
+
+  if (entry.attempts > MAX_EMAIL_CHECK_ATTEMPTS) {
+    emailOtpStore.delete(email);
+    return res.status(429).json({
+      success: false,
+      error: 'Too many incorrect attempts. Please request a new code.',
+      code: 'TOO_MANY_ATTEMPTS'
+    });
+  }
+
+  if (entry.code !== code) {
+    return res.status(400).json({
+      success: false,
+      verified: false,
+      error: 'The verification code is incorrect.',
+      code: 'INVALID_OR_EXPIRED_CODE'
+    });
+  }
+
+  emailOtpStore.delete(email);
+  return res.json({ success: true, verified: true });
 });
 
 module.exports = router;

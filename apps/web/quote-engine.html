@@ -43,7 +43,7 @@
             --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
             /* Legacy compat */
             --emerald-500: #007a3d; --emerald-600: #006432; --emerald-400: #009e4f; --emerald-300: #00b35a;
-            --purple-500: #6d28d9; --purple-600: #5b21b6; --purple-200: #ddd6fe;
+            --purple-500: #007a3d; --purple-600: #006432; --purple-200: #c2e8d4;
             --amber-500: #f59e0b; --blue-500: #3b82f6; --blue-50: #eff6ff;
             --slate-900: #0f1729; --slate-800: #1a2236; --slate-700: #2d3a50;
             --slate-600: #3d4a60; --slate-500: #6b7a94; --slate-400: #9ca8bc;
@@ -534,6 +534,106 @@
             .service-icon { font-size: 1.75rem; }
             .service-name { font-size: 0.6875rem; }
             .progress-container { padding: 1rem 0.875rem; }
+        }
+
+        /* ═══════════════ OTP VERIFICATION MODAL ═══════════════ */
+        .otp-modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 10001;
+            background: rgba(15,23,41,0.55); backdrop-filter: blur(10px);
+            align-items: center; justify-content: center;
+        }
+        .otp-modal-overlay.active { display: flex; }
+        .otp-modal {
+            background: white; border-radius: var(--r4); max-width: 420px; width: calc(100% - 32px);
+            position: relative; box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+            animation: modalIn 0.4s var(--ease-spring);
+        }
+        .otp-modal-close {
+            position: absolute; top: 14px; right: 14px; width: 34px; height: 34px;
+            border-radius: 8px; background: var(--void2); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--t3); transition: all 0.2s;
+        }
+        .otp-modal-close:hover { background: var(--void3); color: var(--t1); }
+        .otp-modal-header { padding: 36px 28px 20px; text-align: center; }
+        .otp-step-icon {
+            width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+        }
+        .otp-step-icon.phone { background: #e8f5f0; }
+        .otp-step-icon.email { background: #e8f0fe; }
+        .otp-step-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--neon-lo); border: 1px solid var(--border-neon);
+            border-radius: 100px; padding: 3px 12px; font-size: 0.75rem;
+            font-weight: 600; color: var(--neon); margin-bottom: 10px;
+        }
+        .otp-modal-title {
+            font-family: var(--ff); font-size: 1.375rem; font-weight: 800;
+            color: var(--t1); margin: 0 0 8px; letter-spacing: -0.03em;
+        }
+        .otp-modal-sub { font-size: 0.875rem; color: var(--t3); line-height: 1.55; margin: 0; }
+        .otp-modal-sub strong { color: var(--t2); font-weight: 600; }
+        .otp-modal-body { padding: 0 28px 28px; }
+        .otp-input-row {
+            display: flex; gap: 10px; margin-bottom: 14px;
+        }
+        .otp-digit-group {
+            display: flex; gap: 7px; flex: 1;
+        }
+        .otp-digit {
+            flex: 1; height: 52px; border: 2px solid var(--border);
+            border-radius: var(--r2); font-size: 1.5rem; font-weight: 700;
+            text-align: center; color: var(--t1); background: var(--void2);
+            transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+            -webkit-appearance: none; -moz-appearance: textfield; caret-color: var(--neon);
+        }
+        .otp-digit::-webkit-inner-spin-button, .otp-digit::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .otp-digit:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,122,61,0.12); }
+        .otp-digit.filled { border-color: var(--neon); background: #f0fdf4; }
+        .otp-digit.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+        .otp-error-msg {
+            display: none; align-items: center; gap: 6px;
+            font-size: 0.8125rem; color: #dc2626; margin-bottom: 12px;
+        }
+        .otp-error-msg.show { display: flex; }
+        .otp-verify-btn {
+            width: 100%; padding: 14px; border: none; border-radius: var(--r2);
+            background: linear-gradient(135deg, var(--neon), var(--neon2));
+            color: white; font-size: 0.9375rem; font-weight: 700; cursor: pointer;
+            font-family: var(--ff); letter-spacing: -0.01em; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .otp-verify-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,122,61,0.3); }
+        .otp-verify-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .otp-resend-row {
+            text-align: center; margin-top: 14px; font-size: 0.8125rem; color: var(--t3);
+        }
+        .otp-resend-btn {
+            background: none; border: none; color: var(--neon); font-weight: 600;
+            cursor: pointer; padding: 0; font-size: inherit; font-family: inherit;
+            text-decoration: underline; text-underline-offset: 2px;
+        }
+        .otp-resend-btn:disabled { color: var(--t4); cursor: not-allowed; text-decoration: none; }
+        .otp-step-progress {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+        }
+        .otp-step-pip {
+            flex: 1; height: 4px; border-radius: 2px; background: var(--border);
+            transition: background 0.3s;
+        }
+        .otp-step-pip.done { background: var(--neon); }
+        .otp-step-pip.active { background: var(--neon2); }
+        .otp-success-tick {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: var(--neon); color: white; font-size: 0.625rem; flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .otp-modal { border-radius: var(--r4) var(--r4) 0 0; position: fixed; bottom: 0; width: 100%; max-width: 100%; }
+            .otp-modal-header { padding: 24px 20px 14px; }
+            .otp-modal-body { padding: 0 20px 24px; }
         }
     </style>
         <script>
@@ -1313,7 +1413,7 @@
 
                 <div class="auth-divider">or</div>
 
-                <button class="auth-button auth-button-ghost" onclick="submitGuest(pendingSubmissionData)">
+                <button class="auth-button auth-button-ghost" onclick="startGuestOtpFlow()">
                     Post as Guest
                 </button>
 
@@ -1342,6 +1442,93 @@
                     <div class="auth-progress-dot"></div>
                     <div class="auth-progress-dot"></div>
                     <div class="auth-progress-dot active"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div class="otp-modal-overlay" id="otpModalOverlay" role="dialog" aria-modal="true" aria-labelledby="otpModalTitle">
+        <div class="otp-modal">
+            <button class="otp-modal-close" id="otpModalClose" aria-label="Close verification">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <!-- Step 1: Phone OTP -->
+            <div id="otpPhoneStep">
+                <div class="otp-modal-header">
+                    <div class="otp-step-icon phone">📱</div>
+                    <div class="otp-step-badge">Step 1 of 2</div>
+                    <h2 class="otp-modal-title" id="otpModalTitle">Verify your phone</h2>
+                    <p class="otp-modal-sub">We've sent a 6-digit code to <strong id="otpPhoneDisplay"></strong></p>
+                </div>
+                <div class="otp-modal-body">
+                    <div class="otp-step-progress">
+                        <div class="otp-step-pip active" id="otpPip1"></div>
+                        <div class="otp-step-pip" id="otpPip2"></div>
+                    </div>
+                    <div class="otp-digit-group" id="otpPhoneDigits" aria-label="Phone verification code">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-idx="0">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="1">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="2">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="3">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="4">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="5">
+                    </div>
+                    <div class="otp-error-msg" id="otpPhoneError">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span id="otpPhoneErrorText">Incorrect code. Please try again.</span>
+                    </div>
+                    <button class="otp-verify-btn" id="otpPhoneVerifyBtn" onclick="verifyPhoneOtp()">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Verify Phone
+                    </button>
+                    <div class="otp-resend-row">
+                        Didn't receive it?
+                        <button class="otp-resend-btn" id="otpPhoneResendBtn" onclick="resendPhoneOtp()">Resend code</button>
+                        <span id="otpPhoneResendTimer" style="display:none"> in <span id="otpPhoneResendCount">60</span>s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Email OTP -->
+            <div id="otpEmailStep" style="display:none">
+                <div class="otp-modal-header">
+                    <div class="otp-step-icon email">✉️</div>
+                    <div class="otp-step-badge">
+                        <span class="otp-success-tick">✓</span> Phone verified &nbsp;·&nbsp; Step 2 of 2
+                    </div>
+                    <h2 class="otp-modal-title">Verify your email</h2>
+                    <p class="otp-modal-sub">We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong></p>
+                </div>
+                <div class="otp-modal-body">
+                    <div class="otp-step-progress">
+                        <div class="otp-step-pip done"></div>
+                        <div class="otp-step-pip active"></div>
+                    </div>
+                    <div class="otp-digit-group" id="otpEmailDigits" aria-label="Email verification code">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-idx="0">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="1">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="2">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="3">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="4">
+                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="5">
+                    </div>
+                    <div class="otp-error-msg" id="otpEmailError">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span id="otpEmailErrorText">Incorrect code. Please try again.</span>
+                    </div>
+                    <button class="otp-verify-btn" id="otpEmailVerifyBtn" onclick="verifyEmailOtp()">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Verify &amp; Submit Quote
+                    </button>
+                    <div class="otp-resend-row">
+                        Didn't receive it?
+                        <button class="otp-resend-btn" id="otpEmailResendBtn" onclick="resendEmailOtp()">Resend email</button>
+                        <span id="otpEmailResendTimer" style="display:none"> in <span id="otpEmailResendCount">60</span>s</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2929,6 +3116,294 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 submitAuthenticated(saved.formData);
             }
         }
+
+        // ══════════════════════════════════════════════════════
+        // GUEST OTP VERIFICATION FLOW
+        // Step 1: Phone (Twilio SMS) → Step 2: Email (Resend)
+        // ══════════════════════════════════════════════════════
+        ;(function () {
+            const overlay = document.getElementById('otpModalOverlay');
+            const phoneStep = document.getElementById('otpPhoneStep');
+            const emailStep = document.getElementById('otpEmailStep');
+            let resendPhoneTimer = null;
+            let resendEmailTimer = null;
+
+            // ── OTP digit input wiring ─────────────────────────────
+            function wireDigitGroup(groupId, verifyFn) {
+                const group = document.getElementById(groupId);
+                if (!group) return;
+                const inputs = Array.from(group.querySelectorAll('.otp-digit'));
+                inputs.forEach((input, i) => {
+                    input.addEventListener('input', () => {
+                        // Clamp to single digit
+                        const val = input.value.replace(/\D/g, '').slice(-1);
+                        input.value = val;
+                        input.classList.toggle('filled', val !== '');
+                        if (val && i < inputs.length - 1) inputs[i + 1].focus();
+                        if (inputs.every(d => d.value !== '')) verifyFn();
+                    });
+                    input.addEventListener('keydown', e => {
+                        if (e.key === 'Backspace' && !input.value && i > 0) {
+                            inputs[i - 1].value = '';
+                            inputs[i - 1].classList.remove('filled');
+                            inputs[i - 1].focus();
+                        }
+                        if (e.key === 'ArrowLeft' && i > 0) inputs[i - 1].focus();
+                        if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i + 1].focus();
+                    });
+                    // Handle paste (e.g. browser autofill)
+                    input.addEventListener('paste', e => {
+                        e.preventDefault();
+                        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+                        inputs.forEach((d, j) => {
+                            d.value = pasted[j] || '';
+                            d.classList.toggle('filled', !!pasted[j]);
+                        });
+                        const nextEmpty = inputs.findIndex(d => !d.value);
+                        (nextEmpty === -1 ? inputs[inputs.length - 1] : inputs[nextEmpty]).focus();
+                        if (pasted.length === 6) verifyFn();
+                    });
+                });
+            }
+
+            function getDigitValue(groupId) {
+                const group = document.getElementById(groupId);
+                if (!group) return '';
+                return Array.from(group.querySelectorAll('.otp-digit')).map(d => d.value).join('');
+            }
+
+            function clearDigits(groupId) {
+                const group = document.getElementById(groupId);
+                if (!group) return;
+                group.querySelectorAll('.otp-digit').forEach(d => {
+                    d.value = '';
+                    d.classList.remove('filled', 'error');
+                });
+            }
+
+            function setDigitsError(groupId) {
+                const group = document.getElementById(groupId);
+                if (!group) return;
+                group.querySelectorAll('.otp-digit').forEach(d => d.classList.add('error'));
+            }
+
+            function clearDigitsError(groupId) {
+                const group = document.getElementById(groupId);
+                if (!group) return;
+                group.querySelectorAll('.otp-digit').forEach(d => d.classList.remove('error'));
+            }
+
+            function showError(errId, textId, msg) {
+                const el = document.getElementById(errId);
+                const txt = document.getElementById(textId);
+                if (el) el.classList.add('show');
+                if (txt) txt.textContent = msg;
+            }
+
+            function hideError(errId) {
+                const el = document.getElementById(errId);
+                if (el) el.classList.remove('show');
+            }
+
+            function startResendTimer(countId, timerId, btnId, timerElId, seconds) {
+                clearInterval(window[countId + '_interval']);
+                let remaining = seconds;
+                const countEl = document.getElementById(countId);
+                const timerEl = document.getElementById(timerId);
+                const btn = document.getElementById(btnId);
+                const timerSpan = document.getElementById(timerElId);
+                if (countEl) countEl.textContent = remaining;
+                if (timerSpan) timerSpan.style.display = 'inline';
+                if (btn) btn.disabled = true;
+                window[countId + '_interval'] = setInterval(() => {
+                    remaining--;
+                    if (countEl) countEl.textContent = remaining;
+                    if (remaining <= 0) {
+                        clearInterval(window[countId + '_interval']);
+                        if (timerSpan) timerSpan.style.display = 'none';
+                        if (btn) btn.disabled = false;
+                    }
+                }, 1000);
+            }
+
+            // ── Open OTP overlay ───────────────────────────────────
+            window.startGuestOtpFlow = function () {
+                if (!pendingSubmissionData) {
+                    alert('Please complete the form first.');
+                    return;
+                }
+                closeAuthModal();
+
+                // Populate display values
+                const phone = pendingSubmissionData.phone || '';
+                const email = pendingSubmissionData.email || '';
+                const maskedPhone = phone.length > 6
+                    ? phone.slice(0, 3) + '•'.repeat(phone.length - 6) + phone.slice(-4)
+                    : phone;
+                const maskedEmail = email.includes('@')
+                    ? email.slice(0, 2) + '•'.repeat(Math.max(0, email.indexOf('@') - 2)) + email.slice(email.indexOf('@'))
+                    : email;
+
+                document.getElementById('otpPhoneDisplay').textContent = maskedPhone;
+                document.getElementById('otpEmailDisplay').textContent = maskedEmail;
+
+                // Show phone step, hide email step
+                phoneStep.style.display = '';
+                emailStep.style.display = 'none';
+                clearDigits('otpPhoneDigits');
+                clearDigitsError('otpPhoneDigits');
+                hideError('otpPhoneError');
+
+                overlay.classList.add('active');
+
+                // Send phone OTP immediately
+                sendPhoneOtpInternal(phone);
+            };
+
+            async function sendPhoneOtpInternal(phone) {
+                try {
+                    const r = await fetch(`${API_BASE}/api/verify/send`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phone })
+                    });
+                    if (!r.ok) {
+                        const d = await r.json().catch(() => ({}));
+                        showError('otpPhoneError', 'otpPhoneErrorText', d.error || 'Failed to send SMS. Please try again.');
+                    } else {
+                        startResendTimer('otpPhoneResendCount', 'otpPhoneResendTimer', 'otpPhoneResendBtn', 'otpPhoneResendTimer', 60);
+                    }
+                } catch (err) {
+                    showError('otpPhoneError', 'otpPhoneErrorText', 'Network error. Please try again.');
+                }
+            }
+
+            window.resendPhoneOtp = function () {
+                clearDigits('otpPhoneDigits');
+                hideError('otpPhoneError');
+                sendPhoneOtpInternal(pendingSubmissionData?.phone || '');
+            };
+
+            window.verifyPhoneOtp = async function () {
+                const code = getDigitValue('otpPhoneDigits');
+                if (code.length < 6) return;
+
+                const btn = document.getElementById('otpPhoneVerifyBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<svg width="18" height="18" class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Verifying…';
+                clearDigitsError('otpPhoneDigits');
+                hideError('otpPhoneError');
+
+                try {
+                    const r = await fetch(`${API_BASE}/api/verify/check`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ phone: pendingSubmissionData?.phone, code })
+                    });
+                    const d = await r.json().catch(() => ({}));
+
+                    if (r.ok && d.verified) {
+                        // Move to email step
+                        phoneStep.style.display = 'none';
+                        emailStep.style.display = '';
+                        clearDigits('otpEmailDigits');
+                        hideError('otpEmailError');
+                        sendEmailOtpInternal(pendingSubmissionData?.email || '');
+                    } else {
+                        setDigitsError('otpPhoneDigits');
+                        showError('otpPhoneError', 'otpPhoneErrorText', d.error || 'Incorrect code. Please try again.');
+                    }
+                } catch (err) {
+                    showError('otpPhoneError', 'otpPhoneErrorText', 'Network error. Please try again.');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify Phone';
+                }
+            };
+
+            async function sendEmailOtpInternal(email) {
+                try {
+                    const r = await fetch(`${API_BASE}/api/verify/email/send`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    });
+                    if (!r.ok) {
+                        const d = await r.json().catch(() => ({}));
+                        showError('otpEmailError', 'otpEmailErrorText', d.error || 'Failed to send email. Please try again.');
+                    } else {
+                        startResendTimer('otpEmailResendCount', 'otpEmailResendTimer', 'otpEmailResendBtn', 'otpEmailResendTimer', 60);
+                    }
+                } catch (err) {
+                    showError('otpEmailError', 'otpEmailErrorText', 'Network error. Please try again.');
+                }
+            }
+
+            window.resendEmailOtp = function () {
+                clearDigits('otpEmailDigits');
+                hideError('otpEmailError');
+                sendEmailOtpInternal(pendingSubmissionData?.email || '');
+            };
+
+            window.verifyEmailOtp = async function () {
+                const code = getDigitValue('otpEmailDigits');
+                if (code.length < 6) return;
+
+                const btn = document.getElementById('otpEmailVerifyBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<svg width="18" height="18" class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Submitting…';
+                clearDigitsError('otpEmailDigits');
+                hideError('otpEmailError');
+
+                try {
+                    const r = await fetch(`${API_BASE}/api/verify/email/check`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: pendingSubmissionData?.email, code })
+                    });
+                    const d = await r.json().catch(() => ({}));
+
+                    if (r.ok && d.verified) {
+                        // Both verified — close OTP modal and submit
+                        overlay.classList.remove('active');
+                        await submitGuest(pendingSubmissionData);
+                    } else {
+                        setDigitsError('otpEmailDigits');
+                        showError('otpEmailError', 'otpEmailErrorText', d.error || 'Incorrect code. Please try again.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify &amp; Submit Quote';
+                    }
+                } catch (err) {
+                    showError('otpEmailError', 'otpEmailErrorText', 'Network error. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify &amp; Submit Quote';
+                }
+            };
+
+            // Close button
+            document.getElementById('otpModalClose').addEventListener('click', () => {
+                overlay.classList.remove('active');
+                clearInterval(window['otpPhoneResendCount_interval']);
+                clearInterval(window['otpEmailResendCount_interval']);
+            });
+            // Click-outside close
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    clearInterval(window['otpPhoneResendCount_interval']);
+                    clearInterval(window['otpEmailResendCount_interval']);
+                }
+            });
+
+            // Wire digit group auto-advance (verifyFn only called on full entry)
+            wireDigitGroup('otpPhoneDigits', () => { /* auto-verify on fill */ window.verifyPhoneOtp(); });
+            wireDigitGroup('otpEmailDigits', () => { window.verifyEmailOtp(); });
+
+            // Spinner keyframe (injected once)
+            const style = document.createElement('style');
+            style.textContent = '@keyframes spin{to{transform:rotate(360deg)}} .spin{animation:spin .8s linear infinite;display:inline-block}';
+            document.head.appendChild(style);
+        })();
     </script>
 
     <!-- Footer -->
