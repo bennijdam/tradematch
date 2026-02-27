@@ -41,14 +41,14 @@
   "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": "hello@tradematch.uk"}
 }
 </script>
-<link rel="preconnect" href="https://images.unsplash.com">
-<!-- DNS + preconnect -->
+<!-- DNS + preconnect for fonts only -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Subset fonts to only weights actually used -->
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap&font-display=swap" rel="stylesheet">
-<!-- Preload LCP hero image -->
-<link rel="preload" as="image" href="images/hero-background-optimized.webp" fetchpriority="high">
+<!-- Fonts: trimmed to weights actually used, display=swap prevents render-blocking -->
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<!-- Preload LCP hero image (AVIF for modern browsers, WebP fallback) -->
+<link rel="preload" as="image" href="images/hero-trade-1.avif" type="image/avif" fetchpriority="high">
+<link rel="preload" as="image" href="images/hero-trade-1.webp" type="image/webp" fetchpriority="high">
 <!-- Lucide loaded async — no render blocking -->
 <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
 <style>
@@ -214,13 +214,22 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 @media(max-width:768px){
   .dual-grid{grid-template-columns:1fr}
   .v-cards-grid{grid-template-columns:1fr}
-  .hero-layout{padding:120px 0 52px}
+  .hero-layout{padding:110px 0 44px}
   .hero-h1{font-size:clamp(2.2rem,8vw,3.5rem)}
-  .footer-grid{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
   .bw-row{grid-template-columns:1fr}
   .search-bar{flex-direction:column;border-radius:var(--r3)}
   .search-field{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
-  .search-btn{padding:18px;text-align:center}
+  .search-field input{padding:13px 0}
+  .search-btn{padding:14px 18px;text-align:center;border-radius:0 0 var(--r3) var(--r3)}
+  .hero-search-trust{gap:6px}
+  .hst-pill{font-size:9px;padding:4px 8px}
+}
+@media(max-width:540px){
+  .footer-grid{grid-template-columns:1fr;gap:20px}
+  .footer-brand p{max-width:none}
+  .footer-bottom{flex-direction:column;align-items:flex-start;gap:10px}
+  .footer-legal{flex-wrap:wrap;gap:12px}
 }
 @media(max-width:480px){
   .wrap{padding:0 18px}
@@ -289,7 +298,21 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* Hamburger — hidden on desktop, shown on mobile */
+.nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:none;padding:8px;border-radius:8px;margin-left:6px;flex-shrink:0}
+.nav-burger span{display:block;width:22px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.22,1,.36,1)}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* Mobile slide-down menu */
+.nav-mobile{display:none;position:fixed;top:80px;left:16px;right:16px;z-index:999;background:rgba(255,255,255,.98);backdrop-filter:blur(24px);border:1px solid rgba(0,0,0,.08);border-radius:18px;box-shadow:0 12px 48px rgba(0,0,0,.14);overflow:hidden}
+.nav-mobile.open{display:block;animation:fadeSlideUp .22s cubic-bezier(.22,1,.36,1)}
+.nav-mobile a{display:block;padding:15px 22px;color:#3d5060;text-decoration:none;font-family:var(--fb);font-size:15px;font-weight:500;border-bottom:1px solid rgba(0,0,0,.06);transition:background .15s,color .15s}
+.nav-mobile a.nm-cta{color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));font-family:var(--ff);font-weight:700}
+.nav-mobile a.nm-cta:hover{opacity:.9}
+.nav-mobile a:not(.nm-cta):hover{background:rgba(0,194,104,.07);color:#008a47}
+.nav-mobile a:last-child{border-bottom:none}
+@media(max-width:900px){.nav-links{display:none}.nav-burger{display:flex}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* ── TICKER ── */
@@ -354,6 +377,11 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 .pain-img-strip,.cta-img-strip{will-change:transform}
 .reviews-track{will-change:transform}
 .sec-reviews,.sec-services,.footer{content-visibility:auto;contain-intrinsic-size:0 800px}
+/* Disable heavy hero animation for reduced-motion / low-power */
+@media(prefers-reduced-motion:reduce){
+  .hero-slide{animation:none;opacity:.82}
+  .hero-slide:not(:first-child){opacity:0}
+}
 *{-webkit-tap-highlight-color:transparent}
 a,button{touch-action:manipulation}
 ::-webkit-scrollbar{width:6px}
@@ -752,8 +780,19 @@ a,button{touch-action:manipulation}
         Post a Job Free
       </a>
     </div>
+    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="nav-mobile" id="navMobile" role="dialog" aria-label="Navigation menu">
+  <a href="/quote-engine" class="nm-cta">Post a Job Free →</a>
+  <a href="/login.html">Sign In</a>
+  <a href="#how">How It Works</a>
+  <a href="#trust">Why TradeMatch</a>
+  <a href="#trades">For Tradespeople</a>
+  <a href="#pricing">Pricing</a>
+</div>
 
 <!-- TICKER -->
 <div class="ticker">
@@ -2955,6 +2994,31 @@ function showFeed(){
   }, 600)
 }
 setTimeout(showFeed, 3000)
+
+// ── Mobile nav hamburger ─────────────────────────────────────────────────────
+;(function(){
+  const burger = document.getElementById('navBurger');
+  const menu   = document.getElementById('navMobile');
+  if(!burger || !menu) return;
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', e => {
+    if(!burger.contains(e.target) && !menu.contains(e.target)){
+      menu.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+  // Close on any internal link click
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+})();
 </script>
 </body>
 </html>
