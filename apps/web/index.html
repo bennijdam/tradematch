@@ -141,14 +141,21 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 
 /* Hero search bar — matches find-tradespeople exactly, left-aligned */
 .hero-search-wrap{animation:fadeIn .8s .5s both;max-width:700px;margin-bottom:0}
-.search-bar{display:flex;gap:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--r3);overflow:hidden;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
+.search-bar{display:flex;gap:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--r3);overflow:visible;backdrop-filter:blur(12px);transition:border-color .25s,box-shadow .25s}
 .search-bar:focus-within{border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.12)}
-.search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.08)}
+.search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid rgba(255,255,255,.08);position:relative}
 .search-field:last-of-type{border-right:none}
 .search-field svg{width:16px;height:16px;color:#5a6478;flex-shrink:0}
 .search-field input,.search-field select{flex:1;background:none;border:none;outline:none;font-family:var(--fb);font-size:14.5px;color:#f0f4ff;padding:18px 0;-webkit-appearance:none;cursor:text}
 .search-field input::placeholder{color:#3d4a60}
 .search-field select option{background:#161c28;color:#f0f4ff}
+.postcode-suggestions-hero{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:40;background:#161c28;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 28px rgba(0,0,0,.35);max-height:260px;overflow-y:auto;display:none}
+.postcode-suggestions-hero.open{display:block}
+.postcode-suggestion-hero{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;padding:10px 14px;text-align:left;cursor:pointer;color:#f0f4ff;font-family:var(--fb)}
+.postcode-suggestion-hero:last-child{border-bottom:0}
+.postcode-suggestion-hero:hover,.postcode-suggestion-hero.active{background:rgba(0,194,104,.13)}
+.postcode-suggestion-code-hero{font-size:13px;font-weight:700;color:#f0f4ff}
+.postcode-suggestion-meta-hero{font-size:11px;color:#8b95aa;font-weight:500}
 .search-btn{font-family:var(--ff);font-size:14px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));border:none;padding:0 32px;cursor:pointer;transition:all .25s;white-space:nowrap;box-shadow:var(--neon-glow)}
 .search-btn:hover{background:linear-gradient(135deg,var(--neon),var(--neon3));box-shadow:0 4px 28px rgba(0,194,104,.5)}
 
@@ -786,6 +793,7 @@ a,button{touch-action:manipulation}
           <div class="search-field" style="flex:0 0 200px">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <input type="text" id="heroPostcode" placeholder="Postcode, e.g. SW1A or Manchester" autocomplete="off">
+            <div id="heroPostcodeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Postcode suggestions"></div>
           </div>
           <button type="submit" class="search-btn">Get Free Quotes →</button>
         </form>
@@ -1796,6 +1804,126 @@ function handleHeroSearch(e){
   if(params.toString()) url += '?' + params.toString();
   window.location.href = url;
 }
+
+const isLocalApiHome = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const HOME_API_BASE = isLocalApiHome
+  ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+  : 'https://api.tradematch.uk'
+
+const heroPostcodeInput = document.getElementById('heroPostcode')
+const heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions')
+let heroPostcodeDebounceTimer = null
+let heroPostcodeRequestId = 0
+let heroPostcodeActiveIndex = -1
+let heroPostcodeItems = []
+
+function closeHeroPostcodeSuggestions(){
+  if(!heroPostcodeSuggestions) return
+  heroPostcodeSuggestions.classList.remove('open')
+  heroPostcodeSuggestions.innerHTML = ''
+  heroPostcodeActiveIndex = -1
+  heroPostcodeItems = []
+}
+
+function highlightHeroPostcodeSuggestion(index){
+  const nodes = heroPostcodeSuggestions.querySelectorAll('.postcode-suggestion-hero')
+  nodes.forEach((node, i) => {
+    node.classList.toggle('active', i === index)
+    node.setAttribute('aria-selected', i === index ? 'true' : 'false')
+  })
+}
+
+function selectHeroPostcodeSuggestion(item){
+  if(!item || !item.postcode || !heroPostcodeInput) return
+  heroPostcodeInput.value = item.postcode.toUpperCase()
+  closeHeroPostcodeSuggestions()
+}
+
+function renderHeroPostcodeSuggestions(suggestions){
+  if(!heroPostcodeSuggestions) return
+  if(!Array.isArray(suggestions) || suggestions.length === 0){
+    closeHeroPostcodeSuggestions()
+    return
+  }
+
+  heroPostcodeItems = suggestions
+  heroPostcodeActiveIndex = -1
+  heroPostcodeSuggestions.innerHTML = suggestions.map((item, index) => {
+    const details = [item.district, item.region].filter(Boolean).join(' • ')
+    return `<button type="button" class="postcode-suggestion-hero" data-index="${index}" role="option"><span class="postcode-suggestion-code-hero">${item.postcode || ''}</span><span class="postcode-suggestion-meta-hero">${details || 'UK postcode'}</span></button>`
+  }).join('')
+  heroPostcodeSuggestions.classList.add('open')
+}
+
+async function fetchHeroPostcodeSuggestions(raw){
+  const query = (raw || '').trim().toUpperCase()
+  if(query.length < 2){
+    closeHeroPostcodeSuggestions()
+    return
+  }
+
+  const currentRequestId = ++heroPostcodeRequestId
+  try{
+    const response = await fetch(`${HOME_API_BASE}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`)
+    if(!response.ok){
+      closeHeroPostcodeSuggestions()
+      return
+    }
+    const data = await response.json()
+    if(currentRequestId !== heroPostcodeRequestId) return
+    renderHeroPostcodeSuggestions(data?.success ? data.suggestions : [])
+  }catch(error){
+    closeHeroPostcodeSuggestions()
+  }
+}
+
+heroPostcodeInput?.addEventListener('input', (event) => {
+  clearTimeout(heroPostcodeDebounceTimer)
+  heroPostcodeDebounceTimer = setTimeout(() => fetchHeroPostcodeSuggestions(event.target.value), 180)
+})
+
+heroPostcodeInput?.addEventListener('keydown', (event) => {
+  if(!heroPostcodeSuggestions?.classList.contains('open')) return
+
+  if(event.key === 'ArrowDown'){
+    event.preventDefault()
+    heroPostcodeActiveIndex = Math.min(heroPostcodeActiveIndex + 1, heroPostcodeItems.length - 1)
+    highlightHeroPostcodeSuggestion(heroPostcodeActiveIndex)
+    return
+  }
+
+  if(event.key === 'ArrowUp'){
+    event.preventDefault()
+    heroPostcodeActiveIndex = Math.max(heroPostcodeActiveIndex - 1, 0)
+    highlightHeroPostcodeSuggestion(heroPostcodeActiveIndex)
+    return
+  }
+
+  if(event.key === 'Enter' && heroPostcodeActiveIndex >= 0){
+    event.preventDefault()
+    selectHeroPostcodeSuggestion(heroPostcodeItems[heroPostcodeActiveIndex])
+    return
+  }
+
+  if(event.key === 'Escape'){
+    closeHeroPostcodeSuggestions()
+  }
+})
+
+heroPostcodeSuggestions?.addEventListener('mousedown', (event) => {
+  const item = event.target.closest('.postcode-suggestion-hero')
+  if(!item) return
+  event.preventDefault()
+  const index = Number(item.dataset.index)
+  selectHeroPostcodeSuggestion(heroPostcodeItems[index])
+})
+
+document.addEventListener('click', (event) => {
+  if(!heroPostcodeInput || !heroPostcodeSuggestions) return
+  if(!heroPostcodeInput.contains(event.target) && !heroPostcodeSuggestions.contains(event.target)){
+    closeHeroPostcodeSuggestions()
+  }
+})
 
 function switchHsw(btn, panelId){
   document.querySelectorAll('.hsw-tab').forEach(t=>t.classList.remove('active'))
