@@ -156,6 +156,12 @@ body{font-family:'DM Sans',sans-serif;background:#ffffff;color:#0f1923;overflow-
 .postcode-suggestion-hero:hover,.postcode-suggestion-hero.active{background:rgba(0,194,104,.13)}
 .postcode-suggestion-code-hero{font-size:13px;font-weight:700;color:#f0f4ff}
 .postcode-suggestion-meta-hero{font-size:11px;color:#8b95aa;font-weight:500}
+.trade-suggestion-hero{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;padding:10px 14px;text-align:left;cursor:pointer;color:#f0f4ff;font-family:var(--fb)}
+.trade-suggestion-hero:last-child{border-bottom:0}
+.trade-suggestion-hero:hover,.trade-suggestion-hero.active{background:rgba(0,194,104,.13)}
+.trade-suggestion-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.trade-suggestion-name{font-size:13px;font-weight:700;color:#f0f4ff;flex:1}
+.trade-suggestion-match{font-size:10px;color:#00c268;font-weight:600;background:rgba(0,194,104,.15);padding:2px 6px;border-radius:4px;white-space:nowrap}
 .search-btn{font-family:var(--ff);font-size:14px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));border:none;padding:0 32px;cursor:pointer;transition:all .25s;white-space:nowrap;box-shadow:var(--neon-glow)}
 .search-btn:hover{background:linear-gradient(135deg,var(--neon),var(--neon3));box-shadow:0 4px 28px rgba(0,194,104,.5)}
 
@@ -788,7 +794,8 @@ a,button{touch-action:manipulation}
         <form class="search-bar" onsubmit="handleHeroSearch(event)">
           <div class="search-field">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="heroTradeInput" placeholder="What do you need? e.g. Plumber…" autocomplete="off">
+            <input type="text" id="heroTradeInput" placeholder="What do you need? e.g. Plumber, boiler repair…" autocomplete="off" aria-autocomplete="list" aria-controls="heroTradeSuggestions" aria-expanded="false">
+            <div id="heroTradeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Service suggestions"></div>
           </div>
           <div class="search-field" style="flex:0 0 200px">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -1790,16 +1797,214 @@ function switchTab(btn, panelId){
   if(panel) panel.classList.add('active')
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// HERO SERVICE SMART SEARCH — catalog + synonym-aware scoring
+// ─────────────────────────────────────────────────────────────────────────────
+const HERO_SERVICES = [
+  { id:'architecture',           icon:'📐', name:'Architecture',              kw:['architect','architecture','structural','design','planning permission','building regs','drawing','plan','floor plan','building design','permitted development','planning application'] },
+  { id:'cad-drawings',           icon:'📋', name:'CAD / Drawings',            kw:['cad','drawings','technical drawings','blueprints','autocad','design drawings','building plans','construction drawings','planning drawings','architectural drawings','planning permission drawings','as built','2d','3d model','revit','bim'] },
+  { id:'bathroom-fitting',       icon:'🛁', name:'Bathroom Fitting',          kw:['bathroom','bath','shower','toilet','sink','wet room','ensuite','loo','washroom','vanity','basin','rebath','bathroom suite','bathroom refurb','bathroom remodel'] },
+  { id:'bricklaying',            icon:'🧱', name:'Bricklaying',               kw:['brick','bricklaying','brickwork','blockwork','wall','garden wall','pointing','mortar','block wall','retaining wall','boundary wall'] },
+  { id:'carpentry',              icon:'🔨', name:'Carpentry',                 kw:['carpentry','carpenter','wood','timber','shelving','skirting','architrave','door hanging','woodwork','staircase','handrail','banister','loft boards','wood frame'] },
+  { id:'carpets-lino',           icon:'🏠', name:'Carpets & Lino',            kw:['carpet','lino','linoleum','vinyl','floor covering','underlay','carpet fitting','carpet laying','new carpet','replace carpet','vinyl flooring'] },
+  { id:'central-heating',        icon:'♨️',  name:'Central Heating',          kw:['central heating','heating','boiler','radiator','underfloor heating','combi boiler','system boiler','boiler installation','boiler repair','boiler service','new boiler','warm','heat pump','hot water cylinder','heating system','no hot water','cold radiators'] },
+  { id:'cleaning-services',      icon:'🧹', name:'Cleaning Services',         kw:['cleaning','clean','cleaner','deep clean','end of tenancy','domestic cleaning','commercial cleaning','oven clean','carpet clean','window cleaning','power washing'] },
+  { id:'conservatories',         icon:'🏡', name:'Conservatories',            kw:['conservatory','sunroom','glass room','garden room','orangery','lean-to','Victorian conservatory','Edwardian conservatory'] },
+  { id:'conversions',            icon:'🔄', name:'Conversions',               kw:['conversion','convert','garage conversion','barn conversion','change of use','basement conversion','cellar conversion','office conversion'] },
+  { id:'damp-proofing',          icon:'💧', name:'Damp Proofing',             kw:['damp','damp proofing','waterproofing','moisture','mould','mold','condensation','rising damp','penetrating damp','wet rot','dry rot','musty smell','damp walls','black mould'] },
+  { id:'decking',                icon:'🪵', name:'Decking',                   kw:['decking','deck','wooden deck','composite decking','garden deck','outdoor deck','timber deck','garden decking','raised deck'] },
+  { id:'demolition',             icon:'🏗️', name:'Demolition',               kw:['demolition','demolish','knock down','strip out','tear down','remove structure','internal wall removal','knock through','party wall'] },
+  { id:'driveways-paved',        icon:'🚗', name:'Driveways (Paved)',         kw:['driveway','block paving','paving','patio','slabs','flagstone','resin drive','Indian stone','driveway installation','new driveway','front garden'] },
+  { id:'driveways-tarmac',       icon:'🛣️', name:'Driveways (Tarmac)',        kw:['tarmac','asphalt','resurfacing','tarmacking','tarmac drive','black top','tarmac driveway'] },
+  { id:'electrical',             icon:'⚡', name:'Electrical',                kw:['electrical','electrician','wiring','rewire','lights','lighting','sockets','power','fuse box','consumer unit','switches','electric','EV charger','solar','circuit breaker','fault finding','periodic inspection','EICR','pat testing','smart lighting'] },
+  { id:'extensions',             icon:'🏗️', name:'Extensions',               kw:['extension','extend','rear extension','side extension','wrap around extension','home extension','house extension','kitchen extension','single storey','double storey','extra room','add room','orangery extension'] },
+  { id:'fascias-soffits',        icon:'🪟', name:'Fascias & Soffits',         kw:['fascia','soffit','bargeboard','roofline','gutter board','fascia board','replace fascia','uPVC fascia'] },
+  { id:'fencing',                icon:'🌿', name:'Fencing',                   kw:['fencing','fence','garden fence','panel fence','security fence','boundary fence','close board','picket fence','gates','wooden fence','metal fence','post and rail'] },
+  { id:'fireplaces-flues',       icon:'🔥', name:'Fireplaces & Flues',        kw:['fireplace','chimney','flue','wood burner','log burner','stove','hearth','inglenook','open fire','gas fire','fireplace installation','chimney sweep','chimney breast','chimney liner'] },
+  { id:'garden-maintenance',     icon:'🌱', name:'Garden Maintenance',        kw:['garden','gardening','lawn','grass','hedge','trimming','pruning','weeding','garden maintenance','mowing','lawn care','turfing','garden clearance','overgrown','allotment','garden tidy'] },
+  { id:'gas-work',               icon:'🔧', name:'Gas Work',                  kw:['gas','gas work','gas safe','gas fitting','gas pipe','gas appliance','gas cooker','gas fire','gas leak','gas certificate','landlord certificate','cp12','annual service','gas hob','gas main'] },
+  { id:'groundwork-foundations', icon:'⛏️', name:'Groundwork & Foundations',  kw:['groundwork','foundations','excavation','digging','footings','earthworks','drainage','soakaway','concrete slab','concrete base','ground preparation','underpinning','substructure'] },
+  { id:'guttering',              icon:'🌧️', name:'Guttering',                 kw:['guttering','gutter','downpipe','rainwater','roof drainage','gutter cleaning','blocked gutter','overflowing gutter','replace gutter','fascia gutter'] },
+  { id:'handyman',               icon:'🔩', name:'Handyman',                  kw:['handyman','odd jobs','general maintenance','repairs','fix','small jobs','general repair','flatpack','picture hanging','shelves','assemble furniture','minor repair','DIY help'] },
+  { id:'hard-flooring',          icon:'🪟', name:'Hard Flooring',             kw:['laminate','wood flooring','engineered wood','lvt','hard floor','parquet','vinyl plank','click flooring','floor fitting','floor laying','herringbone','flooring installation'] },
+  { id:'insulation',             icon:'🧊', name:'Insulation',                kw:['insulation','insulate','loft insulation','cavity wall insulation','solid wall insulation','thermal','soundproofing','energy efficiency','cold house','heat retention','PIR','spray foam','acoustic'] },
+  { id:'joinery-cabinet',        icon:'🪚', name:'Joinery & Cabinet Making',  kw:['joinery','joiner','cabinet','bespoke','fitted furniture','wardrobes','cabinets','custom woodwork','alcove shelving','media wall','TV unit','fitted wardrobe','sliding doors'] },
+  { id:'kitchen-fitting',        icon:'🍳', name:'Kitchen Fitting',           kw:['kitchen','kitchen fitting','kitchen installation','fitted kitchen','worktop','units','kitchen cabinets','new kitchen','kitchen remodel','kitchen refurb','kitchen design','kitchen renovation'] },
+  { id:'landscaping',            icon:'🌳', name:'Landscaping',               kw:['landscaping','landscape','garden design','patio','paving','garden transformation','hard landscaping','soft landscaping','garden overhaul','formal garden','garden makeover','planting','water feature','garden structure'] },
+  { id:'locksmiths',             icon:'🔐', name:'Locksmiths',                kw:['locksmith','lock','keys','locked out','door lock','lock change','lock repair','break-in repair','new lock','security upgrade','key cutting','cylinder lock','rim lock','multi-point lock'] },
+  { id:'loft-conversion',        icon:'🏠', name:'Loft Conversion',           kw:['loft','loft conversion','attic','roof space','dormer','velux','extra bedroom','loft room','hip to gable','mansard','L-shaped dormer','loft bedroom','loft bathroom'] },
+  { id:'moving-services',        icon:'📦', name:'Moving Services',           kw:['moving','removals','moving house','furniture removal','house move','relocation','man with a van','storage','packing','nationwide removal','office removal'] },
+  { id:'new-builds',             icon:'🏗️', name:'New Builds',               kw:['new build','new construction','building project','build from scratch','ground up','new house','self build','new home','custom build','plot development'] },
+  { id:'painting-decorating',    icon:'🎨', name:'Painting & Decorating',     kw:['painting','decorating','paint','decorator','wallpaper','emulsion','gloss','interior decorating','exterior painting','render painting','feature wall','colour scheme','dulux','plaster painting','ceiling painting'] },
+  { id:'plastering',             icon:'🪣', name:'Plastering',                kw:['plastering','plaster','plasterer','skim','skimming','rendering','plasterboard','dry lining','artex removal','ceiling repair','wall repair','sand and cement render','pebbledash'] },
+  { id:'plumbing',               icon:'🚿', name:'Plumbing',                  kw:['plumbing','plumber','pipes','leak','tap','toilet','sink','drainage','bathroom','burst pipe','blocked drain','blocked toilet','pipe repair','water pressure','shower install','valve','radiator valve','hot water','immersion heater'] },
+  { id:'repointing',             icon:'🧱', name:'Repointing',                kw:['repointing','pointing','mortar','brick repair','joint','tuckpointing','brick restoration','crumbling mortar','weathered brickwork','stone pointing'] },
+  { id:'restoration-refurbishment', icon:'🏛️', name:'Restoration & Refurbishment', kw:['restoration','refurbishment','renovation','restore','refurb','period property','listed building','Victorian house','Edwardian property','heritage','old building','traditional property','character home','lime plaster'] },
+  { id:'roofing-flat',           icon:'🏢', name:'Roofing (Flat)',            kw:['flat roof','felt','fibreglass','grp','epdm','rubber roof','flat roof repair','flat roof replacement','ponding','roof waterproofing','torch on felt'] },
+  { id:'roofing-pitched',        icon:'🏠', name:'Roofing (Pitched)',         kw:['roofing','roof','pitched roof','tiles','slate','ridge','roof repair','re-roof','roof leak','missing tile','ridge tile','valley','flashing','lead work','roof inspection','pitched','clay tile','concrete tile'] },
+  { id:'security-systems',       icon:'📷', name:'Security Systems',          kw:['security','alarm','cctv','cameras','burglar alarm','security system','monitoring','smart alarm','ring doorbell','intruder alarm','access control','keypad','motion sensor','smart home security'] },
+  { id:'stonemasonry',           icon:'🪨', name:'Stonemasonry',              kw:['stonemasonry','stone','mason','stonework','natural stone','stone wall','stone repair','limestone','sandstone','granite','stone fireplace','stone restoration','yorkshire stone'] },
+  { id:'tiling',                 icon:'🔳', name:'Tiling',                    kw:['tiling','tiles','tiler','wall tiles','floor tiles','bathroom tiles','kitchen tiles','splashback','grout','regrout','tile removal','porcelain','ceramic','mosaic','large format tile'] },
+  { id:'tree-surgery',           icon:'🌲', name:'Tree Surgery',              kw:['tree','tree surgery','tree surgeon','tree removal','tree pruning','tree cutting','arborist','fell tree','crown reduction','stump removal','hedge cutting','dangerous tree','TPO','tree preservation'] },
+  { id:'waste-clearance',        icon:'🗑️', name:'Waste Clearance',           kw:['waste','clearance','rubbish','skip','junk removal','garden waste','house clearance','bulky waste','fly tipping','deep clean','declutter','hoarder clearance','end of tenancy clearance'] },
+  { id:'windows-doors-upvc',     icon:'🪟', name:'Windows & Doors (uPVC)',    kw:['windows','doors','upvc','pvc','double glazing','triple glazing','aluminium windows','composite door','front door','back door','patio door','bi-fold','new windows','replace windows','aluminium','casement','tilt and turn'] },
+  { id:'windows-doors-wooden',   icon:'🪟', name:'Windows & Doors (Timber)',  kw:['wooden windows','timber windows','sash windows','hardwood','softwood','wood windows','wooden door','timber door','heritage windows','listed property windows','bay window','box sash'] }
+];
+
+// Build a reverse-phrase lookup for fast multi-word matching
+// (phrase → array of service ids it maps to)
+const HERO_PHRASE_MAP = {};
+HERO_SERVICES.forEach(svc => {
+  svc.kw.forEach(kw => {
+    const phrase = kw.toLowerCase();
+    if(!HERO_PHRASE_MAP[phrase]) HERO_PHRASE_MAP[phrase] = [];
+    if(!HERO_PHRASE_MAP[phrase].includes(svc.id)) HERO_PHRASE_MAP[phrase].push(svc.id);
+  });
+});
+
+let heroTradeSelectedId = null; // tracks explicitly selected service id
+
+function scoreHeroServices(raw) {
+  const q = raw.trim().toLowerCase();
+  if(q.length < 2) return [];
+
+  const scores = {};
+
+  // 1) Full-phrase scan through all keywords
+  Object.keys(HERO_PHRASE_MAP).forEach(phrase => {
+    if(q.includes(phrase)) {
+      // Longer phrase matches score higher
+      const boost = phrase.split(' ').length;
+      HERO_PHRASE_MAP[phrase].forEach(id => {
+        scores[id] = (scores[id] || 0) + boost * 2;
+      });
+    }
+  });
+
+  // 2) Token-level scan for partial matches
+  const tokens = q.split(/\s+/).filter(t => t.length > 1);
+  tokens.forEach(tok => {
+    HERO_SERVICES.forEach(svc => {
+      if(svc.id.includes(tok) || svc.name.toLowerCase().includes(tok)) {
+        scores[svc.id] = (scores[svc.id] || 0) + 2;
+      }
+      svc.kw.forEach(kw => {
+        if(kw.startsWith(tok) || kw.includes(' ' + tok)) {
+          scores[svc.id] = (scores[svc.id] || 0) + 1;
+        }
+      });
+    });
+  });
+
+  // 3) Return sorted, with score > 0, max 6
+  return HERO_SERVICES
+    .filter(svc => (scores[svc.id] || 0) > 0)
+    .sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0))
+    .slice(0, 6);
+}
+
+// ── DOM wiring ──────────────────────────────────────────────────────────────
+const heroTradeInput = document.getElementById('heroTradeInput');
+const heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
+let heroTradeDebounce = null;
+let heroTradeActiveIndex = -1;
+let heroTradeItems = [];
+
+function closeHeroTradeSuggestions() {
+  if(!heroTradeSuggestions) return;
+  heroTradeSuggestions.classList.remove('open');
+  heroTradeSuggestions.innerHTML = '';
+  heroTradeActiveIndex = -1;
+  heroTradeItems = [];
+  if(heroTradeInput) heroTradeInput.setAttribute('aria-expanded','false');
+}
+
+function highlightHeroTradeSuggestion(index) {
+  heroTradeSuggestions.querySelectorAll('.trade-suggestion-hero').forEach((node, i) => {
+    node.classList.toggle('active', i === index);
+    node.setAttribute('aria-selected', i === index ? 'true' : 'false');
+  });
+}
+
+function selectHeroTradeService(svc) {
+  if(!heroTradeInput || !svc) return;
+  heroTradeInput.value = svc.name;
+  heroTradeSelectedId = svc.id;
+  closeHeroTradeSuggestions();
+}
+
+function renderHeroTradeSuggestions(results) {
+  if(!heroTradeSuggestions) return;
+  if(!results.length) { closeHeroTradeSuggestions(); return; }
+  heroTradeItems = results;
+  heroTradeActiveIndex = -1;
+  heroTradeSuggestions.innerHTML = results.map((svc, i) =>
+    `<button type="button" class="trade-suggestion-hero" data-index="${i}" role="option" aria-selected="false">
+       <span class="trade-suggestion-icon">${svc.icon}</span>
+       <span class="trade-suggestion-name">${svc.name}</span>
+     </button>`
+  ).join('');
+  heroTradeSuggestions.classList.add('open');
+  if(heroTradeInput) heroTradeInput.setAttribute('aria-expanded','true');
+}
+
+heroTradeInput?.addEventListener('input', e => {
+  heroTradeSelectedId = null; // user is typing again — clear prior selection
+  clearTimeout(heroTradeDebounce);
+  const v = e.target.value;
+  if(v.trim().length < 2) { closeHeroTradeSuggestions(); return; }
+  heroTradeDebounce = setTimeout(() => {
+    renderHeroTradeSuggestions(scoreHeroServices(v));
+  }, 160);
+});
+
+heroTradeInput?.addEventListener('keydown', e => {
+  if(!heroTradeSuggestions?.classList.contains('open')) return;
+  if(e.key === 'ArrowDown') {
+    e.preventDefault();
+    heroTradeActiveIndex = Math.min(heroTradeActiveIndex + 1, heroTradeItems.length - 1);
+    highlightHeroTradeSuggestion(heroTradeActiveIndex);
+  } else if(e.key === 'ArrowUp') {
+    e.preventDefault();
+    heroTradeActiveIndex = Math.max(heroTradeActiveIndex - 1, 0);
+    highlightHeroTradeSuggestion(heroTradeActiveIndex);
+  } else if(e.key === 'Enter' && heroTradeActiveIndex >= 0) {
+    e.preventDefault();
+    selectHeroTradeService(heroTradeItems[heroTradeActiveIndex]);
+  } else if(e.key === 'Escape') {
+    closeHeroTradeSuggestions();
+  }
+});
+
+heroTradeSuggestions?.addEventListener('mousedown', e => {
+  const item = e.target.closest('.trade-suggestion-hero');
+  if(!item) return;
+  e.preventDefault(); // don't blur input
+  selectHeroTradeService(heroTradeItems[Number(item.dataset.index)]);
+});
+
+document.addEventListener('click', e => {
+  if(!heroTradeInput || !heroTradeSuggestions) return;
+  if(!heroTradeInput.contains(e.target) && !heroTradeSuggestions.contains(e.target)) {
+    closeHeroTradeSuggestions();
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Hero search — routes to quote engine with service pre-selection
+// ─────────────────────────────────────────────────────────────────────────────
 // New search widget tab switch
 // Hero search — AI-powered routing to quote engine with prefill
 function handleHeroSearch(e){
   e.preventDefault();
   const trade = (document.getElementById('heroTradeInput').value || '').trim();
   const postcode = (document.getElementById('heroPostcode').value || '').trim();
-  // Build URL with trade param so quote engine can AI-prefill the right category
   let url = '/quote-engine';
   const params = new URLSearchParams();
   if(trade) params.set('trade', trade);
+  // Use explicitly selected service, or auto-resolve top smart-search match
+  const resolvedId = heroTradeSelectedId || (trade.length > 1 ? (scoreHeroServices(trade)[0]?.id || null) : null);
+  if(resolvedId) params.set('service', resolvedId);
   if(postcode) params.set('postcode', postcode);
   if(params.toString()) url += '?' + params.toString();
   window.location.href = url;
