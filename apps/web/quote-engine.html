@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -26,1423 +26,510 @@
     </script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *,*::before,*::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --emerald-400: #34d399;
-            --error-500: #ef4444;
-            --error-100: rgba(239, 68, 68, 0.12);
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-400: #94a3b8;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-            --purple-500: #8b5cf6;
-            --purple-600: #7c3aed;
+            /* TradeMatch Light Design System */
+            --void:#ffffff;--void2:#f8f9fc;--void3:#f1f3f8;--void4:#e8ebf2;--void5:#dde1ea;
+            --glass1:rgba(0,0,0,0.02);--glass2:rgba(0,0,0,0.04);--glass3:rgba(0,0,0,0.06);--glass4:rgba(0,0,0,0.09);
+            --neon:#007a3d;--neon2:#009e4f;--neon3:#006432;
+            --neon-dim:rgba(0,122,61,0.1);--neon-lo:rgba(0,122,61,0.05);
+            --neon-glow:0 4px 20px rgba(0,122,61,0.2),0 1px 6px rgba(0,122,61,0.1);
+            --neon-glow-sm:0 2px 10px rgba(0,122,61,0.18);
+            --t1:#0f1729;--t2:#3d4a60;--t3:#6b7a94;--t4:#9ca8bc;
+            --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.12);--border-neon:rgba(0,122,61,0.2);
+            --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+            --glass-shadow:0 4px 24px rgba(0,0,0,0.08);--deep-shadow:0 12px 40px rgba(0,0,0,0.1);
+            --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+            /* Legacy compat */
+            --emerald-500: #007a3d; --emerald-600: #006432; --emerald-400: #009e4f; --emerald-300: #00b35a;
+            --purple-500: #6d28d9; --purple-600: #5b21b6; --purple-200: #ddd6fe;
+            --amber-500: #f59e0b; --blue-500: #3b82f6; --blue-50: #eff6ff;
+            --slate-900: #0f1729; --slate-800: #1a2236; --slate-700: #2d3a50;
+            --slate-600: #3d4a60; --slate-500: #6b7a94; --slate-400: #9ca8bc;
+            --slate-300: #b8cfe0; --slate-200: #dde1ea; --slate-100: #f1f3f8; --slate-50: #f8f9fc;
+            --border-subtle: rgba(0,0,0,0.08);
+            --glow-emerald: 0 2px 12px rgba(0,122,61,0.2);
+            --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 32px;
+            --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+            --ease-out: cubic-bezier(0.22,1,0.36,1);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--slate-900);
-            background: var(--slate-50);
-            overflow-x: hidden;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            font-family: var(--fb);
+            line-height: 1.6; color: var(--t1);
+            background: var(--void); overflow-x: hidden; -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation */
+        /* ═══════════════ NAV (glass pill — matches index-light) ═══════════════ */
         .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 12px 20px;
+            background: transparent;
         }
-
         .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0.875rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1320px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center; gap: 24px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8);
+            border: 1px solid var(--border);
+            border-radius: var(--r5);
+            padding: 0 8px 0 24px; height: 58px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            transition: all .4s;
         }
-
+        .navbar.scrolled .nav-container {
+            background: rgba(255,255,255,0.92);
+            border-color: var(--border2);
+            box-shadow: 0 4px 28px rgba(0,0,0,0.1);
+        }
         .logo {
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: var(--slate-900);
-            text-decoration: none;
+            font-family: var(--ff); font-size: 1.1rem; font-weight: 800;
+            color: var(--t1); text-decoration: none; letter-spacing: -0.04em; flex-shrink: 0;
         }
-
         .logo span {
-            color: var(--emerald-500);
+            background: linear-gradient(135deg,var(--neon),var(--neon2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-            list-style: none;
-        }
-
+        .nav-links { display: flex; gap: 0.25rem; align-items: center; list-style: none; }
         .nav-links a {
-            text-decoration: none;
-            color: var(--slate-600);
-            font-weight: 500;
-            font-size: 0.9375rem;
-            transition: color 0.3s;
+            text-decoration: none; color: var(--t2); font-weight: 500;
+            font-size: 13px; padding: 8px 14px; border-radius: var(--r5); transition: all 0.2s;
+            font-family: var(--fb);
         }
-
-        .nav-links a:hover {
-            color: var(--emerald-500);
+        .nav-links a:hover { color: var(--t1); background: var(--glass2); }
+        .nav-links li:last-child a {
+            background: linear-gradient(135deg,var(--neon3),var(--neon)); color: #fff; font-weight: 700;
+            font-family: var(--ff); box-shadow: var(--neon-glow-sm);
         }
+        .nav-links li:last-child a:hover { box-shadow: var(--neon-glow); transform: translateY(-1px); }
 
-        /* Hero Section */
+        /* HAMBURGER */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: var(--t2); border-radius: 2px; transition: all 0.3s var(--ease-spring); }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .mobile-menu {
+            display: none; position: fixed; top: 82px; left: 20px; right: 20px;
+            background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
+            border: 1px solid var(--border2); border-radius: var(--r3);
+            box-shadow: var(--deep-shadow); z-index: 999;
+        }
+        .mobile-menu.open { display: block; }
+        .mobile-menu a { display: block; padding: 1rem 1.5rem; color: var(--t2); text-decoration: none; font-weight: 500; font-size: 14px; font-family: var(--fb); border-bottom: 1px solid var(--glass3); transition: all 0.15s; }
+        .mobile-menu a:hover { background: var(--neon-lo); color: var(--neon); }
+        .mobile-menu a:last-child { border-bottom: none; }
+
+        /* ═══════════════ TICKER (dark strip — matches index-light) ═══════════════ */
+        .social-proof-ticker { background: #0f1729; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 0; overflow: hidden; margin-top: 82px; }
+        .ticker-track { display: flex; gap: 3rem; animation: tickerScroll 32s linear infinite; width: max-content; }
+        .ticker-track:hover { animation-play-state: paused; }
+        @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker-item { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; color: rgba(255,255,255,0.65); font-size: 0.8rem; font-weight: 500; font-family: var(--fb); }
+        .ticker-item .ticker-dot { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 6px #4ade80; }
+        .ticker-sep { color: rgba(255,255,255,0.12); font-size: 1.125rem; }
+
+        /* ═══════════════ HERO (light mode — green gradient mesh) ═══════════════ */
         .hero {
-            margin-top: 70px;
-            min-height: 300px;
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            padding: 4rem 0 3rem;
-            position: relative;
-            overflow: hidden;
+            background: var(--void);
+            padding: 5rem 0 6rem; position: relative; overflow: hidden;
         }
-
         .hero::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, var(--emerald-500) 0%, transparent 70%);
-            opacity: 0.15;
-            top: -100px;
-            right: -100px;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 30px); }
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-content h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero-content p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 2rem;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 900px;
-            margin: -50px auto 4rem;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            background: white;
-            border-radius: 16px 16px 0 0;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1;
-            position: relative;
-        }
-
-        .progress-step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            width: 100%;
-            height: 2px;
-            background: var(--slate-200);
-            z-index: -1;
-        }
-
-        .progress-step.active:not(:last-child)::after {
-            background: var(--emerald-500);
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--slate-200);
-            color: var(--slate-600);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.125rem;
-            transition: all 0.3s;
-        }
-
-        .progress-step.active .step-number,
-        .progress-step.completed .step-number {
-            background: var(--emerald-500);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.875rem;
-            color: var(--slate-600);
-            font-weight: 500;
-        }
-
-        .progress-step.active .step-label {
-            color: var(--emerald-600);
-        }
-
-        .progress-bar-fill {
-            width: 100%;
-            height: 8px;
-            background: var(--slate-200);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-bar-inner {
-            height: 100%;
-            background: linear-gradient(90deg, var(--emerald-500) 0%, var(--emerald-400) 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-        /* Form Card */
-        .form-card {
-            background: white;
-            border-radius: 0 0 24px 24px;
-            padding: 3rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .form-step {
-            display: none;
-        }
-
-        .form-step.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 0.75rem;
-        }
-
-        .step-description {
-            color: var(--slate-600);
-            margin-bottom: 0;
-            font-size: 1.0625rem;
-        }
-
-        /* Service Search Section */
-        .service-search-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .service-search-container {
-            position: relative;
-            flex: 0 0 auto;
-            min-width: 300px;
-        }
-
-        .service-search-input {
-            width: 100%;
-            padding: 0.875rem 3rem 0.875rem 2.75rem;
-            border: 2px solid var(--slate-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s;
-            background: white;
-        }
-
-        .service-search-input:focus {
-            outline: none;
-            border-color: var(--emerald-500);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        .service-search-input::placeholder {
-            color: var(--slate-400);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--slate-400);
-            font-size: 1.125rem;
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(0,122,61,0.05) 0%, transparent 60%),
+                        radial-gradient(ellipse 50% 50% at 70% 60%, rgba(56,189,248,0.03) 0%, transparent 60%);
             pointer-events: none;
         }
-
-        .search-clear {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--slate-200);
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--slate-600);
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1;
+        .hero::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background-image: linear-gradient(rgba(0,122,61,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,122,61,0.025) 1px,transparent 1px);
+            background-size: 64px 64px;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
         }
-
-        .search-clear.active {
-            display: flex;
+        .hero-content { max-width: 760px; margin: 0 auto; padding: 0 2rem; text-align: center; position: relative; z-index: 1; }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--neon-lo); border: 1px solid var(--border-neon);
+            color: var(--neon); font-family: var(--fm);
+            font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 5px 14px; border-radius: var(--r5); margin-bottom: 1.5rem;
         }
-
-        .search-clear:hover {
-            background: var(--slate-300);
-            transform: translateY(-50%) scale(1.1);
+        .hero-content h1 {
+            font-family: var(--ff); font-size: clamp(2rem,5vw,3.5rem); font-weight: 800;
+            color: var(--t1); margin-bottom: 1.25rem; line-height: 1.05; letter-spacing: -0.04em;
         }
-
-        .no-results-message {
-            display: none;
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--slate-600);
+        .hero-content h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--neon), var(--neon2), #00b35a);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .hero-content p { font-size: 1.0625rem; color: var(--t2); line-height: 1.8; max-width: 560px; margin: 0 auto; font-weight: 300; }
 
-        .no-results-message.active {
-            display: block;
+        /* ═══════════════ MAIN CONTENT ═══════════════ */
+        .main-content { max-width: 860px; margin: -60px auto 5rem; padding: 0 2rem; position: relative; z-index: 10; }
+
+        /* SESSION BANNER */
+        .session-recovery-banner { background: linear-gradient(135deg,#fffbeb,#fef3c7); border: 1.5px solid var(--amber-500); border-radius: var(--r3); padding: 1rem 1.25rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; animation: fadeSlideUp 0.4s var(--ease-out); }
+        .session-recovery-banner .banner-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .session-recovery-banner .banner-text { flex: 1; font-size: 0.9375rem; color: #92400e; font-weight: 500; }
+        .session-recovery-banner .banner-text strong { color: #78350f; }
+        .banner-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .btn-restore { background: var(--amber-500); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-restore:hover { background: #d97706; transform: translateY(-1px); }
+        .btn-dismiss { background: transparent; color: #92400e; border: 1.5px solid #d97706; padding: 0.5rem 0.875rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .btn-dismiss:hover { background: rgba(217,119,6,0.1); }
+
+        /* ═══════════════ PROGRESS (glass card) ═══════════════ */
+        .progress-container {
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+            border-radius: var(--r4) var(--r4) 0 0;
+            padding: 2rem 2.5rem 1.75rem;
+            box-shadow: 0 -2px 0 var(--neon-lo), var(--glass-shadow);
+            border: 1px solid var(--border2); border-bottom: none;
         }
-
-        .no-results-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+        .progress-steps { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.75rem; position: relative; }
+        .progress-step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; flex: 1; position: relative; }
+        .progress-step:not(:last-child)::after { content: ''; position: absolute; top: 19px; left: calc(50% + 20px); right: calc(-50% + 20px); height: 2px; background: var(--void4); border-radius: 2px; transition: background 0.4s; }
+        .progress-step.completed:not(:last-child)::after { background: var(--neon); }
+        .step-number {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--void3); color: var(--t4);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--ff); font-weight: 800; font-size: 0.9375rem;
+            transition: all 0.35s var(--ease-spring); border: 2px solid var(--void4);
+            position: relative; z-index: 1;
         }
+        .progress-step.active .step-number { background: var(--t1); color: #fff; border-color: var(--t1); box-shadow: 0 0 0 5px rgba(15,23,41,0.06); }
+        .progress-step.completed .step-number { background: var(--neon); color: #fff; border-color: var(--neon); box-shadow: var(--neon-glow-sm); }
+        .step-label { font-family: var(--fm); font-size: 10px; color: var(--t4); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+        .progress-step.active .step-label { color: var(--t1); }
+        .progress-step.completed .step-label { color: var(--neon); }
+        .progress-bar-fill { width: 100%; height: 4px; background: var(--void3); border-radius: 100px; overflow: hidden; }
+        .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--neon3), var(--neon)); border-radius: 100px; transition: width 0.6s var(--ease-out); width: 0%; box-shadow: var(--neon-glow-sm); }
 
-        .no-results-text {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+        /* ═══════════════ FORM CARD (glass) ═══════════════ */
+        .form-card {
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(16px);
+            border-radius: 0 0 var(--r4) var(--r4);
+            padding: 2.5rem 2.5rem 3rem;
+            box-shadow: var(--deep-shadow);
+            border: 1px solid var(--border2); border-top: none;
         }
+        .form-step { display: none; }
+        .form-step.active { display: block; animation: fadeSlideUp 0.4s var(--ease-out); }
 
-        .no-results-hint {
-            font-size: 0.9375rem;
-            color: var(--slate-500);
+        @keyframes fadeSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes spin { to{transform:rotate(360deg)} }
+
+        .step-title { font-family: var(--ff); font-size: 1.875rem; font-weight: 800; color: var(--t1); letter-spacing: -0.04em; margin-bottom: 0.5rem; line-height: 1.15; }
+        .step-description { color: var(--t3); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
+
+        /* SERVICE SEARCH */
+        .service-search-header { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 1.75rem; }
+        .service-search-container { position: relative; flex: 0 0 auto; min-width: 300px; }
+        .service-search-input {
+            width: 100%; padding: 0.875rem 3rem 0.875rem 2.75rem;
+            border: 1px solid var(--border2); border-radius: var(--r2);
+            font-size: 0.9375rem; font-family: var(--fb); transition: all 0.25s;
+            background: var(--void2); color: var(--t1);
         }
+        .service-search-input:focus { outline: none; border-color: rgba(0,122,61,0.4); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.08); }
+        .service-search-input::placeholder { color: var(--t4); }
+        .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--t4); font-size: 1rem; pointer-events: none; }
+        .search-clear { position: absolute; right: 0.875rem; top: 50%; transform: translateY(-50%); background: var(--void4); border: none; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; color: var(--t2); font-size: 0.875rem; font-weight: 700; }
+        .search-clear.active { display: flex; }
+        .search-clear:hover { background: var(--void5); transform: translateY(-50%) scale(1.1); }
+        .no-results-message { display: none; text-align: center; padding: 3rem 1rem; color: var(--t3); }
+        .no-results-message.active { display: block; }
+        .no-results-icon { font-size: 3.5rem; margin-bottom: 1rem; opacity: 0.4; }
+        .no-results-text { font-size: 1.125rem; font-weight: 700; color: var(--t1); margin-bottom: 0.5rem; }
+        .no-results-hint { font-size: 0.9375rem; }
+        .service-option.hidden { display: none; }
 
-        .service-option.hidden {
-            display: none;
-        }
-
-        /* Service Selection Grid */
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
+        /* SERVICE GRID */
+        .service-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr)); gap: 0.875rem; margin-bottom: 2rem; }
         .service-option {
-            aspect-ratio: 1;
-            border: 2px solid var(--slate-200);
-            border-radius: 16px;
+            aspect-ratio: 1; border: 1px solid var(--border2); border-radius: var(--r3);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.625rem;
+            cursor: pointer; transition: all 0.22s var(--ease-out);
+            background: var(--void2); padding: 1rem; user-select: none;
+        }
+        .service-option:hover { border-color: var(--neon); background: #fff; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,122,61,0.08), 0 0 0 3px rgba(0,122,61,0.05); }
+        .service-option.selected { border-color: var(--neon); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.1), 0 8px 24px rgba(0,122,61,0.08); }
+        .service-icon { font-size: 2.25rem; line-height: 1; }
+        .service-name { font-family: var(--fb); font-size: 0.8125rem; font-weight: 700; color: var(--t2); text-align: center; line-height: 1.3; }
+
+        /* FORM GROUPS */
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+        .form-group label { display: block; font-family: var(--fm); font-weight: 600; color: var(--t2); margin-bottom: 0.5rem; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+        .form-control {
+            width: 100%; padding: 0.9375rem 1.25rem;
+            border: 1px solid var(--border2); border-radius: var(--r2);
+            font-size: 0.9375rem; font-family: var(--fb); transition: all 0.25s;
+            color: var(--t1); background: var(--void2);
+        }
+        .form-control:focus { outline: none; border-color: rgba(0,122,61,0.4); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.08); }
+        textarea.form-control { resize: vertical; min-height: 130px; line-height: 1.6; }
+        select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%236b7a94'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 3rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .form-control.field-valid { border-color: var(--neon); background: #fff; }
+        .form-control.field-invalid { border-color: #ef4444; background: #fff; }
+        .field-error-msg { font-size: 0.8125rem; color: #ef4444; margin-top: 0.375rem; display: none; font-weight: 500; }
+        .field-error-msg.visible { display: block; }
+
+        /* POSTCODE FEEDBACK */
+        .postcode-feedback { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.875rem; font-weight: 600; }
+        .postcode-feedback.valid { display: flex; color: var(--neon); }
+        .postcode-feedback.invalid { display: flex; color: #ef4444; }
+        .postcode-feedback.loading { display: flex; color: var(--t3); }
+        .postcode-location-chip { background: var(--neon-lo); border: 1px solid var(--border-neon); color: var(--neon3); padding: 0.2rem 0.625rem; border-radius: var(--r5); font-family: var(--fm); font-size: 10px; font-weight: 700; letter-spacing: 0.04em; }
+        .postcode-suggestions {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 0.25rem);
+            z-index: 25;
+            background: #fff;
+            border: 1px solid var(--border2);
+            border-radius: var(--r2);
+            box-shadow: 0 12px 28px rgba(21, 30, 44, 0.12);
+            max-height: 260px;
+            overflow-y: auto;
+            display: none;
+        }
+        .postcode-suggestions.open { display: block; }
+        .postcode-suggestion {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: white;
-            padding: 1rem;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-
-        .service-option:hover {
-            border-color: var(--emerald-500);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
-        }
-
-        .service-option.selected {
-            border-color: var(--emerald-500);
-            background: rgba(16, 185, 129, 0.05);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        .service-icon {
-            font-size: 2.5rem;
-        }
-
-        .service-name {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--slate-700);
-            text-align: center;
-        }
-
-        /* Form Groups */
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: var(--slate-700);
-            margin-bottom: 0.625rem;
-            font-size: 0.9375rem;
-        }
-
-        .form-control {
+            align-items: flex-start;
+            gap: 0.125rem;
             width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--slate-200);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s;
-            color: var(--slate-900);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--emerald-500);
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-        }
-
-        .form-control.is-valid {
-            border-color: var(--emerald-500);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
-        }
-
-        .form-control.is-invalid {
-            border-color: var(--error-500);
-            box-shadow: 0 0 0 3px var(--error-100);
-        }
-
-        .field-feedback {
-            display: none;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .field-feedback.active {
-            display: block;
-        }
-
-        .field-feedback.success {
-            color: var(--emerald-600);
-        }
-
-        .field-feedback.error {
-            color: var(--error-500);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        select.form-control {
+            border: 0;
+            border-bottom: 1px solid var(--void3);
+            background: #fff;
+            padding: 0.7rem 0.9rem;
+            text-align: left;
             cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%23475569'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 3rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        /* AI Generator Section */
-        .ai-generator-section {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%);
-            border: 2px dashed var(--purple-500);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .ai-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .ai-badge {
-            background: linear-gradient(135deg, var(--purple-500) 0%, var(--purple-600) 100%);
-            color: white;
-            padding: 0.375rem 0.875rem;
-            border-radius: 20px;
-            font-size: 0.8125rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .ai-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--slate-900);
-        }
-
-        .ai-description {
-            color: var(--slate-600);
-            font-size: 0.9375rem;
-            margin-bottom: 1.25rem;
-            line-height: 1.6;
-        }
-
-        .quick-prompts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .quick-prompt {
-            background: white;
-            border: 1.5px solid var(--purple-500);
-            color: var(--purple-600);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quick-prompt:hover {
-            background: var(--purple-500);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .ai-input-group {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .ai-input {
-            flex: 1;
-            padding: 0.875rem 1.125rem;
-            border: 2px solid var(--purple-500);
-            border-radius: 12px;
-            font-size: 0.9375rem;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-
-        .ai-input:focus {
-            outline: none;
-            border-color: var(--purple-600);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
-        }
-
-        .btn-ai-generate {
-            background: linear-gradient(135deg, var(--purple-500) 0%, var(--purple-600) 100%);
-            color: white;
-            border: none;
-            padding: 0.875rem 1.75rem;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
-        }
-
-        .btn-ai-generate:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
-        }
-
-        .btn-ai-generate:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .ai-output {
-            background: white;
-            border: 2px solid var(--purple-500);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .ai-output.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .ai-output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .ai-output-label {
-            font-weight: 600;
-            color: var(--purple-600);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .ai-output-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn-icon {
-            background: var(--slate-100);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.125rem;
-        }
-
-        .btn-icon:hover {
-            background: var(--slate-200);
-            transform: scale(1.05);
-        }
-
-        .ai-output-text {
-            color: var(--slate-700);
-            line-height: 1.7;
-            white-space: pre-wrap;
-        }
-
-        .ai-loading {
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--purple-600);
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .ai-loading.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--purple-200);
-            border-top-color: var(--purple-600);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Budget Range Slider */
-        .budget-display {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--emerald-600);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 10px;
-            background: var(--slate-200);
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--emerald-500);
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--emerald-500);
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Timeline Options */
-        .timeline-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-
-        .timeline-option {
-            border: 2px solid var(--slate-200);
-            border-radius: 12px;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .timeline-option:hover {
-            border-color: var(--emerald-500);
-            transform: translateY(-2px);
-        }
-
-        .timeline-option.selected {
-            border-color: var(--emerald-500);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .timeline-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-label {
-            font-weight: 600;
-            color: var(--slate-700);
-        }
-
-        /* Review Section */
-        .review-section {
-            background: var(--slate-50);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .review-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--slate-200);
-        }
-
-        .review-item:last-child {
-            border-bottom: none;
-        }
-
-        .review-label {
-            font-weight: 600;
-            color: var(--slate-600);
-        }
-
-        .review-value {
-            color: var(--slate-900);
-            font-weight: 500;
-            text-align: right;
-            max-width: 60%;
-        }
-
-        /* Action Buttons */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2.5rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-        }
-
-        .btn-primary {
-            background: var(--emerald-500);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--emerald-600);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--slate-700);
-            border: 2px solid var(--slate-200);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--slate-400);
-        }
-
-        /* Success Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.45);
-            backdrop-filter: blur(12px);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 1.25rem;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(24px);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 18px 48px rgba(15, 23, 42, 0.22);
-            animation: modalSlideIn 0.4s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .success-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-content h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 1rem;
-        }
-
-        .modal-content p {
-            color: var(--slate-600);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .quote-reference {
-            background: var(--slate-50);
-            padding: 1rem;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-weight: 700;
-            color: var(--emerald-600);
-            margin-bottom: 2rem;
-            border: 1px solid var(--slate-200);
-        }
-
-        .modal-footer {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .modal-footer .btn {
-            padding: 0.75rem 1.5rem;
-        }
-
-        /* Auth Save Modal */
-        .auth-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: authFadeIn 0.2s ease;
-            z-index: 10001;
-        }
-
-        .auth-modal-overlay.active {
-            display: flex;
-        }
-
-        @keyframes authFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .auth-modal {
-            background: #ffffff;
-            border-radius: 20px;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            animation: authSlideUp 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes authSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .auth-modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--slate-500);
-            transition: all 0.2s;
-            z-index: 10;
-        }
-
-        .auth-modal-close:hover {
-            background: #f3f4f6;
-            color: var(--slate-900);
-        }
-
-        .auth-modal-header {
-            padding: 40px 32px 24px;
-            text-align: center;
-        }
-
-        .auth-modal-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-
-        .auth-modal-title {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .auth-modal-subtitle {
-            font-size: 15px;
-            color: var(--slate-600);
-            line-height: 1.6;
-            max-width: 360px;
-            margin: 0 auto;
-        }
-
-        .auth-modal-body {
-            padding: 0 32px 32px;
-        }
-
-        .auth-button {
-            width: 100%;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .auth-button-primary {
-            background: var(--emerald-500);
-            color: white;
-            margin-bottom: 12px;
-        }
-
-        .auth-button-primary:hover {
-            background: var(--emerald-600);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .auth-button-secondary {
-            background: #f9fafb;
-            color: var(--slate-900);
-            border: 1.5px solid var(--slate-200);
-            margin-bottom: 12px;
-        }
-
-        .auth-button-secondary:hover {
-            background: #ffffff;
-            border-color: #d1d5db;
-        }
-
-        .auth-button-ghost {
-            background: transparent;
-            color: var(--slate-600);
-            padding: 12px 24px;
-        }
-
-        .auth-button-ghost:hover {
-            background: #f9fafb;
-            color: var(--slate-900);
-        }
-
-        .auth-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 20px 0;
-            color: var(--slate-500);
-            font-size: 13px;
-        }
-
-        .auth-divider::before,
-        .auth-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--slate-200);
-        }
-
-        .auth-feature-list {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 20px;
-        }
-
-        .auth-feature-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0;
-            font-size: 14px;
-            color: var(--slate-600);
-        }
-
-        .auth-feature-icon {
-            width: 20px;
-            height: 20px;
-            color: var(--emerald-600);
-            flex-shrink: 0;
-        }
-
-        .auth-progress-dots {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-top: 24px;
-        }
-
-        .auth-progress-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--slate-200);
-            transition: all 0.3s;
-        }
-
-        .auth-progress-dot.active {
-            background: var(--emerald-500);
-            width: 20px;
-            border-radius: 3px;
+            font-family: var(--fb);
+        }
+        .postcode-suggestion:last-child { border-bottom: 0; }
+        .postcode-suggestion:hover,
+        .postcode-suggestion.active { background: var(--neon-lo); }
+        .postcode-suggestion-code { color: var(--t1); font-size: 0.9rem; font-weight: 700; }
+        .postcode-suggestion-meta { color: var(--t3); font-size: 0.78rem; font-weight: 500; }
+
+        /* AI GENERATOR */
+        .ai-generator-section { background: linear-gradient(145deg,#f5f0ff,#ede5ff); border: 1.5px solid rgba(109,40,217,0.15); border-radius: var(--r4); padding: 1.625rem; margin-bottom: 1.75rem; }
+        .ai-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .ai-badge { background: linear-gradient(135deg,var(--purple-500),var(--purple-600)); color: white; padding: 0.3rem 0.75rem; border-radius: var(--r5); font-family: var(--fm); font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; gap: 0.3rem; }
+        .ai-title { font-family: var(--ff); font-size: 1.0625rem; font-weight: 800; color: var(--t1); letter-spacing: -0.02em; }
+        .ai-description { color: var(--t3); font-size: 0.9rem; margin-bottom: 1.125rem; line-height: 1.6; font-weight: 300; }
+        .quick-prompts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .quick-prompt { background: white; border: 1.5px solid rgba(109,40,217,0.2); color: var(--purple-600); padding: 0.4375rem 0.875rem; border-radius: var(--r5); font-size: 0.8125rem; font-weight: 600; cursor: pointer; transition: all 0.18s; font-family: var(--fb); }
+        .quick-prompt:hover { background: var(--purple-500); border-color: var(--purple-500); color: white; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(109,40,217,0.2); }
+        .ai-input-group { display: flex; gap: 0.625rem; margin-bottom: 0.875rem; }
+        .ai-input { flex: 1; padding: 0.875rem 1.125rem; border: 1.5px solid rgba(109,40,217,0.25); border-radius: var(--r2); font-size: 0.9375rem; font-family: var(--fb); transition: all 0.25s; background: white; color: var(--t1); }
+        .ai-input:focus { outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(109,40,217,0.1); }
+        .btn-ai-generate { background: linear-gradient(135deg,var(--purple-500),var(--purple-600)); color: white; border: none; padding: 0.875rem 1.5rem; border-radius: var(--r2); font-weight: 700; font-size: 0.9rem; font-family: var(--fb); cursor: pointer; transition: all 0.22s var(--ease-out); box-shadow: 0 4px 16px rgba(109,40,217,0.2); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+        .btn-ai-generate:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,0.28); }
+        .btn-ai-generate:disabled { opacity: 0.55; cursor: not-allowed; }
+        .ai-loading { display: none; align-items: center; gap: 0.75rem; color: var(--purple-600); font-weight: 600; font-size: 0.9rem; margin-top: 0.875rem; }
+        .ai-loading.active { display: flex; }
+        .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(109,40,217,0.15); border-top-color: var(--purple-600); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+        .ai-output { background: white; border: 1.5px solid rgba(109,40,217,0.18); border-radius: var(--r2); padding: 1.125rem; margin-top: 0.875rem; display: none; }
+        .ai-output.active { display: block; animation: slideDown 0.3s var(--ease-out); }
+        .ai-output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.875rem; }
+        .ai-output-label { font-weight: 700; color: var(--purple-600); font-size: 0.875rem; display: flex; align-items: center; gap: 0.4rem; }
+        .ai-output-actions { display: flex; gap: 0.4rem; }
+        .btn-icon { background: var(--void3); border: none; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+        .btn-icon:hover { background: var(--void4); transform: scale(1.08); }
+        .ai-output-text { color: var(--t2); line-height: 1.75; white-space: pre-wrap; font-size: 0.9375rem; }
+
+        /* BUDGET */
+        .budget-display { font-family: var(--ff); font-size: 1.75rem; font-weight: 800; color: var(--t1); margin-bottom: 1rem; text-align: center; letter-spacing: -0.04em; }
+        input[type="range"] { width: 100%; height: 6px; border-radius: 100px; background: var(--void4); outline: none; -webkit-appearance: none; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--neon); cursor: pointer; box-shadow: 0 2px 8px rgba(0,122,61,0.3), 0 0 0 3px white, 0 0 0 5px rgba(0,122,61,0.1); transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--neon); cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(0,122,61,0.3); }
+        .budget-context-hint { text-align: center; font-size: 0.8125rem; color: var(--t4); margin-top: 0.625rem; font-style: italic; min-height: 1.2em; transition: all 0.3s; }
+        .budget-context-hint.has-context { color: var(--neon); font-style: normal; font-weight: 600; }
+
+        /* AI PRICE ADVISOR */
+        .ai-advisor-container { background: linear-gradient(145deg,#f5f0ff,#ede5ff); border: 1.5px solid rgba(109,40,217,0.15); border-radius: var(--r4); padding: 1.625rem; margin-top: 1.5rem; }
+        .btn-ai-estimate { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg,var(--purple-500),var(--purple-600)); color: white; border: none; padding: 0.875rem 1.625rem; border-radius: var(--r2); font-size: 0.9375rem; font-weight: 700; font-family: var(--fb); cursor: pointer; transition: all 0.22s var(--ease-out); box-shadow: 0 4px 16px rgba(109,40,217,0.2); }
+        .btn-ai-estimate:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,0.28); }
+        .ai-estimate-loading { display: none; align-items: center; gap: 0.875rem; margin-top: 1.125rem; color: var(--purple-600); font-weight: 600; font-size: 0.9rem; }
+        .ai-estimate-loading.active { display: flex; }
+        .ai-estimate-output { display: none; margin-top: 1.125rem; background: white; border-radius: var(--r2); border: 1px solid rgba(109,40,217,0.15); overflow: hidden; }
+        .ai-estimate-output.active { display: block; animation: fadeSlideUp 0.35s var(--ease-out); }
+        .estimate-range-row { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; background: linear-gradient(135deg,var(--t1),#1a2744); }
+        .estimate-range-label { color: rgba(255,255,255,0.6); font-family: var(--fm); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        .estimate-range-value { color: white; font-family: var(--ff); font-size: 1.75rem; font-weight: 800; letter-spacing: -0.04em; }
+        .estimate-location-note { padding: 0.875rem 1.5rem 0; font-size: 0.875rem; color: var(--t4); font-style: italic; }
+        .estimate-breakdown { padding: 0.875rem 1.5rem 1rem; }
+        .estimate-breakdown h4 { font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--t4); font-weight: 700; margin-bottom: 0.75rem; }
+        .estimate-breakdown ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+        .estimate-breakdown ul li { font-size: 0.9rem; color: var(--t2); display: flex; align-items: flex-start; gap: 0.625rem; }
+        .estimate-breakdown ul li::before { content: "\2713"; color: var(--neon); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+        .estimate-disclaimer { margin: 0; padding: 0.875rem 1.5rem; border-top: 1px solid var(--glass3); font-size: 0.8rem; color: var(--t4); line-height: 1.6; background: var(--void2); }
+        .estimate-disclaimer strong { color: var(--t2); }
+
+        /* PHOTO UPLOAD */
+        .photo-upload-section { margin-bottom: 1.5rem; }
+        .photo-upload-label { display: block; font-weight: 700; color: var(--t2); margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .photo-drop-zone { border: 2px dashed var(--border2); border-radius: var(--r2); padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.25s; background: var(--void2); position: relative; }
+        .photo-drop-zone:hover, .photo-drop-zone.drag-over { border-color: var(--neon); background: var(--neon-lo); }
+        .photo-drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .photo-drop-icon { font-size: 1.875rem; margin-bottom: 0.5rem; }
+        .photo-drop-text { font-size: 0.9375rem; color: var(--t2); margin-bottom: 0.25rem; }
+        .photo-drop-hint { font-size: 0.8125rem; color: var(--t4); }
+        .photo-previews { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+        .photo-preview-item { position: relative; width: 76px; height: 76px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border2); }
+        .photo-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-preview-remove { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; background: rgba(0,0,0,0.65); color: white; border: none; border-radius: 50%; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        /* RESPONSE TIME */
+        .response-time-indicator { display: flex; align-items: center; gap: 0.625rem; background: #eff6ff; border: 1px solid rgba(59,130,246,0.15); border-radius: var(--r2); padding: 0.75rem 1rem; margin-top: 1rem; font-size: 0.875rem; color: #1d4ed8; }
+        .response-time-indicator .rti-icon { font-size: 1rem; flex-shrink: 0; }
+        .response-time-indicator strong { color: #1e3a8a; }
+
+        /* TIMELINE */
+        .timeline-options { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.875rem; }
+        .timeline-option { border: 1px solid var(--border2); border-radius: var(--r3); padding: 1.25rem; cursor: pointer; transition: all 0.22s var(--ease-out); text-align: center; background: var(--void2); }
+        .timeline-option:hover { border-color: var(--neon); background: #fff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,122,61,0.06); }
+        .timeline-option.selected { border-color: var(--neon); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.08), 0 6px 20px rgba(0,122,61,0.06); }
+        .timeline-icon { font-size: 1.875rem; margin-bottom: 0.5rem; }
+        .timeline-label { font-family: var(--fb); font-weight: 700; color: var(--t2); font-size: 0.9rem; }
+
+        /* REVIEW */
+        .quote-preview-box { background: linear-gradient(160deg,#0f1729,#1a2744); border-radius: var(--r4); padding: 1.625rem; margin-bottom: 1.5rem; color: white; border: 1px solid rgba(255,255,255,0.06); }
+        .quote-preview-box h4 { font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); margin-bottom: 1rem; font-weight: 700; }
+        .qp-field { padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; gap: 1rem; }
+        .qp-field:last-child { border-bottom: none; }
+        .qp-label { font-family: var(--fm); font-size: 10px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+        .qp-value { font-size: 0.9rem; color: white; font-weight: 700; text-align: right; max-width: 60%; }
+        .review-section { background: var(--void2); border-radius: var(--r3); padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+        .review-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.875rem 0; border-bottom: 1px solid var(--glass3); }
+        .review-item:last-child { border-bottom: none; }
+        .review-label { font-family: var(--fm); font-weight: 600; color: var(--t3); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+        .review-value { color: var(--t1); font-weight: 600; text-align: right; max-width: 60%; font-size: 0.9375rem; }
+
+        /* ═══════════════ BUTTONS (matches index-light) ═══════════════ */
+        .form-actions { display: flex; gap: 0.875rem; margin-top: 2.5rem; }
+        .btn { padding: 1rem 2rem; border-radius: var(--r2); font-weight: 700; font-size: 0.9375rem; border: none; cursor: pointer; transition: all 0.22s var(--ease-out); flex: 1; font-family: var(--ff); letter-spacing: -0.02em; }
+        .btn-primary { background: linear-gradient(135deg,var(--neon3),var(--neon)); color: #fff; box-shadow: var(--neon-glow-sm); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--neon-glow); }
+        .btn-secondary { background: white; color: var(--t2); border: 1px solid var(--border2); }
+        .btn-secondary:hover { border-color: var(--t3); background: var(--void2); }
+
+        /* ═══════════════ MODALS ═══════════════ */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(15,23,41,0.4); backdrop-filter: blur(6px); z-index: 10000; align-items: center; justify-content: center; padding: 1.5rem; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: var(--r4); padding: 3rem; max-width: 480px; width: 100%; text-align: center; animation: modalIn 0.4s var(--ease-spring); box-shadow: var(--deep-shadow); }
+        @keyframes modalIn { from{opacity:0;transform:scale(0.88) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        .success-icon { font-size: 4rem; margin-bottom: 1.25rem; }
+        .modal-content h2 { font-family: var(--ff); font-size: 1.75rem; font-weight: 800; color: var(--t1); margin-bottom: 0.875rem; letter-spacing: -0.04em; }
+        .modal-content p { color: var(--t3); margin-bottom: 1.5rem; line-height: 1.7; }
+        .quote-id { background: var(--void2); padding: 0.875rem 1.25rem; border-radius: var(--r2); font-family: var(--fm); font-weight: 700; font-size: 0.9375rem; color: var(--neon); margin-bottom: 1.75rem; border: 1px solid var(--border); }
+
+        /* AUTH MODAL */
+        .auth-modal-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(15,23,41,0.45); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+        .auth-modal-overlay.active { display: flex; }
+        .auth-modal { background: white; border-radius: var(--r4); max-width: 440px; width: 100%; position: relative; box-shadow: var(--deep-shadow); animation: modalIn 0.4s var(--ease-spring); }
+        .auth-modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: var(--r1); background: var(--void2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--t3); transition: all 0.2s; }
+        .auth-modal-close:hover { background: var(--void3); color: var(--t1); }
+        .auth-modal-close svg { width: 18px; height: 18px; }
+        .auth-modal-header { padding: 40px 32px 24px; text-align: center; }
+        .auth-modal-icon { width: 56px; height: 56px; background: var(--neon-lo); border: 1px solid var(--border-neon); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: var(--neon); }
+        .auth-modal-icon svg { width: 24px; height: 24px; }
+        .auth-modal-title { font-family: var(--ff); font-size: 1.5rem; font-weight: 800; color: var(--t1); margin-bottom: 10px; letter-spacing: -0.04em; }
+        .auth-modal-subtitle { font-size: 0.9375rem; color: var(--t3); line-height: 1.6; max-width: 340px; margin: 0 auto; font-weight: 300; }
+        .auth-modal-body { padding: 0 32px 32px; }
+        .auth-button { width: 100%; padding: 14px 24px; border-radius: var(--r2); font-size: 0.9375rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--ff); }
+        .auth-button-primary { background: linear-gradient(135deg,var(--neon3),var(--neon)); color: #fff; margin-bottom: 10px; box-shadow: var(--neon-glow-sm); }
+        .auth-button-primary:hover { transform: translateY(-1px); box-shadow: var(--neon-glow); }
+        .auth-button-secondary { background: var(--void2); color: var(--t1); border: 1px solid var(--border2); margin-bottom: 10px; }
+        .auth-button-secondary:hover { background: white; border-color: var(--t3); }
+        .auth-button-ghost { background: transparent; color: var(--t3); padding: 12px 24px; }
+        .auth-button-ghost:hover { background: var(--void2); color: var(--t1); }
+        .auth-divider { display: flex; align-items: center; gap: 14px; margin: 18px 0; color: var(--t4); font-size: 0.8125rem; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--glass3); }
+        .auth-feature-list { background: var(--void2); border-radius: var(--r2); padding: 14px; margin-top: 18px; border: 1px solid var(--border); }
+        .auth-feature-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 0.875rem; color: var(--t2); }
+        .auth-feature-icon { width: 18px; height: 18px; color: var(--neon); flex-shrink: 0; }
+        .auth-progress-dots { display: flex; gap: 6px; justify-content: center; margin-top: 20px; }
+        .auth-progress-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--void4); transition: all 0.3s; }
+        .auth-progress-dot.active { background: var(--neon); width: 20px; border-radius: 3px; }
+
+        /* ═══════════════ FOOTER (matches index-light) ═══════════════ */
+        footer {
+            background: var(--void);
+            border-top: 1px solid var(--border);
+            color: var(--t3);
+            padding: 2rem; text-align: center; margin-top: 3rem;
+        }
+
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links { display: none; }
+            .nav-container { padding: 0 16px 0 20px; }
+            .hero { padding: 4rem 0 5rem; }
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { font-size: 1rem; }
+            .main-content { margin: -40px auto 3rem; padding: 0 1rem; }
+            .progress-container { padding: 1.5rem 1.25rem 1.25rem; border-radius: var(--r4) var(--r4) 0 0; }
+            .step-number { width: 34px; height: 34px; font-size: 0.875rem; }
+            .step-label { font-size: 9px; display: none; }
+            .progress-step.active .step-label { display: block; }
+            .form-card { padding: 1.5rem 1.25rem 2rem; border-radius: 0 0 var(--r4) var(--r4); }
+            .step-title { font-size: 1.5rem; }
+            .step-description { font-size: 0.9375rem; margin-bottom: 1.5rem; }
+            .service-search-header { flex-direction: column; align-items: stretch; gap: 0.875rem; }
+            .service-search-container { min-width: 100%; }
+            .service-grid { grid-template-columns: repeat(2,1fr); gap: 0.625rem; }
+            .service-option { padding: 0.75rem; }
+            .service-icon { font-size: 2rem; }
+            .service-name { font-size: 0.75rem; }
+            .form-row, .timeline-options { grid-template-columns: 1fr; gap: 0.875rem; }
+            .form-control { padding: 0.875rem 1rem; font-size: 0.9375rem; }
+            textarea.form-control { min-height: 100px; }
+            .ai-generator-section { padding: 1.125rem; }
+            .ai-input-group { flex-direction: column; gap: 0.625rem; }
+            .btn-ai-generate { width: 100%; justify-content: center; }
+            .quick-prompts { gap: 0.4rem; }
+            .form-actions { flex-direction: column; gap: 0.75rem; }
+            .btn { padding: 0.9375rem 1.5rem; }
+            .review-section { padding: 1.125rem; }
+            .quote-preview-box { padding: 1.25rem; }
+            .modal-content { padding: 2rem 1.5rem; border-radius: var(--r4); }
+            .modal-content h2 { font-size: 1.5rem; }
+            .session-recovery-banner { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .banner-actions { width: 100%; }
+            .btn-restore, .btn-dismiss { flex: 1; text-align: center; }
         }
 
         @media (max-width: 640px) {
-            .auth-modal {
-                border-radius: 20px 20px 0 0;
-                position: fixed;
-                bottom: 0;
-                max-width: 100%;
-            }
-
-            .auth-modal-header {
-                padding: 32px 24px 20px;
-            }
-
-            .auth-modal-body {
-                padding: 0 24px 32px;
-            }
-
-            .auth-modal-title {
-                font-size: 22px;
-            }
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0.75rem 1rem;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero {
-                min-height: 300px;
-                padding: 6rem 1rem 4rem;
-            }
-
-            .hero-content h1 {
-                font-size: 1.75rem;
-                line-height: 1.3;
-            }
-
-            .hero-content p {
-                font-size: 1rem;
-            }
-
-            .main-content {
-                margin: -30px auto 2rem;
-                padding: 0 1rem;
-            }
-
-            .progress-container {
-                padding: 1.5rem 1rem;
-                border-radius: 12px 12px 0 0;
-            }
-
-            .progress-steps {
-                margin-bottom: 1rem;
-            }
-
-            .step-number {
-                width: 32px;
-                height: 32px;
-                font-size: 0.875rem;
-            }
-
-            .step-label {
-                font-size: 0.75rem;
-                display: none;
-            }
-
-            .progress-step.active .step-label {
-                display: block;
-            }
-
-            .progress-bar-fill {
-                height: 6px;
-            }
-
-            .form-card {
-                padding: 1.5rem 1rem;
-                border-radius: 0 0 16px 16px;
-            }
-
-            .step-title {
-                font-size: 1.5rem;
-            }
-
-            .step-description {
-                font-size: 0.9375rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .service-search-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1rem;
-            }
-
-            .service-search-container {
-                min-width: 100%;
-                order: 2;
-            }
-
-            .service-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
-            }
-
-            .service-option {
-                padding: 0.75rem;
-            }
-
-            .service-icon {
-                font-size: 2rem;
-            }
-
-            .service-name {
-                font-size: 0.8125rem;
-            }
-
-            .form-row,
-            .timeline-options {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .form-control {
-                padding: 0.875rem 1rem;
-                font-size: 0.9375rem;
-            }
-
-            textarea.form-control {
-                min-height: 100px;
-            }
-
-            .ai-generator-section {
-                padding: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .ai-title {
-                font-size: 1rem;
-            }
-
-            .ai-subtitle {
-                font-size: 0.8125rem;
-            }
-
-            .quick-prompts {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .quick-prompt {
-                padding: 0.625rem 1rem;
-                font-size: 0.8125rem;
-            }
-
-            .ai-input-group {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .btn-ai-generate {
-                width: 100%;
-                justify-content: center;
-                padding: 0.875rem;
-                font-size: 0.9375rem;
-            }
-
-            .button-group {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                padding: 0.875rem 1.5rem;
-                font-size: 0.9375rem;
-            }
-
-            .review-section {
-                padding: 1.25rem;
-            }
-
-            .review-item {
-                padding: 1rem;
-            }
-
-            .review-label {
-                font-size: 0.8125rem;
-            }
-
-            .review-value {
-                font-size: 0.9375rem;
-            }
-
-            .modal-content {
-                padding: 1.5rem;
-                margin: 1rem;
-                max-width: calc(100% - 2rem);
-            }
-
-            .modal-content h2 {
-                font-size: 1.5rem;
-            }
-
-            .quote-id {
-                padding: 0.75rem;
-                font-size: 0.875rem;
-            }
+            .auth-modal { border-radius: var(--r4) var(--r4) 0 0; position: fixed; bottom: 0; max-width: 100%; }
+            .auth-modal-header { padding: 28px 24px 18px; }
+            .auth-modal-body { padding: 0 24px 28px; }
+            .auth-modal-title { font-size: 1.25rem; }
         }
 
         @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 1.5rem;
-            }
-
-            .main-content {
-                padding: 0 0.75rem;
-            }
-
-            .form-card {
-                padding: 1.25rem 0.875rem;
-            }
-
-            .step-title {
-                font-size: 1.25rem;
-            }
-
-            .service-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-
-            .service-option {
-                padding: 0.5rem;
-            }
-
-            .service-icon {
-                font-size: 1.75rem;
-            }
-
-            .service-name {
-                font-size: 0.75rem;
-            }
-
-            .progress-container {
-                padding: 1rem 0.75rem;
-            }
+            .hero-content h1 { font-size: 1.625rem; }
+            .main-content { padding: 0 0.75rem; }
+            .form-card { padding: 1.25rem 1rem 1.75rem; }
+            .step-title { font-size: 1.25rem; }
+            .service-grid { gap: 0.5rem; }
+            .service-option { padding: 0.625rem; }
+            .service-icon { font-size: 1.75rem; }
+            .service-name { font-size: 0.6875rem; }
+            .progress-container { padding: 1rem 0.875rem; }
         }
     </style>
         <script>
@@ -1463,19 +550,51 @@
                 <li><a href="/help">Help</a></li>
                 <li><a href="/login">Sign In</a></li>
             </ul>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="/how-it-works">How It Works</a>
+        <a href="/find-tradespeople">Find Trades</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/help">Help</a>
+        <a href="/login">Sign In</a>
+    </div>
+
+    <!-- Social Proof Ticker -->
+    <div class="social-proof-ticker">
+        <div class="ticker-track" id="tickerTrack"></div>
+    </div>
 
     <!-- Hero -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Get Free Quotes from Local Tradespeople</h1>
+            <div class="hero-eyebrow">⚡ Free · No obligation · 2 minute form</div>
+            <h1>Get <em>Free Quotes</em> from Local Tradespeople</h1>
             <p>Tell us about your project and receive competitive quotes from verified professionals within 24 hours</p>
         </div>
     </section>
 
     <!-- Main Content -->
     <div class="main-content">
+
+        <!-- Session Recovery Banner (shown if saved progress exists) -->
+        <div class="session-recovery-banner" id="sessionRecoveryBanner" style="display:none;">
+            <div class="banner-icon">👋</div>
+            <div class="banner-text">
+                <strong>Welcome back!</strong> You left off at <span id="recoveryStepName">Step 2</span>. Want to continue where you were?
+            </div>
+            <div class="banner-actions">
+                <button class="btn-restore" id="btnRestoreSession">Continue</button>
+                <button class="btn-dismiss" id="btnDismissSession">Start fresh</button>
+            </div>
+        </div>
+
         <!-- Progress Bar -->
         <div class="progress-container">
             <div class="progress-steps">
@@ -1737,7 +856,13 @@
                         <div class="form-group">
                             <label for="postcode">Your Postcode *</label>
                             <input type="text" id="postcode" name="postcode" class="form-control" placeholder="e.g. SW1A 1AA" required pattern="[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}">
-                            <p id="postcodeFeedback" class="field-feedback"></p>
+                            <div class="postcode-suggestions" id="postcodeSuggestions" role="listbox" aria-label="Postcode suggestions"></div>
+                            <div class="postcode-feedback" id="postcodeFeedback">
+                                <span id="postcodeFeedbackIcon"></span>
+                                <span id="postcodeFeedbackText"></span>
+                                <span class="postcode-location-chip" id="postcodeLocationChip" style="display:none;"></span>
+                            </div>
+                            <div class="field-error-msg" id="postcodeError">Please enter a valid UK postcode</div>
                         </div>
                         <div class="form-group">
                             <label for="propertyType">Property Type</label>
@@ -1818,10 +943,68 @@
                         </small>
                     </div>
 
+                    <!-- Photo Upload -->
+                    <div class="photo-upload-section">
+                        <label class="photo-upload-label">
+                            📷 Add Photos <span style="font-weight:400; color: var(--slate-400);">(optional — increases quote accuracy)</span>
+                        </label>
+                        <div class="photo-drop-zone" id="photoDropZone">
+                            <input type="file" id="photoInput" accept="image/*" multiple>
+                            <div class="photo-drop-icon">🖼️</div>
+                            <div class="photo-drop-text">Drop photos here or <strong style="color:var(--emerald-600);">browse</strong></div>
+                            <div class="photo-drop-hint">JPG, PNG or HEIC · Up to 5 photos · 10MB each</div>
+                        </div>
+                        <div class="photo-previews" id="photoPreviews"></div>
+                    </div>
+
+                    <!-- Response Time Indicator -->
+                    <div class="response-time-indicator" id="responseTimeIndicator" style="display:none;">
+                        <span class="rti-icon">⚡</span>
+                        <span id="responseTimeText">Typically <strong>3–5 tradespeople</strong> respond within <strong>4 hours</strong> for this trade in your area.</span>
+                    </div>
+
                     <div class="form-group">
                         <label for="budget">Your Budget</label>
                         <div class="budget-display" id="budgetDisplay">£5,000 - £10,000</div>
                         <input type="range" id="budgetSlider" min="500" max="100000" step="500" value="7500">
+                        <div class="budget-context-hint" id="budgetContextHint">Move the slider to set your budget range</div>
+                    </div>
+
+                    <!-- AI Price Advisor -->
+                    <div class="ai-advisor-container" id="aiAdvisorContainer">
+                        <div class="ai-header">
+                            <div class="ai-badge">
+                                <span>💰</span>
+                                <span>AI PRICE ADVISOR</span>
+                            </div>
+                            <div class="ai-title">Instant Price Estimate</div>
+                        </div>
+                        <p class="ai-description">
+                            Get a rough idea of what your project might cost in your area before tradespeople respond.
+                        </p>
+                        <button type="button" id="getAiEstimate" class="btn-ai-estimate">
+                            <span>✨</span>
+                            <span>Get Instant AI Estimate</span>
+                        </button>
+
+                        <!-- Loading State -->
+                        <div class="ai-estimate-loading" id="aiEstimateLoading">
+                            <div class="spinner"></div>
+                            <span>Analysing typical rates for your area...</span>
+                        </div>
+
+                        <!-- Estimate Output -->
+                        <div class="ai-estimate-output" id="aiEstimateOutput">
+                            <div class="estimate-range-row">
+                                <span class="estimate-range-label">Estimated Price Range</span>
+                                <span class="estimate-range-value" id="estimateRange"></span>
+                            </div>
+                            <p class="estimate-location-note" id="locationNote"></p>
+                            <div class="estimate-breakdown" id="estimateBreakdown"></div>
+                            <p class="estimate-disclaimer">
+                                ⚠️ <strong>Disclaimer:</strong> This is an AI-generated estimate based on typical UK market rates. It is not 100% accurate and does not constitute a formal quote. Final prices depend on local factors, project scope, materials chosen, and tradesperson inspection.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -1865,6 +1048,35 @@
                 <div class="form-step" data-step="4">
                     <h2 class="step-title">Review your quote request</h2>
                     <p class="step-description">Check your details before submitting</p>
+
+                    <!-- What Tradespeople Will See Preview -->
+                    <div class="quote-preview-box">
+                        <h4>👷 What tradespeople will see</h4>
+                        <div class="qp-field">
+                            <span class="qp-label">Service</span>
+                            <span class="qp-value" id="previewService">—</span>
+                        </div>
+                        <div class="qp-field">
+                            <span class="qp-label">Location</span>
+                            <span class="qp-value" id="previewLocation">—</span>
+                        </div>
+                        <div class="qp-field">
+                            <span class="qp-label">Property</span>
+                            <span class="qp-value" id="previewProperty">—</span>
+                        </div>
+                        <div class="qp-field">
+                            <span class="qp-label">Budget</span>
+                            <span class="qp-value" id="previewBudget">—</span>
+                        </div>
+                        <div class="qp-field">
+                            <span class="qp-label">Timeline</span>
+                            <span class="qp-value" id="previewUrgency">—</span>
+                        </div>
+                        <div class="qp-field">
+                            <span class="qp-label">Description</span>
+                            <span class="qp-value" id="previewDescription" style="font-size:0.8125rem; color:rgba(255,255,255,0.7); font-weight:400;">—</span>
+                        </div>
+                    </div>
                     
                     <div class="review-section">
                         <div class="review-item">
@@ -2044,9 +1256,9 @@
             <div class="success-icon">✅</div>
             <h2>Quote Request Submitted!</h2>
             <p>We've received your request and locked your price for 30 days while we match verified tradespeople.</p>
-            <div class="quote-reference">Your reference: <span id="displayQuoteRef">LOADING...</span></div>
-            <p style="font-size: 0.9375rem; margin-bottom: 0;">You'll start receiving quotes within 24 hours via email and SMS.</p>
-            <div class="modal-footer">
+            <div class="quote-id">Your reference: <span id="displayQuoteRef">LOADING...</span></div>
+            <p style="font-size: 0.9375rem; margin-bottom: 0.75rem;">You'll receive quotes within 24 hours via email and SMS.</p>
+            <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
                 <button id="saveQuoteBtn" class="btn btn-primary" type="button">Save to Account</button>
                 <button class="btn btn-secondary" type="button" onclick="closeSuccessModal()">Dismiss</button>
             </div>
@@ -2182,40 +1394,16 @@
             };
         }
 
-        // ── Config ─────────────────────────────────────────────────────────
-        const API_BASE = (window.__TRADEMATCH_API__ || 'https://api.tradematch.uk').replace(/\/$/, '');
-
-        // ── UK Postcode regex (single source of truth) ─────────────────────
-        const UK_POSTCODE_RE = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]? ?[0-9][A-Z]{2}$/i;
-
-        // ── GBP formatter (en-GB locale) ────────────────────────────────────
-        function formatGBP(n) {
-            return '£' + Number(n).toLocaleString('en-GB');
-        }
-
-        // ── Idempotency key (one per page session) ──────────────────────────
-        const _sessionIdempotencyKey = 'iqk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
-        let _idempotencyUsed = false;
-        function getIdempotencyKey() {
-            // Reuse key on auto-submit retry; generate fresh one after successful use
-            return _sessionIdempotencyKey;
-        }
-
-        // ── Analytics helper ────────────────────────────────────────────────
-        function trackQuote(eventName, params) {
-            try {
-                if (typeof gtag === 'function') {
-                    gtag('event', eventName, { event_category: 'quote_funnel', ...params });
-                }
-            } catch (_) {}
-        }
-
         // Form State
         let currentStep = 1;
         const totalSteps = 4;
         const formData = {};
         let pendingSubmissionData = null;
         let latestSubmittedQuoteId = null;
+        const isLocalApi = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocalApi
+            ? (localStorage.getItem('apiBase') || 'http://localhost:3001')
+            : 'https://api.tradematch.uk';
         
         // Auto-fill from homepage parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -2300,6 +1488,12 @@
                     if (serviceInput) {
                         serviceInput.value = serviceOption.dataset.service;
                     }
+
+                    // Update dynamic features
+                    updateQuickPrompts(formData.service);
+                    updateResponseTime(formData.service);
+                    updateBudgetContextHint(parseInt(budgetSlider?.value || 7500));
+                    trackEvent('service_selected', { service: formData.service });
                 }
             });
         }
@@ -2320,6 +1514,11 @@
                 formData.service = this.dataset.service;
                 formData.serviceName = this.querySelector('.service-name').textContent;
                 document.getElementById('serviceInput').value = this.dataset.service;
+
+                // Update dynamic features
+                updateQuickPrompts(formData.service);
+                updateResponseTime(formData.service);
+                updateBudgetContextHint(parseInt(document.getElementById('budgetSlider')?.value || 7500));
             });
         });
         
@@ -2500,11 +1699,12 @@
             const value = parseInt(e.target.value);
             const min = value;
             const max = Math.min(value * 2, 100000);
-            const display = `${formatGBP(min)} - ${formatGBP(max)}`;
+            const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
             budgetDisplay.textContent = display;
             formData.budget = display;
             formData.budgetMin = min;
             formData.budgetMax = max;
+            updateBudgetContextHint(min);
         });
 
         // AI Generator Functions
@@ -2537,11 +1737,9 @@
 
         async function generateDescription() {
             const prompt = aiInput.value.trim();
-
+            
             if (!prompt) {
-                aiInput.focus();
-                aiInput.style.borderColor = '#ef4444';
-                setTimeout(() => { aiInput.style.borderColor = ''; }, 2000);
+                alert('Please enter a brief description of your project');
                 return;
             }
 
@@ -2559,7 +1757,7 @@
                 aiOutput.classList.add('active');
                 
             } catch (error) {
-                CustomConfirm.toast('Failed to generate description. Please try again.', 'error');
+                alert('Failed to generate description. Please try again.');
                 console.error(error);
             } finally {
                 generateBtn.disabled = false;
@@ -2572,18 +1770,8 @@ async function generateAIDescription(prompt) {
             const service = formData.serviceName || 'home improvement';
             const propertyType = document.getElementById('propertyType').value;
             
-            // Uses smart template-based generation; Claude AI integration is configured server-side via /api/ai/describe
-            try {
-                const res = await fetch('/api/ai/describe', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, service, propertyType })
-                });
-                if (res.ok) {
-                    const d = await res.json();
-                    if (d.description) return d.description;
-                }
-            } catch (_) { /* fall through to template */ }
+            // For now, return a template-based description
+            // TODO: Integrate with Claude API when ready
             return generateSmartDescription(prompt, service, propertyType);
         }
 
@@ -2727,7 +1915,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     copyBtn.textContent = originalText;
                 }, 2000);
             } catch (error) {
-                CustomConfirm.toast('Failed to copy to clipboard.', 'error');
+                alert('Failed to copy to clipboard');
             }
         });
 
@@ -2750,8 +1938,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
         nextBtn.addEventListener('click', () => {
             if (validateStep(currentStep)) {
+                trackEvent('step_completed', { step: currentStep, step_name: stepNames[currentStep], service: formData.service });
                 if (currentStep < totalSteps) {
-                    trackQuote('quote_step_complete', { step: currentStep, service: formData.service });
                     currentStep++;
                     updateStep();
                 }
@@ -2807,187 +1995,46 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 updateReview();
             }
 
+            // Fire analytics step viewed
+            if (typeof trackEvent === 'function') {
+                trackEvent('step_viewed', { step: currentStep, step_name: ['','Service','Details','Timeline','Review'][currentStep] });
+            }
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function showStepError(message) {
-            const activeStep = document.querySelector('.form-step.active');
-            if (!activeStep) return;
-            let el = activeStep.querySelector('.step-error-msg');
-            if (!el) {
-                el = document.createElement('p');
-                el.className = 'step-error-msg';
-                el.style.cssText = 'color:#ef4444;font-size:13px;margin:0 0 12px;padding:10px 14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:4px;';
-                activeStep.insertBefore(el, activeStep.firstChild);
-            }
-            el.textContent = message;
-            el.style.display = 'block';
-            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function clearStepError() {
-            document.querySelectorAll('.step-error-msg').forEach(el => el.style.display = 'none');
-        }
-
-        function setFieldValidationState(inputEl, isValid, feedbackEl, successMessage, errorMessage) {
-            if (!inputEl) return;
-            inputEl.classList.remove('is-valid', 'is-invalid');
-
-            if (typeof isValid !== 'boolean') {
-                if (feedbackEl) {
-                    feedbackEl.classList.remove('active', 'success', 'error');
-                    feedbackEl.textContent = '';
-                }
-                return;
-            }
-
-            inputEl.classList.add(isValid ? 'is-valid' : 'is-invalid');
-
-            if (feedbackEl) {
-                feedbackEl.classList.add('active');
-                feedbackEl.classList.toggle('success', isValid);
-                feedbackEl.classList.toggle('error', !isValid);
-                feedbackEl.textContent = isValid ? (successMessage || '') : (errorMessage || 'Please check this field.');
-            }
-        }
-
-        function validatePostcodeRealtime() {
-            const postcodeInput = document.getElementById('postcode');
-            const postcodeFeedback = document.getElementById('postcodeFeedback');
-            if (!postcodeInput) return false;
-
-            const postcodeValue = postcodeInput.value.trim().toUpperCase();
-            if (!postcodeValue) {
-                setFieldValidationState(postcodeInput, null, postcodeFeedback);
-                return false;
-            }
-
-            const isValid = UK_POSTCODE_RE.test(postcodeValue);
-            setFieldValidationState(
-                postcodeInput,
-                isValid,
-                postcodeFeedback,
-                'Valid UK postcode',
-                'Please enter a valid UK postcode (e.g. SW1A 1AA).'
-            );
-            return isValid;
-        }
-
-        function setupRealtimeValidation() {
-            const requiredFields = document.querySelectorAll('#quoteForm .form-control[required]');
-            requiredFields.forEach((field) => {
-                if (field.id === 'postcode') return;
-
-                const validateRequiredField = () => {
-                    const value = field.value.trim();
-                    if (!value) {
-                        field.classList.remove('is-valid');
-                        field.classList.add('is-invalid');
-                        return;
-                    }
-
-                    if (field.type === 'email') {
-                        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                        field.classList.toggle('is-valid', emailOk);
-                        field.classList.toggle('is-invalid', !emailOk);
-                        return;
-                    }
-
-                    field.classList.add('is-valid');
-                    field.classList.remove('is-invalid');
-                };
-
-                field.addEventListener('blur', validateRequiredField);
-                field.addEventListener('input', () => {
-                    if (!field.classList.contains('is-invalid')) return;
-                    validateRequiredField();
-                });
-            });
-        }
-
-        function extractQuoteReference(payload) {
-            if (!payload || typeof payload !== 'object') return 'Pending';
-            return payload.quoteReference
-                || payload.quote_reference
-                || payload.reference
-                || payload.quote?.quoteReference
-                || payload.quote?.quote_reference
-                || payload.quote?.reference
-                || payload.quote?.id
-                || 'Pending';
-        }
-
-        function extractQuoteId(payload) {
-            if (!payload || typeof payload !== 'object') return null;
-            return payload.quote?.id || payload.quoteId || payload.quote_id || null;
-        }
-
-        function closeSuccessModal() {
-            document.getElementById('successModal').classList.remove('active');
-        }
-
-        function buildSignupUrlWithQuote(quoteId) {
-            const signupUrl = new URL('/signup', window.location.origin);
-            if (quoteId) {
-                signupUrl.searchParams.set('quoteId', quoteId);
-            }
-            signupUrl.searchParams.set('redirect', '/quote-engine');
-            return `${signupUrl.pathname}${signupUrl.search}`;
-        }
-
-        function openSuccessModal(responseData, isGuestFlow) {
-            const quoteReference = extractQuoteReference(responseData);
-            latestSubmittedQuoteId = extractQuoteId(responseData);
-
-            document.getElementById('displayQuoteRef').textContent = quoteReference;
-
-            const saveQuoteBtn = document.getElementById('saveQuoteBtn');
-            if (saveQuoteBtn) {
-                saveQuoteBtn.style.display = isGuestFlow ? 'inline-flex' : 'none';
-                saveQuoteBtn.onclick = () => {
-                    const quoteIdForClaim = latestSubmittedQuoteId;
-                    if (quoteIdForClaim) {
-                        localStorage.setItem('pendingQuoteClaimId', quoteIdForClaim);
-                    }
-                    window.location.href = buildSignupUrlWithQuote(quoteIdForClaim);
-                };
-            }
-
-            document.getElementById('successModal').classList.add('active');
-        }
-
         function validateStep(step) {
-            clearStepError();
             switch(step) {
                 case 1:
                     if (!formData.service) {
-                        showStepError('Please select a service.');
+                        alert('Please select a service');
                         return false;
                     }
                     break;
-                case 2: {
+                case 2:
                     const postcode = document.getElementById('postcode').value.trim().toUpperCase();
                     const description = document.getElementById('description').value.trim();
-
+                    
                     if (!postcode || !description) {
-                        showStepError('Please fill in all required fields.');
+                        alert('Please fill in all required fields');
                         return false;
                     }
-
-                    if (!UK_POSTCODE_RE.test(postcode)) {
-                        showStepError('Please enter a valid UK postcode (e.g. SW1A 1AA).');
+                    
+                    // UK postcode validation
+                    const postcodeRegex = /^[A-Z]{1,2}[0-9]{1,2} ?[0-9][A-Z]{2}$/;
+                    if (!postcodeRegex.test(postcode)) {
+                        alert('Please enter a valid UK postcode');
                         return false;
                     }
-
+                    
                     formData.postcode = postcode;
                     formData.propertyType = document.getElementById('propertyType').value;
                     formData.description = description;
                     break;
-                }
                 case 3:
                     if (!formData.urgency) {
-                        showStepError('Please select a timeline.');
+                        alert('Please select a timeline');
                         return false;
                     }
                     formData.contactPreference = document.getElementById('contactPreference').value;
@@ -3000,10 +2047,23 @@ I'm happy to discuss the project in more detail and answer any questions to help
             document.getElementById('reviewService').textContent = formData.serviceName || '-';
             document.getElementById('reviewPostcode').textContent = formData.postcode || '-';
             document.getElementById('reviewProperty').textContent = formData.propertyType || '-';
-            const budgetText = formData.budget || (formData.budgetMin ? `${formatGBP(formData.budgetMin)} - ${formatGBP(formData.budgetMax || formData.budgetMin)}` : '-');
+            const budgetText = formData.budget || (formData.budgetMin ? `£${formData.budgetMin.toLocaleString()} - £${formData.budgetMax?.toLocaleString() || ''}` : '-');
             document.getElementById('reviewBudget').textContent = budgetText;
             document.getElementById('reviewUrgency').textContent = formData.urgencyLabel || '-';
             document.getElementById('reviewDescription').textContent = formData.description || '-';
+
+            // Populate the "what tradespeople see" preview box
+            const descPreview = formData.description ? formData.description.substring(0, 120) + (formData.description.length > 120 ? '…' : '') : '—';
+            const chipEl = document.getElementById('postcodeLocationChip');
+            const chipText = chipEl && chipEl.style.display !== 'none' ? ' · ' + chipEl.textContent : '';
+            document.getElementById('previewService').textContent = formData.serviceName || '—';
+            document.getElementById('previewLocation').textContent = formData.postcode ? `${formData.postcode}${chipText}` : '—';
+            document.getElementById('previewProperty').textContent = formData.propertyType || '—';
+            document.getElementById('previewBudget').textContent = budgetText;
+            document.getElementById('previewUrgency').textContent = formData.urgencyLabel || '—';
+            document.getElementById('previewDescription').textContent = descPreview;
+
+            trackEvent('review_step_reached', { service: formData.service, has_photos: uploadedPhotos ? uploadedPhotos.length > 0 : false });
         }
 
         function persistProgress(snapshot) {
@@ -3051,13 +2111,53 @@ I'm happy to discuss the project in more detail and answer any questions to help
             window.location.href = `/signup?redirect=${encodeURIComponent(redirectTarget)}`;
         }
 
-        function _extractErrorMessage(data) {
-            if (!data) return null;
-            if (data.error) return data.error;
-            if (Array.isArray(data.errors) && data.errors.length) {
-                return data.errors.map((e) => e.message || e.msg || JSON.stringify(e)).join(', ');
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        function extractQuoteReference(payload) {
+            if (!payload || typeof payload !== 'object') return 'Pending';
+            return payload.quoteReference
+                || payload.quote_reference
+                || payload.reference
+                || payload.quote?.quoteReference
+                || payload.quote?.quote_reference
+                || payload.quote?.reference
+                || payload.quote?.id
+                || 'Pending';
+        }
+
+        function extractQuoteId(payload) {
+            if (!payload || typeof payload !== 'object') return null;
+            return payload.quote?.id || payload.quoteId || payload.quote_id || null;
+        }
+
+        function buildSignupUrlWithQuote(quoteId) {
+            const signupUrl = new URL('/signup', window.location.origin);
+            if (quoteId) {
+                signupUrl.searchParams.set('quoteId', quoteId);
             }
-            return null;
+            signupUrl.searchParams.set('redirect', '/quote-engine');
+            return `${signupUrl.pathname}${signupUrl.search}`;
+        }
+
+        function openSuccessModal(responseData, isGuestFlow) {
+            const quoteReference = extractQuoteReference(responseData);
+            latestSubmittedQuoteId = extractQuoteId(responseData);
+            document.getElementById('displayQuoteRef').textContent = quoteReference;
+
+            const saveQuoteBtn = document.getElementById('saveQuoteBtn');
+            if (saveQuoteBtn) {
+                saveQuoteBtn.style.display = isGuestFlow ? 'inline-flex' : 'none';
+                saveQuoteBtn.onclick = () => {
+                    if (latestSubmittedQuoteId) {
+                        localStorage.setItem('pendingQuoteClaimId', latestSubmittedQuoteId);
+                    }
+                    window.location.href = buildSignupUrlWithQuote(latestSubmittedQuoteId);
+                };
+            }
+
+            document.getElementById('successModal').classList.add('active');
         }
 
         async function submitAuthenticated(finalData) {
@@ -3066,33 +2166,30 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
             try {
                 const token = localStorage.getItem('token');
-                if (!token) throw new Error('Missing token');
-
-                trackQuote('quote_submit_start', { method: 'authenticated' });
+                if (!token) {
+                    throw new Error('Missing token');
+                }
 
                 const response = await fetch(`${API_BASE}/api/quotes`, {
                     method: 'POST',
-                    headers: {
+                    headers: { 
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                        'X-Idempotency-Key': getIdempotencyKey()
+                        'Authorization': 'Bearer ' + token
                     },
                     body: JSON.stringify(finalData)
                 });
-
+                
                 const data = await response.json();
-
+                
                 if (!response.ok) {
-                    throw new Error(_extractErrorMessage(data) || 'Failed to submit quote');
+                    throw new Error(data.error || 'Failed to submit quote');
                 }
 
-                trackQuote('quote_submit_success', { method: 'authenticated', quote_id: data.quote?.id });
                 openSuccessModal(data, false);
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Quote submission error:', error);
-                trackQuote('quote_submit_error', { method: 'authenticated', error: error.message });
-                CustomConfirm.toast(error.message || 'Failed to submit quote request. Please try again.', 'error');
+                alert(error.message || 'Failed to submit quote request. Please try again.');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Quote Request';
@@ -3101,21 +2198,16 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
         async function submitGuest(finalData) {
             if (!finalData) {
-                CustomConfirm.toast('Please complete the form before posting as a guest.', 'error');
+                alert('Please complete the form before posting as a guest.');
                 return;
             }
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
 
             try {
-                trackQuote('quote_submit_start', { method: 'guest' });
-
                 const response = await fetch(`${API_BASE}/api/quotes/public`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Idempotency-Key': getIdempotencyKey()
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         serviceType: finalData.service,
                         title: finalData.serviceName || 'Home project',
@@ -3137,16 +2229,14 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(_extractErrorMessage(data) || 'Failed to submit quote');
+                    throw new Error(data.error || 'Failed to submit quote');
                 }
 
-                trackQuote('quote_submit_success', { method: 'guest', quote_id: data.quote?.id });
                 openSuccessModal(data, true);
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Guest quote submission error:', error);
-                trackQuote('quote_submit_error', { method: 'guest', error: error.message });
-                CustomConfirm.toast(error.message || 'Failed to submit quote request. Please try again.', 'error');
+                alert(error.message || 'Failed to submit quote request. Please try again.');
             } finally {
                 closeAuthModal();
                 submitBtn.disabled = false;
@@ -3174,19 +2264,541 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 return;
             }
 
-            await submitAuthenticated(finalData);
+            await submitAuthenticated(finalDataWithAddons);
         });
 
-        // Auto-uppercase postcode + realtime validation
-        document.getElementById('postcode').addEventListener('input', (e) => {
+        // Auto-uppercase postcode handled by debounced validation listener above
+
+        // AI Price Advisor
+        const serviceEstimates = {
+            'bathroom-fitting':     { min: 3000,  max: 8000,  items: ['Supply & fit new bathroom suite (bath, toilet, basin)', 'Wall & floor tiling', 'Plumbing connections & pipework', 'Lighting & ventilation installation', 'Siliconing & finishing'] },
+            'kitchen-fitting':      { min: 5000,  max: 15000, items: ['Kitchen unit supply & installation', 'Worktop fitting (laminate or solid surface)', 'Appliance integration', 'Plumbing & electrical connections', 'Splashback & finishing touches'] },
+            'loft-conversion':      { min: 20000, max: 50000, items: ['Structural works & roof alterations', 'Staircase installation', 'Insulation & plastering', 'Electrical & lighting', 'Flooring & decoration'] },
+            'painting-decorating':  { min: 800,   max: 4000,  items: ['Surface preparation & filling', 'Undercoat & finish coats', 'Ceiling, walls & woodwork', 'Gloss or satinwood on doors/skirting', 'Furniture protection & clean-up'] },
+            'plumbing':             { min: 300,   max: 2500,  items: ['Diagnosis & fault finding', 'Parts & materials supply', 'Fitting & installation', 'Pressure testing', 'Site clean and commission'] },
+            'electrical':           { min: 500,   max: 5000,  items: ['Initial inspection & testing', 'Cable routing & installation', 'Consumer unit / fuse board work', 'Socket & fitting installations', 'Electrical certificate (NICEIC/NAPIT)'] },
+            'roofing-pitched':      { min: 2000,  max: 10000, items: ['Scaffolding & access', 'Tile/slate removal & replacement', 'Felt underlayment if required', 'Ridge, hip & valley repairs', 'Lead flashing & guttering check'] },
+            'roofing-flat':         { min: 1500,  max: 6000,  items: ['Existing covering strip & dispose', 'Deck inspection & repairs', 'New flat roof membrane (GRP/EPDM)', 'Edging trims & outlets', '10-year workmanship guarantee'] },
+            'extensions':           { min: 25000, max: 80000, items: ['Planning & building regs drawings', 'Groundworks & foundations', 'Blockwork walls & roof structure', 'Windows, doors & roof lights', 'Internal fit-out & decoration'] },
+            'plastering':           { min: 600,   max: 3000,  items: ['Surface preparation & bonding coat', 'Skim coat on walls & ceilings', 'Beading on corners & reveals', 'Sanding & rubbing down', 'Ready for painting'] },
+            'tiling':               { min: 400,   max: 2500,  items: ['Surface levelling & waterproofing', 'Adhesive & tile laying', 'Grouting & sealing', 'Edge trims & silicone joints', 'Clean down & polishing'] },
+            'landscaping':          { min: 2000,  max: 12000, items: ['Design consultation', 'Ground clearance & levelling', 'Paving, decking or lawn laying', 'Planting & edging', 'Drainage & irrigation if required'] },
+            'carpentry':            { min: 500,   max: 4000,  items: ['Timber supply & cutting', 'Structural or decorative carpentry', 'Fixings, adhesives & finishing', 'Door & window installation', 'Skirting, architrave & coving'] },
+            'central-heating':      { min: 2500,  max: 7000,  items: ['Boiler supply & installation', 'Radiator & pipework fitting', 'System flush & inhibitor dose', 'Thermostatic controls & smart thermostat', 'Gas safe certification'] },
+            'damp-proofing':        { min: 800,   max: 4000,  items: ['Damp survey & moisture readings', 'Injection cream damp proof course', 'Tanking slurry application', 'Re-plastering with salt-resistant render', '20-year guarantee'] },
+            'decking':              { min: 1000,  max: 5000,  items: ['Ground preparation & weed membrane', 'Frame & joist construction', 'Composite or timber decking boards', 'Steps & balustrade installation', 'Sealing & finishing treatment'] },
+            'hard-flooring':        { min: 800,   max: 4000,  items: ['Sub-floor preparation & levelling', 'Underlay supply & fitting', 'Laminate, engineered or LVT laying', 'Threshold bars & skirting', 'Clean up & final inspection'] },
+        };
+
+        const defaultEstimate = { min: 500, max: 3000, items: ['Labour & materials', 'Site preparation & protection', 'Qualified tradesperson time', 'Waste removal if applicable', 'Completion clean & inspection'] };
+
+        document.getElementById('getAiEstimate').addEventListener('click', generateAIEstimate);
+
+        function generateAIEstimate() {
+            const serviceEl = document.querySelector('.service-option.selected');
+            const service = serviceEl ? serviceEl.dataset.service : null;
+            const serviceName = serviceEl ? serviceEl.querySelector('.service-name')?.textContent : 'your project';
+            const postcode = document.getElementById('postcode').value.trim() || 'your area';
+            const description = document.getElementById('description').value.trim();
+
+            const btn = document.getElementById('getAiEstimate');
+            const loading = document.getElementById('aiEstimateLoading');
+            const output = document.getElementById('aiEstimateOutput');
+
+            // Hide output, show loading
+            btn.style.display = 'none';
+            output.classList.remove('active');
+            loading.classList.add('active');
+
+            // Simulate AI processing delay
+            setTimeout(() => {
+                const data = service && serviceEstimates[service] ? serviceEstimates[service] : defaultEstimate;
+
+                // Add a small random variance (±10%) to make it feel dynamic
+                const variance = 0.1;
+                const minVariance = 1 + (Math.random() * variance * 2 - variance);
+                const maxVariance = 1 + (Math.random() * variance * 2 - variance);
+                const estMin = Math.round(data.min * minVariance / 100) * 100;
+                const estMax = Math.round(data.max * maxVariance / 100) * 100;
+
+                // Populate output
+                document.getElementById('estimateRange').textContent = `£${estMin.toLocaleString()} – £${estMax.toLocaleString()}`;
+                document.getElementById('locationNote').textContent = `Typical rates for ${serviceName} in the ${postcode} area, based on UK market data.`;
+
+                const breakdownEl = document.getElementById('estimateBreakdown');
+                breakdownEl.innerHTML = `<h4>What's typically included</h4><ul>${data.items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+
+                loading.classList.remove('active');
+                output.classList.add('active');
+                btn.textContent = '↺ Recalculate Estimate';
+                btn.style.display = 'inline-flex';
+                btn.style.marginTop = '1rem';
+                btn.style.gap = '0.5rem';
+                // Restyle to outline on recalculate
+                btn.style.background = 'white';
+                btn.style.color = 'var(--purple-600)';
+                btn.style.border = '2px solid var(--purple-500)';
+                btn.style.boxShadow = 'none';
+                trackEvent('ai_estimate_generated', { service: service, postcode: postcode, range_min: estMin, range_max: estMax });
+            }, 1600);
+        }
+
+        // ============================================================
+        // FEATURE 1: HAMBURGER MOBILE MENU
+        // ============================================================
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        hamburgerBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('open');
+            hamburgerBtn.classList.toggle('open', isOpen);
+            hamburgerBtn.setAttribute('aria-expanded', isOpen);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburgerBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+                hamburgerBtn.classList.remove('open');
+            }
+        });
+
+        // ============================================================
+        // FEATURE 2: SOCIAL PROOF TICKER
+        // ============================================================
+        const tickerItems = [
+            { name: 'Sarah', location: 'Manchester', service: 'Bathroom Fitting', quotes: 4, time: '2 mins ago' },
+            { name: 'James', location: 'Birmingham', service: 'Kitchen Fitting', quotes: 3, time: '5 mins ago' },
+            { name: 'Emily', location: 'Leeds', service: 'Loft Conversion', quotes: 5, time: '8 mins ago' },
+            { name: 'David', location: 'Bristol', service: 'Plastering', quotes: 3, time: '11 mins ago' },
+            { name: 'Priya', location: 'London', service: 'Electrical', quotes: 4, time: '14 mins ago' },
+            { name: 'Tom', location: 'Sheffield', service: 'Roofing', quotes: 3, time: '18 mins ago' },
+            { name: 'Claire', location: 'Liverpool', service: 'Painting & Decorating', quotes: 4, time: '21 mins ago' },
+            { name: 'Mohammed', location: 'Leicester', service: 'Central Heating', quotes: 3, time: '25 mins ago' },
+            { name: 'Laura', location: 'Edinburgh', service: 'Extensions', quotes: 5, time: '29 mins ago' },
+            { name: 'Rob', location: 'Cardiff', service: 'Landscaping', quotes: 3, time: '33 mins ago' },
+        ];
+
+        const tickerTrack = document.getElementById('tickerTrack');
+        if (tickerTrack) {
+            // Double the items for seamless loop
+            const allItems = [...tickerItems, ...tickerItems];
+            tickerTrack.innerHTML = allItems.map((item, i) =>
+                `<span class="ticker-item">
+                    <span class="ticker-dot"></span>
+                    <strong>${item.name}</strong> in ${item.location} just received <strong>${item.quotes} quotes</strong> for ${item.service} · ${item.time}
+                </span>
+                ${i < allItems.length - 1 ? '<span class="ticker-sep">·</span>' : ''}`
+            ).join('');
+        }
+
+        // ============================================================
+        // FEATURE 3: SESSION RECOVERY BANNER
+        // ============================================================
+        const sessionBanner = document.getElementById('sessionRecoveryBanner');
+        const stepNames = ['', 'Service Selection', 'Project Details', 'Timeline', 'Review'];
+
+        function checkSessionRecovery() {
+            const saved = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
+            if (saved.step && saved.step > 1 && saved.formData && saved.formData.service) {
+                const age = Date.now() - (saved.timestamp || 0);
+                if (age < 48 * 60 * 60 * 1000) { // Only show if < 48h old
+                    document.getElementById('recoveryStepName').textContent = stepNames[saved.step] || `Step ${saved.step}`;
+                    sessionBanner.style.display = 'flex';
+                }
+            }
+        }
+
+        document.getElementById('btnRestoreSession')?.addEventListener('click', () => {
+            sessionBanner.style.display = 'none';
+            restoreProgress();
+            updateStep();
+            trackEvent('session_restored', { step: currentStep });
+        });
+
+        document.getElementById('btnDismissSession')?.addEventListener('click', () => {
+            sessionBanner.style.display = 'none';
+            localStorage.removeItem('quoteProgress');
+            trackEvent('session_dismissed');
+        });
+
+        // ============================================================
+        // FEATURE 4: POSTCODE REAL-TIME VALIDATION (Postcodes.io)
+        // ============================================================
+        let postcodeDebounceTimer = null;
+        let postcodeSuggestDebounceTimer = null;
+        let lastValidatedPostcode = '';
+        let postcodeSuggestRequestId = 0;
+        let activeSuggestionIndex = -1;
+        let activeSuggestions = [];
+
+        const postcodeInput = document.getElementById('postcode');
+        const postcodeSuggestions = document.getElementById('postcodeSuggestions');
+        const postcodeFeedback = document.getElementById('postcodeFeedback');
+        const postcodeFeedbackIcon = document.getElementById('postcodeFeedbackIcon');
+        const postcodeFeedbackText = document.getElementById('postcodeFeedbackText');
+        const postcodeLocationChip = document.getElementById('postcodeLocationChip');
+        const postcodeError = document.getElementById('postcodeError');
+
+        function closePostcodeSuggestions() {
+            postcodeSuggestions.classList.remove('open');
+            postcodeSuggestions.innerHTML = '';
+            activeSuggestionIndex = -1;
+            activeSuggestions = [];
+        }
+
+        function renderPostcodeSuggestions(suggestions) {
+            if (!Array.isArray(suggestions) || suggestions.length === 0) {
+                closePostcodeSuggestions();
+                return;
+            }
+
+            activeSuggestions = suggestions;
+            activeSuggestionIndex = -1;
+            postcodeSuggestions.innerHTML = suggestions.map((item, index) => {
+                const details = [item.district, item.region].filter(Boolean).join(' • ');
+                return `
+                    <button type="button" class="postcode-suggestion" data-index="${index}" role="option">
+                        <span class="postcode-suggestion-code">${item.postcode || ''}</span>
+                        <span class="postcode-suggestion-meta">${details || 'UK postcode'}</span>
+                    </button>
+                `;
+            }).join('');
+            postcodeSuggestions.classList.add('open');
+        }
+
+        function highlightSuggestion(index) {
+            const items = postcodeSuggestions.querySelectorAll('.postcode-suggestion');
+            items.forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+                el.setAttribute('aria-selected', i === index ? 'true' : 'false');
+            });
+        }
+
+        function selectPostcodeSuggestion(suggestion) {
+            if (!suggestion || !suggestion.postcode) return;
+            const normalized = suggestion.postcode.toUpperCase();
+            postcodeInput.value = normalized;
+            formData.postcode = normalized;
+            lastValidatedPostcode = normalized.replace(/\s+/g, '');
+
+            const loc = suggestion.district || suggestion.region || suggestion.country || '';
+            setPostcodeState('valid', 'Postcode selected', loc || null);
+            if (suggestion.region) {
+                updateResponseTimeForPostcode(suggestion.region);
+            }
+            closePostcodeSuggestions();
+            trackEvent('postcode_suggestion_selected', { postcode: normalized, region: suggestion.region || null });
+        }
+
+        async function fetchPostcodeSuggestions(raw) {
+            const query = raw.trim().toUpperCase();
+            if (query.length < 2) {
+                closePostcodeSuggestions();
+                return;
+            }
+
+            const currentRequestId = ++postcodeSuggestRequestId;
+            try {
+                const response = await fetch(`${API_BASE}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    closePostcodeSuggestions();
+                    return;
+                }
+                const data = await response.json();
+                if (currentRequestId !== postcodeSuggestRequestId) return;
+                renderPostcodeSuggestions(data?.success ? data.suggestions : []);
+            } catch (error) {
+                closePostcodeSuggestions();
+            }
+        }
+
+        function setPostcodeState(state, text, location) {
+            postcodeFeedback.className = `postcode-feedback ${state}`;
+            postcodeFeedbackIcon.textContent = state === 'valid' ? '✓' : state === 'invalid' ? '✗' : '⏳';
+            postcodeFeedbackText.textContent = text;
+            if (location) {
+                postcodeLocationChip.textContent = location;
+                postcodeLocationChip.style.display = 'inline-block';
+            } else {
+                postcodeLocationChip.style.display = 'none';
+            }
+            postcodeError.classList.toggle('visible', state === 'invalid');
+            postcodeInput.classList.toggle('field-valid', state === 'valid');
+            postcodeInput.classList.toggle('field-invalid', state === 'invalid');
+        }
+
+        async function validatePostcode(raw) {
+            const pc = raw.trim().toUpperCase().replace(/\s+/g, '');
+            if (pc.length < 5) { setPostcodeState('', '', null); return; }
+            if (pc === lastValidatedPostcode) return;
+
+            const ukRegex = /^[A-Z]{1,2}[0-9]{1,2}[A-Z]?[0-9][A-Z]{2}$/;
+            if (!ukRegex.test(pc)) {
+                setPostcodeState('invalid', 'Not a valid UK postcode', null);
+                return;
+            }
+
+            setPostcodeState('loading', 'Looking up...', null);
+
+            try {
+                const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(pc)}`);
+                const json = await res.json();
+                if (json.status === 200 && json.result) {
+                    lastValidatedPostcode = pc;
+                    const loc = json.result.admin_district || json.result.parliamentary_constituency || json.result.region || '';
+                    setPostcodeState('valid', 'Postcode confirmed', loc);
+                    updateResponseTimeForPostcode(json.result.region);
+                    trackEvent('postcode_validated', { postcode: pc, region: json.result.region });
+                } else {
+                    setPostcodeState('invalid', 'Postcode not found', null);
+                }
+            } catch (e) {
+                // Fallback to regex-only if API fails
+                setPostcodeState('valid', 'Format looks correct', null);
+            }
+        }
+
+        postcodeInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.toUpperCase();
-            validatePostcodeRealtime();
-        });
-        document.getElementById('postcode').addEventListener('blur', validatePostcodeRealtime);
+            clearTimeout(postcodeDebounceTimer);
+            postcodeDebounceTimer = setTimeout(() => validatePostcode(e.target.value), 350);
 
+            clearTimeout(postcodeSuggestDebounceTimer);
+            postcodeSuggestDebounceTimer = setTimeout(() => fetchPostcodeSuggestions(e.target.value), 180);
+        });
+
+        postcodeInput.addEventListener('keydown', (event) => {
+            if (!postcodeSuggestions.classList.contains('open')) return;
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, activeSuggestions.length - 1);
+                highlightSuggestion(activeSuggestionIndex);
+                return;
+            }
+
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, 0);
+                highlightSuggestion(activeSuggestionIndex);
+                return;
+            }
+
+            if (event.key === 'Enter' && activeSuggestionIndex >= 0) {
+                event.preventDefault();
+                selectPostcodeSuggestion(activeSuggestions[activeSuggestionIndex]);
+                return;
+            }
+
+            if (event.key === 'Escape') {
+                closePostcodeSuggestions();
+            }
+        });
+
+        postcodeSuggestions.addEventListener('mousedown', (event) => {
+            const item = event.target.closest('.postcode-suggestion');
+            if (!item) return;
+            event.preventDefault();
+            const index = Number(item.dataset.index);
+            selectPostcodeSuggestion(activeSuggestions[index]);
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!postcodeInput.contains(event.target) && !postcodeSuggestions.contains(event.target)) {
+                closePostcodeSuggestions();
+            }
+        });
+
+        // ============================================================
+        // FEATURE 5: BUDGET CONTEXT HINT (connects to AI estimate data)
+        // ============================================================
+        const budgetContextHint = document.getElementById('budgetContextHint');
+
+        function updateBudgetContextHint(budgetMin) {
+            const service = formData.service;
+            if (!service || !serviceEstimates[service]) {
+                budgetContextHint.textContent = 'Move the slider to set your budget range';
+                budgetContextHint.className = 'budget-context-hint';
+                return;
+            }
+            const est = serviceEstimates[service];
+            const typMin = est.min;
+            const typMax = est.max;
+
+            let hint = '';
+            if (budgetMin < typMin * 0.7) {
+                hint = `⚠️ Most ${formData.serviceName} projects cost £${typMin.toLocaleString()}–£${typMax.toLocaleString()} — your budget may be on the low side`;
+                budgetContextHint.className = 'budget-context-hint';
+                budgetContextHint.style.color = '#d97706';
+            } else if (budgetMin > typMax * 1.3) {
+                hint = `✓ Your budget is above typical for ${formData.serviceName} — you should get great quality responses`;
+                budgetContextHint.className = 'budget-context-hint has-context';
+            } else {
+                hint = `✓ Budget looks realistic for ${formData.serviceName} (typical range: £${typMin.toLocaleString()}–£${typMax.toLocaleString()})`;
+                budgetContextHint.className = 'budget-context-hint has-context';
+            }
+            budgetContextHint.textContent = hint;
+        }
+
+        // ============================================================
+        // FEATURE 6: DYNAMIC QUICK PROMPTS (based on selected service)
+        // ============================================================
+        const serviceQuickPrompts = {
+            'bathroom-fitting':     [{ icon: '🛁', text: 'Full bathroom renovation', prompt: 'Complete bathroom renovation with new suite, tiling and fixtures' }, { icon: '🚿', text: 'Shower room only', prompt: 'Convert bathroom to walk-in shower room' }, { icon: '🔧', text: 'Replace suite only', prompt: 'Replace existing bathroom suite like-for-like' }],
+            'kitchen-fitting':      [{ icon: '🍳', text: 'Full kitchen installation', prompt: 'Complete kitchen removal and new fitted kitchen installation with appliances' }, { icon: '🪵', text: 'Worktop replacement', prompt: 'Replace existing kitchen worktops only' }, { icon: '🗄️', text: 'Units only', prompt: 'Replace kitchen units keeping existing layout' }],
+            'loft-conversion':      [{ icon: '🏚️', text: 'Dormer conversion', prompt: 'Loft conversion with dormer extension into bedroom with en-suite' }, { icon: '🪟', text: 'Velux conversion', prompt: 'Basic loft conversion with Velux windows into usable room' }, { icon: '🛏️', text: 'Master bedroom suite', prompt: 'Loft conversion into master bedroom with en-suite bathroom and walk-in wardrobe' }],
+            'painting-decorating':  [{ icon: '🎨', text: 'Full interior repaint', prompt: 'Full interior repaint of all rooms including ceilings, walls and woodwork' }, { icon: '🏠', text: 'Single room', prompt: 'Redecorate single bedroom including preparation and two coats' }, { icon: '🪣', text: 'External painting', prompt: 'External masonry painting and woodwork repaint' }],
+            'electrical':           [{ icon: '⚡', text: 'Full rewire', prompt: 'Full house rewiring with new consumer unit and all circuits' }, { icon: '🔌', text: 'Consumer unit upgrade', prompt: 'Consumer unit replacement with RCD protection' }, { icon: '💡', text: 'Extra sockets/lights', prompt: 'Additional power sockets and lighting circuits' }],
+            'plumbing':             [{ icon: '🚰', text: 'Leak repair', prompt: 'Locate and repair water leak' }, { icon: '💧', text: 'New radiators', prompt: 'Supply and fit new radiators throughout property' }, { icon: '🪠', text: 'Blocked drain', prompt: 'Clear blocked drain and check pipework' }],
+            'extensions':           [{ icon: '🏠', text: 'Single storey rear', prompt: 'Single storey rear extension approximately 4x5m with bifold doors' }, { icon: '🏗️', text: 'Double storey', prompt: 'Double storey side/rear extension with additional bedroom and living space' }, { icon: '🪟', text: 'Side return', prompt: 'Side return extension to widen kitchen and add utility room' }],
+            'roofing-pitched':      [{ icon: '🏠', text: 'Full re-roof', prompt: 'Complete roof re-tile on detached house, approximately 80sqm' }, { icon: '🔧', text: 'Repair leak', prompt: 'Locate and repair roof leak, replace damaged tiles' }, { icon: '🪨', text: 'Ridge/valley repair', prompt: 'Repoint ridge tiles and repair valley flashings' }],
+        };
+
+        const defaultQuickPrompts = [
+            { icon: '🏠', text: 'Full renovation', prompt: 'Complete renovation and refurbishment' },
+            { icon: '🔧', text: 'Repair work', prompt: 'Repair and fix existing installation' },
+            { icon: '✨', text: 'New installation', prompt: 'New installation from scratch' },
+        ];
+
+        function updateQuickPrompts(serviceId) {
+            const prompts = serviceQuickPrompts[serviceId] || defaultQuickPrompts;
+            const container = document.querySelector('.quick-prompts');
+            if (!container) return;
+            container.innerHTML = prompts.map(p =>
+                `<button type="button" class="quick-prompt" data-prompt="${p.prompt}">${p.icon} ${p.text}</button>`
+            ).join('');
+            // Re-bind click handlers
+            container.querySelectorAll('.quick-prompt').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    aiInput.value = btn.dataset.prompt;
+                    generateDescription();
+                });
+            });
+        }
+
+        // ============================================================
+        // FEATURE 7: RESPONSE TIME INDICATOR
+        // ============================================================
+        const responseTimeData = {
+            'bathroom-fitting': { count: '4–5', hours: 2 },
+            'kitchen-fitting':  { count: '3–5', hours: 3 },
+            'electrical':       { count: '4–6', hours: 2 },
+            'plumbing':         { count: '5–7', hours: 1 },
+            'plastering':       { count: '3–5', hours: 4 },
+            'painting-decorating': { count: '4–6', hours: 3 },
+            'roofing-pitched':  { count: '3–4', hours: 4 },
+            'roofing-flat':     { count: '2–4', hours: 5 },
+            'extensions':       { count: '3–5', hours: 6 },
+            'loft-conversion':  { count: '3–4', hours: 8 },
+            'landscaping':      { count: '3–5', hours: 4 },
+            'carpentry':        { count: '3–5', hours: 3 },
+            'central-heating':  { count: '3–5', hours: 2 },
+        };
+
+        const responseTimeIndicator = document.getElementById('responseTimeIndicator');
+        const responseTimeText = document.getElementById('responseTimeText');
+
+        function updateResponseTime(serviceId) {
+            const data = responseTimeData[serviceId];
+            if (data && responseTimeIndicator) {
+                const hourText = data.hours === 1 ? '1 hour' : `${data.hours} hours`;
+                responseTimeText.innerHTML = `Typically <strong>${data.count} tradespeople</strong> respond within <strong>${hourText}</strong> for this trade in your area.`;
+                responseTimeIndicator.style.display = 'flex';
+            }
+        }
+
+        function updateResponseTimeForPostcode(region) {
+            // London gets faster response times
+            if (region && region.toLowerCase().includes('london')) {
+                const serviceId = formData.service;
+                const data = responseTimeData[serviceId];
+                if (data) {
+                    responseTimeText.innerHTML = `Great news! <strong>${data.count} tradespeople</strong> are typically available within <strong>${Math.max(1, data.hours - 1)} hours</strong> in the London area.`;
+                }
+            }
+        }
+
+        // ============================================================
+        // FEATURE 8: PHOTO UPLOAD
+        // ============================================================
+        const photoInput = document.getElementById('photoInput');
+        const photoDropZone = document.getElementById('photoDropZone');
+        const photoPreviews = document.getElementById('photoPreviews');
+        let uploadedPhotos = [];
+
+        if (photoDropZone) {
+            photoDropZone.addEventListener('dragover', (e) => { e.preventDefault(); photoDropZone.classList.add('drag-over'); });
+            photoDropZone.addEventListener('dragleave', () => photoDropZone.classList.remove('drag-over'));
+            photoDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                photoDropZone.classList.remove('drag-over');
+                handlePhotoFiles(e.dataTransfer.files);
+            });
+        }
+
+        if (photoInput) {
+            photoInput.addEventListener('change', (e) => handlePhotoFiles(e.target.files));
+        }
+
+        function handlePhotoFiles(files) {
+            const remaining = 5 - uploadedPhotos.length;
+            const toProcess = Array.from(files).slice(0, remaining);
+            toProcess.forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                if (file.size > 10 * 1024 * 1024) return; // 10MB limit
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedPhotos.push({ name: file.name, dataUrl: e.target.result });
+                    renderPhotoPreview(e.target.result, uploadedPhotos.length - 1);
+                    trackEvent('photo_added', { count: uploadedPhotos.length });
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderPhotoPreview(dataUrl, index) {
+            const item = document.createElement('div');
+            item.className = 'photo-preview-item';
+            item.dataset.index = index;
+            item.innerHTML = `
+                <img src="${dataUrl}" alt="Photo ${index + 1}">
+                <button class="photo-preview-remove" type="button" onclick="removePhoto(${index})">✕</button>
+            `;
+            photoPreviews.appendChild(item);
+        }
+
+        window.removePhoto = function(index) {
+            uploadedPhotos.splice(index, 1);
+            photoPreviews.innerHTML = '';
+            uploadedPhotos.forEach((p, i) => renderPhotoPreview(p.dataUrl, i));
+        };
+
+        // ============================================================
+        // FEATURE 9: GA4 ANALYTICS EVENTS
+        // ============================================================
+        function trackEvent(eventName, params = {}) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, {
+                    'event_category': 'quote_engine',
+                    ...params
+                });
+            }
+            // Also log to console in dev
+            console.debug(`[TradeMatch Analytics] ${eventName}`, params);
+        }
+
+        // Track form abandonment
+        window.addEventListener('beforeunload', () => {
+            if (currentStep > 1 && currentStep < totalSteps) {
+                trackEvent('form_abandoned', { step: currentStep, service: formData.service });
+            }
+        });
+
+        // ============================================================
         // Initialize
+        // ============================================================
+        checkSessionRecovery();
         restoreProgress();
-        setupRealtimeValidation();
         updateStep();
 
         const autoSubmitFlag = localStorage.getItem('quoteAutoSubmit');
@@ -3200,13 +2812,21 @@ I'm happy to discuss the project in more detail and answer any questions to help
     </script>
 
     <!-- Footer -->
-    <footer style="background: var(--slate-900); color: rgba(255,255,255,0.8); padding: 2rem; text-align: center; margin-top: 3rem;">
+    <footer>
         <div class="container" style="max-width: 1200px; margin: 0 auto;">
             <p style="font-size: 14px;">&copy; 2026 TradeMatch UK. All rights reserved. | <a href="/terms" style="color: rgba(255,255,255,0.8); text-decoration: none;">Terms</a> | <a href="/privacy" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy</a></p>
         </div>
     </footer>
-    <script src="/shared/ui/confirm-modal.js" defer></script>
-    <script src="/shared/ui/profile-menu.js" defer></script>
+    
+    <script>
+        // Nav scroll effect
+        (function(){
+            var nav = document.querySelector('.navbar');
+            function updateNav(){ nav.classList.toggle('scrolled', window.scrollY > 40); }
+            updateNav(); window.addEventListener('scroll', updateNav, {passive:true});
+        })();
+    </script>
+<script src="/shared/ui/profile-menu.js" defer></script>
 </body>
 </html>
 
