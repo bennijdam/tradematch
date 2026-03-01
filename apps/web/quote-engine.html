@@ -586,105 +586,225 @@
             .progress-container { padding: 1rem 0.875rem; }
         }
 
-        /* ═══════════════ OTP VERIFICATION MODAL ═══════════════ */
-        .otp-modal-overlay {
-            display: none; position: fixed; inset: 0; z-index: 10001;
-            background: rgba(15,23,41,0.55); backdrop-filter: blur(10px);
-            align-items: center; justify-content: center;
-        }
-        .otp-modal-overlay.active { display: flex; }
-        .otp-modal {
-            background: white; border-radius: var(--r4); max-width: 420px; width: calc(100% - 32px);
-            position: relative; box-shadow: 0 24px 80px rgba(0,0,0,0.18);
-            animation: modalIn 0.4s var(--ease-spring);
-        }
-        .otp-modal-close {
-            position: absolute; top: 14px; right: 14px; width: 34px; height: 34px;
-            border-radius: 8px; background: var(--void2); border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; color: var(--t3); transition: all 0.2s;
-        }
-        .otp-modal-close:hover { background: var(--void3); color: var(--t1); }
-        .otp-modal-header { padding: 36px 28px 20px; text-align: center; }
-        .otp-step-icon {
-            width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 16px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
-        }
-        .otp-step-icon.phone { background: #e8f5f0; }
-        .otp-step-icon.email { background: #e8f0fe; }
-        .otp-step-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: var(--neon-lo); border: 1px solid var(--border-neon);
-            border-radius: 100px; padding: 3px 12px; font-size: 0.75rem;
-            font-weight: 600; color: var(--neon); margin-bottom: 10px;
-        }
-        .otp-modal-title {
-            font-family: var(--ff); font-size: 1.375rem; font-weight: 800;
-            color: var(--t1); margin: 0 0 8px; letter-spacing: -0.03em;
-        }
-        .otp-modal-sub { font-size: 0.875rem; color: var(--t3); line-height: 1.55; margin: 0; }
-        .otp-modal-sub strong { color: var(--t2); font-weight: 600; }
-        .otp-modal-body { padding: 0 28px 28px; }
-        .otp-input-row {
-            display: flex; gap: 10px; margin-bottom: 14px;
-        }
-        .otp-digit-group {
-            display: flex; gap: 7px; flex: 1;
-        }
-        .otp-digit {
-            flex: 1; height: 52px; border: 2px solid var(--border);
-            border-radius: var(--r2); font-size: 1.5rem; font-weight: 700;
-            text-align: center; color: var(--t1); background: var(--void2);
-            transition: border-color 0.2s, box-shadow 0.2s; outline: none;
-            -webkit-appearance: none; -moz-appearance: textfield; caret-color: var(--neon);
-        }
-        .otp-digit::-webkit-inner-spin-button, .otp-digit::-webkit-outer-spin-button { -webkit-appearance: none; }
-        .otp-digit:focus { border-color: var(--neon); box-shadow: 0 0 0 3px rgba(0,122,61,0.12); }
-        .otp-digit.filled { border-color: var(--neon); background: #f0fdf4; }
-        .otp-digit.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
-        .otp-error-msg {
-            display: none; align-items: center; gap: 6px;
-            font-size: 0.8125rem; color: #dc2626; margin-bottom: 12px;
-        }
-        .otp-error-msg.show { display: flex; }
-        .otp-verify-btn {
-            width: 100%; padding: 14px; border: none; border-radius: var(--r2);
-            background: linear-gradient(135deg, var(--neon), var(--neon2));
-            color: white; font-size: 0.9375rem; font-weight: 700; cursor: pointer;
-            font-family: var(--ff); letter-spacing: -0.01em; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .otp-verify-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,122,61,0.3); }
-        .otp-verify-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .otp-resend-row {
-            text-align: center; margin-top: 14px; font-size: 0.8125rem; color: var(--t3);
-        }
-        .otp-resend-btn {
-            background: none; border: none; color: var(--neon); font-weight: 600;
-            cursor: pointer; padding: 0; font-size: inherit; font-family: inherit;
-            text-decoration: underline; text-underline-offset: 2px;
-        }
-        .otp-resend-btn:disabled { color: var(--t4); cursor: not-allowed; text-decoration: none; }
-        .otp-step-progress {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-        }
-        .otp-step-pip {
-            flex: 1; height: 4px; border-radius: 2px; background: var(--border);
-            transition: background 0.3s;
-        }
-        .otp-step-pip.done { background: var(--neon); }
-        .otp-step-pip.active { background: var(--neon2); }
-        .otp-success-tick {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 18px; height: 18px; border-radius: 50%;
-            background: var(--neon); color: white; font-size: 0.625rem; flex-shrink: 0;
-        }
+        /* ═══════ GUEST POST MODAL ═══════ */
+        #guestModalOverlay{display:none;position:fixed;inset:0;z-index:10001;background:rgba(5,9,15,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px}
+        #guestModalOverlay.active{display:flex}
+        .gm-modal{position:relative;width:100%;max-width:448px;background:linear-gradient(165deg,#181f2e 0%,#111620 55%,#0f1520 100%);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:0 40px 100px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04);overflow:hidden;animation:modalIn .45s cubic-bezier(.34,1.38,.64,1) both;max-height:90vh;overflow-y:auto;scrollbar-width:none}
+        .gm-modal::-webkit-scrollbar{display:none}
+        .gm-modal::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,104,.6),transparent);z-index:2;pointer-events:none}
+        .gm-header{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between}
+        .gm-brand-row{display:flex;align-items:center;gap:10px}
+        .gm-logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#007a3d,#00c268);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 14px rgba(0,194,104,.22)}
+        .gm-logo svg{width:15px;height:15px;color:#fff;stroke-width:2.5}
+        .gm-brand{font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.03em;color:#f0f4ff}
+        .gm-brand span{background:linear-gradient(135deg,#00c268,#007a3d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gm-close{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:#5a6478}
+        .gm-close:hover{background:rgba(255,255,255,.11);color:#f0f4ff}
+        .gm-close svg{width:13px;height:13px}
+        /* step tracker */
+        .gm-step-track{display:flex;align-items:center;padding:16px 22px 0}
+        .gm-step-node{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;flex:1}
+        .gm-step-node:not(:last-child)::after{content:'';position:absolute;top:13px;left:calc(50% + 16px);right:calc(-50% + 16px);height:1.5px;background:rgba(255,255,255,.08);transition:background .4s;z-index:0}
+        .gm-step-node.done:not(:last-child)::after{background:#007a3d}
+        .gm-step-bubble{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:500;color:#5a6478;transition:all .3s;position:relative;z-index:1}
+        .gm-step-node.active .gm-step-bubble{border-color:#00c268;background:rgba(0,194,104,.12);color:#00c268;box-shadow:0 0 0 4px rgba(0,194,104,.1)}
+        .gm-step-node.done .gm-step-bubble{border-color:#007a3d;background:#007a3d;color:#fff}
+        .gm-step-check{display:none;width:12px;height:12px}
+        .gm-step-node.done .gm-step-check{display:block}
+        .gm-step-node.done .gm-step-num{display:none}
+        .gm-step-label{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#5a6478;text-align:center;transition:color .2s;white-space:nowrap}
+        .gm-step-node.active .gm-step-label{color:#00c268}
+        .gm-step-node.done .gm-step-label{color:#007a3d}
+        /* panels */
+        .gm-panel{display:none;padding:22px 22px 26px}
+        .gm-panel.active{display:block;animation:gmSlide .32s cubic-bezier(.22,1,.36,1) both}
+        @keyframes gmSlide{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+        /* context banner */
+        .gm-ctx{display:flex;align-items:center;gap:10px;padding:10px 13px;margin-bottom:20px;background:rgba(0,194,104,.07);border:1px solid rgba(0,194,104,.18);border-radius:12px}
+        .gm-ctx-dot{width:7px;height:7px;border-radius:50%;background:#00c268;box-shadow:0 0 8px #00c268;flex-shrink:0;animation:gmBlink 2s infinite}
+        @keyframes gmBlink{0%,100%{opacity:1}50%{opacity:.3}}
+        .gm-ctx-text{font-size:12px;color:#00c268;font-weight:500;line-height:1.4}
+        .gm-ctx-text span{color:rgba(0,194,104,.55);font-weight:400}
+        /* typography */
+        .gm-sec-label{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,194,104,.6);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+        .gm-sec-label::before{content:'';width:14px;height:1px;background:#00c268;opacity:.4}
+        .gm-heading{font-family:var(--ff);font-size:1.45rem;font-weight:800;letter-spacing:-.045em;color:#f0f4ff;line-height:1.08;margin-bottom:6px}
+        .gm-heading em{font-style:normal;background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gm-sub{font-size:13px;line-height:1.65;color:#8b95aa;font-weight:300;margin-bottom:18px}
+        /* upsell */
+        .gm-upsell{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;margin-bottom:18px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18);border-radius:12px}
+        .gm-upsell svg{width:14px;height:14px;color:#fbbf24;flex-shrink:0;margin-top:1px}
+        .gm-upsell-text{font-size:11.5px;color:rgba(245,158,11,.8);line-height:1.55}
+        .gm-upsell-text strong{color:#fbbf24;font-weight:700}
+        /* fields */
+        .gm-field{margin-bottom:13px;position:relative}
+        .gm-field-label{font-family:var(--ff);font-size:11px;font-weight:700;letter-spacing:-.01em;color:#8b95aa;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+        .gm-field-hint{font-family:var(--fm);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:#5a6478;font-weight:400}
+        .gm-field-wrap{position:relative}
+        .gm-field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#5a6478;pointer-events:none;transition:color .2s;z-index:1}
+        .gm-field-wrap:focus-within .gm-field-icon{color:#00c268}
+        .gm-field-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:13px 13px 13px 38px;font-family:var(--fb);font-size:13.5px;color:#f0f4ff;outline:none;transition:all .22s;-webkit-appearance:none}
+        .gm-field-input::placeholder{color:#5a6478}
+        .gm-field-input:focus{border-color:rgba(0,194,104,.45);background:rgba(0,194,104,.04);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+        .gm-field-input.error{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.1)}
+        .gm-field-error{font-size:11px;color:#ef4444;margin-top:5px;display:flex;align-items:center;gap:4px;max-height:0;overflow:hidden;opacity:0;transition:max-height .25s,opacity .25s}
+        .gm-field-error.show{max-height:40px;opacity:1}
+        .gm-field-error svg{width:11px;height:11px;flex-shrink:0}
+        /* phone row */
+        .gm-phone-wrap{display:flex;gap:8px}
+        .gm-phone-country{flex-shrink:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:0 12px;font-family:var(--fm);font-size:12.5px;color:#8b95aa;display:flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer;transition:all .22s;position:relative}
+        .gm-phone-country:hover{border-color:rgba(0,194,104,.35);background:rgba(0,194,104,.04)}
+        .gm-phone-flag{font-size:15px}
+        .gm-phone-code{letter-spacing:.04em}
+        .gm-phone-caret{width:10px;height:10px;color:#5a6478}
+        .gm-phone-num{flex:1}
+        .gm-phone-num .gm-field-input{padding-left:13px}
+        .gm-country-drop{position:absolute;top:calc(100% + 6px);left:0;z-index:50;background:#161c28;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:6px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none}
+        .gm-country-drop.open{display:block}
+        .gm-country-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s;font-size:12.5px;color:#8b95aa}
+        .gm-country-opt:hover{background:rgba(255,255,255,.06);color:#f0f4ff}
+        .gm-country-opt.selected{background:rgba(0,194,104,.08);color:#00c268}
+        .gm-country-opt-code{font-family:var(--fm);font-size:11px;color:#5a6478;margin-left:auto}
+        /* OTP cells */
+        .gm-otp-wrap{display:flex;gap:9px;justify-content:center;margin-bottom:6px}
+        .gm-otp-cell{width:50px;height:58px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:13px;font-family:var(--fm);font-size:22px;font-weight:500;color:#f0f4ff;text-align:center;outline:none;transition:all .2s;caret-color:#00c268;-webkit-appearance:none;appearance:none}
+        .gm-otp-cell:focus{border-color:rgba(0,194,104,.55);background:rgba(0,194,104,.06);box-shadow:0 0 0 3px rgba(0,194,104,.12);transform:scale(1.04)}
+        .gm-otp-cell.filled{border-color:rgba(0,194,104,.4);background:rgba(0,194,104,.06)}
+        .gm-otp-cell.error{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.1);animation:gmShake .35s ease}
+        @keyframes gmShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+        /* otp meta */
+        .gm-otp-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+        .gm-otp-sent{font-size:12px;color:#8b95aa}
+        .gm-otp-sent strong{color:#f0f4ff;font-weight:600}
+        .gm-resend-btn{font-family:var(--ff);font-size:12px;font-weight:700;letter-spacing:-.02em;color:#00c268;background:none;border:none;cursor:pointer;transition:color .2s}
+        .gm-resend-btn:hover{color:#00e582}
+        .gm-resend-btn:disabled{color:#5a6478;cursor:not-allowed}
+        .gm-resend-timer{font-family:var(--fm);font-size:11px;color:#5a6478}
+        /* email card */
+        .gm-email-card{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:13px;padding:14px;margin-bottom:18px;text-align:center}
+        .gm-email-icon{width:42px;height:42px;border-radius:11px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+        .gm-email-icon svg{width:20px;height:20px;color:#3b82f6}
+        .gm-email-card-title{font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.025em;color:#f0f4ff;margin-bottom:3px}
+        .gm-email-card-sub{font-size:11.5px;color:#8b95aa;line-height:1.55}
+        .gm-email-card-sub strong{color:#f0f4ff;font-weight:600}
+        /* field error inline */
+        .gm-otp-error{font-size:11.5px;color:#ef4444;margin-bottom:12px;justify-content:center;display:none;align-items:center;gap:5px}
+        .gm-otp-error.show{display:flex}
+        .gm-otp-error svg{width:12px;height:12px;flex-shrink:0}
+        /* submit btn */
+        .gm-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ff);font-size:14.5px;font-weight:800;letter-spacing:-.025em;color:#fff;background:linear-gradient(135deg,#007a3d 0%,#00c268 100%);border:none;border-radius:13px;padding:15px 22px;cursor:pointer;transition:all .25s;box-shadow:0 4px 24px rgba(0,194,104,.32),0 1px 8px rgba(0,194,104,.16);position:relative;overflow:hidden}
+        .gm-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,194,104,.44)}
+        .gm-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .gm-btn svg{width:16px;height:16px}
+        .gm-btn-secondary{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ff);font-size:13.5px;font-weight:700;letter-spacing:-.02em;color:#8b95aa;background:none;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 22px;cursor:pointer;transition:all .22s;margin-top:9px}
+        .gm-btn-secondary:hover{border-color:rgba(255,255,255,.16);color:#f0f4ff}
+        /* trust */
+        .gm-trust{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px;flex-wrap:wrap;padding-top:13px;border-top:1px solid rgba(255,255,255,.06)}
+        .gm-trust-item{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#5a6478}
+        .gm-trust-item svg{width:10px;height:10px;color:#00c268;opacity:.8}
+        /* loading */
+        .gm-loading{position:absolute;inset:0;border-radius:28px;background:rgba(13,17,23,.7);backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s}
+        .gm-loading.show{opacity:1;pointer-events:all}
+        .gm-loading-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#007a3d,#00c268);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,194,104,.32);animation:gmPulse 1.4s ease-in-out infinite}
+        @keyframes gmPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+        .gm-loading-icon svg{width:21px;height:21px;color:#fff;stroke-width:2.5}
+        .gm-loading-text{font-family:var(--fm);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#8b95aa}
+        /* success */
+        .gm-success{padding:34px 22px 30px;text-align:center;display:none}
+        .gm-success.show{display:block;animation:gmSlide .4s cubic-bezier(.22,1,.36,1) both}
+        .gm-success-rings{position:relative;width:70px;height:70px;margin:0 auto 18px}
+        .gm-success-ring{position:absolute;border-radius:50%;border:1px solid rgba(0,194,104,.2);animation:gmRingPulse 2.5s ease-out infinite}
+        .gm-success-ring:nth-child(1){inset:0;animation-delay:0s}
+        .gm-success-ring:nth-child(2){inset:-8px;animation-delay:.4s}
+        .gm-success-ring:nth-child(3){inset:-16px;animation-delay:.8s}
+        @keyframes gmRingPulse{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.25)}}
+        .gm-success-inner{position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(0,194,104,.15),rgba(0,194,104,.05));border:1px solid rgba(0,194,104,.3);display:flex;align-items:center;justify-content:center}
+        .gm-success-inner svg{width:26px;height:26px;color:#00c268}
+        .gm-success-title{font-family:var(--ff);font-size:1.45rem;font-weight:800;letter-spacing:-.045em;color:#f0f4ff;margin-bottom:7px}
+        .gm-success-title em{font-style:normal;background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gm-success-sub{font-size:13px;color:#8b95aa;line-height:1.65;max-width:300px;margin:0 auto 20px}
+        .gm-success-facts{display:flex;flex-direction:column;gap:7px;text-align:left;max-width:270px;margin:0 auto 22px}
+        .gm-fact-row{display:flex;align-items:center;gap:9px;font-size:12px;color:#8b95aa}
+        .gm-fact-row svg{width:13px;height:13px;color:#00c268;flex-shrink:0}
+        .gm-success-cta{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.025em;color:#fff;background:linear-gradient(135deg,#007a3d,#00c268);border:none;border-radius:12px;padding:13px 26px;cursor:pointer;box-shadow:0 4px 24px rgba(0,194,104,.32);transition:all .25s}
+        .gm-success-cta:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,194,104,.44)}
+        .gm-success-upgrade{margin-top:14px;font-size:11.5px;color:#5a6478}
+        .gm-success-upgrade a{color:#00c268;text-decoration:none;font-weight:600;cursor:pointer}
 
-        @media (max-width: 640px) {
-            .otp-modal { border-radius: var(--r4) var(--r4) 0 0; position: fixed; bottom: 0; width: 100%; max-width: 100%; }
-            .otp-modal-header { padding: 24px 20px 14px; }
-            .otp-modal-body { padding: 0 20px 24px; }
-        }
+        /* ═══════ LOGIN MODAL ═══════ */
+        #loginModalOverlay{display:none;position:fixed;inset:0;z-index:10001;background:rgba(5,9,15,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:20px}
+        #loginModalOverlay.active{display:flex}
+        .lm-modal{position:relative;width:100%;max-width:440px;background:linear-gradient(160deg,#181f2e 0%,#111620 60%,#0f1520 100%);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:0 32px 80px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.04);overflow:hidden;animation:modalIn .45s cubic-bezier(.34,1.38,.64,1) both;max-height:90vh;overflow-y:auto;scrollbar-width:none}
+        .lm-modal::-webkit-scrollbar{display:none}
+        .lm-modal::before{content:'';position:absolute;top:0;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,104,.55),transparent);z-index:2}
+        .lm-close{position:absolute;top:15px;right:15px;width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:10;color:#5a6478}
+        .lm-close:hover{background:rgba(255,255,255,.11);color:#f0f4ff}
+        .lm-close svg{width:13px;height:13px}
+        .lm-tabs{display:flex;gap:0;padding:18px 18px 0}
+        .lm-tab{flex:1;font-family:var(--ff);font-size:12.5px;font-weight:700;letter-spacing:-.02em;color:#5a6478;background:none;border:none;padding:10px 0;cursor:pointer;position:relative;transition:color .2s}
+        .lm-tab::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;border-radius:2px;background:#00c268;transform:scaleX(0);transition:transform .25s cubic-bezier(.34,1.4,.64,1)}
+        .lm-tab.active{color:#f0f4ff}
+        .lm-tab.active::after{transform:scaleX(1)}
+        .lm-tab-div{width:1px;background:rgba(255,255,255,.07);margin:8px 0}
+        .lm-body{padding:22px 22px 26px}
+        .lm-panel{display:none}
+        .lm-panel.active{display:block;animation:gmSlide .3s cubic-bezier(.22,1,.36,1) both}
+        .lm-ctx{display:flex;align-items:center;gap:10px;padding:10px 13px;margin-bottom:20px;background:rgba(0,194,104,.07);border:1px solid rgba(0,194,104,.18);border-radius:12px}
+        .lm-ctx-dot{width:7px;height:7px;border-radius:50%;background:#00c268;box-shadow:0 0 8px #00c268;flex-shrink:0;animation:gmBlink 2s infinite}
+        .lm-ctx-text{font-size:12px;color:#00c268;font-weight:500;line-height:1.4}
+        .lm-ctx-text span{color:rgba(0,194,104,.55);font-weight:400}
+        .lm-heading{font-family:var(--ff);font-size:1.45rem;font-weight:800;letter-spacing:-.045em;color:#f0f4ff;line-height:1.1;margin-bottom:6px}
+        .lm-heading em{font-style:normal;background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .lm-sub{font-size:13px;line-height:1.6;color:#8b95aa;font-weight:300;margin-bottom:20px}
+        .lm-social-row{display:flex;gap:8px;margin-bottom:16px}
+        .lm-social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ff);font-size:12.5px;font-weight:700;letter-spacing:-.02em;color:#f0f4ff;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:11px 10px;cursor:pointer;transition:all .22s}
+        .lm-social-btn:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.17);transform:translateY(-1px)}
+        .lm-social-btn svg{width:17px;height:17px;flex-shrink:0}
+        .lm-divider{display:flex;align-items:center;gap:10px;margin:0 0 16px;color:#5a6478;font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase}
+        .lm-divider::before,.lm-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
+        .lm-field{margin-bottom:13px;position:relative}
+        .lm-field-label{display:flex;align-items:center;justify-content:space-between;font-family:var(--ff);font-size:11px;font-weight:700;letter-spacing:-.01em;color:#8b95aa;margin-bottom:6px}
+        .lm-field-label a{font-weight:500;color:#00c268;font-size:11px;text-decoration:none;cursor:pointer;transition:color .2s}
+        .lm-field-label a:hover{color:#00e582}
+        .lm-field-wrap{position:relative}
+        .lm-field-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#5a6478;pointer-events:none;transition:color .2s}
+        .lm-field-wrap:focus-within .lm-field-icon{color:#00c268}
+        .lm-field-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:13px 13px 13px 38px;font-family:var(--fb);font-size:13.5px;color:#f0f4ff;outline:none;transition:all .22s;-webkit-appearance:none}
+        .lm-field-input::placeholder{color:#5a6478}
+        .lm-field-input:focus{border-color:rgba(0,194,104,.45);background:rgba(0,194,104,.04);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+        .lm-field-input.error{border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.12)}
+        .lm-pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#5a6478;transition:color .2s;padding:2px}
+        .lm-pw-toggle:hover{color:#8b95aa}
+        .lm-pw-toggle svg{width:15px;height:15px}
+        .lm-field-error{font-size:11px;color:#ef4444;margin-top:4px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s}
+        .lm-field-error.show{opacity:1}
+        .lm-field-error svg{width:11px;height:11px;flex-shrink:0}
+        .lm-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--ff);font-size:14.5px;font-weight:800;letter-spacing:-.025em;color:#fff;background:linear-gradient(135deg,#007a3d 0%,#00c268 100%);border:none;border-radius:13px;padding:15px 22px;cursor:pointer;transition:all .25s;box-shadow:0 4px 24px rgba(0,194,104,.32),0 1px 8px rgba(0,194,104,.16);position:relative;overflow:hidden;margin-top:3px}
+        .lm-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,194,104,.44)}
+        .lm-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .lm-btn svg{width:16px;height:16px}
+        .lm-footer{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+        .lm-footer-txt{font-size:12.5px;color:#5a6478}
+        .lm-footer-link{font-family:var(--ff);font-size:12.5px;font-weight:700;letter-spacing:-.02em;color:#00c268;text-decoration:none;cursor:pointer;transition:color .2s}
+        .lm-footer-link:hover{color:#00e582}
+        .lm-trust{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:13px;flex-wrap:wrap}
+        .lm-trust-item{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#5a6478}
+        .lm-trust-item svg{width:10px;height:10px;color:#00c268;opacity:.8}
+        .lm-strength-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:7px}
+        .lm-strength-fill{height:100%;border-radius:2px;transition:width .4s,background .4s;width:0%}
+        .lm-strength-label{font-size:10.5px;color:#5a6478;margin-top:4px}
+        .lm-checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+        .lm-checkbox{width:17px;height:17px;border-radius:5px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;transition:all .2s}
+        .lm-checkbox.checked{background:#007a3d;border-color:#00c268}
+        .lm-checkbox.checked svg{opacity:1}
+        .lm-checkbox svg{width:10px;height:10px;color:#fff;opacity:0;transition:opacity .15s}
+        .lm-checkbox-label{font-size:12px;color:#8b95aa;line-height:1.5;cursor:pointer}
+        .lm-checkbox-label a{color:#00c268;text-decoration:none}
+        .lm-forgot-back{display:flex;align-items:center;gap:6px;font-family:var(--ff);font-size:12.5px;font-weight:600;color:#5a6478;background:none;border:none;cursor:pointer;transition:color .2s;padding:0;margin-bottom:16px}
+        .lm-forgot-back:hover{color:#f0f4ff}
+        .lm-forgot-back svg{width:13px;height:13px}
+        .lm-name-row{display:flex;gap:9px}
+        .lm-name-row .lm-field{flex:1}
     </style>
         <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
@@ -1564,92 +1684,328 @@
         </div>
     </div>
 
-    <!-- OTP Verification Modal -->
-    <div class="otp-modal-overlay" id="otpModalOverlay" role="dialog" aria-modal="true" aria-labelledby="otpModalTitle">
-        <div class="otp-modal">
-            <button class="otp-modal-close" id="otpModalClose" aria-label="Close verification">
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-
-            <!-- Step 1: Phone OTP -->
-            <div id="otpPhoneStep">
-                <div class="otp-modal-header">
-                    <div class="otp-step-icon phone">📱</div>
-                    <div class="otp-step-badge">Step 1 of 2</div>
-                    <h2 class="otp-modal-title" id="otpModalTitle">Verify your phone</h2>
-                    <p class="otp-modal-sub">We've sent a 6-digit code to <strong id="otpPhoneDisplay"></strong></p>
-                </div>
-                <div class="otp-modal-body">
-                    <div class="otp-step-progress">
-                        <div class="otp-step-pip active" id="otpPip1"></div>
-                        <div class="otp-step-pip" id="otpPip2"></div>
-                    </div>
-                    <div class="otp-digit-group" id="otpPhoneDigits" aria-label="Phone verification code">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-idx="0">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="1">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="2">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="3">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="4">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="5">
-                    </div>
-                    <div class="otp-error-msg" id="otpPhoneError">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span id="otpPhoneErrorText">Incorrect code. Please try again.</span>
-                    </div>
-                    <button class="otp-verify-btn" id="otpPhoneVerifyBtn" onclick="verifyPhoneOtp()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        Verify Phone
-                    </button>
-                    <div class="otp-resend-row">
-                        Didn't receive it?
-                        <button class="otp-resend-btn" id="otpPhoneResendBtn" onclick="resendPhoneOtp()">Resend code</button>
-                        <span id="otpPhoneResendTimer" style="display:none"> in <span id="otpPhoneResendCount">60</span>s</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 2: Email OTP -->
-            <div id="otpEmailStep" style="display:none">
-                <div class="otp-modal-header">
-                    <div class="otp-step-icon email">✉️</div>
-                    <div class="otp-step-badge">
-                        <span class="otp-success-tick">✓</span> Phone verified &nbsp;·&nbsp; Step 2 of 2
-                    </div>
-                    <h2 class="otp-modal-title">Verify your email</h2>
-                    <p class="otp-modal-sub">We've sent a 6-digit code to <strong id="otpEmailDisplay"></strong></p>
-                </div>
-                <div class="otp-modal-body">
-                    <div class="otp-step-progress">
-                        <div class="otp-step-pip done"></div>
-                        <div class="otp-step-pip active"></div>
-                    </div>
-                    <div class="otp-digit-group" id="otpEmailDigits" aria-label="Email verification code">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" autocomplete="one-time-code" data-idx="0">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="1">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="2">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="3">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="4">
-                        <input class="otp-digit" type="number" maxlength="1" inputmode="numeric" data-idx="5">
-                    </div>
-                    <div class="otp-error-msg" id="otpEmailError">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span id="otpEmailErrorText">Incorrect code. Please try again.</span>
-                    </div>
-                    <button class="otp-verify-btn" id="otpEmailVerifyBtn" onclick="verifyEmailOtp()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        Verify &amp; Submit Quote
-                    </button>
-                    <div class="otp-resend-row">
-                        Didn't receive it?
-                        <button class="otp-resend-btn" id="otpEmailResendBtn" onclick="resendEmailOtp()">Resend email</button>
-                        <span id="otpEmailResendTimer" style="display:none"> in <span id="otpEmailResendCount">60</span>s</span>
-                    </div>
-                </div>
-            </div>
+    <!-- ═══════════════ GUEST POST MODAL ═══════════════ -->
+    <div id="guestModalOverlay" role="dialog" aria-modal="true" aria-label="Post job as guest">
+      <div class="gm-modal">
+        <!-- Loading -->
+        <div class="gm-loading" id="gmLoading">
+          <div class="gm-loading-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="gm-loading-text" id="gmLoadingText">Sending code…</div>
         </div>
-    </div>
+        <!-- Header -->
+        <div class="gm-header">
+          <div class="gm-brand-row">
+            <div class="gm-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+            <div class="gm-brand">Trade<span>Match</span></div>
+          </div>
+          <button class="gm-close" id="gmClose" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <!-- Step tracker -->
+        <div class="gm-step-track" id="gmStepTrack">
+          <div class="gm-step-node active" id="gmSn1">
+            <div class="gm-step-bubble"><span class="gm-step-num">1</span><svg class="gm-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="gm-step-label">Your info</span>
+          </div>
+          <div class="gm-step-node" id="gmSn2">
+            <div class="gm-step-bubble"><span class="gm-step-num">2</span><svg class="gm-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="gm-step-label">Verify phone</span>
+          </div>
+          <div class="gm-step-node" id="gmSn3">
+            <div class="gm-step-bubble"><span class="gm-step-num">3</span><svg class="gm-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="gm-step-label">Confirm email</span>
+          </div>
+        </div>
+        <!-- STEP 1: Info form -->
+        <div class="gm-panel active" id="gmPanel1">
+          <div class="gm-ctx"><div class="gm-ctx-dot"></div><div class="gm-ctx-text" id="gmCtxText">Your job <span>· ready to post</span></div></div>
+          <div class="gm-sec-label">Post as guest</div>
+          <div class="gm-heading">Quick &amp; <em>no account</em> needed</div>
+          <div class="gm-sub">We just need your contact details so tradespeople can reach you. Your job posts live for 30 days.</div>
+          <div class="gm-upsell">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="gm-upsell-text"><strong>Tip:</strong> Creating a free account lets you track quotes, message trades, and repost jobs — all in one dashboard.</div>
+          </div>
+          <!-- Name row -->
+          <div style="display:flex;gap:10px">
+            <div class="gm-field" style="flex:1">
+              <div class="gm-field-label"><span>First name</span></div>
+              <div class="gm-field-wrap">
+                <input type="text" class="gm-field-input" id="gm-first" placeholder="Jane" autocomplete="given-name">
+                <svg class="gm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+            </div>
+            <div class="gm-field" style="flex:1">
+              <div class="gm-field-label"><span>Last name</span></div>
+              <div class="gm-field-wrap">
+                <input type="text" class="gm-field-input" id="gm-last" placeholder="Smith" autocomplete="family-name">
+                <svg class="gm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+            </div>
+          </div>
+          <!-- Phone -->
+          <div class="gm-field">
+            <div class="gm-field-label"><span>Mobile number</span><span class="gm-field-hint">For SMS verification</span></div>
+            <div class="gm-phone-wrap">
+              <div class="gm-phone-country" id="gmCountrySelector" tabindex="0" onclick="gmToggleCountryDrop()">
+                <span class="gm-phone-flag" id="gmSelFlag">&#127468;&#127463;</span>
+                <span class="gm-phone-code" id="gmSelCode">+44</span>
+                <svg class="gm-phone-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                <div class="gm-country-drop" id="gmCountryDrop">
+                  <div class="gm-country-opt selected" onclick="gmSelectCountry(event,'&#127468;&#127463;','+44')">&#127468;&#127463; United Kingdom <span class="gm-country-opt-code">+44</span></div>
+                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127470;&#127466;','+353')">&#127470;&#127466; Ireland <span class="gm-country-opt-code">+353</span></div>
+                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127482;&#127480;','+1')">&#127482;&#127480; United States <span class="gm-country-opt-code">+1</span></div>
+                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127462;&#127482;','+61')">&#127462;&#127482; Australia <span class="gm-country-opt-code">+61</span></div>
+                </div>
+              </div>
+              <div class="gm-phone-num gm-field-wrap">
+                <input type="tel" class="gm-field-input" id="gm-phone" placeholder="7911 123456" autocomplete="tel" inputmode="numeric">
+                <svg class="gm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.06 6.06l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+              </div>
+            </div>
+            <div class="gm-field-error" id="gmErrPhone">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Please enter a valid mobile number
+            </div>
+          </div>
+          <!-- Email -->
+          <div class="gm-field">
+            <div class="gm-field-label"><span>Email address</span><span class="gm-field-hint">For job updates</span></div>
+            <div class="gm-field-wrap">
+              <input type="email" class="gm-field-input" id="gm-email" placeholder="you@example.com" autocomplete="email">
+              <svg class="gm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="gm-field-error" id="gmErrEmail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Please enter a valid email address
+            </div>
+          </div>
+          <button class="gm-btn" onclick="gmStep1Submit()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.06 6.06l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+            Send Verification Code
+          </button>
+          <div class="gm-trust">
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Twilio-verified</div>
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>No spam calls</div>
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Under 60 sec</div>
+          </div>
+        </div><!-- /gmPanel1 -->
+
+        <!-- STEP 2: Verify phone -->
+        <div class="gm-panel" id="gmPanel2">
+          <button class="gm-btn-secondary" style="width:auto;border:none;padding:0;margin-bottom:14px;justify-content:flex-start;color:#5a6478" onclick="gmGoToStep(1,'back')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><polyline points="15 18 9 12 15 6"/></svg>Back
+          </button>
+          <div class="gm-sec-label">Step 2 of 3 · Twilio SMS</div>
+          <div class="gm-heading">Verify your <em>mobile</em></div>
+          <div class="gm-sub">We sent a 6-digit code to <strong id="gmPhoneDisplay" style="color:#f0f4ff">+44 7911 123456</strong> via SMS. Expires in 10 min.</div>
+          <div class="gm-otp-wrap" id="gmOtpWrap">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp0" oninput="gmOtpInput(this,0,'gm')" onkeydown="gmOtpKeydown(this,0,'gm')" autocomplete="one-time-code">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp1" oninput="gmOtpInput(this,1,'gm')" onkeydown="gmOtpKeydown(this,1,'gm')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp2" oninput="gmOtpInput(this,2,'gm')" onkeydown="gmOtpKeydown(this,2,'gm')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp3" oninput="gmOtpInput(this,3,'gm')" onkeydown="gmOtpKeydown(this,3,'gm')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp4" oninput="gmOtpInput(this,4,'gm')" onkeydown="gmOtpKeydown(this,4,'gm')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmOtp5" oninput="gmOtpInput(this,5,'gm')" onkeydown="gmOtpKeydown(this,5,'gm')">
+          </div>
+          <div class="gm-otp-meta">
+            <div class="gm-otp-sent">Code sent via <strong>Twilio Verify</strong></div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="gm-resend-btn" id="gmResendBtn" disabled onclick="gmResendPhone()">Resend</button>
+              <span class="gm-resend-timer" id="gmResendTimer">in 0:30</span>
+            </div>
+          </div>
+          <div class="gm-otp-error" id="gmOtpError">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="gmOtpErrMsg">Incorrect code. Please try again.</span>
+          </div>
+          <button class="gm-btn" id="gmVerifyBtn" onclick="gmVerifyPhone()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Verify &amp; Continue
+          </button>
+          <div class="gm-trust" style="margin-top:12px">
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>End-to-end encrypted</div>
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Prevents fake leads</div>
+          </div>
+        </div><!-- /gmPanel2 -->
+
+        <!-- STEP 3: Confirm email -->
+        <div class="gm-panel" id="gmPanel3">
+          <div class="gm-sec-label">Step 3 of 3 · Resend</div>
+          <div class="gm-heading">Confirm your <em>email</em></div>
+          <div class="gm-sub">We sent a 6-digit code to <strong id="gmEmailDisplay" style="color:#f0f4ff">jane@example.com</strong>. Check your inbox.</div>
+          <div class="gm-email-card">
+            <div class="gm-email-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="gm-email-card-title">Check your inbox</div>
+            <div class="gm-email-card-sub">Sent from <strong>noreply@tradematch.uk</strong> via Resend. Check spam if needed.</div>
+          </div>
+          <div class="gm-otp-wrap" id="gmEOtpWrap">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp0" oninput="gmOtpInput(this,0,'gme')" onkeydown="gmOtpKeydown(this,0,'gme')" autocomplete="one-time-code">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp1" oninput="gmOtpInput(this,1,'gme')" onkeydown="gmOtpKeydown(this,1,'gme')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp2" oninput="gmOtpInput(this,2,'gme')" onkeydown="gmOtpKeydown(this,2,'gme')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp3" oninput="gmOtpInput(this,3,'gme')" onkeydown="gmOtpKeydown(this,3,'gme')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp4" oninput="gmOtpInput(this,4,'gme')" onkeydown="gmOtpKeydown(this,4,'gme')">
+            <input class="gm-otp-cell" maxlength="1" inputmode="numeric" pattern="[0-9]" id="gmEotp5" oninput="gmOtpInput(this,5,'gme')" onkeydown="gmOtpKeydown(this,5,'gme')">
+          </div>
+          <div class="gm-otp-meta">
+            <div class="gm-otp-sent">Powered by <strong>Resend</strong></div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="gm-resend-btn" id="gmEmailResendBtn" disabled onclick="gmResendEmail()">Resend</button>
+              <span class="gm-resend-timer" id="gmEmailResendTimer">in 0:30</span>
+            </div>
+          </div>
+          <div class="gm-otp-error" id="gmEmailOtpError">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="gmEmailOtpErrMsg">Incorrect code. Please check your inbox.</span>
+          </div>
+          <button class="gm-btn" id="gmEmailVerifyBtn" onclick="gmVerifyEmail()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Confirm &amp; Post Job
+          </button>
+          <div class="gm-trust" style="margin-top:12px">
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Resend verified</div>
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>No marketing spam</div>
+            <div class="gm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Code valid 10 min</div>
+          </div>
+        </div><!-- /gmPanel3 -->
+
+        <!-- SUCCESS -->
+        <div class="gm-success" id="gmSuccess">
+          <div class="gm-success-rings"><div class="gm-success-ring"></div><div class="gm-success-ring"></div><div class="gm-success-ring"></div>
+            <div class="gm-success-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="gm-success-title">Job <em>posted</em>, <span id="gmSuccessName">there</span>!</div>
+          <div class="gm-success-sub">Your job is now live. Up to 5 verified tradespeople in your area will quote within hours.</div>
+          <div class="gm-success-facts">
+            <div class="gm-fact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Phone verified via Twilio ✓</div>
+            <div class="gm-fact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Email confirmed via Resend ✓</div>
+            <div class="gm-fact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Quotes sent to <strong id="gmSuccessEmail" style="color:#f0f4ff">jane@example.com</strong></div>
+            <div class="gm-fact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Job live for 30 days</div>
+          </div>
+          <button class="gm-success-cta" onclick="window.location.href='/'">View your job listing<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="gm-success-upgrade">Want to track quotes &amp; message trades? <a onclick="openLoginModal('register')">Create a free account →</a></div>
+        </div><!-- /gmSuccess -->
+      </div><!-- /gm-modal -->
+    </div><!-- /guestModalOverlay -->
+
+    <!-- ═══════════════ LOGIN / REGISTER MODAL ═══════════════ -->
+    <div id="loginModalOverlay" role="dialog" aria-modal="true" aria-label="Sign in or create account">
+      <div class="lm-modal">
+        <button class="lm-close" id="lmClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <!-- Tabs -->
+        <div class="lm-tabs">
+          <button class="lm-tab active" id="lmTabLogin" onclick="lmSwitchTab('login')">Log In</button>
+          <div class="lm-tab-div"></div>
+          <button class="lm-tab" id="lmTabRegister" onclick="lmSwitchTab('register')">Create Account</button>
+        </div>
+        <div class="lm-body">
+          <!-- LOGIN PANEL -->
+          <div class="lm-panel active" id="lmPanelLogin">
+            <div class="lm-ctx"><div class="lm-ctx-dot"></div><div class="lm-ctx-text" id="lmCtxText">Your job <span>· ready to post</span></div></div>
+            <div class="lm-heading">Welcome <em>back</em></div>
+            <div class="lm-sub">Log in to post your job and start receiving quotes from verified tradespeople.</div>
+            <div class="lm-social-row">
+              <button class="lm-social-btn" onclick="lmHandleSocial('Google')">
+                <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Google
+              </button>
+              <button class="lm-social-btn" onclick="lmHandleSocial('Apple')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                Apple
+              </button>
+            </div>
+            <div class="lm-divider">or sign in with email</div>
+            <div class="lm-field">
+              <div class="lm-field-label"><span>Email address</span></div>
+              <div class="lm-field-wrap">
+                <input type="email" class="lm-field-input" id="lm-login-email" placeholder="you@example.com" autocomplete="email">
+                <svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="lm-field-error" id="lm-err-login-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Please enter a valid email</div>
+            </div>
+            <div class="lm-field">
+              <div class="lm-field-label"><span>Password</span><a onclick="lmSwitchTab('forgot')">Forgot password?</a></div>
+              <div class="lm-field-wrap">
+                <input type="password" class="lm-field-input" id="lm-login-password" placeholder="Your password" autocomplete="current-password">
+                <svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <button class="lm-pw-toggle" onclick="lmTogglePw('lm-login-password',this)" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="lm-field-error" id="lm-err-login-password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Incorrect email or password</div>
+            </div>
+            <button class="lm-btn" id="lm-login-submit" onclick="lmHandleLogin()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Log in &amp; Post Job
+            </button>
+            <div class="lm-footer"><span class="lm-footer-txt">Don't have an account?</span><a class="lm-footer-link" onclick="lmSwitchTab('register')">Create one free →</a></div>
+            <div class="lm-trust">
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>256-bit encrypted</div>
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>GDPR compliant</div>
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>2-min setup</div>
+            </div>
+          </div><!-- /lmPanelLogin -->
+
+          <!-- REGISTER PANEL -->
+          <div class="lm-panel" id="lmPanelRegister">
+            <div class="lm-ctx"><div class="lm-ctx-dot"></div><div class="lm-ctx-text" id="lmCtxTextReg">Your job <span>· ready to post</span></div></div>
+            <div class="lm-heading">Create your <em>free</em> account</div>
+            <div class="lm-sub">Track quotes, message trades, and pay safely — all in one place.</div>
+            <div class="lm-social-row">
+              <button class="lm-social-btn" onclick="lmHandleSocial('Google')">
+                <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Continue with Google
+              </button>
+              <button class="lm-social-btn" onclick="lmHandleSocial('Apple')"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg></button>
+            </div>
+            <div class="lm-divider">or create with email</div>
+            <div class="lm-name-row">
+              <div class="lm-field"><div class="lm-field-label"><span>First name</span></div><div class="lm-field-wrap"><input type="text" class="lm-field-input" id="lm-reg-first" placeholder="Jane" autocomplete="given-name"><svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
+              <div class="lm-field"><div class="lm-field-label"><span>Last name</span></div><div class="lm-field-wrap"><input type="text" class="lm-field-input" id="lm-reg-last" placeholder="Smith" autocomplete="family-name"><svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div></div>
+            </div>
+            <div class="lm-field"><div class="lm-field-label"><span>Email address</span></div><div class="lm-field-wrap"><input type="email" class="lm-field-input" id="lm-reg-email" placeholder="you@example.com" autocomplete="email"><svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div></div>
+            <div class="lm-field">
+              <div class="lm-field-label"><span>Password</span></div>
+              <div class="lm-field-wrap"><input type="password" class="lm-field-input" id="lm-reg-password" placeholder="Min. 8 characters" autocomplete="new-password" oninput="lmCheckStrength(this.value)"><svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><button class="lm-pw-toggle" onclick="lmTogglePw('lm-reg-password',this)" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+              <div class="lm-strength-bar"><div class="lm-strength-fill" id="lm-strength-fill"></div></div>
+              <div class="lm-strength-label" id="lm-strength-label"></div>
+            </div>
+            <div class="lm-checkbox-row">
+              <div class="lm-checkbox" id="lm-terms-check" onclick="this.classList.toggle('checked')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="lm-checkbox-label" onclick="document.getElementById('lm-terms-check').classList.toggle('checked')">I agree to TradeMatch's <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</div>
+            </div>
+            <button class="lm-btn" onclick="lmHandleRegister()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Create Account &amp; Post Job
+            </button>
+            <div class="lm-footer"><span class="lm-footer-txt">Already have an account?</span><a class="lm-footer-link" onclick="lmSwitchTab('login')">Log in →</a></div>
+            <div class="lm-trust">
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>256-bit encrypted</div>
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>GDPR compliant</div>
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Free for homeowners</div>
+            </div>
+          </div><!-- /lmPanelRegister -->
+
+          <!-- FORGOT PANEL -->
+          <div class="lm-panel" id="lmPanelForgot">
+            <button class="lm-forgot-back" onclick="lmSwitchTab('login')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Back to log in</button>
+            <div class="lm-heading">Reset your <em>password</em></div>
+            <div class="lm-sub">Enter your email and we'll send a secure reset link within 2 minutes.</div>
+            <div class="lm-field"><div class="lm-field-label"><span>Email address</span></div><div class="lm-field-wrap"><input type="email" class="lm-field-input" id="lm-forgot-email" placeholder="you@example.com" autocomplete="email"><svg class="lm-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div></div>
+            <button class="lm-btn" onclick="lmHandleForgot()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Send Reset Link
+            </button>
+            <div class="lm-trust" style="margin-top:16px">
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Link expires in 15 min</div>
+              <div class="lm-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Secure &amp; encrypted</div>
+            </div>
+          </div><!-- /lmPanelForgot -->
+        </div><!-- /lm-body -->
+      </div><!-- /lm-modal -->
+    </div><!-- /loginModalOverlay -->    </div>
 
     <script>
 
@@ -2434,17 +2790,11 @@ I'm happy to discuss the project in more detail and answer any questions to help
         });
 
         function goLogin() {
-            persistProgress(pendingSubmissionData || {});
-            localStorage.setItem('quoteAutoSubmit', '1');
-            const redirectTarget = `${window.location.pathname}${window.location.search}`;
-            window.location.href = `/login?redirect=${encodeURIComponent(redirectTarget)}`;
+            openLoginModal('login');
         }
 
         function goRegister() {
-            persistProgress(pendingSubmissionData || {});
-            localStorage.setItem('quoteAutoSubmit', '1');
-            const redirectTarget = `${window.location.pathname}${window.location.search}`;
-            window.location.href = `/signup?redirect=${encodeURIComponent(redirectTarget)}`;
+            openLoginModal('register');
         }
 
         function closeSuccessModal() {
@@ -3316,291 +3666,432 @@ I'm happy to discuss the project in more detail and answer any questions to help
         }
 
         // ══════════════════════════════════════════════════════
-        // GUEST OTP VERIFICATION FLOW
-        // Step 1: Phone (Twilio SMS) → Step 2: Email (Resend)
+        // GUEST MODAL — 3-step: Info → Phone OTP → Email OTP
         // ══════════════════════════════════════════════════════
-        ;(function () {
-            const overlay = document.getElementById('otpModalOverlay');
-            const phoneStep = document.getElementById('otpPhoneStep');
-            const emailStep = document.getElementById('otpEmailStep');
-            let resendPhoneTimer = null;
-            let resendEmailTimer = null;
+        (function(){
+            // ── State ────────────────────────────────────────────────
+            let gmSelectedCountryCode = '+44';
+            let gmGuestData = {};  // filled in step 1
 
-            // ── OTP digit input wiring ─────────────────────────────
-            function wireDigitGroup(groupId, verifyFn) {
-                const group = document.getElementById(groupId);
-                if (!group) return;
-                const inputs = Array.from(group.querySelectorAll('.otp-digit'));
-                inputs.forEach((input, i) => {
-                    input.addEventListener('input', () => {
-                        // Clamp to single digit
-                        const val = input.value.replace(/\D/g, '').slice(-1);
-                        input.value = val;
-                        input.classList.toggle('filled', val !== '');
-                        if (val && i < inputs.length - 1) inputs[i + 1].focus();
-                        if (inputs.every(d => d.value !== '')) verifyFn();
-                    });
-                    input.addEventListener('keydown', e => {
-                        if (e.key === 'Backspace' && !input.value && i > 0) {
-                            inputs[i - 1].value = '';
-                            inputs[i - 1].classList.remove('filled');
-                            inputs[i - 1].focus();
-                        }
-                        if (e.key === 'ArrowLeft' && i > 0) inputs[i - 1].focus();
-                        if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i + 1].focus();
-                    });
-                    // Handle paste (e.g. browser autofill)
-                    input.addEventListener('paste', e => {
-                        e.preventDefault();
-                        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
-                        inputs.forEach((d, j) => {
-                            d.value = pasted[j] || '';
-                            d.classList.toggle('filled', !!pasted[j]);
-                        });
-                        const nextEmpty = inputs.findIndex(d => !d.value);
-                        (nextEmpty === -1 ? inputs[inputs.length - 1] : inputs[nextEmpty]).focus();
-                        if (pasted.length === 6) verifyFn();
-                    });
+            // ── Helpers ──────────────────────────────────────────────
+            function gmShow(id){ const el=document.getElementById(id); if(el) el.classList.add('show'); }
+            function gmHide(id){ const el=document.getElementById(id); if(el) el.classList.remove('show'); }
+            function gmShowLoad(msg){ document.getElementById('gmLoading').classList.add('show'); document.getElementById('gmLoadingText').textContent=msg||'Loading…'; }
+            function gmHideLoad(){ document.getElementById('gmLoading').classList.remove('show'); }
+
+            function gmSetStep(n){
+                [1,2,3].forEach(i=>{
+                    const p=document.getElementById('gmPanel'+i);
+                    if(p) p.classList.toggle('active', i===n);
+                    const sn=document.getElementById('gmSn'+i);
+                    if(sn){ sn.classList.remove('active','done'); if(i<n) sn.classList.add('done'); else if(i===n) sn.classList.add('active'); }
                 });
             }
 
-            function getDigitValue(groupId) {
-                const group = document.getElementById(groupId);
-                if (!group) return '';
-                return Array.from(group.querySelectorAll('.otp-digit')).map(d => d.value).join('');
-            }
+            // ── Country selector ─────────────────────────────────────
+            window.gmToggleCountryDrop = function(){
+                document.getElementById('gmCountryDrop').classList.toggle('open');
+            };
+            window.gmSelectCountry = function(e, flag, code){
+                e.stopPropagation();
+                gmSelectedCountryCode = code;
+                document.getElementById('gmSelFlag').textContent = flag;
+                document.getElementById('gmSelCode').textContent = code;
+                document.querySelectorAll('.gm-country-opt').forEach(o=>o.classList.remove('selected'));
+                e.currentTarget.classList.add('selected');
+                document.getElementById('gmCountryDrop').classList.remove('open');
+            };
+            document.addEventListener('click', e=>{
+                const drop=document.getElementById('gmCountryDrop');
+                if(drop && !e.target.closest('#gmCountrySelector')) drop.classList.remove('open');
+            });
 
-            function clearDigits(groupId) {
-                const group = document.getElementById(groupId);
-                if (!group) return;
-                group.querySelectorAll('.otp-digit').forEach(d => {
-                    d.value = '';
-                    d.classList.remove('filled', 'error');
-                });
+            // ── OTP input helpers ────────────────────────────────────
+            // prefix: 'gm' → gmOtp0-5, 'gme' → gmEotp0-5
+            function gmOtpId(prefix, i){ return prefix==='gm' ? 'gmOtp'+i : 'gmEotp'+i; }
+            window.gmOtpInput = function(cell, idx, prefix){
+                cell.value = cell.value.replace(/\D/g,'').slice(-1);
+                cell.classList.toggle('filled', !!cell.value);
+                if(cell.value && idx<5) document.getElementById(gmOtpId(prefix,idx+1)).focus();
+                gmUpdateVerifyBtn(prefix);
+                // clear error on input
+                const errId = prefix==='gm' ? 'gmOtpError' : 'gmEmailOtpError';
+                gmHide(errId);
+            };
+            window.gmOtpKeydown = function(cell, idx, prefix){
+                const ev = window.event || arguments[3];
+                if(!ev) return;
+                if(ev.key==='Backspace' && !cell.value && idx>0) document.getElementById(gmOtpId(prefix,idx-1)).focus();
+                if(ev.key==='ArrowLeft' && idx>0) document.getElementById(gmOtpId(prefix,idx-1)).focus();
+                if(ev.key==='ArrowRight' && idx<5) document.getElementById(gmOtpId(prefix,idx+1)).focus();
+            };
+            function gmGetOtpValue(prefix){
+                let v=''; for(let i=0;i<6;i++) v+=document.getElementById(gmOtpId(prefix,i)).value; return v;
             }
-
-            function setDigitsError(groupId) {
-                const group = document.getElementById(groupId);
-                if (!group) return;
-                group.querySelectorAll('.otp-digit').forEach(d => d.classList.add('error'));
+            function gmClearOtp(prefix){
+                for(let i=0;i<6;i++){ const c=document.getElementById(gmOtpId(prefix,i)); c.value=''; c.classList.remove('filled','error'); }
+                document.getElementById(gmOtpId(prefix,0)).focus();
+                gmUpdateVerifyBtn(prefix);
             }
-
-            function clearDigitsError(groupId) {
-                const group = document.getElementById(groupId);
-                if (!group) return;
-                group.querySelectorAll('.otp-digit').forEach(d => d.classList.remove('error'));
+            function gmShakeOtp(prefix){
+                for(let i=0;i<6;i++){ const c=document.getElementById(gmOtpId(prefix,i)); c.classList.add('error'); setTimeout(()=>c.classList.remove('error'),400); }
             }
-
-            function showError(errId, textId, msg) {
-                const el = document.getElementById(errId);
-                const txt = document.getElementById(textId);
-                if (el) el.classList.add('show');
-                if (txt) txt.textContent = msg;
-            }
-
-            function hideError(errId) {
-                const el = document.getElementById(errId);
-                if (el) el.classList.remove('show');
-            }
-
-            function startResendTimer(countId, timerId, btnId, timerElId, seconds) {
-                clearInterval(window[countId + '_interval']);
-                let remaining = seconds;
-                const countEl = document.getElementById(countId);
-                const timerEl = document.getElementById(timerId);
+            function gmUpdateVerifyBtn(prefix){
+                const full = gmGetOtpValue(prefix).length===6;
+                const btnId = prefix==='gm' ? 'gmVerifyBtn' : 'gmEmailVerifyBtn';
                 const btn = document.getElementById(btnId);
-                const timerSpan = document.getElementById(timerElId);
-                if (countEl) countEl.textContent = remaining;
-                if (timerSpan) timerSpan.style.display = 'inline';
-                if (btn) btn.disabled = true;
-                window[countId + '_interval'] = setInterval(() => {
+                if(btn) btn.disabled = !full;
+            }
+            // Paste support
+            ['gmOtp0','gmEotp0'].forEach(id=>{
+                const el=document.getElementById(id);
+                if(!el) return;
+                el.addEventListener('paste', e=>{
+                    e.preventDefault();
+                    const pasted=(e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+                    const prefix = id.startsWith('gmEotp') ? 'gme' : 'gm';
+                    for(let i=0;i<6;i++){ const c=document.getElementById(gmOtpId(prefix,i)); c.value=pasted[i]||''; c.classList.toggle('filled',!!pasted[i]); }
+                    gmUpdateVerifyBtn(prefix);
+                });
+            });
+
+            // ── Resend timer ─────────────────────────────────────────
+            function gmStartResendTimer(btnId, timerId, seconds){
+                const btn=document.getElementById(btnId), timer=document.getElementById(timerId);
+                if(btn) btn.disabled=true;
+                let remaining=seconds;
+                if(timer) timer.textContent='in 0:'+String(remaining).padStart(2,'0');
+                const iv=setInterval(()=>{
                     remaining--;
-                    if (countEl) countEl.textContent = remaining;
-                    if (remaining <= 0) {
-                        clearInterval(window[countId + '_interval']);
-                        if (timerSpan) timerSpan.style.display = 'none';
-                        if (btn) btn.disabled = false;
-                    }
-                }, 1000);
+                    if(timer) timer.textContent=remaining>0?'in 0:'+String(remaining).padStart(2,'0'):'';
+                    if(remaining<=0){ clearInterval(iv); if(btn) btn.disabled=false; }
+                },1000);
             }
 
-            // ── Open OTP overlay ───────────────────────────────────
-            window.startGuestOtpFlow = function () {
-                if (!pendingSubmissionData) {
-                    alert('Please complete the form first.');
-                    return;
+            // ── Step 1 submit ────────────────────────────────────────
+            window.gmStep1Submit = async function(){
+                const first=document.getElementById('gm-first').value.trim();
+                const last=document.getElementById('gm-last').value.trim();
+                const phone=document.getElementById('gm-phone').value.trim();
+                const email=document.getElementById('gm-email').value.trim();
+                let valid=true;
+
+                document.getElementById('gm-first').classList.toggle('error', first.length<2);
+                document.getElementById('gm-last').classList.toggle('error', last.length<2);
+                if(first.length<2||last.length<2) valid=false;
+
+                const fullPhone = gmSelectedCountryCode + phone;
+                if(phone.replace(/\s/g,'').length<9){
+                    document.getElementById('gm-phone').classList.add('error');
+                    gmShow('gmErrPhone'); valid=false;
+                } else {
+                    document.getElementById('gm-phone').classList.remove('error');
+                    gmHide('gmErrPhone');
                 }
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+                    document.getElementById('gm-email').classList.add('error');
+                    gmShow('gmErrEmail'); valid=false;
+                } else {
+                    document.getElementById('gm-email').classList.remove('error');
+                    gmHide('gmErrEmail');
+                }
+                if(!valid) return;
+
+                gmGuestData = { firstName: first, lastName: last, phone: fullPhone, email };
+                // Pre-populate displays
+                document.getElementById('gmPhoneDisplay').textContent = fullPhone;
+                document.getElementById('gmEmailDisplay').textContent = email;
+                document.getElementById('gmSuccessName').textContent = first;
+                document.getElementById('gmSuccessEmail').textContent = email;
+
+                // Send phone OTP
+                gmShowLoad('Sending SMS via Twilio…');
+                try {
+                    const r=await fetch(API_BASE+'/api/verify/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:fullPhone})});
+                    gmHideLoad();
+                    if(!r.ok){const d=await r.json().catch(()=>({}));gmShow('gmErrPhone');document.querySelector('#gmErrPhone').lastChild.textContent=d.error||'Failed to send SMS.';return;}
+                    gmSetStep(2);
+                    gmStartResendTimer('gmResendBtn','gmResendTimer',30);
+                    setTimeout(()=>document.getElementById('gmOtp0').focus(),200);
+                } catch(err){
+                    gmHideLoad();
+                    gmShow('gmErrPhone');
+                }
+            };
+
+            // ── Resend phone ─────────────────────────────────────────
+            window.gmResendPhone = async function(){
+                gmClearOtp('gm');
+                gmHide('gmOtpError');
+                try { await fetch(API_BASE+'/api/verify/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:gmGuestData.phone})}); } catch(e){}
+                gmStartResendTimer('gmResendBtn','gmResendTimer',30);
+            };
+
+            // ── Verify phone OTP ─────────────────────────────────────
+            window.gmVerifyPhone = async function(){
+                const code=gmGetOtpValue('gm');
+                if(code.length!==6) return;
+                const btn=document.getElementById('gmVerifyBtn');
+                btn.disabled=true;
+                btn.innerHTML='<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Verifying…';
+                gmHide('gmOtpError');
+                try {
+                    const r=await fetch(API_BASE+'/api/verify/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:gmGuestData.phone,code})});
+                    const d=await r.json().catch(()=>({}));
+                    if(r.ok && d.verified){
+                        gmSetStep(3);
+                        gmClearOtp('gme');
+                        gmHide('gmEmailOtpError');
+                        // Send email OTP
+                        gmShowLoad('Sending code to your email…');
+                        try {
+                            await fetch(API_BASE+'/api/verify/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:gmGuestData.email})});
+                        } catch(e){}
+                        gmHideLoad();
+                        gmStartResendTimer('gmEmailResendBtn','gmEmailResendTimer',30);
+                        setTimeout(()=>document.getElementById('gmEotp0').focus(),200);
+                    } else {
+                        gmShakeOtp('gm');
+                        const errMsg=document.getElementById('gmOtpErrMsg');
+                        if(errMsg) errMsg.textContent=d.error||'Incorrect code. Please try again.';
+                        gmShow('gmOtpError');
+                        btn.disabled=false;
+                        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verify &amp; Continue';
+                    }
+                } catch(err){
+                    const errMsg=document.getElementById('gmOtpErrMsg');
+                    if(errMsg) errMsg.textContent='Network error. Please try again.';
+                    gmShow('gmOtpError');
+                    btn.disabled=false;
+                    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Verify &amp; Continue';
+                }
+            };
+
+            // ── Resend email ─────────────────────────────────────────
+            window.gmResendEmail = async function(){
+                gmClearOtp('gme');
+                gmHide('gmEmailOtpError');
+                try { await fetch(API_BASE+'/api/verify/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:gmGuestData.email})}); } catch(e){}
+                gmStartResendTimer('gmEmailResendBtn','gmEmailResendTimer',30);
+            };
+
+            // ── Verify email OTP → submit ────────────────────────────
+            window.gmVerifyEmail = async function(){
+                const code=gmGetOtpValue('gme');
+                if(code.length!==6) return;
+                const btn=document.getElementById('gmEmailVerifyBtn');
+                btn.disabled=true;
+                btn.innerHTML='<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Submitting…';
+                gmHide('gmEmailOtpError');
+                try {
+                    const r=await fetch(API_BASE+'/api/verify/email/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:gmGuestData.email,code})});
+                    const d=await r.json().catch(()=>({}));
+                    if(r.ok && d.verified){
+                        // Both verified — merge data and submit
+                        const mergedData = Object.assign({}, pendingSubmissionData, {
+                            firstName: gmGuestData.firstName,
+                            lastName:  gmGuestData.lastName,
+                            phone:     gmGuestData.phone,
+                            email:     gmGuestData.email,
+                            name:      gmGuestData.firstName + ' ' + gmGuestData.lastName
+                        });
+                        document.getElementById('guestStepTrack').style.display='none';
+                        document.getElementById('gmPanel3').classList.remove('active');
+                        gmShow('gmSuccess');
+                        await submitGuest(mergedData);
+                    } else {
+                        gmShakeOtp('gme');
+                        const errMsg=document.getElementById('gmEmailOtpErrMsg');
+                        if(errMsg) errMsg.textContent=d.error||'Incorrect code. Please check your inbox.';
+                        gmShow('gmEmailOtpError');
+                        btn.disabled=false;
+                        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg> Confirm &amp; Post Job';
+                    }
+                } catch(err){
+                    const errMsg=document.getElementById('gmEmailOtpErrMsg');
+                    if(errMsg) errMsg.textContent='Network error. Please try again.';
+                    gmShow('gmEmailOtpError');
+                    btn.disabled=false;
+                    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg> Confirm &amp; Post Job';
+                }
+            };
+
+            // ── Open / close guest modal ─────────────────────────────
+            window.startGuestOtpFlow = function(){
+                if(!pendingSubmissionData){ alert('Please complete the form first.'); return; }
                 closeAuthModal();
-
-                // Populate display values
-                const phone = pendingSubmissionData.phone || '';
-                const email = pendingSubmissionData.email || '';
-                const maskedPhone = phone.length > 6
-                    ? phone.slice(0, 3) + '•'.repeat(phone.length - 6) + phone.slice(-4)
-                    : phone;
-                const maskedEmail = email.includes('@')
-                    ? email.slice(0, 2) + '•'.repeat(Math.max(0, email.indexOf('@') - 2)) + email.slice(email.indexOf('@'))
-                    : email;
-
-                document.getElementById('otpPhoneDisplay').textContent = maskedPhone;
-                document.getElementById('otpEmailDisplay').textContent = maskedEmail;
-
-                // Show phone step, hide email step
-                phoneStep.style.display = '';
-                emailStep.style.display = 'none';
-                clearDigits('otpPhoneDigits');
-                clearDigitsError('otpPhoneDigits');
-                hideError('otpPhoneError');
-
-                overlay.classList.add('active');
-
-                // Send phone OTP immediately
-                sendPhoneOtpInternal(phone);
-            };
-
-            async function sendPhoneOtpInternal(phone) {
-                try {
-                    const r = await fetch(`${API_BASE}/api/verify/send`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone })
-                    });
-                    if (!r.ok) {
-                        const d = await r.json().catch(() => ({}));
-                        showError('otpPhoneError', 'otpPhoneErrorText', d.error || 'Failed to send SMS. Please try again.');
-                    } else {
-                        startResendTimer('otpPhoneResendCount', 'otpPhoneResendTimer', 'otpPhoneResendBtn', 'otpPhoneResendTimer', 60);
-                    }
-                } catch (err) {
-                    showError('otpPhoneError', 'otpPhoneErrorText', 'Network error. Please try again.');
+                // Populate context banner
+                const ctxText = document.getElementById('gmCtxText');
+                if(ctxText && pendingSubmissionData.service){
+                    const svc = pendingSubmissionData.serviceName || pendingSubmissionData.service || 'Your job';
+                    const pc  = pendingSubmissionData.postcode || '';
+                    ctxText.innerHTML = svc + (pc ? ' <span>· ' + pc + ' · ready to post</span>' : ' <span>· ready to post</span>');
                 }
-            }
-
-            window.resendPhoneOtp = function () {
-                clearDigits('otpPhoneDigits');
-                hideError('otpPhoneError');
-                sendPhoneOtpInternal(pendingSubmissionData?.phone || '');
+                // Reset to step 1
+                gmSetStep(1);
+                document.getElementById('guestStepTrack').style.display='';
+                document.getElementById('gmSuccess').classList.remove('show');
+                ['gm-first','gm-last','gm-phone','gm-email'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('error'); } });
+                gmHide('gmErrPhone'); gmHide('gmErrEmail');
+                document.getElementById('guestModalOverlay').classList.add('active');
             };
 
-            window.verifyPhoneOtp = async function () {
-                const code = getDigitValue('otpPhoneDigits');
-                if (code.length < 6) return;
-
-                const btn = document.getElementById('otpPhoneVerifyBtn');
-                btn.disabled = true;
-                btn.innerHTML = '<svg width="18" height="18" class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Verifying…';
-                clearDigitsError('otpPhoneDigits');
-                hideError('otpPhoneError');
-
-                try {
-                    const r = await fetch(`${API_BASE}/api/verify/check`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone: pendingSubmissionData?.phone, code })
-                    });
-                    const d = await r.json().catch(() => ({}));
-
-                    if (r.ok && d.verified) {
-                        // Move to email step
-                        phoneStep.style.display = 'none';
-                        emailStep.style.display = '';
-                        clearDigits('otpEmailDigits');
-                        hideError('otpEmailError');
-                        sendEmailOtpInternal(pendingSubmissionData?.email || '');
-                    } else {
-                        setDigitsError('otpPhoneDigits');
-                        showError('otpPhoneError', 'otpPhoneErrorText', d.error || 'Incorrect code. Please try again.');
-                    }
-                } catch (err) {
-                    showError('otpPhoneError', 'otpPhoneErrorText', 'Network error. Please try again.');
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify Phone';
-                }
-            };
-
-            async function sendEmailOtpInternal(email) {
-                try {
-                    const r = await fetch(`${API_BASE}/api/verify/email/send`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email })
-                    });
-                    if (!r.ok) {
-                        const d = await r.json().catch(() => ({}));
-                        showError('otpEmailError', 'otpEmailErrorText', d.error || 'Failed to send email. Please try again.');
-                    } else {
-                        startResendTimer('otpEmailResendCount', 'otpEmailResendTimer', 'otpEmailResendBtn', 'otpEmailResendTimer', 60);
-                    }
-                } catch (err) {
-                    showError('otpEmailError', 'otpEmailErrorText', 'Network error. Please try again.');
-                }
-            }
-
-            window.resendEmailOtp = function () {
-                clearDigits('otpEmailDigits');
-                hideError('otpEmailError');
-                sendEmailOtpInternal(pendingSubmissionData?.email || '');
-            };
-
-            window.verifyEmailOtp = async function () {
-                const code = getDigitValue('otpEmailDigits');
-                if (code.length < 6) return;
-
-                const btn = document.getElementById('otpEmailVerifyBtn');
-                btn.disabled = true;
-                btn.innerHTML = '<svg width="18" height="18" class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Submitting…';
-                clearDigitsError('otpEmailDigits');
-                hideError('otpEmailError');
-
-                try {
-                    const r = await fetch(`${API_BASE}/api/verify/email/check`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: pendingSubmissionData?.email, code })
-                    });
-                    const d = await r.json().catch(() => ({}));
-
-                    if (r.ok && d.verified) {
-                        // Both verified — close OTP modal and submit
-                        overlay.classList.remove('active');
-                        await submitGuest(pendingSubmissionData);
-                    } else {
-                        setDigitsError('otpEmailDigits');
-                        showError('otpEmailError', 'otpEmailErrorText', d.error || 'Incorrect code. Please try again.');
-                        btn.disabled = false;
-                        btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify &amp; Submit Quote';
-                    }
-                } catch (err) {
-                    showError('otpEmailError', 'otpEmailErrorText', 'Network error. Please try again.');
-                    btn.disabled = false;
-                    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Verify &amp; Submit Quote';
-                }
-            };
-
-            // Close button
-            document.getElementById('otpModalClose').addEventListener('click', () => {
-                overlay.classList.remove('active');
-                clearInterval(window['otpPhoneResendCount_interval']);
-                clearInterval(window['otpEmailResendCount_interval']);
+            document.getElementById('gmClose').addEventListener('click',()=>{
+                document.getElementById('guestModalOverlay').classList.remove('active');
             });
-            // Click-outside close
-            overlay.addEventListener('click', e => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                    clearInterval(window['otpPhoneResendCount_interval']);
-                    clearInterval(window['otpEmailResendCount_interval']);
+            document.getElementById('guestModalOverlay').addEventListener('click',e=>{
+                if(e.target===document.getElementById('guestModalOverlay'))
+                    document.getElementById('guestModalOverlay').classList.remove('active');
+            });
+        })();
+
+        // ══════════════════════════════════════════════════════
+        // LOGIN / REGISTER MODAL
+        // ══════════════════════════════════════════════════════
+        (function(){
+            // ── Tab switching ────────────────────────────────────────
+            window.lmSwitchTab = function(tab){
+                ['login','register','forgot'].forEach(t=>{
+                    document.getElementById('lmPanel'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('active');
+                    const btn=document.getElementById('lmTab'+t.charAt(0).toUpperCase()+t.slice(1));
+                    if(btn) btn.classList.remove('active');
+                });
+                const panelId='lmPanel'+tab.charAt(0).toUpperCase()+tab.slice(1);
+                document.getElementById(panelId).classList.add('active');
+                const btnId='lmTab'+tab.charAt(0).toUpperCase()+tab.slice(1);
+                const btn=document.getElementById(btnId);
+                if(btn) btn.classList.add('active');
+            };
+
+            // ── Open / close ─────────────────────────────────────────
+            window.openLoginModal = function(tab){
+                tab = tab||'login';
+                // Populate context banners
+                if(pendingSubmissionData){
+                    const svc=pendingSubmissionData.serviceName||pendingSubmissionData.service||'Your job';
+                    const pc=pendingSubmissionData.postcode||'';
+                    const ctxHtml=svc+(pc?' <span>· '+pc+' · ready to post</span>':' <span>· ready to post</span>');
+                    const ct1=document.getElementById('lmCtxText'), ct2=document.getElementById('lmCtxTextReg');
+                    if(ct1) ct1.innerHTML=ctxHtml;
+                    if(ct2) ct2.innerHTML=ctxHtml;
                 }
+                lmSwitchTab(tab);
+                document.getElementById('loginModalOverlay').classList.add('active');
+            };
+
+            document.getElementById('lmClose').addEventListener('click',()=>{
+                document.getElementById('loginModalOverlay').classList.remove('active');
+            });
+            document.getElementById('loginModalOverlay').addEventListener('click',e=>{
+                if(e.target===document.getElementById('loginModalOverlay'))
+                    document.getElementById('loginModalOverlay').classList.remove('active');
             });
 
-            // Wire digit group auto-advance (verifyFn only called on full entry)
-            wireDigitGroup('otpPhoneDigits', () => { /* auto-verify on fill */ window.verifyPhoneOtp(); });
-            wireDigitGroup('otpEmailDigits', () => { window.verifyEmailOtp(); });
+            // ── Password toggle ──────────────────────────────────────
+            window.lmTogglePw = function(id, btn){
+                const inp=document.getElementById(id);
+                inp.type=inp.type==='text'?'password':'text';
+                btn.querySelector('svg').style.opacity=inp.type==='text'?'1':'0.5';
+            };
 
-            // Spinner keyframe (injected once)
-            const style = document.createElement('style');
-            style.textContent = '@keyframes spin{to{transform:rotate(360deg)}} .spin{animation:spin .8s linear infinite;display:inline-block}';
-            document.head.appendChild(style);
+            // ── Strength meter ───────────────────────────────────────
+            window.lmCheckStrength = function(val){
+                const fill=document.getElementById('lm-strength-fill');
+                const label=document.getElementById('lm-strength-label');
+                if(!val){fill.style.width='0%';label.textContent='';return;}
+                let score=0;
+                if(val.length>=8) score++;
+                if(/[A-Z]/.test(val)) score++;
+                if(/[0-9]/.test(val)) score++;
+                if(/[^A-Za-z0-9]/.test(val)) score++;
+                const levels=[{pct:'20%',color:'#ef4444',text:'Too short'},{pct:'40%',color:'#f59e0b',text:'Weak'},{pct:'65%',color:'#fbbf24',text:'Fair'},{pct:'85%',color:'#84cc16',text:'Good'},{pct:'100%',color:'#00c268',text:'Strong ✓'}];
+                const l=levels[Math.min(score,4)];
+                fill.style.width=l.pct; fill.style.background=l.color;
+                label.textContent=l.text; label.style.color=l.color;
+            };
+
+            // ── Login handler ────────────────────────────────────────
+            window.lmHandleLogin = async function(){
+                const emailEl=document.getElementById('lm-login-email');
+                const passEl=document.getElementById('lm-login-password');
+                const errEmail=document.getElementById('lm-err-login-email');
+                const errPass=document.getElementById('lm-err-login-password');
+                let valid=true;
+                const emailVal=emailEl.value.trim();
+                if(!emailVal||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)){emailEl.classList.add('error');errEmail.classList.add('show');valid=false;}
+                else{emailEl.classList.remove('error');errEmail.classList.remove('show');}
+                if(!passEl.value){passEl.classList.add('error');errPass.classList.add('show');valid=false;}
+                else{passEl.classList.remove('error');errPass.classList.remove('show');}
+                if(!valid) return;
+                const btn=document.getElementById('lm-login-submit');
+                btn.innerHTML='<div style="width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></div> Logging in…';
+                btn.disabled=true;
+                try {
+                    const r=await fetch(API_BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:emailVal,password:passEl.value})});
+                    const d=await r.json().catch(()=>({}));
+                    if(r.ok && d.token){
+                        localStorage.setItem('token',d.token);
+                        if(d.user) localStorage.setItem('user',JSON.stringify(d.user));
+                        document.getElementById('loginModalOverlay').classList.remove('active');
+                        if(pendingSubmissionData) await submitAuthenticated(pendingSubmissionData);
+                    } else {
+                        passEl.classList.add('error');
+                        errPass.textContent=d.error||'Incorrect email or password';
+                        errPass.classList.add('show');
+                        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Log in &amp; Post Job';
+                        btn.disabled=false;
+                    }
+                } catch(err){
+                    errPass.textContent='Network error. Please try again.';
+                    errPass.classList.add('show');
+                    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Log in &amp; Post Job';
+                    btn.disabled=false;
+                }
+            };
+
+            // ── Register handler ─────────────────────────────────────
+            window.lmHandleRegister = async function(){
+                const first=document.getElementById('lm-reg-first').value.trim();
+                const last=document.getElementById('lm-reg-last').value.trim();
+                const email=document.getElementById('lm-reg-email').value.trim();
+                const pass=document.getElementById('lm-reg-password').value;
+                const terms=document.getElementById('lm-terms-check').classList.contains('checked');
+                if(!first||!last||!email||pass.length<8||!terms){ alert('Please fill in all fields and accept the terms.'); return; }
+                try {
+                    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName:first,lastName:last,email,password:pass})});
+                    const d=await r.json().catch(()=>({}));
+                    if(r.ok && d.token){
+                        localStorage.setItem('token',d.token);
+                        if(d.user) localStorage.setItem('user',JSON.stringify(d.user));
+                        document.getElementById('loginModalOverlay').classList.remove('active');
+                        if(pendingSubmissionData) await submitAuthenticated(pendingSubmissionData);
+                    } else { alert(d.error||'Registration failed. Please try again.'); }
+                } catch(err){ alert('Network error. Please try again.'); }
+            };
+
+            // ── Forgot handler ───────────────────────────────────────
+            window.lmHandleForgot = async function(){
+                const email=document.getElementById('lm-forgot-email').value.trim();
+                if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('lm-forgot-email').classList.add('error');return;}
+                try {
+                    await fetch(API_BASE+'/api/auth/forgot-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+                } catch(e){}
+                document.getElementById('lmPanelForgot').innerHTML='<div style="text-align:center;padding:20px 0"><div style="width:50px;height:50px;border-radius:14px;background:rgba(0,194,104,.12);border:1px solid rgba(0,194,104,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00c268" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div style="font-family:var(--ff);font-size:1.25rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff;margin-bottom:7px">Check your inbox</div><div style="font-size:13px;color:#8b95aa;line-height:1.6;max-width:270px;margin:0 auto">We sent a reset link to <strong style="color:#f0f4ff">'+email+'</strong>. It expires in 15 minutes.</div><button onclick="lmSwitchTab('login')" style="margin-top:20px;font-family:var(--ff);font-size:12.5px;font-weight:700;color:#00c268;background:none;border:none;cursor:pointer">← Back to log in</button></div>';
+            };
+
+            // ── Social ───────────────────────────────────────────────
+            window.lmHandleSocial = function(provider){
+                const url=provider==='Google'?API_BASE+'/api/auth/google':API_BASE+'/api/auth/apple';
+                window.location.href=url;
+            };
+
+            // ── Spinner keyframe (once) ───────────────────────────────
+            if(!document.getElementById('gmSpinStyle')){
+                const s=document.createElement('style');
+                s.id='gmSpinStyle';
+                s.textContent='@keyframes spin{to{transform:rotate(360deg)}} .spin{animation:spin .8s linear infinite;display:inline-block}';
+                document.head.appendChild(s);
+            }
         })();
     </script>
 
