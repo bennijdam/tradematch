@@ -273,7 +273,7 @@
             color: var(--t1); background: var(--void2);
         }
         .form-control:focus { outline: none; border-color: rgba(0,122,61,0.4); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.08); }
-        textarea.form-control { resize: vertical; min-height: 130px; line-height: 1.6; }
+        textarea.form-control { resize: none; min-height: 130px; line-height: 1.6; overflow: hidden; }
         select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='%236b7a94'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 3rem; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
         .form-control.field-valid { border-color: var(--neon); background: #fff; box-shadow: 0 0 0 3px rgba(0,122,61,0.06); }
@@ -393,6 +393,14 @@
         .photo-preview-item { position: relative; width: 76px; height: 76px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border2); }
         .photo-preview-item img { width: 100%; height: 100%; object-fit: cover; }
         .photo-preview-remove { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; background: rgba(0,0,0,0.65); color: white; border: none; border-radius: 50%; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .upload-icon-wrap { width: 52px; height: 52px; border-radius: 50%; background: var(--neon-lo); border: 1.5px solid var(--border-neon); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: var(--neon); }
+        .upload-icon-wrap svg { width: 26px; height: 26px; }
+        .upload-file-types { display: flex; flex-wrap: wrap; gap: 0.375rem; justify-content: center; margin-top: 0.75rem; }
+        .file-type-pill { background: var(--void3); border: 1px solid var(--border2); color: var(--t3); font-size: 0.6875rem; font-weight: 700; font-family: var(--fm); letter-spacing: 0.06em; padding: 0.2rem 0.5rem; border-radius: var(--r5); text-transform: uppercase; }
+        .file-size-pill { background: var(--neon-lo); border: 1px solid var(--border-neon); color: var(--neon3); font-size: 0.6875rem; font-weight: 700; font-family: var(--fm); letter-spacing: 0.06em; padding: 0.2rem 0.5rem; border-radius: var(--r5); text-transform: uppercase; }
+        .file-preview-doc { position: relative; width: 76px; border-radius: 8px; overflow: hidden; border: 2px solid var(--border2); background: var(--void2); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.5rem 0.25rem; gap: 0.25rem; min-height: 76px; }
+        .file-ext-badge { font-family: var(--fm); font-size: 9px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--neon); background: var(--neon-lo); border: 1px solid var(--border-neon); border-radius: 4px; padding: 0.15rem 0.35rem; }
+        .file-preview-name { font-size: 0.625rem; color: var(--t3); text-align: center; word-break: break-all; line-height: 1.3; max-width: 68px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
         /* RESPONSE TIME */
         .response-time-indicator { display: flex; align-items: center; gap: 0.625rem; background: #eff6ff; border: 1px solid rgba(59,130,246,0.15); border-radius: var(--r2); padding: 0.75rem 1rem; margin-top: 1rem; font-size: 0.875rem; color: #1d4ed8; }
@@ -413,12 +421,14 @@
         .qp-field { padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; gap: 1rem; }
         .qp-field:last-child { border-bottom: none; }
         .qp-label { font-family: var(--fm); font-size: 10px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-        .qp-value { font-size: 0.9rem; color: white; font-weight: 700; text-align: right; max-width: 60%; }
+        .qp-value { font-size: 0.9rem; color: white; font-weight: 700; text-align: right; max-width: 60%; word-break: break-word; overflow-wrap: anywhere; }
         .review-section { background: var(--void2); border-radius: var(--r3); padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
         .review-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 0.875rem 0; border-bottom: 1px solid var(--glass3); }
         .review-item:last-child { border-bottom: none; }
         .review-label { font-family: var(--fm); font-weight: 600; color: var(--t3); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
-        .review-value { color: var(--t1); font-weight: 600; text-align: right; max-width: 60%; font-size: 0.9375rem; }
+        .review-value { color: var(--t1); font-weight: 600; text-align: right; max-width: 60%; font-size: 0.9375rem; word-break: break-word; overflow-wrap: anywhere; }
+        .review-item.review-item--block { flex-direction: column; align-items: flex-start; gap: 0.375rem; }
+        .review-item.review-item--block .review-value { max-width: 100%; text-align: left; font-weight: 400; color: var(--t2); line-height: 1.6; }
 
         /* ═══════════════ BUTTONS (matches index-light) ═══════════════ */
         .form-actions { display: flex; gap: 0.875rem; margin-top: 2.5rem; }
@@ -433,39 +443,77 @@
         .modal.active { display: flex; }
         .modal-content { background: white; border-radius: var(--r4); padding: 3rem; max-width: 480px; width: 100%; text-align: center; animation: modalIn 0.4s var(--ease-spring); box-shadow: var(--deep-shadow); }
         @keyframes modalIn { from{opacity:0;transform:scale(0.88) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        @keyframes progFill{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}
+        @keyframes modalOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(16px) scale(.97)}}
         .success-icon { font-size: 4rem; margin-bottom: 1.25rem; }
         .modal-content h2 { font-family: var(--ff); font-size: 1.75rem; font-weight: 800; color: var(--t1); margin-bottom: 0.875rem; letter-spacing: -0.04em; }
         .modal-content p { color: var(--t3); margin-bottom: 1.5rem; line-height: 1.7; }
         .quote-id { background: var(--void2); padding: 0.875rem 1.25rem; border-radius: var(--r2); font-family: var(--fm); font-weight: 700; font-size: 0.9375rem; color: var(--neon); margin-bottom: 1.75rem; border: 1px solid var(--border); }
 
         /* AUTH MODAL */
-        .auth-modal-overlay { display: none; position: fixed; inset: 0; z-index: 10000; background: rgba(15,23,41,0.45); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
-        .auth-modal-overlay.active { display: flex; }
-        .auth-modal { background: white; border-radius: var(--r4); max-width: 440px; width: 100%; position: relative; box-shadow: var(--deep-shadow); animation: modalIn 0.4s var(--ease-spring); }
-        .auth-modal-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: var(--r1); background: var(--void2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--t3); transition: all 0.2s; }
-        .auth-modal-close:hover { background: var(--void3); color: var(--t1); }
-        .auth-modal-close svg { width: 18px; height: 18px; }
-        .auth-modal-header { padding: 40px 32px 24px; text-align: center; }
-        .auth-modal-icon { width: 56px; height: 56px; background: var(--neon-lo); border: 1px solid var(--border-neon); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: var(--neon); }
-        .auth-modal-icon svg { width: 24px; height: 24px; }
-        .auth-modal-title { font-family: var(--ff); font-size: 1.5rem; font-weight: 800; color: var(--t1); margin-bottom: 10px; letter-spacing: -0.04em; }
-        .auth-modal-subtitle { font-size: 0.9375rem; color: var(--t3); line-height: 1.6; max-width: 340px; margin: 0 auto; font-weight: 300; }
-        .auth-modal-body { padding: 0 32px 32px; }
-        .auth-button { width: 100%; padding: 14px 24px; border-radius: var(--r2); font-size: 0.9375rem; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--ff); }
-        .auth-button-primary { background: linear-gradient(135deg,var(--neon3),var(--neon)); color: #fff; margin-bottom: 10px; box-shadow: var(--neon-glow-sm); }
-        .auth-button-primary:hover { transform: translateY(-1px); box-shadow: var(--neon-glow); }
-        .auth-button-secondary { background: var(--void2); color: var(--t1); border: 1px solid var(--border2); margin-bottom: 10px; }
-        .auth-button-secondary:hover { background: white; border-color: var(--t3); }
-        .auth-button-ghost { background: transparent; color: var(--t3); padding: 12px 24px; }
-        .auth-button-ghost:hover { background: var(--void2); color: var(--t1); }
-        .auth-divider { display: flex; align-items: center; gap: 14px; margin: 18px 0; color: var(--t4); font-size: 0.8125rem; }
-        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--glass3); }
-        .auth-feature-list { background: var(--void2); border-radius: var(--r2); padding: 14px; margin-top: 18px; border: 1px solid var(--border); }
-        .auth-feature-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 0.875rem; color: var(--t2); }
-        .auth-feature-icon { width: 18px; height: 18px; color: var(--neon); flex-shrink: 0; }
-        .auth-progress-dots { display: flex; gap: 6px; justify-content: center; margin-top: 20px; }
-        .auth-progress-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--void4); transition: all 0.3s; }
-        .auth-progress-dot.active { background: var(--neon); width: 20px; border-radius: 3px; }
+        /* AUTH CHECKOUT MODAL — dark theme */
+        .auth-modal-overlay { display:none; position:fixed; inset:0; z-index:10000; background:rgba(5,9,15,.82); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:20px; }
+        .auth-modal-overlay.active { display:flex; }
+        .auth-modal { position:relative; width:100%; max-width:460px; background:linear-gradient(160deg,#161c28 0%,#111620 100%); border:1px solid rgba(255,255,255,.09); border-radius:28px; box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04); overflow:hidden; animation:modalIn .45s cubic-bezier(.34,1.42,.64,1) both; }
+        .auth-modal::before { content:''; position:absolute; top:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,rgba(0,194,104,.5),transparent); z-index:1; }
+        .auth-modal-close { position:absolute; top:18px; right:18px; width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.09); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; z-index:10; color:rgba(90,100,120,1); }
+        .auth-modal-close:hover { background:rgba(255,255,255,.11); color:#f0f4ff; border-color:rgba(255,255,255,.15); }
+        .auth-modal-close svg { width:14px; height:14px; }
+        /* progress bar */
+        .auth-modal-progress { display:flex; align-items:center; gap:6px; padding:20px 24px 0; }
+        .auth-prog-step { height:3px; border-radius:2px; flex:1; background:rgba(255,255,255,.08); overflow:hidden; }
+        .auth-prog-step.done { background:var(--neon3); }
+        .auth-prog-step.active { background:rgba(255,255,255,.08); position:relative; }
+        .auth-prog-step.active::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,var(--neon3),var(--neon)); animation:progFill .6s .2s cubic-bezier(.22,1,.36,1) both; }
+        .auth-prog-label { font-family:var(--fm); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(90,100,120,1); white-space:nowrap; }
+        /* job summary strip */
+        .auth-job-summary { margin:20px 24px 0; padding:14px 16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:14px; display:flex; align-items:center; gap:12px; }
+        .auth-job-icon { width:38px; height:38px; border-radius:10px; flex-shrink:0; background:rgba(0,194,104,.12); border:1px solid rgba(0,194,104,.3); display:flex; align-items:center; justify-content:center; color:var(--neon); }
+        .auth-job-icon svg { width:18px; height:18px; }
+        .auth-job-info { flex:1; min-width:0; }
+        .auth-job-title { font-family:var(--ff); font-size:13px; font-weight:700; color:#f0f4ff; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .auth-job-meta { font-size:12px; color:rgba(90,100,120,1); margin-top:1px; }
+        .auth-job-badge { font-family:var(--fm); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--neon); background:rgba(0,194,104,.1); border:1px solid rgba(0,194,104,.2); padding:4px 9px; border-radius:100px; flex-shrink:0; }
+        /* modal body */
+        .auth-modal-header { padding:24px 24px 0; }
+        .auth-modal-icon { width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg,rgba(0,194,104,.15),rgba(0,194,104,.05)); border:1px solid rgba(0,194,104,.3); display:flex; align-items:center; justify-content:center; margin-bottom:18px; box-shadow:0 0 0 6px rgba(0,194,104,.06); color:var(--neon); }
+        .auth-modal-icon svg { width:26px; height:26px; }
+        .auth-modal-title { font-family:var(--ff); font-size:1.45rem; font-weight:800; letter-spacing:-.045em; color:#f0f4ff; line-height:1.1; margin-bottom:8px; }
+        .auth-modal-title em { font-style:normal; background:linear-gradient(135deg,#00e582,var(--neon)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .auth-modal-subtitle { font-size:14px; line-height:1.6; color:rgba(139,149,170,1); font-weight:300; margin-bottom:22px; max-width:340px; }
+        .auth-modal-body { padding:16px 24px 28px; }
+        /* rating row */
+        .auth-rating-row { display:flex; align-items:center; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+        .auth-stars { display:flex; gap:2px; }
+        .auth-stars svg { width:13px; height:13px; fill:#fbbf24; color:#fbbf24; }
+        .auth-rating-text { font-size:12.5px; color:rgba(139,149,170,1); }
+        .auth-rating-text b { color:#f0f4ff; }
+        .auth-rating-sep { width:1px; height:14px; background:rgba(255,255,255,.1); }
+        /* buttons */
+        .auth-button { width:100%; display:flex; align-items:center; justify-content:center; gap:9px; border:none; border-radius:14px; padding:16px 24px; cursor:pointer; transition:all .25s; font-family:var(--ff); font-size:15px; font-weight:800; letter-spacing:-.025em; text-decoration:none; }
+        .auth-button-primary { color:#fff; background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%); box-shadow:0 4px 24px rgba(0,194,104,.32),0 1px 8px rgba(0,194,104,.16); position:relative; overflow:hidden; }
+        .auth-button-primary::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.16),transparent); opacity:0; transition:opacity .25s; }
+        .auth-button-primary:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,194,104,.42); }
+        .auth-button-primary:hover::before { opacity:1; }
+        .auth-button-secondary { color:#f0f4ff; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.11); margin-top:10px; }
+        .auth-button-secondary:hover { background:rgba(255,255,255,.09); border-color:rgba(255,255,255,.18); color:#fff; }
+        .auth-button-ghost { background:none; border:none; color:var(--neon); font-family:var(--ff); font-size:14px; font-weight:700; letter-spacing:-.02em; width:100%; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px; cursor:pointer; transition:color .2s; }
+        .auth-button-ghost:hover { color:#00e582; }
+        .auth-button svg { width:17px; height:17px; }
+        .auth-button-ghost svg { width:14px; height:14px; opacity:.7; }
+        .auth-divider { display:flex; align-items:center; gap:12px; margin:16px 0; color:rgba(90,100,120,1); font-size:12px; }
+        .auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.07); }
+        /* trust pills */
+        .auth-trust-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,.06); }
+        .auth-trust-pill { display:flex; flex-direction:column; align-items:center; gap:5px; padding:12px 8px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:12px; text-align:center; transition:border-color .2s; }
+        .auth-trust-pill:hover { border-color:rgba(0,194,104,.2); }
+        .auth-trust-pill-icon { width:30px; height:30px; border-radius:8px; background:rgba(0,194,104,.1); display:flex; align-items:center; justify-content:center; }
+        .auth-trust-pill-icon svg { width:15px; height:15px; color:var(--neon); }
+        .auth-trust-pill-label { font-family:var(--fb); font-size:10.5px; font-weight:500; color:rgba(139,149,170,1); line-height:1.3; }
+        /* dismiss hint */
+        .auth-dismiss-hint { text-align:center; margin-top:14px; font-size:11.5px; color:rgba(90,100,120,1); }
+        .auth-dismiss-hint a { color:rgba(90,100,120,1); text-decoration:underline; cursor:pointer; }
+        .auth-dismiss-hint a:hover { color:rgba(139,149,170,1); }
 
         /* ═══════════════ FOOTER (matches index-light) ═══════════════ */
         footer {
@@ -518,10 +566,12 @@
         }
 
         @media (max-width: 640px) {
-            .auth-modal { border-radius: var(--r4) var(--r4) 0 0; position: fixed; bottom: 0; max-width: 100%; }
-            .auth-modal-header { padding: 28px 24px 18px; }
-            .auth-modal-body { padding: 0 24px 28px; }
+            .auth-modal { border-radius: 24px 24px 0 0; position: fixed; bottom: 0; max-width: 100%; }
+            .auth-modal-header { padding: 20px 20px 0; }
+            .auth-modal-body { padding: 12px 20px 24px; }
             .auth-modal-title { font-size: 1.25rem; }
+            .auth-job-summary { margin: 16px 20px 0; }
+            .auth-trust-row { grid-template-columns: 1fr 1fr 1fr; }
         }
 
         @media (max-width: 480px) {
@@ -1053,10 +1103,22 @@
                             📷 Add Photos <span style="font-weight:400; color: var(--slate-400);">(optional — increases quote accuracy)</span>
                         </label>
                         <div class="photo-drop-zone" id="photoDropZone">
-                            <input type="file" id="photoInput" accept="image/*" multiple>
-                            <div class="photo-drop-icon">🖼️</div>
-                            <div class="photo-drop-text">Drop photos here or <strong style="color:var(--emerald-600);">browse</strong></div>
-                            <div class="photo-drop-hint">JPG, PNG or HEIC · Up to 5 photos · 10MB each</div>
+                            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/heic,application/pdf,.doc,.docx,.dwg" multiple>
+                            <div class="upload-icon-wrap">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                                </svg>
+                            </div>
+                            <div class="photo-drop-text">Drop files here or <strong>browse</strong></div>
+                            <div class="photo-drop-hint">Photos of the job, drawings, floor plans, existing surveys</div>
+                            <div class="upload-file-types">
+                                <span class="file-type-pill">JPG</span>
+                                <span class="file-type-pill">PNG</span>
+                                <span class="file-type-pill">PDF</span>
+                                <span class="file-type-pill">DOC</span>
+                                <span class="file-type-pill">DWG</span>
+                                <span class="file-size-pill">MAX 10MB EACH</span>
+                            </div>
                         </div>
                         <div class="photo-previews" id="photoPreviews"></div>
                     </div>
@@ -1070,7 +1132,7 @@
                     <div class="form-group">
                         <label for="budget">Your Budget</label>
                         <div class="budget-display" id="budgetDisplay">£5,000 - £10,000</div>
-                        <input type="range" id="budgetSlider" min="500" max="100000" step="500" value="7500">
+                        <input type="range" id="budgetSlider" min="500" max="200000" step="1000" value="7500">
                         <div class="budget-context-hint" id="budgetContextHint">Move the slider to set your budget range</div>
                     </div>
 
@@ -1203,7 +1265,7 @@
                             <span class="review-label">Timeline:</span>
                             <span class="review-value" id="reviewUrgency">-</span>
                         </div>
-                        <div class="review-item">
+                        <div class="review-item review-item--block">
                             <span class="review-label">Description:</span>
                             <span class="review-value" id="reviewDescription">-</span>
                         </div>
@@ -1375,74 +1437,129 @@
         </div>
     </div>
 
-    <!-- Auth Prompt Modal -->
+    <!-- Auth Checkout Modal (dark theme) -->
     <div class="auth-modal-overlay" id="authModalOverlay">
         <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+
+            <!-- Close -->
             <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Close">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                 </svg>
             </button>
 
-            <div class="auth-modal-header">
-                <div class="auth-modal-icon">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <h2 class="auth-modal-title" id="authModalTitle">Save your job request</h2>
-                <p class="auth-modal-subtitle">
-                    Create an account to track bids, message tradespeople, and manage your projects in one place.
-                </p>
+            <!-- Progress bar -->
+            <div class="auth-modal-progress">
+                <div class="auth-prog-step done"></div>
+                <div class="auth-prog-step done"></div>
+                <div class="auth-prog-step done"></div>
+                <div class="auth-prog-step active"></div>
+                <span class="auth-prog-label">Step 4 of 4</span>
             </div>
 
+            <!-- Job Summary Strip -->
+            <div class="auth-job-summary">
+                <div class="auth-job-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                </div>
+                <div class="auth-job-info">
+                    <div class="auth-job-title" id="authJobTitle">Your job request</div>
+                    <div class="auth-job-meta" id="authJobMeta">Up to 5 quotes incoming</div>
+                </div>
+                <div class="auth-job-badge">Ready</div>
+            </div>
+
+            <!-- Header -->
+            <div class="auth-modal-header">
+                <div class="auth-modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+                <h2 class="auth-modal-title" id="authModalTitle">Save your <em>job request</em></h2>
+                <p class="auth-modal-subtitle">Your job is ready to go live. Create an account to track every quote, message tradespeople, and pay securely — all in one place.</p>
+            </div>
+
+            <!-- Body -->
             <div class="auth-modal-body">
+
+                <!-- Rating row -->
+                <div class="auth-rating-row">
+                    <div class="auth-stars">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <span class="auth-rating-text"><b>4.9</b> from 12,400+ homeowners</span>
+                    <div class="auth-rating-sep"></div>
+                    <span class="auth-rating-text"><b>Free</b> to post</span>
+                </div>
+
+                <!-- Login CTA -->
                 <button class="auth-button auth-button-primary" onclick="goLogin()">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                     </svg>
-                    Login & Continue
+                    Login &amp; Post Job
                 </button>
 
+                <!-- Create Account CTA -->
                 <button class="auth-button auth-button-secondary" onclick="goRegister()">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
-                    Create Account & Continue
+                    Create Account &amp; Post
                 </button>
 
-                <div class="auth-divider">or</div>
+                <!-- Divider -->
+                <div class="auth-divider">or continue without an account</div>
 
-                <button class="auth-button auth-button-ghost" onclick="startGuestOtpFlow()">
-                    Post as Guest
+                <!-- Guest -->
+                <button class="auth-button-ghost" onclick="startGuestOtpFlow()">
+                    Post as Guest &mdash; no account needed
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
                 </button>
 
-                <div class="auth-feature-list">
-                    <div class="auth-feature-item">
-                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Track quotes and messages in real-time</span>
+                <!-- Trust pills -->
+                <div class="auth-trust-row">
+                    <div class="auth-trust-pill">
+                        <div class="auth-trust-pill-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <div class="auth-trust-pill-label">Real-time quote tracking</div>
                     </div>
-                    <div class="auth-feature-item">
-                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Compare tradespeople side-by-side</span>
+                    <div class="auth-trust-pill">
+                        <div class="auth-trust-pill-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <div class="auth-trust-pill-label">Secure escrow payments</div>
                     </div>
-                    <div class="auth-feature-item">
-                        <svg class="auth-feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Secure payment protection included</span>
+                    <div class="auth-trust-pill">
+                        <div class="auth-trust-pill-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="auth-trust-pill-label">Compare trades side-by-side</div>
                     </div>
                 </div>
 
-                <div class="auth-progress-dots">
-                    <div class="auth-progress-dot"></div>
-                    <div class="auth-progress-dot"></div>
-                    <div class="auth-progress-dot active"></div>
+                <!-- Dismiss -->
+                <div class="auth-dismiss-hint">
+                    Changed your mind? <a onclick="closeAuthModal()">Exit without saving</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -1892,16 +2009,22 @@
         const budgetSlider = document.getElementById('budgetSlider');
         const budgetDisplay = document.getElementById('budgetDisplay');
         
+        function renderBudgetDisplay(value) {
+            if (value >= 200000) {
+                return '£200,000+';
+            }
+            const maxVal = Math.min(value * 2, 200000);
+            return `£${value.toLocaleString()} - £${maxVal.toLocaleString()}`;
+        }
+
         budgetSlider.addEventListener('input', (e) => {
             const value = parseInt(e.target.value);
-            const min = value;
-            const max = Math.min(value * 2, 100000);
-            const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
+            const display = renderBudgetDisplay(value);
             budgetDisplay.textContent = display;
             formData.budget = display;
-            formData.budgetMin = min;
-            formData.budgetMax = max;
-            updateBudgetContextHint(min);
+            formData.budgetMin = value;
+            formData.budgetMax = value >= 200000 ? null : Math.min(value * 2, 200000);
+            updateBudgetContextHint(value);
         });
 
         // AI Generator Functions
@@ -1913,6 +2036,14 @@
         const copyBtn = document.getElementById('copyBtn');
         const useBtn = document.getElementById('useBtn');
         const descriptionField = document.getElementById('description');
+
+        // Auto-expand textarea
+        if (descriptionField) {
+            descriptionField.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+        }
 
         // Quick Prompts
         document.querySelectorAll('.quick-prompt').forEach(btn => {
@@ -2272,6 +2403,14 @@ I'm happy to discuss the project in more detail and answer any questions to help
         }
 
         function openAuthModal() {
+            // Populate job summary strip with live formData
+            const titleEl = document.getElementById('authJobTitle');
+            const metaEl  = document.getElementById('authJobMeta');
+            if (titleEl) titleEl.textContent = formData.serviceName || 'Your job request';
+            if (metaEl) {
+                const pc = formData.postcode || '';
+                metaEl.textContent = (pc ? pc + ' · ' : '') + 'Up to 5 quotes incoming';
+            }
             document.getElementById('authModalOverlay').classList.add('active');
         }
 
@@ -3047,16 +3186,46 @@ I'm happy to discuss the project in more detail and answer any questions to help
             photoInput.addEventListener('change', (e) => handlePhotoFiles(e.target.files));
         }
 
+        const ALLOWED_TYPES = [
+            'image/jpeg', 'image/png', 'image/heic', 'image/heif',
+            'application/pdf', 'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        const ALLOWED_EXTS = ['.jpg','.jpeg','.png','.heic','.heif','.pdf','.doc','.docx','.dwg','.dxf'];
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+        function isAllowedFile(file) {
+            if (ALLOWED_TYPES.includes(file.type)) return true;
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            return ALLOWED_EXTS.includes(ext);
+        }
+
+        function getFileExt(file) {
+            return file.name.split('.').pop().toUpperCase();
+        }
+
         function handlePhotoFiles(files) {
-            const remaining = 5 - uploadedPhotos.length;
+            const remaining = 10 - uploadedPhotos.length;
             const toProcess = Array.from(files).slice(0, remaining);
             toProcess.forEach(file => {
-                if (!file.type.startsWith('image/')) return;
-                if (file.size > 10 * 1024 * 1024) return; // 10MB limit
+                if (!isAllowedFile(file)) {
+                    alert(`File type not supported: ${file.name}`);
+                    return;
+                }
+                if (file.size > MAX_FILE_SIZE) {
+                    alert(`${file.name} exceeds the 10MB limit`);
+                    return;
+                }
+                const isImage = file.type.startsWith('image/');
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    uploadedPhotos.push({ name: file.name, dataUrl: e.target.result });
-                    renderPhotoPreview(e.target.result, uploadedPhotos.length - 1);
+                    const idx = uploadedPhotos.length;
+                    uploadedPhotos.push({ name: file.name, dataUrl: e.target.result, isImage });
+                    if (isImage) {
+                        renderPhotoPreview(e.target.result, idx);
+                    } else {
+                        renderDocPreview(file, idx);
+                    }
                     trackEvent('photo_added', { count: uploadedPhotos.length });
                 };
                 reader.readAsDataURL(file);
@@ -3069,7 +3238,21 @@ I'm happy to discuss the project in more detail and answer any questions to help
             item.dataset.index = index;
             item.innerHTML = `
                 <img src="${dataUrl}" alt="Photo ${index + 1}">
-                <button class="photo-preview-remove" type="button" onclick="removePhoto(${index})">✕</button>
+                <button class="photo-preview-remove" type="button" onclick="removePhoto(${index})">&#x2715;</button>
+            `;
+            photoPreviews.appendChild(item);
+        }
+
+        function renderDocPreview(file, index) {
+            const item = document.createElement('div');
+            item.className = 'file-preview-doc';
+            item.dataset.index = index;
+            const ext = getFileExt(file);
+            const shortName = file.name.length > 18 ? file.name.substring(0, 16) + '...' : file.name;
+            item.innerHTML = `
+                <span class="file-ext-badge">${ext}</span>
+                <span class="file-preview-name">${shortName}</span>
+                <button class="photo-preview-remove" type="button" onclick="removePhoto(${index})" style="position:static;width:18px;height:18px;font-size:0.65rem;margin-top:0.25rem;">&#x2715;</button>
             `;
             photoPreviews.appendChild(item);
         }
@@ -3077,7 +3260,22 @@ I'm happy to discuss the project in more detail and answer any questions to help
         window.removePhoto = function(index) {
             uploadedPhotos.splice(index, 1);
             photoPreviews.innerHTML = '';
-            uploadedPhotos.forEach((p, i) => renderPhotoPreview(p.dataUrl, i));
+            uploadedPhotos.forEach((p, i) => {
+                if (p.isImage) renderPhotoPreview(p.dataUrl, i);
+                else {
+                    const ext = p.name.split('.').pop().toUpperCase();
+                    const shortName = p.name.length > 18 ? p.name.substring(0, 16) + '...' : p.name;
+                    const item = document.createElement('div');
+                    item.className = 'file-preview-doc';
+                    item.dataset.index = i;
+                    item.innerHTML = `
+                        <span class="file-ext-badge">${ext}</span>
+                        <span class="file-preview-name">${shortName}</span>
+                        <button class="photo-preview-remove" type="button" onclick="removePhoto(${i})" style="position:static;width:18px;height:18px;font-size:0.65rem;margin-top:0.25rem;">&#x2715;</button>
+                    `;
+                    photoPreviews.appendChild(item);
+                }
+            });
         };
 
         // ============================================================
