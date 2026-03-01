@@ -72,7 +72,23 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* ── Mobile hamburger ── */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:1px solid rgba(0,0,0,.1);padding:8px 10px;border-radius:9px;flex-shrink:0;transition:border-color .2s}
+.nav-hamburger:hover{border-color:var(--border-neon)}
+.nav-hamburger span{display:block;width:20px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.34,1.38,.64,1)}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* ── Mobile drawer ── */
+.nav-mobile-drawer{display:none;position:fixed;top:86px;left:16px;right:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.04);z-index:999;overflow:hidden}
+.nav-mobile-drawer.open{display:block;animation:drawerFadeIn .2s ease both}
+@keyframes drawerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-mobile-drawer a{display:block;padding:14px 20px;color:#3d5060;text-decoration:none;font-weight:500;font-size:14px;font-family:var(--fb);border-bottom:1px solid rgba(0,0,0,.06);transition:all .15s}
+.nav-mobile-drawer a:hover,.nav-mobile-drawer a:active{background:rgba(0,194,104,.06);color:var(--neon3)}
+.nav-mobile-drawer a:last-child{border-bottom:none}
+.nav-mobile-drawer-ctas{display:flex;gap:10px;padding:14px 20px;border-top:1px solid rgba(0,0,0,.06)}
+.nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
+@media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* ── BUTTONS ── */
@@ -121,8 +137,14 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .postcode-suggestion-meta-hero{font-size:11px;color:#8b95aa}
 @media(max-width:768px){
   .search-bar{flex-direction:column;border-radius:var(--r3)}
-  .search-field{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
-  .search-btn{padding:18px;text-align:center}
+  .search-field{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex:none;width:100%}
+  .search-field input,.search-field select{padding:16px 0}
+  .search-btn{padding:16px;text-align:center;border-radius:0 0 var(--r3) var(--r3);width:100%}
+  .postcode-suggestions-hero{max-height:200px;left:-18px;right:-18px}
+}
+@media(max-width:480px){
+  .search-field input,.search-field select{font-size:14px}
+  .search-btn{font-size:13px;padding:14px}
 }
 
 /* ══════════════════════════════════
@@ -647,8 +669,24 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         Post a Job Free
       </a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="register.html">Post a Job</a>
+  <a href="register.html?role=tradesperson">For Tradespeople</a>
+  <a href="compare.html">Pricing</a>
+  <div class="nav-mobile-drawer-ctas">
+    <a href="login.html" class="nav-btn-ghost">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════
      HERO — CINEMATIC DARK
@@ -701,7 +739,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
             <input type="text" id="heroTradeInput" placeholder="What do you need? e.g. boiler repair, tiler…" autocomplete="off" aria-autocomplete="list" aria-controls="heroTradeSuggestions" aria-expanded="false">
             <div id="heroTradeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Service suggestions"></div>
           </div>
-          <div class="search-field" style="flex:0 0 210px">
+          <div class="search-field">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <input type="text" id="heroPostcode" placeholder="Postcode, e.g. SW1A 1AA" autocomplete="off" aria-autocomplete="list" aria-controls="heroPostcodeSuggestions">
             <div id="heroPostcodeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Postcode suggestions"></div>
@@ -2563,17 +2601,39 @@ heroPostcodeInput?.addEventListener('keydown', e => {
   else if(e.key === 'Escape') closeHeroPostcodeSuggestions();
 });
 
-heroPostcodeSuggestions?.addEventListener('mousedown', e => {
+function handleHeroPostcodeSelect(e) {
   const item = e.target.closest('.postcode-suggestion-hero');
   if(!item) return;
   e.preventDefault();
   selectHeroPostcodeSuggestion(heroPostcodeItems[Number(item.dataset.index)]);
-});
+}
+heroPostcodeSuggestions?.addEventListener('mousedown', handleHeroPostcodeSelect);
+heroPostcodeSuggestions?.addEventListener('touchend', handleHeroPostcodeSelect);
 
 document.addEventListener('click', e => {
   if(!heroPostcodeInput || !heroPostcodeSuggestions) return;
   if(!heroPostcodeInput.contains(e.target) && !heroPostcodeSuggestions.contains(e.target)) closeHeroPostcodeSuggestions();
 });
+
+// ── Mobile hamburger nav ──────────────────────────────────────────────────────
+(function(){
+  const btn = document.getElementById('navHamburger');
+  const drawer = document.getElementById('navMobileDrawer');
+  if(!btn || !drawer) return;
+  btn.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    btn.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', e => {
+    if(!drawer.classList.contains('open')) return;
+    if(!btn.contains(e.target) && !drawer.contains(e.target)) {
+      drawer.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
 
 // ── Hero search submit — prefills quote engine ──────────────────────────────
 function handleHeroSearch(e) {

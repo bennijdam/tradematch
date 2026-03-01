@@ -586,6 +586,24 @@
             .progress-container { padding: 1rem 0.875rem; }
         }
 
+        /* ═══════ DARK MODAL — MOBILE BOTTOM-SHEET ═══════ */
+        @keyframes sheetUp{from{transform:translateY(100%);opacity:.8}to{transform:translateY(0);opacity:1}}
+        @media (max-width: 640px) {
+            #guestModalOverlay{align-items:flex-end;padding:0}
+            .gm-modal{border-radius:24px 24px 0 0;max-width:100%;width:100%;max-height:92vh;animation:sheetUp .38s cubic-bezier(.22,1,.36,1) both}
+            #loginModalOverlay{align-items:flex-end;padding:0}
+            .lm-modal{border-radius:24px 24px 0 0;max-width:100%;width:100%;max-height:92vh;animation:sheetUp .38s cubic-bezier(.22,1,.36,1) both}
+        }
+        @media (max-width: 480px) {
+            .gm-otp-cell{width:40px;height:50px;font-size:1.35rem;border-radius:10px}
+            .lm-otp-cell{width:40px;height:50px;font-size:1.35rem;border-radius:10px}
+            .gm-header{padding:16px 16px 0}
+            .gm-panel{padding:18px 16px 22px}
+            .lm-body{padding:18px 16px 22px}
+            .gm-step-title{font-size:1.15rem}
+            .lm-title{font-size:1.1rem}
+        }
+
         /* ═══════ GUEST POST MODAL ═══════ */
         #guestModalOverlay{display:none;position:fixed;inset:0;z-index:10001;background:rgba(5,9,15,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px}
         #guestModalOverlay.active{display:flex}
