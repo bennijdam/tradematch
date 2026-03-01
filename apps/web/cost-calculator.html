@@ -35,9 +35,14 @@
     }
     </script>
     
+    <!-- Resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Non-blocking Google Fonts (eliminates render-blocking resource) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
     
     <style>
         :root {
@@ -312,201 +317,6 @@
             box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
         }
 
-        /* Results */
-        .results-section {
-            display: none;
-            padding: 2rem;
-            background: var(--slate-50);
-            border-radius: 12px;
-            margin-top: 2rem;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .estimate-result {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
-
-        .estimate-label {
-            font-size: 1rem;
-            color: var(--slate-600);
-            margin-bottom: 0.5rem;
-        }
-
-        .estimate-amount {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--emerald-600);
-            font-family: 'Space Mono', monospace;
-            margin-bottom: 0.5rem;
-        }
-
-        .estimate-range {
-            font-size: 1.125rem;
-            color: var(--slate-600);
-        }
-
-        .breakdown {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .breakdown h3 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            color: var(--slate-900);
-        }
-
-        .breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--slate-200);
-        }
-
-        .breakdown-item:last-child {
-            border-bottom: none;
-        }
-
-        .breakdown-label {
-            color: var(--slate-700);
-        }
-
-        .breakdown-value {
-            font-weight: 700;
-            color: var(--slate-900);
-            font-family: 'Space Mono', monospace;
-        }
-
-        .cta-box {
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            color: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .cta-box h3 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-box p {
-            font-size: 1.125rem;
-            margin-bottom: 1.5rem;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .cta-btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: white;
-            color: var(--emerald-600);
-            border-radius: 8px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Popular Projects */
-        .popular-projects {
-            padding: 4rem 0;
-            background: white;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--slate-900);
-            margin-bottom: 1rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--slate-50);
-            border: 2px solid var(--slate-200);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .project-card:hover {
-            border-color: var(--emerald-500);
-            background: white;
-            transform: translateY(-4px);
-        }
-
-        .project-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .project-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--slate-900);
-        }
-
-        .project-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--emerald-600);
-            font-family: 'Space Mono', monospace;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .calculator-body {
-                padding: 2rem 1.5rem;
-            }
-
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .estimate-amount {
-                font-size: 2.5rem;
-            }
-        }
     </style>
     <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
@@ -1093,6 +903,205 @@
         }
 
     </script>
+<!-- Non-critical CSS (below-fold styles) — non-blocking -->
+<style id="nc-styles">
+        /* Results */
+        .results-section {
+            display: none;
+            padding: 2rem;
+            background: var(--slate-50);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .estimate-result {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .estimate-label {
+            font-size: 1rem;
+            color: var(--slate-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .estimate-amount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .estimate-range {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+        }
+
+        .breakdown {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .breakdown h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--slate-900);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: var(--slate-700);
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            color: var(--slate-900);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: white;
+            color: var(--emerald-600);
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Popular Projects */
+        .popular-projects {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--slate-50);
+            border: 2px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: var(--emerald-500);
+            background: white;
+            transform: translateY(-4px);
+        }
+
+        .project-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--slate-900);
+        }
+
+        .project-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--emerald-600);
+            font-family: 'Space Mono', monospace;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .calculator-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .estimate-amount {
+                font-size: 2.5rem;
+            }
+        }
+    
+</style>
 </body>
 </html>
 

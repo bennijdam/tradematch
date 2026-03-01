@@ -6,9 +6,14 @@
     <title>Careers at TradeMatch - Join Our Team | Open Positions</title>
     <meta name="description" content="Join TradeMatch and help revolutionize the UK trades industry. Explore open positions, benefits, and our company culture. Build your career with us.">
     
+    <!-- Resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Non-blocking Google Fonts (eliminates render-blocking resource) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
     
     <style>
         /* ========================================
@@ -502,338 +507,6 @@
             transform: translateY(-2px);
         }
 
-        /* ========================================
-           TEAM PHOTOS
-           ======================================== */
-        .team-photos {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-top: 3rem;
-        }
-
-        .team-photo {
-            aspect-ratio: 1;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-            font-weight: 800;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-
-        .team-photo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        /* ========================================
-           PERKS SECTION
-           ======================================== */
-        .perks-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .perk-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .perk-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            flex-shrink: 0;
-        }
-
-        .perk-content h4 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--slate-900);
-        }
-
-        .perk-content p {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-            line-height: 1.6;
-        }
-
-        /* ========================================
-           TESTIMONIALS
-           ======================================== */
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .testimonial-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .testimonial-stars {
-            color: var(--amber-500);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .testimonial-text {
-            font-size: 1rem;
-            color: var(--slate-700);
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-            font-style: italic;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .author-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-        }
-
-        .author-info h5 {
-            font-size: 0.9375rem;
-            font-weight: 600;
-            color: var(--slate-900);
-            margin-bottom: 0.125rem;
-        }
-
-        .author-info p {
-            font-size: 0.8125rem;
-            color: var(--slate-600);
-        }
-
-        /* ========================================
-           CTA SECTION
-           ======================================== */
-        .cta-section {
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            color: white;
-            text-align: center;
-            padding: 5rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-            top: -150px;
-            right: -150px;
-        }
-
-        .cta-section .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .btn-cta {
-            display: inline-block;
-            padding: 1.25rem 3rem;
-            background: var(--emerald-500);
-            color: white;
-            border-radius: 12px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-cta:hover {
-            background: var(--emerald-600);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
-        }
-
-        /* ========================================
-           FOOTER
-           ======================================== */
-        .footer {
-            background: var(--slate-900);
-            color: rgba(255, 255, 255, 0.7);
-            padding: 3rem 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--emerald-500);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        /* ========================================
-           RESPONSIVE
-           ======================================== */
-        @media (max-width: 1024px) {
-            .values-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .benefits-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .team-photos {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .testimonials-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.125rem;
-            }
-
-            .hero-stats {
-                gap: 2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .values-grid,
-            .benefits-grid,
-            .testimonials-grid,
-            .perks-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .team-photos {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .cta-section h2 {
-                font-size: 2rem;
-            }
-
-            .position-header {
-                flex-direction: column;
-            }
-
-            .position-footer {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-        }
-
-        /* ========================================
-           ANIMATIONS
-           ======================================== */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s, transform 0.6s;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
     </style>
     <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
@@ -1578,6 +1251,342 @@
         });
 
     </script>
+<!-- Non-critical CSS (below-fold styles) — non-blocking -->
+<style id="nc-styles">
+        /* ========================================
+           TEAM PHOTOS
+           ======================================== */
+        .team-photos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .team-photo {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .team-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ========================================
+           PERKS SECTION
+           ======================================== */
+        .perks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .perk-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .perk-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .perk-content h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--slate-900);
+        }
+
+        .perk-content p {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           TESTIMONIALS
+           ======================================== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .testimonial-stars {
+            color: var(--amber-500);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            color: var(--slate-700);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .author-info h5 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--slate-900);
+            margin-bottom: 0.125rem;
+        }
+
+        .author-info p {
+            font-size: 0.8125rem;
+            color: var(--slate-600);
+        }
+
+        /* ========================================
+           CTA SECTION
+           ======================================== */
+        .cta-section {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            text-align: center;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            top: -150px;
+            right: -150px;
+        }
+
+        .cta-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            background: var(--emerald-500);
+            color: white;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-cta:hover {
+            background: var(--emerald-600);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 1024px) {
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .team-photos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .values-grid,
+            .benefits-grid,
+            .testimonials-grid,
+            .perks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-photos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+
+            .position-header {
+                flex-direction: column;
+            }
+
+            .position-footer {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* ========================================
+           ANIMATIONS
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+</style>
 </body>
 </html>
 

@@ -6,9 +6,14 @@
     <title>Contact Us - TradeMatch UK | Get in Touch</title>
     <meta name="description" content="Contact TradeMatch UK for support, partnerships, or general inquiries. We're here to help with your questions.">
     
+    <!-- Resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Non-blocking Google Fonts (eliminates render-blocking resource) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
     
     <style>
         * {
@@ -288,99 +293,6 @@
             transform: none;
         }
 
-        /* Success Message */
-        .success-message {
-            display: none;
-            background: rgba(16, 185, 129, 0.1);
-            border: 2px solid var(--emerald-500);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .success-message.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .success-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .success-message h3 {
-            color: var(--emerald-600);
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .success-message p {
-            color: var(--slate-600);
-        }
-
-        .error-message {
-            display: none;
-            background: rgba(239, 68, 68, 0.08);
-            border: 2px solid rgba(239, 68, 68, 0.4);
-            border-radius: 16px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1.5rem;
-            animation: fadeIn 0.3s ease;
-        }
-        .error-message.active { display: flex; align-items: flex-start; gap: 12px; }
-        .error-message-icon { font-size: 1.25rem; flex-shrink: 0; }
-        .error-message-body { font-size: 0.95rem; color: #ef4444; }
-        .error-message-body strong { display: block; margin-bottom: 4px; }
-        .error-message-body a { color: inherit; text-decoration: underline; }
-
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--slate-900);
-            padding: 3rem 2rem;
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 968px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
-        }
     </style>
         <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
@@ -599,6 +511,103 @@
         }
     </script>
     <script src="/shared/ui/profile-menu.js" defer></script>
+<!-- Non-critical CSS (below-fold styles) — non-blocking -->
+<style id="nc-styles">
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--emerald-500);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-message h3 {
+            color: var(--emerald-600);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: var(--slate-600);
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(239, 68, 68, 0.08);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .error-message.active { display: flex; align-items: flex-start; gap: 12px; }
+        .error-message-icon { font-size: 1.25rem; flex-shrink: 0; }
+        .error-message-body { font-size: 0.95rem; color: #ef4444; }
+        .error-message-body strong { display: block; margin-bottom: 4px; }
+        .error-message-body a { color: inherit; text-decoration: underline; }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--slate-900);
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    
+</style>
 </body>
 </html>
 

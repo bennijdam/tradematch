@@ -6,9 +6,14 @@
     <title>Join TradeMatch - Win Better Jobs, Pay Less for Leads</title>
     <meta name="description" content="Only receive local, relevant leads. Transparent per-lead pricing. No subscriptions required. Start winning better jobs today.">
     
+    <!-- Resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Non-blocking Google Fonts (eliminates render-blocking resource) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
     
     <style>
         /* ========================================
@@ -512,578 +517,6 @@
             width: var(--width);
         }
 
-        /* ========================================
-           COMPETITOR COMPARISON TABLE
-           ======================================== */
-        .comparison-section {
-            background: white;
-        }
-
-        .comparison-table-wrapper {
-            overflow-x: auto;
-            margin-top: 2rem;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-        }
-
-        .comparison-table thead {
-            background: var(--slate-900);
-            color: white;
-        }
-
-        .comparison-table th {
-            padding: 1.5rem 1rem;
-            text-align: left;
-            font-weight: 700;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .comparison-table th:first-child {
-            width: 25%;
-        }
-
-        .comparison-table tbody tr {
-            border-bottom: 1px solid var(--slate-200);
-        }
-
-        .comparison-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .comparison-table td {
-            padding: 1.25rem 1rem;
-            font-size: 0.9375rem;
-        }
-
-        .comparison-table td:first-child {
-            font-weight: 600;
-            color: var(--slate-700);
-        }
-
-        .highlight-col {
-            background: rgba(16, 185, 129, 0.05);
-            border-left: 3px solid var(--emerald-500);
-            border-right: 3px solid var(--emerald-500);
-        }
-
-        .highlight-col-header {
-            background: var(--emerald-600) !important;
-            position: relative;
-        }
-
-        .highlight-col-header::after {
-            content: 'BEST VALUE';
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            background: var(--amber-500);
-            color: white;
-            font-size: 0.625rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 800;
-        }
-
-        .check-icon {
-            color: var(--emerald-500);
-            font-weight: 700;
-        }
-
-        .cross-icon {
-            color: var(--slate-400);
-        }
-
-        /* ========================================
-           HOW IT WORKS SECTION
-           ======================================== */
-        .how-it-works {
-            background: var(--slate-50);
-        }
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .step-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-        }
-
-        .step-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .step-number {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin: 0 auto 1.5rem;
-        }
-
-        .step-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .step-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--slate-900);
-        }
-
-        .step-desc {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-            line-height: 1.6;
-        }
-
-        .micro-copy {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            border-radius: 12px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .micro-copy p {
-            font-size: 1rem;
-            color: var(--emerald-700);
-            font-weight: 600;
-        }
-
-        /* ========================================
-           WALLET EXPLANATION SECTION
-           ======================================== */
-        .wallet-section {
-            background: white;
-        }
-
-        .wallet-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .wallet-visual {
-            background: var(--slate-50);
-            border-radius: 20px;
-            padding: 3rem;
-            text-align: center;
-        }
-
-        .wallet-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .wallet-balance {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .wallet-balance-label {
-            font-size: 0.875rem;
-            color: var(--slate-500);
-            margin-bottom: 0.5rem;
-        }
-
-        .wallet-balance-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--emerald-500);
-            font-family: 'Space Mono', monospace;
-        }
-
-        .wallet-features {
-            list-style: none;
-        }
-
-        .wallet-features li {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .wallet-features li::before {
-            content: '💎';
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .wallet-feature-title {
-            font-weight: 700;
-            color: var(--slate-900);
-            margin-bottom: 0.25rem;
-        }
-
-        .wallet-feature-desc {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-        }
-
-        /* ========================================
-           ADD-ONS PREVIEW SECTION
-           ======================================== */
-        .addons-section {
-            background: var(--slate-50);
-        }
-
-        .addons-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .addon-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            border: 2px solid var(--slate-200);
-            transition: all 0.3s;
-        }
-
-        .addon-card:hover {
-            border-color: var(--emerald-500);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .addon-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--emerald-700);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .addon-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--slate-900);
-        }
-
-        .addon-desc {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .addon-features {
-            list-style: none;
-        }
-
-        .addon-features li {
-            font-size: 0.875rem;
-            color: var(--slate-700);
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .addon-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--emerald-500);
-            font-weight: 700;
-        }
-
-        /* ========================================
-           TRUST & SOCIAL PROOF SECTION
-           ======================================== */
-        .trust-section {
-            background: white;
-        }
-
-        .trust-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .trust-stat {
-            text-align: center;
-        }
-
-        .trust-stat-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--emerald-500);
-            font-family: 'Space Mono', monospace;
-            margin-bottom: 0.5rem;
-        }
-
-        .trust-stat-label {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .testimonial-card {
-            background: var(--slate-50);
-            border-radius: 16px;
-            padding: 2rem;
-        }
-
-        .testimonial-stars {
-            color: var(--amber-500);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .testimonial-text {
-            font-size: 0.9375rem;
-            color: var(--slate-700);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .testimonial-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.125rem;
-        }
-
-        .testimonial-name {
-            font-weight: 700;
-            color: var(--slate-900);
-            font-size: 0.9375rem;
-        }
-
-        .testimonial-trade {
-            font-size: 0.875rem;
-            color: var(--slate-500);
-        }
-
-        /* ========================================
-           FINAL CTA SECTION
-           ======================================== */
-        .final-cta {
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .final-cta h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-        }
-
-        .final-cta p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .final-cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* ========================================
-           FOOTER (SIMPLE)
-           ======================================== */
-        .footer {
-            background: var(--slate-900);
-            color: rgba(255, 255, 255, 0.7);
-            padding: 3rem 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--emerald-500);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        /* ========================================
-           RESPONSIVE DESIGN
-           ======================================== */
-        @media (max-width: 1024px) {
-            .hero .container {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-
-            .hero-visual {
-                order: -1;
-            }
-
-            .wallet-content {
-                grid-template-columns: 1fr;
-            }
-
-            .steps-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .addons-grid,
-            .testimonials-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .trust-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .section {
-                padding: 3rem 0;
-            }
-
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .earnings-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .earnings-flow {
-                grid-template-columns: 1fr;
-            }
-
-            .earnings-flow-arrow {
-                transform: rotate(90deg);
-            }
-
-            .comparison-table-wrapper {
-                overflow-x: scroll;
-            }
-
-            .steps-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .final-cta h2 {
-                font-size: 2rem;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ========================================
-           ANIMATION UTILITIES
-           ======================================== */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s, transform 0.6s;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
     </style>
     <script>
         if (window.zaraz && typeof window.zaraz.track === "function") {
@@ -1709,6 +1142,582 @@
         // ========================================
     </script>
     <script src="/shared/ui/confirm-modal.js" defer></script>
+<!-- Non-critical CSS (below-fold styles) — non-blocking -->
+<style id="nc-styles">
+        /* ========================================
+           COMPETITOR COMPARISON TABLE
+           ======================================== */
+        .comparison-section {
+            background: white;
+        }
+
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .comparison-table thead {
+            background: var(--slate-900);
+            color: white;
+        }
+
+        .comparison-table th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-table th:first-child {
+            width: 25%;
+        }
+
+        .comparison-table tbody tr {
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .comparison-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-table td {
+            padding: 1.25rem 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .highlight-col {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 3px solid var(--emerald-500);
+            border-right: 3px solid var(--emerald-500);
+        }
+
+        .highlight-col-header {
+            background: var(--emerald-600) !important;
+            position: relative;
+        }
+
+        .highlight-col-header::after {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--amber-500);
+            color: white;
+            font-size: 0.625rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .check-icon {
+            color: var(--emerald-500);
+            font-weight: 700;
+        }
+
+        .cross-icon {
+            color: var(--slate-400);
+        }
+
+        /* ========================================
+           HOW IT WORKS SECTION
+           ======================================== */
+        .how-it-works {
+            background: var(--slate-50);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--slate-900);
+        }
+
+        .step-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            line-height: 1.6;
+        }
+
+        .micro-copy {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .micro-copy p {
+            font-size: 1rem;
+            color: var(--emerald-700);
+            font-weight: 600;
+        }
+
+        /* ========================================
+           WALLET EXPLANATION SECTION
+           ======================================== */
+        .wallet-section {
+            background: white;
+        }
+
+        .wallet-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .wallet-visual {
+            background: var(--slate-50);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .wallet-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-balance {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .wallet-balance-label {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .wallet-balance-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .wallet-features {
+            list-style: none;
+        }
+
+        .wallet-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wallet-features li::before {
+            content: '💎';
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .wallet-feature-title {
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .wallet-feature-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        /* ========================================
+           ADD-ONS PREVIEW SECTION
+           ======================================== */
+        .addons-section {
+            background: var(--slate-50);
+        }
+
+        .addons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .addon-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid var(--slate-200);
+            transition: all 0.3s;
+        }
+
+        .addon-card:hover {
+            border-color: var(--emerald-500);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .addon-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald-700);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .addon-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--slate-900);
+        }
+
+        .addon-desc {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .addon-features {
+            list-style: none;
+        }
+
+        .addon-features li {
+            font-size: 0.875rem;
+            color: var(--slate-700);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .addon-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--emerald-500);
+            font-weight: 700;
+        }
+
+        /* ========================================
+           TRUST & SOCIAL PROOF SECTION
+           ======================================== */
+        .trust-section {
+            background: white;
+        }
+
+        .trust-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .trust-stat {
+            text-align: center;
+        }
+
+        .trust-stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--emerald-500);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .trust-stat-label {
+            font-size: 0.9375rem;
+            color: var(--slate-600);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: var(--slate-50);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .testimonial-stars {
+            color: var(--amber-500);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 0.9375rem;
+            color: var(--slate-700);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--slate-900);
+            font-size: 0.9375rem;
+        }
+
+        .testimonial-trade {
+            font-size: 0.875rem;
+            color: var(--slate-500);
+        }
+
+        /* ========================================
+           FINAL CTA SECTION
+           ======================================== */
+        .final-cta {
+            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ========================================
+           FOOTER (SIMPLE)
+           ======================================== */
+        .footer {
+            background: var(--slate-900);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--emerald-500);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .wallet-content {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .addons-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .earnings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .earnings-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .earnings-flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .comparison-table-wrapper {
+                overflow-x: scroll;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .final-cta h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========================================
+           ANIMATION UTILITIES
+           ======================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
+</style>
 </body>
 </html>
 
