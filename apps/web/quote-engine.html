@@ -3581,7 +3581,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 const terms=document.getElementById('lm-terms-check').classList.contains('checked');
                 if(!first||!last||!email||pass.length<8||!terms){ alert('Please fill in all fields and accept the terms.'); return; }
                 try {
-                    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName:first,lastName:last,email,password:pass})});
+                    const r=await fetch(API_BASE+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullName:first+' '+last,email,password:pass,userType:'customer'})});
                     const d=await r.json().catch(()=>({}));
                     if(r.ok && d.token){
                         localStorage.setItem('token',d.token);
