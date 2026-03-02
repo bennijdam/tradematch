@@ -97,6 +97,10 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
 @media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
+/* ── NAV AUTH PILL (logged-in state) ── */
+.nav-user-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.11);padding:6px 14px 6px 6px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-user-pill:hover{border-color:var(--border-neon);color:var(--neon3)}
+.nav-user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;letter-spacing:.03em;flex-shrink:0}
 
 /* ── BUTTONS ── */
 .btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);padding:15px 30px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s;position:relative;overflow:hidden}
@@ -255,9 +259,9 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <a href="register.html?role=tradesperson" class="nav-link">For Tradespeople</a>
       <a href="compare.html" class="nav-link">Pricing</a>
     </div>
-    <div class="nav-actions">
-      <a href="login.html" class="nav-btn-ghost">Sign In</a>
-      <a href="register.html" class="nav-cta">
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
         <span class="nav-cta-pip"></span>
         Post a Job Free
       </a>
@@ -275,8 +279,8 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
   <a href="register.html">Post a Job</a>
   <a href="register.html?role=tradesperson">For Tradespeople</a>
   <a href="compare.html">Pricing</a>
-  <div class="nav-mobile-drawer-ctas">
-    <a href="login.html" class="nav-btn-ghost">Sign In</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
     <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
   </div>
 </div>
@@ -2663,5 +2667,62 @@ function handleHeroSearch(e) {
 </style>
 <!-- Lucide icons — deferred, non-render-blocking -->
 <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+<script>
+(function(){
+  var token = localStorage.getItem('token') || localStorage.getItem('authToken');
+  if(!token) return;
+  var user = null;
+  try { user = JSON.parse(localStorage.getItem('user')); } catch(e){}
+  if(!user) return;
+
+  var name = user.fullName || user.name || user.email || '';
+  var first = name.split(' ')[0] || '';
+  var initials = name.split(' ').slice(0,2).map(function(w){return w[0]||'';}).join('').toUpperCase() || '?';
+  var role = user.role || user.userType || 'customer';
+  var dashUrl = (role === 'vendor' || role === 'tradesperson') ? 'vendor-dashboard.html' : 'dashboard.html';
+
+  var pill = '<a href="'+dashUrl+'" class="nav-user-pill">'
+    + '<span class="nav-user-avatar">'+initials+'</span>'
+    + first
+    + '</a>';
+
+  // Desktop: replace Sign In link
+  var desktopSignIn = document.getElementById('navSignIn');
+  if(desktopSignIn){
+    desktopSignIn.outerHTML = pill;
+  }
+
+  // Desktop: swap CTA to "My Dashboard" for returning customers
+  var navCta = document.getElementById('navCta');
+  if(navCta){
+    navCta.href = dashUrl;
+    navCta.innerHTML = '<span class="nav-cta-pip"></span>My Dashboard';
+  }
+
+  // Mobile: replace Sign In link
+  var mobileSignIn = document.getElementById('navMobileSignIn');
+  if(mobileSignIn){
+    mobileSignIn.href = dashUrl;
+    mobileSignIn.textContent = 'My Dashboard';
+  }
+
+  // Sign out handler — add to mobile drawer
+  var mobileDrawer = document.getElementById('navMobileDrawer');
+  if(mobileDrawer){
+    var signOutLink = document.createElement('a');
+    signOutLink.href = '#';
+    signOutLink.textContent = 'Sign Out';
+    signOutLink.style.cssText = 'color:#ef4444;font-weight:600';
+    signOutLink.addEventListener('click', function(e){
+      e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      window.location.href = 'index.html';
+    });
+    mobileDrawer.insertBefore(signOutLink, document.getElementById('navMobileCtas'));
+  }
+})();
+</script>
 </body>
 </html>
