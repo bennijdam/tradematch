@@ -143,7 +143,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .postcode-suggestion-code-hero{font-size:13px;font-weight:700;color:#f0f4ff}
 .postcode-suggestion-meta-hero{font-size:11px;color:#8b95aa}
 @media(max-width:768px){
-  .search-bar{flex-direction:column;border-radius:var(--r3)}
+  .search-bar{flex-direction:column;border-radius:var(--r3);background:rgba(13,17,23,.75);border-color:rgba(255,255,255,.22)}
   .search-field{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex:none;width:100%}
   .search-field input,.search-field select{padding:16px 0}
   .search-btn{padding:16px;text-align:center;border-radius:0 0 var(--r3) var(--r3);width:100%}
@@ -172,7 +172,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .hiw-mosaic-botfade{position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(0deg,#070b10 0%,transparent 100%);z-index:1}
 @media(max-width:900px){
   .hiw-mosaic-grid{grid-template-columns:repeat(2,1fr);opacity:.65}
-  .hiw-hero-overlay{background:linear-gradient(180deg,rgba(7,11,16,.84) 0%,rgba(7,11,16,.38) 48%,rgba(7,11,16,.72) 100%)}
+  .hiw-hero-overlay{background:rgba(7,11,16,.82)}
 }
 /* Emerald radial bloom */
 .hiw-hero-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -232,6 +232,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
   .hiw-hero-layout{padding:110px 0 60px}
   .hiw-card-stack{display:none}
   .hiw-hero-layout{grid-template-columns:1fr}
+  .hiw-pill{color:#a0aec0;background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18)}
 }
 
 </style>
@@ -2619,6 +2620,7 @@ function handleHeroSearch(e) {
 .btn-outline-dark{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:700;letter-spacing:-.02em;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.15);padding:15px 28px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
 .btn-outline-dark:hover{border-color:var(--border-neon);color:var(--neon3);background:rgba(0,194,104,.05)}
 .btn-outline-dark svg{width:16px;height:16px}
+@media(max-width:640px){.cta-final-imgs{display:none}}
 
 /* ══════════════════════════════════
    FOOTER
