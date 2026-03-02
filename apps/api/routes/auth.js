@@ -623,4 +623,112 @@ router.get('/verify', async (req, res) => {
   }
 });
 
+// ==========================================
+// FORGOT PASSWORD
+// ==========================================
+router.post('/forgot-password', authLimiter, async (req, res) => {
+  // Always 200 — never reveal whether the email exists
+  res.json({ success: true });
+
+  const { email } = req.body;
+  if (!email || !emailRegex.test(email)) return;
+
+  try {
+    const result = await pool.query(
+      "SELECT id, email, full_name FROM users WHERE LOWER(email) = $1 AND status != 'deleted'",
+      [email.toLowerCase().trim()]
+    );
+    if (result.rows.length === 0) return;
+
+    const user = result.rows[0];
+    const secret = process.env.JWT_SECRET;
+    if (!secret) return;
+
+    const resetToken = jwt.sign(
+      { purpose: 'password_reset', userId: user.id, email: user.email },
+      secret,
+      { expiresIn: '15m' }
+    );
+
+    const frontendBase = buildFrontendBase();
+    const resetUrl = `${frontendBase}/reset-password?token=${encodeURIComponent(resetToken)}`;
+    const displayName = user.full_name || user.email;
+
+    const emailService = new EmailService();
+    await emailService.sendEmail({
+      to: user.email,
+      subject: 'Reset your TradeMatch password',
+      html: `
+        <div style="font-family:'DM Sans',Arial,sans-serif;max-width:560px;margin:0 auto;background:#f3f7f4;padding:32px 20px">
+          <div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)">
+            <div style="background:linear-gradient(135deg,#007a3d,#00c268);padding:32px;text-align:center">
+              <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px">
+                <span style="font-size:24px">🔑</span>
+              </div>
+              <h1 style="color:#fff;font-size:1.4rem;font-weight:800;letter-spacing:-.04em;margin:0">Reset your password</h1>
+            </div>
+            <div style="padding:32px">
+              <p style="color:#3d5060;font-size:15px;margin:0 0 8px">Hi ${displayName},</p>
+              <p style="color:#3d5060;font-size:14px;line-height:1.7;margin:0 0 24px">We received a request to reset your TradeMatch password. Click the button below — the link expires in <strong>15 minutes</strong>.</p>
+              <div style="text-align:center;margin-bottom:28px">
+                <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#007a3d,#00c268);color:#fff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:100px;box-shadow:0 4px 16px rgba(0,194,104,.3)">Reset my password →</a>
+              </div>
+              <p style="color:#9fb0bc;font-size:12px;text-align:center;margin:0 0 8px">If the button doesn't work, copy and paste this link into your browser:</p>
+              <p style="color:#9fb0bc;font-size:11px;text-align:center;word-break:break-all;margin:0 0 24px">${resetUrl}</p>
+              <hr style="border:none;border-top:1px solid rgba(0,0,0,.07);margin:0 0 20px">
+              <p style="color:#9fb0bc;font-size:12px;margin:0">If you didn't request this, you can safely ignore this email — your password won't change.</p>
+            </div>
+          </div>
+          <p style="text-align:center;color:#9fb0bc;font-size:11px;margin-top:20px">© 2026 TradeMatch UK Ltd · <a href="${frontendBase}/privacy" style="color:#9fb0bc">Privacy Policy</a></p>
+        </div>`,
+      text: `Reset your TradeMatch password\n\nHi ${displayName},\n\nClick the link below to reset your password (expires in 15 minutes):\n${resetUrl}\n\nIf you didn't request this, ignore this email.`
+    });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+  }
+});
+
+// ==========================================
+// RESET PASSWORD
+// ==========================================
+router.post('/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+
+  if (!token || !password || password.length < 8) {
+    return res.status(400).json({ error: 'Token and a password of at least 8 characters are required.' });
+  }
+
+  try {
+    const jwtSecret = getJwtSecret(res);
+    if (!jwtSecret) return;
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret);
+    } catch (e) {
+      return res.status(400).json({ error: 'This reset link has expired or is invalid. Please request a new one.' });
+    }
+
+    if (decoded.purpose !== 'password_reset') {
+      return res.status(400).json({ error: 'Invalid reset token.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const result = await pool.query(
+      'UPDATE users SET password_hash = $1 WHERE id = $2 AND LOWER(email) = $3 RETURNING id',
+      [hashedPassword, decoded.userId, decoded.email.toLowerCase()]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: 'User not found.' });
+    }
+
+    res.json({ success: true, message: 'Password updated. You can now sign in with your new password.' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ error: 'Server error. Please try again.' });
+  }
+});
+
 module.exports = router;
