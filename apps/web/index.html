@@ -171,8 +171,8 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .hiw-mosaic-topfade{position:absolute;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#070b10 0%,transparent 100%);z-index:1}
 .hiw-mosaic-botfade{position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(0deg,#070b10 0%,transparent 100%);z-index:1}
 @media(max-width:900px){
-  .hiw-mosaic-grid{grid-template-columns:repeat(3,1fr);opacity:.3}
-  .hiw-hero-overlay{background:linear-gradient(90deg,rgba(7,11,16,.98) 0%,rgba(7,11,16,.95) 50%,rgba(7,11,16,.85) 100%)}
+  .hiw-mosaic-grid{grid-template-columns:repeat(2,1fr);opacity:.65}
+  .hiw-hero-overlay{background:linear-gradient(180deg,rgba(7,11,16,.84) 0%,rgba(7,11,16,.38) 48%,rgba(7,11,16,.72) 100%)}
 }
 /* Emerald radial bloom */
 .hiw-hero-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -2105,7 +2105,7 @@ heroTradeInput?.addEventListener('keydown', e => {
   else if(e.key === 'Escape') closeHeroTradeSuggestions();
 });
 
-heroTradeSuggestions?.addEventListener('mousedown', e => {
+heroTradeSuggestions?.addEventListener('pointerdown', e => {
   const item = e.target.closest('.trade-suggestion-hero');
   if(!item) return;
   e.preventDefault();
@@ -2199,8 +2199,7 @@ function handleHeroPostcodeSelect(e) {
   e.preventDefault();
   selectHeroPostcodeSuggestion(heroPostcodeItems[Number(item.dataset.index)]);
 }
-heroPostcodeSuggestions?.addEventListener('mousedown', handleHeroPostcodeSelect);
-heroPostcodeSuggestions?.addEventListener('touchend', handleHeroPostcodeSelect);
+heroPostcodeSuggestions?.addEventListener('pointerdown', handleHeroPostcodeSelect);
 
 document.addEventListener('click', e => {
   if(!heroPostcodeInput || !heroPostcodeSuggestions) return;
