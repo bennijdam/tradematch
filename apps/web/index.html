@@ -136,7 +136,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .trust-badge-icon{width:20px;height:20px;border-radius:5px;background:rgba(0,194,104,.1);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .trust-badge-icon svg{width:11px;height:11px;color:var(--neon)}
 /* ── TRADE AUTOCOMPLETE DROPDOWN ── */
-.postcode-suggestions-hero{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:200;background:#161c28;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 28px rgba(0,0,0,.45);max-height:270px;overflow-y:auto;display:none}
+.postcode-suggestions-hero{position:fixed;z-index:10000;background:#161c28;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 28px rgba(0,0,0,.45);max-height:270px;overflow-y:auto;display:none}
 .postcode-suggestions-hero.open{display:block}
 .trade-suggestion-hero,.postcode-suggestion-hero{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;padding:10px 14px;text-align:left;cursor:pointer;color:#f0f4ff;font-family:var(--fb)}
 .trade-suggestion-hero:last-child,.postcode-suggestion-hero:last-child{border-bottom:0}
@@ -151,7 +151,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
   .search-field{border-right:none;border-bottom:1px solid rgba(255,255,255,.08);flex:none;width:100%}
   .search-field input,.search-field select{padding:16px 0}
   .search-btn{padding:16px;text-align:center;border-radius:0 0 var(--r3) var(--r3);width:100%}
-  .postcode-suggestions-hero{max-height:200px;left:-18px;right:-18px}
+  .postcode-suggestions-hero{max-height:200px}
 }
 @media(max-width:480px){
   .search-field input,.search-field select{font-size:14px}
@@ -2090,6 +2090,10 @@ function renderHeroTradeSuggestions(results) {
   heroTradeSuggestions.innerHTML = results.map((svc, i) =>
     `<button type="button" class="trade-suggestion-hero" data-index="${i}" role="option" aria-selected="false"><span class="trade-suggestion-icon">${svc.icon}</span><span class="trade-suggestion-name">${svc.name}</span></button>`
   ).join('');
+  const rect = heroTradeInput.getBoundingClientRect();
+  heroTradeSuggestions.style.top = (rect.bottom + 6) + 'px';
+  heroTradeSuggestions.style.left = rect.left + 'px';
+  heroTradeSuggestions.style.width = rect.width + 'px';
   heroTradeSuggestions.classList.add('open');
   if(heroTradeInput) heroTradeInput.setAttribute('aria-expanded','true');
 }
@@ -2157,6 +2161,10 @@ function renderHeroPostcodeSuggestions(suggestions) {
     const details = [item.admin_district || item.district, item.region].filter(Boolean).join(', ') || 'UK postcode';
     return `<button type="button" class="postcode-suggestion-hero" data-index="${i}" role="option"><span class="postcode-suggestion-code-hero">${item.postcode || ''}</span><span class="postcode-suggestion-meta-hero">${details}</span></button>`;
   }).join('');
+  const rect = heroPostcodeInput.getBoundingClientRect();
+  heroPostcodeSuggestions.style.top = (rect.bottom + 6) + 'px';
+  heroPostcodeSuggestions.style.left = rect.left + 'px';
+  heroPostcodeSuggestions.style.width = rect.width + 'px';
   heroPostcodeSuggestions.classList.add('open');
 }
 
@@ -2165,28 +2173,17 @@ async function fetchHeroPostcodeSuggestions(raw) {
   if(query.length < 2) { closeHeroPostcodeSuggestions(); return; }
   const currentRequestId = ++heroPostcodeRequestId;
   try {
-    // Try backend proxy first, fall back to postcodes.io directly
-    let suggestions = [];
-    try {
-      const r = await fetch(`${HOME_API_BASE}/api/postcode/autocomplete?q=${encodeURIComponent(query)}`);
-      const d = await r.json().catch(() => null);
-      if(r.ok && d?.success && Array.isArray(d.suggestions) && d.suggestions.length) {
-        suggestions = d.suggestions.map(s => ({ postcode: s.postcode, admin_district: s.district || null, region: s.region || null }));
-      }
-    } catch(e) {}
-    if(!suggestions.length) {
-      const r = await fetch(`https://api.postcodes.io/postcodes?q=${encodeURIComponent(query)}&limit=6`);
-      const d = await r.json().catch(() => null);
-      if(d?.status === 200 && Array.isArray(d.result)) suggestions = d.result;
-    }
+    const r = await fetch(`https://api.postcodes.io/postcodes?q=${encodeURIComponent(query)}&limit=6`);
+    const d = await r.json().catch(() => null);
     if(currentRequestId !== heroPostcodeRequestId) return;
+    const suggestions = (d?.status === 200 && Array.isArray(d.result)) ? d.result : [];
     renderHeroPostcodeSuggestions(suggestions);
   } catch(e) { closeHeroPostcodeSuggestions(); }
 }
 
 heroPostcodeInput?.addEventListener('input', e => {
   clearTimeout(heroPostcodeDebounceTimer);
-  heroPostcodeDebounceTimer = setTimeout(() => fetchHeroPostcodeSuggestions(e.target.value), 200);
+  heroPostcodeDebounceTimer = setTimeout(() => fetchHeroPostcodeSuggestions(e.target.value), 50);
 });
 
 heroPostcodeInput?.addEventListener('keydown', e => {

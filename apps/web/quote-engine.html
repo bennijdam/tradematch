@@ -1682,10 +1682,12 @@
                         serviceInput.value = serviceOption.dataset.service;
                     }
 
-                    // Update dynamic features
-                    updateQuickPrompts(formData.service);
-                    updateResponseTime(formData.service);
-                    updateBudgetContextHint(parseInt(budgetSlider?.value || 7500));
+                    // Update dynamic features (guarded against TDZ during early auto-select)
+                    try {
+                        updateQuickPrompts(formData.service);
+                        updateResponseTime(formData.service);
+                        updateBudgetContextHint(parseInt(budgetSlider?.value || 7500));
+                    } catch(err) { /* vars not yet initialised */ }
                     trackEvent('service_selected', { service: formData.service });
                 }
             });
@@ -1699,19 +1701,22 @@
             option.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                
+
                 document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
-                
+
                 // Store service data
                 formData.service = this.dataset.service;
                 formData.serviceName = this.querySelector('.service-name').textContent;
                 document.getElementById('serviceInput').value = this.dataset.service;
 
-                // Update dynamic features
-                updateQuickPrompts(formData.service);
-                updateResponseTime(formData.service);
-                updateBudgetContextHint(parseInt(document.getElementById('budgetSlider')?.value || 7500));
+                // Update dynamic features (guarded — these vars may not be initialised yet
+                // when this handler fires during the early auto-select from URL params)
+                try {
+                    updateQuickPrompts(formData.service);
+                    updateResponseTime(formData.service);
+                    updateBudgetContextHint(parseInt(document.getElementById('budgetSlider')?.value || 7500));
+                } catch(err) { /* will be called again once all vars are ready */ }
             });
         });
         
@@ -3178,6 +3183,13 @@ I'm happy to discuss the project in more detail and answer any questions to help
         checkSessionRecovery();
         restoreProgress();
         updateStep();
+
+        // Re-apply dynamic UI for any service that was auto-selected from URL params
+        // (the early auto-select fires before serviceQuickPrompts etc. are declared)
+        if (formData.service) {
+            updateQuickPrompts(formData.service);
+            updateResponseTime(formData.service);
+        }
 
         const autoSubmitFlag = localStorage.getItem('quoteAutoSubmit');
         if (autoSubmitFlag && localStorage.getItem('token')) {
