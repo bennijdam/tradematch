@@ -1,9 +1,11 @@
-import Topbar from '@/components/layout/Topbar';
+import '@/styles/variables.module.css';
+import CustomerHeader from '@/components/customer/CustomerHeader';
 import StatsOverview from '@/components/customer/StatsOverview';
 import JobFeed from '@/components/customer/JobFeed';
 import MessageInbox from '@/components/customer/MessageInbox';
 import CustomerActions from '@/components/customer/CustomerActions';
 import type { CustomerJobRequest, VendorLeadNotification } from '@tradematch/types';
+import styles from './Dashboard.module.css';
 
 const jobRequests: CustomerJobRequest[] = [
   { id: 'jr-101', title: 'Kitchen rewiring', postcode: 'E14', status: 'In Progress', budget: 1800 },
@@ -19,19 +21,34 @@ const vendorLeadNotifications: VendorLeadNotification[] = jobRequests.map((job) 
   unread: job.status === 'Pending',
 }));
 
-export default function CustomerDashboardPage() {
+type DashboardSearchParams = {
+  mode?: string | string[];
+};
+
+function resolveMode(mode: string | string[] | undefined): 'full' | 'lite' {
+  if (Array.isArray(mode)) {
+    return mode.includes('lite') ? 'lite' : 'full';
+  }
+
+  return mode === 'lite' ? 'lite' : 'full';
+}
+
+export default async function CustomerDashboardPage({
+  searchParams,
+}: {
+  searchParams?: DashboardSearchParams | Promise<DashboardSearchParams>;
+}) {
+  const params = await Promise.resolve(searchParams);
+  const uiMode = resolveMode(params?.mode);
   const unreadLeads = vendorLeadNotifications.filter((lead) => lead.unread).length;
 
   return (
-    <section className="container">
-      <Topbar title="Customer Dashboard" />
-      <p style={{ color: '#a1a1aa' }}>
-        Shared Type Integration active: {vendorLeadNotifications.length} linked lead events, {unreadLeads} unread.
-      </p>
+    <section className={`${styles.container} container`} data-mode={uiMode}>
+      <CustomerHeader linkedEvents={vendorLeadNotifications.length} unread={unreadLeads} />
       <StatsOverview jobs={jobRequests} />
-      <div className="grid" style={{ gridTemplateColumns: '2fr 1fr', marginTop: '1rem' }}>
+      <div className={styles.contentGrid}>
         <JobFeed jobs={jobRequests} />
-        <div className="grid">
+        <div className={styles.sidebarStack}>
           <CustomerActions />
           <MessageInbox />
         </div>

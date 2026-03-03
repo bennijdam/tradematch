@@ -1,3 +1,5 @@
+import styles from './MessageInbox.module.css';
+
 export default function MessageInbox() {
   const threads = [
     'Builder confirmed site visit for Friday',
@@ -6,9 +8,9 @@ export default function MessageInbox() {
   ];
 
   return (
-    <section id="messages" className="panel">
-      <h2 style={{ marginTop: 0 }}>Inbox</h2>
-      <ul>
+    <section id="messages" className={styles.panel}>
+      <h2 className={styles.title}>Inbox</h2>
+      <ul className={styles.list}>
         {threads.map((thread) => (
           <li key={thread}>{thread}</li>
         ))}
