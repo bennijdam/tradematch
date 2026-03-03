@@ -10,6 +10,18 @@ TradeMatch is a UK marketplace connecting homeowners with verified tradespeople.
 - Vendor dashboard: public/vendor-dashboard/
 - Super admin dashboard: public/super-admin-dashboard/
 
+## Next.js Dashboard Core
+
+TradeMatch now includes a component-based Next.js dashboard core in `apps/web-next` for both customer and vendor experiences.
+
+- Customer route group: `/customer/*` (for example, `/customer/dashboard` and `/customer/jobs/[id]`)
+- Vendor route group: `/vendor/*` (for example, `/vendor/dashboard`, `/vendor/active-jobs`, `/vendor/leads`)
+- Cross-role bridge: `DashboardBridge` toggles between customer and vendor dashboard views
+- Session bridge: `apps/web-next/proxy.ts` handles synthetic-session routing for E2E and legacy URL redirects
+- Shared contracts: dashboard state types are centralized in `packages/types`
+
+This architecture is validated by the Playwright suite (`pnpm run test:e2e`) and built with `npm --prefix apps/web-next run build`.
+
 ## Environments
 
 - Production frontend: https://www.tradematch.uk
