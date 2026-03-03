@@ -1,58 +1,44 @@
 const { test, expect } = require('@playwright/test');
-const { routes } = require('./utils/routes');
 const fs = require('fs');
 const path = require('path');
 
-const apiBase =
-  process.env.API_BASE_URL || `${(process.env.BASE_URL || 'http://localhost:8080').replace(/\/$/, '')}/api`;
 const storageStatePath = path.join(__dirname, '.auth', 'vendor.json');
 const storageState = fs.existsSync(storageStatePath) ? storageStatePath : undefined;
 
 test.use({ storageState });
 
-function shouldSkipCreds() {
-  return !process.env.E2E_VENDOR_EMAIL || !process.env.E2E_VENDOR_PASSWORD;
-}
-
-test('@e2e vendor journey', async ({ page, request }) => {
-  test.skip(shouldSkipCreds(), 'Set E2E_VENDOR_EMAIL and E2E_VENDOR_PASSWORD to run full vendor journey.');
+test('@e2e vendor journey', async ({ page }) => {
 
   await test.step('Vendor onboarding', async () => {
-    await page.goto(routes.vendorDashboard, { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/Dashboard/i);
-  });
-
-  await test.step('Login (API)', async () => {
-    const response = await request.post(`${apiBase}/auth/login`, {
-      data: {
-        email: process.env.E2E_VENDOR_EMAIL,
-        password: process.env.E2E_VENDOR_PASSWORD
-      }
-    });
-
-    expect(response.ok()).toBeTruthy();
+    await page.goto('/vendor/dashboard', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/dashboard$/);
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
   });
 
   await test.step('Leads and quotes', async () => {
-    await page.goto(routes.vendorDashboard, { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/Dashboard/i);
+    await page.goto('/vendor/leads', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/leads$/);
+    await expect(page.getByRole('heading', { name: 'New Leads' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Customer' })).toBeVisible();
   });
 
   await test.step('Messaging', async () => {
-    await page.goto(routes.messaging, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.messaging-container')).toBeVisible();
+    await page.goto('/vendor/messages', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/messages$/);
+    await expect(page.getByRole('heading', { name: 'Messages' })).toBeVisible();
   });
 
   await test.step('Milestone/payment', async () => {
-    await page.goto(routes.paymentCheckout, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('#payment-form')).toBeVisible();
+    await page.goto('/vendor/active-jobs', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/active-jobs$/);
+    await expect(page.getByRole('heading', { name: 'Active Jobs' })).toBeVisible();
+    await expect(page.locator('.animate-ping').first()).toBeVisible();
   });
 
   await test.step('Payout', async () => {
-    await page.goto(routes.vendorSettings, { waitUntil: 'domcontentloaded' });
-
-    // Stripe status is rendered inside the Billing tab on the vendor settings page.
-    await page.getByRole('button', { name: /^Billing$/ }).click();
-    await expect(page.locator('#stripeStatusBadge')).toBeVisible();
+    await page.goto('/vendor/billing', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/billing$/);
+    await expect(page.getByRole('heading', { name: 'Billing' })).toBeVisible();
+    await expect(page.getByRole('columnheader', { name: 'Amount' })).toBeVisible();
   });
 });

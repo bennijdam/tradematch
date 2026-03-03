@@ -35,6 +35,28 @@ async function createStorageState({ email, password, storagePath }) {
   const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
+  const targetUrl = new URL(baseURL);
+
+  await context.addCookies([
+    {
+      name: 'auth-token',
+      value: token,
+      domain: targetUrl.hostname,
+      path: '/',
+      sameSite: 'Lax',
+      secure: targetUrl.protocol === 'https:',
+      httpOnly: false
+    },
+    {
+      name: 'token',
+      value: token,
+      domain: targetUrl.hostname,
+      path: '/',
+      sameSite: 'Lax',
+      secure: targetUrl.protocol === 'https:',
+      httpOnly: false
+    }
+  ]);
 
   await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
   await page.evaluate(

@@ -10,13 +10,17 @@ module.exports = defineConfig({
   retries: process.env.CI ? 2 : 0,
   reporter: [['list']],
   webServer: {
-    command: 'node scripts/e2e-webserver.js',
+    command: 'npm --prefix apps/web-next run dev -- --port 8080 --hostname 127.0.0.1',
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120000
   },
   use: {
     baseURL,
+    extraHTTPHeaders: {
+      'x-tradematch-test-secret': process.env.INTERNAL_TEST_SECRET || 'dev-secret-123',
+      'x-tradematch-test-user': process.env.E2E_TEST_USER || 'vendor'
+    },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'

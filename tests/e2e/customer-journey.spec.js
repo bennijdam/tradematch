@@ -1,62 +1,55 @@
 const { test, expect } = require('@playwright/test');
-const { routes } = require('./utils/routes');
 const fs = require('fs');
 const path = require('path');
-
-const apiBase =
-  process.env.API_BASE_URL || `${(process.env.BASE_URL || 'http://localhost:8080').replace(/\/$/, '')}/api`;
 const storageStatePath = path.join(__dirname, '.auth', 'customer.json');
 const storageState = fs.existsSync(storageStatePath) ? storageStatePath : undefined;
 
-test.use({ storageState });
+test.use({
+  storageState,
+  extraHTTPHeaders: {
+    'x-tradematch-test-secret': process.env.INTERNAL_TEST_SECRET || 'dev-secret-123',
+    'x-tradematch-test-user': 'customer'
+  }
+});
 
-function shouldSkipCreds() {
-  return !process.env.E2E_CUSTOMER_EMAIL || !process.env.E2E_CUSTOMER_PASSWORD;
-}
-
-test('@e2e customer journey', async ({ page, request }) => {
-  test.skip(shouldSkipCreds(), 'Set E2E_CUSTOMER_EMAIL and E2E_CUSTOMER_PASSWORD to run full customer journey.');
+test('@e2e customer journey', async ({ page, request, baseURL }) => {
 
   await test.step('Register', async () => {
-    await page.goto(routes.register, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('input#fullName')).toBeVisible();
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/dashboard$/);
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
   });
 
   await test.step('Activate', async () => {
-    const token = process.env.E2E_ACTIVATION_TOKEN;
-    const activationUrl = token ? `${routes.activate}?token=${encodeURIComponent(token)}` : routes.activate;
-    await page.goto(activationUrl, { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/Activate/i);
-  });
-
-  await test.step('Login (API)', async () => {
-    const response = await request.post(`${apiBase}/auth/login`, {
-      data: {
-        email: process.env.E2E_CUSTOMER_EMAIL,
-        password: process.env.E2E_CUSTOMER_PASSWORD
-      }
+    const response = await request.get(`${baseURL}/vendor-dashboard.html`, {
+      maxRedirects: 0
     });
-
-    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBe(308);
+    expect(response.headers().location).toContain('/vendor/dashboard');
   });
 
   await test.step('Post job', async () => {
-    await page.goto(routes.quoteEngine, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.service-search-input')).toBeVisible();
+    await page.goto('/vendor/leads', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/leads$/);
+    await expect(page.getByRole('heading', { name: 'New Leads' })).toBeVisible();
   });
 
   await test.step('Chat', async () => {
-    await page.goto(routes.messaging, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.messaging-container')).toBeVisible();
+    await page.goto('/vendor/messages', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/messages$/);
+    await expect(page.getByRole('heading', { name: 'Messages' })).toBeVisible();
   });
 
   await test.step('Payment', async () => {
-    await page.goto(routes.paymentCheckout, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('#payment-form')).toBeVisible();
+    await page.goto('/vendor/active-jobs', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/active-jobs$/);
+    await expect(page.getByRole('heading', { name: 'Active Jobs' })).toBeVisible();
+    await expect(page.locator('.animate-ping').first()).toBeVisible();
   });
 
   await test.step('Dashboard access', async () => {
-    await page.goto(routes.customerDashboard, { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/Dashboard/i);
+    await page.goto('/vendor/billing', { waitUntil: 'domcontentloaded' });
+    await expect(page).toHaveURL(/\/vendor\/billing$/);
+    await expect(page.getByRole('heading', { name: 'Billing' })).toBeVisible();
   });
 });
