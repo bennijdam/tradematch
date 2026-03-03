@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname, '../..'),
   },
-  transpilePackages: ['@tradematch/types'],
 };
 
 export default nextConfig;

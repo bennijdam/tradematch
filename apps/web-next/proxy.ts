@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 type SyntheticSession = {
   token: string;
+  role: 'vendor' | 'customer';
 };
 
 const LEGACY_VENDOR_REDIRECTS: Record<string, string> = {
@@ -34,6 +35,9 @@ const LEGACY_VENDOR_REDIRECTS: Record<string, string> = {
   '/vendor-dashboard/vendor-archived-jobs': '/vendor/active-jobs',
   '/vendor-dashboard/vendor-active-quotes': '/vendor/active-jobs',
   '/vendor-dashboard/vendor-new-jobs': '/vendor/active-jobs',
+  '/user-dashboard.html': '/customer/dashboard',
+  '/user-messages.html': '/customer/dashboard#messages',
+  '/user-settings.html': '/customer/dashboard',
 };
 
 function normalizePath(pathname: string) {
@@ -65,10 +69,11 @@ function resolveSyntheticSession(request: NextRequest): SyntheticSession | null 
   }
 
   const syntheticUser = request.headers.get('x-tradematch-test-user') || 'vendor';
-  const normalizedUser = syntheticUser.toLowerCase() === 'customer' ? 'customer' : 'vendor';
+  const role = syntheticUser.toLowerCase() === 'customer' ? 'customer' : 'vendor';
 
   return {
-    token: `e2e-${normalizedUser}-token`,
+    token: `e2e-${role}-token`,
+    role,
   };
 }
 
@@ -87,7 +92,7 @@ export function proxy(request: NextRequest) {
 
   if ((sourcePath === '/' || sourcePath === '/index.html') && (hasSession || canAutoSession)) {
     const url = request.nextUrl.clone();
-    url.pathname = '/vendor/dashboard';
+    url.pathname = syntheticSession?.role === 'customer' ? '/customer/dashboard' : '/vendor/dashboard';
     const response = NextResponse.redirect(url, 307);
     if (syntheticSession && !hasSession) {
       applySyntheticCookies(response, syntheticSession);
