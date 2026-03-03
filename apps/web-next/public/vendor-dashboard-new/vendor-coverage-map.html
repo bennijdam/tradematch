@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coverage Map — TradeMatch Location Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.1);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h: 72px;
+  --panel-w: 340px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-size:16px}
+body{font-family:var(--fb);background:var(--bg-primary);color:var(--text-1);overflow:hidden;-webkit-font-smoothing:antialiased;transition:background 0.3s,color 0.3s}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:width 0.3s cubic-bezier(0.4,0,0.2,1)}
+.sidebar.collapsed{width:72px}
+.sidebar-logo{height:var(--topnav-h);display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);gap:12px;flex-shrink:0}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:20px;height:20px;color:#fff;stroke-width:2.5}
+.logo-text{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-0.04em;color:var(--text-1);white-space:nowrap;overflow:hidden}
+.logo-text span{color:var(--neon)}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-section-label,.sidebar.collapsed .sidebar-footer,.sidebar.collapsed .nav-badge,.sidebar.collapsed .nav-badge-danger,.sidebar.collapsed .expiry-dot{display:none}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.nav-section-label{font-family:var(--fm);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-3);padding:6px 12px;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.18s;color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;position:relative;margin-bottom:2px}
+.nav-item:hover{background:var(--bg-tertiary);color:var(--text-1)}
+.nav-item.active{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.nav-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px;stroke-width:1.8}
+.nav-label{white-space:nowrap;overflow:hidden;flex:1}
+.nav-badge{background:var(--neon-dim);color:var(--neon);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid var(--border-neon);margin-left:auto}
+.nav-badge-danger{background:rgba(255,71,87,0.12);color:var(--accent-danger);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto}
+.expiry-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-amber);margin-left:auto;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.4}}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);flex-shrink:0}
+.profile-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg-tertiary);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;text-align:left}
+.avatar{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.avatar-info{flex:1;min-width:0}
+.avatar-name{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-1)}
+.avatar-role{font-size:11px;color:var(--text-2)}
+.profile-chevron{color:var(--text-3)}
+.profile-chevron svg{width:14px;height:14px;stroke-width:2}
+.sidebar-upgrade-slim{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(66,165,245,0.06));border:1px solid var(--border-neon);cursor:pointer;transition:all 0.2s;margin-top:8px}
+.sidebar-upgrade-slim:hover{background:linear-gradient(135deg,rgba(0,229,160,0.14),rgba(66,165,245,0.1));box-shadow:var(--neon-glow-sm)}
+.sidebar-upgrade-slim-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-upgrade-slim-icon svg{width:14px;height:14px;color:#fff;stroke-width:2.5}
+.sidebar-upgrade-slim-body{flex:1;text-align:left}
+.sidebar-upgrade-slim-title{font-family:var(--ff);font-size:12px;font-weight:700;color:var(--neon)}
+.sidebar-upgrade-slim-sub{font-size:10px;color:var(--text-2)}
+.sidebar-upgrade-slim-arrow{width:14px;height:14px;color:var(--text-3);stroke-width:2.5;flex-shrink:0}
+
+/* ── TOP NAV ── */
+.topnav{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topnav-h);background:rgba(8,12,18,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:90;transition:left 0.3s cubic-bezier(0.4,0,0.2,1)}
+[data-theme="light"] .topnav{background:rgba(240,244,248,0.94)}
+.topnav.collapsed{left:72px}
+.hamburger{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all 0.2s;flex-shrink:0}
+.hamburger:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.hamburger svg{width:16px;height:16px;stroke-width:2}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-2)}
+.breadcrumb-sep{color:var(--text-3)}
+.breadcrumb-current{font-family:var(--ff);font-weight:700;color:var(--text-1);font-size:15px}
+.topnav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.notif-pill{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-tertiary);cursor:pointer;transition:all 0.2s;color:var(--text-2);font-size:13px;font-weight:500}
+.notif-pill:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.notif-pill-bell{position:relative;display:flex}
+.notif-pill-bell svg{width:16px;height:16px;stroke-width:1.8}
+.notif-pill-badge{position:absolute;top:-5px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--accent-danger);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-secondary)}
+.balance-info-btn{display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:10px;background:var(--neon-dim);border:1px solid var(--border-neon);cursor:pointer;transition:all 0.2s}
+.balance-info-btn:hover{background:rgba(0,229,160,0.15);box-shadow:var(--neon-glow-sm)}
+.balance-info-btn-icon{font-size:16px}
+.balance-info-btn-label{font-family:var(--fm);font-size:10px;color:var(--neon);opacity:0.7;text-transform:uppercase;letter-spacing:0.08em}
+.balance-info-btn-amount{font-family:var(--ff);font-size:15px;font-weight:800;color:var(--neon);letter-spacing:-0.03em}
+.theme-toggle-btn{width:52px;height:28px;border-radius:100px;background:#1e293b;border:1px solid var(--border-2);cursor:pointer;position:relative;transition:all 0.3s;display:flex;align-items:center;padding:0 4px;flex-shrink:0}
+[data-theme="light"] .theme-toggle-btn{background:#e0f2fe;border-color:#bae6fd}
+.toggle-knob{width:20px;height:20px;border-radius:50%;background:#334155;position:absolute;left:4px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+[data-theme="light"] .toggle-knob{left:26px;background:#f59e0b;box-shadow:0 0 10px rgba(245,158,11,0.5)}
+.toggle-knob svg{width:11px;height:11px;color:#fff;stroke-width:2.5}
+
+/* ── LAYOUT ── */
+.map-layout{position:fixed;top:var(--topnav-h);left:var(--sidebar-w);right:0;bottom:0;display:flex;transition:left 0.3s cubic-bezier(0.4,0,0.2,1)}
+.map-layout.collapsed{left:72px}
+
+/* ── MAP CANVAS ── */
+.map-canvas{flex:1;position:relative;overflow:hidden;background:#0a1628}
+
+/* SVG UK Map background art */
+.map-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+
+/* Grid overlay */
+.map-grid{position:absolute;inset:0;background-image:
+  linear-gradient(rgba(0,229,160,0.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,229,160,0.04) 1px,transparent 1px);
+background-size:60px 60px;pointer-events:none}
+
+/* Heatmap blobs */
+.heatmap-layer{position:absolute;inset:0;pointer-events:none;opacity:0.6;transition:opacity 0.5s}
+.heat-blob{position:absolute;border-radius:50%;filter:blur(60px);transition:all 0.8s ease}
+
+/* Vendor pins */
+.vendor-pin{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:10}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,0.8);position:relative;transition:all 0.2s}
+.pin-dot.available{background:var(--neon);box-shadow:0 0 8px rgba(0,229,160,0.6)}
+.pin-dot.busy{background:var(--accent-amber);box-shadow:0 0 8px rgba(255,167,38,0.5)}
+.pin-dot.elite{background:var(--accent-purple);box-shadow:0 0 8px rgba(156,95,233,0.6)}
+.pin-dot.hotspot{width:18px;height:18px;background:transparent;border:2px solid var(--accent-danger)}
+.pin-pulse{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;height:100%;border-radius:50%;animation:pin-pulse-anim 2.5s ease-out infinite;pointer-events:none}
+.pin-dot.available .pin-pulse{background:rgba(0,229,160,0.4)}
+.pin-dot.elite .pin-pulse{background:rgba(156,95,233,0.4)}
+.pin-dot.hotspot .pin-pulse{background:rgba(255,71,87,0.3)}
+@keyframes pin-pulse-anim{0%{transform:translate(-50%,-50%) scale(1);opacity:0.8}100%{transform:translate(-50%,-50%) scale(3.5);opacity:0}}
+.vendor-pin:hover .pin-dot{transform:scale(1.4)}
+.pin-label{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg-secondary);border:1px solid var(--border-2);border-radius:8px;padding:5px 9px;font-size:11px;font-family:var(--ff);font-weight:700;color:var(--text-1);white-space:nowrap;opacity:0;transition:opacity 0.15s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
+.vendor-pin:hover .pin-label{opacity:1}
+
+/* City labels */
+.city-label{position:absolute;transform:translate(-50%,-50%);font-family:var(--fm);font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase;pointer-events:none;text-align:center;line-height:1.3}
+[data-theme="light"] .city-label{color:rgba(0,0,0,0.2)}
+
+/* Travel ring */
+.travel-ring{position:absolute;border-radius:50%;pointer-events:none;border:1.5px dashed rgba(0,229,160,0.4);transform:translate(-50%,-50%);transition:all 0.5s ease}
+.travel-ring-2{border-color:rgba(66,165,245,0.3)}
+.travel-ring-3{border-color:rgba(255,167,38,0.2)}
+
+/* Demand zone */
+.demand-zone{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);border:2px solid;animation:demand-breathe 3s ease-in-out infinite}
+@keyframes demand-breathe{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.05)}}
+
+/* Storm forecast overlay */
+.storm-zone{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);filter:blur(4px);animation:storm-pulse 4s ease-in-out infinite}
+@keyframes storm-pulse{0%,100%{opacity:0.5}50%{opacity:0.8}}
+
+/* Map tooltip */
+.map-tooltip{position:absolute;z-index:20;background:var(--bg-secondary);border:1px solid var(--border-neon);border-radius:12px;padding:14px 16px;width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.5);pointer-events:none;transition:opacity 0.15s}
+.map-tooltip.hidden{opacity:0}
+.map-tooltip-trade{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--neon);margin-bottom:4px}
+.map-tooltip-name{font-family:var(--ff);font-weight:700;font-size:13px;color:var(--text-1);margin-bottom:8px}
+.map-tooltip-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);padding:2px 0}
+.map-tooltip-val{font-family:var(--fm);color:var(--text-1);font-weight:600}
+.map-tooltip-score{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.trust-score-bar{flex:1;height:4px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.trust-score-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#007a3d,var(--neon))}
+
+/* ── CONTROL BAR (top of map) ── */
+.map-controls{position:absolute;top:16px;left:16px;right:16px;z-index:15;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--bg-secondary);border:1px solid var(--border-2);border-radius:12px;padding:10px 16px;flex:1;min-width:280px;max-width:400px;backdrop-filter:blur(12px)}
+[data-theme="light"] .search-bar{background:rgba(255,255,255,0.95)}
+.search-bar svg{width:16px;height:16px;stroke-width:2;color:var(--text-3);flex-shrink:0}
+.search-input{flex:1;background:transparent;border:none;outline:none;font-family:var(--fb);font-size:14px;color:var(--text-1)}
+.search-input::placeholder{color:var(--text-3)}
+.search-pill{font-family:var(--fm);font-size:10px;background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon);padding:3px 8px;border-radius:20px;white-space:nowrap}
+.map-ctrl-group{display:flex;align-items:center;gap:6px;background:var(--bg-secondary);border:1px solid var(--border-2);border-radius:12px;padding:6px;backdrop-filter:blur(12px)}
+[data-theme="light"] .map-ctrl-group{background:rgba(255,255,255,0.95)}
+.map-ctrl-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-family:var(--ff);font-size:12px;font-weight:600;color:var(--text-2);transition:all 0.18s;white-space:nowrap}
+.map-ctrl-btn svg{width:14px;height:14px;stroke-width:2;flex-shrink:0}
+.map-ctrl-btn:hover{background:var(--bg-tertiary);color:var(--text-1)}
+.map-ctrl-btn.active{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.map-ctrl-btn.active-blue{background:rgba(66,165,245,0.1);color:var(--accent-blue);border:1px solid rgba(66,165,245,0.25)}
+.map-ctrl-btn.active-amber{background:rgba(255,167,38,0.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,0.25)}
+.map-ctrl-btn.active-purple{background:rgba(156,95,233,0.1);color:var(--accent-purple);border:1px solid rgba(156,95,233,0.25)}
+.map-ctrl-divider{width:1px;height:24px;background:var(--border);flex-shrink:0}
+.map-ctrl-btn.danger{color:var(--accent-danger)}
+
+/* ── ZOOM CONTROLS ── */
+.zoom-controls{position:absolute;bottom:80px;right:16px;z-index:15;display:flex;flex-direction:column;gap:6px}
+.zoom-btn{width:36px;height:36px;border-radius:8px;background:var(--bg-secondary);border:1px solid var(--border-2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--text-2)}
+.zoom-btn:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.zoom-btn svg{width:16px;height:16px;stroke-width:2.5}
+
+/* ── MAP LEGEND ── */
+.map-legend{position:absolute;bottom:16px;left:16px;z-index:15;background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;padding:12px 14px;backdrop-filter:blur(12px)}
+[data-theme="light"] .map-legend{background:rgba(255,255,255,0.95)}
+.legend-title{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px}
+.legend-items{display:flex;gap:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-dot.available{background:var(--neon)}
+.legend-dot.busy{background:var(--accent-amber)}
+.legend-dot.elite{background:var(--accent-purple)}
+.legend-dot.hotspot{background:transparent;border:2px solid var(--accent-danger)}
+.legend-dot.heat-high{background:rgba(255,71,87,0.7)}
+.legend-dot.heat-med{background:rgba(255,167,38,0.6)}
+.legend-dot.heat-low{background:rgba(0,229,160,0.5)}
+
+/* ── STATS BAR (bottom of map) ── */
+.map-stats-bar{position:absolute;bottom:16px;right:16px;z-index:15;display:flex;gap:10px}
+.map-stat-pill{background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:8px 14px;backdrop-filter:blur(12px);display:flex;align-items:center;gap:8px}
+[data-theme="light"] .map-stat-pill{background:rgba(255,255,255,0.95)}
+.map-stat-label{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3)}
+.map-stat-value{font-family:var(--ff);font-size:13px;font-weight:800;color:var(--text-1)}
+.map-stat-dot{width:7px;height:7px;border-radius:50%;background:var(--neon);animation:pulse-dot 1.5s infinite;flex-shrink:0}
+
+/* ── SIDE PANEL ── */
+.side-panel{width:var(--panel-w);background:var(--bg-secondary);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;z-index:10}
+.panel-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.panel-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.panel-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);animation:pulse-dot 1.5s infinite}
+.panel-title{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-0.03em;color:var(--text-1)}
+.panel-sub{font-size:12px;color:var(--text-2);margin-top:2px}
+.panel-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0}
+.panel-tab{flex:1;padding:10px 12px;background:transparent;border:none;cursor:pointer;font-family:var(--ff);font-size:12px;font-weight:700;color:var(--text-3);border-bottom:2px solid transparent;transition:all 0.18s;text-align:center}
+.panel-tab.active{color:var(--neon);border-bottom-color:var(--neon)}
+.panel-tab:hover:not(.active){color:var(--text-2)}
+.panel-body{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+
+/* Panel sections */
+.panel-section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.panel-section:last-child{border-bottom:none}
+.ps-label{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+
+/* Demand stats */
+.demand-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.demand-card{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px;transition:all 0.2s;cursor:pointer}
+.demand-card:hover{border-color:var(--border-neon);background:var(--bg-card-hover)}
+.demand-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.demand-trade-icon{font-size:16px}
+.demand-trend{font-family:var(--fm);font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
+.demand-trend.up{background:var(--neon-dim);color:var(--neon)}
+.demand-trend.hot{background:rgba(255,71,87,0.1);color:var(--accent-danger)}
+.demand-card-label{font-size:11px;color:var(--text-2);margin-bottom:2px}
+.demand-card-value{font-family:var(--ff);font-size:15px;font-weight:800;color:var(--text-1);letter-spacing:-0.03em}
+
+/* Opportunity zones */
+.opp-zone-list{display:flex;flex-direction:column;gap:8px}
+.opp-zone{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.2s}
+.opp-zone:hover{border-color:var(--border-neon);background:var(--bg-card-hover)}
+.opp-zone-heat{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.opp-zone-heat.critical{background:var(--accent-danger);box-shadow:0 0 6px rgba(255,71,87,0.5)}
+.opp-zone-heat.high{background:var(--accent-amber)}
+.opp-zone-heat.medium{background:var(--neon)}
+.opp-zone-info{flex:1;min-width:0}
+.opp-zone-name{font-size:13px;font-weight:600;color:var(--text-1)}
+.opp-zone-meta{font-size:11px;color:var(--text-3)}
+.opp-zone-gap{font-family:var(--fm);font-size:11px;font-weight:700;text-align:right;flex-shrink:0}
+.opp-zone-gap.critical{color:var(--accent-danger)}
+.opp-zone-gap.high{color:var(--accent-amber)}
+.opp-zone-gap.medium{color:var(--neon)}
+
+/* Travel time */
+.travel-display{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.travel-rings-legend{display:flex;gap:10px;flex-wrap:wrap}
+.travel-ring-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2)}
+.travel-ring-swatch{width:20px;height:2px;border-radius:1px}
+
+/* Forecast card */
+.forecast-card{background:linear-gradient(135deg,rgba(255,167,38,0.07),rgba(255,71,87,0.04));border:1px solid rgba(255,167,38,0.25);border-radius:10px;padding:14px}
+.forecast-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.forecast-icon{width:28px;height:28px;border-radius:7px;background:rgba(255,167,38,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.forecast-icon svg{width:14px;height:14px;stroke-width:2;color:var(--accent-amber)}
+.forecast-label{font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-amber)}
+.forecast-title{font-size:13px;font-weight:700;color:var(--text-1)}
+.forecast-text{font-size:12px;color:var(--text-2);line-height:1.5}
+.forecast-trades{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.forecast-trade-pill{font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(255,167,38,0.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,0.2)}
+
+/* Trust filter */
+.trust-slider-wrap{padding:6px 0}
+.trust-slider{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--neon) var(--pct,70%),var(--bg-tertiary) var(--pct,70%));outline:none;cursor:pointer}
+.trust-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--neon);border:2px solid var(--bg-secondary);box-shadow:0 0 8px rgba(0,229,160,0.4);cursor:pointer}
+.trust-range-labels{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--text-3);margin-top:4px}
+.trust-display{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.trust-display-val{font-family:var(--ff);font-size:1.2rem;font-weight:800;color:var(--neon)}
+
+/* Pseo pages */
+.pseo-list{display:flex;flex-direction:column;gap:6px}
+.pseo-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all 0.18s}
+.pseo-item:hover{border-color:var(--border-neon);background:var(--bg-card-hover)}
+.pseo-icon{width:24px;height:24px;border-radius:6px;background:var(--neon-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pseo-icon svg{width:12px;height:12px;stroke-width:2;color:var(--neon)}
+.pseo-info{flex:1}
+.pseo-title{font-size:12px;font-weight:600;color:var(--text-1)}
+.pseo-meta{font-family:var(--fm);font-size:10px;color:var(--text-3)}
+.pseo-rank{font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 6px;border-radius:6px}
+.pseo-rank.g1{background:var(--neon-dim);color:var(--neon)}
+.pseo-rank.g2{background:rgba(66,165,245,0.1);color:var(--accent-blue)}
+.pseo-rank.g3{background:rgba(255,167,38,0.1);color:var(--accent-amber)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:12px;font-weight:700;letter-spacing:-0.02em;border-radius:9px;padding:8px 16px;cursor:pointer;border:none;transition:all 0.22s;white-space:nowrap}
+.btn svg{width:14px;height:14px;stroke-width:2}
+.btn-primary{background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;box-shadow:var(--neon-glow-sm)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text-1);border:1px solid var(--border-2)}
+.btn-secondary:hover{background:var(--bg-card-hover);border-color:var(--border-neon);color:var(--neon)}
+.btn-sm{padding:6px 12px;font-size:11px;border-radius:7px}
+.btn-full{width:100%;justify-content:center}
+
+/* Competitor compare */
+.comp-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.comp-row:last-child{border-bottom:none}
+.comp-name{font-size:12px;color:var(--text-2);width:100px;flex-shrink:0}
+.comp-bar-track{flex:1;height:5px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.comp-bar-fill{height:100%;border-radius:100px;transition:width 1s ease}
+.comp-bar-fill.you{background:linear-gradient(90deg,#007a3d,var(--neon))}
+.comp-bar-fill.comp{background:var(--text-3)}
+.comp-val{font-family:var(--fm);font-size:10px;width:40px;text-align:right;flex-shrink:0;color:var(--text-2)}
+
+/* Animated counter */
+.live-counter{font-family:var(--ff);font-size:1.8rem;font-weight:900;letter-spacing:-0.05em;color:var(--neon);font-variant-numeric:tabular-nums}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.6s ease both}
+.slide-in{animation:slideIn 0.5s ease both}
+
+/* Panel tab content */
+.tab-content{display:none}
+.tab-content.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- ═════════════════════ SIDEBAR ═════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/></svg>
+    </div>
+    <div class="logo-text">Trade<span>Match</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Workspace</div>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div><span class="nav-label">Dashboard</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58"/></svg></div><span class="nav-label">Leads</span><span class="nav-badge">3 New</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg></div><span class="nav-label">Messages</span><span class="nav-badge-danger">2</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg></div><span class="nav-label">Quotes & Proposals</span></a>
+    <div class="nav-section-label" style="margin-top:14px">Analytics</div>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div><span class="nav-label">Analytics</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg></div><span class="nav-label">Reputation</span></a>
+    <a class="nav-item active" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg></div><span class="nav-label">Coverage Map</span></a>
+    <div class="nav-section-label" style="margin-top:14px">Account</div>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></div><span class="nav-label">My Profile</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75"/></svg></div><span class="nav-label">Credentials Vault</span><div class="expiry-dot"></div></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="profile-btn">
+      <div class="avatar">JD</div>
+      <div class="avatar-info"><div class="avatar-name">Jake Donovan</div><div class="avatar-role">Electrician · Pro Plan</div></div>
+      <div class="profile-chevron"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg></div>
+    </div>
+    <button class="sidebar-upgrade-slim">
+      <div class="sidebar-upgrade-slim-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg></div>
+      <div class="sidebar-upgrade-slim-body"><div class="sidebar-upgrade-slim-title">Upgrade to Elite</div><div class="sidebar-upgrade-slim-sub">Unlock Heatmaps & Demand View</div></div>
+      <svg class="sidebar-upgrade-slim-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ═════════════════════ TOP NAV ═════════════════════ -->
+<header class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+  <div class="breadcrumb">
+    <span>TradeMatch</span>
+    <span class="breadcrumb-sep">›</span>
+    <span>Analytics</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Coverage Map</span>
+  </div>
+  <div class="topnav-right">
+    <button class="notif-pill">
+      <div class="notif-pill-bell">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span class="notif-pill-badge">3</span>
+      </div>
+      <span class="notif-pill-label">Alerts</span>
+    </button>
+    <button class="balance-info-btn">
+      <div class="balance-info-btn-icon">💳</div>
+      <div><div class="balance-info-btn-label">Balance</div><div class="balance-info-btn-amount">£47.50</div></div>
+    </button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <div class="toggle-knob" id="toggleKnob">
+        <svg xmlns="http://www.w3.org/2000/svg" id="themeIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+      </div>
+    </button>
+  </div>
+</header>
+
+<!-- ═════════════════════ MAP LAYOUT ═════════════════════ -->
+<div class="map-layout" id="mapLayout">
+
+  <!-- ════ MAP CANVAS ════ -->
+  <div class="map-canvas" id="mapCanvas">
+
+    <!-- Grid -->
+    <div class="map-grid"></div>
+
+    <!-- SVG UK Map Silhouette -->
+    <div class="map-bg">
+      <svg viewBox="0 0 500 700" style="height:90%;width:auto;opacity:0.12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simplified UK outline shape -->
+        <path d="M280,30 L300,50 L320,60 L340,80 L330,110 L350,130 L360,160 L340,190 L360,210 L370,240 L350,270 L340,300 L360,320 L380,350 L370,380 L350,400 L340,430 L320,450 L300,460 L280,480 L260,490 L240,480 L220,470 L200,450 L180,440 L170,420 L160,400 L150,380 L160,360 L150,340 L130,320 L140,300 L150,280 L140,260 L160,240 L170,220 L160,200 L180,180 L200,170 L210,150 L200,130 L210,110 L230,90 L250,70 L270,50 Z" 
+              stroke="#00E5A0" stroke-width="2" fill="rgba(0,229,160,0.05)"/>
+        <!-- Scotland -->
+        <path d="M230,90 L210,70 L200,50 L210,30 L230,20 L250,30 L270,50 L250,70 Z"
+              stroke="#00E5A0" stroke-width="1.5" fill="rgba(0,229,160,0.04)"/>
+        <!-- Wales bump -->
+        <path d="M160,340 L140,360 L130,380 L150,390 L160,380 L160,360 Z"
+              stroke="#00E5A0" stroke-width="1" fill="rgba(0,229,160,0.04)"/>
+        <!-- Northern Ireland -->
+        <path d="M100,200 L120,190 L140,200 L130,220 L110,220 Z"
+              stroke="#00E5A0" stroke-width="1" fill="rgba(0,229,160,0.04)"/>
+      </svg>
+    </div>
+
+    <!-- ── HEATMAP BLOBS ── -->
+    <div class="heatmap-layer" id="heatLayer">
+      <!-- London cluster - HIGH density -->
+      <div class="heat-blob" style="width:220px;height:180px;background:radial-gradient(circle,rgba(255,71,87,0.55) 0%,rgba(255,71,87,0.2) 50%,transparent 70%);left:55%;top:62%"></div>
+      <!-- Manchester - HIGH -->
+      <div class="heat-blob" style="width:150px;height:130px;background:radial-gradient(circle,rgba(255,167,38,0.5) 0%,rgba(255,167,38,0.18) 50%,transparent 70%);left:40%;top:35%"></div>
+      <!-- Birmingham - MED -->
+      <div class="heat-blob" style="width:130px;height:110px;background:radial-gradient(circle,rgba(255,167,38,0.4) 0%,rgba(255,167,38,0.14) 50%,transparent 70%);left:47%;top:52%"></div>
+      <!-- Leeds - MED -->
+      <div class="heat-blob" style="width:110px;height:90px;background:radial-gradient(circle,rgba(255,167,38,0.38) 0%,rgba(255,167,38,0.12) 50%,transparent 70%);left:48%;top:28%"></div>
+      <!-- Bristol - MED -->
+      <div class="heat-blob" style="width:100px;height:85px;background:radial-gradient(circle,rgba(0,229,160,0.4) 0%,rgba(0,229,160,0.12) 50%,transparent 70%);left:34%;top:62%"></div>
+      <!-- Edinburgh - LOW -->
+      <div class="heat-blob" style="width:80px;height:70px;background:radial-gradient(circle,rgba(0,229,160,0.3) 0%,rgba(0,229,160,0.1) 50%,transparent 70%);left:40%;top:10%"></div>
+      <!-- Newcastle - LOW -->
+      <div class="heat-blob" style="width:70px;height:60px;background:radial-gradient(circle,rgba(0,229,160,0.28) 0%,rgba(0,229,160,0.08) 50%,transparent 70%);left:45%;top:20%"></div>
+      <!-- Demand gap zone Cornwall -->
+      <div class="heat-blob" style="width:60px;height:50px;background:radial-gradient(circle,rgba(66,165,245,0.15) 0%,transparent 70%);left:22%;top:78%"></div>
+    </div>
+
+    <!-- ── STORM FORECAST OVERLAY (visible when Forecast mode active) ── -->
+    <div id="stormLayer" style="display:none">
+      <div class="storm-zone" style="width:160px;height:120px;background:rgba(255,167,38,0.2);border:2px dashed rgba(255,167,38,0.5);left:22%;top:68%;"></div>
+      <div class="storm-zone" style="width:100px;height:80px;background:rgba(255,167,38,0.15);border:2px dashed rgba(255,167,38,0.4);left:35%;top:75%;animation-delay:1s"></div>
+      <div style="position:absolute;left:22%;top:68%;transform:translate(-50%,-50%);background:rgba(255,167,38,0.9);color:#000;font-family:var(--ff);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;pointer-events:none">⛈ Storm Forecast +7d</div>
+    </div>
+
+    <!-- ── VENDOR PINS ── -->
+    <!-- London / South East area -->
+    <div class="vendor-pin" style="left:56%;top:61%">
+      <div class="pin-dot elite"><div class="pin-pulse"></div></div>
+      <div class="pin-label">⚡ Elite · 4.9★ · £95/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:59%;top:64%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔧 Available · 4.7★ · £85/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:53%;top:65%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🪠 Available · 4.8★ · £90/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:58%;top:59%">
+      <div class="pin-dot busy"></div>
+      <div class="pin-label">🏠 On-Site · Est. free 3pm</div>
+    </div>
+    <div class="vendor-pin" style="left:61%;top:67%">
+      <div class="pin-dot busy"></div>
+      <div class="pin-label">🔌 On-Site · Job #T48219</div>
+    </div>
+    <div class="vendor-pin" style="left:55%;top:68%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔥 Boiler Specialist · 4.9★</div>
+    </div>
+    <!-- Hotspot demand ring - East London -->
+    <div class="vendor-pin" style="left:62%;top:62%">
+      <div class="pin-dot hotspot"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔴 Lead Hotspot · 14 jobs today</div>
+    </div>
+
+    <!-- Manchester -->
+    <div class="vendor-pin" style="left:40%;top:32%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">⚡ Available · 4.6★ · £80/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:42%;top:36%">
+      <div class="pin-dot elite"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🏗 Elite · 5.0★ · £110/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:38%;top:35%">
+      <div class="pin-dot busy"></div>
+      <div class="pin-label">🔧 On-Site · Est. free 5pm</div>
+    </div>
+    <!-- Manchester hotspot -->
+    <div class="vendor-pin" style="left:43%;top:33%">
+      <div class="pin-dot hotspot"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔴 Hotspot · 8 jobs open</div>
+    </div>
+
+    <!-- Birmingham -->
+    <div class="vendor-pin" style="left:46%;top:50%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔌 Available · 4.5★ · £75/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:49%;top:53%">
+      <div class="pin-dot busy"></div>
+      <div class="pin-label">🏠 On-Site · Est. free 2pm</div>
+    </div>
+
+    <!-- Leeds -->
+    <div class="vendor-pin" style="left:47%;top:27%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🔧 Available · 4.4★ · £78/hr</div>
+    </div>
+    <div class="vendor-pin" style="left:50%;top:25%">
+      <div class="pin-dot elite"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🏗 Elite Builder · 4.9★</div>
+    </div>
+
+    <!-- Bristol -->
+    <div class="vendor-pin" style="left:34%;top:61%">
+      <div class="pin-dot available"><div class="pin-pulse"></div></div>
+      <div class="pin-label">🪠 Plumber · 4.7★ · £88/hr</div>
+    </div>
+
+    <!-- Edinburgh -->
+    <div class="vendor-pin" style="left:40%;top:10%">
+      <div class="pin-dot elite"><div class="pin-pulse"></div></div>
+      <div class="pin-label">⚡ Elite · 4.9★ · £95/hr</div>
+    </div>
+
+    <!-- ── TRAVEL TIME RINGS (centered on Jake's location - East London) ── -->
+    <div class="travel-ring" id="ring1" style="width:120px;height:120px;left:57%;top:63%"></div>
+    <div class="travel-ring travel-ring-2" id="ring2" style="width:220px;height:220px;left:57%;top:63%"></div>
+    <div class="travel-ring travel-ring-3" id="ring3" style="width:340px;height:340px;left:57%;top:63%"></div>
+
+    <!-- ── DEMAND GAP ZONES ── -->
+    <div class="demand-zone" id="demandZones" style="display:none">
+      <div style="position:absolute;width:90px;height:70px;border-color:rgba(66,165,245,0.5);background:rgba(66,165,245,0.06);border:2px solid rgba(66,165,245,0.4);border-radius:50%;top:72%;left:24%;transform:translate(-50%,-50%)">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--fm);font-size:9px;color:var(--accent-blue);font-weight:700">GAP ZONE</div>
+      </div>
+      <div style="position:absolute;width:70px;height:55px;border-color:rgba(66,165,245,0.4);background:rgba(66,165,245,0.05);border:2px solid rgba(66,165,245,0.35);border-radius:50%;top:15%;left:30%;transform:translate(-50%,-50%)">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--fm);font-size:9px;color:var(--accent-blue);font-weight:700">GAP ZONE</div>
+      </div>
+    </div>
+
+    <!-- ── CITY LABELS ── -->
+    <div class="city-label" style="left:57%;top:67%">London<br><span style="font-size:9px">2,847 vendors</span></div>
+    <div class="city-label" style="left:40%;top:40%">Manchester<br><span style="font-size:9px">634 vendors</span></div>
+    <div class="city-label" style="left:47%;top:57%">Birmingham<br><span style="font-size:9px">512 vendors</span></div>
+    <div class="city-label" style="left:47%;top:23%">Leeds<br><span style="font-size:9px">398 vendors</span></div>
+    <div class="city-label" style="left:33%;top:66%">Bristol<br><span style="font-size:9px">287 vendors</span></div>
+    <div class="city-label" style="left:40%;top:14%">Edinburgh<br><span style="font-size:9px">201 vendors</span></div>
+
+    <!-- ── MY LOCATION PIN (Jake's base) ── -->
+    <div style="position:absolute;left:57%;top:63%;transform:translate(-50%,-50%);z-index:12;cursor:pointer">
+      <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#007a3d,var(--neon));border:3px solid rgba(255,255,255,0.9);box-shadow:0 0 16px rgba(0,229,160,0.7);display:flex;align-items:center;justify-content:center;font-size:10px">📍</div>
+      <div style="position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;font-family:var(--ff);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap">Jake D. · E1 6QR</div>
+    </div>
+
+    <!-- ── CONTROLS ── -->
+    <div class="map-controls">
+      <!-- Search -->
+      <div class="search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+        <input class="search-input" placeholder="Search by postcode, city or trade…" value="E1 6QR — Electricians">
+        <span class="search-pill">48 Trades</span>
+      </div>
+
+      <!-- Layer toggles -->
+      <div class="map-ctrl-group">
+        <button class="map-ctrl-btn active" onclick="toggleLayer(this,'heatmap')">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/></svg>
+          Density Heatmap
+        </button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn active-blue" onclick="toggleLayer(this,'travel')" id="travelBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Travel-Time Rings
+        </button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn" onclick="toggleLayer(this,'demand')" id="demandBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75"/></svg>
+          Demand View
+        </button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn" onclick="toggleLayer(this,'forecast')" id="forecastBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+          Storm Forecast
+        </button>
+      </div>
+
+      <!-- Trade filter -->
+      <div class="map-ctrl-group">
+        <button class="map-ctrl-btn active">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+          ⚡ Electricians
+        </button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn">🪠 Plumbers</button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn">🏗 Builders</button>
+        <div class="map-ctrl-divider"></div>
+        <button class="map-ctrl-btn" style="color:var(--text-3)">+45 more</button>
+      </div>
+    </div>
+
+    <!-- ── ZOOM CONTROLS ── -->
+    <div class="zoom-controls">
+      <button class="zoom-btn"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg></button>
+      <button class="zoom-btn"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"/></svg></button>
+      <button class="zoom-btn" style="margin-top:4px"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg></button>
+    </div>
+
+    <!-- ── LEGEND ── -->
+    <div class="map-legend">
+      <div class="legend-title">Map Legend</div>
+      <div class="legend-items">
+        <div class="legend-item"><div class="legend-dot available"></div> Available</div>
+        <div class="legend-item"><div class="legend-dot busy"></div> On-Site</div>
+        <div class="legend-item"><div class="legend-dot elite"></div> Elite</div>
+        <div class="legend-item"><div class="legend-dot hotspot"></div> Lead Hotspot</div>
+        <div class="legend-item"><div class="legend-dot heat-high"></div> High Demand</div>
+        <div class="legend-item"><div class="legend-dot heat-med"></div> Medium</div>
+        <div class="legend-item"><div class="legend-dot heat-low"></div> Low</div>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM STAT PILLS ── -->
+    <div class="map-stats-bar">
+      <div class="map-stat-pill">
+        <div class="map-stat-dot"></div>
+        <div>
+          <div class="map-stat-label">Live Vendors</div>
+          <div class="map-stat-value"><span id="liveCount">6,284</span></div>
+        </div>
+      </div>
+      <div class="map-stat-pill">
+        <div>
+          <div class="map-stat-label">Open Jobs Today</div>
+          <div class="map-stat-value">1,847</div>
+        </div>
+      </div>
+      <div class="map-stat-pill">
+        <div>
+          <div class="map-stat-label">Avg Response (London)</div>
+          <div class="map-stat-value">47 min</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /map-canvas -->
+
+  <!-- ════ SIDE PANEL ════ -->
+  <div class="side-panel">
+    <div class="panel-header">
+      <div class="panel-eyebrow"><div class="panel-eyebrow-dot"></div>Location Intelligence</div>
+      <div class="panel-title">Market Data</div>
+      <div class="panel-sub">East London · E1 · Electricians</div>
+    </div>
+
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab(this,'demand')">Demand</button>
+      <button class="panel-tab" onclick="switchTab(this,'travel')">Travel</button>
+      <button class="panel-tab" onclick="switchTab(this,'trust')">Trust Radius</button>
+      <button class="panel-tab" onclick="switchTab(this,'pseo')">Pages</button>
+    </div>
+
+    <div class="panel-body">
+
+      <!-- ── TAB: DEMAND ── -->
+      <div class="tab-content active" id="tab-demand">
+
+        <!-- Live pulse stats -->
+        <div class="panel-section">
+          <div class="ps-label">Your Sector · E1 Postcode Zone</div>
+          <div class="demand-grid">
+            <div class="demand-card">
+              <div class="demand-card-top">
+                <span class="demand-trade-icon">⚡</span>
+                <span class="demand-trend hot">🔥 HOT</span>
+              </div>
+              <div class="demand-card-label">Open Leads</div>
+              <div class="demand-card-value">14</div>
+            </div>
+            <div class="demand-card">
+              <div class="demand-card-top">
+                <span class="demand-trade-icon">👷</span>
+                <span class="demand-trend up">↑ +3</span>
+              </div>
+              <div class="demand-card-label">Active Vendors</div>
+              <div class="demand-card-value">8</div>
+            </div>
+            <div class="demand-card">
+              <div class="demand-card-top">
+                <span class="demand-trade-icon">💰</span>
+                <span class="demand-trend up">↑ +12%</span>
+              </div>
+              <div class="demand-card-label">Avg Job Value</div>
+              <div class="demand-card-value">£1,240</div>
+            </div>
+            <div class="demand-card">
+              <div class="demand-card-top">
+                <span class="demand-trade-icon">⏱</span>
+                <span class="demand-trend up">Fast</span>
+              </div>
+              <div class="demand-card-label">Avg Win Time</div>
+              <div class="demand-card-value">2.4h</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opportunity Zones -->
+        <div class="panel-section">
+          <div class="ps-label">Demand Gap Zones — Expand Your Coverage</div>
+          <div class="opp-zone-list">
+            <div class="opp-zone" onclick="showDemandGaps()">
+              <div class="opp-zone-heat critical"></div>
+              <div class="opp-zone-info">
+                <div class="opp-zone-name">Cornwall & Devon</div>
+                <div class="opp-zone-meta">23 open jobs · only 2 electricians</div>
+              </div>
+              <div class="opp-zone-gap critical">11:1<br><span style="font-size:9px;color:var(--text-3);font-weight:400">demand/vendor</span></div>
+            </div>
+            <div class="opp-zone">
+              <div class="opp-zone-heat high"></div>
+              <div class="opp-zone-info">
+                <div class="opp-zone-name">Scottish Highlands</div>
+                <div class="opp-zone-meta">8 open jobs · 1 electrician active</div>
+              </div>
+              <div class="opp-zone-gap high">8:1<br><span style="font-size:9px;color:var(--text-3);font-weight:400">demand/vendor</span></div>
+            </div>
+            <div class="opp-zone">
+              <div class="opp-zone-heat high"></div>
+              <div class="opp-zone-info">
+                <div class="opp-zone-name">East Anglia</div>
+                <div class="opp-zone-meta">17 open jobs · 4 vendors</div>
+              </div>
+              <div class="opp-zone-gap high">4:1<br><span style="font-size:9px;color:var(--text-3);font-weight:400">demand/vendor</span></div>
+            </div>
+            <div class="opp-zone">
+              <div class="opp-zone-heat medium"></div>
+              <div class="opp-zone-info">
+                <div class="opp-zone-name">Welsh Valleys</div>
+                <div class="opp-zone-meta">12 open jobs · 5 vendors</div>
+              </div>
+              <div class="opp-zone-gap medium">2.4:1<br><span style="font-size:9px;color:var(--text-3);font-weight:400">demand/vendor</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Predictive Forecast -->
+        <div class="panel-section">
+          <div class="ps-label">Predictive Demand Forecast</div>
+          <div class="forecast-card">
+            <div class="forecast-header">
+              <div class="forecast-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+              </div>
+              <div>
+                <div class="forecast-label">Storm System · Southwest UK</div>
+                <div class="forecast-title">Roofing surge forecast +7 days</div>
+              </div>
+            </div>
+            <div class="forecast-text">Met Office data predicts 80mph+ winds hitting Cornwall and Devon between 8–10 March. Historical data shows emergency repair leads spike <strong style="color:var(--accent-amber)">+340%</strong> in the 72hrs following coastal storms.</div>
+            <div class="forecast-trades">
+              <span class="forecast-trade-pill">🏠 Roofing</span>
+              <span class="forecast-trade-pill">🔧 General Repair</span>
+              <span class="forecast-trade-pill">🪟 Windows</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary btn-full btn-sm" style="margin-top:10px" onclick="toggleLayer(document.getElementById('forecastBtn'),'forecast')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z"/></svg>
+            Show Storm Layer on Map
+          </button>
+        </div>
+
+        <!-- Competitor Benchmarking -->
+        <div class="panel-section">
+          <div class="ps-label">Competitor Benchmarking — E1 Zone</div>
+          <div class="comp-row">
+            <div class="comp-name" style="color:var(--neon);font-weight:700">You</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill you" style="width:76%"></div></div>
+            <div class="comp-val" style="color:var(--neon)">47 min</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-name">Area Avg</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill comp" style="width:55%"></div></div>
+            <div class="comp-val">82 min</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-name">Top Vendor</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill" style="width:95%;background:linear-gradient(90deg,var(--accent-purple),rgba(156,95,233,0.4))"></div></div>
+            <div class="comp-val" style="color:var(--accent-purple)">18 min</div>
+          </div>
+          <div class="comp-row">
+            <div class="comp-name">Checkatrade</div>
+            <div class="comp-bar-track"><div class="comp-bar-fill comp" style="width:28%"></div></div>
+            <div class="comp-val">4.2 hrs</div>
+          </div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:8px">Response time is the #1 predictor of job win in E1. Vendors under 30 min win 68% of leads.</div>
+        </div>
+
+      </div>
+
+      <!-- ── TAB: TRAVEL ── -->
+      <div class="tab-content" id="tab-travel">
+        <div class="panel-section">
+          <div class="ps-label">Travel-Time Reality Engine</div>
+          <div class="travel-display">
+            <div style="font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:10px">Real-world travel from E1 6QR</div>
+            <div class="travel-rings-legend">
+              <div class="travel-ring-item">
+                <div class="travel-ring-swatch" style="background:rgba(0,229,160,0.6);border-top:2px dashed rgba(0,229,160,0.6)"></div>
+                <span>≤ 30 min · Prime Zone</span>
+              </div>
+              <div class="travel-ring-item">
+                <div class="travel-ring-swatch" style="border-top:2px dashed rgba(66,165,245,0.5)"></div>
+                <span>30–60 min</span>
+              </div>
+              <div class="travel-ring-item">
+                <div class="travel-ring-swatch" style="border-top:2px dashed rgba(255,167,38,0.4)"></div>
+                <span>60–90 min · Edge</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px">
+            <div style="font-size:12px;color:var(--text-2);line-height:1.6">
+              <strong style="color:var(--text-1)">AI Traffic Modelling Active.</strong> Rings are calculated using historical TfL + Highways England data. Unlike Bark's crow-flies radius, these reflect <em style="color:var(--neon);font-style:normal">actual travel time</em> including peak-hour congestion.<br><br>
+              <span style="color:var(--accent-amber)">⚠ Alert:</span> A South London job posted 4km away has a modelled travel time of <strong style="color:var(--accent-amber)">1h 47min</strong> (M25 congestion). The AI has flagged this as outside your profitable range.
+            </div>
+          </div>
+
+          <!-- Travel zone stats -->
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--bg-tertiary);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text-1)">Prime Zone ≤ 30 min</div>
+                <div style="font-size:11px;color:var(--text-2)">City of London, Shoreditch, Bethnal Green</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:var(--ff);font-size:14px;font-weight:800;color:var(--neon)">8 leads</div>
+                <div style="font-size:10px;color:var(--text-3)">open now</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-tertiary);border:1px solid rgba(66,165,245,0.2);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text-1)">Mid Zone 30–60 min</div>
+                <div style="font-size:11px;color:var(--text-2)">Hackney, Islington, Brixton, Canary Wharf</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:var(--ff);font-size:14px;font-weight:800;color:var(--accent-blue)">14 leads</div>
+                <div style="font-size:10px;color:var(--text-3)">open now</div>
+              </div>
+            </div>
+            <div style="background:var(--bg-tertiary);border:1px solid rgba(255,167,38,0.15);border-radius:10px;padding:12px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text-1)">Edge Zone 60–90 min</div>
+                <div style="font-size:11px;color:var(--text-2)">South London, Kingston, Croydon</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:var(--ff);font-size:14px;font-weight:800;color:var(--accent-amber)">6 leads</div>
+                <div style="font-size:10px;color:var(--text-3)">consider carefully</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="ps-label">Coverage Area Configuration</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:10px">Adjust your maximum travel-time threshold to control which leads you receive.</div>
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="font-size:13px;font-weight:600;color:var(--text-1)">Max Travel Time</div>
+              <div style="font-family:var(--ff);font-size:1.1rem;font-weight:800;color:var(--neon)">60 min</div>
+            </div>
+            <input type="range" class="trust-slider" min="15" max="120" value="60" style="width:100%">
+            <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--text-3);margin-top:4px"><span>15 min</span><span>120 min</span></div>
+          </div>
+          <button class="btn btn-primary btn-full btn-sm" style="margin-top:10px">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Save Coverage Zone
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TAB: TRUST RADIUS ── -->
+      <div class="tab-content" id="tab-trust">
+        <div class="panel-section">
+          <div class="ps-label">Trust Radius Filter</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:14px;line-height:1.5">Filter the map to show only vendors above a minimum TradeMatch Trust Score within your radius. Helps homeowners find only Elite-verified pros.</div>
+
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+            <div class="trust-display">
+              <div>
+                <div style="font-family:var(--fm);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px">Min Trust Score</div>
+                <div class="trust-display-val" id="trustScoreDisplay">7.0 / 10</div>
+              </div>
+              <span style="font-family:var(--fm);font-size:9px;padding:3px 8px;border-radius:20px;background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)">12 vendors visible</span>
+            </div>
+            <input type="range" class="trust-slider" min="0" max="100" value="70" oninput="updateTrustScore(this.value)">
+            <div class="trust-range-labels"><span>1.0</span><span>5.0</span><span>10.0</span></div>
+          </div>
+
+          <!-- Trust tier breakdown -->
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(156,95,233,0.06);border:1px solid rgba(156,95,233,0.2);border-radius:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--accent-purple)"></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-1)">Elite Vendors</div>
+                  <div style="font-size:10px;color:var(--text-3)">Trust Score ≥ 9.0 · Full Vault</div>
+                </div>
+              </div>
+              <div style="font-family:var(--ff);font-size:13px;font-weight:800;color:var(--accent-purple)">3 nearby</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--neon)"></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-1)">Verified Vendors</div>
+                  <div style="font-size:10px;color:var(--text-3)">Trust Score 7.0–8.9 · Verified</div>
+                </div>
+              </div>
+              <div style="font-family:var(--ff);font-size:13px;font-weight:800;color:var(--neon)">9 nearby</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--text-3)"></div>
+                <div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text-2)">Standard</div>
+                  <div style="font-size:10px;color:var(--text-3)">Trust Score below 7.0</div>
+                </div>
+              </div>
+              <div style="font-family:var(--ff);font-size:13px;font-weight:800;color:var(--text-3)">Hidden</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="ps-label">Your Trust Score — Jake Donovan</div>
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border-neon);border-radius:10px;padding:16px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <div style="position:relative;width:60px;height:60px">
+                <svg viewBox="0 0 36 36" style="width:60px;height:60px;transform:rotate(-90deg)">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--bg-card)" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="url(#tg)" stroke-width="3" stroke-dasharray="87 100" stroke-linecap="round"/>
+                  <defs><linearGradient id="tg"><stop offset="0%" stop-color="#007a3d"/><stop offset="100%" stop-color="#00E5A0"/></linearGradient></defs>
+                </svg>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ff);font-size:13px;font-weight:900;color:var(--neon)">8.7</div>
+              </div>
+              <div>
+                <div style="font-family:var(--ff);font-size:15px;font-weight:800;color:var(--text-1)">Score: 8.7 / 10</div>
+                <div style="font-size:12px;color:var(--text-2)">Top 18% in E1 zone</div>
+                <div style="font-size:11px;color:var(--neon);margin-top:3px">Verified — visible to trust filters</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-2);line-height:1.5">Complete your <strong style="color:var(--text-1)">Credentials Vault</strong> (2 docs pending) to push your score to <strong style="color:var(--neon)">9.4+</strong> and unlock Elite status on the map.</div>
+            <button class="btn btn-secondary btn-full btn-sm" style="margin-top:10px">Go to Credentials Vault</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: pSEO PAGES ── -->
+      <div class="tab-content" id="tab-pseo">
+        <div class="panel-section">
+          <div class="ps-label">AI-Optimised Landing Pages — Your Trade</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.5">Every vendor pin on the map anchors a unique, auto-generated pSEO landing page. These pages are continuously updated with live data to stay fresh in Google's index.</div>
+          <div class="pseo-list">
+            <div class="pseo-item">
+              <div class="pseo-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg></div>
+              <div class="pseo-info">
+                <div class="pseo-title">Electricians in East London</div>
+                <div class="pseo-meta">Updated 4 min ago · 847 monthly visits</div>
+              </div>
+              <span class="pseo-rank g1">#1</span>
+            </div>
+            <div class="pseo-item">
+              <div class="pseo-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg></div>
+              <div class="pseo-info">
+                <div class="pseo-title">Electricians in Shoreditch E1</div>
+                <div class="pseo-meta">Updated 12 min ago · 412 monthly visits</div>
+              </div>
+              <span class="pseo-rank g1">#2</span>
+            </div>
+            <div class="pseo-item">
+              <div class="pseo-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg></div>
+              <div class="pseo-info">
+                <div class="pseo-title">Emergency Electrician London</div>
+                <div class="pseo-meta">Updated 1 hr ago · 2,140 monthly visits</div>
+              </div>
+              <span class="pseo-rank g2">#4</span>
+            </div>
+            <div class="pseo-item">
+              <div class="pseo-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg></div>
+              <div class="pseo-info">
+                <div class="pseo-title">Consumer Unit Upgrade E1</div>
+                <div class="pseo-meta">Updated 2 hrs ago · 198 monthly visits</div>
+              </div>
+              <span class="pseo-rank g2">#6</span>
+            </div>
+            <div class="pseo-item">
+              <div class="pseo-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg></div>
+              <div class="pseo-info">
+                <div class="pseo-title">EICR Certificate Hackney</div>
+                <div class="pseo-meta">Updated 3 hrs ago · 341 monthly visits</div>
+              </div>
+              <span class="pseo-rank g3">#11</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="ps-label">Dynamic Metadata — Live Page Stats</div>
+          <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:12px;color:var(--text-2);line-height:1.6">
+            Pages auto-update with live stats like:<br>
+            <strong style="color:var(--neon)">→</strong> "Average response time in E1: <strong style="color:var(--text-1)">47 minutes</strong>"<br>
+            <strong style="color:var(--neon)">→</strong> "<strong style="color:var(--text-1)">14 jobs</strong> completed in Shoreditch this week"<br>
+            <strong style="color:var(--neon)">→</strong> "Avg rating of electricians in E1: <strong style="color:var(--text-1)">4.8★</strong>"<br><br>
+            <span style="color:var(--text-3)">Google indexes these as fresh, authoritative signals — a structural SEO moat MyJobQuote and LocalSurveyorDirect cannot replicate.</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+            <div style="background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--neon)">2,847</div>
+              <div style="font-size:10px;color:var(--text-2)">Live pSEO pages</div>
+            </div>
+            <div style="background:rgba(66,165,245,0.08);border:1px solid rgba(66,165,245,0.2);border-radius:8px;padding:10px;text-align:center">
+              <div style="font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--accent-blue)">94K</div>
+              <div style="font-size:10px;color:var(--text-2)">Monthly organic visits</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-body -->
+
+    <!-- Panel footer -->
+    <div style="padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0">
+      <button class="btn btn-primary btn-full btn-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        Export Market Report — E1 Zone
+      </button>
+    </div>
+  </div><!-- /side-panel -->
+
+</div><!-- /map-layout -->
+
+<script>
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const ml=document.getElementById('mapLayout');
+  const t=document.getElementById('topnav');
+  s.classList.toggle('collapsed');
+  ml.classList.toggle('collapsed');
+  t.classList.toggle('collapsed');
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.getAttribute('data-theme')==='light';
+  html.setAttribute('data-theme',isLight?'dark':'light');
+  const icon=document.getElementById('themeIcon');
+  if(isLight){
+    icon.innerHTML='<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';
+  } else {
+    icon.innerHTML='<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';
+  }
+}
+
+function switchTab(el, tabId){
+  document.querySelectorAll('.panel-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+tabId).classList.add('active');
+}
+
+function toggleLayer(btn, layer){
+  const classMap = {
+    heatmap: 'active',
+    travel: 'active-blue',
+    demand: 'active-amber',
+    forecast: 'active-amber'
+  };
+  const cls = classMap[layer] || 'active';
+  const isActive = btn.classList.contains(cls);
+
+  if(layer === 'heatmap'){
+    const hl = document.getElementById('heatLayer');
+    if(isActive){btn.classList.remove(cls);hl.style.opacity='0';}
+    else{btn.classList.add(cls);hl.style.opacity='0.6';}
+  }
+  if(layer === 'travel'){
+    const rings = ['ring1','ring2','ring3'];
+    if(isActive){
+      btn.classList.remove(cls);
+      rings.forEach(id=>{const r=document.getElementById(id);if(r)r.style.display='none';});
+    } else {
+      btn.classList.add(cls);
+      rings.forEach(id=>{const r=document.getElementById(id);if(r)r.style.display='block';});
+    }
+  }
+  if(layer === 'demand'){
+    const dz = document.getElementById('demandZones');
+    if(isActive){btn.classList.remove(cls);if(dz)dz.style.display='none';}
+    else{btn.classList.add(cls);if(dz)dz.style.display='block';}
+  }
+  if(layer === 'forecast'){
+    const sl = document.getElementById('stormLayer');
+    if(isActive){btn.classList.remove(cls);if(sl)sl.style.display='none';}
+    else{btn.classList.add(cls);if(sl)sl.style.display='block';}
+  }
+}
+
+function showDemandGaps(){
+  const demandBtn = document.getElementById('demandBtn');
+  // Activate demand layer
+  const dz = document.getElementById('demandZones');
+  if(dz) dz.style.display='block';
+  demandBtn.classList.add('active-amber');
+}
+
+function updateTrustScore(val){
+  const display = document.getElementById('trustScoreDisplay');
+  if(display){
+    const score = (val / 10).toFixed(1);
+    const visible = Math.max(0, Math.round((100-val)/8));
+    display.textContent = score + ' / 10';
+    // Update nearby count
+    const nearbyEl = display.parentElement.parentElement.querySelector('span');
+    if(nearbyEl) nearbyEl.textContent = visible + ' vendors visible';
+  }
+  // Update slider gradient
+  const slider = event.target;
+  slider.style.setProperty('--pct', val+'%');
+  slider.style.background = `linear-gradient(90deg, var(--neon) ${val}%, var(--bg-tertiary) ${val}%)`;
+}
+
+// Animate live counter with realistic fluctuation
+let liveBase = 6284;
+setInterval(()=>{
+  const change = Math.floor(Math.random()*6) - 2;
+  liveBase = Math.max(6270, Math.min(6300, liveBase + change));
+  const el = document.getElementById('liveCount');
+  if(el) el.textContent = liveBase.toLocaleString();
+}, 3500);
+
+// Stagger pin animations
+document.querySelectorAll('.pin-pulse').forEach((el,i)=>{
+  el.style.animationDelay = (i*0.4)+'s';
+});
+
+// Add subtle map canvas cursor tracking glow
+const canvas = document.getElementById('mapCanvas');
+if(canvas){
+  canvas.addEventListener('mousemove', e=>{
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    canvas.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(0,229,160,0.03) 0%, #0a1628 60%)`;
+  });
+  canvas.addEventListener('mouseleave',()=>{
+    canvas.style.background = '#0a1628';
+  });
+}
+</script>
+</body>
+</html>
