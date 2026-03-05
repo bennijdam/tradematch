@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cost Guides | TradeMatch UK — What Should You Pay?</title>
+<meta name="description" content="Transparent, up-to-date UK trade cost guides. Find out what plumbers, electricians, builders and more charge for common jobs in your area. No guesswork, just real data.">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<meta name="theme-color" content="#007a3d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+:root{
+  --neon:#00c268;--neon2:#00a855;--neon3:#007a3d;--neon4:#009e4f;
+  --neon-dim:rgba(0,194,104,.12);--neon-lo:rgba(0,194,104,.07);
+  --neon-glow:0 4px 24px rgba(0,194,104,.28),0 1px 8px rgba(0,194,104,.14);
+  --neon-glow-sm:0 2px 14px rgba(0,194,104,.22);
+  --amber:#f59e0b;--amber2:#fbbf24;
+  --dk-bg:#0d1117;--dk-bg2:#111620;--dk-bg3:#161c28;
+  --dk-t1:#f0f4ff;--dk-t2:#8b95aa;--dk-t3:#5a6478;
+  --dk-border:rgba(255,255,255,.07);--dk-border2:rgba(255,255,255,.12);
+  --dk-glass1:rgba(255,255,255,.03);--dk-glass2:rgba(255,255,255,.06);
+  --border-neon:rgba(0,194,104,.3);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ── SCROLL REVEAL ── */
+.sr{opacity:0;transform:translateY(32px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.sr.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.sr{opacity:1;transform:none}}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.30s}.d6{transition-delay:.36s}
+
+/* ── TYPOGRAPHY ── */
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,229,130,.7);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--neon);opacity:.5}
+.h2{font-family:var(--ff);font-weight:800;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.045em;line-height:1.04;margin-bottom:14px}
+.h2 em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon),#00a855);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.body-sub{font-size:16px;line-height:1.82;max-width:520px;font-weight:300}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{transform:translateY(110%);opacity:0}to{transform:none;opacity:1}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.88);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:all .4s}
+.nav.scrolled .nav-inner{background:rgba(255,255,255,.97);box-shadow:0 4px 32px rgba(0,0,0,.11)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;box-shadow:var(--neon-glow-sm)}
+.nav-logo-icon svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.nav-wordmark{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-.04em;color:#0f1923}
+.nav-wordmark span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{font-family:var(--fb);font-size:13px;font-weight:500;color:#3d5060;text-decoration:none;padding:8px 14px;border-radius:var(--r5);white-space:nowrap;transition:color .2s,background .2s}
+.nav-link:hover{color:#0f1923;background:rgba(0,0,0,.05)}
+.nav-link.active{color:var(--neon3)}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-btn-ghost{font-family:var(--ff);font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.11);padding:8px 18px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-btn-ghost:hover{border-color:var(--border-neon);color:var(--neon3)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
+
+/* ── BUTTONS ── */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);padding:15px 30px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s;position:relative;overflow:hidden}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,194,104,.38)}
+.btn-outline-light{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:700;letter-spacing:-.02em;color:#f0f4ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:15px 28px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-outline-light:hover{border-color:rgba(0,194,104,.5);color:#00e582;background:rgba(0,194,104,.08)}
+.btn-outline-light svg,.btn-primary svg{width:16px;height:16px}
+
+/* ══════════════════════════════════
+   HERO — COST GUIDES
+   ══════════════════════════════════ */
+.cg-hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;background:#0d1117}
+
+/* Multi-image collage background */
+.cg-hero-collage{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:3px;z-index:0}
+.cg-hero-collage img{width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.45)}
+.cg-hero-collage .tall{grid-row:span 2}
+
+/* dramatic overlay — dark vignette with emerald bloom */
+.cg-hero-overlay{position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg,rgba(5,9,15,.7) 0%,rgba(5,9,15,.4) 40%,rgba(5,9,15,.85) 100%),
+    linear-gradient(90deg,rgba(5,9,15,.92) 0%,rgba(5,9,15,.2) 55%,rgba(5,9,15,.6) 100%)}
+.cg-hero-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 55% at 0% 60%,rgba(0,194,104,.16) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 30% at 75% 30%,rgba(0,122,61,.08) 0%,transparent 50%)}
+.cg-hero-grid{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(0,194,104,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.022) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 70% 60% at 20% 50%,black 10%,transparent 72%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 20% 50%,black 10%,transparent 72%)}
+
+.cg-hero .wrap{position:relative;z-index:2}
+.cg-hero-layout{padding:140px 0 100px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+
+/* Left — headline */
+.cg-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);border-radius:var(--r5);padding:6px 14px;margin-bottom:24px;animation:fadeIn .8s .1s both}
+.cg-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
+.cg-h1{font-family:var(--ff);font-weight:900;font-size:clamp(2.6rem,5vw,4.2rem);letter-spacing:-.055em;line-height:.96;color:#f0f4ff;margin-bottom:22px;overflow:hidden}
+.cg-h1 .ln{display:block;animation:slideUp .75s cubic-bezier(.22,1,.36,1) both}
+.cg-h1 .l1{animation-delay:.1s}.cg-h1 .l2{animation-delay:.2s}.cg-h1 .l3{animation-delay:.3s}
+.cg-h1 em{font-style:normal;background:linear-gradient(135deg,#00e582 0%,var(--neon) 50%,#00a855 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cg-sub{font-size:17px;color:#8b95aa;line-height:1.8;font-weight:300;margin-bottom:36px;max-width:480px;animation:fadeIn .8s .42s both}
+.cg-hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeIn .8s .6s both;margin-bottom:36px}
+
+/* Trust strip */
+.cg-trust-strip{display:flex;flex-wrap:wrap;gap:16px;animation:fadeIn .8s .72s both}
+.cg-trust-item{display:flex;align-items:center;gap:7px}
+.cg-trust-icon{width:22px;height:22px;border-radius:6px;background:rgba(0,194,104,.1);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cg-trust-icon svg{width:11px;height:11px;color:var(--neon)}
+.cg-trust-txt{font-size:12px;color:#8b95aa}
+.cg-trust-txt b{color:#f0f4ff}
+
+/* Right — quick lookup card */
+.cg-hero-right{animation:fadeIn 1s .3s both}
+.cg-lookup-card{background:rgba(13,17,23,.92);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r4);overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.cg-lookup-card-top{background:linear-gradient(135deg,var(--neon3),var(--neon));padding:22px 28px;display:flex;align-items:center;gap:12px}
+.cg-lookup-card-top svg{width:20px;height:20px;color:#fff}
+.cg-lookup-card-title{font-family:var(--ff);font-weight:800;font-size:1rem;letter-spacing:-.03em;color:#fff}
+.cg-lookup-card-sub{font-size:11.5px;color:rgba(255,255,255,.75);margin-top:1px}
+.cg-lookup-body{padding:24px 28px}
+.cg-field-group{display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+.cg-field-label{font-family:var(--fm);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dk-t3)}
+.cg-field{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);font-family:var(--fb);font-size:14px;color:var(--dk-t1);outline:none;transition:border-color .25s;-webkit-appearance:none;cursor:pointer}
+.cg-field:focus{border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.1)}
+.cg-field option{background:#161c28;color:#f0f4ff}
+.cg-lookup-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--neon3),var(--neon));border:none;border-radius:var(--r2);font-family:var(--ff);font-size:14px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--neon-glow);transition:all .25s;margin-top:4px}
+.cg-lookup-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,194,104,.4)}
+.cg-lookup-btn svg{width:15px;height:15px}
+.cg-lookup-footer{padding:16px 28px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
+.cg-lookup-footer svg{width:13px;height:13px;color:var(--neon);flex-shrink:0}
+.cg-lookup-footer p{font-size:11.5px;color:var(--dk-t3);line-height:1.5}
+
+@media(max-width:900px){
+  .cg-hero-layout{grid-template-columns:1fr;gap:52px;padding:110px 0 60px}
+}
+@media(max-width:600px){
+  .cg-hero-right{display:none}
+}
+
+/* ══════════════════════════════════
+   STATS BAR
+   ══════════════════════════════════ */
+.cg-stats-bar{background:var(--dk-bg2);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:32px 0;position:relative;overflow:hidden}
+.cg-stats-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,194,104,.03) 50%,transparent)}
+.cg-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;z-index:1}
+.cg-stat{text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.07)}
+.cg-stat:last-child{border-right:none}
+.cg-stat-val{font-family:var(--ff);font-weight:900;font-size:2rem;letter-spacing:-.05em;color:var(--neon);margin-bottom:2px}
+.cg-stat-lbl{font-size:12px;color:var(--dk-t3);font-weight:300}
+@media(max-width:700px){
+  .cg-stats-row{grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.07)}
+  .cg-stat{border-right:none;border-bottom:1px solid rgba(255,255,255,.07);padding:20px}
+  .cg-stat:nth-child(2n){border-left:1px solid rgba(255,255,255,.07)}
+}
+
+/* ══════════════════════════════════
+   FEATURED GUIDE SECTIONS
+   with faded background imagery
+   ══════════════════════════════════ */
+.guide-sec{position:relative;overflow:hidden}
+.guide-sec-bg{position:absolute;inset:0;z-index:0}
+.guide-sec-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.28) saturate(.5)}
+.guide-sec-bg-overlay{position:absolute;inset:0}
+
+/* Alt sections */
+.guide-sec.dark .guide-sec-bg img{filter:brightness(.2) saturate(.4)}
+.guide-sec.dark .guide-sec-bg-overlay{background:linear-gradient(90deg,rgba(5,9,15,.97) 0%,rgba(5,9,15,.7) 55%,rgba(5,9,15,.88) 100%)}
+.guide-sec.mid .guide-sec-bg-overlay{background:linear-gradient(90deg,rgba(13,20,30,.96) 0%,rgba(13,20,30,.65) 55%,rgba(13,20,30,.9) 100%)}
+.guide-sec.light-bg{background:#f3f7f4}
+.guide-sec.light-bg .guide-sec-bg img{filter:brightness(.08) saturate(.3)}
+.guide-sec.light-bg .guide-sec-bg-overlay{background:linear-gradient(90deg,rgba(243,247,244,.98) 0%,rgba(243,247,244,.85) 55%,rgba(243,247,244,.96) 100%)}
+
+.guide-sec-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:560px;align-items:stretch}
+.guide-sec-inner.flip{direction:rtl}
+.guide-sec-inner.flip>*{direction:ltr}
+
+/* Image pane — visible within section */
+.guide-img-pane{position:relative;overflow:hidden;min-height:480px}
+.guide-img-pane img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.guide-img-pane:hover img{transform:scale(1.04)}
+.guide-img-overlay-grad{position:absolute;inset:0}
+.guide-sec.dark .guide-img-overlay-grad{background:linear-gradient(90deg,rgba(5,9,15,.8) 0%,transparent 60%)}
+.guide-sec.mid .guide-img-overlay-grad{background:linear-gradient(90deg,rgba(13,20,30,.75) 0%,transparent 60%)}
+.guide-sec.dark .guide-sec-inner.flip .guide-img-overlay-grad{background:linear-gradient(270deg,rgba(5,9,15,.8) 0%,transparent 60%)}
+.guide-sec.mid .guide-sec-inner.flip .guide-img-overlay-grad{background:linear-gradient(270deg,rgba(13,20,30,.75) 0%,transparent 60%)}
+.guide-sec.light-bg .guide-img-overlay-grad{background:linear-gradient(90deg,rgba(243,247,244,.7) 0%,transparent 60%)}
+.guide-sec.light-bg .guide-sec-inner.flip .guide-img-overlay-grad{background:linear-gradient(270deg,rgba(243,247,244,.7) 0%,transparent 60%)}
+
+/* Image pane badge */
+.guide-img-badge{position:absolute;bottom:24px;left:24px;z-index:3;background:rgba(13,17,23,.92);backdrop-filter:blur(16px);border:1px solid rgba(0,194,104,.3);border-radius:var(--r3);padding:16px 20px}
+.guide-img-badge.right{left:auto;right:24px}
+.guide-img-badge-label{font-family:var(--fm);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,229,130,.6);margin-bottom:4px}
+.guide-img-badge-val{font-family:var(--ff);font-weight:900;font-size:1.6rem;letter-spacing:-.05em;color:var(--neon);line-height:1}
+.guide-img-badge-sub{font-size:11px;color:var(--dk-t3);margin-top:3px}
+
+/* Text pane */
+.guide-text-pane{padding:72px 60px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.guide-sec.dark .guide-text-pane,.guide-sec.mid .guide-text-pane{background:transparent}
+.guide-sec.light-bg .guide-text-pane{background:transparent}
+
+.guide-trade-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--neon);background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);border-radius:var(--r5);padding:6px 14px;width:fit-content;margin-bottom:18px}
+.guide-trade-tag svg{width:10px;height:10px}
+.guide-title{font-family:var(--ff);font-weight:800;font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:-.045em;line-height:1.06;margin-bottom:14px}
+.guide-sec.dark .guide-title,.guide-sec.mid .guide-title{color:var(--dk-t1)}
+.guide-sec.light-bg .guide-title{color:#0f1923}
+.guide-title em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.guide-desc{font-size:15px;line-height:1.82;font-weight:300;margin-bottom:28px;max-width:430px}
+.guide-sec.dark .guide-desc,.guide-sec.mid .guide-desc{color:var(--dk-t2)}
+.guide-sec.light-bg .guide-desc{color:#3d5060}
+
+/* Cost breakdown table */
+.cost-table{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r3);overflow:hidden;margin-bottom:24px}
+.guide-sec.light-bg .cost-table{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08)}
+.cost-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s}
+.guide-sec.light-bg .cost-row{border-bottom-color:rgba(0,0,0,.06)}
+.cost-row:last-child{border-bottom:none}
+.cost-row:hover{background:rgba(0,194,104,.04)}
+.cost-job{font-size:13.5px;color:var(--dk-t2)}
+.guide-sec.light-bg .cost-job{color:#3d5060}
+.cost-range{font-family:var(--ff);font-weight:800;font-size:13.5px;letter-spacing:-.02em;white-space:nowrap}
+.cost-range.low{color:#4ade80}
+.cost-range.mid-price{color:var(--amber2)}
+.cost-range.high{color:#f87171}
+
+.cost-table-header{padding:10px 18px;background:rgba(0,194,104,.08);border-bottom:1px solid rgba(0,194,104,.15);display:grid;grid-template-columns:1fr auto;align-items:center}
+.guide-sec.light-bg .cost-table-header{background:rgba(0,122,61,.06);border-bottom-color:rgba(0,122,61,.12)}
+.cth-left,.cth-right{font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(0,194,104,.7)}
+.guide-sec.light-bg .cth-left,.guide-sec.light-bg .cth-right{color:var(--neon3);opacity:.7}
+
+/* CTA link */
+.guide-cta-link{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:var(--neon);text-decoration:none;padding:10px 20px;border:1px solid var(--border-neon);border-radius:var(--r5);transition:all .25s;background:rgba(0,194,104,.06)}
+.guide-cta-link:hover{background:rgba(0,194,104,.12);border-color:rgba(0,194,104,.5);transform:translateX(2px)}
+.guide-cta-link svg{width:13px;height:13px;transition:transform .25s}
+.guide-cta-link:hover svg{transform:translateX(3px)}
+.guide-sec.light-bg .guide-cta-link{color:var(--neon3)}
+
+/* Disclaimer note */
+.guide-note{display:flex;align-items:flex-start;gap:8px;margin-top:16px}
+.guide-note svg{width:13px;height:13px;color:var(--dk-t3);flex-shrink:0;margin-top:2px}
+.guide-note p{font-size:11.5px;color:var(--dk-t3);line-height:1.6}
+
+@media(max-width:900px){
+  .guide-sec-inner{grid-template-columns:1fr}
+  .guide-sec-inner.flip{direction:ltr}
+  .guide-img-pane{min-height:320px;order:-1}
+  .guide-img-overlay-grad{display:none}
+  .guide-text-pane{padding:44px 28px}
+  .guide-sec.dark .guide-text-pane,.guide-sec.mid .guide-text-pane{background:rgba(5,9,15,.97)}
+  .guide-sec.light-bg .guide-text-pane{background:rgba(243,247,244,.97)}
+}
+
+/* ══════════════════════════════════
+   CATEGORY GRID — ALL TRADES
+   ══════════════════════════════════ */
+.sec-all-guides{background:var(--dk-bg);padding:100px 0;position:relative;overflow:hidden}
+.sec-all-guides-bloom{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 50% 40% at 50% 0%,rgba(0,194,104,.07) 0%,transparent 60%)}
+.sec-all-guides .wrap{position:relative;z-index:1}
+.sec-all-guides .h2{color:var(--dk-t1);text-align:center}
+.sec-all-guides .sec-label{justify-content:center}
+.sec-all-guides .body-sub{color:var(--dk-t2);text-align:center;margin:0 auto 56px}
+
+/* Filter tabs */
+.cat-filters{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:48px}
+.cat-filter{font-family:var(--ff);font-size:12.5px;font-weight:700;letter-spacing:-.02em;color:var(--dk-t3);background:var(--dk-glass1);border:1px solid var(--dk-border);border-radius:var(--r5);padding:9px 18px;cursor:pointer;transition:all .25s}
+.cat-filter:hover{color:var(--dk-t2);border-color:var(--dk-border2)}
+.cat-filter.active{background:rgba(0,194,104,.1);border-color:var(--border-neon);color:var(--neon)}
+
+/* Guide cards grid */
+.guides-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.guide-card{position:relative;border-radius:var(--r3);overflow:hidden;background:var(--dk-bg2);border:1px solid var(--dk-border);transition:all .4s cubic-bezier(.22,1,.36,1);cursor:pointer;display:flex;flex-direction:column;min-height:260px}
+.guide-card:hover{border-color:rgba(0,194,104,.3);box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 40px rgba(0,194,104,.04);transform:translateY(-3px)}
+.guide-card-img{height:160px;position:relative;overflow:hidden;flex-shrink:0}
+.guide-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1),filter .4s;filter:brightness(.7) saturate(.8)}
+.guide-card:hover .guide-card-img img{transform:scale(1.07);filter:brightness(.55)}
+/* Faded image effect — gradient over image */
+.guide-card-img-fade{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,var(--dk-bg2) 100%)}
+.guide-card-img-badge{position:absolute;top:12px;right:12px;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--neon);background:rgba(13,17,23,.9);border:1px solid var(--border-neon);border-radius:var(--r5);padding:4px 10px;z-index:2}
+.guide-card-body{padding:18px 20px 22px;flex:1;display:flex;flex-direction:column;position:relative}
+.guide-card-trade{font-family:var(--fm);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:rgba(0,229,130,.6);margin-bottom:5px}
+.guide-card-title{font-family:var(--ff);font-weight:800;font-size:1rem;letter-spacing:-.035em;color:var(--dk-t1);margin-bottom:8px;line-height:1.25}
+.guide-card-range{font-family:var(--ff);font-weight:900;font-size:1.3rem;letter-spacing:-.04em;color:var(--neon);margin-bottom:8px}
+.guide-card-desc{font-size:12.5px;color:var(--dk-t3);line-height:1.6;flex:1}
+.guide-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--dk-border)}
+.guide-card-jobs{font-size:11px;color:var(--dk-t3)}
+.guide-card-jobs b{color:var(--dk-t2)}
+.guide-card-arrow{width:28px;height:28px;border-radius:50%;background:rgba(0,194,104,.08);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s}
+.guide-card-arrow svg{width:12px;height:12px;color:var(--neon)}
+.guide-card:hover .guide-card-arrow{background:rgba(0,194,104,.2);transform:translateX(2px)}
+
+@media(max-width:900px){.guides-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.guides-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   REGIONAL PRICING SECTION
+   ══════════════════════════════════ */
+.sec-regional{position:relative;overflow:hidden;background:var(--dk-bg2);padding:100px 0}
+.sec-regional-bg{position:absolute;inset:0;z-index:0}
+.sec-regional-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.08) saturate(.3)}
+.sec-regional-bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,22,32,.98) 0%,rgba(17,22,32,.88) 50%,rgba(17,22,32,.98) 100%)}
+.sec-regional .wrap{position:relative;z-index:1}
+.sec-regional .h2{color:var(--dk-t1);text-align:center}
+.sec-regional .sec-label{justify-content:center}
+.sec-regional .body-sub{color:var(--dk-t2);text-align:center;margin:0 auto 56px}
+
+/* Region cards */
+.regions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.region-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r3);padding:20px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+.region-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,194,104,.08),transparent);opacity:0;transition:opacity .3s}
+.region-card:hover{border-color:rgba(0,194,104,.25);transform:translateY(-2px)}
+.region-card:hover::before{opacity:1}
+.region-name{font-family:var(--ff);font-weight:800;font-size:.95rem;letter-spacing:-.03em;color:var(--dk-t1);margin-bottom:8px}
+.region-modifier{display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.region-mod-val{font-family:var(--fm);font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r5)}
+.region-mod-val.above{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:#f87171}
+.region-mod-val.at{background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);color:var(--neon)}
+.region-mod-val.below{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.18);color:#4ade80}
+.region-mod-label{font-size:11px;color:var(--dk-t3)}
+.region-example{font-size:12px;color:var(--dk-t3);line-height:1.6}
+.region-example span{color:var(--dk-t2)}
+@media(max-width:900px){.regions-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.regions-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   HOW WE GET OUR DATA
+   ══════════════════════════════════ */
+.sec-data{position:relative;background:var(--dk-bg);padding:100px 0;overflow:hidden}
+.sec-data-bg{position:absolute;inset:0;z-index:0}
+.sec-data-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.06) saturate(.2)}
+.sec-data-overlay{position:absolute;inset:0;background:rgba(13,17,23,.97)}
+.sec-data .wrap{position:relative;z-index:1}
+.sec-data .h2{color:var(--dk-t1)}
+.sec-data .body-sub{color:var(--dk-t2)}
+.data-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.data-methods{display:flex;flex-direction:column;gap:20px;margin-top:36px}
+.data-method{display:flex;gap:16px;align-items:flex-start}
+.data-method-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.data-method-icon svg{width:20px;height:20px;color:var(--neon)}
+.data-method-txt h4{font-family:var(--ff);font-weight:800;font-size:.95rem;letter-spacing:-.03em;color:var(--dk-t1);margin-bottom:4px}
+.data-method-txt p{font-size:13px;color:var(--dk-t3);line-height:1.7}
+
+/* Right — data freshness card */
+.data-freshness-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r4);overflow:hidden}
+.dfc-header{background:linear-gradient(135deg,rgba(0,122,61,.3),rgba(0,194,104,.15));padding:24px 28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.dfc-header-title{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-.03em;color:var(--dk-t1);margin-bottom:4px}
+.dfc-header-sub{font-size:12px;color:var(--dk-t2)}
+.dfc-body{padding:24px 28px}
+.dfc-stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px}
+.dfc-stat{text-align:center}
+.dfc-stat-val{font-family:var(--ff);font-weight:900;font-size:2rem;letter-spacing:-.05em;color:var(--neon)}
+.dfc-stat-lbl{font-size:11.5px;color:var(--dk-t3);line-height:1.4;margin-top:2px}
+.dfc-divider{height:1px;background:rgba(255,255,255,.07);margin:0 0 20px}
+.dfc-update-label{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dk-t3);margin-bottom:10px}
+.dfc-update-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.dfc-update-row:last-child{border-bottom:none}
+.dfc-update-trade{font-size:13px;color:var(--dk-t2)}
+.dfc-update-date{font-family:var(--fm);font-size:11px;color:rgba(0,229,130,.6)}
+
+@media(max-width:900px){
+  .data-layout{grid-template-columns:1fr;gap:48px}
+}
+
+/* ══════════════════════════════════
+   CTA BANNER
+   ══════════════════════════════════ */
+.sec-cta-banner{position:relative;overflow:hidden;background:var(--dk-bg2);padding:80px 0}
+.cta-banner-bg{position:absolute;inset:0;z-index:0}
+.cta-banner-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.15) saturate(.4)}
+.cta-banner-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,50,25,.97) 0%,rgba(5,9,15,.9) 100%)}
+.cta-banner-bloom{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(0,194,104,.12) 0%,transparent 65%)}
+.sec-cta-banner .wrap{position:relative;z-index:1;text-align:center}
+.cta-banner-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);border-radius:var(--r5);padding:6px 14px;margin-bottom:22px}
+.cta-banner-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
+.cta-banner-h2{font-family:var(--ff);font-weight:900;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.05em;color:#f0f4ff;margin-bottom:14px}
+.cta-banner-h2 em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-banner-sub{font-size:16px;color:#8b95aa;line-height:1.75;font-weight:300;max-width:500px;margin:0 auto 36px}
+.cta-banner-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+footer{background:#0a0e14;border-top:1px solid rgba(255,255,255,.06);padding:72px 0 32px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:16px;text-decoration:none}
+.footer-brand-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center}
+.footer-brand-icon svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.footer-brand-name{font-family:var(--ff);font-weight:800;font-size:1rem;letter-spacing:-.04em;color:var(--dk-t1)}
+.footer-brand-name span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-tagline{font-size:13px;color:var(--dk-t3);line-height:1.7;max-width:260px;margin-bottom:20px}
+.footer-col h4{font-family:var(--ff);font-size:12.5px;font-weight:800;letter-spacing:-.01em;color:var(--dk-t1);margin-bottom:14px}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:9px}
+.footer-col ul li a{font-size:13px;color:var(--dk-t3);text-decoration:none;transition:color .2s}
+.footer-col ul li a:hover{color:var(--neon)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:12px;color:var(--dk-t3)}
+.footer-legal{display:flex;gap:16px;flex-wrap:wrap}
+.footer-legal a{font-size:12px;color:var(--dk-t3);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--dk-t2)}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><i data-lucide="hammer"></i></div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="browse-trades.html" class="nav-link">Find a Tradesperson</a>
+      <a href="cost-guides.html" class="nav-link active">Cost Guides</a>
+      <a href="TradeMatch-Pro.html" class="nav-link">For Tradespeople</a>
+      <a href="safety-verification.html" class="nav-link">TradeMatch Guarantee</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-btn-ghost">Sign In</a>
+      <a href="post-a-job.html" class="nav-cta"><div class="nav-cta-pip"></div>Post a Job — Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="cg-hero">
+  <!-- Background collage -->
+  <div class="cg-hero-collage">
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70" alt="">
+    <img src="https://images.unsplash.com/photo-1621905251189-08b45249ff78?w=400&q=70" class="tall" alt="">
+    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=70" alt="">
+    <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400&q=70" alt="">
+    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=400&q=70" alt="">
+    <img src="https://images.unsplash.com/photo-1609172333700-09ce0e6ca58c?w=400&q=70" alt="">
+    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&q=70" alt="">
+  </div>
+  <div class="cg-hero-overlay"></div>
+  <div class="cg-hero-bloom"></div>
+  <div class="cg-hero-grid"></div>
+
+  <div class="wrap">
+    <div class="cg-hero-layout">
+      <div class="cg-hero-left">
+        <div class="cg-eyebrow">
+          <div class="cg-eyebrow-dot"></div>
+          UK Trades Cost Guides 2026
+        </div>
+        <h1 class="cg-h1">
+          <span class="ln l1">Know <em>exactly</em></span>
+          <span class="ln l2">what to pay</span>
+          <span class="ln l3">before you ask.</span>
+        </h1>
+        <p class="cg-sub">Real pricing data from 28,000+ jobs completed through TradeMatch. No inflated estimates, no guesswork — just transparent cost ranges for every trade across the UK.</p>
+        <div class="cg-hero-btns">
+          <a href="#all-guides" class="btn-primary">
+            <i data-lucide="search"></i>
+            Browse All Guides
+          </a>
+          <a href="post-a-job.html" class="btn-outline-light">
+            <i data-lucide="send"></i>
+            Get Free Quotes
+          </a>
+        </div>
+        <div class="cg-trust-strip">
+          <div class="cg-trust-item">
+            <div class="cg-trust-icon"><i data-lucide="refresh-cw"></i></div>
+            <span class="cg-trust-txt"><b>Updated monthly</b> from live job data</span>
+          </div>
+          <div class="cg-trust-item">
+            <div class="cg-trust-icon"><i data-lucide="map-pin"></i></div>
+            <span class="cg-trust-txt">Regional pricing breakdowns</span>
+          </div>
+          <div class="cg-trust-item">
+            <div class="cg-trust-icon"><i data-lucide="shield-check"></i></div>
+            <span class="cg-trust-txt"><b>Verified</b> — no inflated estimates</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cg-hero-right">
+        <div class="cg-lookup-card">
+          <div class="cg-lookup-card-top">
+            <i data-lucide="calculator"></i>
+            <div>
+              <div class="cg-lookup-card-title">Quick Cost Lookup</div>
+              <div class="cg-lookup-card-sub">Get an instant price range for your job</div>
+            </div>
+          </div>
+          <div class="cg-lookup-body">
+            <div class="cg-field-group">
+              <label class="cg-field-label">Trade</label>
+              <select class="cg-field">
+                <option value="">Select a trade...</option>
+                <option>Plumbing</option>
+                <option>Electrical</option>
+                <option>Gas &amp; Heating</option>
+                <option>Boiler Installation</option>
+                <option>Roofing</option>
+                <option>Plastering</option>
+                <option>Painting &amp; Decorating</option>
+                <option>Carpentry &amp; Joinery</option>
+                <option>Tiling</option>
+                <option>Bathroom Fitting</option>
+                <option>Kitchen Fitting</option>
+                <option>Flooring</option>
+                <option>Loft Conversion</option>
+                <option>Extension</option>
+              </select>
+            </div>
+            <div class="cg-field-group">
+              <label class="cg-field-label">Job Type</label>
+              <select class="cg-field">
+                <option value="">Select a job type...</option>
+                <option>Repair / Fix</option>
+                <option>Full Replacement</option>
+                <option>New Installation</option>
+                <option>Inspection / Survey</option>
+                <option>Maintenance</option>
+              </select>
+            </div>
+            <div class="cg-field-group">
+              <label class="cg-field-label">Your Region</label>
+              <select class="cg-field">
+                <option value="">Select region...</option>
+                <option>London</option>
+                <option>South East</option>
+                <option>South West</option>
+                <option>Midlands</option>
+                <option>North West</option>
+                <option>Yorkshire &amp; Humber</option>
+                <option>North East</option>
+                <option>East of England</option>
+                <option>Wales</option>
+                <option>Scotland</option>
+              </select>
+            </div>
+            <button class="cg-lookup-btn">
+              <i data-lucide="zap"></i>
+              Show Cost Guide
+            </button>
+          </div>
+          <div class="cg-lookup-footer">
+            <i data-lucide="info"></i>
+            <p>Costs are estimates based on real completed jobs. Get exact quotes from verified tradespeople for free.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STATS BAR ═══════════════════ -->
+<div class="cg-stats-bar">
+  <div class="wrap">
+    <div class="cg-stats-row">
+      <div class="cg-stat">
+        <div class="cg-stat-val">28K+</div>
+        <div class="cg-stat-lbl">Completed jobs in our dataset</div>
+      </div>
+      <div class="cg-stat">
+        <div class="cg-stat-val">48</div>
+        <div class="cg-stat-lbl">Trade categories covered</div>
+      </div>
+      <div class="cg-stat">
+        <div class="cg-stat-val">£850</div>
+        <div class="cg-stat-lbl">Average UK job value</div>
+      </div>
+      <div class="cg-stat">
+        <div class="cg-stat-val">Monthly</div>
+        <div class="cg-stat-lbl">Data refresh cycle</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FEATURED GUIDE 1: PLUMBING ═══════════════════ -->
+<div class="guide-sec dark">
+  <div class="guide-sec-bg">
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=75" alt="Plumbing cost guide">
+    <div class="guide-sec-bg-overlay"></div>
+  </div>
+  <div class="guide-sec-inner">
+    <div class="guide-text-pane sr">
+      <div class="guide-trade-tag"><i data-lucide="droplets"></i> Plumbing</div>
+      <h2 class="guide-title">How much does a <em>plumber</em> cost in 2026?</h2>
+      <p class="guide-desc">From dripping taps to full bathroom plumbing, costs vary widely. Our data covers call-out charges, hourly rates and fixed-price job averages — so you know whether a quote is fair before accepting it.</p>
+      <div class="cost-table">
+        <div class="cost-table-header"><span class="cth-left">Job</span><span class="cth-right">Typical cost</span></div>
+        <div class="cost-row"><span class="cost-job">Fix a dripping tap</span><span class="cost-range low">£75–£150</span></div>
+        <div class="cost-row"><span class="cost-job">Unblock a drain</span><span class="cost-range low">£80–£200</span></div>
+        <div class="cost-row"><span class="cost-job">Replace a toilet</span><span class="cost-range mid-price">£200–£400</span></div>
+        <div class="cost-row"><span class="cost-job">Fit an outside tap</span><span class="cost-range mid-price">£150–£250</span></div>
+        <div class="cost-row"><span class="cost-job">Emergency call-out</span><span class="cost-range high">£150–£350</span></div>
+      </div>
+      <a href="#all-guides" class="guide-cta-link">Full plumbing cost guide <i data-lucide="arrow-right"></i></a>
+      <div class="guide-note">
+        <i data-lucide="info"></i>
+        <p>Prices shown are UK averages. London and South East typically 20–40% higher. Based on 4,200 jobs in 2025–26.</p>
+      </div>
+    </div>
+    <div class="guide-img-pane">
+      <img src="https://images.unsplash.com/photo-1621905251189-08b45249ff78?w=800&q=80" alt="Plumber working">
+      <div class="guide-img-overlay-grad"></div>
+      <div class="guide-img-badge">
+        <div class="guide-img-badge-label">Avg job value</div>
+        <div class="guide-img-badge-val">£310</div>
+        <div class="guide-img-badge-sub">Based on 4,200 jobs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FEATURED GUIDE 2: ELECTRICAL ═══════════════════ -->
+<div class="guide-sec light-bg">
+  <div class="guide-sec-bg">
+    <img src="https://images.unsplash.com/photo-1509391111902-de3a7bdcf96d?w=1200&q=75" alt="Electrician cost guide">
+    <div class="guide-sec-bg-overlay"></div>
+  </div>
+  <div class="guide-sec-inner flip">
+    <div class="guide-text-pane sr">
+      <div class="guide-trade-tag"><i data-lucide="zap"></i> Electrical</div>
+      <h2 class="guide-title" style="color:#0f1923">What does an <em>electrician</em> charge?</h2>
+      <p class="guide-desc" style="color:#3d5060">Electrical work must be completed by a qualified, registered electrician. Daily rates, fixed job prices and what Part P certification work costs — all from real completed jobs.</p>
+      <div class="cost-table" style="background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08)">
+        <div class="cost-table-header" style="background:rgba(0,122,61,.07);border-bottom-color:rgba(0,122,61,.12)">
+          <span class="cth-left" style="color:var(--neon3);opacity:.8">Job</span>
+          <span class="cth-right" style="color:var(--neon3);opacity:.8">Typical cost</span>
+        </div>
+        <div class="cost-row" style="border-bottom-color:rgba(0,0,0,.06)"><span class="cost-job" style="color:#3d5060">Rewire a room</span><span class="cost-range mid-price">£300–£600</span></div>
+        <div class="cost-row" style="border-bottom-color:rgba(0,0,0,.06)"><span class="cost-job" style="color:#3d5060">Consumer unit replacement</span><span class="cost-range mid-price">£500–£900</span></div>
+        <div class="cost-row" style="border-bottom-color:rgba(0,0,0,.06)"><span class="cost-job" style="color:#3d5060">Install EV charger</span><span class="cost-range mid-price">£600–£1,200</span></div>
+        <div class="cost-row" style="border-bottom-color:rgba(0,0,0,.06)"><span class="cost-job" style="color:#3d5060">Add a power socket</span><span class="cost-range low">£80–£180</span></div>
+        <div class="cost-row" style="border-bottom-color:rgba(0,0,0,.06)"><span class="cost-job" style="color:#3d5060">Full house rewire</span><span class="cost-range high">£3,500–£7,000</span></div>
+      </div>
+      <a href="#all-guides" class="guide-cta-link" style="color:var(--neon3);border-color:rgba(0,122,61,.3);background:rgba(0,122,61,.06)">Full electrical cost guide <i data-lucide="arrow-right"></i></a>
+      <div class="guide-note">
+        <i data-lucide="info" style="color:#9ab;"></i>
+        <p style="color:#6b7f8e">All electrical costs require a NICEIC or NAPIT registered electrician. Prices include certification where applicable.</p>
+      </div>
+    </div>
+    <div class="guide-img-pane">
+      <img src="https://images.unsplash.com/photo-1509391111902-de3a7bdcf96d?w=800&q=80" alt="Electrician at work">
+      <div class="guide-img-overlay-grad"></div>
+      <div class="guide-img-badge right">
+        <div class="guide-img-badge-label">Avg job value</div>
+        <div class="guide-img-badge-val">£520</div>
+        <div class="guide-img-badge-sub">Based on 3,800 jobs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FEATURED GUIDE 3: BOILERS ═══════════════════ -->
+<div class="guide-sec mid">
+  <div class="guide-sec-bg">
+    <img src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&q=75" alt="Boiler cost guide">
+    <div class="guide-sec-bg-overlay"></div>
+  </div>
+  <div class="guide-sec-inner">
+    <div class="guide-text-pane sr">
+      <div class="guide-trade-tag"><i data-lucide="flame"></i> Gas &amp; Heating</div>
+      <h2 class="guide-title">New boiler <em>installation</em> costs — the complete picture</h2>
+      <p class="guide-desc">Boiler replacement is one of the biggest household costs. We break down combi, system and heat pump costs — including supply and installation — so there are no surprises on the invoice.</p>
+      <div class="cost-table">
+        <div class="cost-table-header"><span class="cth-left">Job</span><span class="cth-right">Typical cost</span></div>
+        <div class="cost-row"><span class="cost-job">Combi boiler swap (like-for-like)</span><span class="cost-range mid-price">£1,800–£2,800</span></div>
+        <div class="cost-row"><span class="cost-job">System boiler replacement</span><span class="cost-range mid-price">£2,000–£3,200</span></div>
+        <div class="cost-row"><span class="cost-job">Boiler service</span><span class="cost-range low">£65–£120</span></div>
+        <div class="cost-row"><span class="cost-job">Annual Gas Safety Certificate</span><span class="cost-range low">£60–£100</span></div>
+        <div class="cost-row"><span class="cost-job">Air source heat pump install</span><span class="cost-range high">£8,000–£15,000</span></div>
+      </div>
+      <a href="#all-guides" class="guide-cta-link">Full boiler cost guide <i data-lucide="arrow-right"></i></a>
+      <div class="guide-note">
+        <i data-lucide="info"></i>
+        <p>All gas work must be carried out by a Gas Safe registered engineer. TradeMatch verifies all gas engineer registrations.</p>
+      </div>
+    </div>
+    <div class="guide-img-pane">
+      <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=800&q=80" alt="Boiler installation">
+      <div class="guide-img-overlay-grad"></div>
+      <div class="guide-img-badge">
+        <div class="guide-img-badge-label">Avg job value</div>
+        <div class="guide-img-badge-val">£2,400</div>
+        <div class="guide-img-badge-sub">Based on 2,100 jobs</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ALL COST GUIDES GRID ═══════════════════ -->
+<section class="sec-all-guides" id="all-guides">
+  <div class="sec-all-guides-bloom"></div>
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:16px" class="sr">
+      <div class="sec-label" style="justify-content:center">All Cost Guides</div>
+      <h2 class="h2" style="color:var(--dk-t1)">48 trade <em>cost guides</em></h2>
+      <p class="body-sub" style="color:var(--dk-t2);text-align:center;margin:0 auto 32px">Every guide is based on real jobs completed through TradeMatch — not industry surveys or inflated agency estimates.</p>
+    </div>
+    <div class="cat-filters sr d1">
+      <button class="cat-filter active" onclick="filterGuides(this,'all')">All Trades</button>
+      <button class="cat-filter" onclick="filterGuides(this,'plumbing')">Plumbing &amp; Heating</button>
+      <button class="cat-filter" onclick="filterGuides(this,'electrical')">Electrical</button>
+      <button class="cat-filter" onclick="filterGuides(this,'building')">Building</button>
+      <button class="cat-filter" onclick="filterGuides(this,'interior')">Interior</button>
+      <button class="cat-filter" onclick="filterGuides(this,'exterior')">Exterior</button>
+    </div>
+
+    <div class="guides-grid sr d2" id="guides-grid">
+
+      <!-- Bathroom -->
+      <div class="guide-card" data-cat="interior plumbing">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&q=70" alt="Bathroom fitting">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Plumbing &amp; Fitting</div>
+          <div class="guide-card-title">Bathroom Installation Costs</div>
+          <div class="guide-card-range">£2,500–£8,000</div>
+          <div class="guide-card-desc">Full bathroom suite installation including tiles, sanitaryware and plumbing. Costs vary enormously by specification.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>1,840</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kitchen -->
+      <div class="guide-card" data-cat="interior">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=70" alt="Kitchen fitting">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Kitchen Fitting</div>
+          <div class="guide-card-title">Kitchen Fitting &amp; Installation</div>
+          <div class="guide-card-range">£1,500–£5,000</div>
+          <div class="guide-card-desc">Labour costs for fitting a new kitchen. Excludes units and appliances. Complex layouts and removals increase price.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>2,200</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Roofing -->
+      <div class="guide-card" data-cat="exterior building">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=500&q=70" alt="Roofing">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Exterior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Roofing</div>
+          <div class="guide-card-title">Roof Repair &amp; Replacement</div>
+          <div class="guide-card-range">£400–£12,000</div>
+          <div class="guide-card-desc">From individual tile replacement to a full re-roof. Flat, pitched and slate pricing broken down by roof size and pitch.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>980</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plastering -->
+      <div class="guide-card" data-cat="interior building">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1606744824163-985d376605aa?w=500&q=70" alt="Plastering">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Plastering</div>
+          <div class="guide-card-title">Plastering &amp; Skimming Costs</div>
+          <div class="guide-card-range">£200–£2,500</div>
+          <div class="guide-card-desc">Single wall skim to full room replaster. Priced per square metre with typical room examples for budgeting.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>1,450</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painting -->
+      <div class="guide-card" data-cat="interior exterior">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?w=500&q=70" alt="Painting decorating">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior/Exterior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Painting &amp; Decorating</div>
+          <div class="guide-card-title">Painter &amp; Decorator Day Rates</div>
+          <div class="guide-card-range">£180–£300/day</div>
+          <div class="guide-card-desc">Day rates and per-room pricing for interior and exterior decorating, including wallpapering and specialist finishes.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>3,100</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loft Conversion -->
+      <div class="guide-card" data-cat="building">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=500&q=70" alt="Loft conversion">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Building</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Building &amp; Construction</div>
+          <div class="guide-card-title">Loft Conversion Costs</div>
+          <div class="guide-card-range">£20,000–£65,000</div>
+          <div class="guide-card-desc">Velux, dormer and hip-to-gable conversions compared. Includes structural, insulation, electrics and finishes.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>320</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tiling -->
+      <div class="guide-card" data-cat="interior">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&q=70" alt="Tiling">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Tiling</div>
+          <div class="guide-card-title">Wall &amp; Floor Tiling Prices</div>
+          <div class="guide-card-range">£25–£60/m²</div>
+          <div class="guide-card-desc">Labour cost per square metre for ceramic, porcelain and natural stone. Bathroom and kitchen tiling with typical project costs.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>1,820</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flooring -->
+      <div class="guide-card" data-cat="interior">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1615873968403-89e068629265?w=500&q=70" alt="Flooring">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Interior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Flooring</div>
+          <div class="guide-card-title">Flooring Installation Costs</div>
+          <div class="guide-card-range">£12–£80/m²</div>
+          <div class="guide-card-desc">Laminate, engineered wood, LVT and carpet installation costs compared. Subfloor prep and underlay included.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>2,050</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Landscaping -->
+      <div class="guide-card" data-cat="exterior">
+        <div class="guide-card-img">
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&q=70" alt="Landscaping">
+          <div class="guide-card-img-fade"></div>
+          <div class="guide-card-img-badge">Exterior</div>
+        </div>
+        <div class="guide-card-body">
+          <div class="guide-card-trade">Landscaping</div>
+          <div class="guide-card-title">Garden Landscaping Costs</div>
+          <div class="guide-card-range">£1,200–£15,000</div>
+          <div class="guide-card-desc">Full garden redesigns, patio laying, fencing, decking and turf — all priced for typical UK garden sizes.</div>
+          <div class="guide-card-footer">
+            <span class="guide-card-jobs"><b>1,100</b> jobs completed</span>
+            <div class="guide-card-arrow"><i data-lucide="arrow-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:40px" class="sr">
+      <a href="#all-guides" class="btn-outline-light" style="color:var(--neon);border-color:var(--border-neon);background:rgba(0,194,104,.06)">
+        View all 48 cost guides <i data-lucide="arrow-right" style="width:14px;height:14px"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ REGIONAL PRICING ═══════════════════ -->
+<section class="sec-regional">
+  <div class="sec-regional-bg">
+    <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1400&q=70" alt="UK regions">
+    <div class="sec-regional-bg-overlay"></div>
+  </div>
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:16px" class="sr">
+      <div class="sec-label" style="justify-content:center">Regional Pricing</div>
+      <h2 class="h2" style="color:var(--dk-t1)">Where you live <em>changes</em> the price</h2>
+      <p class="body-sub" style="color:var(--dk-t2);text-align:center;margin:0 auto 48px">Labour costs vary significantly by region. London and the South East typically command a 20–40% premium over the national average.</p>
+    </div>
+    <div class="regions-grid sr d1">
+      <div class="region-card">
+        <div class="region-name">London</div>
+        <div class="region-modifier">
+          <span class="region-mod-val above">+38% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£120–£250</span>. Electrician day rate: <span>£380–£500</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">South East</div>
+        <div class="region-modifier">
+          <span class="region-mod-val above">+22% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£100–£200</span>. Electrician day rate: <span>£320–£420</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">South West</div>
+        <div class="region-modifier">
+          <span class="region-mod-val at">+8% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£85–£160</span>. Electrician day rate: <span>£260–£360</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">Midlands</div>
+        <div class="region-modifier">
+          <span class="region-mod-val at">0% avg</span>
+          <span class="region-mod-label">national baseline</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£80–£150</span>. Electrician day rate: <span>£250–£340</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">North West</div>
+        <div class="region-modifier">
+          <span class="region-mod-val below">–8% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£70–£140</span>. Electrician day rate: <span>£230–£310</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">Yorkshire</div>
+        <div class="region-modifier">
+          <span class="region-mod-val below">–10% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£65–£130</span>. Electrician day rate: <span>£220–£300</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">North East</div>
+        <div class="region-modifier">
+          <span class="region-mod-val below">–15% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£60–£120</span>. Electrician day rate: <span>£200–£280</span>.</p>
+      </div>
+      <div class="region-card">
+        <div class="region-name">Wales</div>
+        <div class="region-modifier">
+          <span class="region-mod-val below">–12% avg</span>
+          <span class="region-mod-label">vs national</span>
+        </div>
+        <p class="region-example">Plumber call-out: <span>£65–£130</span>. Electrician day rate: <span>£210–£290</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ HOW WE GET OUR DATA ═══════════════════ -->
+<section class="sec-data">
+  <div class="sec-data-bg">
+    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=70" alt="Data">
+    <div class="sec-data-overlay"></div>
+  </div>
+  <div class="wrap">
+    <div class="data-layout">
+      <div class="sr">
+        <div class="sec-label">Our methodology</div>
+        <h2 class="h2" style="color:var(--dk-t1)">Cost data you can <em>actually trust</em></h2>
+        <p class="body-sub">Unlike price comparison sites that use outdated industry surveys, every figure in our guides comes directly from invoices and completed jobs on the TradeMatch platform.</p>
+        <div class="data-methods">
+          <div class="data-method">
+            <div class="data-method-icon"><i data-lucide="receipt"></i></div>
+            <div class="data-method-txt">
+              <h4>Verified invoice data</h4>
+              <p>Costs are drawn from completed job invoices submitted through our milestone escrow system — actual amounts paid, not estimated.</p>
+            </div>
+          </div>
+          <div class="data-method">
+            <div class="data-method-icon"><i data-lucide="map"></i></div>
+            <div class="data-method-txt">
+              <h4>Postcode-level granularity</h4>
+              <p>Regional breakdowns come from real job postcode data, not broad regional estimates.</p>
+            </div>
+          </div>
+          <div class="data-method">
+            <div class="data-method-icon"><i data-lucide="refresh-cw"></i></div>
+            <div class="data-method-txt">
+              <h4>Monthly refresh cycle</h4>
+              <p>Data is recalculated every month as new jobs complete, ensuring guides reflect current market rates not pre-pandemic surveys.</p>
+            </div>
+          </div>
+          <div class="data-method">
+            <div class="data-method-icon"><i data-lucide="filter"></i></div>
+            <div class="data-method-txt">
+              <h4>Outlier filtering</h4>
+              <p>Statistical outliers (emergency premium jobs, unusually complex work) are flagged separately so averages aren't distorted.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sr d3">
+        <div class="data-freshness-card">
+          <div class="dfc-header">
+            <div class="dfc-header-title">Live Data Dashboard</div>
+            <div class="dfc-header-sub">Last refreshed: February 2026</div>
+          </div>
+          <div class="dfc-body">
+            <div class="dfc-stat-row">
+              <div class="dfc-stat">
+                <div class="dfc-stat-val">28,421</div>
+                <div class="dfc-stat-lbl">Total completed jobs in dataset</div>
+              </div>
+              <div class="dfc-stat">
+                <div class="dfc-stat-val">48</div>
+                <div class="dfc-stat-lbl">Trade categories with live pricing</div>
+              </div>
+            </div>
+            <div class="dfc-divider"></div>
+            <div class="dfc-update-label">Recently Updated Guides</div>
+            <div class="dfc-update-row">
+              <span class="dfc-update-trade">Boiler Installation</span>
+              <span class="dfc-update-date">Feb 2026</span>
+            </div>
+            <div class="dfc-update-row">
+              <span class="dfc-update-trade">EV Charger Installation</span>
+              <span class="dfc-update-date">Feb 2026</span>
+            </div>
+            <div class="dfc-update-row">
+              <span class="dfc-update-trade">Bathroom Fitting</span>
+              <span class="dfc-update-date">Jan 2026</span>
+            </div>
+            <div class="dfc-update-row">
+              <span class="dfc-update-trade">Kitchen Installation</span>
+              <span class="dfc-update-date">Jan 2026</span>
+            </div>
+            <div class="dfc-update-row">
+              <span class="dfc-update-trade">Loft Conversion</span>
+              <span class="dfc-update-date">Jan 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA BANNER ═══════════════════ -->
+<section class="sec-cta-banner">
+  <div class="cta-banner-bg">
+    <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1400&q=70" alt="Get quotes">
+    <div class="cta-banner-overlay"></div>
+  </div>
+  <div class="cta-banner-bloom"></div>
+  <div class="wrap">
+    <div class="cta-banner-eyebrow sr">
+      <div class="cta-banner-eyebrow-dot"></div>
+      Ready to go further?
+    </div>
+    <h2 class="cta-banner-h2 sr d1">Now you know the price,<br><em>get a real quote.</em></h2>
+    <p class="cta-banner-sub sr d2">Post your job free and get up to 5 quotes from verified, insured tradespeople in your area. Our escrow protects your payment. Our 48-hour dispute SLA protects your project.</p>
+    <div class="cta-banner-btns sr d3">
+      <a href="post-a-job.html" class="btn-primary">
+        <i data-lucide="send"></i>
+        Post a Job — Free
+      </a>
+      <a href="how-it-works.html" class="btn-outline-light">
+        <i data-lucide="info"></i>
+        How TradeMatch Works
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="footer-brand">
+          <div class="footer-brand-icon"><i data-lucide="hammer"></i></div>
+          <span class="footer-brand-name">Trade<span>Match</span></span>
+        </a>
+        <p class="footer-tagline">The UK's most trusted trades marketplace. Verified tradespeople, protected payments, real reviews.</p>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">TradeMatch Guarantee</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="view-profile.html">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing &amp; Fees</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="trade-accreditations.html">Accreditations</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="browse-trades.html">Plumbers</a></li>
+          <li><a href="browse-trades.html">Electricians</a></li>
+          <li><a href="browse-trades.html">Gas Engineers</a></li>
+          <li><a href="browse-trades.html">Builders</a></li>
+          <li><a href="browse-trades.html">All 48 Trades →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="about.html">Careers</a></li>
+          <li><a href="about.html">Press</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+        <a href="/cookies">Cookie Policy</a>
+        <a href="/complaints">Complaints</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// ── Scroll reveal
+const srObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
+
+// ── Category filter
+function filterGuides(btn, cat) {
+  document.querySelectorAll('.cat-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.guide-card').forEach(card => {
+    if (cat === 'all') {
+      card.style.display = '';
+    } else {
+      const cardCat = card.dataset.cat || '';
+      card.style.display = cardCat.includes(cat) ? '' : 'none';
+    }
+  });
+}
+
+// ── Lookup widget — scroll to matching section
+document.querySelector('.cg-lookup-btn').addEventListener('click', function(){
+  const tradeEl = document.querySelectorAll('.cg-field')[0];
+  if (tradeEl.value) {
+    document.getElementById('all-guides').scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// ── Select styling
+document.querySelectorAll('.cg-field').forEach(s => {
+  s.addEventListener('change', function(){ this.style.color = this.value ? '#f0f4ff' : '#5a6478'; });
+});
+</script>
+</body>
+</html>

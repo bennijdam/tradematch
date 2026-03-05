@@ -1,1211 +1,1128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About TradeMatch - Connecting Homeowners with Verified Tradespeople | Our Story</title>
-    <meta name="description" content="Learn about TradeMatch's mission to revolutionize how UK homeowners find and hire trusted local tradespeople. Our story, values, and commitment to quality.">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ========================================
-           CSS VARIABLES - TradeMatch Design System
-           ======================================== */
-        :root {
-            --emerald-500: #10b981;
-            --emerald-600: #059669;
-            --emerald-700: #047857;
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-500: #64748b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-            --white: #ffffff;
-            --blue-500: #3b82f6;
-            --blue-600: #2563eb;
-            --amber-500: #f59e0b;
-            --purple-600: #7c3aed;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--slate-900);
-            background: var(--white);
-            overflow-x: hidden;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .container-narrow {
-            max-width: 800px;
-        }
-
-        /* ========================================
-           NAVIGATION
-           ======================================== */
-        .navbar {
-            background: var(--white);
-            border-bottom: 1px solid var(--slate-200);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--slate-900);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 800;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--slate-600);
-            font-weight: 500;
-            font-size: 0.9375rem;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--emerald-500);
-        }
-
-        .btn-nav {
-            padding: 0.625rem 1.25rem;
-            background: var(--emerald-500);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-nav:hover {
-            background: var(--emerald-600);
-            transform: translateY(-1px);
-        }
-
-        /* ========================================
-           HERO SECTION
-           ======================================== */
-        .hero {
-            background: linear-gradient(135deg, var(--slate-900) 0%, var(--slate-800) 100%);
-            color: white;
-            padding: 6rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
-            top: -200px;
-            right: -200px;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 30px); }
-        }
-
-        .hero .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-label {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--emerald-500);
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 3rem;
-            font-weight: 900;
-            font-family: 'Space Mono', monospace;
-            color: var(--emerald-500);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* ========================================
-           SECTIONS
-           ======================================== */
-        .section {
-            padding: 5rem 0;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-label {
-            display: inline-block;
-            padding: 0.375rem 0.875rem;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--emerald-700);
-            border-radius: 20px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            color: var(--slate-900);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            font-size: 1.25rem;
-            color: var(--slate-600);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        /* ========================================
-           STORY SECTION
-           ======================================== */
-        .story-section {
-            background: var(--slate-50);
-        }
-
-        .story-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .story-content p {
-            font-size: 1.125rem;
-            line-height: 1.8;
-            color: var(--slate-700);
-            margin-bottom: 1.5rem;
-        }
-
-        .story-content p:first-of-type {
-            font-size: 1.375rem;
-            font-weight: 500;
-            color: var(--slate-900);
-        }
-
-        .highlight-box {
-            background: white;
-            border-left: 4px solid var(--emerald-500);
-            padding: 2rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .highlight-box p {
-            font-size: 1.125rem;
-            font-style: italic;
-            color: var(--slate-800);
-            margin-bottom: 0;
-        }
-
-        /* ========================================
-           VALUES SECTION
-           ======================================== */
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .value-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-        }
-
-        .value-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .value-icon {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-        }
-
-        .value-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--slate-900);
-        }
-
-        .value-description {
-            font-size: 1rem;
-            color: var(--slate-600);
-            line-height: 1.7;
-        }
-
-        /* ========================================
-           TEAM SECTION
-           ======================================== */
-        .team-section {
-            background: var(--slate-50);
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .team-member {
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .team-member:hover {
-            transform: translateY(-8px);
-        }
-
-        .team-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, var(--emerald-500), var(--blue-500));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            font-weight: 800;
-            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-        }
-
-        .team-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            color: var(--slate-900);
-        }
-
-        .team-role {
-            font-size: 0.9375rem;
-            color: var(--emerald-600);
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .team-bio {
-            font-size: 0.875rem;
-            color: var(--slate-600);
-            line-height: 1.6;
-        }
-
-        /* ========================================
-           TIMELINE SECTION
-           ======================================== */
-        .timeline-section {
-            background: white;
-        }
-
-        .timeline {
-            max-width: 900px;
-            margin: 3rem auto 0;
-            position: relative;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 100%;
-            background: var(--emerald-500);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .timeline-item:nth-child(odd) {
-            flex-direction: row;
-        }
-
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .timeline-content {
-            width: calc(50% - 2rem);
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .timeline-year {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--emerald-600);
-            font-family: 'Space Mono', monospace;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--slate-900);
-        }
-
-        .timeline-description {
-            font-size: 0.9375rem;
-            color: var(--slate-600);
-            line-height: 1.6;
-        }
-
-        .timeline-dot {
-            width: 20px;
-            height: 20px;
-            background: var(--emerald-500);
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 0 0 3px var(--emerald-500);
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* ========================================
-           CTA SECTION
-           ======================================== */
-        .cta-section {
-            background: linear-gradient(135deg, var(--emerald-600) 0%, var(--blue-600) 100%);
-            color: white;
-            text-align: center;
-            padding: 5rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            top: -150px;
-            right: -150px;
-        }
-
-        .cta-section .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .btn-cta {
-            display: inline-block;
-            padding: 1.25rem 3rem;
-            background: white;
-            color: var(--emerald-600);
-            border-radius: 12px;
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        /* ========================================
-           FOOTER
-           ======================================== */
-        .footer {
-            background: var(--slate-900);
-            color: rgba(255, 255, 255, 0.7);
-            padding: 3rem 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: var(--emerald-500);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
-            text-align: center;
-            font-size: 0.875rem;
-        }
-
-        /* ========================================
-           RESPONSIVE
-           ======================================== */
-        @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
-            }
-
-            .values-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .team-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .timeline::before {
-                left: 20px;
-            }
-
-            .timeline-item {
-                flex-direction: row !important;
-            }
-
-            .timeline-content {
-                width: calc(100% - 80px);
-                margin-left: 60px;
-            }
-
-            .timeline-dot {
-                left: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.125rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .values-grid,
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .cta-section h2 {
-                font-size: 2rem;
-            }
-        }
-
-        /* ========================================
-           ANIMATIONS
-           ======================================== */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s, transform 0.6s;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
-    <script>
-        if (window.zaraz && typeof window.zaraz.track === "function") {
-            window.zaraz.track("page_view", { path: window.location.pathname, title: document.title });
-        }
-    </script></head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About TradeMatch UK | Built on Trust. Designed for Trades.</title>
+<meta name="description" content="TradeMatch is the UK's most trusted trades marketplace — connecting verified tradespeople with homeowners through radical transparency, real escrow protection, and zero fake leads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+:root{
+  --neon:#00c268;--neon2:#00a855;--neon3:#007a3d;--neon4:#009e4f;
+  --neon-dim:rgba(0,194,104,.12);--neon-lo:rgba(0,194,104,.07);
+  --neon-glow:0 4px 24px rgba(0,194,104,.28),0 1px 8px rgba(0,194,104,.14);
+  --neon-glow-sm:0 2px 14px rgba(0,194,104,.22);
+  --amber:#f59e0b;--amber2:#fbbf24;
+  --dk-bg:#0d1117;--dk-bg2:#111620;--dk-bg3:#161c28;
+  --dk-t1:#f0f4ff;--dk-t2:#8b95aa;--dk-t3:#5a6478;
+  --dk-border:rgba(255,255,255,.07);--dk-border2:rgba(255,255,255,.12);
+  --dk-glass1:rgba(255,255,255,.03);--dk-glass2:rgba(255,255,255,.06);
+  --border-neon:rgba(0,194,104,.3);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ── SCROLL REVEAL ── */
+.sr{opacity:0;transform:translateY(32px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1)}
+.sr.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.sr{opacity:1;transform:none}}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.30s}.d6{transition-delay:.36s}
+
+/* ── TYPOGRAPHY ── */
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,229,130,.7);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--neon);opacity:.5}
+.h2{font-family:var(--ff);font-weight:800;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.045em;line-height:1.04;margin-bottom:14px}
+.h2 em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon),#00a855);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.body-sub{font-size:16px;line-height:1.82;max-width:520px;font-weight:300}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{transform:translateY(110%);opacity:0}to{transform:none;opacity:1}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes countUp{from{opacity:0;transform:translateY(20px) scale(.9)}to{opacity:1;transform:none}}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.88);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:all .4s}
+.nav.scrolled .nav-inner{background:rgba(255,255,255,.97);box-shadow:0 4px 32px rgba(0,0,0,.11)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;box-shadow:var(--neon-glow-sm)}
+.nav-logo-icon svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.nav-wordmark{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-.04em;color:#0f1923}
+.nav-wordmark span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{font-family:var(--fb);font-size:13px;font-weight:500;color:#3d5060;text-decoration:none;padding:8px 14px;border-radius:var(--r5);white-space:nowrap;transition:color .2s,background .2s}
+.nav-link:hover{color:#0f1923;background:rgba(0,0,0,.05)}
+.nav-link.active{color:var(--neon3)}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-btn-ghost{font-family:var(--ff);font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.11);padding:8px 18px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-btn-ghost:hover{border-color:var(--border-neon);color:var(--neon3)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
+
+/* ── BUTTONS ── */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3) 0%,var(--neon) 100%);padding:15px 30px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow);transition:all .3s;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,194,104,.38)}
+.btn-primary:hover::before{opacity:1}
+.btn-primary svg{width:16px;height:16px}
+.btn-outline-light{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff);font-size:15px;font-weight:700;letter-spacing:-.02em;color:#f0f4ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:15px 28px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-outline-light:hover{border-color:rgba(0,194,104,.5);color:#00e582;background:rgba(0,194,104,.08)}
+.btn-outline-light svg{width:16px;height:16px}
+
+
+/* ══════════════════════════════════
+   HERO — ABOUT PAGE
+   ══════════════════════════════════ */
+.about-hero{position:relative;min-height:96vh;display:flex;align-items:center;overflow:hidden;background:#0d1117}
+
+/* Full-bleed image collage background */
+.hero-bg-mosaic{position:absolute;inset:0;z-index:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:3px;opacity:.22;filter:saturate(.4)}
+.hero-bg-mosaic img{width:100%;height:100%;object-fit:cover}
+.hero-bg-mosaic .span2{grid-column:span 2}
+
+/* Layers */
+.hero-overlay{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(145deg,rgba(5,9,15,.97) 0%,rgba(5,9,15,.82) 40%,rgba(0,25,12,.9) 100%)}
+.hero-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 65% 55% at 12% 55%,rgba(0,194,104,.13) 0%,transparent 55%),
+             radial-gradient(ellipse 40% 30% at 88% 20%,rgba(0,122,61,.07) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(0,194,104,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.022) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 80% 70% at 20% 50%,black 10%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 20% 50%,black 10%,transparent 70%)}
+
+.about-hero .wrap{position:relative;z-index:2;width:100%}
+.about-hero-layout{padding:148px 0 100px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+
+/* LEFT */
+.about-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);border-radius:var(--r5);padding:6px 14px;margin-bottom:24px;animation:fadeIn .8s .1s both}
+.about-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
+.about-h1{font-family:var(--ff);font-weight:900;font-size:clamp(2.8rem,5vw,4.6rem);letter-spacing:-.055em;line-height:.95;color:#f0f4ff;margin-bottom:24px;overflow:hidden}
+.about-h1 .ln{display:block;animation:slideUp .75s cubic-bezier(.22,1,.36,1) both}
+.about-h1 .l1{animation-delay:.1s}.about-h1 .l2{animation-delay:.2s}.about-h1 .l3{animation-delay:.3s}
+.about-h1 em{font-style:normal;background:linear-gradient(135deg,#00e582 0%,var(--neon) 50%,#00a855 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.about-sub{font-size:17px;color:#8b95aa;line-height:1.8;font-weight:300;margin-bottom:40px;max-width:500px;animation:fadeIn .8s .42s both}
+.about-hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeIn .8s .58s both}
+
+/* RIGHT — stacked image visual */
+.about-hero-visual{position:relative;animation:fadeIn 1s .25s both}
+.hero-img-stack{position:relative;height:500px}
+.him-main{position:absolute;right:0;top:0;width:78%;height:360px;border-radius:var(--r4);overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:0 32px 80px rgba(0,0,0,.65)}
+.him-main img{width:100%;height:100%;object-fit:cover;filter:brightness(.82)}
+.him-sec{position:absolute;left:0;bottom:30px;width:52%;height:230px;border-radius:var(--r4);overflow:hidden;border:1px solid rgba(0,194,104,.22);box-shadow:0 16px 48px rgba(0,0,0,.55);z-index:2}
+.him-sec img{width:100%;height:100%;object-fit:cover;filter:brightness(.72)}
+
+/* Floating trust card */
+.hero-fc{position:absolute;right:-16px;bottom:120px;z-index:3;background:rgba(13,17,23,.95);backdrop-filter:blur(20px);border:1px solid rgba(0,194,104,.25);border-radius:var(--r3);padding:16px 20px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.5);animation:floatY 5s ease-in-out infinite}
+.hero-fc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.hero-fc-dot{width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 8px rgba(0,194,104,.8);animation:pulse 2s infinite}
+.hero-fc-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,229,130,.6)}
+.hero-fc-val{font-family:var(--ff);font-weight:800;font-size:1.5rem;letter-spacing:-.04em;color:var(--neon);margin-bottom:2px}
+.hero-fc-sub{font-size:11px;color:var(--dk-t3);font-weight:300}
+/* Badge */
+.hero-badge{position:absolute;top:24px;left:14px;z-index:3;background:rgba(13,17,23,.9);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:var(--r2);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.hero-badge-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--neon-glow-sm)}
+.hero-badge-icon svg{width:18px;height:18px;color:#fff}
+.hero-badge-txt{font-family:var(--ff);font-size:.8rem;font-weight:700;color:#f0f4ff;letter-spacing:-.02em}
+.hero-badge-sub{font-size:11px;color:var(--dk-t3);margin-top:1px}
+
+@media(max-width:900px){
+  .about-hero-layout{grid-template-columns:1fr;gap:52px;padding:120px 0 60px}
+  .hero-img-stack{height:320px}
+  .him-main{width:72%;height:260px}
+  .him-sec{width:50%;height:185px}
+  .hero-fc{right:0;bottom:10px}
+}
+@media(max-width:600px){
+  .about-hero-layout{grid-template-columns:1fr}
+  .about-hero-visual{display:none}
+}
+
+/* ══════════════════════════════════
+   STAT BAR — full-width dark glass
+   ══════════════════════════════════ */
+.stat-bar{background:var(--dk-bg2);border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);padding:0;position:relative;overflow:hidden}
+.stat-bar-bloom{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(0,194,104,.05) 0%,transparent 65%)}
+.stat-bar-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{padding:44px 32px;text-align:center;border-right:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden;transition:background .3s}
+.stat-item:last-child{border-right:none}
+.stat-item::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,194,104,.04),transparent);opacity:0;transition:opacity .3s}
+.stat-item:hover::before{opacity:1}
+.stat-num{font-family:var(--ff);font-weight:900;font-size:clamp(2rem,3.5vw,3rem);letter-spacing:-.06em;background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;line-height:1}
+.stat-lbl{font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dk-t3)}
+@media(max-width:768px){
+  .stat-bar-inner{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(3){border-top:1px solid rgba(255,255,255,.05)}
+  .stat-item:nth-child(4){border-top:1px solid rgba(255,255,255,.05);border-right:none}
+}
+
+/* ══════════════════════════════════
+   ORIGIN STORY — alternating split
+   ══════════════════════════════════ */
+.sec-origin{position:relative;overflow:hidden;background:var(--dk-bg);padding:0}
+
+/* full-bleed image + text split */
+.origin-split{display:grid;grid-template-columns:1fr 1fr;min-height:600px;align-items:stretch}
+.origin-split.flip{direction:rtl}
+.origin-split.flip>*{direction:ltr}
+
+.origin-img-pane{position:relative;overflow:hidden;min-height:500px}
+.origin-img-pane img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.22,1,.36,1)}
+.origin-split:hover .origin-img-pane img{transform:scale(1.04)}
+.origin-img-overlay{position:absolute;inset:0;pointer-events:none}
+
+.origin-text-pane{background:var(--dk-bg2);padding:80px 72px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.origin-text-pane::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 10% 50%,rgba(0,194,104,.07) 0%,transparent 60%);z-index:0}
+.origin-text-pane.light{background:#f3f7f4}
+.origin-text-pane.light::before{background:radial-gradient(ellipse 70% 60% at 80% 50%,rgba(0,194,104,.06) 0%,transparent 60%)}
+.origin-text-pane.light .origin-label{color:var(--neon3)}
+.origin-text-pane.light .origin-title{color:#0f1923}
+.origin-text-pane.light .origin-body{color:#3d5060}
+.origin-text-pane>*{position:relative;z-index:1}
+.origin-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,194,104,.55);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.origin-label-n{width:28px;height:28px;border-radius:50%;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:var(--neon);flex-shrink:0}
+.origin-title{font-family:var(--ff);font-weight:800;font-size:clamp(1.7rem,3vw,2.6rem);letter-spacing:-.045em;line-height:1.05;color:var(--dk-t1);margin-bottom:18px}
+.origin-body{font-size:15.5px;color:var(--dk-t2);line-height:1.85;font-weight:300;margin-bottom:28px}
+.origin-features{display:flex;flex-direction:column;gap:14px}
+.origin-feat{display:flex;align-items:flex-start;gap:14px}
+.origin-feat-icon{width:38px;height:38px;border-radius:10px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.origin-feat-icon svg{width:16px;height:16px;color:var(--neon)}
+.origin-text-pane.light .origin-feat-icon{background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.2)}
+.origin-text-pane.light .origin-feat-icon svg{color:var(--neon3)}
+.origin-feat-lbl{font-family:var(--ff);font-size:.9rem;font-weight:700;color:var(--dk-t1);margin-bottom:3px;letter-spacing:-.02em}
+.origin-text-pane.light .origin-feat-lbl{color:#0f1923}
+.origin-feat-sub{font-size:13.5px;color:var(--dk-t3);font-weight:300;line-height:1.65}
+.origin-text-pane.light .origin-feat-sub{color:#6b7f8e}
+
+/* Image overlay tint */
+.oi-dark-overlay{background:linear-gradient(135deg,rgba(0,194,104,.12) 0%,rgba(13,17,23,.5) 100%)}
+.oi-light-overlay{background:linear-gradient(315deg,rgba(0,122,61,.08) 0%,rgba(0,0,0,.12) 100%)}
+
+@media(max-width:900px){
+  .origin-split{grid-template-columns:1fr}
+  .origin-split.flip{direction:ltr}
+  .origin-img-pane{min-height:300px;order:-1}
+  .origin-text-pane{padding:52px 28px}
+}
+
+/* ══════════════════════════════════
+   MISSION STRIP — full bleed dark green
+   ══════════════════════════════════ */
+.sec-mission{position:relative;overflow:hidden;padding:0}
+.mission-bg{position:absolute;inset:0;z-index:0}
+.mission-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.15;filter:saturate(.3) blur(2px)}
+.mission-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,60,30,.97) 0%,rgba(0,40,20,.98) 100%)}
+.mission-bloom{position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% 50%,rgba(0,194,104,.18) 0%,transparent 65%)}
+.mission-grid-tex{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,194,104,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.04) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.5}
+.mission-inner{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:120px 28px;text-align:center}
+.mission-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.12);border:1px solid rgba(0,194,104,.25);border-radius:var(--r5);padding:6px 14px;margin-bottom:28px}
+.mission-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
+.mission-quote{font-family:var(--ff);font-weight:900;font-size:clamp(2rem,4.5vw,3.8rem);letter-spacing:-.055em;line-height:1.02;color:#f0f4ff;margin-bottom:28px}
+.mission-quote em{font-style:normal;background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mission-sub{font-size:17px;color:rgba(240,244,255,.65);line-height:1.8;font-weight:300;max-width:600px;margin:0 auto 52px}
+.mission-three{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:52px;text-align:left}
+.m3-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r3);padding:28px;transition:all .35s;cursor:default}
+.m3-card:hover{background:rgba(0,194,104,.08);border-color:rgba(0,194,104,.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
+.m3-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,194,104,.15);border:1px solid rgba(0,194,104,.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.m3-icon svg{width:20px;height:20px;color:#00e582}
+.m3-title{font-family:var(--ff);font-weight:700;font-size:1rem;letter-spacing:-.03em;color:#f0f4ff;margin-bottom:8px}
+.m3-text{font-size:13.5px;color:rgba(240,244,255,.55);line-height:1.72;font-weight:300}
+@media(max-width:768px){.mission-three{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   THE PROBLEM — light section with image
+   ══════════════════════════════════ */
+.sec-problem{background:#f3f7f4;padding:120px 0;position:relative;overflow:hidden}
+.problem-bg-img{position:absolute;right:-60px;top:0;bottom:0;width:48%;opacity:.06;object-fit:cover;filter:grayscale(1);pointer-events:none}
+.sec-problem .wrap{position:relative;z-index:1}
+.problem-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.problem-left .sec-label::before{background:var(--neon3)}
+.problem-left .sec-label{color:var(--neon3)}
+.problem-left .h2{color:#0f1923}
+.problem-left .h2 em{background:linear-gradient(135deg,var(--neon3),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.problem-left .body-sub{color:#4a5e6e}
+.problem-cards{display:flex;flex-direction:column;gap:16px}
+.prob-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r3);padding:22px 24px;display:flex;align-items:flex-start;gap:16px;transition:all .3s;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.prob-card:hover{border-color:rgba(220,38,38,.15);box-shadow:0 4px 24px rgba(0,0,0,.08);transform:translateX(4px)}
+.prob-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.prob-icon.red{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.15)}
+.prob-icon.red svg{width:16px;height:16px;color:#dc2626}
+.prob-lbl{font-family:var(--ff);font-weight:700;font-size:.9rem;letter-spacing:-.02em;color:#0f1923;margin-bottom:4px}
+.prob-sub{font-size:13.5px;color:#6b7f8e;line-height:1.65;font-weight:300}
+.prob-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#dc2626;background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.12);border-radius:var(--r5);padding:3px 8px;margin-top:6px}
+
+@media(max-width:900px){
+  .problem-layout{grid-template-columns:1fr;gap:48px}
+  .problem-bg-img{display:none}
+}
+
+/* ══════════════════════════════════
+   THE FIX GRID — dark, image-backed
+   ══════════════════════════════════ */
+.sec-fix{background:var(--dk-bg);padding:120px 0;position:relative;overflow:hidden}
+.fix-bg{position:absolute;inset:0;z-index:0;opacity:.07;filter:saturate(.3) blur(3px)}
+.fix-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fix-bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg,var(--dk-bg) 0%,transparent 30%,transparent 70%,var(--dk-bg) 100%)}
+.fix-bloom{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(0,194,104,.07) 0%,transparent 60%)}
+.sec-fix .wrap{position:relative;z-index:1}
+.fix-header{text-align:center;margin-bottom:72px}
+.fix-header .h2{color:var(--dk-t1);margin:0 auto 14px}
+.fix-header .h2 em{background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fix-header .sec-label{justify-content:center;color:rgba(0,229,130,.65)}
+.fix-header .sec-label::before{background:var(--neon)}
+.fix-header .body-sub{color:var(--dk-t2);margin:0 auto;text-align:center}
+.fix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fix-card{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r4);overflow:hidden;transition:all .4s cubic-bezier(.22,1,.36,1);position:relative}
+.fix-card:hover{border-color:var(--border-neon);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.4),0 0 40px rgba(0,194,104,.06)}
+.fix-card-img{position:relative;height:200px;overflow:hidden}
+.fix-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.22,1,.36,1);filter:brightness(.65)}
+.fix-card:hover .fix-card-img img{transform:scale(1.07)}
+.fix-card-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,17,23,.1) 0%,rgba(13,17,23,.85) 100%)}
+.fix-card-tag{position:absolute;top:14px;left:14px;font-family:var(--fm);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--neon);background:rgba(0,194,104,.12);border:1px solid rgba(0,194,104,.22);border-radius:var(--r5);padding:5px 10px}
+.fix-card-body{padding:24px 24px 28px}
+.fix-card-icon{width:40px;height:40px;border-radius:11px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.18);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.fix-card-icon svg{width:18px;height:18px;color:var(--neon)}
+.fix-card-title{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-.035em;color:var(--dk-t1);margin-bottom:8px}
+.fix-card-text{font-size:13.5px;color:var(--dk-t2);line-height:1.72;font-weight:300}
+@media(max-width:900px){.fix-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.fix-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   TEAM / LEADERSHIP — light bg
+   ══════════════════════════════════ */
+.sec-team{background:#f3f7f4;padding:120px 0;position:relative;overflow:hidden}
+.team-bg-faded{position:absolute;right:0;top:0;bottom:0;width:45%;opacity:.05;object-fit:cover;pointer-events:none;filter:grayscale(1)}
+.sec-team .wrap{position:relative;z-index:1}
+.team-header{margin-bottom:64px}
+.team-header .sec-label{color:var(--neon3)}
+.team-header .sec-label::before{background:var(--neon3)}
+.team-header .h2{color:#0f1923}
+.team-header .h2 em{background:linear-gradient(135deg,var(--neon3),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.team-header .body-sub{color:#4a5e6e}
+.advisors-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.adv-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r3);padding:24px 20px;transition:all .35s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.adv-card:hover{border-color:rgba(0,122,61,.2);box-shadow:0 8px 28px rgba(0,0,0,.1);transform:translateY(-4px)}
+.adv-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.adv-icon svg{width:20px;height:20px;color:var(--neon3)}
+.adv-role{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--neon3);margin-bottom:6px;opacity:.8}
+.adv-name{font-family:var(--ff);font-weight:800;font-size:.95rem;letter-spacing:-.03em;color:#0f1923;margin-bottom:6px}
+.adv-desc{font-size:12.5px;color:#6b7f8e;line-height:1.68;font-weight:300}
+.hiring-banner{background:linear-gradient(135deg,rgba(0,194,104,.08),rgba(0,122,61,.05));border:1px solid rgba(0,194,104,.18);border-radius:var(--r4);padding:36px 40px;margin-top:40px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.hb-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--neon-glow-sm)}
+.hb-icon svg{width:24px;height:24px;color:#fff}
+.hb-text{flex:1;min-width:200px}
+.hb-title{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-.03em;color:#0f1923;margin-bottom:4px}
+.hb-sub{font-size:13.5px;color:#4a5e6e;line-height:1.6}
+.btn-outline-dark{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--neon3);background:transparent;border:1.5px solid var(--neon3);padding:12px 24px;border-radius:var(--r5);text-decoration:none;transition:all .25s}
+.btn-outline-dark:hover{background:var(--neon3);color:#fff;box-shadow:var(--neon-glow-sm)}
+.btn-outline-dark svg{width:14px;height:14px}
+@media(max-width:900px){.advisors-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.advisors-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   COMPARE TABLE — dark
+   ══════════════════════════════════ */
+.sec-compare{background:var(--dk-bg2);padding:120px 0;position:relative;overflow:hidden}
+.compare-bloom{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 55% 45% at 50% 50%,rgba(0,194,104,.06) 0%,transparent 60%)}
+.compare-img-left{position:absolute;left:0;top:0;bottom:0;width:22%;opacity:.06;object-fit:cover;filter:saturate(.3) blur(2px);pointer-events:none}
+.compare-img-right{position:absolute;right:0;top:0;bottom:0;width:22%;opacity:.06;object-fit:cover;filter:saturate(.3) blur(2px);pointer-events:none}
+.sec-compare .wrap{position:relative;z-index:1}
+.compare-header{text-align:center;margin-bottom:64px}
+.compare-header .sec-label{justify-content:center;color:rgba(0,229,130,.65)}
+.compare-header .sec-label::before{background:var(--neon)}
+.compare-header .h2{color:var(--dk-t1)}
+.compare-header .h2 em{background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.compare-header .body-sub{color:var(--dk-t2);margin:0 auto;text-align:center}
+.compare-table{width:100%;border-collapse:collapse;background:var(--dk-bg3);border-radius:var(--r4);overflow:hidden;border:1px solid var(--dk-border)}
+.compare-table th,.compare-table td{padding:16px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.04)}
+.compare-table th:first-child,.compare-table td:first-child{text-align:left}
+.compare-table thead th{font-family:var(--ff);font-weight:700;font-size:.8rem;letter-spacing:-.02em;color:var(--dk-t2);background:var(--dk-bg2);border-bottom:1px solid rgba(255,255,255,.07)}
+.compare-table thead .tm-col{background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.18);border-bottom:1px solid rgba(0,194,104,.18);color:var(--neon)}
+.compare-table tbody tr:last-child td{border-bottom:none}
+.compare-table tbody tr:hover td{background:rgba(255,255,255,.02)}
+.ct-feat{font-size:13.5px;color:var(--dk-t2);font-weight:400}
+.ct-yes{color:var(--neon);font-size:16px}
+.ct-no{color:#ef4444;font-size:16px}
+.ct-partial{color:var(--amber2);font-size:12px;font-family:var(--fm)}
+.ct-tm{font-size:13.5px;color:var(--dk-t1);font-weight:600}
+@media(max-width:768px){
+  .compare-table{font-size:12px;overflow-x:auto;display:block}
+  .compare-table th,.compare-table td{padding:10px 12px}
+}
+
+/* ══════════════════════════════════
+   VALUES — image-backed dark
+   ══════════════════════════════════ */
+.sec-values{background:var(--dk-bg);padding:120px 0;position:relative;overflow:hidden}
+.values-bg{position:absolute;inset:0;z-index:0}
+.values-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.08;filter:saturate(.3) blur(1px)}
+.values-bg-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,var(--dk-bg) 0%,rgba(13,17,23,.6) 40%,rgba(13,17,23,.6) 60%,var(--dk-bg) 100%)}
+.values-bloom{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 45% 40% at 20% 50%,rgba(0,194,104,.07) 0%,transparent 55%),
+             radial-gradient(ellipse 40% 35% at 80% 50%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.sec-values .wrap{position:relative;z-index:1}
+.values-header{text-align:center;margin-bottom:72px}
+.values-header .sec-label{justify-content:center;color:rgba(0,229,130,.65)}
+.values-header .sec-label::before{background:var(--neon)}
+.values-header .h2{color:var(--dk-t1)}
+.values-header .h2 em{background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.values-header .body-sub{color:var(--dk-t2);margin:0 auto;text-align:center}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.val-card{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r3);padding:28px 24px;position:relative;overflow:hidden;transition:all .4s}
+.val-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon3),var(--neon));opacity:0;transition:opacity .3s}
+.val-card:hover{border-color:rgba(0,194,104,.25);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.val-card:hover::before{opacity:1}
+.val-num{font-family:var(--fm);font-size:52px;font-weight:500;line-height:1;letter-spacing:-.04em;color:rgba(0,194,104,.07);position:absolute;top:12px;right:18px;pointer-events:none;transition:color .4s}
+.val-card:hover .val-num{color:rgba(0,194,104,.12)}
+.val-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.18);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.val-icon svg{width:20px;height:20px;color:var(--neon)}
+.val-title{font-family:var(--ff);font-weight:800;font-size:1rem;letter-spacing:-.03em;color:var(--dk-t1);margin-bottom:10px}
+.val-text{font-size:13.5px;color:var(--dk-t2);line-height:1.72;font-weight:300}
+@media(max-width:900px){.values-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.values-grid{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════
+   FINAL CTA — dark with full image bg
+   ══════════════════════════════════ */
+.sec-cta{position:relative;overflow:hidden;padding:140px 0}
+.cta-bg-img{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.25)}
+.cta-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(0,40,20,.97) 0%,rgba(0,25,12,.95) 100%)}
+.cta-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(0,194,104,.16) 0%,transparent 60%)}
+.cta-grid{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(0,194,104,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.04) 1px,transparent 1px);
+  background-size:56px 56px;opacity:.6}
+.sec-cta .wrap{position:relative;z-index:2}
+.cta-inner{text-align:center;max-width:760px;margin:0 auto}
+.cta-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.22);border-radius:var(--r5);padding:6px 14px;margin-bottom:28px}
+.cta-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
+.cta-title{font-family:var(--ff);font-weight:900;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:-.055em;line-height:.97;color:#f0f4ff;margin-bottom:20px}
+.cta-title em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-sub{font-size:17px;color:rgba(240,244,255,.6);line-height:1.8;font-weight:300;margin-bottom:48px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cta-trust-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.ctp{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:#4a5e6e;padding:5px 12px;border-radius:var(--r5);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.ctp svg{width:10px;height:10px;color:var(--neon)}
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+footer{background:#080c11;border-top:1px solid rgba(255,255,255,.05);padding:72px 0 0}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand{}
+.footer-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:16px}
+.footer-logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center}
+.footer-logo-icon svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.footer-wordmark{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff}
+.footer-wordmark span{background:linear-gradient(135deg,var(--neon),var(--neon3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-tagline{font-size:13px;color:#5a6478;line-height:1.7;margin-bottom:20px;max-width:260px}
+.footer-col h4{font-family:var(--ff);font-weight:700;font-size:.82rem;letter-spacing:-.01em;color:#f0f4ff;margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-col ul a{font-size:13px;color:#5a6478;text-decoration:none;transition:color .2s}
+.footer-col ul a:hover{color:var(--neon)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.05);padding:20px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:12px;color:#3d4a60}
+.footer-legal{display:flex;gap:20px;flex-wrap:wrap}
+.footer-legal a{font-size:12px;color:#3d4a60;text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--neon)}
+@media(max-width:960px){.footer-grid{grid-template-columns:1fr 1fr;row-gap:32px}}
+@media(max-width:560px){.footer-grid{grid-template-columns:1fr}}
+</style>
+</head>
 <body>
-    
-    <!-- Navigation -->
-    <nav class="top-nav">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">Trade<span>Match</span></a>
-            
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="/how-it-works-customer">How it works</a></li>
-                <li><a href="/ask-a-trade">Ask a trade</a></li>
-                
-                <!-- Services Mega Menu -->
-                <li class="has-mega-menu">
-                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Services <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
-                    <div class="mega-menu">
-                        <div class="mega-menu-content">
-                            <div class="mega-column">
-                                <h3>Building & Construction</h3>
-                                <ul>
-                                    <li><a href="/services/builders">Builders</a></li>
-                                    <li><a href="/services/extensions">Extensions</a></li>
-                                    <li><a href="/services/loft-conversions">Loft Conversions</a></li>
-                                    <li><a href="/services/garage-conversions">Garage Conversions</a></li>
-                                    <li><a href="/services/bricklayers">Bricklayers</a></li>
-                                    <li><a href="/services/stonemasons">Stonemasons</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Plumbing & Heating</h3>
-                                <ul>
-                                    <li><a href="/services/plumbers">Plumbers</a></li>
-                                    <li><a href="/services/gas-engineers">Gas Engineers</a></li>
-                                    <li><a href="/services/heating-engineers">Heating Engineers</a></li>
-                                    <li><a href="/services/boiler-installation">Boiler Installation</a></li>
-                                    <li><a href="/services/bathroom-installation">Bathroom Installation</a></li>
-                                    <li><a href="/services/radiator-installation">Radiator Installation</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Electrical & Lighting</h3>
-                                <ul>
-                                    <li><a href="/services/electricians">Electricians</a></li>
-                                    <li><a href="/services/rewiring">Rewiring</a></li>
-                                    <li><a href="/services/ev-charger">EV Charger Installation</a></li>
-                                    <li><a href="/services/fuse-box">Fuse Box Replacement</a></li>
-                                    <li><a href="/services/lighting">Lighting Installation</a></li>
-                                    <li><a href="/services/solar-panels">Solar Panels</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Decorating & Finishes</h3>
-                                <ul>
-                                    <li><a href="/services/painters">Painters & Decorators</a></li>
-                                    <li><a href="/services/plasterers">Plasterers</a></li>
-                                    <li><a href="/services/tilers">Tilers</a></li>
-                                    <li><a href="/services/flooring">Flooring Installation</a></li>
-                                    <li><a href="/services/carpenters">Carpenters</a></li>
-                                    <li><a href="/services/kitchen-fitters">Kitchen Fitters</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                
-                <!-- Locations Mega Menu -->
-                <li class="has-mega-menu">
-                    <button type="button" class="mega-trigger" onclick="this.closest('li').classList.toggle('open')">Locations <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg></button>
-                    <div class="mega-menu">
-                        <div class="mega-menu-content">
-                            <div class="mega-column">
-                                <h3>Major Cities</h3>
-                                <ul>
-                                    <li><a href="/trades/london">London</a></li>
-                                    <li><a href="/trades/birmingham">Birmingham</a></li>
-                                    <li><a href="/trades/manchester">Manchester</a></li>
-                                    <li><a href="/trades/leeds">Leeds</a></li>
-                                    <li><a href="/trades/liverpool">Liverpool</a></li>
-                                    <li><a href="/trades/bristol">Bristol</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Southern England</h3>
-                                <ul>
-                                    <li><a href="/trades/brighton">Brighton</a></li>
-                                    <li><a href="/trades/southampton">Southampton</a></li>
-                                    <li><a href="/trades/reading">Reading</a></li>
-                                    <li><a href="/trades/oxford">Oxford</a></li>
-                                    <li><a href="/trades/portsmouth">Portsmouth</a></li>
-                                    <li><a href="/trades/bournemouth">Bournemouth</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Midlands & North</h3>
-                                <ul>
-                                    <li><a href="/trades/nottingham">Nottingham</a></li>
-                                    <li><a href="/trades/sheffield">Sheffield</a></li>
-                                    <li><a href="/trades/newcastle">Newcastle</a></li>
-                                    <li><a href="/trades/stoke-on-trent">Stoke-on-Trent</a></li>
-                                    <li><a href="/trades/coventry">Coventry</a></li>
-                                    <li><a href="/trades/leicester">Leicester</a></li>
-                                </ul>
-                            </div>
-                            <div class="mega-column">
-                                <h3>Scotland & Wales</h3>
-                                <ul>
-                                    <li><a href="/trades/glasgow">Glasgow</a></li>
-                                    <li><a href="/trades/edinburgh">Edinburgh</a></li>
-                                    <li><a href="/trades/aberdeen">Aberdeen</a></li>
-                                    <li><a href="/trades/cardiff">Cardiff</a></li>
-                                    <li><a href="/trades/swansea">Swansea</a></li>
-                                    <li><a href="/trades/belfast">Belfast</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                
-                <li class="nav-cta">
-                    <a href="/post-a-job" class="btn-post">Post a Job</a>
-                    <a href="/trade-signup" class="btn-signup">Trade Signup</a>
-                    <a href="/login" class="btn-login">Login</a>
-                </li>
-            </ul>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><i data-lucide="zap"></i></div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="browse-trades.html" class="nav-link">Find a Tradesperson</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="about.html" class="nav-link active">About</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-btn-ghost">Trade Login</a>
+      <a href="post-a-job.html" class="nav-cta"><div class="nav-cta-pip"></div>Post a Job Free</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="about-hero">
+  <!-- Background image mosaic -->
+  <div class="hero-bg-mosaic">
+    <img src="handyman-construction-site-process-drilling-wall-with-perforator__1_.jpg" alt="">
+    <img src="working-blueprint__1_.jpg" alt="" class="span2">
+    <img src="industrial-builder-works-with-professional-angle-grinder-cut-bricks-build-interior-walls-electrician__1_.jpg" alt="">
+    <img src="plasterer-renovating-indoor-walls__1_.jpg" alt="">
+    <img src="tiler-working-renovation-apartment.jpg" alt="">
+    <img src="plumbing-professional-doing-his-job.jpg" alt="">
+    <img src="modern-bathroom-with-blue-tile-glass-shower.jpg" alt="">
+    <img src="hands-engineer-working-blueprint-construction-concept-engineering-tools-vintage-tone-retro-filter-effect-soft-focus-selective-focus__1_.jpg" alt="">
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-bloom"></div>
+  <div class="hero-grid"></div>
+
+  <div class="wrap">
+    <div class="about-hero-layout">
+      <!-- Left: Copy -->
+      <div>
+        <div class="about-eyebrow">
+          <div class="about-eyebrow-dot"></div>
+          Our Story
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-label">🚀 Building the Future of Home Improvement</div>
-            <h1>Connecting Homeowners<br>with Trusted Tradespeople</h1>
-            <p class="hero-subtitle">We're on a mission to make finding and hiring local tradespeople transparent, fair, and stress-free for everyone.</p>
-            
-            <div class="stats-grid">
-                <div class="stat">
-                    <span class="stat-value">12K+</span>
-                    <span class="stat-label">Verified Tradespeople</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">85K+</span>
-                    <span class="stat-label">Jobs Completed</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">4.9★</span>
-                    <span class="stat-label">Customer Rating</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">£45M+</span>
-                    <span class="stat-label">Work Facilitated</span>
-                </div>
-            </div>
+        <h1 class="about-h1">
+          <span class="ln l1">Built on</span>
+          <span class="ln l2"><em>trust.</em></span>
+          <span class="ln l3">Designed for trades.</span>
+        </h1>
+        <p class="about-sub">TradeMatch exists because the UK trades marketplace was broken — rigged against the very tradespeople and homeowners it was supposed to serve. We built the alternative.</p>
+        <div class="about-hero-btns">
+          <a href="post-a-job.html" class="btn-primary"><i data-lucide="zap"></i>Post a Job Free</a>
+          <a href="TradeMatch-Pro.html" class="btn-outline-light"><i data-lucide="users"></i>Join as a Tradesperson</a>
         </div>
-    </section>
-
-    <!-- Our Story Section -->
-    <section class="story-section section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Our Story</span>
-                <h2 class="section-title">How <span class="gradient-text">TradeMatch</span> Was Born</h2>
+      </div>
+      <!-- Right: Image stack visual -->
+      <div class="about-hero-visual">
+        <div class="hero-img-stack">
+          <div class="him-main">
+            <img src="hands-engineer-working-blueprint-construction-concept-engineering-tools-vintage-tone-retro-filter-effect-soft-focus-selective-focus__1_.jpg" alt="Engineers reviewing blueprints">
+          </div>
+          <div class="him-sec">
+            <img src="plumbing-professional-doing-his-job.jpg" alt="Plumber at work">
+          </div>
+          <!-- Floating stats card -->
+          <div class="hero-fc">
+            <div class="hero-fc-top">
+              <div class="hero-fc-dot"></div>
+              <span class="hero-fc-lbl">Platform Status</span>
             </div>
-
-            <div class="story-content">
-                <p>In 2019, our founder Sarah Mitchell spent three frustrating weeks trying to find a reliable electrician to rewire her London flat. She called dozens of tradespeople who either never returned her calls, quoted wildly different prices, or simply didn't show up.</p>
-
-                <p>Sarah knew she wasn't alone. Millions of UK homeowners face the same problem every year: finding trustworthy, fairly-priced tradespeople is unnecessarily difficult, stressful, and time-consuming.</p>
-
-                <div class="highlight-box">
-                    <p>"There had to be a better way. A platform that worked for both homeowners and tradespeople. One built on transparency, fairness, and trust."</p>
-                </div>
-
-                <p>That's when TradeMatch was born. We set out to create a marketplace where homeowners could post jobs for free, receive multiple competitive quotes, and hire with complete confidence. At the same time, we wanted to give tradespeople a fair, affordable way to find quality leads without paying extortionate subscription fees.</p>
-
-                <p>Today, we're proud to have helped over 85,000 homeowners complete their projects, while supporting thousands of skilled tradespeople to grow their businesses. But we're just getting started.</p>
-
-                <p>Our vision is simple: to become the UK's most trusted platform for home improvement, where every homeowner can find the right tradesperson quickly, and every skilled professional can build a thriving business.</p>
+            <div class="hero-fc-val">£30B</div>
+            <div class="hero-fc-sub">UK home improvement market we're disrupting</div>
+          </div>
+          <!-- Badge -->
+          <div class="hero-badge">
+            <div class="hero-badge-icon"><i data-lucide="shield-check"></i></div>
+            <div>
+              <div class="hero-badge-txt">48 Trade Categories</div>
+              <div class="hero-badge-sub">Verified · Insured · Trusted</div>
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Our Values Section -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Our Values</span>
-                <h2 class="section-title">What We <span class="gradient-text">Stand For</span></h2>
-                <p class="section-subtitle">These core principles guide everything we do at TradeMatch</p>
-            </div>
+<!-- ═══════════ STAT BAR ═══════════ -->
+<div class="stat-bar">
+  <div class="stat-bar-bloom"></div>
+  <div class="stat-bar-inner">
+    <div class="stat-item sr d1">
+      <div class="stat-num">£30B</div>
+      <div class="stat-lbl">UK Market We're Disrupting</div>
+    </div>
+    <div class="stat-item sr d2">
+      <div class="stat-num">48</div>
+      <div class="stat-lbl">Trade Categories Covered</div>
+    </div>
+    <div class="stat-item sr d3">
+      <div class="stat-num">5</div>
+      <div class="stat-lbl">Max Vendors Per Lead</div>
+    </div>
+    <div class="stat-item sr d4">
+      <div class="stat-num">48hr</div>
+      <div class="stat-lbl">Dispute Resolution SLA</div>
+    </div>
+  </div>
+</div>
 
-            <div class="values-grid">
-                <div class="value-card fade-in">
-                    <div class="value-icon">🤝</div>
-                    <h3 class="value-title">Trust First</h3>
-                    <p class="value-description">Every tradesperson on TradeMatch is ID verified and insurance checked. We never compromise on safety or quality, because your home deserves the best.</p>
-                </div>
-
-                <div class="value-card fade-in">
-                    <div class="value-icon">💎</div>
-                    <h3 class="value-title">Transparency</h3>
-                    <p class="value-description">No hidden fees, no confusing pricing, no surprises. We believe in clear, honest communication at every step of the journey.</p>
-                </div>
-
-                <div class="value-card fade-in">
-                    <div class="value-icon">⚖️</div>
-                    <h3 class="value-title">Fairness</h3>
-                    <p class="value-description">We charge tradespeople only £3-£15 per lead, not thousands in subscriptions. Fair prices mean better service for everyone.</p>
-                </div>
-
-                <div class="value-card fade-in">
-                    <div class="value-icon">🚀</div>
-                    <h3 class="value-title">Innovation</h3>
-                    <p class="value-description">We're constantly improving our platform with new features, better matching algorithms, and smarter tools to save you time and money.</p>
-                </div>
-
-                <div class="value-card fade-in">
-                    <div class="value-icon">🎯</div>
-                    <h3 class="value-title">Quality</h3>
-                    <p class="value-description">We don't just connect people—we ensure every connection is high-quality, relevant, and likely to result in great work.</p>
-                </div>
-
-                <div class="value-card fade-in">
-                    <div class="value-icon">💚</div>
-                    <h3 class="value-title">Community</h3>
-                    <p class="value-description">We're building more than a platform—we're creating a community of homeowners and tradespeople who support each other.</p>
-                </div>
-            </div>
+<!-- ═══════════ ORIGIN STORY — Section 1 ═══════════ -->
+<section class="sec-origin">
+  <!-- Split 1: Dark text / Image -->
+  <div class="origin-split sr">
+    <div class="origin-text-pane">
+      <div class="origin-label">
+        <div class="origin-label-n">01</div>
+        The Problem We Found
+      </div>
+      <h2 class="origin-title">The market was rigged against both sides.</h2>
+      <p class="origin-body">Every major trades platform had quietly turned into a lead-extraction machine. Tradespeople paid upfront regardless of whether they won work. Homeowners got fake reviews, ghost leads, and zero payment protection. Nobody was protecting the people the platforms were supposed to serve.</p>
+      <div class="origin-features">
+        <div class="origin-feat">
+          <div class="origin-feat-icon"><i data-lucide="alert-triangle"></i></div>
+          <div>
+            <div class="origin-feat-lbl">Fake leads at scale</div>
+            <div class="origin-feat-sub">Platforms like Bark reported 50%+ ghost or unresponsive leads — vendors paid, got nothing.</div>
+          </div>
         </div>
-    </section>
-
-    <!-- Our Journey Timeline -->
-    <section class="timeline-section section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Our Journey</span>
-                <h2 class="section-title">The <span class="gradient-text">TradeMatch</span> Story</h2>
-                <p class="section-subtitle">From a simple idea to the UK's fastest-growing trades platform</p>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2019</div>
-                        <h3 class="timeline-title">The Beginning</h3>
-                        <p class="timeline-description">TradeMatch is founded in London with a mission to make finding tradespeople easier, fairer, and more transparent.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2020</div>
-                        <h3 class="timeline-title">First 1,000 Jobs</h3>
-                        <p class="timeline-description">We reach our first milestone: 1,000 jobs successfully completed through the platform across London and the South East.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2021</div>
-                        <h3 class="timeline-title">UK-Wide Expansion</h3>
-                        <p class="timeline-description">TradeMatch launches nationwide, covering all major UK cities. We introduce our verified badge system and enhanced background checks.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2022</div>
-                        <h3 class="timeline-title">10,000 Tradespeople</h3>
-                        <p class="timeline-description">Our community grows to over 10,000 verified tradespeople. We launch our mobile app and introduce instant messaging features.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2023</div>
-                        <h3 class="timeline-title">£25M Milestone</h3>
-                        <p class="timeline-description">We facilitate over £25 million in home improvement work. Our "Ask a Trade" Q&A feature launches, helping thousands get free expert advice.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2024</div>
-                        <h3 class="timeline-title">Payment Protection</h3>
-                        <p class="timeline-description">We introduce optional payment protection for larger projects, giving homeowners even more peace of mind when hiring.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-content">
-                        <div class="timeline-year">2025</div>
-                        <h3 class="timeline-title">The Future</h3>
-                        <p class="timeline-description">12,000+ verified tradespeople, 85,000+ jobs completed. We're investing in AI-powered matching and expanding our services across Europe.</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                </div>
-            </div>
+        <div class="origin-feat">
+          <div class="origin-feat-icon"><i data-lucide="star-off"></i></div>
+          <div>
+            <div class="origin-feat-lbl">Manipulated reviews</div>
+            <div class="origin-feat-sub">Five-day suppression windows. Bad reviews removed on request. No accountability.</div>
+          </div>
         </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="team-section section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Our Team</span>
-                <h2 class="section-title">Meet the <span class="gradient-text">People</span> Behind TradeMatch</h2>
-                <p class="section-subtitle">A diverse team passionate about transforming the trades industry</p>
-            </div>
-
-            <div class="team-grid">
-                <div class="team-member fade-in">
-                    <div class="team-avatar">SM</div>
-                    <h3 class="team-name">Sarah Mitchell</h3>
-                    <p class="team-role">Founder & CEO</p>
-                    <p class="team-bio">Former product manager at a fintech startup. Passionate about building fair marketplaces.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">JC</div>
-                    <h3 class="team-name">James Chen</h3>
-                    <p class="team-role">CTO & Co-founder</p>
-                    <p class="team-bio">Software engineer with 15 years experience. Loves solving complex technical challenges.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">RP</div>
-                    <h3 class="team-name">Rachel Patel</h3>
-                    <p class="team-role">Head of Operations</p>
-                    <p class="team-bio">Ensures every tradesperson meets our high standards. Former operations director at a logistics firm.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">DW</div>
-                    <h3 class="team-name">David Williams</h3>
-                    <p class="team-role">Head of Growth</p>
-                    <p class="team-bio">Marketing expert focused on helping tradespeople grow their businesses sustainably.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">LT</div>
-                    <h3 class="team-name">Lisa Thompson</h3>
-                    <p class="team-role">Customer Success Lead</p>
-                    <p class="team-bio">Dedicated to ensuring every homeowner has a positive experience on TradeMatch.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">MA</div>
-                    <h3 class="team-name">Mike Anderson</h3>
-                    <p class="team-role">Vendor Success Manager</p>
-                    <p class="team-bio">Former plumber turned advocate for tradespeople. Helps pros get the most from our platform.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">EJ</div>
-                    <h3 class="team-name">Emma Johnson</h3>
-                    <p class="team-role">Product Manager</p>
-                    <p class="team-bio">Designs features that make hiring tradespeople simple and stress-free.</p>
-                </div>
-
-                <div class="team-member fade-in">
-                    <div class="team-avatar">TR</div>
-                    <h3 class="team-name">Tom Roberts</h3>
-                    <p class="team-role">Head of Trust & Safety</p>
-                    <p class="team-bio">Ensures our verification processes keep our community safe and trustworthy.</p>
-                </div>
-            </div>
+        <div class="origin-feat">
+          <div class="origin-feat-icon"><i data-lucide="shield-off"></i></div>
+          <div>
+            <div class="origin-feat-lbl">Zero payment protection</div>
+            <div class="origin-feat-sub">Homeowners handed cash to strangers with no escrow, no protection, no recourse.</div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+    <div class="origin-img-pane">
+      <img src="working-blueprint__1_.jpg" alt="Planning and blueprints">
+      <div class="origin-img-overlay oi-dark-overlay"></div>
+    </div>
+  </div>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Ready to Experience the TradeMatch Difference?</h2>
-            <p>Join thousands of homeowners who've found trusted tradespeople through our platform</p>
-            <a href="/post-job" class="btn-cta">Post Your Job Free</a>
+  <!-- Split 2: Image / Light text -->
+  <div class="origin-split flip sr">
+    <div class="origin-text-pane light">
+      <div class="origin-label" style="color:var(--neon3)">
+        <div class="origin-label-n" style="background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.2);color:var(--neon3)">02</div>
+        What We Built Instead
+      </div>
+      <h2 class="origin-title" style="color:#0f1923">A marketplace with integrity at its core.</h2>
+      <p class="origin-body" style="color:#4a5e6e">We started from first principles: what would the ideal trades marketplace look like if you genuinely cared about outcomes for both sides? Every feature on TradeMatch exists to answer a real problem we found in the existing market.</p>
+      <div class="origin-features">
+        <div class="origin-feat">
+          <div class="origin-feat-icon" style="background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.2)"><i data-lucide="phone-call" style="color:var(--neon3)"></i></div>
+          <div>
+            <div class="origin-feat-lbl" style="color:#0f1923">Phone-verified jobs only</div>
+            <div class="origin-feat-sub" style="color:#6b7f8e">Every job is verified before distribution. No ghost leads. No wasted spend.</div>
+          </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="enhanced-footer">
-        <div class="footer-container">
-            <!-- Footer Top -->
-            <div class="footer-top">
-                <div class="footer-logo-section">
-                    <h3>Trade<span>Match</span></h3>
-                    <p class="footer-tagline">Connecting UK homeowners with trusted tradespeople</p>
-                </div>
-                <div class="footer-status">
-                    <div class="status-dot"></div>
-                    <span class="status-text">All Systems Operational</span>
-                </div>
-            </div>
-
-            <!-- Footer Main -->
-            <div class="footer-main">
-                <!-- About Column -->
-                <div class="footer-column footer-about-col">
-                    <h4>About TradeMatch</h4>
-                    <p class="footer-about">
-                        TradeMatch is the UK's leading platform for connecting homeowners with verified, rated tradespeople. 
-                        Get free quotes, compare prices, and hire with confidence.
-                    </p>
-                    <div class="footer-social">
-                        <a href="https://facebook.com/tradematch" class="social-icon" aria-label="Facebook">f</a>
-                        <a href="https://twitter.com/tradematch" class="social-icon" aria-label="Twitter">𝕏</a>
-                        <a href="https://instagram.com/tradematch" class="social-icon" aria-label="Instagram">📷</a>
-                        <a href="https://linkedin.com/company/tradematch" class="social-icon" aria-label="LinkedIn">in</a>
-                        <a href="https://youtube.com/tradematch" class="social-icon" aria-label="YouTube">▶</a>
-                        <a href="https://tiktok.com/@tradematch" class="social-icon" aria-label="TikTok">🎵</a>
-                    </div>
-                </div>
-
-                <!-- For Homeowners -->
-                <div class="footer-column">
-                    <h4>For Homeowners</h4>
-                    <ul class="footer-links">
-                        <li><a href="/how-it-works-customer">How It Works</a></li>
-                        <li><a href="/post-a-job">Get Free Quotes</a></li>
-                        <li><a href="/find-tradespeople">Find Tradespeople</a></li>
-                        <li><a href="/compare">Compare Platforms</a></li>
-                        <li><a href="/cost-calculator">Cost Calculator</a></li>
-                    </ul>
-                </div>
-
-                <!-- Popular Services -->
-                <div class="footer-column">
-                    <h4>Popular Services</h4>
-                    <ul class="footer-links">
-                        <li><a href="/post-job?service=plumbing">Plumbers</a></li>
-                        <li><a href="/post-job?service=electrical">Electricians</a></li>
-                        <li><a href="/post-job?service=bathroom">Bathroom Fitters</a></li>
-                        <li><a href="/post-job?service=kitchen">Kitchen Fitters</a></li>
-                        <li><a href="/post-job?service=landscaping">Landscapers</a></li>
-                    </ul>
-                </div>
-
-                <!-- Company -->
-                <div class="footer-column">
-                    <h4>Company</h4>
-                    <ul class="footer-links">
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/careers">Careers</a></li>
-                        <li><a href="/investor-relations">Investor Relations</a></li>
-                        <li><a href="/blog">Blog</a></li>
-                        <li><a href="/help">Help Centre</a></li>
-                    </ul>
-                </div>
-
-                <!-- Legal -->
-                <div class="footer-column">
-                    <h4>Legal</h4>
-                    <ul class="footer-links">
-                        <li><a href="/terms">Terms & Conditions</a></li>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                        <li><a href="/cookies">Cookie Policy</a></li>
-                        <li><a href="/complaints">Complaints</a></li>
-                        <li><a href="/help">Help Centre</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Footer Bottom -->
-            <div class="footer-bottom">
-                <p>&copy; 2026 TradeMatch UK. All rights reserved.</p>
-                <div class="footer-legal">
-                    <a href="/terms">Terms & Conditions</a>
-                    <a href="/privacy">Privacy Policy</a>
-                </div>
-            </div>
+        <div class="origin-feat">
+          <div class="origin-feat-icon" style="background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.2)"><i data-lucide="lock" style="color:var(--neon3)"></i></div>
+          <div>
+            <div class="origin-feat-lbl" style="color:#0f1923">Milestone escrow protection</div>
+            <div class="origin-feat-sub" style="color:#6b7f8e">Funds held until both parties confirm job completion. No cowboy builders. No unpaid tradespeople.</div>
+          </div>
         </div>
-    </footer>
+        <div class="origin-feat">
+          <div class="origin-feat-icon" style="background:rgba(0,122,61,.08);border-color:rgba(0,122,61,.2)"><i data-lucide="bar-chart-3" style="color:var(--neon3)"></i></div>
+          <div>
+            <div class="origin-feat-lbl" style="color:#0f1923">Reliability Scores, not just stars</div>
+            <div class="origin-feat-sub" style="color:#6b7f8e">Response rate, show-up rate, completion rate — real signal, not just reviews that can be bought.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="origin-img-pane">
+      <img src="modern-bathroom-with-blue-tile-glass-shower.jpg" alt="Completed renovation bathroom">
+      <div class="origin-img-overlay oi-light-overlay"></div>
+    </div>
+  </div>
+</section>
 
-    <!-- JavaScript for Animations -->
-    <script>
-        // Intersection Observer for fade-in animations
-        const observerOptions = {
-            root: null,
-            threshold: 0.1,
-            rootMargin: '0px 0px -80px 0px'
-        };
+<!-- ═══════════ MISSION STRIP ═══════════ -->
+<section class="sec-mission">
+  <div class="mission-bg">
+    <img class="mission-bg-img" src="tiler-working-renovation-apartment.jpg" alt="">
+    <div class="mission-overlay"></div>
+    <div class="mission-bloom"></div>
+    <div class="mission-grid-tex"></div>
+  </div>
+  <div class="mission-inner">
+    <div class="mission-eyebrow sr">
+      <div class="mission-eyebrow-dot"></div>
+      Our Mission
+    </div>
+    <h2 class="mission-quote sr d1">To become the UK's most <em>trusted</em> trades marketplace — for everyone.</h2>
+    <p class="mission-sub sr d2">Not just trusted in reputation. Trusted in architecture. Every product decision we make, every feature we build, is filtered through one question: does this make the platform more honest?</p>
+    <div class="mission-three">
+      <div class="m3-card sr d2">
+        <div class="m3-icon"><i data-lucide="eye"></i></div>
+        <div class="m3-title">Radical Transparency</div>
+        <div class="m3-text">No hidden fees. No blind purchases. Vendors see full job detail before spending a penny. Reviews publish immediately — no suppression window.</div>
+      </div>
+      <div class="m3-card sr d3">
+        <div class="m3-icon"><i data-lucide="scale"></i></div>
+        <div class="m3-title">Genuine Fairness</div>
+        <div class="m3-text">A maximum of 5 vendors per lead. A full quality credit if the homeowner doesn't respond. No annual commitment. No monthly fee just to be visible.</div>
+      </div>
+      <div class="m3-card sr d4">
+        <div class="m3-icon"><i data-lucide="shield-check"></i></div>
+        <div class="m3-title">Real Protection</div>
+        <div class="m3-text">Milestone escrow for every significant job. The TradeMatch Guarantee for homeowners. 48-hour human dispute resolution for both sides.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
+<!-- ═══════════ THE PROBLEM (expanded) ═══════════ -->
+<section class="sec-problem">
+  <img class="problem-bg-img" src="industrial-builder-works-with-professional-angle-grinder-cut-bricks-build-interior-walls-electrician__1_.jpg" alt="">
+  <div class="wrap">
+    <div class="problem-layout">
+      <div class="problem-left">
+        <div class="sec-label sr">What we're fixing</div>
+        <h2 class="h2 sr d1">Four failures the <em>market ignored.</em></h2>
+        <p class="body-sub sr d2" style="color:#4a5e6e;margin-bottom:40px">The incumbent platforms had documented, public, systemic problems. Our founding team mapped every category of failure — and built a direct answer to each one.</p>
+        <a href="how-it-works.html" class="btn-outline-dark sr d3"><i data-lucide="arrow-right"></i>See how we fixed it</a>
+      </div>
+      <div class="problem-cards sr d2">
+        <div class="prob-card">
+          <div class="prob-icon red"><i data-lucide="ghost"></i></div>
+          <div>
+            <div class="prob-lbl">Ghost & fake leads</div>
+            <div class="prob-sub">Vendors on Bark.com reported paying for leads where homeowners never responded, numbers were fake, or the same lead was resold dozens of times.</div>
+            <div class="prob-tag"><i data-lucide="x-circle" style="width:8px;height:8px"></i>Fixed: phone-verified jobs only</div>
+          </div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon red"><i data-lucide="star"></i></div>
+          <div>
+            <div class="prob-lbl">Suppressed & bought reviews</div>
+            <div class="prob-sub">Checkatrade's 5-day suppression window allowed poor-performing vendors to flag and remove negative reviews before they published.</div>
+            <div class="prob-tag"><i data-lucide="x-circle" style="width:8px;height:8px"></i>Fixed: immediate publish, tamper-proof</div>
+          </div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon red"><i data-lucide="banknote"></i></div>
+          <div>
+            <div class="prob-lbl">No payment protection</div>
+            <div class="prob-sub">MyBuilder and Bark offer zero escrow. Homeowners hand money directly to tradespeople with no protection. Disputes are ignored.</div>
+            <div class="prob-tag"><i data-lucide="x-circle" style="width:8px;height:8px"></i>Fixed: milestone escrow on every job</div>
+          </div>
+        </div>
+        <div class="prob-card">
+          <div class="prob-icon red"><i data-lucide="pound-sterling"></i></div>
+          <div>
+            <div class="prob-lbl">Pay-and-pray lead models</div>
+            <div class="prob-sub">Platforms charging £700–1,200/year upfront — before a single job is won. Sole traders on thin margins locked into annual subs with no guaranteed ROI.</div>
+            <div class="prob-tag"><i data-lucide="x-circle" style="width:8px;height:8px"></i>Fixed: pay-per-lead, no annual commitment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+<!-- ═══════════ THE FIX GRID ═══════════ -->
+<section class="sec-fix">
+  <div class="fix-bg">
+    <img src="handyman-construction-site-process-drilling-wall-with-perforator__1_.jpg" alt="">
+    <div class="fix-bg-overlay"></div>
+  </div>
+  <div class="fix-bloom"></div>
+  <div class="wrap">
+    <div class="fix-header">
+      <div class="sec-label sr">How TradeMatch is different</div>
+      <h2 class="h2 sr d1">Every feature built for <em>a reason.</em></h2>
+      <p class="body-sub sr d2">We didn't copy the incumbents and add a badge. We rebuilt from scratch with every trust failure mapped and addressed.</p>
+    </div>
+    <div class="fix-grid">
+      <div class="fix-card sr d1">
+        <div class="fix-card-img">
+          <img src="plumbing-professional-doing-his-job.jpg" alt="Plumbing professional">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Lead Quality</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="phone-check"></i></div>
+          <div class="fix-card-title">Phone-Verified Jobs</div>
+          <div class="fix-card-text">Every job goes through phone OTP and postcode verification before any vendor receives the lead. Zero ghost leads. Full credit refund if a homeowner is unresponsive within 72 hours.</div>
+        </div>
+      </div>
+      <div class="fix-card sr d2">
+        <div class="fix-card-img">
+          <img src="tiler-working-renovation-apartment.jpg" alt="Tiler working">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Payment Safety</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="lock"></i></div>
+          <div class="fix-card-title">Milestone Escrow</div>
+          <div class="fix-card-text">Homeowner funds are held securely and released at agreed milestones. Neither party can access funds until sign-off. The only UK trades platform with built-in escrow.</div>
+        </div>
+      </div>
+      <div class="fix-card sr d3">
+        <div class="fix-card-img">
+          <img src="plasterer-renovating-indoor-walls__1_.jpg" alt="Plasterer working">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Verified Reviews</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="badge-check"></i></div>
+          <div class="fix-card-title">Tamper-Proof Reliability Scores</div>
+          <div class="fix-card-text">Reviews only unlock when both parties confirm completion. They publish immediately. Alongside star ratings, we surface response rate, show-up rate, and completion rate.</div>
+        </div>
+      </div>
+      <div class="fix-card sr d1">
+        <div class="fix-card-img">
+          <img src="hands-engineer-working-blueprint-construction-concept-engineering-tools-vintage-tone-retro-filter-effect-soft-focus-selective-focus__1_.jpg" alt="Planning">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Vendor Vetting</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="user-check"></i></div>
+          <div class="fix-card-title">Full Credential Verification</div>
+          <div class="fix-card-text">Identity check, public liability insurance upload with expiry monitoring, and trade-specific registration verification (Gas Safe, NICEIC, NAPIT). All displayed with last-verified dates.</div>
+        </div>
+      </div>
+      <div class="fix-card sr d2">
+        <div class="fix-card-img">
+          <img src="working-blueprint__1_.jpg" alt="Blueprint">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Fair Pricing</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="coins"></i></div>
+          <div class="fix-card-title">See Before You Buy</div>
+          <div class="fix-card-text">Vendors see full job details — description, budget, timeline, postcode — before spending a single credit. No blind purchases. Credits never expire. No annual commitment.</div>
+        </div>
+      </div>
+      <div class="fix-card sr d3">
+        <div class="fix-card-img">
+          <img src="modern-bathroom-with-blue-tile-glass-shower.jpg" alt="Beautiful completed bathroom">
+          <div class="fix-card-img-overlay"></div>
+          <div class="fix-card-tag">Dispute Support</div>
+        </div>
+        <div class="fix-card-body">
+          <div class="fix-card-icon"><i data-lucide="headphones"></i></div>
+          <div class="fix-card-title">48-Hour Human Resolution</div>
+          <div class="fix-card-text">Every dispute is handled by a human trust specialist, not an automated chatbot. We guarantee a response within 48 hours. Real accountability when things go wrong.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    </script>
+<!-- ═══════════ COMPARE TABLE ═══════════ -->
+<section class="sec-compare">
+  <div class="compare-bloom"></div>
+  <img class="compare-img-left" src="handyman-construction-site-process-drilling-wall-with-perforator__1_.jpg" alt="">
+  <img class="compare-img-right" src="plasterer-renovating-indoor-walls.jpg" alt="">
+  <div class="wrap">
+    <div class="compare-header">
+      <div class="sec-label sr">Honest comparison</div>
+      <h2 class="h2 sr d1">TradeMatch vs the <em>incumbents.</em></h2>
+      <p class="body-sub sr d2">We're not shy about how we stack up. Judge for yourself.</p>
+    </div>
+    <div class="sr d2">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Feature</th>
+            <th class="tm-col">TradeMatch</th>
+            <th>Checkatrade</th>
+            <th>MyBuilder</th>
+            <th>Bark.com</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ct-feat">Phone-verified jobs before distribution</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Milestone payment escrow</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">No annual subscription required</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-yes">✓</td>
+            <td class="ct-yes">✓</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Full job detail before purchase</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Immediate review publication</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-partial">Partial</td>
+            <td class="ct-yes">✓</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Max 5 vendors per lead</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Lead quality credit guarantee</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">48-hour human dispute resolution</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+            <td class="ct-no">✗</td>
+          </tr>
+          <tr>
+            <td class="ct-feat">Credits never expire</td>
+            <td class="ct-tm ct-yes">✓</td>
+            <td class="ct-no">N/A</td>
+            <td class="ct-no">N/A</td>
+            <td class="ct-no">✗</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ TEAM & LEADERSHIP ═══════════ -->
+<section class="sec-team">
+  <img class="team-bg-faded" src="working-blueprint__1_.jpg" alt="">
+  <div class="wrap">
+    <div class="team-header">
+      <div class="sec-label sr">The People Building This</div>
+      <h2 class="h2 sr d1">Founder-led. <em>Mission-driven.</em></h2>
+      <p class="body-sub sr d2" style="color:#4a5e6e;margin-bottom:0">TradeMatch was founded by someone who lived the failures of the existing market firsthand. Every member of the leadership team is hired because they've operated at the problem, not just studied it.</p>
+    </div>
+
+    <!-- Founder card -->
+    <div class="sr d2" style="background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:var(--r4);padding:40px 40px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;box-shadow:0 4px 24px rgba(0,0,0,.06);margin-bottom:24px">
+      <div style="width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--neon3),var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--neon-glow-sm)">
+        <i data-lucide="user" style="width:36px;height:36px;color:#fff;stroke-width:1.5"></i>
+      </div>
+      <div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--neon3);margin-bottom:6px">Founder & CEO</div>
+        <div style="font-family:var(--ff);font-weight:800;font-size:1.2rem;letter-spacing:-.04em;color:#0f1923;margin-bottom:8px">TradeMatch Leadership</div>
+        <p style="font-size:14px;color:#4a5e6e;line-height:1.75;font-weight:300;max-width:620px">10+ years in digital marketplace strategy and product development. Extensive experience building consumer-facing platforms in the UK home services sector. Led all aspects of TradeMatch's product development from concept to 129-page live platform — with deep expertise in programmatic SEO, conversion optimisation, and trust architecture design.</p>
+      </div>
+    </div>
+
+    <!-- Advisory grid -->
+    <div class="sec-label sr" style="margin-top:40px">Advisory Board</div>
+    <div class="advisors-grid">
+      <div class="adv-card sr d1">
+        <div class="adv-icon"><i data-lucide="trending-up"></i></div>
+        <div class="adv-role">PropTech Investor</div>
+        <div class="adv-name">UK PropTech Advisor</div>
+        <div class="adv-desc">Portfolio includes Rated People and HomeLet. Deep expertise in UK property services investment.</div>
+      </div>
+      <div class="adv-card sr d2">
+        <div class="adv-icon"><i data-lucide="gavel"></i></div>
+        <div class="adv-role">Consumer Protection</div>
+        <div class="adv-name">Trading Standards Expert</div>
+        <div class="adv-desc">Former senior officer at Trading Standards. Ensures platform integrity and regulatory compliance.</div>
+      </div>
+      <div class="adv-card sr d3">
+        <div class="adv-icon"><i data-lucide="rocket"></i></div>
+        <div class="adv-role">Marketplace Operator</div>
+        <div class="adv-name">Exit-Experienced Founder</div>
+        <div class="adv-desc">Previous exit in home services sector. Advises on vendor growth, retention, and marketplace flywheel mechanics.</div>
+      </div>
+      <div class="adv-card sr d4">
+        <div class="adv-icon"><i data-lucide="scale"></i></div>
+        <div class="adv-role">Legal Advisor</div>
+        <div class="adv-name">Consumer Rights Lawyer</div>
+        <div class="adv-desc">Specialises in digital marketplaces. Advises on T&Cs, escrow product structure, and GDPR compliance.</div>
+      </div>
+    </div>
+
+    <!-- Hiring banner -->
+    <div class="hiring-banner sr" style="margin-top:32px">
+      <div class="hb-icon"><i data-lucide="briefcase"></i></div>
+      <div class="hb-text">
+        <div class="hb-title">We're hiring — join the mission.</div>
+        <div class="hb-sub">We're looking for a CTO, Head of Growth, and Head of Trust & Safety. If you've operated in UK marketplace growth and want to build something that actually matters, we want to hear from you.</div>
+      </div>
+      <a href="mailto:hello@tradematch.uk" class="btn-outline-dark"><i data-lucide="mail"></i>Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VALUES ═══════════ -->
+<section class="sec-values">
+  <div class="values-bg">
+    <img src="industrial-builder-works-with-professional-angle-grinder-cut-bricks-build-interior-walls-electrician__1_.jpg" alt="">
+    <div class="values-bg-overlay"></div>
+  </div>
+  <div class="values-bloom"></div>
+  <div class="wrap">
+    <div class="values-header">
+      <div class="sec-label sr">What we stand for</div>
+      <h2 class="h2 sr d1">Four values that shape <em>every decision.</em></h2>
+      <p class="body-sub sr d2">Not written for a wall. Written because every feature, every hire, every product call at TradeMatch runs through these filters first.</p>
+    </div>
+    <div class="values-grid">
+      <div class="val-card sr d1">
+        <div class="val-num">01</div>
+        <div class="val-icon"><i data-lucide="eye"></i></div>
+        <div class="val-title">Transparency above all</div>
+        <div class="val-text">No suppressed reviews. No blind purchases. No hidden fees. If something is happening on this platform, both sides should be able to see it.</div>
+      </div>
+      <div class="val-card sr d2">
+        <div class="val-num">02</div>
+        <div class="val-icon"><i data-lucide="shield"></i></div>
+        <div class="val-title">Protection is non-negotiable</div>
+        <div class="val-text">Escrow. Lead quality guarantees. Verified credentials. A 48-hour dispute SLA. Protection isn't a feature — it's the foundation.</div>
+      </div>
+      <div class="val-card sr d3">
+        <div class="val-num">03</div>
+        <div class="val-icon"><i data-lucide="scale"></i></div>
+        <div class="val-title">Fairness to both sides</div>
+        <div class="val-text">Tradespeople and homeowners both matter equally. A platform that extracts from one side to serve the other eventually destroys itself. We designed for both.</div>
+      </div>
+      <div class="val-card sr d4">
+        <div class="val-num">04</div>
+        <div class="val-icon"><i data-lucide="zap"></i></div>
+        <div class="val-title">Quality over quantity</div>
+        <div class="val-text">Five vendors per lead, not fifty. Verified tradespeople only. Fewer, better leads. Fewer, better vendors. The whole platform is tuned for outcome quality, not volume metrics.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FINAL CTA ═══════════ -->
+<section class="sec-cta">
+  <img class="cta-bg-img" src="plasterer-renovating-indoor-walls.jpg" alt="">
+  <div class="cta-overlay"></div>
+  <div class="cta-bloom"></div>
+  <div class="cta-grid"></div>
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="cta-eyebrow sr">
+        <div class="cta-eyebrow-dot"></div>
+        Ready to experience the difference?
+      </div>
+      <h2 class="cta-title sr d1">Find the right tradesperson. <em>Protected, every time.</em></h2>
+      <p class="cta-sub sr d2">Post a job free in under 3 minutes. Get up to 5 quotes from verified, insured tradespeople. Pay securely through escrow. No fake leads. No cowboys. No nonsense.</p>
+      <div class="cta-btns sr d3">
+        <a href="post-a-job.html" class="btn-primary"><i data-lucide="zap"></i>Post a Job — It's Free</a>
+        <a href="TradeMatch-Pro.html" class="btn-outline-light"><i data-lucide="users"></i>Join as a Tradesperson</a>
+      </div>
+      <div class="cta-trust-pills sr d4">
+        <div class="ctp"><i data-lucide="check-circle"></i>Free to post</div>
+        <div class="ctp"><i data-lucide="check-circle"></i>Verified tradespeople only</div>
+        <div class="ctp"><i data-lucide="check-circle"></i>Escrow protection</div>
+        <div class="ctp"><i data-lucide="check-circle"></i>48hr dispute SLA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">
+          <div class="footer-logo-icon"><i data-lucide="zap"></i></div>
+          <span class="footer-wordmark">Trade<span>Match</span></span>
+        </a>
+        <p class="footer-tagline">The UK's most trusted trades marketplace. Built on radical transparency and real protection for both sides of every job.</p>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="view-profile.html">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="dispute-resolution.html">Tradesperson Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="browse-trades.html">Plumbers</a></li>
+          <li><a href="browse-trades.html">Electricians</a></li>
+          <li><a href="browse-trades.html">Builders</a></li>
+          <li><a href="browse-trades.html">Gas Engineers</a></li>
+          <li><a href="browse-trades.html">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades →</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="about.html">Careers</a></li>
+          <li><a href="about.html">Press</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeMatch UK Ltd · Registered in England & Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms & Conditions</a>
+        <a href="/cookies">Cookie Policy</a>
+        <a href="/complaints">Complaints</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// ── Scroll reveal
+const srObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); srObs.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+document.querySelectorAll('.sr').forEach(el => srObs.observe(el));
+</script>
 </body>
 </html>
-
-
-
-
-
-

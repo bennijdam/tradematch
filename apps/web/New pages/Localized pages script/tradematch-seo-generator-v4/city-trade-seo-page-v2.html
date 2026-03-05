@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best {TRADE} in {LOCATION} | Verified Local Pros | TradeMatch UK</title>
+<meta name="description" content="{META_DESCRIPTION}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.tradematch.uk/services/{TRADE_SLUG}/{LOCATION_SLUG}">
+<meta property="og:title" content="Best {TRADE} in {LOCATION} | TradeMatch UK">
+<meta property="og:description" content="{META_DESCRIPTION}">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#007a3d">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "{TRADE} Services in {LOCATION}",
+  "description": "{META_DESCRIPTION}",
+  "areaServed": { "@type": "City", "name": "{LOCATION}" },
+  "provider": { "@type": "LocalBusiness", "name": "TradeMatch", "url": "https://www.tradematch.uk" },
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "{REVIEW_COUNT}", "bestRating": "5" },
+  "review": {REVIEWS_SCHEMA}
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ─── NEW v3 COMPONENTS ─── */
+
+/* Local insight block (in intro section) */
+.local-insight-block{display:flex;align-items:flex-start;gap:12px;background:rgba(0,194,104,.06);border:1px solid rgba(0,194,104,.22);border-radius:var(--r3);padding:14px 16px;margin-top:20px}
+.lib-icon{width:28px;height:28px;border-radius:50%;background:rgba(0,194,104,.15);border:1px solid rgba(0,194,104,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lib-icon svg{width:13px;height:13px;color:var(--g2)}
+.lib-text{font-size:13px;line-height:1.6;color:var(--tx-dk2)}
+.lib-text strong{color:var(--g2);font-weight:600}
+
+/* Cost rows */
+.cost-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bdr-lt)}
+.cost-row:last-child{border-bottom:none}
+.cost-row-label{font-size:14px;color:var(--tx-dk2)}
+.cost-row-range{font-size:13px;color:var(--tx-dk3);text-align:right}
+.cost-row-avg{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--g2);text-align:right;min-width:60px}
+@media(max-width:600px){.cost-row{grid-template-columns:1fr auto;}.cost-row-avg{display:none}}
+
+/* Competitor comparison section */
+.comparison{background:var(--lt);padding:var(--sec-pad)}
+.comparison-inner{max-width:1240px;margin:0 auto;padding:0 28px}
+.cmp-table-wrap{overflow-x:auto;border-radius:var(--r3);border:1px solid var(--bdr-lt);box-shadow:0 4px 20px rgba(0,0,0,.06);margin-top:28px}
+.cmp-table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+.cmp-table thead tr{background:var(--dk);color:var(--tx-lt)}
+.cmp-table th{padding:14px 16px;text-align:left;font-family:var(--ff);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.cmp-table th.cmp-tm{background:linear-gradient(135deg,var(--g2),var(--g));color:#fff}
+.cmp-table td{padding:13px 16px;border-bottom:1px solid var(--bdr-lt);color:var(--tx-dk2)}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table tr:hover td{background:var(--lt2)}
+.cmp-table td.cmp-tm{background:rgba(0,194,104,.05);font-weight:600;color:var(--g2)}
+.cmp-table td.cmp-yes{color:#16a34a}
+.cmp-table td.cmp-partial{color:#d97706}
+.cmp-table td.cmp-no{color:#dc2626}
+.cmp-feature{color:var(--tx-dk);font-weight:500}
+.cmp-footnote{font-size:11px;color:var(--tx-dk3);margin-top:12px;font-style:italic}
+
+/* ─── RESET & BASE ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+/* ─── DESIGN TOKENS ─── */
+:root{
+  --g:#00c268;--g2:#007a3d;--g3:#00e582;--g4:#009e4f;
+  --glow:0 4px 24px rgba(0,194,104,.3),0 1px 8px rgba(0,194,104,.15);
+  --glow-sm:0 2px 14px rgba(0,194,104,.22);
+  --dk:#0d1117;--dk2:#111620;--dk3:#161c28;
+  --lt:#f9fafb;--lt2:#f0f4f8;--lt3:#e8edf3;
+  --tx-dk:#0f1923;--tx-dk2:#374151;--tx-dk3:#6b7280;
+  --tx-lt:#f0f4ff;--tx-lt2:#8b95aa;--tx-lt3:#5a6478;
+  --bdr-lt:rgba(0,0,0,.08);--bdr-dk:rgba(255,255,255,.08);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+  --sec-pad:100px 0;
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ─── SCROLL REVEAL ─── */
+.sr{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
+.sr.vis{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+.d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}
+@media(prefers-reduced-motion:reduce){.sr{opacity:1;transform:none}}
+
+/* ─── KEYFRAMES ─── */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.5)}}
+@keyframes bloomIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+/* ─── SECTION LABELS ─── */
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--g);opacity:.6}
+.sec-label.dark{color:rgba(0,229,130,.7)}
+.sec-label.light{color:var(--g2)}
+
+.h2{font-family:var(--ff);font-weight:800;font-size:clamp(1.9rem,3.6vw,2.9rem);letter-spacing:-.045em;line-height:1.06;margin-bottom:16px}
+.h2 em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--g),#007a3d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h2.on-dk{color:var(--tx-lt)}
+.h2.on-lt{color:var(--tx-dk)}
+.body-sub{font-size:16px;line-height:1.8;font-weight:300}
+.body-sub.on-dk{color:var(--tx-lt2)}
+.body-sub.on-lt{color:var(--tx-dk3);max-width:520px}
+
+/* ─── NAV ─── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.92);backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.08);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.07);transition:all .4s}
+.nav.scrolled .nav-inner{box-shadow:0 4px 32px rgba(0,0,0,.12)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--g2),var(--g));display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-sm)}
+.nav-logo-icon svg{width:16px;height:16px;color:#fff;stroke-width:2.5}
+.nav-wordmark{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-.04em;color:#0f1923}
+.nav-wordmark span{background:linear-gradient(135deg,var(--g),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nav-link{font-size:13px;font-weight:500;color:#3d5060;text-decoration:none;padding:8px 14px;border-radius:var(--r5);transition:color .2s,background .2s}
+.nav-link:hover{color:#0f1923;background:rgba(0,0,0,.05)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g2),var(--g));padding:9px 20px;border-radius:var(--r5);text-decoration:none;box-shadow:var(--glow-sm);transition:all .25s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:var(--glow)}
+.nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
+.nav-ghost{font-size:13px;font-weight:600;color:#0f1923;background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.1);padding:8px 18px;border-radius:var(--r5);cursor:pointer;transition:all .25s;text-decoration:none}
+.nav-ghost:hover{border-color:rgba(0,122,61,.4);color:var(--g2)}
+@media(max-width:900px){.nav-links{display:none}}
+@media(max-width:600px){.nav-ghost{display:none}}
+
+/* ─── BUTTONS ─── */
+.btn-primary{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--g2),var(--g));padding:11px 22px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--glow);transition:all .3s;position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);opacity:0;transition:opacity .25s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,194,104,.38)}
+.btn-primary:hover::before{opacity:1}
+.btn-primary svg{width:14px;height:14px}
+.btn-secondary{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13.5px;font-weight:700;color:var(--g2);background:#fff;border:1.5px solid rgba(0,122,61,.22);padding:10px 22px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-secondary:hover{border-color:var(--g);box-shadow:0 4px 16px rgba(0,194,104,.15)}
+.btn-secondary svg{width:14px;height:14px}
+.btn-outline-dk{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13.5px;font-weight:700;color:#f0f4ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:11px 22px;border-radius:var(--r5);text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-outline-dk:hover{border-color:rgba(0,194,104,.5);color:var(--g3);background:rgba(0,194,104,.07)}
+.btn-outline-dk svg{width:14px;height:14px}
+
+/* ════════════════════════════════════
+   SECTION 1: HERO — DARK with cinematic image
+   ════════════════════════════════════ */
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:var(--dk)}
+.hero-img-bg{position:absolute;inset:0;z-index:0}
+.hero-img-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.28);transform:scale(1.04);transition:transform 10s ease}
+.hero-img-bg.loaded img{transform:scale(1)}
+.hero-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,9,15,.65) 0%,rgba(5,9,15,.3) 40%,rgba(5,9,15,.92) 100%),linear-gradient(90deg,rgba(5,9,15,.97) 0%,rgba(5,9,15,.1) 65%,rgba(5,9,15,.5) 100%)}
+.hero-bloom{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 65% 55% at 10% 55%,rgba(0,194,104,.09) 0%,transparent 70%)}
+.hero-grain{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+.hero-content{position:relative;z-index:3;width:100%;padding-top:100px;padding-bottom:60px}
+.hero-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 440px;gap:60px;align-items:center}
+
+.hero-crumb{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--tx-lt3);margin-bottom:20px;flex-wrap:wrap}
+.hero-crumb a{color:var(--tx-lt3);text-decoration:none;transition:color .2s}
+.hero-crumb a:hover{color:var(--g)}
+.hero-crumb-sep{color:rgba(255,255,255,.2);font-size:12px}
+
+.hero-loc-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--g);background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.25);padding:5px 14px;border-radius:var(--r5);margin-bottom:20px}
+.hero-loc-pill svg{width:10px;height:10px}
+
+.hero-h1{font-family:var(--ff);font-weight:900;font-size:clamp(2.4rem,5.5vw,4.4rem);letter-spacing:-.055em;line-height:1;color:#f0f4ff;margin-bottom:18px}
+.hero-h1 .trade{display:block;background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-h1 .loc{color:rgba(240,244,255,.8)}
+
+.hero-sub{font-size:17px;line-height:1.75;color:#8b95aa;font-weight:300;max-width:440px;margin-bottom:30px}
+
+.hero-trust{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:32px}
+.htr-stars{display:flex;gap:2px}
+.htr-stars svg{width:13px;height:13px;fill:#f59e0b;color:#f59e0b}
+.htr-txt{font-size:13px;color:#8b95aa}
+.htr-txt b{color:#f0f4ff}
+.htr-sep{width:1px;height:16px;background:rgba(255,255,255,.14)}
+.htr-badge{display:flex;align-items:center;gap:5px;font-size:12px;color:#8b95aa}
+.htr-dot{width:18px;height:18px;border-radius:4px;background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.28);display:flex;align-items:center;justify-content:center}
+.htr-dot svg{width:10px;height:10px;color:var(--g)}
+
+.hero-ctas{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:28px;margin-top:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,.07)}
+.hst-num{font-family:var(--ff);font-size:1.55rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff;line-height:1}
+.hst-num span{color:var(--g)}
+.hst-lbl{font-size:11px;color:var(--tx-lt3);font-weight:400;margin-top:3px}
+
+/* Hero quote card */
+.hero-card{background:rgba(15,20,30,.7);border:1px solid rgba(255,255,255,.12);border-radius:var(--r4);padding:30px;backdrop-filter:blur(28px) saturate(1.4);animation:bloomIn .8s .35s both;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.hero-card-top{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.hero-card-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--g2),var(--g));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--glow-sm)}
+.hero-card-icon svg{width:18px;height:18px;color:#fff}
+.hero-card-title{font-family:var(--ff);font-size:1rem;font-weight:700;color:#f0f4ff;margin-bottom:2px}
+.hero-card-sub{font-size:12px;color:var(--tx-lt3)}
+.hc-field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.hc-lbl{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx-lt3)}
+.hc-input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r2);padding:11px 14px;font-family:var(--fb);font-size:14px;color:#f0f4ff;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;width:100%}
+.hc-input::placeholder{color:#3d4a60}
+.hc-input:focus{border-color:rgba(0,194,104,.4);box-shadow:0 0 0 3px rgba(0,194,104,.09)}
+.hc-input option{background:#161c28;color:#f0f4ff}
+.hc-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--g2),var(--g));border:none;padding:13px;border-radius:var(--r2);cursor:pointer;box-shadow:var(--glow);transition:all .25s;margin-top:8px}
+.hc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,194,104,.4)}
+.hc-btn svg{width:14px;height:14px}
+.hc-footer{display:flex;justify-content:center;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.hc-foot-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--tx-lt3)}
+.hc-foot-item svg{width:9px;height:9px;color:var(--g)}
+
+@media(max-width:960px){.hero-inner{grid-template-columns:1fr}.hero-card{display:none}}
+@media(max-width:600px){.hero-h1{font-size:2.2rem}.hero-stats{gap:16px;flex-wrap:wrap}}
+
+/* ════════════════════════════════════
+   SECTION 2: LOCAL INTRO — LIGHT with image collage
+   ════════════════════════════════════ */
+.intro{background:var(--lt);padding:var(--sec-pad)}
+.intro-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.intro-body{font-size:16px;line-height:1.85;color:var(--tx-dk2);margin-bottom:18px}
+.intro-body strong{color:var(--tx-dk);font-weight:600}
+.intro-features{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.intro-feat{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fff;border:1px solid var(--bdr-lt);border-radius:var(--r3);transition:border-color .25s,box-shadow .25s}
+.intro-feat:hover{border-color:rgba(0,122,61,.2);box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.intro-feat-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,rgba(0,194,104,.12),rgba(0,194,104,.06));border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.intro-feat-icon svg{width:16px;height:16px;color:var(--g2)}
+.intro-feat-title{font-family:var(--ff);font-size:.88rem;font-weight:700;color:var(--tx-dk);margin-bottom:2px}
+.intro-feat-body{font-size:12.5px;color:var(--tx-dk3);line-height:1.55}
+.intro-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.intro-stat{background:#fff;border:1px solid var(--bdr-lt);border-radius:var(--r3);padding:18px;text-align:center;transition:border-color .25s}
+.intro-stat:hover{border-color:rgba(0,122,61,.2)}
+.intro-stat-num{font-family:var(--ff);font-size:1.7rem;font-weight:800;letter-spacing:-.04em;color:var(--tx-dk);line-height:1}
+.intro-stat-num em{color:var(--g2);font-style:normal}
+.intro-stat-lbl{font-size:11px;color:var(--tx-dk3);margin-top:4px}
+
+/* Image collage */
+.intro-visual{position:relative}
+.intro-mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:200px 200px;gap:10px}
+.im-cell{border-radius:var(--r3);overflow:hidden;position:relative}
+.im-cell img{width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .4s;filter:saturate(.9)}
+.im-cell:hover img{transform:scale(1.05);filter:saturate(1.1)}
+.im-cell.tall{grid-row:span 2}
+.im-cell::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.3) 100%);border-radius:var(--r3)}
+.intro-badge{position:absolute;bottom:-16px;right:-16px;background:#fff;border:1px solid rgba(0,122,61,.2);border-radius:var(--r3);padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:2}
+.ib-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--g2),var(--g));display:flex;align-items:center;justify-content:center}
+.ib-icon svg{width:18px;height:18px;color:#fff}
+.ib-title{font-family:var(--ff);font-size:.85rem;font-weight:700;color:var(--tx-dk);line-height:1.2}
+.ib-sub{font-size:11px;color:var(--tx-dk3);margin-top:1px}
+
+@media(max-width:960px){.intro-inner{grid-template-columns:1fr}.intro-visual{display:none}}
+
+/* ════════════════════════════════════
+   SECTION 3: VENDOR CARDS — DARK with image atmosphere
+   ════════════════════════════════════ */
+.vendors{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk2)}
+.vendors-bg{position:absolute;inset:0;z-index:0}
+.vendors-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.08) brightness(.08);opacity:.9}
+.vendors-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(13,17,23,.98) 0%,rgba(13,17,23,.9) 100%)}
+.vendors-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 28px}
+.vendors-header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin-bottom:48px}
+.vendors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+
+.vc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:var(--r4);overflow:hidden;position:relative;transition:border-color .3s,transform .3s,box-shadow .3s}
+.vc:hover{border-color:rgba(0,194,104,.3);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.35),0 0 0 1px rgba(0,194,104,.12)}
+/* Featured / highlighted vendor */
+.vc.featured{border-color:rgba(0,194,104,.35);box-shadow:0 0 0 1px rgba(0,194,104,.15),0 8px 32px rgba(0,0,0,.3)}
+.vc-featured-ribbon{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,var(--g2),var(--g));padding:5px 12px;font-family:var(--fm);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;font-weight:600}
+.vc-featured-ribbon svg{width:9px;height:9px;flex-shrink:0}
+.vc-img{height:130px;position:relative;overflow:hidden}
+.vc.featured .vc-img{height:118px} /* ribbon takes 20px */
+.vc-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.5);transition:filter .4s,transform .5s}
+.vc:hover .vc-img img{filter:saturate(.7) brightness(.65);transform:scale(1.05)}
+.vc-img-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,17,23,.3) 0%,rgba(13,17,23,.7) 100%)}
+.vc-verified{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);background:rgba(13,17,23,.92);border:1px solid rgba(0,194,104,.35);padding:4px 8px;border-radius:var(--r5);backdrop-filter:blur(8px)}
+.vc-verified svg{width:8px;height:8px}
+/* Verification badges strip */
+.vc-certs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.vc-cert{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:var(--r5);font-weight:600}
+.vc-cert.id{color:#60a5fa;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2)}
+.vc-cert.dbs{color:#a78bfa;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2)}
+.vc-cert.ins{color:var(--g);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2)}
+.vc-cert.gas{color:#fb923c;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.2)}
+.vc-cert svg{width:7px;height:7px}
+.vc-body{padding:18px}
+.vc-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.vc-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--g2),var(--g));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:.9rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:var(--glow-sm)}
+.vc.featured .vc-avatar{box-shadow:0 0 0 2px rgba(0,194,104,.5),var(--glow-sm)}
+.vc-name{font-family:var(--ff);font-size:.95rem;font-weight:700;color:#f0f4ff;line-height:1.2}
+.vc-trade{font-size:11px;color:var(--tx-lt3);margin-top:2px}
+.vc-stars{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.vc-stars-row{display:flex;gap:2px}
+.vc-stars-row svg{width:11px;height:11px;fill:#f59e0b;color:#f59e0b}
+.vc-rating{font-family:var(--ff);font-size:.82rem;font-weight:700;color:#f0f4ff}
+.vc-reviews{font-size:11px;color:var(--tx-lt3)}
+.vc-specialism{font-size:12.5px;color:var(--tx-lt2);line-height:1.6;margin-bottom:12px;padding:9px 11px;background:rgba(255,255,255,.04);border-radius:var(--r1);border-left:2px solid rgba(0,194,104,.5);font-style:italic}
+.vc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+.vc-years{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--tx-lt3)}
+.vc-years svg{width:11px;height:11px;color:var(--g)}
+.vc-quote{font-family:var(--ff);font-size:11px;font-weight:700;color:#fff;background:rgba(0,194,104,.15);border:1px solid rgba(0,194,104,.3);padding:6px 13px;border-radius:var(--r5);cursor:pointer;transition:all .2s;text-decoration:none}
+.vc-quote:hover{background:linear-gradient(135deg,var(--g2),var(--g));box-shadow:var(--glow-sm)}
+.vc.featured .vc-quote{background:linear-gradient(135deg,var(--g2),var(--g));box-shadow:var(--glow-sm)}
+.vc.featured .vc-quote:hover{box-shadow:var(--glow)}
+
+@media(max-width:960px){.vendors-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.vendors-grid{grid-template-columns:1fr}}
+
+/* ════════════════════════════════════
+   SECTION 4: WHY TRADEMATCH — LIGHT split layout
+   ════════════════════════════════════ */
+.why{background:#fff;padding:var(--sec-pad)}
+.why-inner{max-width:1240px;margin:0 auto;padding:0 28px}
+.why-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:60px}
+.why-img-wrap{position:relative;border-radius:var(--r4);overflow:hidden;height:380px;box-shadow:0 24px 60px rgba(0,0,0,.14)}
+.why-img-wrap img{width:100%;height:100%;object-fit:cover;filter:saturate(.9)}
+.why-img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,122,61,.15),transparent)}
+.why-img-stat{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-radius:var(--r3);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.wis-num{font-family:var(--ff);font-size:1.8rem;font-weight:800;letter-spacing:-.04em;color:var(--tx-dk)}
+.wis-num span{color:var(--g2)}
+.wis-lbl{font-size:12px;color:var(--tx-dk3);margin-top:2px}
+.wis-sep{width:1px;height:36px;background:var(--bdr-lt)}
+
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.why-card{background:var(--lt);border:1px solid var(--bdr-lt);border-radius:var(--r3);padding:24px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s,box-shadow .3s}
+.why-card:hover{border-color:rgba(0,122,61,.2);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g2),var(--g));opacity:0;transition:opacity .3s}
+.why-card:hover::before{opacity:1}
+.wc-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,rgba(0,194,104,.12),rgba(0,194,104,.05));border:1px solid rgba(0,194,104,.2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.wc-icon svg{width:19px;height:19px;color:var(--g2)}
+.wc-title{font-family:var(--ff);font-size:.95rem;font-weight:700;color:var(--tx-dk);margin-bottom:7px}
+.wc-body{font-size:13.5px;color:var(--tx-dk3);line-height:1.65}
+
+@media(max-width:960px){.why-top{grid-template-columns:1fr}.why-img-wrap{display:none}.why-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.why-grid{grid-template-columns:1fr}}
+
+/* ════════════════════════════════════
+   SECTION 5: HOW IT WORKS — DARK with image bg
+   ════════════════════════════════════ */
+.hiw{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk)}
+.hiw-bg{position:absolute;inset:0;z-index:0}
+.hiw-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.1) brightness(.1);opacity:.7}
+.hiw-bg-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(13,17,23,.97) 0%,rgba(13,17,23,.85) 50%,rgba(13,17,23,.97) 100%)}
+.hiw-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 28px}
+.hiw-header{text-align:center;max-width:560px;margin:0 auto 60px}
+.hiw-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative}
+.hiw-steps::before{content:'';position:absolute;top:32px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,104,.3) 20%,rgba(0,194,104,.3) 80%,transparent);z-index:0}
+.hiw-step{position:relative;z-index:1;text-align:center}
+.hiw-num{width:58px;height:58px;border-radius:50%;background:var(--dk2);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;transition:border-color .3s,background .3s}
+.hiw-num::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px dashed rgba(0,194,104,.2)}
+.hiw-step:hover .hiw-num{border-color:rgba(0,194,104,.4);background:rgba(0,194,104,.08)}
+.hiw-n{font-family:var(--fm);font-size:.9rem;font-weight:500;color:var(--g)}
+.hiw-title{font-family:var(--ff);font-size:.95rem;font-weight:700;color:#f0f4ff;margin-bottom:8px}
+.hiw-body{font-size:13px;color:var(--tx-lt3);line-height:1.65}
+
+@media(max-width:768px){.hiw-steps{grid-template-columns:1fr 1fr;gap:28px}.hiw-steps::before{display:none}}
+@media(max-width:480px){.hiw-steps{grid-template-columns:1fr}}
+
+/* ════════════════════════════════════
+   SECTION 6: COST GUIDE — LIGHT with split image
+   ════════════════════════════════════ */
+.cost{background:var(--lt);padding:var(--sec-pad);position:relative;overflow:hidden}
+.cost-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.cost-table{margin-top:28px}
+.cost-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--bdr-lt);gap:20px}
+.cost-row:last-child{border-bottom:none}
+.cost-row-lbl{font-size:14px;color:var(--tx-dk2)}
+.cost-range{font-family:var(--ff);font-size:.95rem;font-weight:700;color:var(--tx-dk)}
+.cost-range em{color:var(--g2);font-style:normal}
+.cost-note{margin-top:22px;padding:16px 18px;background:rgba(0,194,104,.06);border:1px solid rgba(0,194,104,.18);border-radius:var(--r2);font-size:13px;color:var(--tx-dk2);line-height:1.65}
+.cost-note strong{color:var(--g2);font-weight:600}
+
+/* Cost right: image + CTA card stacked */
+.cost-right{display:flex;flex-direction:column;gap:24px;padding-top:28px}
+.cost-img-frame{border-radius:var(--r4);overflow:hidden;height:220px;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.12)}
+.cost-img-frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.85)}
+.cost-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.4) 100%)}
+.cost-cta-card{background:#fff;border:1px solid var(--bdr-lt);border-radius:var(--r4);padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.cost-cta-title{font-family:var(--ff);font-size:1.2rem;font-weight:800;color:var(--tx-dk);margin-bottom:10px;letter-spacing:-.03em}
+.cost-cta-body{font-size:14px;color:var(--tx-dk3);line-height:1.7;margin-bottom:20px}
+.cost-features{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.cost-feat{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--tx-dk2)}
+.cost-feat svg{width:14px;height:14px;color:var(--g2);flex-shrink:0}
+
+@media(max-width:960px){.cost-inner{grid-template-columns:1fr}}
+
+/* ════════════════════════════════════
+   SECTION 7: FAQ — DARK with minimal bg image
+   ════════════════════════════════════ */
+.faq{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk2)}
+.faq-bg{position:absolute;inset:0;z-index:0}
+.faq-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.05) brightness(.07);opacity:.8}
+.faq-bg-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(13,17,23,.99) 0%,rgba(13,17,23,.92) 100%)}
+.faq-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 28px}
+.faq-header{max-width:520px;margin-bottom:48px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.faq-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r3);overflow:hidden;transition:border-color .25s}
+.faq-item.open{border-color:rgba(0,194,104,.25)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.faq-q-text{font-family:var(--ff);font-size:.9rem;font-weight:600;color:#f0f4ff;line-height:1.4;flex:1}
+.faq-q-icon{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .25s,border-color .25s}
+.faq-item.open .faq-q-icon{background:rgba(0,194,104,.12);border-color:rgba(0,194,104,.3)}
+.faq-q-icon svg{width:12px;height:12px;color:var(--tx-lt3);transition:transform .3s,color .25s}
+.faq-item.open .faq-q-icon svg{transform:rotate(180deg);color:var(--g)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-item.open .faq-a{max-height:200px}
+.faq-a-inner{padding:0 20px 18px;font-size:13.5px;color:var(--tx-lt2);line-height:1.7;border-top:1px solid rgba(255,255,255,.06);padding-top:14px}
+
+@media(max-width:768px){.faq-grid{grid-template-columns:1fr}}
+
+/* ════════════════════════════════════
+   SECTION 8: NEARBY LOCATIONS — LIGHT
+   ════════════════════════════════════ */
+.nearby{background:var(--lt2);padding:var(--sec-pad)}
+.nearby-inner{max-width:1240px;margin:0 auto;padding:0 28px}
+.nearby-header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin-bottom:40px}
+.nearby-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.nearby-card{background:#fff;border:1px solid var(--bdr-lt);border-radius:var(--r3);padding:16px 18px;text-decoration:none;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:border-color .25s,box-shadow .25s,transform .25s}
+.nearby-card:hover{border-color:rgba(0,122,61,.2);box-shadow:0 4px 16px rgba(0,0,0,.07);transform:translateY(-2px)}
+.nearby-name{font-family:var(--ff);font-size:.85rem;font-weight:600;color:var(--tx-dk);line-height:1.2}
+.nearby-county{font-size:11px;color:var(--tx-dk3);margin-top:2px}
+.nearby-icon{width:26px;height:26px;border-radius:7px;background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nearby-icon svg{width:11px;height:11px;color:var(--g2)}
+@media(max-width:960px){.nearby-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.nearby-grid{grid-template-columns:1fr 1fr}}
+
+/* ════════════════════════════════════
+   SECTION 9: SERVICES — DARK
+   ════════════════════════════════════ */
+.services{background:var(--dk);padding:var(--sec-pad)}
+.services-inner{max-width:1240px;margin:0 auto;padding:0 28px}
+.services-header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin-bottom:40px}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.svc-pill{display:flex;align-items:center;gap:8px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--r2);text-decoration:none;transition:all .2s}
+.svc-pill:hover{border-color:rgba(0,194,104,.28);background:rgba(0,194,104,.05)}
+.svc-icon{font-size:.95rem;flex-shrink:0}
+.svc-name{font-size:12.5px;font-weight:500;color:var(--tx-lt2);line-height:1.3;transition:color .2s}
+.svc-pill:hover .svc-name{color:#f0f4ff}
+@media(max-width:960px){.services-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.services-grid{grid-template-columns:1fr 1fr}}
+
+/* ════════════════════════════════════
+   SECTION 10: FINAL CTA — LIGHT with full-bleed image
+   ════════════════════════════════════ */
+.final-cta{position:relative;padding:100px 0;overflow:hidden}
+.fcta-bg{position:absolute;inset:0;z-index:0}
+.fcta-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.85)}
+.fcta-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(135deg,rgba(255,255,255,.97) 0%,rgba(240,248,243,.92) 40%,rgba(220,240,230,.88) 100%)}
+.fcta-inner{position:relative;z-index:2;max-width:720px;margin:0 auto;padding:0 28px;text-align:center}
+.fcta-h2{font-family:var(--ff);font-weight:900;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.055em;line-height:1.04;color:var(--tx-dk);margin-bottom:14px}
+.fcta-h2 em{font-style:normal;background:linear-gradient(135deg,var(--g2),var(--g));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fcta-sub{font-size:17px;color:var(--tx-dk2);line-height:1.7;margin-bottom:36px;font-weight:300;max-width:520px;margin-left:auto;margin-right:auto}
+.fcta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.fcta-trust{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:28px;flex-wrap:wrap}
+.fcta-trust-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--tx-dk3)}
+.fcta-trust-item svg{width:12px;height:12px;color:var(--g2)}
+
+/* ════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════ */
+footer{background:#0d1117;border-top:1px solid rgba(255,255,255,.05);padding:72px 0 36px;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 50% at 10% 50%,rgba(0,194,104,.06) 0%,transparent 60%),
+             radial-gradient(ellipse 50% 40% at 90% 50%,rgba(0,122,61,.05) 0%,transparent 55%)}
+.footer-wrap{max-width:1240px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+.footer-grid{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:52px}
+.footer-brand-name{font-family:var(--ff);font-size:1.2rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff;margin-bottom:10px}
+.footer-brand-name span{background:linear-gradient(135deg,#00e582,var(--g));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-brand p{font-size:13px;color:#5a6478;line-height:1.8;font-weight:300;max-width:240px;margin-bottom:20px}
+.footer-socials{display:flex;gap:8px}
+.fsoc{width:34px;height:34px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#5a6478;text-decoration:none;transition:all .25s}
+.fsoc:hover{background:rgba(0,194,104,.1);border-color:rgba(0,194,104,.3);color:var(--g);transform:translateY(-2px)}
+.fsoc svg{width:14px;height:14px}
+.footer-col h4{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#5a6478;margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col a{font-size:13px;color:#8b95aa;text-decoration:none;font-weight:300;transition:color .2s}
+.footer-col a:hover{color:var(--g)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-family:var(--fm);font-size:10px;color:#5a6478;letter-spacing:.04em}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{font-family:var(--fm);font-size:10px;color:#5a6478;text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--g)}
+@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr 1fr;gap:32px}}
+@media(max-width:600px){.footer-grid{grid-template-columns:1fr 1fr;gap:24px}}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+/* ─── SECTION ALTERNATION VISUAL ACCENT ─── */
+.section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,104,.2) 30%,rgba(0,194,104,.2) 70%,transparent)}
+
+/* ─── MISC ─── */
+.text-center{text-align:center}
+.text-center .body-sub{margin-left:auto;margin-right:auto}
+.text-center .sec-label{justify-content:center}
+.text-center .sec-label::before{display:none}
+.text-center .sec-label::after{content:'';width:20px;height:1px;background:var(--g);opacity:.6}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="/how-it-works" class="nav-link">How It Works</a>
+      <a href="/services/{TRADE_SLUG}" class="nav-link">{TRADE}</a>
+      <a href="/cost-guides" class="nav-link">Cost Guides</a>
+      <a href="/for-tradespeople" class="nav-link">For Tradespeople</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px">
+      <a href="/login" class="nav-ghost">Sign In</a>
+      <a href="/get-quotes" class="nav-cta"><div class="nav-cta-pip"></div>Get Free Quotes</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════
+     S1: HERO — DARK
+     ════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-img-bg" id="heroBg">
+    <img src="img-builder.jpg" alt="Professional {TRADE} work in {LOCATION}" loading="eager">
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-bloom"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-crumb sr">
+          <a href="/">Home</a><span class="hero-crumb-sep">›</span>
+          <a href="/services/{TRADE_SLUG}">{TRADE}</a><span class="hero-crumb-sep">›</span>
+          <span>{LOCATION}</span>
+        </div>
+        <div class="hero-loc-pill sr d1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          {LOCATION}, {COUNTY}
+        </div>
+        <h1 class="hero-h1 sr d2">
+          Expert<br>
+          <span class="trade">{TRADE}</span>
+          <span class="loc">in {LOCATION}</span>
+        </h1>
+        <p class="hero-sub sr d3">{HERO_SUBHEADLINE}</p>
+        <div class="hero-trust sr d4">
+          <div class="htr-stars">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <span class="htr-txt"><b>4.9/5</b> from {REVIEW_COUNT} reviews</span>
+          <div class="htr-sep"></div>
+          <div class="htr-badge"><div class="htr-dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div>Fully vetted pros</div>
+          <div class="htr-sep"></div>
+          <div class="htr-badge"><div class="htr-dot"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>Insured &amp; DBS checked</div>
+        </div>
+        <div class="hero-ctas sr d5">
+          <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Get Free Quotes
+          </a>
+          <a href="/how-it-works" class="btn-outline-dk">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            How It Works
+          </a>
+        </div>
+        <div class="hero-stats sr d6">
+          <div><div class="hst-num">{PRO_COUNT}<span>+</span></div><div class="hst-lbl">Verified pros in {LOCATION}</div></div>
+          <div><div class="hst-num">48<span>h</span></div><div class="hst-lbl">Average response time</div></div>
+          <div><div class="hst-num">5<span>★</span></div><div class="hst-lbl">Max quotes per job</div></div>
+          <div><div class="hst-num">0<span>p</span></div><div class="hst-lbl">Commission charged</div></div>
+        </div>
+      </div>
+
+      <!-- Quote card -->
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div class="hero-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <div>
+            <div class="hero-card-title">Get up to 5 free quotes</div>
+            <div class="hero-card-sub">No obligation · Takes 60 seconds</div>
+          </div>
+        </div>
+        <div class="hc-field">
+          <div class="hc-lbl">Service needed</div>
+          <select class="hc-input">
+            <option>{TRADE}</option>
+            <option>Plumbing</option>
+            <option>Electrical</option>
+            <option>Building</option>
+          </select>
+        </div>
+        <div class="hc-field">
+          <div class="hc-lbl">Your postcode</div>
+          <input class="hc-input" type="text" placeholder="{POSTCODE_EXAMPLE}">
+        </div>
+        <div class="hc-field">
+          <div class="hc-lbl">Briefly describe the job</div>
+          <input class="hc-input" type="text" placeholder="e.g. Fix leaking pipe in kitchen...">
+        </div>
+        <button class="hc-btn" onclick="location.href='/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}'">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 7-7 7 7M12 5v14"/></svg>
+          Request Free Quotes
+        </button>
+        <div class="hc-footer">
+          <div class="hc-foot-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Free</div>
+          <div class="hc-foot-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>No spam</div>
+          <div class="hc-foot-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>48h max</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S2: LOCAL INTRO — LIGHT
+     ════════════════════════════════════ -->
+<section class="intro">
+  <div class="intro-inner">
+    <div>
+      <div class="sec-label light sr">{LOCATION}</div>
+      <h2 class="h2 on-lt sr d1">Why {LOCATION} homeowners<br>choose <em>TradeMatch</em></h2>
+      <p class="intro-body sr d2">{LOCAL_INTRO_P1}</p>
+      <p class="intro-body sr d3">{LOCAL_INTRO_P2}</p>
+      <div class="intro-features sr d4">
+        <div class="intro-feat">
+          <div class="intro-feat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div>
+            <div class="intro-feat-title">Every Pro is Verified</div>
+            <div class="intro-feat-body">ID checked, insured, and DBS cleared before they can quote on your job.</div>
+          </div>
+        </div>
+        <div class="intro-feat">
+          <div class="intro-feat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+          <div>
+            <div class="intro-feat-title">Escrow Payment Protection</div>
+            <div class="intro-feat-body">Funds held securely and only released when you confirm the job is complete.</div>
+          </div>
+        </div>
+        <div class="intro-feat">
+          <div class="intro-feat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div>
+            <div class="intro-feat-title">Max 5 Quotes — No Spam</div>
+            <div class="intro-feat-body">We limit responses so every quote is genuine, detailed, and competitive.</div>
+          </div>
+        </div>
+      </div>
+      <div class="intro-stats sr d5">
+        <div class="intro-stat"><div class="intro-stat-num">{PRO_COUNT}<em>+</em></div><div class="intro-stat-lbl">Active pros in {LOCATION}</div></div>
+        <div class="intro-stat"><div class="intro-stat-num"><em>4.9</em>★</div><div class="intro-stat-lbl">Average pro rating</div></div>
+        <div class="intro-stat"><div class="intro-stat-num">48<em>h</em></div><div class="intro-stat-lbl">Response guarantee</div></div>
+        <div class="intro-stat"><div class="intro-stat-num"><em>£0</em></div><div class="intro-stat-lbl">Commission for homeowners</div></div>
+      </div>
+      {LOCAL_INSIGHT}
+    </div>
+    <!-- Image collage -->
+    <div class="intro-visual sr d3">
+      <div class="intro-mosaic">
+        <div class="im-cell tall">
+          <img src="img-tradesman.jpg" alt="Verified {TRADE} in {LOCATION}">
+        </div>
+        <div class="im-cell">
+          <img src="img-carpenter.jpg" alt="{TRADE} work in {COUNTY}">
+        </div>
+        <div class="im-cell">
+          <img src="img-house.jpg" alt="Home improvements in {LOCATION}">
+        </div>
+      </div>
+      <div class="intro-badge">
+        <div class="ib-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div>
+          <div class="ib-title">TradeMatch Verified</div>
+          <div class="ib-sub">All {LOCATION} pros fully vetted</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S3: VENDOR CARDS — DARK
+     ════════════════════════════════════ -->
+<section class="vendors">
+  <div class="vendors-bg"><img src="img-builders.jpg" alt="Tradespeople in {LOCATION}"></div>
+  <div class="vendors-overlay"></div>
+  <div class="vendors-inner">
+    <div class="vendors-header">
+      <div>
+        <div class="sec-label dark sr">{LOCATION} Professionals</div>
+        <h2 class="h2 on-dk sr d1">Top-rated <em>{TRADE} specialists</em><br>near you</h2>
+      </div>
+      <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="btn-primary sr">See All {PRO_COUNT}+ Pros</a>
+    </div>
+    <div class="vendors-grid">
+      <!-- Vendor 1 — Featured Pro -->
+      <div class="vc featured sr d2">
+        <div class="vc-featured-ribbon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Featured Pro · Highest Rated in {LOCATION}</div>
+        <div class="vc-img">
+          <img src="img-tradesman.jpg" alt="{VENDOR_1_NAME} - {TRADE} in {LOCATION}">
+          <div class="vc-img-overlay"></div>
+          <div class="vc-verified"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> TradeMatch Verified</div>
+        </div>
+        <div class="vc-body">
+          <div class="vc-top">
+            <div class="vc-avatar">{VENDOR_1_INITIALS}</div>
+            <div>
+              <div class="vc-name">{VENDOR_1_NAME}</div>
+              <div class="vc-trade">{TRADE} · {LOCATION}</div>
+            </div>
+          </div>
+          <div class="vc-certs">{VENDOR_1_CERTS}</div>
+          <div class="vc-stars">
+            <div class="vc-stars-row">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="vc-rating">5.0</span><span class="vc-reviews">(47 reviews)</span>
+          </div>
+          <div class="vc-specialism">"{VENDOR_1_SPECIALISM}"</div>
+          <div class="vc-footer">
+            <div class="vc-years"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>{VENDOR_1_YEARS} yrs experience</div>
+            <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="vc-quote">Get Quote</a>
+          </div>
+        </div>
+      </div>
+      <!-- Vendor 2 -->
+      <div class="vc sr d3">
+        <div class="vc-img">
+          <img src="img-builder.jpg" alt="{VENDOR_2_NAME} - {TRADE} in {LOCATION}">
+          <div class="vc-img-overlay"></div>
+          <div class="vc-verified"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Verified</div>
+        </div>
+        <div class="vc-body">
+          <div class="vc-top">
+            <div class="vc-avatar">{VENDOR_2_INITIALS}</div>
+            <div>
+              <div class="vc-name">{VENDOR_2_NAME}</div>
+              <div class="vc-trade">{TRADE} · {COUNTY}</div>
+            </div>
+          </div>
+          <div class="vc-certs">{VENDOR_2_CERTS}</div>
+          <div class="vc-stars">
+            <div class="vc-stars-row">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="vc-rating">4.9</span><span class="vc-reviews">(83 reviews)</span>
+          </div>
+          <div class="vc-specialism">"{VENDOR_2_SPECIALISM}"</div>
+          <div class="vc-footer">
+            <div class="vc-years"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>{VENDOR_2_YEARS} yrs experience</div>
+            <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="vc-quote">Get Quote</a>
+          </div>
+        </div>
+      </div>
+      <!-- Vendor 3 -->
+      <div class="vc sr d4">
+        <div class="vc-img">
+          <img src="img-handyman.jpg" alt="{VENDOR_3_NAME} - {TRADE} in {LOCATION}">
+          <div class="vc-img-overlay"></div>
+          <div class="vc-verified"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Verified</div>
+        </div>
+        <div class="vc-body">
+          <div class="vc-top">
+            <div class="vc-avatar">{VENDOR_3_INITIALS}</div>
+            <div>
+              <div class="vc-name">{VENDOR_3_NAME}</div>
+              <div class="vc-trade">{TRADE} · {LOCATION}</div>
+            </div>
+          </div>
+          <div class="vc-certs">{VENDOR_3_CERTS}</div>
+          <div class="vc-stars">
+            <div class="vc-stars-row">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="vc-rating">4.8</span><span class="vc-reviews">(61 reviews)</span>
+          </div>
+          <div class="vc-specialism">"{VENDOR_3_SPECIALISM}"</div>
+          <div class="vc-footer">
+            <div class="vc-years"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>{VENDOR_3_YEARS} yrs experience</div>
+            <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="vc-quote">Get Quote</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S4: WHY TRADEMATCH — LIGHT
+     ════════════════════════════════════ -->
+<section class="why">
+  <div class="why-inner">
+    <div class="why-top">
+      <div>
+        <div class="sec-label light sr">Why Us</div>
+        <h2 class="h2 on-lt sr d1">The smarter way to hire<br>a <em>trusted tradesperson</em></h2>
+        <p class="body-sub on-lt sr d2">Unlike other platforms, we vet every pro before they join, cap quotes to stop spam, and hold payments safely in escrow until you're satisfied.</p>
+        <div style="display:flex;gap:12px;margin-top:28px" class="sr d3">
+          <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="btn-primary">Get Free Quotes</a>
+          <a href="/how-it-works" class="btn-secondary">Learn More</a>
+        </div>
+      </div>
+      <div class="why-img-wrap sr d2">
+        <img src="img-blueprint.jpg" alt="TradeMatch verification process">
+        <div class="why-img-overlay"></div>
+        <div class="why-img-stat">
+          <div><div class="wis-num">165<span>k+</span></div><div class="wis-lbl">Jobs completed UK-wide</div></div>
+          <div class="wis-sep"></div>
+          <div><div class="wis-num">48<span>h</span></div><div class="wis-lbl">Avg. first response</div></div>
+          <div class="wis-sep"></div>
+          <div><div class="wis-num">4.9<span>★</span></div><div class="wis-lbl">Platform rating</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card sr d1">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="wc-title">All Pros Verified</div>
+        <div class="wc-body">Every tradesperson is ID verified, insured, and DBS checked before listing — not self-registered.</div>
+      </div>
+      <div class="why-card sr d2">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="wc-title">Verified Reviews Only</div>
+        <div class="wc-body">Reviews are posted only after a completed job. No fake reviews, no self-promotion, no bias.</div>
+      </div>
+      <div class="why-card sr d3">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <div class="wc-title">Escrow Payments</div>
+        <div class="wc-body">Pay securely into escrow. Funds only release to the tradesperson once you confirm the job is done.</div>
+      </div>
+      <div class="why-card sr d4">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="wc-title">Max 5 Quotes</div>
+        <div class="wc-body">We limit quotes to 5 per job so you get genuine, competitive bids — not a deluge of cold calls.</div>
+      </div>
+      <div class="why-card sr d5">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="wc-title">48-Hour Response</div>
+        <div class="wc-body">Our network is dense enough to guarantee responses within 48 hours for all listed trades.</div>
+      </div>
+      <div class="why-card sr d6">
+        <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div class="wc-title">TradeMatch Guarantee</div>
+        <div class="wc-body">If a verified pro lets you down, we'll find a replacement at no extra cost. Your satisfaction is assured.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S5: HOW IT WORKS — DARK
+     ════════════════════════════════════ -->
+<section class="hiw">
+  <div class="hiw-bg"><img src="img-buildings.jpg" alt="UK homes and properties"></div>
+  <div class="hiw-bg-overlay"></div>
+  <div class="hiw-inner">
+    <div class="hiw-header text-center">
+      <div class="sec-label dark sr">Process</div>
+      <h2 class="h2 on-dk sr d1">Hire a <em>great tradesperson</em><br>in 4 simple steps</h2>
+    </div>
+    <div class="hiw-steps">
+      <div class="hiw-step sr d1">
+        <div class="hiw-num"><span class="hiw-n">01</span></div>
+        <div class="hiw-title">Post Your Job</div>
+        <div class="hiw-body">Describe your project, your location, and when you need it done. Takes under 60 seconds.</div>
+      </div>
+      <div class="hiw-step sr d2">
+        <div class="hiw-num"><span class="hiw-n">02</span></div>
+        <div class="hiw-title">Receive Quotes</div>
+        <div class="hiw-body">Up to 5 verified local tradespeople send you competitive, itemised quotes within 48 hours.</div>
+      </div>
+      <div class="hiw-step sr d3">
+        <div class="hiw-num"><span class="hiw-n">03</span></div>
+        <div class="hiw-title">Choose Your Pro</div>
+        <div class="hiw-body">Compare reviews, credentials, and prices. Chat directly before you decide — no pressure.</div>
+      </div>
+      <div class="hiw-step sr d4">
+        <div class="hiw-num"><span class="hiw-n">04</span></div>
+        <div class="hiw-title">Pay Safely</div>
+        <div class="hiw-body">Funds held in escrow. Release payment only when you're completely happy with the work.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+{COMPARISON_SECTION}
+
+<!-- ════════════════════════════════════
+     S6: COST GUIDE — LIGHT
+     ════════════════════════════════════ -->
+<section class="cost">
+  <div class="cost-inner">
+    <div>
+      <div class="sec-label light sr">Pricing Transparency</div>
+      <h2 class="h2 on-lt sr d1">Typical <em>{TRADE}</em> costs<br>in {LOCATION}</h2>
+      <p class="body-sub on-lt sr d2">{COST_INTRO}</p>
+      <div class="cost-table sr d3">
+        {COST_ROWS}
+      </div>
+      <div class="cost-note sr d4"><strong>Local tip:</strong> {COST_TIP}</div>
+    </div>
+    <div class="cost-right sr d2">
+      <div class="cost-img-frame">
+        <img src="img-carpenter.jpg" alt="{TRADE} work in progress, {LOCATION}">
+      </div>
+      <div class="cost-cta-card">
+        <div class="cost-cta-title">Ready to get accurate quotes?</div>
+        <div class="cost-cta-body">These are typical ranges. Get real quotes from verified {LOCATION} {TRADE} specialists tailored to your exact job.</div>
+        <div class="cost-features">
+          <div class="cost-feat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>No obligation, completely free</div>
+          <div class="cost-feat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Up to 5 competitive quotes</div>
+          <div class="cost-feat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Only verified, insured pros</div>
+          <div class="cost-feat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Escrow payment protection</div>
+        </div>
+        <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="btn-primary" style="width:100%;justify-content:center">Get Your Free Quotes</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S7: FAQ — DARK
+     ════════════════════════════════════ -->
+<section class="faq">
+  <div class="faq-bg"><img src="img-grinder.jpg" alt="Professional tradesperson at work"></div>
+  <div class="faq-bg-ov"></div>
+  <div class="faq-inner">
+    <div class="faq-header">
+      <div class="sec-label dark sr">FAQ</div>
+      <h2 class="h2 on-dk sr d1">Common questions about<br><em>{TRADE}</em> in {LOCATION}</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item sr d1">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">How much does {TRADE} cost in {LOCATION}?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">{FAQ_COST_ANSWER}</div></div>
+      </div>
+      <div class="faq-item sr d2">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">Are all {TRADE} on TradeMatch verified?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Yes — every tradesperson on TradeMatch is manually ID verified, DBS checked, and must hold valid public liability insurance before they can respond to jobs. We don't allow self-registration.</div></div>
+      </div>
+      <div class="faq-item sr d3">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">How long will it take to get quotes?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Most {LOCATION} homeowners receive their first quote within a few hours. We guarantee responses within 48 hours, and typically you'll have 3–5 quotes to compare by the next day.</div></div>
+      </div>
+      <div class="faq-item sr d4">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">Is it really free to post a job?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Yes, completely free for homeowners. No hidden fees, no commission, no subscription. TradeMatch charges a small platform fee to the tradespeople, not to you.</div></div>
+      </div>
+      <div class="faq-item sr d5">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">How does the escrow payment work?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">When you agree to a quote, you pay into a secure escrow account. The tradesperson begins work knowing funds are committed. Once you confirm the job is complete and you're satisfied, the funds are released. If there's a dispute, our team mediates.</div></div>
+      </div>
+      <div class="faq-item sr d6">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-text">What if I'm not happy with the work?</div>
+          <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">Don't release the escrow payment. Contact our resolution team and we'll mediate with the tradesperson to get the issue fixed. If unresolved, we invoke our TradeMatch Guarantee and arrange alternative works at no extra cost.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S8: NEARBY LOCATIONS — LIGHT
+     ════════════════════════════════════ -->
+<section class="nearby">
+  <div class="nearby-inner">
+    <div class="nearby-header">
+      <div>
+        <div class="sec-label light sr">{COUNTY} &amp; Beyond</div>
+        <h2 class="h2 on-lt sr d1">Find <em>{TRADE}</em> in<br>nearby areas</h2>
+      </div>
+      <a href="/services/{TRADE_SLUG}" class="btn-secondary sr">View All Locations</a>
+    </div>
+    <div class="nearby-grid">
+      {NEARBY_LOCATIONS_HTML}
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S9: ALL SERVICES — DARK
+     ════════════════════════════════════ -->
+<section class="services">
+  <div class="services-inner">
+    <div class="services-header">
+      <div>
+        <div class="sec-label dark sr">All Trades</div>
+        <h2 class="h2 on-dk sr d1">Other services in <em>{LOCATION}</em></h2>
+      </div>
+    </div>
+    <div class="services-grid sr d2">
+      <a href="/services/plumbing/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🔧</span><span class="svc-name">Plumbing</span></a>
+      <a href="/services/electrical/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">⚡</span><span class="svc-name">Electrical</span></a>
+      <a href="/services/building/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🏗️</span><span class="svc-name">Building</span></a>
+      <a href="/services/carpentry/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🪚</span><span class="svc-name">Carpentry</span></a>
+      <a href="/services/painting-decorating/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🎨</span><span class="svc-name">Painting &amp; Decorating</span></a>
+      <a href="/services/bathroom-fitting/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🚿</span><span class="svc-name">Bathroom Fitting</span></a>
+      <a href="/services/kitchen-fitting/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🍳</span><span class="svc-name">Kitchen Fitting</span></a>
+      <a href="/services/roofing-pitched/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🏠</span><span class="svc-name">Roofing</span></a>
+      <a href="/services/landscaping/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🌿</span><span class="svc-name">Landscaping</span></a>
+      <a href="/services/plastering/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🪣</span><span class="svc-name">Plastering</span></a>
+      <a href="/services/central-heating/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">♨️</span><span class="svc-name">Central Heating</span></a>
+      <a href="/services/tiling/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🟫</span><span class="svc-name">Tiling</span></a>
+      <a href="/services/extensions/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🏛️</span><span class="svc-name">Extensions</span></a>
+      <a href="/services/loft-conversion/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">📐</span><span class="svc-name">Loft Conversion</span></a>
+      <a href="/services/handyman/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🔨</span><span class="svc-name">Handyman</span></a>
+      <a href="/services/driveways/{LOCATION_SLUG}" class="svc-pill"><span class="svc-icon">🛣️</span><span class="svc-name">Driveways</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ════════════════════════════════════
+     S10: FINAL CTA — LIGHT with image
+     ════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="fcta-bg"><img src="img-house.jpg" alt="Beautiful UK home"></div>
+  <div class="fcta-overlay"></div>
+  <div class="fcta-inner">
+    <div class="sec-label light text-center sr">Get Started Today</div>
+    <h2 class="fcta-h2 sr d1">Find your perfect<br><em>{TRADE} specialist</em><br>in {LOCATION}</h2>
+    <p class="fcta-sub sr d2">Join thousands of {COUNTY} homeowners who've found reliable, vetted tradespeople through TradeMatch. Free to post, zero commission.</p>
+    <div class="fcta-btns sr d3">
+      <a href="/get-quotes?trade={TRADE_SLUG}&location={LOCATION_SLUG}" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        Get Free Quotes Now
+      </a>
+      <a href="/for-tradespeople" class="btn-secondary">Join as a Tradesperson</a>
+    </div>
+    <div class="fcta-trust sr d4">
+      <div class="fcta-trust-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>100% free for homeowners</div>
+      <div class="fcta-trust-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Only verified, insured pros</div>
+      <div class="fcta-trust-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Escrow payment protection</div>
+      <div class="fcta-trust-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>TradeMatch Guarantee</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════ -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="https://facebook.com/tradematchuk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/get-quotes">Post a Job</a></li>
+          <li><a href="/how-it-works#escrow">How Escrow Works</a></li>
+          <li><a href="/cost-guides">Cost Guides</a></li>
+          <li><a href="/guarantee">Safety &amp; Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="/register">Create a Profile</a></li>
+          <li><a href="/pricing">Pricing &amp; Fees</a></li>
+          <li><a href="/verification">Trade Accreditations</a></li>
+          <li><a href="/pro-dashboard">TradeMatch Pro</a></li>
+          <li><a href="/forum">Tradesperson Forum</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>{TRADE} Nearby</h4>
+        <ul>
+          {FOOTER_NEARBY_LINKS}
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About TradeMatch</a></li>
+          <li><a href="/how-it-works">How It Works</a></li>
+          <li><a href="/careers">Careers</a></li>
+          <li><a href="/press">Press</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms &amp; Conditions</a>
+        <a href="/cookies">Cookie Policy</a>
+        <a href="/complaints">Complaints</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV scroll ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Hero image load ──
+const heroBg = document.getElementById('heroBg');
+const heroImg = heroBg.querySelector('img');
+if (heroImg.complete) heroBg.classList.add('loaded');
+else heroImg.addEventListener('load', () => heroBg.classList.add('loaded'));
+
+// ── Scroll Reveal ──
+const srEls = document.querySelectorAll('.sr');
+const srObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); srObs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+srEls.forEach(el => srObs.observe(el));
+
+// ── FAQ Accordion ──
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>
