@@ -66,13 +66,68 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
 <body>
 <div class="shell">
   <aside class="sidebar">
-    <div class="logo">TRADEMATCH • VENDOR</div>
-    <nav class="nav" id="vendorNativeNav"></nav>
-  </aside>
+    <div class="logo">TRADEMATCH â€˘ VENDOR</div>
+    <!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+</aside>
 
   <header class="top-nav">
     <input class="search" value="Search leads, quotes, customers..." aria-label="Search" readonly>
-    <div class="badge">NATIVE • 0.01 PARITY</div>
+    <div class="badge">NATIVE â€˘ 0.01 PARITY</div>
   </header>
 
   <main class="main">
@@ -101,7 +156,7 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
   const runtimeOverrides = {};
   let activeView = 'analytics';
   const parityDebug = window.createNativeParityDebug
-    ? window.createNativeParityDebug({ label: 'PARITY DEBUG · VENDOR' })
+    ? window.createNativeParityDebug({ label: 'PARITY DEBUG Â· VENDOR' })
     : { write() {} };
 
   function writeDebug(data) {
@@ -112,7 +167,7 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
     analytics: {
       metrics: [['Quotes Viewed', '42', '+12%'], ['Bids Submitted', '18', '+6%'], ['Jobs Won', '7', 'Strong'], ['Win Rate', '39%', 'Industry avg 25%']],
       primaryTitle: 'Revenue Trend',
-      rows: [['Dec', '£8,240', '↑'], ['Jan', '£9,120', '↑'], ['Feb', '£10,450', '↑']],
+      rows: [['Dec', 'ÂŁ8,240', 'â†‘'], ['Jan', 'ÂŁ9,120', 'â†‘'], ['Feb', 'ÂŁ10,450', 'â†‘']],
       sideTitle: 'Service Win Rate',
       sideItems: [['Plumbing', '44%'], ['Electrical', '36%'], ['Landscaping', '31%']]
     },
@@ -124,7 +179,7 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
       sideItems: [['Quote now', '3'], ['View details', '12'], ['Top up balance', 'Recommended']]
     },
     'active-quotes': {
-      metrics: [['Total Active', '7', '+12%'], ['Viewed by Customer', '4', '57%'], ['Avg Response Time', '2.3d', '-15%'], ['Estimated Value', '£12.5k', '+28%']],
+      metrics: [['Total Active', '7', '+12%'], ['Viewed by Customer', '4', '57%'], ['Avg Response Time', '2.3d', '-15%'], ['Estimated Value', 'ÂŁ12.5k', '+28%']],
       primaryTitle: 'Quote Follow-up',
       rows: [['Bathroom Renovation', 'Viewed', 'Follow up today'], ['Kitchen Refit', 'Pending', '2d no reply'], ['Garden Project', 'Viewed', 'Price clarification']],
       sideTitle: 'Quote Priority',
@@ -133,7 +188,7 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
     messages: {
       metrics: [['Unread', '7', '2 critical'], ['Threads', '19', 'Active'], ['Sent today', '14', 'Good cadence'], ['Avg response', '36m', 'Fast']],
       primaryTitle: 'Recent Conversations',
-      rows: [['Homeowner • SW1 boiler', 'Unread', '22m ago'], ['Customer • Kitchen wiring', 'Replied', '1h ago'], ['Lead • Garden design', 'Pending', '3h ago']],
+      rows: [['Homeowner â€˘ SW1 boiler', 'Unread', '22m ago'], ['Customer â€˘ Kitchen wiring', 'Replied', '1h ago'], ['Lead â€˘ Garden design', 'Pending', '3h ago']],
       sideTitle: 'Message Queue',
       sideItems: [['Unread now', '7'], ['Awaiting files', '2'], ['Escalations', '0']]
     },
@@ -152,11 +207,11 @@ body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--t
       sideItems: [['Verification docs', 'Pending'], ['Notification tune', 'Recommended'], ['Billing defaults', 'Set']]
     },
     billing: {
-      metrics: [['Current Balance', '£34.00', 'After charges'], ['Monthly Spend', '£76.40', 'This cycle'], ['Plan', 'Pro', 'Renews 14d'], ['Invoices', '12', 'Available']],
+      metrics: [['Current Balance', 'ÂŁ34.00', 'After charges'], ['Monthly Spend', 'ÂŁ76.40', 'This cycle'], ['Plan', 'Pro', 'Renews 14d'], ['Invoices', '12', 'Available']],
       primaryTitle: 'Billing & Payments',
-      rows: [['Top-up #TM-2241', 'Completed', '£20.00'], ['Subscription • Pro', 'Paid', '£29.99'], ['Lead charges bundle', 'Settled', '£8.00']],
+      rows: [['Top-up #TM-2241', 'Completed', 'ÂŁ20.00'], ['Subscription â€˘ Pro', 'Paid', 'ÂŁ29.99'], ['Lead charges bundle', 'Settled', 'ÂŁ8.00']],
       sideTitle: 'Billing Alerts',
-      sideItems: [['Low balance risk', 'Medium'], ['Auto top-up', 'Off'], ['Payment method', 'Visa •••• 4242']]
+      sideItems: [['Low balance risk', 'Medium'], ['Auto top-up', 'Off'], ['Payment method', 'Visa â€˘â€˘â€˘â€˘ 4242']]
     }
   };
 

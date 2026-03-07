@@ -5,10 +5,6 @@ const USE_NATIVE_UI = process.env.NEXT_PUBLIC_UI_MODE === 'native';
 const ENABLE_CUSTOMER_NATIVE_EXPERIMENT =
   process.env.NEXT_PUBLIC_CUSTOMER_NATIVE_EXPERIMENT === 'true';
 
-type DashboardSearchParams = {
-  'test-native'?: string | string[];
-};
-
 function shouldUseNative(testNative: string | string[] | undefined) {
   if (!ENABLE_CUSTOMER_NATIVE_EXPERIMENT) {
     return false;
@@ -28,10 +24,12 @@ function shouldUseNative(testNative: string | string[] | undefined) {
 export default async function CustomerDashboardPage({
   searchParams,
 }: {
-  searchParams?: DashboardSearchParams | Promise<DashboardSearchParams>;
+  searchParams?: Promise<{ 'test-native'?: string | string[] }>;
 }) {
-  const params = await Promise.resolve(searchParams);
-  const nativeMode = shouldUseNative(params?.['test-native']);
+  const params = await (searchParams ?? Promise.resolve({}));
+  const testNative = params?.['test-native'];
+  
+  const nativeMode = shouldUseNative(testNative);
 
   if (nativeMode) {
     return <CustomerLiteralSkeleton />;

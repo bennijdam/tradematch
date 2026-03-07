@@ -2,8 +2,7 @@
 
 import { MetricCard } from '@/components/native/ui/card';
 import { Button } from '@/components/native/ui/button';
-import { Badge } from '@/components/native/ui/badge';
-import { StatusBadge } from '@/components/native/ui/badge';
+import { Badge, StatusBadge } from '@/components/native/ui/badge';
 import { 
   Briefcase,
   FileText,

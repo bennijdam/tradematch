@@ -279,25 +279,61 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <div class="nav-logo-icon"><i data-lucide="hammer"></i></div>
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
       <span class="nav-wordmark">Trade<span>Match</span></span>
     </a>
     <div class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
+      <a href="index.html" class="nav-link active">Home</a>
       <a href="how-it-works.html" class="nav-link">How It Works</a>
-      <a href="pricing.html" class="nav-link active">Pricing</a>
-      <a href="trades.html" class="nav-link">Find a Trade</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
       <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
-    <div class="nav-actions">
-      <a href="login.html" class="nav-btn-ghost">Log In</a>
-      <a href="post-a-job.html" class="nav-cta"><div class="nav-cta-pip"></div>Post a Job</a>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 
 <!-- HERO -->
 <section class="hero">
@@ -393,7 +429,7 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
     <div style="text-align:center;margin-bottom:60px">
       <div class="sec-label sr" style="justify-content:center">Plans &amp; Pricing</div>
       <h2 class="h2 sr d1">Choose your <em>plan</em></h2>
-      <p class="sr d2" style="font-size:16px;color:var(--dk-t2);max-width:520px;margin:0 auto 32px;font-weight:300;line-height:1.8">One plan for homeowners (free forever). Three tiers for tradespeople — all with the same core protections.</p>
+      <p class="sr d2" style="font-size:16px;color:var(--dk-t2);max-width:520px;margin:0 auto 32px;font-weight:300;line-height:1.8">One plan for homeowners (free forever). Three tiers for tradespeople â€” all with the same core protections.</p>
       <!-- Billing Toggle -->
       <div class="sr d3" style="display:inline-flex;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:100px;padding:5px;gap:4px">
         <button class="hero-toggle-btn active" id="btnMonthly" onclick="setBilling('monthly')">Monthly</button>
@@ -603,7 +639,7 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
       <div class="sr d1">
         <div class="sec-label">How Lead Credits Work</div>
         <h2 class="h2">Pay for <em>connection,</em><br>not for browsing.</h2>
-        <p style="font-size:15px;color:var(--dk-t2);line-height:1.8;font-weight:300;margin-bottom:8px">Each time you express interest in a job, one credit is used. You never pay to browse — only when you decide a lead is worth pursuing.</p>
+        <p style="font-size:15px;color:var(--dk-t2);line-height:1.8;font-weight:300;margin-bottom:8px">Each time you express interest in a job, one credit is used. You never pay to browse â€” only when you decide a lead is worth pursuing.</p>
         <div class="hw-content-list">
           <div class="hw-item">
             <div class="hw-item-icon"><i data-lucide="eye"></i></div>
@@ -650,7 +686,7 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
     <div class="leads-header">
       <div class="sec-label sr" style="justify-content:center">Lead Pricing by Trade</div>
       <h2 class="h2 sr d1">Know exactly <em>what you pay.</em></h2>
-      <p class="sr d2" style="font-size:15px;color:var(--dk-t2);max-width:500px;margin:12px auto 0;font-weight:300;line-height:1.8">Lead prices vary by trade complexity &amp; job value. Pro members pay the same rate — but with unlimited access.</p>
+      <p class="sr d2" style="font-size:15px;color:var(--dk-t2);max-width:500px;margin:12px auto 0;font-weight:300;line-height:1.8">Lead prices vary by trade complexity &amp; job value. Pro members pay the same rate â€” but with unlimited access.</p>
     </div>
     <div class="leads-table sr d2">
       <div class="leads-table-head">
@@ -778,7 +814,7 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
         </div>
         <div class="faq-item">
           <div class="faq-q" onclick="toggleFaq(this)">What happens to my unused credits? <div class="faq-q-icon"><i data-lucide="chevron-down"></i></div></div>
-          <div class="faq-a">On the Free plan, unused credits roll over for up to 30 days. On Pro, there are no credits to worry about — you get unlimited lead access as part of your subscription.</div>
+          <div class="faq-a">On the Free plan, unused credits roll over for up to 30 days. On Pro, there are no credits to worry about â€” you get unlimited lead access as part of your subscription.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q" onclick="toggleFaq(this)">How does the 14-day Pro trial work? <div class="faq-q-icon"><i data-lucide="chevron-down"></i></div></div>
@@ -821,27 +857,83 @@ footer{background:#080c10;border-top:1px solid rgba(255,255,255,.05);padding:70p
   </div>
 </section>
 
-<footer>
+<!-- FOOTER -->
+<footer class="footer">
   <div class="wrap">
     <div class="footer-grid">
-      <div>
-        <a href="index.html" class="footer-brand">
-          <div class="footer-brand-icon"><i data-lucide="hammer"></i></div>
-          <span class="footer-brand-name">Trade<span>Match</span></span>
-        </a>
-        <p class="footer-tagline">The UK&apos;s most trusted trades marketplace. Verified tradespeople, protected payments, real reviews.</p>
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="https://facebook.com/tradematchuk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
       </div>
-      <div class="footer-col"><h4>For Homeowners</h4><ul><li><a href="post-a-job.html">Post a Job</a></li><li><a href="how-escrow-works.html">How Escrow Works</a></li><li><a href="browse-trades.html">Browse Trades</a></li><li><a href="cost-guides.html">Cost Guides</a></li><li><a href="safety-verification.html">TradeMatch Guarantee</a></li></ul></div>
-      <div class="footer-col"><h4>For Tradespeople</h4><ul><li><a href="view-profile.html">Create a Profile</a></li><li><a href="pricing.html">Pricing &amp; Fees</a></li><li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li><li><a href="trade-accreditations.html">Accreditations</a></li></ul></div>
-      <div class="footer-col"><h4>Find Trades</h4><ul><li><a href="browse-trades.html">Plumbers</a></li><li><a href="browse-trades.html">Electricians</a></li><li><a href="browse-trades.html">Gas Engineers</a></li><li><a href="browse-trades.html">Builders</a></li><li><a href="browse-trades.html">All 48 Trades &rarr;</a></li></ul></div>
-      <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About TradeMatch</a></li><li><a href="how-it-works.html">How It Works</a></li><li><a href="about.html">Careers</a></li><li><a href="about.html">Press</a></li><li><a href="contact.html">hello@tradematch.co.uk</a></li></ul></div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="find-tradespeople.html?trade=Plumbing">Plumbers</a></li>
+          <li><a href="find-tradespeople.html?trade=Electrical">Electricians</a></li>
+          <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
+          <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
+          <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="referral.html">Referral Programme</a></li>
+          <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
+          <li><a href="apply.html">Apply</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2026 TradeMatch UK Ltd &middot; Registered in England &amp; Wales &middot; Pay-Per-Lead &middot; Max 5 Vendors Per Job</p>
-      <div class="footer-legal"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cookies">Cookie Policy</a><a href="/complaints">Complaints</a></div>
+      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="contact.html">Complaints</a>
+      </div>
     </div>
   </div>
 </footer>
+
 
 <script>
 const nav = document.getElementById('nav');

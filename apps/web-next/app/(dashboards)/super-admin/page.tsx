@@ -120,6 +120,3 @@ export default function SuperAdminDashboard() {
     </div>
   );
 }
-
-// Import StatusBadge
-import { StatusBadge } from '@/components/native/ui/badge';

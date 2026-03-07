@@ -30,7 +30,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* ─── NEW v3 COMPONENTS ─── */
+/* â”€â”€â”€ NEW v3 COMPONENTS â”€â”€â”€ */
 
 /* Local insight block (in intro section) */
 .local-insight-block{display:flex;align-items:flex-start;gap:12px;background:rgba(0,194,104,.06);border:1px solid rgba(0,194,104,.22);border-radius:var(--r3);padding:14px 16px;margin-top:20px}
@@ -65,12 +65,12 @@
 .cmp-feature{color:var(--tx-dk);font-weight:500}
 .cmp-footnote{font-size:11px;color:var(--tx-dk3);margin-top:12px;font-style:italic}
 
-/* ─── RESET & BASE ─── */
+/* â”€â”€â”€ RESET & BASE â”€â”€â”€ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px}
 body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
 
-/* ─── DESIGN TOKENS ─── */
+/* â”€â”€â”€ DESIGN TOKENS â”€â”€â”€ */
 :root{
   --g:#00c268;--g2:#007a3d;--g3:#00e582;--g4:#009e4f;
   --glow:0 4px 24px rgba(0,194,104,.3),0 1px 8px rgba(0,194,104,.15);
@@ -87,20 +87,20 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 
 .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
 
-/* ─── SCROLL REVEAL ─── */
+/* â”€â”€â”€ SCROLL REVEAL â”€â”€â”€ */
 .sr{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}
 .sr.vis{opacity:1;transform:none}
 .d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
 .d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}
 @media(prefers-reduced-motion:reduce){.sr{opacity:1;transform:none}}
 
-/* ─── KEYFRAMES ─── */
+/* â”€â”€â”€ KEYFRAMES â”€â”€â”€ */
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.5)}}
 @keyframes bloomIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 
-/* ─── SECTION LABELS ─── */
+/* â”€â”€â”€ SECTION LABELS â”€â”€â”€ */
 .sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sec-label::before{content:'';width:20px;height:1px;background:var(--g);opacity:.6}
 .sec-label.dark{color:rgba(0,229,130,.7)}
@@ -114,7 +114,7 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 .body-sub.on-dk{color:var(--tx-lt2)}
 .body-sub.on-lt{color:var(--tx-dk3);max-width:520px}
 
-/* ─── NAV ─── */
+/* â”€â”€â”€ NAV â”€â”€â”€ */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px;transition:all .4s}
 .nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(255,255,255,.92);backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.08);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 24px rgba(0,0,0,.07);transition:all .4s}
 .nav.scrolled .nav-inner{box-shadow:0 4px 32px rgba(0,0,0,.12)}
@@ -134,7 +134,7 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:900px){.nav-links{display:none}}
 @media(max-width:600px){.nav-ghost{display:none}}
 
-/* ─── BUTTONS ─── */
+/* â”€â”€â”€ BUTTONS â”€â”€â”€ */
 .btn-primary{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--g2),var(--g));padding:11px 22px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--glow);transition:all .3s;position:relative;overflow:hidden}
 .btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);opacity:0;transition:opacity .25s}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,194,104,.38)}
@@ -147,9 +147,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 .btn-outline-dk:hover{border-color:rgba(0,194,104,.5);color:var(--g3);background:rgba(0,194,104,.07)}
 .btn-outline-dk svg{width:14px;height:14px}
 
-/* ════════════════════════════════════
-   SECTION 1: HERO — DARK with cinematic image
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 1: HERO â€” DARK with cinematic image
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hero{position:relative;min-height:92vh;display:flex;align-items:center;overflow:hidden;background:var(--dk)}
 .hero-img-bg{position:absolute;inset:0;z-index:0}
 .hero-img-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.4) brightness(.28);transform:scale(1.04);transition:transform 10s ease}
@@ -213,9 +213,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:960px){.hero-inner{grid-template-columns:1fr}.hero-card{display:none}}
 @media(max-width:600px){.hero-h1{font-size:2.2rem}.hero-stats{gap:16px;flex-wrap:wrap}}
 
-/* ════════════════════════════════════
-   SECTION 2: LOCAL INTRO — LIGHT with image collage
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 2: LOCAL INTRO â€” LIGHT with image collage
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .intro{background:var(--lt);padding:var(--sec-pad)}
 .intro-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .intro-body{font-size:16px;line-height:1.85;color:var(--tx-dk2);margin-bottom:18px}
@@ -250,9 +250,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 
 @media(max-width:960px){.intro-inner{grid-template-columns:1fr}.intro-visual{display:none}}
 
-/* ════════════════════════════════════
-   SECTION 3: VENDOR CARDS — DARK with image atmosphere
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 3: VENDOR CARDS â€” DARK with image atmosphere
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .vendors{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk2)}
 .vendors-bg{position:absolute;inset:0;z-index:0}
 .vendors-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.08) brightness(.08);opacity:.9}
@@ -305,9 +305,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:960px){.vendors-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.vendors-grid{grid-template-columns:1fr}}
 
-/* ════════════════════════════════════
-   SECTION 4: WHY TRADEMATCH — LIGHT split layout
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 4: WHY TRADEMATCH â€” LIGHT split layout
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .why{background:#fff;padding:var(--sec-pad)}
 .why-inner{max-width:1240px;margin:0 auto;padding:0 28px}
 .why-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-bottom:60px}
@@ -333,9 +333,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:960px){.why-top{grid-template-columns:1fr}.why-img-wrap{display:none}.why-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.why-grid{grid-template-columns:1fr}}
 
-/* ════════════════════════════════════
-   SECTION 5: HOW IT WORKS — DARK with image bg
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 5: HOW IT WORKS â€” DARK with image bg
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hiw{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk)}
 .hiw-bg{position:absolute;inset:0;z-index:0}
 .hiw-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.1) brightness(.1);opacity:.7}
@@ -355,9 +355,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:768px){.hiw-steps{grid-template-columns:1fr 1fr;gap:28px}.hiw-steps::before{display:none}}
 @media(max-width:480px){.hiw-steps{grid-template-columns:1fr}}
 
-/* ════════════════════════════════════
-   SECTION 6: COST GUIDE — LIGHT with split image
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 6: COST GUIDE â€” LIGHT with split image
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .cost{background:var(--lt);padding:var(--sec-pad);position:relative;overflow:hidden}
 .cost-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
 .cost-table{margin-top:28px}
@@ -383,9 +383,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 
 @media(max-width:960px){.cost-inner{grid-template-columns:1fr}}
 
-/* ════════════════════════════════════
-   SECTION 7: FAQ — DARK with minimal bg image
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 7: FAQ â€” DARK with minimal bg image
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .faq{position:relative;padding:var(--sec-pad);overflow:hidden;background:var(--dk2)}
 .faq-bg{position:absolute;inset:0;z-index:0}
 .faq-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.05) brightness(.07);opacity:.8}
@@ -407,9 +407,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 
 @media(max-width:768px){.faq-grid{grid-template-columns:1fr}}
 
-/* ════════════════════════════════════
-   SECTION 8: NEARBY LOCATIONS — LIGHT
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 8: NEARBY LOCATIONS â€” LIGHT
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .nearby{background:var(--lt2);padding:var(--sec-pad)}
 .nearby-inner{max-width:1240px;margin:0 auto;padding:0 28px}
 .nearby-header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin-bottom:40px}
@@ -423,9 +423,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:960px){.nearby-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.nearby-grid{grid-template-columns:1fr 1fr}}
 
-/* ════════════════════════════════════
-   SECTION 9: SERVICES — DARK
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 9: SERVICES â€” DARK
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .services{background:var(--dk);padding:var(--sec-pad)}
 .services-inner{max-width:1240px;margin:0 auto;padding:0 28px}
 .services-header{display:grid;grid-template-columns:1fr auto;align-items:end;gap:20px;margin-bottom:40px}
@@ -438,9 +438,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 @media(max-width:960px){.services-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.services-grid{grid-template-columns:1fr 1fr}}
 
-/* ════════════════════════════════════
-   SECTION 10: FINAL CTA — LIGHT with full-bleed image
-   ════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SECTION 10: FINAL CTA â€” LIGHT with full-bleed image
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .final-cta{position:relative;padding:100px 0;overflow:hidden}
 .fcta-bg{position:absolute;inset:0;z-index:0}
 .fcta-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.85)}
@@ -454,9 +454,9 @@ body{font-family:'DM Sans',sans-serif;color:#0f1923;overflow-x:hidden;-webkit-fo
 .fcta-trust-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--tx-dk3)}
 .fcta-trust-item svg{width:12px;height:12px;color:var(--g2)}
 
-/* ════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    FOOTER
-   ════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 footer{background:#0d1117;border-top:1px solid rgba(255,255,255,.05);padding:72px 0 36px;position:relative;overflow:hidden}
 footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse 70% 50% at 10% 50%,rgba(0,194,104,.06) 0%,transparent 60%),
@@ -483,10 +483,10 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 @media(max-width:600px){.footer-grid{grid-template-columns:1fr 1fr;gap:24px}}
 @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
 
-/* ─── SECTION ALTERNATION VISUAL ACCENT ─── */
+/* â”€â”€â”€ SECTION ALTERNATION VISUAL ACCENT â”€â”€â”€ */
 .section-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,194,104,.2) 30%,rgba(0,194,104,.2) 70%,transparent)}
 
-/* ─── MISC ─── */
+/* â”€â”€â”€ MISC â”€â”€â”€ */
 .text-center{text-align:center}
 .text-center .body-sub{margin-left:auto;margin-right:auto}
 .text-center .sec-label{justify-content:center}
@@ -496,29 +496,73 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- â”€â”€ NAV â”€â”€ -->
+<!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <div class="nav-logo-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
       <span class="nav-wordmark">Trade<span>Match</span></span>
     </a>
-    <nav class="nav-links">
-      <a href="/how-it-works" class="nav-link">How It Works</a>
-      <a href="/services/plumbing" class="nav-link">Plumbing</a>
-      <a href="/cost-guides" class="nav-link">Cost Guides</a>
-      <a href="/for-tradespeople" class="nav-link">For Tradespeople</a>
-    </nav>
-    <div style="display:flex;align-items:center;gap:8px">
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+<div style="display:flex;align-items:center;gap:8px">
       <a href="/login" class="nav-ghost">Sign In</a>
       <a href="/get-quotes" class="nav-cta"><div class="nav-cta-pip"></div>Get Free Quotes</a>
     </div>
   </div>
 </nav>
 
-<!-- ════════════════════════════════════
-     S1: HERO — DARK
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S1: HERO â€” DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="hero">
   <div class="hero-img-bg" id="heroBg">
     <img src="../../assets/hero/plumbing/nottingham.webp" alt="Professional Plumbing work in Nottingham" loading="eager">
@@ -530,8 +574,8 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
     <div class="hero-inner">
       <div>
         <div class="hero-crumb sr">
-          <a href="/">Home</a><span class="hero-crumb-sep">›</span>
-          <a href="/services/plumbing">Plumbing</a><span class="hero-crumb-sep">›</span>
+          <a href="/">Home</a><span class="hero-crumb-sep">â€ş</span>
+          <a href="/services/plumbing">Plumbing</a><span class="hero-crumb-sep">â€ş</span>
           <span>Nottingham</span>
         </div>
         <div class="hero-loc-pill sr d1">
@@ -571,7 +615,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
         <div class="hero-stats sr d6">
           <div><div class="hst-num">14<span>+</span></div><div class="hst-lbl">Verified pros in Nottingham</div></div>
           <div><div class="hst-num">48<span>h</span></div><div class="hst-lbl">Average response time</div></div>
-          <div><div class="hst-num">5<span>★</span></div><div class="hst-lbl">Max quotes per job</div></div>
+          <div><div class="hst-num">5<span>â…</span></div><div class="hst-lbl">Max quotes per job</div></div>
           <div><div class="hst-num">0<span>p</span></div><div class="hst-lbl">Commission charged</div></div>
         </div>
       </div>
@@ -582,7 +626,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
           <div class="hero-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
           <div>
             <div class="hero-card-title">Get up to 5 free quotes</div>
-            <div class="hero-card-sub">No obligation · Takes 60 seconds</div>
+            <div class="hero-card-sub">No obligation Â· Takes 60 seconds</div>
           </div>
         </div>
         <div class="hc-field">
@@ -618,9 +662,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S2: LOCAL INTRO — LIGHT
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S2: LOCAL INTRO â€” LIGHT
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="intro">
   <div class="intro-inner">
     <div>
@@ -646,16 +690,16 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
         <div class="intro-feat">
           <div class="intro-feat-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
           <div>
-            <div class="intro-feat-title">Max 5 Quotes — No Spam</div>
+            <div class="intro-feat-title">Max 5 Quotes â€” No Spam</div>
             <div class="intro-feat-body">We limit responses so every quote is genuine, detailed, and competitive.</div>
           </div>
         </div>
       </div>
       <div class="intro-stats sr d5">
         <div class="intro-stat"><div class="intro-stat-num">14<em>+</em></div><div class="intro-stat-lbl">Active pros in Nottingham</div></div>
-        <div class="intro-stat"><div class="intro-stat-num"><em>4.9</em>★</div><div class="intro-stat-lbl">Average pro rating</div></div>
+        <div class="intro-stat"><div class="intro-stat-num"><em>4.9</em>â…</div><div class="intro-stat-lbl">Average pro rating</div></div>
         <div class="intro-stat"><div class="intro-stat-num">48<em>h</em></div><div class="intro-stat-lbl">Response guarantee</div></div>
-        <div class="intro-stat"><div class="intro-stat-num"><em>£0</em></div><div class="intro-stat-lbl">Commission for homeowners</div></div>
+        <div class="intro-stat"><div class="intro-stat-num"><em>ÂŁ0</em></div><div class="intro-stat-lbl">Commission for homeowners</div></div>
       </div>
       <div class="local-insight-block sr d5"><div class="lib-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="lib-text"><strong>Local insight:</strong> Nottingham has a higher-than-average rate of <strong>older copper pipework needing pressure testing</strong> in its housing stock. Experienced Plumbing professionals in our network flag this in their quotes so there are no surprises.</div></div>
     </div>
@@ -685,9 +729,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S3: VENDOR CARDS — DARK
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S3: VENDOR CARDS â€” DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="vendors">
   <div class="vendors-bg"><img src="../../assets/hero/plumbing/nottingham.webp" alt="Tradespeople in Nottingham"></div>
   <div class="vendors-overlay"></div>
@@ -700,9 +744,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <a href="/get-quotes?trade=plumbing&location=nottingham" class="btn-primary sr">See All 14+ Pros</a>
     </div>
     <div class="vendors-grid">
-      <!-- Vendor 1 — Featured Pro -->
+      <!-- Vendor 1 â€” Featured Pro -->
       <div class="vc featured sr d2">
-        <div class="vc-featured-ribbon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Featured Pro · Highest Rated in Nottingham</div>
+        <div class="vc-featured-ribbon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Featured Pro Â· Highest Rated in Nottingham</div>
         <div class="vc-img">
           <img src="../../assets/hero/plumbing/nottingham.webp" alt="Ben Brown - Plumbing in Nottingham">
           <div class="vc-img-overlay"></div>
@@ -713,7 +757,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
             <div class="vc-avatar">BB</div>
             <div>
               <div class="vc-name">Ben Brown</div>
-              <div class="vc-trade">Plumbing · Nottingham</div>
+              <div class="vc-trade">Plumbing Â· Nottingham</div>
             </div>
           </div>
           <div class="vc-certs"><span class="vc-cert ins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>CIPHE Member</span><span class="vc-cert ins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Insured</span><span class="vc-cert dbs"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>DBS Checked</span></div>
@@ -746,7 +790,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
             <div class="vc-avatar">LT</div>
             <div>
               <div class="vc-name">Laura Thompson</div>
-              <div class="vc-trade">Plumbing · United Kingdom</div>
+              <div class="vc-trade">Plumbing Â· United Kingdom</div>
             </div>
           </div>
           <div class="vc-certs"><span class="vc-cert ins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Insured</span><span class="vc-cert dbs"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>DBS Checked</span></div>
@@ -779,7 +823,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
             <div class="vc-avatar">LD</div>
             <div>
               <div class="vc-name">Laura Davis</div>
-              <div class="vc-trade">Plumbing · Nottingham</div>
+              <div class="vc-trade">Plumbing Â· Nottingham</div>
             </div>
           </div>
           <div class="vc-certs"><span class="vc-cert ins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Part P Registered</span><span class="vc-cert ins"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Insured</span></div>
@@ -806,9 +850,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S4: WHY TRADEMATCH — LIGHT
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S4: WHY TRADEMATCH â€” LIGHT
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="why">
   <div class="why-inner">
     <div class="why-top">
@@ -829,7 +873,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
           <div class="wis-sep"></div>
           <div><div class="wis-num">48<span>h</span></div><div class="wis-lbl">Avg. first response</div></div>
           <div class="wis-sep"></div>
-          <div><div class="wis-num">4.9<span>★</span></div><div class="wis-lbl">Platform rating</div></div>
+          <div><div class="wis-num">4.9<span>â…</span></div><div class="wis-lbl">Platform rating</div></div>
         </div>
       </div>
     </div>
@@ -837,7 +881,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <div class="why-card sr d1">
         <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="wc-title">All Pros Verified</div>
-        <div class="wc-body">Every tradesperson is ID verified, insured, and DBS checked before listing — not self-registered.</div>
+        <div class="wc-body">Every tradesperson is ID verified, insured, and DBS checked before listing â€” not self-registered.</div>
       </div>
       <div class="why-card sr d2">
         <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
@@ -852,7 +896,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <div class="why-card sr d4">
         <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="wc-title">Max 5 Quotes</div>
-        <div class="wc-body">We limit quotes to 5 per job so you get genuine, competitive bids — not a deluge of cold calls.</div>
+        <div class="wc-body">We limit quotes to 5 per job so you get genuine, competitive bids â€” not a deluge of cold calls.</div>
       </div>
       <div class="why-card sr d5">
         <div class="wc-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
@@ -870,9 +914,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S5: HOW IT WORKS — DARK
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S5: HOW IT WORKS â€” DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="hiw">
   <div class="hiw-bg"><img src="../../assets/hero/plumbing/nottingham.webp" alt="UK homes and properties"></div>
   <div class="hiw-bg-overlay"></div>
@@ -895,7 +939,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <div class="hiw-step sr d3">
         <div class="hiw-num"><span class="hiw-n">03</span></div>
         <div class="hiw-title">Choose Your Pro</div>
-        <div class="hiw-body">Compare reviews, credentials, and prices. Chat directly before you decide — no pressure.</div>
+        <div class="hiw-body">Compare reviews, credentials, and prices. Chat directly before you decide â€” no pressure.</div>
       </div>
       <div class="hiw-step sr d4">
         <div class="hiw-num"><span class="hiw-n">04</span></div>
@@ -943,9 +987,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 <div class="section-divider"></div>
 
 
-<!-- ════════════════════════════════════
-     S6: COST GUIDE — LIGHT
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S6: COST GUIDE â€” LIGHT
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="cost">
   <div class="cost-inner">
     <div>
@@ -953,7 +997,7 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <h2 class="h2 on-lt sr d1">Typical <em>Plumbing</em> costs<br>in Nottingham</h2>
       <p class="body-sub on-lt sr d2">Getting an accurate quote for Plumbing in Nottingham starts with understanding typical market rates. We compiled these ranges from real jobs posted on TradeMatch across the United Kingdom area.</p>
       <div class="cost-table sr d3">
-        <div class="cost-row"><div class="cost-row-label">First hour / call-out fee</div><div class="cost-row-range">£60 - £160</div><div class="cost-row-avg">£95</div></div><div class="cost-row"><div class="cost-row-label">Additional hours (per hour)</div><div class="cost-row-range">£40 - £90</div><div class="cost-row-avg">£60</div></div><div class="cost-row"><div class="cost-row-label">Half-day rate (4 hrs)</div><div class="cost-row-range">£180 - £350</div><div class="cost-row-avg">£240</div></div><div class="cost-row"><div class="cost-row-label">Full-day rate (8 hrs)</div><div class="cost-row-range">£300 - £600</div><div class="cost-row-avg">£420</div></div><div class="cost-row"><div class="cost-row-label">Emergency / out-of-hours</div><div class="cost-row-range">£100 - £250</div><div class="cost-row-avg">£160</div></div>
+        <div class="cost-row"><div class="cost-row-label">First hour / call-out fee</div><div class="cost-row-range">ÂŁ60 - ÂŁ160</div><div class="cost-row-avg">ÂŁ95</div></div><div class="cost-row"><div class="cost-row-label">Additional hours (per hour)</div><div class="cost-row-range">ÂŁ40 - ÂŁ90</div><div class="cost-row-avg">ÂŁ60</div></div><div class="cost-row"><div class="cost-row-label">Half-day rate (4 hrs)</div><div class="cost-row-range">ÂŁ180 - ÂŁ350</div><div class="cost-row-avg">ÂŁ240</div></div><div class="cost-row"><div class="cost-row-label">Full-day rate (8 hrs)</div><div class="cost-row-range">ÂŁ300 - ÂŁ600</div><div class="cost-row-avg">ÂŁ420</div></div><div class="cost-row"><div class="cost-row-label">Emergency / out-of-hours</div><div class="cost-row-range">ÂŁ100 - ÂŁ250</div><div class="cost-row-avg">ÂŁ160</div></div>
       </div>
       <div class="cost-note sr d4"><strong>Local tip:</strong> Always request at least 3 quotes for any Plumbing job in Nottingham. TradeMatch sends your request to up to 5 verified specialists - making side-by-side comparison effortless.</div>
     </div>
@@ -978,9 +1022,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S7: FAQ — DARK
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S7: FAQ â€” DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="faq">
   <div class="faq-bg"><img src="../../assets/hero/plumbing/nottingham.webp" alt="Professional tradesperson at work"></div>
   <div class="faq-bg-ov"></div>
@@ -995,21 +1039,21 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
           <div class="faq-q-text">How much does Plumbing cost in Nottingham?</div>
           <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
-        <div class="faq-a"><div class="faq-a-inner">Plumbing in Nottingham typically costs between £60 and £160 for the first hour, including call-out. Subsequent hours usually run £40-£90. Emergency or out-of-hours work commands a premium - expect to pay 50-80% more than standard rates. Always confirm whether the quote includes VAT and materials.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Plumbing in Nottingham typically costs between ÂŁ60 and ÂŁ160 for the first hour, including call-out. Subsequent hours usually run ÂŁ40-ÂŁ90. Emergency or out-of-hours work commands a premium - expect to pay 50-80% more than standard rates. Always confirm whether the quote includes VAT and materials.</div></div>
       </div>
       <div class="faq-item sr d2">
         <div class="faq-q" onclick="toggleFaq(this)">
           <div class="faq-q-text">Are all Plumbing on TradeMatch verified?</div>
           <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
-        <div class="faq-a"><div class="faq-a-inner">Yes — every tradesperson on TradeMatch is manually ID verified, DBS checked, and must hold valid public liability insurance before they can respond to jobs. We don't allow self-registration.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Yes â€” every tradesperson on TradeMatch is manually ID verified, DBS checked, and must hold valid public liability insurance before they can respond to jobs. We don't allow self-registration.</div></div>
       </div>
       <div class="faq-item sr d3">
         <div class="faq-q" onclick="toggleFaq(this)">
           <div class="faq-q-text">How long will it take to get quotes?</div>
           <div class="faq-q-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
-        <div class="faq-a"><div class="faq-a-inner">Most Nottingham homeowners receive their first quote within a few hours. We guarantee responses within 48 hours, and typically you'll have 3–5 quotes to compare by the next day.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">Most Nottingham homeowners receive their first quote within a few hours. We guarantee responses within 48 hours, and typically you'll have 3â€“5 quotes to compare by the next day.</div></div>
       </div>
       <div class="faq-item sr d4">
         <div class="faq-q" onclick="toggleFaq(this)">
@@ -1038,9 +1082,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S8: NEARBY LOCATIONS — LIGHT
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S8: NEARBY LOCATIONS â€” LIGHT
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="nearby">
   <div class="nearby-inner">
     <div class="nearby-header">
@@ -1058,9 +1102,9 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S9: ALL SERVICES — DARK
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S9: ALL SERVICES â€” DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="services">
   <div class="services-inner">
     <div class="services-header">
@@ -1070,31 +1114,31 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       </div>
     </div>
     <div class="services-grid sr d2">
-      <a href="/services/plumbing/nottingham" class="svc-pill"><span class="svc-icon">🔧</span><span class="svc-name">Plumbing</span></a>
-      <a href="/services/electrical/nottingham" class="svc-pill"><span class="svc-icon">⚡</span><span class="svc-name">Electrical</span></a>
-      <a href="/services/building/nottingham" class="svc-pill"><span class="svc-icon">🏗️</span><span class="svc-name">Building</span></a>
-      <a href="/services/carpentry/nottingham" class="svc-pill"><span class="svc-icon">🪚</span><span class="svc-name">Carpentry</span></a>
-      <a href="/services/painting-decorating/nottingham" class="svc-pill"><span class="svc-icon">🎨</span><span class="svc-name">Painting &amp; Decorating</span></a>
-      <a href="/services/bathroom-fitting/nottingham" class="svc-pill"><span class="svc-icon">🚿</span><span class="svc-name">Bathroom Fitting</span></a>
-      <a href="/services/kitchen-fitting/nottingham" class="svc-pill"><span class="svc-icon">🍳</span><span class="svc-name">Kitchen Fitting</span></a>
-      <a href="/services/roofing-pitched/nottingham" class="svc-pill"><span class="svc-icon">🏠</span><span class="svc-name">Roofing</span></a>
-      <a href="/services/landscaping/nottingham" class="svc-pill"><span class="svc-icon">🌿</span><span class="svc-name">Landscaping</span></a>
-      <a href="/services/plastering/nottingham" class="svc-pill"><span class="svc-icon">🪣</span><span class="svc-name">Plastering</span></a>
-      <a href="/services/central-heating/nottingham" class="svc-pill"><span class="svc-icon">♨️</span><span class="svc-name">Central Heating</span></a>
-      <a href="/services/tiling/nottingham" class="svc-pill"><span class="svc-icon">🟫</span><span class="svc-name">Tiling</span></a>
-      <a href="/services/extensions/nottingham" class="svc-pill"><span class="svc-icon">🏛️</span><span class="svc-name">Extensions</span></a>
-      <a href="/services/loft-conversion/nottingham" class="svc-pill"><span class="svc-icon">📐</span><span class="svc-name">Loft Conversion</span></a>
-      <a href="/services/handyman/nottingham" class="svc-pill"><span class="svc-icon">🔨</span><span class="svc-name">Handyman</span></a>
-      <a href="/services/driveways/nottingham" class="svc-pill"><span class="svc-icon">🛣️</span><span class="svc-name">Driveways</span></a>
+      <a href="/services/plumbing/nottingham" class="svc-pill"><span class="svc-icon">đź”§</span><span class="svc-name">Plumbing</span></a>
+      <a href="/services/electrical/nottingham" class="svc-pill"><span class="svc-icon">âšˇ</span><span class="svc-name">Electrical</span></a>
+      <a href="/services/building/nottingham" class="svc-pill"><span class="svc-icon">đźŹ—ď¸Ź</span><span class="svc-name">Building</span></a>
+      <a href="/services/carpentry/nottingham" class="svc-pill"><span class="svc-icon">đźŞš</span><span class="svc-name">Carpentry</span></a>
+      <a href="/services/painting-decorating/nottingham" class="svc-pill"><span class="svc-icon">đźŽ¨</span><span class="svc-name">Painting &amp; Decorating</span></a>
+      <a href="/services/bathroom-fitting/nottingham" class="svc-pill"><span class="svc-icon">đźšż</span><span class="svc-name">Bathroom Fitting</span></a>
+      <a href="/services/kitchen-fitting/nottingham" class="svc-pill"><span class="svc-icon">đźŤł</span><span class="svc-name">Kitchen Fitting</span></a>
+      <a href="/services/roofing-pitched/nottingham" class="svc-pill"><span class="svc-icon">đźŹ </span><span class="svc-name">Roofing</span></a>
+      <a href="/services/landscaping/nottingham" class="svc-pill"><span class="svc-icon">đźŚż</span><span class="svc-name">Landscaping</span></a>
+      <a href="/services/plastering/nottingham" class="svc-pill"><span class="svc-icon">đźŞŁ</span><span class="svc-name">Plastering</span></a>
+      <a href="/services/central-heating/nottingham" class="svc-pill"><span class="svc-icon">â™¨ď¸Ź</span><span class="svc-name">Central Heating</span></a>
+      <a href="/services/tiling/nottingham" class="svc-pill"><span class="svc-icon">đźź«</span><span class="svc-name">Tiling</span></a>
+      <a href="/services/extensions/nottingham" class="svc-pill"><span class="svc-icon">đźŹ›ď¸Ź</span><span class="svc-name">Extensions</span></a>
+      <a href="/services/loft-conversion/nottingham" class="svc-pill"><span class="svc-icon">đź“</span><span class="svc-name">Loft Conversion</span></a>
+      <a href="/services/handyman/nottingham" class="svc-pill"><span class="svc-icon">đź”¨</span><span class="svc-name">Handyman</span></a>
+      <a href="/services/driveways/nottingham" class="svc-pill"><span class="svc-icon">đź›Łď¸Ź</span><span class="svc-name">Driveways</span></a>
     </div>
   </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ════════════════════════════════════
-     S10: FINAL CTA — LIGHT with image
-     ════════════════════════════════════ -->
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     S10: FINAL CTA â€” LIGHT with image
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="final-cta">
   <div class="fcta-bg"><img src="../../assets/hero/plumbing/nottingham.webp" alt="Beautiful UK home"></div>
   <div class="fcta-overlay"></div>
@@ -1118,11 +1162,12 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
   </div>
 </section>
 
-<!-- ════════════════════════════════════
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      FOOTER
-     ════════════════════════════════════ -->
-<footer>
-  <div class="footer-wrap">
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-brand-name">Trade<span>Match</span></div>
@@ -1137,79 +1182,88 @@ footer::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:non
       <div class="footer-col">
         <h4>For Homeowners</h4>
         <ul>
-          <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/get-quotes">Post a Job</a></li>
-          <li><a href="/how-it-works#escrow">How Escrow Works</a></li>
-          <li><a href="/cost-guides">Cost Guides</a></li>
-          <li><a href="/guarantee">Safety &amp; Verification</a></li>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>For Tradespeople</h4>
         <ul>
-          <li><a href="/register">Create a Profile</a></li>
-          <li><a href="/pricing">Pricing &amp; Fees</a></li>
-          <li><a href="/verification">Trade Accreditations</a></li>
-          <li><a href="/pro-dashboard">TradeMatch Pro</a></li>
-          <li><a href="/forum">Tradesperson Forum</a></li>
+          <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Plumbing Nearby</h4>
+        <h4>Find Trades</h4>
         <ul>
-          <li><a href="/services/plumbing/newcastle">Plumbing in Newcastle</a></li>
-          <li><a href="/services/plumbing/southampton">Plumbing in Southampton</a></li>
-          <li><a href="/services/plumbing/oxford">Plumbing in Oxford</a></li>
-          <li><a href="/services/plumbing/belfast">Plumbing in Belfast</a></li>
-          <li><a href="/services/plumbing/edinburgh">Plumbing in Edinburgh</a></li>
-          <li><a href="/services/plumbing/stirling">Plumbing in Stirling</a></li>
-          
+          <li><a href="find-tradespeople.html?trade=Plumbing">Plumbers</a></li>
+          <li><a href="find-tradespeople.html?trade=Electrical">Electricians</a></li>
+          <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
+          <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
+          <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
         <ul>
-          <li><a href="/about">About TradeMatch</a></li>
-          <li><a href="/how-it-works">How It Works</a></li>
-          <li><a href="/careers">Careers</a></li>
-          <li><a href="/press">Press</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="referral.html">Referral Programme</a></li>
+          <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
+          <li><a href="apply.html">Apply</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
+      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
       <div class="footer-legal">
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms &amp; Conditions</a>
-        <a href="/cookies">Cookie Policy</a>
-        <a href="/complaints">Complaints</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="contact.html">Complaints</a>
       </div>
     </div>
   </div>
 </footer>
 
+
 <script>
-// ── NAV scroll ──
+// â”€â”€ NAV scroll â”€â”€
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// ── Hero image load ──
+// â”€â”€ Hero image load â”€â”€
 const heroBg = document.getElementById('heroBg');
 const heroImg = heroBg.querySelector('img');
 if (heroImg.complete) heroBg.classList.add('loaded');
 else heroImg.addEventListener('load', () => heroBg.classList.add('loaded'));
 
-// ── Scroll Reveal ──
+// â”€â”€ Scroll Reveal â”€â”€
 const srEls = document.querySelectorAll('.sr');
 const srObs = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); srObs.unobserve(e.target); } });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 srEls.forEach(el => srObs.observe(el));
 
-// ── FAQ Accordion ──
+// â”€â”€ FAQ Accordion â”€â”€
 function toggleFaq(btn) {
   const item = btn.parentElement;
   const isOpen = item.classList.contains('open');

@@ -80,13 +80,68 @@ body::before{
 <body>
   <div class="shell">
     <aside class="sidebar">
-      <div class="logo">TRADEMATCH • CUSTOMER</div>
-      <nav class="nav" id="customerNativeNav"></nav>
-    </aside>
+      <div class="logo">TRADEMATCH â€˘ CUSTOMER</div>
+      <!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+
+</aside>
 
     <header class="top-nav">
       <input class="search" value="Search jobs, quotes, messages..." aria-label="Search" readonly>
-      <div class="badge">NATIVE • 0.01 PARITY</div>
+      <div class="badge">NATIVE â€˘ 0.01 PARITY</div>
     </header>
 
     <main class="main">
@@ -120,7 +175,7 @@ body::before{
   const runtimeOverrides = {};
   let activeView = 'dashboard';
   const parityDebug = window.createNativeParityDebug
-    ? window.createNativeParityDebug({ label: 'PARITY DEBUG · CUSTOMER' })
+    ? window.createNativeParityDebug({ label: 'PARITY DEBUG Â· CUSTOMER' })
     : { write() {} };
 
   function writeDebug(data) {
@@ -145,7 +200,7 @@ body::before{
     quotes: {
       metrics: [['All Quotes', '8', 'Across 3 jobs'], ['New', '3', 'Need review'], ['Accepted', '1', 'In progress'], ['Archived', '4', 'Past decisions']],
       primaryTitle: 'Your Quotes',
-      rows: [['Premium Bathrooms Ltd', '£8,500', 'Submitted 18 Jan'], ['Swift Plumbing Services', '£6,800', 'Submitted 19 Jan'], ['Budget Bathrooms', '£5,200', 'Submitted 20 Jan']],
+      rows: [['Premium Bathrooms Ltd', 'ÂŁ8,500', 'Submitted 18 Jan'], ['Swift Plumbing Services', 'ÂŁ6,800', 'Submitted 19 Jan'], ['Budget Bathrooms', 'ÂŁ5,200', 'Submitted 20 Jan']],
       sideTitle: 'Selection Tip',
       sideText: 'Compare timeline, warranty, and review score before accepting the lowest-cost quote.'
     },
@@ -159,7 +214,7 @@ body::before{
     'saved-trades': {
       metrics: [['Saved Vendors', '12', '+2 this month'], ['Verified', '10', '83%'], ['Top Rated', '7', 'Priority shortlist'], ['Invited', '4', 'Awaiting reply']],
       primaryTitle: 'Saved Tradespeople',
-      rows: [['Elite Builders', '4.9 ★', 'Saved 2w ago'], ['Quick Fix Plumbing', '4.7 ★', 'Saved 9d ago'], ['PowerPro Electricians', '4.8 ★', 'Saved 3d ago']],
+      rows: [['Elite Builders', '4.9 â…', 'Saved 2w ago'], ['Quick Fix Plumbing', '4.7 â…', 'Saved 9d ago'], ['PowerPro Electricians', '4.8 â…', 'Saved 3d ago']],
       sideTitle: 'Shortlist Action',
       sideText: 'Invite two more verified vendors to improve quote diversity for upcoming projects.'
     },
@@ -171,9 +226,9 @@ body::before{
       sideText: 'Clear quote-related notifications first to reduce acceptance delay.'
     },
     billing: {
-      metrics: [['Total Spent', '£22.96', 'All time'], ['Most Recent', '£4.99', 'Last payment'], ['Billing Status', 'Up to date', 'No outstanding'], ['Invoices', '6', 'Downloadable']],
+      metrics: [['Total Spent', 'ÂŁ22.96', 'All time'], ['Most Recent', 'ÂŁ4.99', 'Last payment'], ['Billing Status', 'Up to date', 'No outstanding'], ['Invoices', '6', 'Downloadable']],
       primaryTitle: 'Billing & Invoices',
-      rows: [['Invoice #TM-2402', 'Paid', '£4.99'], ['Invoice #TM-2401', 'Paid', '£7.99'], ['Invoice #TM-2312', 'Paid', '£9.98']],
+      rows: [['Invoice #TM-2402', 'Paid', 'ÂŁ4.99'], ['Invoice #TM-2401', 'Paid', 'ÂŁ7.99'], ['Invoice #TM-2312', 'Paid', 'ÂŁ9.98']],
       sideTitle: 'Billing Action',
       sideText: 'Keep your payment method current to avoid interruptions for premium features.'
     },

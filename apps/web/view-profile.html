@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>James Riley Plumbing — Verified Plumber in Manchester | TradeMatch UK</title>
-<meta name="description" content="James Riley Plumbing — Gas Safe registered, ID-verified plumber in Manchester with a 4.9★ rating across 84 verified reviews. View reliability scores, work photos, and post a job.">
+<title>James Riley Plumbing â€” Verified Plumber in Manchester | TradeMatch UK</title>
+<meta name="description" content="James Riley Plumbing â€” Gas Safe registered, ID-verified plumber in Manchester with a 4.9â… rating across 84 verified reviews. View reliability scores, work photos, and post a job.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -166,7 +166,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
 .lead-table td:first-child{font-weight:500;color:var(--t1)}
 .lead-table td.price{font-family:var(--ff);font-weight:700;color:var(--neon3)}
 
-/* ── STICKY CTA SIDEBAR ── */
+/* â”€â”€ STICKY CTA SIDEBAR â”€â”€ */
 .profile-cta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r4);padding:24px;position:sticky;top:88px}
 .cta-title{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.04em;color:var(--t1);margin-bottom:4px}
 .cta-sub{font-size:13px;color:var(--t3);margin-bottom:20px;line-height:1.5}
@@ -194,7 +194,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
 .lead-price-val{font-family:var(--ff);font-size:1rem;font-weight:800;color:var(--neon3);letter-spacing:-.04em}
 .lead-price-note{font-size:11px;color:var(--t4);text-align:center;margin-bottom:16px;line-height:1.5}
 
-/* ── BOTTOM CONTENT ── */
+/* â”€â”€ BOTTOM CONTENT â”€â”€ */
 .sec-reviews-full{padding:48px 0 72px;background:var(--surface2)}
 .sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--neon3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .sec-label::before{content:'';width:20px;height:1px;background:var(--neon3);opacity:.6}
@@ -308,31 +308,66 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <div class="nav-logo-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
       <span class="nav-wordmark">Trade<span>Match</span></span>
     </a>
-    <ul class="nav-links">
-      <li><a href="/how-it-works" class="nav-link">How It Works</a></li>
-      <li><a href="/find-tradespeople" class="nav-link">Find Trades</a></li>
-      <li><a href="/about" class="nav-link">About</a></li>
-      <li><a href="/contact" class="nav-link">Contact</a></li>
-      <li><a href="/help" class="nav-link">Help</a></li>
-    </ul>
-    <div class="nav-actions">
-      <a href="/login" class="nav-btn-ghost">Sign In</a>
-      <button class="nav-cta" onclick="openQuoteModal()">Post a Job</button>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
   <div class="wrap">
     <div class="bc-inner">
-      <a href="/">Home</a><span class="bc-sep">›</span>
-      <a href="/find-tradespeople">Find Trades</a><span class="bc-sep">›</span>
-      <a href="/find-tradespeople?trade=plumbing">Plumbing</a><span class="bc-sep">›</span>
+      <a href="/">Home</a><span class="bc-sep">â€ş</span>
+      <a href="/find-tradespeople">Find Trades</a><span class="bc-sep">â€ş</span>
+      <a href="/find-tradespeople?trade=plumbing">Plumbing</a><span class="bc-sep">â€ş</span>
       <span>James Riley Plumbing</span>
     </div>
   </div>
@@ -352,7 +387,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
             <div class="ph-live-sep"></div>
             <div class="ph-live-item"><div class="ph-live-dot" style="animation-delay:.4s"></div> 4 leads sent in last hour</div>
             <div class="ph-live-sep"></div>
-            <div class="ph-live-item" style="color:var(--neon3);font-weight:600">✓ Available this week</div>
+            <div class="ph-live-item" style="color:var(--neon3);font-weight:600">âś“ Available this week</div>
           </div>
 
           <!-- Main header -->
@@ -373,13 +408,13 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
                 <span class="ph-rating-num">4.9</span>
                 <span class="ph-review-count">84 verified reviews</span>
               </div>
-              <div class="ph-location"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg> Manchester, M1 · Covers M, SK, WA postcodes</div>
+              <div class="ph-location"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg> Manchester, M1 Â· Covers M, SK, WA postcodes</div>
             </div>
           </div>
 
           <!-- Performance stats -->
           <div class="ph-perf">
-            <div class="ph-perf-item"><div class="ph-perf-val">≤ 2hrs</div><div class="ph-perf-label">Avg. Response</div></div>
+            <div class="ph-perf-item"><div class="ph-perf-val">â‰¤ 2hrs</div><div class="ph-perf-label">Avg. Response</div></div>
             <div class="ph-perf-item"><div class="ph-perf-val">247</div><div class="ph-perf-label">Jobs Done</div></div>
             <div class="ph-perf-item"><div class="ph-perf-val">98%</div><div class="ph-perf-label">Success Rate</div></div>
             <div class="ph-perf-item"><div class="ph-perf-val">41%</div><div class="ph-perf-label">Repeat Hire</div></div>
@@ -412,19 +447,19 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
             <div class="cred-grid">
               <div class="cred-item">
                 <div class="cred-icon gold"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
-                <div><div class="cred-name">Gas Safe Registered</div><div class="cred-sub">Reg. 589241 · Verified Jan 2026</div></div>
+                <div><div class="cred-name">Gas Safe Registered</div><div class="cred-sub">Reg. 589241 Â· Verified Jan 2026</div></div>
               </div>
               <div class="cred-item">
                 <div class="cred-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-                <div><div class="cred-name">Identity Verified</div><div class="cred-sub">Gov.uk Verify · Feb 2026</div></div>
+                <div><div class="cred-name">Identity Verified</div><div class="cred-sub">Gov.uk Verify Â· Feb 2026</div></div>
               </div>
               <div class="cred-item">
                 <div class="cred-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-                <div><div class="cred-name">Public Liability Insured</div><div class="cred-sub">£2M cover · Expires Dec 2026</div></div>
+                <div><div class="cred-name">Public Liability Insured</div><div class="cred-sub">ÂŁ2M cover Â· Expires Dec 2026</div></div>
               </div>
               <div class="cred-item">
                 <div class="cred-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
-                <div><div class="cred-name">TradeMatch Verified</div><div class="cred-sub">Knowledge test passed · Score 94%</div></div>
+                <div><div class="cred-name">TradeMatch Verified</div><div class="cred-sub">Knowledge test passed Â· Score 94%</div></div>
               </div>
             </div>
 
@@ -468,7 +503,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
             <div class="review-list">
               <div class="review-item">
                 <div class="review-header">
-                  <div><div class="reviewer-name">Sarah T.</div><div class="review-job">Boiler replacement — Manchester M14</div></div>
+                  <div><div class="reviewer-name">Sarah T.</div><div class="review-job">Boiler replacement â€” Manchester M14</div></div>
                   <div style="text-align:right"><div class="review-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="review-date">12 Feb 2026</div></div>
                 </div>
                 <p class="review-text">James replaced our 18-year-old boiler in a day. He explained everything clearly, cleaned up completely, and the whole process was stress-free. Will definitely book again for the bathroom renovation next year.</p>
@@ -476,7 +511,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
               </div>
               <div class="review-item">
                 <div class="review-header">
-                  <div><div class="reviewer-name">Marcus H.</div><div class="review-job">Full bathroom installation — Salford M5</div></div>
+                  <div><div class="reviewer-name">Marcus H.</div><div class="review-job">Full bathroom installation â€” Salford M5</div></div>
                   <div style="text-align:right"><div class="review-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="review-date">4 Feb 2026</div></div>
                 </div>
                 <p class="review-text">Completely transformed our bathroom in 4 days. James managed the whole process, was at our house every day as agreed, and the quality of finish is excellent. We paid through milestone escrow so it felt very secure. Highly recommend.</p>
@@ -484,7 +519,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
               </div>
               <div class="review-item">
                 <div class="review-header">
-                  <div><div class="reviewer-name">Diane F.</div><div class="review-job">Emergency burst pipe — Manchester M2</div></div>
+                  <div><div class="reviewer-name">Diane F.</div><div class="review-job">Emergency burst pipe â€” Manchester M2</div></div>
                   <div style="text-align:right"><div class="review-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><div class="review-date">18 Jan 2026</div></div>
                 </div>
                 <p class="review-text">James arrived within 45 minutes of my call on a Sunday morning. Fixed a burst pipe under the kitchen floor quickly and professionally. Charged exactly what he quoted. Incredibly impressed.</p>
@@ -496,19 +531,19 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
           <!-- PRICING TAB -->
           <div class="ph-tab-content" id="tab-pricing">
             <div class="pricing-note">
-              <strong>How TradeMatch lead pricing works:</strong> James pays a small fee per lead he receives — only when a genuine job is posted by a phone-verified homeowner. He never pays blind. He sees your job description, location, and budget before deciding to request the lead. You pay nothing as a homeowner.
+              <strong>How TradeMatch lead pricing works:</strong> James pays a small fee per lead he receives â€” only when a genuine job is posted by a phone-verified homeowner. He never pays blind. He sees your job description, location, and budget before deciding to request the lead. You pay nothing as a homeowner.
             </div>
             <table class="lead-table">
               <thead><tr><th>Job Value</th><th>Lead Price James Pays</th><th>Max Vendors on Lead</th><th>Your Win-Rate Est.</th></tr></thead>
               <tbody>
-                <tr><td>Under £250</td><td class="price">£4–8</td><td>3 vendors</td><td>~33%</td></tr>
-                <tr><td>£250 – £750</td><td class="price">£12–18</td><td>4 vendors</td><td>~25%</td></tr>
-                <tr><td>£750 – £2,500</td><td class="price">£22–35</td><td>5 vendors</td><td>~20%</td></tr>
-                <tr><td>£2,500+</td><td class="price">£40–65</td><td>5 vendors</td><td>~20%</td></tr>
-                <tr><td>Emergency / same-day</td><td class="price">£15–30 + premium</td><td>3 vendors</td><td>~33%</td></tr>
+                <tr><td>Under ÂŁ250</td><td class="price">ÂŁ4â€“8</td><td>3 vendors</td><td>~33%</td></tr>
+                <tr><td>ÂŁ250 â€“ ÂŁ750</td><td class="price">ÂŁ12â€“18</td><td>4 vendors</td><td>~25%</td></tr>
+                <tr><td>ÂŁ750 â€“ ÂŁ2,500</td><td class="price">ÂŁ22â€“35</td><td>5 vendors</td><td>~20%</td></tr>
+                <tr><td>ÂŁ2,500+</td><td class="price">ÂŁ40â€“65</td><td>5 vendors</td><td>~20%</td></tr>
+                <tr><td>Emergency / same-day</td><td class="price">ÂŁ15â€“30 + premium</td><td>3 vendors</td><td>~33%</td></tr>
               </tbody>
             </table>
-            <p style="font-size:12px;color:var(--t4);margin-top:12px;line-height:1.6">Lead quality guarantee: if a homeowner is unresponsive within 72 hours, the tradesperson receives a full credit — not a partial refund. Zero expiry on credits.</p>
+            <p style="font-size:12px;color:var(--t4);margin-top:12px;line-height:1.6">Lead quality guarantee: if a homeowner is unresponsive within 72 hours, the tradesperson receives a full credit â€” not a partial refund. Zero expiry on credits.</p>
           </div>
         </div>
       </div>
@@ -521,21 +556,21 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
             <span class="avail-badge green">Available this week</span>
           </div>
           <div class="cta-stat-row">
-            <div class="cta-stat"><div class="cta-stat-val">4.9★</div><div class="cta-stat-label">Rating</div></div>
+            <div class="cta-stat"><div class="cta-stat-val">4.9â…</div><div class="cta-stat-label">Rating</div></div>
             <div class="cta-stat"><div class="cta-stat-val">247</div><div class="cta-stat-label">Jobs</div></div>
             <div class="cta-stat"><div class="cta-stat-val">41%</div><div class="cta-stat-label">Repeat</div></div>
           </div>
           <div class="cta-lead-price">
             <span class="lead-price-label">Lead price (this job)</span>
-            <span class="lead-price-val">£12–35</span>
+            <span class="lead-price-val">ÂŁ12â€“35</span>
           </div>
-          <p class="lead-price-note">James pays this — you pay nothing.<br>He sees your job details before requesting the lead.</p>
+          <p class="lead-price-note">James pays this â€” you pay nothing.<br>He sees your job details before requesting the lead.</p>
           <button class="cta-btn" onclick="openQuoteModal()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            Post a Job — Get Quotes
+            Post a Job â€” Get Quotes
           </button>
           <a href="/find-tradespeople" class="cta-btn outline">
-            ← Back to Search
+            â† Back to Search
           </a>
           <div class="cta-divider"></div>
           <div class="cta-escrow">
@@ -547,7 +582,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
             <p style="color:var(--t2)">Gas Safe registered. All gas work certified and Building Regulations compliant.</p>
           </div>
           <div style="text-align:center;margin-top:14px">
-            <p style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t4)">Posting a job is free · No account required</p>
+            <p style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--t4)">Posting a job is free Â· No account required</p>
           </div>
         </div>
       </div>
@@ -558,16 +593,16 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
 
 <!-- PHOTO LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
-  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-close" onclick="closeLightbox()">âś•</button>
   <div class="lb-wrap">
-    <button class="lb-arrow prev" id="lbPrev" onclick="lbNav(-1)">‹</button>
+    <button class="lb-arrow prev" id="lbPrev" onclick="lbNav(-1)">â€ą</button>
     <div class="lb-img-box" id="lbImgBox">
       <div class="lb-caption-bar">
         <span class="lb-cap-text" id="lbCaption">Work photo</span>
         <span class="lb-counter" id="lbCounter">1 of 3</span>
       </div>
     </div>
-    <button class="lb-arrow next" id="lbNext" onclick="lbNav(1)">›</button>
+    <button class="lb-arrow next" id="lbNext" onclick="lbNav(1)">â€ş</button>
   </div>
   <div class="lb-dots" id="lbDots"></div>
   <div class="lb-thumb-strip" id="lbThumbStrip"></div>
@@ -579,22 +614,22 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
     <div class="qm-header">
       <div>
         <div class="qm-title">Post Your Job</div>
-        <div class="qm-subtitle">Get 3–5 matched quotes from verified plumbers</div>
+        <div class="qm-subtitle">Get 3â€“5 matched quotes from verified plumbers</div>
       </div>
-      <button class="qm-close" onclick="closeQuoteModal()">✕</button>
+      <button class="qm-close" onclick="closeQuoteModal()">âś•</button>
     </div>
     <div class="qm-trade-banner">
       <div class="qm-trade-avatar" style="background:linear-gradient(135deg,#007a3d,#00c268)">JR</div>
       <div>
         <div class="qm-trade-name">James Riley Plumbing</div>
-        <div class="qm-trade-meta">Plumbing · Manchester, M1 · 4.9★ · 84 reviews</div>
+        <div class="qm-trade-meta">Plumbing Â· Manchester, M1 Â· 4.9â… Â· 84 reviews</div>
       </div>
     </div>
     <div class="qm-body" id="qmFormBody">
       <div class="qm-field">
         <label class="qm-label">What do you need done?</label>
         <select class="qm-select">
-          <option value="">Select job type…</option>
+          <option value="">Select job typeâ€¦</option>
           <option>Leaking pipe or tap</option>
           <option>Bathroom installation</option>
           <option>Boiler replacement or service</option>
@@ -605,7 +640,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
       </div>
       <div class="qm-field">
         <label class="qm-label">Describe your job</label>
-        <textarea class="qm-textarea" id="qmDesc" placeholder="Give as much detail as you can — location in home, urgency, any access issues…"></textarea>
+        <textarea class="qm-textarea" id="qmDesc" placeholder="Give as much detail as you can â€” location in home, urgency, any access issuesâ€¦"></textarea>
       </div>
       <div class="qm-row">
         <div class="qm-field">
@@ -623,7 +658,7 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
         <div class="qm-field">
           <label class="qm-label">Budget range</label>
           <select class="qm-select">
-            <option>Under £250</option><option>£250 – £750</option><option>£750 – £2,500</option><option>£2,500 – £5,000</option><option>£5,000+</option>
+            <option>Under ÂŁ250</option><option>ÂŁ250 â€“ ÂŁ750</option><option>ÂŁ750 â€“ ÂŁ2,500</option><option>ÂŁ2,500 â€“ ÂŁ5,000</option><option>ÂŁ5,000+</option>
           </select>
         </div>
         <div class="qm-field">
@@ -639,14 +674,14 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
     <div class="qm-step-success" id="qmSuccess">
       <div class="qm-success-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
       <div class="qm-success-title">Job Posted!</div>
-      <div class="qm-success-sub">Your job request is live. You'll receive 3–5 quotes from verified plumbers within 24 hours. Your deposit is protected by milestone escrow.</div>
+      <div class="qm-success-sub">Your job request is live. You'll receive 3â€“5 quotes from verified plumbers within 24 hours. Your deposit is protected by milestone escrow.</div>
     </div>
     <div class="qm-footer" id="qmFooter">
       <button class="qm-submit" onclick="submitQuote()">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
         Post Job &amp; Get Quotes
       </button>
-      <p class="qm-disclaimer">Phone number verified by SMS before job is published — eliminates ghost leads for tradespeople.</p>
+      <p class="qm-disclaimer">Phone number verified by SMS before job is published â€” eliminates ghost leads for tradespeople.</p>
       <button class="qm-cancel" onclick="closeQuoteModal()">Cancel</button>
     </div>
   </div>
@@ -680,14 +715,83 @@ body{font-family:'DM Sans',sans-serif;background:#f3f7f4;color:#0f1923;overflow-
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="footer">
-  <a href="/" class="footer-logo">Trade<span>Match</span></a>
-  <p class="footer-legal">© 2026 TradeMatch UK Ltd · Registered in England & Wales · FCA Appointed Representative via Stripe</p>
-  <div class="footer-links">
-    <a href="/privacy">Privacy Policy</a><a href="/terms">Terms & Conditions</a><a href="/cookies">Cookie Policy</a>
-    <a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="https://facebook.com/tradematchuk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="find-tradespeople.html?trade=Plumbing">Plumbers</a></li>
+          <li><a href="find-tradespeople.html?trade=Electrical">Electricians</a></li>
+          <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
+          <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
+          <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="referral.html">Referral Programme</a></li>
+          <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
+          <li><a href="apply.html">Apply</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="contact.html">Complaints</a>
+      </div>
+    </div>
   </div>
 </footer>
+
 
 <script>
 // Nav scroll
@@ -705,8 +809,8 @@ function switchTab(name, btn){
 // LIGHTBOX
 const galleryData = {
   plumbing:[
-    {svg:`<svg viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="780" height="460" fill="#e0f5ec"/><rect x="60" y="100" width="660" height="300" rx="12" fill="#a7e3c2"/><rect x="80" y="120" width="620" height="260" rx="10" fill="#c8f2e0"/><rect x="280" y="50" width="220" height="90" rx="10" fill="#7dd3b0"/><circle cx="390" cy="92" r="28" fill="#2d9c67"/><rect x="100" y="358" width="80" height="72" rx="6" fill="#7dd3b0"/><rect x="600" y="358" width="80" height="72" rx="6" fill="#7dd3b0"/><text x="390" y="260" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#2d9c67" opacity=".6">Bathroom Installation — Chorlton</text></svg>`, caption:'Bathroom installation — Chorlton, Manchester'},
-    {svg:`<svg viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="780" height="460" fill="#ddf4f0"/><rect x="40" y="40" width="700" height="380" rx="12" fill="#b8e8e2"/><rect x="60" y="60" width="660" height="340" rx="10" fill="#d2f5f0"/><line x1="60" y1="173" x2="720" y2="173" stroke="#8fd5cc" stroke-width="3"/><line x1="60" y1="287" x2="720" y2="287" stroke="#8fd5cc" stroke-width="3"/><line x1="60" y1="400" x2="720" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="233" y1="60" x2="233" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="390" y1="60" x2="390" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="547" y1="60" x2="547" y2="400" stroke="#8fd5cc" stroke-width="3"/><text x="390" y="230" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#2d9c67" opacity=".5">Wet Room Tiling — Didsbury</text></svg>`, caption:'Full en-suite wet room — Didsbury'},
+    {svg:`<svg viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="780" height="460" fill="#e0f5ec"/><rect x="60" y="100" width="660" height="300" rx="12" fill="#a7e3c2"/><rect x="80" y="120" width="620" height="260" rx="10" fill="#c8f2e0"/><rect x="280" y="50" width="220" height="90" rx="10" fill="#7dd3b0"/><circle cx="390" cy="92" r="28" fill="#2d9c67"/><rect x="100" y="358" width="80" height="72" rx="6" fill="#7dd3b0"/><rect x="600" y="358" width="80" height="72" rx="6" fill="#7dd3b0"/><text x="390" y="260" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#2d9c67" opacity=".6">Bathroom Installation â€” Chorlton</text></svg>`, caption:'Bathroom installation â€” Chorlton, Manchester'},
+    {svg:`<svg viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="780" height="460" fill="#ddf4f0"/><rect x="40" y="40" width="700" height="380" rx="12" fill="#b8e8e2"/><rect x="60" y="60" width="660" height="340" rx="10" fill="#d2f5f0"/><line x1="60" y1="173" x2="720" y2="173" stroke="#8fd5cc" stroke-width="3"/><line x1="60" y1="287" x2="720" y2="287" stroke="#8fd5cc" stroke-width="3"/><line x1="60" y1="400" x2="720" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="233" y1="60" x2="233" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="390" y1="60" x2="390" y2="400" stroke="#8fd5cc" stroke-width="3"/><line x1="547" y1="60" x2="547" y2="400" stroke="#8fd5cc" stroke-width="3"/><text x="390" y="230" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#2d9c67" opacity=".5">Wet Room Tiling â€” Didsbury</text></svg>`, caption:'Full en-suite wet room â€” Didsbury'},
     {svg:`<svg viewBox="0 0 780 460" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="780" height="460" fill="#fef3e2"/><rect x="220" y="40" width="340" height="380" rx="14" fill="#fcd590"/><rect x="250" y="70" width="280" height="140" rx="8" fill="#fde8b8"/><circle cx="310" cy="280" r="50" fill="#f59e0b" opacity=".7"/><circle cx="470" cy="280" r="50" fill="#f59e0b" opacity=".7"/><rect x="270" y="370" width="240" height="34" rx="8" fill="#f59e0b" opacity=".5"/><circle cx="390" cy="140" r="36" fill="#f59e0b"/><text x="390" y="430" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#92400e" opacity=".7">Boiler Replacement</text></svg>`, caption:'Boiler replacement & system upgrade'},
   ]
 }

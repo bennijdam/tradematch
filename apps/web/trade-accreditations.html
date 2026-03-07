@@ -263,22 +263,57 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <div class="nav-logo-icon"><i data-lucide="hammer" style="width:16px;height:16px;color:#fff;stroke-width:2.5"></i></div>
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
       <span class="nav-wordmark">Trade<span>Match</span></span>
     </a>
     <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
       <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
       <a href="browse-trades.html" class="nav-link">Browse Trades</a>
-      <a href="trade-accreditations.html" class="nav-link active">Accreditations</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
       <a href="pricing.html" class="nav-link">Pricing</a>
-      <a href="/about" class="nav-link">About</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </div>
-    <div class="nav-actions">
-      <a href="login.html" class="nav-btn-ghost">Sign In</a>
-      <a href="post-a-job.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job</a>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
     </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+     HERO â€” CINEMATIC DARK
+     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 
 <!-- HERO -->
 <section class="hero">
@@ -298,13 +333,13 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <span class="ln l2">Every <em>certification.</em></span>
         <span class="ln l3">Verified.</span>
       </h1>
-      <p class="hero-sub">TradeMatch enforces the most rigorous accreditation framework in the UK. Before a tradesperson can bid on your job, they pass our multi-layer verification — from licence checks to live insurance validation.</p>
+      <p class="hero-sub">TradeMatch enforces the most rigorous accreditation framework in the UK. Before a tradesperson can bid on your job, they pass our multi-layer verification â€” from licence checks to live insurance validation.</p>
       <div class="hero-trust-badges">
         <span class="hero-badge"><i data-lucide="shield-check" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>Gas Safe Registered</span>
         <span class="hero-badge"><i data-lucide="zap" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>NICEIC Verified</span>
         <span class="hero-badge"><i data-lucide="award" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>CSCS Checked</span>
         <span class="hero-badge"><i data-lucide="lock" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>DBS Screened</span>
-        <span class="hero-badge"><i data-lucide="file-check" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>£5M+ Insurance Verified</span>
+        <span class="hero-badge"><i data-lucide="file-check" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>ÂŁ5M+ Insurance Verified</span>
       </div>
       <div class="hero-stats">
         <div class="hstat"><div class="hstat-val">48</div><div class="hstat-lbl">Trade categories covered</div></div>
@@ -348,7 +383,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <div class="framework-step-num">03 <span style="flex:1;height:1px;background:var(--dk-border)"></span></div>
         <div class="framework-icon"><i data-lucide="shield" style="width:22px;height:22px;color:#00c268;stroke-width:2"></i></div>
         <div class="framework-step-title">Insurance Validation</div>
-        <div class="framework-step-desc">Public liability (min £2M) and employer's liability verified via live insurer document scan.</div>
+        <div class="framework-step-desc">Public liability (min ÂŁ2M) and employer's liability verified via live insurer document scan.</div>
       </div>
       <div class="framework-step sr d4">
         <div class="framework-step-num">04 <span style="flex:1;height:1px;background:var(--dk-border)"></span></div>
@@ -395,7 +430,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <div class="stat-sub">Last 12 months</div>
       </div>
       <div class="sr d2" style="text-align:center">
-        <div class="stat-val">£0</div>
+        <div class="stat-val">ÂŁ0</div>
         <div class="stat-label">Customer losses to fraud since launch</div>
         <div class="stat-sub">Protected by escrow</div>
       </div>
@@ -585,7 +620,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <div class="split-list-icon"><i data-lucide="shield-check" style="width:17px;height:17px;color:#00c268;stroke-width:2"></i></div>
             <div class="split-list-text">
               <strong>Insurance-backed escrow</strong>
-              <span>Funds are held securely and only released when you approve the completed work — never before.</span>
+              <span>Funds are held securely and only released when you approve the completed work â€” never before.</span>
             </div>
           </li>
           <li class="split-list-item">
@@ -599,7 +634,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <div class="split-list-icon"><i data-lucide="thumbs-up" style="width:17px;height:17px;color:#00c268;stroke-width:2"></i></div>
             <div class="split-list-text">
               <strong>Verified reviews only</strong>
-              <span>Every review on our platform is linked to a completed, paid job — no fake testimonials, ever.</span>
+              <span>Every review on our platform is linked to a completed, paid job â€” no fake testimonials, ever.</span>
             </div>
           </li>
           <li class="split-list-item">
@@ -644,7 +679,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Gas Engineer</td>
             <td>Gas Safe Register</td>
             <td>IGEM / APHC</td>
-            <td>£2M PLI</td>
+            <td>ÂŁ2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -652,7 +687,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Electrician</td>
             <td>NICEIC / NAPIT</td>
             <td>ELECSA / Part P</td>
-            <td>£2M PLI</td>
+            <td>ÂŁ2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -660,7 +695,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Plumber</td>
             <td>WaterSafe / APHC</td>
             <td>CIPHE</td>
-            <td>£1M PLI</td>
+            <td>ÂŁ1M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -668,7 +703,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Builder</td>
             <td>FMB / NHBC</td>
             <td>LABC / RICS</td>
-            <td>£5M PLI</td>
+            <td>ÂŁ5M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -676,7 +711,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Roofer</td>
             <td>NFRC</td>
             <td>CompetentRoofer</td>
-            <td>£2M PLI</td>
+            <td>ÂŁ2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -684,7 +719,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Carpenter</td>
             <td>IoC / C&amp;G 6571</td>
             <td>NVQ Level 2+</td>
-            <td>£1M PLI</td>
+            <td>ÂŁ1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -692,7 +727,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Plasterer</td>
             <td>FIS / NVQ L2</td>
             <td>Portfolio Review</td>
-            <td>£1M PLI</td>
+            <td>ÂŁ1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -700,7 +735,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Tiler</td>
             <td>CTDA / NVQ L2</td>
             <td>Portfolio Review</td>
-            <td>£1M PLI</td>
+            <td>ÂŁ1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -708,7 +743,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Landscaper</td>
             <td>APL / BALI</td>
             <td>RHS / PA1</td>
-            <td>£1M PLI</td>
+            <td>ÂŁ1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill industry"><i data-lucide="leaf" style="width:9px;height:9px;stroke-width:2.5"></i>Industry</span></td>
           </tr>
@@ -716,7 +751,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Solar Installer</td>
             <td>MCS Certified</td>
             <td>RECC / NAPIT</td>
-            <td>£2M PLI</td>
+            <td>ÂŁ2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -755,7 +790,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
           </div>
         </div>
         <div class="how-step-title">Automated Verification</div>
-        <div class="how-step-desc">Our systems instantly cross-check your details against 15+ official databases. Most trades are approved within 24 hours — no waiting weeks.</div>
+        <div class="how-step-desc">Our systems instantly cross-check your details against 15+ official databases. Most trades are approved within 24 hours â€” no waiting weeks.</div>
       </div>
       <div class="how-step sr d6">
         <div class="how-step-num">Step 03</div>
@@ -766,7 +801,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
           </div>
         </div>
         <div class="how-step-title">Start Winning Jobs</div>
-        <div class="how-step-desc">Once verified, your badge is displayed on every quote you submit. Customers can see your credentials with one tap — building trust before you even arrive.</div>
+        <div class="how-step-desc">Once verified, your badge is displayed on every quote you submit. Customers can see your credentials with one tap â€” building trust before you even arrive.</div>
       </div>
     </div>
   </div>
@@ -784,7 +819,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
       <div class="sr">
         <div class="sec-label" style="justify-content:center">Join TradeMatch</div>
         <h2 class="section-h" style="text-align:center">Ready to work with <em>trusted</em> trades?</h2>
-        <p class="section-sub" style="text-align:center">Whether you're a homeowner looking for peace of mind, or a tradesperson who takes pride in their credentials — TradeMatch is where you belong.</p>
+        <p class="section-sub" style="text-align:center">Whether you're a homeowner looking for peace of mind, or a tradesperson who takes pride in their credentials â€” TradeMatch is where you belong.</p>
         <div class="cta-actions">
           <a href="browse-trades.html" class="btn-primary"><i data-lucide="search" style="width:17px;height:17px;stroke-width:2.5"></i>Find a Tradesperson</a>
           <a href="TradeMatch-Pro.html" class="btn-outline-light"><i data-lucide="user-plus" style="width:17px;height:17px;stroke-width:2.5"></i>Join as a Tradesperson</a>
@@ -800,62 +835,77 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-brand-name">Trade<span>Match</span></div>
-        <p>The UK's most trusted trades marketplace. ID-verified, insured, background-checked tradespeople. Escrow-protected payments on every job.</p>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
         <div class="footer-socials">
-          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
-          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://facebook.com/tradematchuk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         </div>
       </div>
       <div class="footer-col">
-        <h4>Homeowners</h4>
+        <h4>For Homeowners</h4>
         <ul>
-          <li><a href="post-a-job.html">Post a Job Free</a></li>
-          <li><a href="how-it-works.html">How It Works</a></li>
-          <li><a href="/safety-verification">Safety &amp; Verification</a></li>
-          <li><a href="how-escrow-works.html">Escrow Protection</a></li>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
           <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Tradespeople</h4>
+        <h4>Find Trades</h4>
         <ul>
-          <li><a href="TradeMatch-Pro.html">Join TradeMatch</a></li>
-          <li><a href="pricing.html">Pricing &amp; Plans</a></li>
-          <li><a href="verification-process.html">Verification Process</a></li>
-          <li><a href="browse-trades.html">All 48 Trades &rarr;</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Accreditations</h4>
-        <ul>
-          <li><a href="#framework">9-Layer Framework</a></li>
-          <li><a href="#accreds">By Trade</a></li>
-          <li><a href="#cert-table">Cert Table</a></li>
-          <li><a href="#how">Get Verified</a></li>
+          <li><a href="find-tradespeople.html?trade=Plumbing">Plumbers</a></li>
+          <li><a href="find-tradespeople.html?trade=Electrical">Electricians</a></li>
+          <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
+          <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
+          <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
         <ul>
           <li><a href="about.html">About TradeMatch</a></li>
-          <li><a href="about.html">Careers</a></li>
-          <li><a href="about.html">Press</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="referral.html">Referral Programme</a></li>
+          <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
+          <li><a href="apply.html">Apply</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 TradeMatch UK Ltd · Registered in England &amp; Wales · Pay on Completion Only · Max 5 Vendors Per Job</p>
+      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
       <div class="footer-legal">
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms &amp; Conditions</a>
-        <a href="/cookies">Cookie Policy</a>
-        <a href="/complaints">Complaints</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="contact.html">Complaints</a>
       </div>
     </div>
   </div>
 </footer>
+
 
 <script>
 // NAV scroll
@@ -873,7 +923,7 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.sr, .sr-l, .sr-r').forEach(el => observer.observe(el));
 
 // Ticker
-const certs = ['Gas Safe Registered','NICEIC Verified','NAPIT Approved','DBS Screened','CSCS Checked','£5M Insurance Validated','FMB Members','NHBC Approved','WaterSafe Members','ELECSA Certified','MCS Accredited','BALI Members','CTDA Verified','NVQ Level 2+','Part P Compliant','OFTEC Registered','CIPHE Members','RICS Regulated'];
+const certs = ['Gas Safe Registered','NICEIC Verified','NAPIT Approved','DBS Screened','CSCS Checked','ÂŁ5M Insurance Validated','FMB Members','NHBC Approved','WaterSafe Members','ELECSA Certified','MCS Accredited','BALI Members','CTDA Verified','NVQ Level 2+','Part P Compliant','OFTEC Registered','CIPHE Members','RICS Regulated'];
 const ticker = document.getElementById('ticker');
 [...certs,...certs].forEach(c => {
   const item = document.createElement('span');

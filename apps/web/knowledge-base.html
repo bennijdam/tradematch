@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeMatch Knowledge Base Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Platform Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+
+:root{
+  --neon:#00c268;--neon2:#00a855;--neon3:#007a3d;
+  --neon-dim:rgba(0,194,104,.12);--neon-lo:rgba(0,194,104,.07);
+  --neon-glow:0 4px 24px rgba(0,194,104,.28),0 1px 8px rgba(0,194,104,.14);
+  --amber:#f59e0b;--amber2:#fbbf24;--red:#ef4444;--blue:#3b82f6;
+  --dk-bg:#0d1117;--dk-bg2:#111620;--dk-bg3:#161c28;--dk-bg4:#1a2234;
+  --dk-t1:#f0f4ff;--dk-t2:#8b95aa;--dk-t3:#5a6478;
+  --dk-border:rgba(255,255,255,.07);--dk-border2:rgba(255,255,255,.12);
+  --dk-glass1:rgba(255,255,255,.03);--dk-glass2:rgba(255,255,255,.06);
+  --border-neon:rgba(0,194,104,.3);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r1:6px;--r2:12px;--r3:16px;--r4:24px;--r5:100px;
+}
+
+.wrap{max-width:1260px;margin:0 auto;padding:0 28px}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.sr.vis{opacity:1;transform:none}
+.d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}.d4{transition-delay:.24s}.d5{transition-delay:.3s}.d6{transition-delay:.36s}
+
+/* KEYFRAMES */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{transform:translateY(80%);opacity:0}to{transform:none;opacity:1}}
+@keyframes tickScroll{to{transform:translateX(-50%)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(0,194,104,0)}50%{box-shadow:0 0 18px 4px rgba(0,194,104,.22)}}
+@keyframes scanLine{0%{top:0}100%{top:100%}}
+@keyframes typeIn{from{width:0}to{width:100%}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes progressBar{0%{width:0}100%{width:var(--prog,65%)}}
+@keyframes countUp{0%{opacity:0;transform:translateY(4px)}100%{opacity:1;transform:none}}
+@keyframes dotPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes escrowFlow{0%{transform:translateX(-8px);opacity:0}50%{opacity:1}100%{transform:translateX(8px);opacity:0}}
+@keyframes milestoneCheck{0%{transform:scale(0) rotate(-20deg)}100%{transform:scale(1) rotate(0deg)}}
+@keyframes mapPing{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.5);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 20px}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;background:rgba(13,17,23,.92);backdrop-filter:blur(28px);border:1px solid var(--dk-border2);border-radius:var(--r5);padding:0 8px 0 24px;height:60px;box-shadow:0 4px 32px rgba(0,0,0,.4)}
+.nav-logo{font-family:var(--ff);font-weight:800;font-size:17px;letter-spacing:-.03em;color:var(--dk-t1);display:flex;align-items:center;gap:8px}
+.nav-logo-dot{width:8px;height:8px;background:var(--neon);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-badge{font-family:var(--fm);font-size:10px;padding:4px 10px;border-radius:var(--r5);background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon);letter-spacing:.08em}
+.nav-btn{font-family:var(--ff);font-size:13px;font-weight:600;padding:9px 20px;border-radius:var(--r5);background:var(--neon);color:#000;border:none;cursor:pointer;transition:all .2s}
+.nav-btn:hover{background:#00e582;transform:translateY(-1px)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{font-size:13px;color:var(--dk-t2);padding:7px 12px;border-radius:var(--r5);cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-link:hover{color:var(--dk-t1);background:var(--dk-glass2)}
+
+/* HERO */
+.hero{padding:140px 0 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(0,194,104,.12) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,229,130,.7);margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:40px;height:1px;background:var(--neon);opacity:.5}
+.hero-title{font-family:var(--ff);font-weight:800;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:-.05em;line-height:1.04;margin-bottom:18px}
+.hero-title em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon),#00a855);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;line-height:1.82;max-width:580px;margin:0 auto 40px;color:var(--dk-t2);font-weight:300}
+.search-bar{max-width:540px;margin:0 auto 60px;position:relative;animation:glow 3s ease-in-out infinite}
+.search-input{width:100%;background:var(--dk-bg3);border:1px solid var(--dk-border2);border-radius:var(--r5);padding:14px 56px 14px 20px;font-size:14px;color:var(--dk-t1);font-family:var(--fb);outline:none;transition:all .3s}
+.search-input:focus{border-color:var(--border-neon);box-shadow:var(--neon-glow)}
+.search-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--dk-t3);font-size:18px}
+
+/* TABS */
+.tab-switcher{display:flex;gap:4px;max-width:400px;margin:0 auto 60px;background:var(--dk-bg3);border:1px solid var(--dk-border);border-radius:var(--r5);padding:4px}
+.tab-btn{flex:1;font-family:var(--ff);font-size:13px;font-weight:600;padding:10px 20px;border-radius:var(--r5);border:none;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:7px}
+.tab-btn.active{background:var(--neon);color:#000}
+.tab-btn:not(.active){background:transparent;color:var(--dk-t2)}
+.tab-btn:not(.active):hover{color:var(--dk-t1);background:var(--dk-glass2)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* SECTION */
+.section{padding:80px 0}
+.sec-label{font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,229,130,.7);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--neon);opacity:.5}
+.sec-h2{font-family:var(--ff);font-weight:800;font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:-.04em;line-height:1.1;margin-bottom:12px}
+.sec-h2 em{font-style:normal;background:linear-gradient(135deg,#00e582,var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-sub{font-size:15px;line-height:1.8;color:var(--dk-t2);max-width:500px;margin-bottom:40px}
+
+/* FEATURE GRID */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
+.feat-grid.three{grid-template-columns:1fr 1fr 1fr}
+.feat-grid.full{grid-template-columns:1fr}
+@media(max-width:760px){.feat-grid,.feat-grid.three{grid-template-columns:1fr}}
+
+/* FEATURE CARD */
+.feat-card{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r3);padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,194,104,.04),transparent 60%);opacity:0;transition:opacity .3s}
+.feat-card:hover{border-color:var(--border-neon);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:44px;height:44px;background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.feat-title{font-family:var(--ff);font-weight:700;font-size:16px;margin-bottom:8px;color:var(--dk-t1)}
+.feat-desc{font-size:14px;color:var(--dk-t2);line-height:1.7}
+.feat-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:10px;padding:3px 8px;border-radius:var(--r5);margin-top:12px;letter-spacing:.06em}
+.feat-badge.green{background:rgba(0,194,104,.12);color:var(--neon);border:1px solid rgba(0,194,104,.2)}
+.feat-badge.amber{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.feat-badge.blue{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
+.feat-badge.red{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+
+/* BIG FEATURE ROW */
+.big-feat{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:80px}
+.big-feat.rev{direction:rtl}
+.big-feat.rev > *{direction:ltr}
+@media(max-width:860px){.big-feat,.big-feat.rev{grid-template-columns:1fr;direction:ltr}}
+.big-feat-content{}
+.big-feat-title{font-family:var(--ff);font-weight:800;font-size:clamp(1.4rem,2.5vw,2rem);letter-spacing:-.04em;margin-bottom:12px;color:var(--dk-t1)}
+.big-feat-desc{font-size:15px;color:var(--dk-t2);line-height:1.8;margin-bottom:20px}
+.step-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.step-item{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--dk-t2)}
+.step-num{width:24px;height:24px;min-width:24px;background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;color:var(--neon);margin-top:2px}
+.step-text{line-height:1.6}
+.step-text strong{color:var(--dk-t1);font-weight:600}
+
+/* MOCK SCREEN */
+.mock{background:var(--dk-bg3);border:1px solid var(--dk-border2);border-radius:var(--r3);overflow:hidden;position:relative}
+.mock-header{background:var(--dk-bg4);border-bottom:1px solid var(--dk-border);padding:12px 16px;display:flex;align-items:center;gap:8px}
+.mock-dots{display:flex;gap:5px}
+.mock-dot{width:10px;height:10px;border-radius:50%}
+.mock-dot.r{background:#ef4444}
+.mock-dot.y{background:#f59e0b}
+.mock-dot.g{background:#22c55e}
+.mock-title-bar{font-family:var(--fm);font-size:11px;color:var(--dk-t3);margin-left:8px}
+.mock-body{padding:20px}
+.mock-body p,.mock-body span,.mock-body div{font-size:13px}
+
+/* MOCK UI COMPONENTS */
+.mock-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--r2);margin-bottom:8px}
+.mock-row.neon-bg{background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.15)}
+.mock-row.glass{background:var(--dk-glass2);border:1px solid var(--dk-border)}
+.mock-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#00c268,#007a3d);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;color:#000;font-weight:700;min-width:32px}
+.mock-label{font-size:12px;color:var(--dk-t1);font-weight:600}
+.mock-sub{font-size:11px;color:var(--dk-t3)}
+.mock-pill{font-family:var(--fm);font-size:9px;padding:3px 7px;border-radius:var(--r5);white-space:nowrap}
+.mock-pill.green{background:rgba(0,194,104,.15);color:#00e582;border:1px solid rgba(0,194,104,.2)}
+.mock-pill.amber{background:rgba(245,158,11,.15);color:#fbbf24}
+.mock-pill.blue{background:rgba(59,130,246,.15);color:#93c5fd}
+.mock-pill.red{background:rgba(239,68,68,.15);color:#fca5a5}
+
+/* PROGRESS BAR */
+.prog-wrap{background:rgba(255,255,255,.06);border-radius:4px;height:6px;overflow:hidden;margin:6px 0}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--neon),#00e582);border-radius:4px;animation:progressBar 1.4s ease-out forwards}
+.prog-fill.amber{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+
+/* ESCROW FLOW */
+.escrow-flow{display:flex;align-items:center;gap:8px;margin:16px 0;padding:14px;background:var(--dk-glass1);border:1px solid var(--dk-border);border-radius:var(--r2)}
+.escrow-node{text-align:center;flex:1}
+.escrow-node-icon{font-size:18px;margin-bottom:4px}
+.escrow-node-label{font-family:var(--fm);font-size:9px;color:var(--dk-t3);letter-spacing:.08em;text-transform:uppercase}
+.escrow-node-val{font-size:12px;font-weight:700;color:var(--dk-t1)}
+.escrow-arrow{color:var(--neon);font-size:16px;animation:escrowFlow 2s ease-in-out infinite}
+
+/* MILESTONE CARD */
+.milestone-card{background:var(--dk-bg4);border:1px solid var(--dk-border);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.milestone-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;min-width:22px}
+.milestone-check.done{background:rgba(0,194,104,.2);color:var(--neon);animation:milestoneCheck .5s ease-out}
+.milestone-check.pending{background:rgba(245,158,11,.15);color:#fbbf24}
+.milestone-check.locked{background:rgba(255,255,255,.05);color:var(--dk-t3)}
+.milestone-info{flex:1}
+.milestone-title{font-size:12px;font-weight:600;color:var(--dk-t1)}
+.milestone-sub{font-size:11px;color:var(--dk-t3)}
+.milestone-amt{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--neon)}
+
+/* GPS PING ANIMATION */
+.gps-wrap{position:relative;display:flex;align-items:center;justify-content:center;padding:20px}
+.gps-map-bg{width:100%;height:180px;background:linear-gradient(135deg,#0d1825,#0a1520);border-radius:var(--r2);position:relative;overflow:hidden}
+.gps-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,194,104,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.06) 1px,transparent 1px);background-size:24px 24px}
+.gps-pin{position:absolute;font-size:20px;animation:mapPing 2s ease-out infinite}
+.gps-ring{position:absolute;width:16px;height:16px;border:2px solid var(--neon);border-radius:50%;animation:mapPing 2s ease-out infinite .5s;opacity:0}
+.gps-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:10px;color:var(--neon);white-space:nowrap;background:rgba(0,0,0,.7);padding:3px 8px;border-radius:var(--r5)}
+
+/* VERIFY LEVEL */
+.verify-level{border:1px solid var(--dk-border);border-radius:var(--r2);margin-bottom:8px;overflow:hidden}
+.verify-level-header{padding:10px 14px;background:var(--dk-bg4);display:flex;align-items:center;gap:10px;cursor:pointer}
+.verify-level-num{font-family:var(--fm);font-size:9px;color:var(--neon);background:var(--neon-dim);padding:2px 6px;border-radius:var(--r5);border:1px solid var(--border-neon)}
+.verify-level-title{font-size:13px;font-weight:600;color:var(--dk-t1)}
+.verify-level-status{margin-left:auto;font-size:10px;color:var(--neon)}
+.verify-level-body{padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--dk-bg2)}
+.verify-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dk-t2)}
+.verify-icon{width:18px;text-align:center}
+
+/* SCORE RING */
+.score-ring-wrap{display:flex;align-items:center;gap:20px;padding:16px}
+.score-ring{position:relative;width:90px;height:90px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:8}
+.score-ring-fill{fill:none;stroke:var(--neon);stroke-width:8;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:var(--ring-offset,62);transition:stroke-dashoffset 1.5s ease-out}
+.score-ring-val{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--ff);font-size:18px;font-weight:800;color:var(--dk-t1)}
+.score-details{flex:1}
+.score-detail-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.score-detail-label{color:var(--dk-t3)}
+.score-detail-val{color:var(--dk-t1);font-weight:600}
+
+/* DISPUTE TIMELINE */
+.dispute-timeline{padding:16px}
+.dispute-step{display:flex;gap:12px;margin-bottom:16px;position:relative}
+.dispute-step::before{content:'';position:absolute;left:12px;top:28px;bottom:-4px;width:1px;background:var(--dk-border)}
+.dispute-step:last-child::before{display:none}
+.dispute-dot{width:24px;height:24px;min-width:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:2px}
+.dispute-dot.active{background:rgba(245,158,11,.2);color:#fbbf24;box-shadow:0 0 10px rgba(245,158,11,.3)}
+.dispute-dot.done{background:rgba(0,194,104,.2);color:var(--neon)}
+.dispute-dot.pending{background:var(--dk-glass2);color:var(--dk-t3)}
+.dispute-info{flex:1}
+.dispute-title{font-size:13px;font-weight:600;color:var(--dk-t1);margin-bottom:2px}
+.dispute-sub{font-size:11px;color:var(--dk-t3)}
+
+/* LEAD CARD */
+.lead-card{background:var(--dk-bg4);border:1px solid var(--dk-border);border-radius:var(--r2);padding:14px;margin-bottom:8px;transition:all .25s;cursor:pointer}
+.lead-card:hover{border-color:var(--border-neon);background:rgba(0,194,104,.04)}
+.lead-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lead-match{font-family:var(--fm);font-size:10px;font-weight:700}
+.lead-match.high{color:var(--neon)}
+.lead-match.med{color:var(--amber)}
+.lead-title{font-size:13px;font-weight:700;color:var(--dk-t1);margin-bottom:2px}
+.lead-meta{font-size:11px;color:var(--dk-t3)}
+.lead-range{font-family:var(--fm);font-size:12px;color:var(--dk-t1);font-weight:700}
+
+/* ANALYTICS SPARKLINE */
+.spark-container{padding:16px 0 8px;position:relative;height:80px}
+.spark-bars{display:flex;align-items:flex-end;gap:4px;height:60px;margin-bottom:8px}
+.spark-bar{flex:1;border-radius:3px 3px 0 0;transition:height .5s ease-out}
+.spark-bar.neon{background:linear-gradient(to top,var(--neon3),var(--neon))}
+.spark-bar.dim{background:var(--dk-bg4)}
+
+/* HEATMAP */
+.heatmap-preview{background:linear-gradient(135deg,#060d14,#0a1520);border-radius:var(--r2);height:160px;position:relative;overflow:hidden}
+.heatmap-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,194,104,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,194,104,.04) 1px,transparent 1px);background-size:20px 20px}
+.heat-dot{position:absolute;border-radius:50%;animation:pulse 2s ease-in-out infinite}
+
+/* QUOTE COMPARE TABLE */
+.quote-table{width:100%;border-collapse:collapse;font-size:13px}
+.quote-table th{background:var(--dk-bg4);color:var(--dk-t3);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--dk-border)}
+.quote-table td{padding:10px 12px;border-bottom:1px solid var(--dk-border);color:var(--dk-t2)}
+.quote-table tr:last-child td{border-bottom:none}
+.quote-table .hl{color:var(--dk-t1);font-weight:600}
+.quote-table .best{color:var(--neon)}
+
+/* VAULT ITEM */
+.vault-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--dk-bg4);border:1px solid var(--dk-border);border-radius:var(--r2);margin-bottom:6px}
+.vault-icon{font-size:16px;width:28px;text-align:center}
+.vault-name{font-size:13px;font-weight:600;color:var(--dk-t1);flex:1}
+.vault-status{font-family:var(--fm);font-size:10px}
+.vault-status.ok{color:var(--neon)}
+.vault-status.warn{color:var(--amber)}
+.vault-status.err{color:var(--red)}
+
+/* ACCORDION */
+.acc-section{margin-bottom:24px}
+.acc-section-title{font-family:var(--ff);font-weight:700;font-size:14px;color:var(--dk-t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--dk-border)}
+.acc-item{border:1px solid var(--dk-border);border-radius:var(--r2);margin-bottom:6px;overflow:hidden}
+.acc-trigger{width:100%;background:var(--dk-bg2);border:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;text-align:left;gap:12px;transition:background .2s}
+.acc-trigger:hover{background:var(--dk-bg3)}
+.acc-q{font-size:14px;font-weight:600;color:var(--dk-t1)}
+.acc-arrow{color:var(--dk-t3);transition:transform .3s;font-size:12px}
+.acc-item.open .acc-arrow{transform:rotate(180deg)}
+.acc-body{display:none;padding:0 18px 16px;background:var(--dk-bg2)}
+.acc-item.open .acc-body{display:block}
+.acc-body p{font-size:14px;color:var(--dk-t2);line-height:1.8;margin-bottom:10px}
+.acc-body ul{padding-left:16px;margin-bottom:10px}
+.acc-body li{font-size:13px;color:var(--dk-t2);line-height:1.7;margin-bottom:4px}
+.acc-body strong{color:var(--dk-t1)}
+
+/* TICKER */
+.ticker-wrap{background:var(--dk-bg2);border-top:1px solid var(--dk-border);border-bottom:1px solid var(--dk-border);padding:10px 0;overflow:hidden;margin:40px 0}
+.ticker-track{display:flex;gap:40px;white-space:nowrap;animation:tickScroll 22s linear infinite}
+.ticker-item{font-family:var(--fm);font-size:11px;color:var(--dk-t3);display:flex;align-items:center;gap:8px}
+.ticker-item span.g{color:var(--neon)}
+.ticker-item span.a{color:var(--amber)}
+
+/* IMG HERO STRIP */
+.img-strip{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:40px 0;border-radius:var(--r3);overflow:hidden}
+.img-strip img{width:100%;height:160px;object-fit:cover;display:block;filter:brightness(.75) saturate(1.2)}
+@media(max-width:700px){.img-strip{grid-template-columns:1fr 1fr}}
+
+/* TOC */
+.toc{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r3);padding:28px;margin-bottom:60px}
+.toc-title{font-family:var(--ff);font-weight:700;font-size:14px;margin-bottom:16px;color:var(--dk-t1)}
+.toc-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.toc-cols{grid-template-columns:1fr}}
+.toc-link{font-size:13px;color:var(--dk-t2);display:flex;align-items:center;gap:8px;padding:6px 0;text-decoration:none;transition:color .2s;border-bottom:1px solid rgba(255,255,255,.04)}
+.toc-link:hover{color:var(--neon)}
+.toc-link::before{content:'Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘';color:var(--neon);opacity:.5;font-size:11px}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--dk-border2),transparent);margin:60px 0}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px}
+@media(max-width:700px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r3);padding:20px;text-align:center}
+.stat-val{font-family:var(--ff);font-weight:800;font-size:28px;color:var(--dk-t1);margin-bottom:4px}
+.stat-val em{font-style:normal;color:var(--neon)}
+.stat-label{font-size:12px;color:var(--dk-t3)}
+
+/* CTA */
+.cta-band{background:linear-gradient(135deg,rgba(0,194,104,.12),rgba(0,100,50,.08));border:1px solid rgba(0,194,104,.2);border-radius:var(--r4);padding:48px;text-align:center;margin:60px 0}
+.cta-title{font-family:var(--ff);font-weight:800;font-size:clamp(1.4rem,2.5vw,2rem);letter-spacing:-.04em;margin-bottom:12px}
+.cta-sub{color:var(--dk-t2);margin-bottom:28px;font-size:15px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{font-family:var(--ff);font-size:14px;font-weight:700;padding:12px 28px;border-radius:var(--r5);background:var(--neon);color:#000;border:none;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:#00e582;transform:translateY(-2px);box-shadow:var(--neon-glow)}
+.btn-ghost{font-family:var(--ff);font-size:14px;font-weight:600;padding:12px 28px;border-radius:var(--r5);background:transparent;color:var(--dk-t1);border:1px solid var(--dk-border2);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{border-color:var(--border-neon);color:var(--neon)}
+
+/* NOTIFICATION MOCK */
+.notif{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--dk-bg4);border-left:3px solid var(--neon);border-radius:0 var(--r2) var(--r2) 0;margin-bottom:8px;animation:fadeIn .5s ease-out forwards}
+.notif.amber{border-left-color:var(--amber)}
+.notif.red{border-left-color:var(--red)}
+.notif-icon{font-size:14px;margin-top:2px}
+.notif-content .title{font-size:13px;font-weight:600;color:var(--dk-t1)}
+.notif-content .sub{font-size:11px;color:var(--dk-t3)}
+
+/* CHAT BUBBLE */
+.chat{display:flex;flex-direction:column;gap:8px;padding:12px}
+.chat-msg{max-width:80%;padding:8px 12px;border-radius:12px;font-size:12px;line-height:1.5}
+.chat-msg.them{background:var(--dk-bg4);color:var(--dk-t2);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.me{background:rgba(0,194,104,.15);color:var(--dk-t1);align-self:flex-end;border-bottom-right-radius:4px}
+.chat-system{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:8px 12px;font-size:11px;color:#fbbf24;text-align:center}
+
+/* FOOTER */
+footer{background:var(--dk-bg2);border-top:1px solid var(--dk-border);padding:40px 0;margin-top:80px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:var(--ff);font-weight:800;font-size:16px;color:var(--dk-t1)}
+.footer-links{display:flex;gap:20px}
+.footer-link{font-size:13px;color:var(--dk-t3);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--neon)}
+.footer-copy{font-size:12px;color:var(--dk-t3)}
+
+/* FEATURE PAGE HEADER */
+.feat-page-header{background:linear-gradient(135deg,var(--dk-bg2),var(--dk-bg3));border:1px solid var(--dk-border);border-radius:var(--r3);padding:32px;margin-bottom:32px;display:flex;align-items:center;gap:20px}
+.feat-page-icon{font-size:36px;width:64px;height:64px;background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:var(--r3);display:flex;align-items:center;justify-content:center;min-width:64px}
+.feat-page-title{font-family:var(--ff);font-weight:800;font-size:22px;margin-bottom:6px;color:var(--dk-t1)}
+.feat-page-desc{font-size:14px;color:var(--dk-t2);line-height:1.7}
+
+/* INLINE TAG */
+.tag{font-family:var(--fm);font-size:10px;padding:2px 7px;border-radius:var(--r5);letter-spacing:.05em;display:inline-block;margin-left:6px}
+.tag.new{background:rgba(0,194,104,.12);color:var(--neon);border:1px solid rgba(0,194,104,.2)}
+.tag.pro{background:rgba(245,158,11,.12);color:var(--amber)}
+.tag.elite{background:rgba(147,51,234,.15);color:#c084fc}
+.tag.beta{background:rgba(59,130,246,.12);color:#93c5fd}
+
+/* HOW IT WORKS STEPS */
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:32px 0}
+@media(max-width:700px){.how-steps{grid-template-columns:repeat(2,1fr)}}
+.how-step{background:var(--dk-bg2);border:1px solid var(--dk-border);border-radius:var(--r3);padding:20px;position:relative}
+.how-step-num{font-family:var(--fm);font-size:11px;color:var(--neon);margin-bottom:12px}
+.how-step-icon{font-size:22px;margin-bottom:10px}
+.how-step-title{font-size:13px;font-weight:700;color:var(--dk-t1);margin-bottom:6px}
+.how-step-desc{font-size:12px;color:var(--dk-t3);line-height:1.6}
+.how-connector{position:absolute;right:-9px;top:50%;transform:translateY(-50%);color:var(--dk-t3);font-size:14px;z-index:2}
+
+/* SAFE BADGE */
+.safe-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff);font-size:12px;font-weight:700;padding:6px 12px;border-radius:var(--r5);background:rgba(0,194,104,.1);border:1px solid rgba(0,194,104,.25);color:var(--neon);margin-right:8px;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <span class="nav-wordmark">Trade<span>Match</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Home</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+      <a href="cost-guides.html" class="nav-link">Cost Guides</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <a href="login.html" class="nav-btn-ghost" id="navSignIn">Sign In</a>
+      <a href="register.html" class="nav-cta" id="navCta">
+        <span class="nav-cta-pip"></span>
+        Post a Job Free
+      </a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- Ă˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘Â
+     HERO Ă˘â‚¬â€ť CINEMATIC DARK
+     Ă˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘ÂĂ˘â€˘Â -->
+
+
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile-drawer" id="navMobileDrawer" role="navigation" aria-label="Mobile navigation">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="post-a-job.html">Post a Job</a>
+  <a href="browse-trades.html">Browse Trades</a>
+  <a href="blog.html">Blog</a>
+  <a href="help-centre.html">Help Centre</a>
+  <a href="cost-guides.html">Cost Guides</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <div class="nav-mobile-drawer-ctas" id="navMobileCtas">
+    <a href="login.html" class="nav-btn-ghost" id="navMobileSignIn">Sign In</a>
+    <a href="register.html" class="nav-cta"><span class="nav-cta-pip"></span>Post a Job Free</a>
+  </div>
+</div>
+
+<!-- Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â
+     HERO Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ CINEMATIC DARK
+     Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â -->
+
+<section class="hero">
+  <div class="wrap">
+    <div class="sec-label sr">Knowledge Base Ä‚â€šĂ‚Â· Platform Guide</div>
+    <h1 class="hero-title sr d1">Everything you need to know<br>about <em>TradeMatch</em></h1>
+    <p class="hero-sub sr d2">A complete guide to every feature, screen, and workflow Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ for both Homeowners and Tradespeople. Explore how the platform works end-to-end.</p>
+    <div class="search-bar sr d3">
+      <input class="search-input" type="text" placeholder="Search the knowledge base Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ e.g. 'how does escrow work'Ä‚ËĂ˘â€šÂ¬Ă‚Â¦" id="kbSearch" oninput="searchKB(this.value)">
+      <span class="search-icon">Ä‚ËÄąĹˇĂ˘â‚¬Ë</span>
+    </div>
+
+    <!-- image strip -->
+    <div class="img-strip sr d4">
+      <img src="worker-smiling.avif" alt="Tradesperson on site" onerror="this.style.background='#1a2234';this.removeAttribute('src')">
+      <img src="worker-active.avif" alt="Worker active" onerror="this.style.background='#111620';this.removeAttribute('src')">
+      <img src="buildings.avif" alt="Properties" onerror="this.style.background='#161c28';this.removeAttribute('src')">
+      <img src="home-exterior.avif" alt="Home exterior" onerror="this.style.background='#1a2234';this.removeAttribute('src')">
+    </div>
+
+    <div class="stats-row sr d5">
+      <div class="stat-card"><div class="stat-val"><em>847+</em></div><div class="stat-label">Verified Tradespeople</div></div>
+      <div class="stat-card"><div class="stat-val"><em>48h</em></div><div class="stat-label">Dispute Resolution SLA</div></div>
+      <div class="stat-card"><div class="stat-val"><em>Ä‚â€šÄąÂ0</em></div><div class="stat-label">Upfront for Homeowners</div></div>
+      <div class="stat-card"><div class="stat-val"><em>94%</em></div><div class="stat-label">Dispute Resolution Rate</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â Stripe Escrow <span class="g">Active</span></span>
+    <span class="ticker-item">Ä‚ËĂ‚Â­Ă‚Â Trust Scores <span class="g">Live</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤ GPS Tracking <span class="g">Real-time</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś AI Matching <span class="g">847 Pros</span></span>
+    <span class="ticker-item">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ… 48h SLA <span class="g">Guaranteed</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźÄąÄ…Ă‚Â  Home Passport <span class="g">Digital Twin</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬Â KYC Verified <span class="g">Every Pro</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬â„˘Äąâ€š Zero Upfront <span class="g">Homeowners</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ  Analytics <span class="a">Pro Feature</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â Stripe Escrow <span class="g">Active</span></span>
+    <span class="ticker-item">Ä‚ËĂ‚Â­Ă‚Â Trust Scores <span class="g">Live</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤ GPS Tracking <span class="g">Real-time</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś AI Matching <span class="g">847 Pros</span></span>
+    <span class="ticker-item">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ… 48h SLA <span class="g">Guaranteed</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźÄąÄ…Ă‚Â  Home Passport <span class="g">Digital Twin</span></span>
+    <span class="ticker-item">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬Â KYC Verified <span class="g">Every Pro</span></span>
+  </div>
+</div>
+
+<!-- TAB SWITCHER -->
+<div class="wrap" style="padding-top:40px">
+  <div class="tab-switcher sr">
+    <button class="tab-btn active" onclick="switchTab('homeowner')">Ă„â€ÄąĹźÄąÄ…Ă‚Â  Homeowner</button>
+    <button class="tab-btn" onclick="switchTab('tradesperson')">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â§ Tradesperson</button>
+  </div>
+</div>
+
+<!-- Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â
+     HOMEOWNER TAB
+Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â -->
+<div class="tab-content active" id="tab-homeowner">
+<div class="wrap">
+
+<!-- TOC -->
+<div class="toc sr" id="homeowner">
+  <div class="toc-title">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąË‡ Homeowner Feature Index</div>
+  <div class="toc-cols">
+    <a class="toc-link" href="#ho-dashboard">Dashboard & My Projects</a>
+    <a class="toc-link" href="#ho-ai">AI Search & Job Posting</a>
+    <a class="toc-link" href="#ho-quotes">Compare Quotes Engine</a>
+    <a class="toc-link" href="#ho-escrow">Escrow Wallet & Milestones</a>
+    <a class="toc-link" href="#ho-gps">Live GPS Tracking</a>
+    <a class="toc-link" href="#ho-messages">Message Centre</a>
+    <a class="toc-link" href="#ho-verify">Verification Hub</a>
+    <a class="toc-link" href="#ho-dispute">Dispute Centre</a>
+    <a class="toc-link" href="#ho-vault">Document Vault</a>
+    <a class="toc-link" href="#ho-passport">Home Passport</a>
+    <a class="toc-link" href="#ho-settings">Account Settings</a>
+    <a class="toc-link" href="#ho-payment">Payment Flow</a>
+  </div>
+</div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ DASHBOARD Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-dashboard" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬â€ťĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Dashboard Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ My Projects</div>
+      <div class="feat-page-desc">Your central command for all active and past projects. See live milestone status, escrow balance, and alerts at a glance.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Dashboard</div>
+      <h2 class="big-feat-title">Your Protected Workspace</h2>
+      <p class="big-feat-desc">The dashboard shows a personalised greeting with a live summary of active projects, funds in escrow, and any milestones awaiting your approval. Every section updates in real time.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Alert Banner:</strong> If a tradesperson is en route, a top banner shows their name, trade, and ETA with a live map link.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Escrow Summary:</strong> Total funds held securely by Stripe Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ updated per milestone release. You always see exactly how much is locked vs released.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Milestone Alerts:</strong> When a tradesperson submits work for a milestone, a prominent review card appears prompting your approval.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Active Project Card:</strong> Tap any project to see progress percentage, the milestone feed, and photo evidence.</span></li>
+        <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Post New Job:</strong> Instantly post a job from the dashboard with AI assistance.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">TradeMatch Ä‚ËĂ˘â€šÂ¬ÄąĹş My Projects</div>
+      </div>
+      <div class="mock-body">
+        <div class="notif" style="animation-delay:.2s">
+          <span class="notif-icon">Ă„â€ÄąĹźÄąË‡Ă˘â‚¬â€ť</span>
+          <div class="notif-content">
+            <div class="title">Jake Donovan is En Route Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Kitchen Extension</div>
+            <div class="sub">ETA ~28 min Ä‚â€šĂ‚Â· 147 Abingdon Road, SW1A Ä‚â€šĂ‚Â· GPS Active</div>
+          </div>
+        </div>
+        <div class="escrow-flow">
+          <div class="escrow-node"><div class="escrow-node-icon">Ă„â€ÄąĹźÄąÄ…Ă‚Â¦</div><div class="escrow-node-label">Your Bank</div><div class="escrow-node-val">Funded</div></div>
+          <div class="escrow-arrow">Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</div>
+          <div class="escrow-node"><div class="escrow-node-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â</div><div class="escrow-node-label">In Escrow</div><div class="escrow-node-val" style="color:var(--neon)">Ä‚â€šÄąÂ3,000</div></div>
+          <div class="escrow-arrow">Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</div>
+          <div class="escrow-node"><div class="escrow-node-icon">Ä‚ËÄąâ€şĂ˘â‚¬Â¦</div><div class="escrow-node-label">Released</div><div class="escrow-node-val">Ä‚â€šÄąÂ1,250</div></div>
+        </div>
+        <div class="notif amber">
+          <span class="notif-icon">Ä‚ËÄąÄ…Äąâ€š</span>
+          <div class="notif-content">
+            <div class="title">Milestone 2 Review Requested</div>
+            <div class="sub">Jake submitted 4 photos Ä‚â€šĂ‚Â· Ä‚â€šÄąÂ1,500 pending your approval</div>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="mock-row glass"><span class="mock-label">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬â€ťĂ„ĹąĂ‚Â¸ÄąÄ… Kitchen Extension Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Active</span><span class="mock-pill green">45% Complete</span></div>
+          <div style="padding:0 4px"><div class="prog-wrap"><div class="prog-fill" style="--prog:45%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ä…</div>
+      <div class="feat-title">Milestone Feed</div>
+      <div class="feat-desc">Every milestone is listed with its status, submitted photos, and approval action. Approve to release funds, or reject with a reason to pause escrow.</div>
+      <div class="feat-badge green">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› Escrow-Linked</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬ĹĄ</div>
+      <div class="feat-title">Smart Alerts</div>
+      <div class="feat-desc">Real-time push alerts for en-route arrivals, milestone submissions, new messages, dispute filings, and escrow movements.</div>
+      <div class="feat-badge blue">Real-time</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </div>
+      <div class="feat-title">Project Progress</div>
+      <div class="feat-desc">Visual progress bar shows overall job completion across all milestones. Updates instantly when you approve a stage.</div>
+      <div class="feat-badge green">Live</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă‚Â </div>
+      <div class="feat-title">Multi-Property</div>
+      <div class="feat-desc">Manage jobs across multiple properties simultaneously. Each property has its own job history in your portfolio.</div>
+      <div class="feat-badge green">Free</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ AI SEARCH Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-ai" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div>
+    <div>
+      <div class="feat-page-title">AI Search & Job Posting</div>
+      <div class="feat-page-desc">Post a job in plain English. The AI engine scans 847+ verified tradespeople and surfaces your top 3 AI-matched candidates instantly.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">AI Ä‚â€šĂ‚Â· Matching Engine</div>
+      <h2 class="big-feat-title">Top 3 Matches Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Instantly</h2>
+      <p class="big-feat-desc">Type your job in natural language Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ "my boiler stopped working and there's no hot water" Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ and the AI parses your intent, finds your location, matches trade categories, and ranks verified professionals by Trust Score, availability, and proximity.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Type or speak</strong> your job description. No categories to choose.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>AI cross-references</strong> 847 local verified pros by location, cert, Trust Score, and live availability.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Top 3 results</strong> appear with Trust Scores, response times, and availability badges.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Shortlist or invite</strong> up to 5 vendors to quote. The Rule of 3Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›5 ensures competitive but not overwhelming choice.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">AI Search Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ TradeMatch</div>
+      </div>
+      <div class="mock-body">
+        <div style="background:var(--dk-bg4);border:1px solid var(--border-neon);border-radius:var(--r2);padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--dk-t3)">
+          Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś Scanning 847 verified tradespeopleÄ‚ËĂ˘â€šÂ¬Ă‚Â¦
+          <div class="prog-wrap" style="margin-top:6px"><div class="prog-fill" style="--prog:90%;animation-duration:.8s"></div></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:10px;color:var(--dk-t3);margin-bottom:8px;letter-spacing:.08em">TOP 3 AI-MATCHED VENDORS</div>
+        <div class="mock-row neon-bg" style="margin-bottom:6px">
+          <div class="mock-avatar">JD</div>
+          <div style="flex:1;margin-left:10px">
+            <div class="mock-label">Jake Donovan</div>
+            <div class="mock-sub">Master Electrician Ä‚â€šĂ‚Â· SW1A Ä‚â€šĂ‚Â· Ä‚ËĂ˘â‚¬â€ťÄąÄ… Available now</div>
+          </div>
+          <div style="text-align:right"><div class="mock-pill green">9.8 Trust</div></div>
+        </div>
+        <div class="mock-row glass" style="margin-bottom:6px">
+          <div class="mock-avatar" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">MR</div>
+          <div style="flex:1;margin-left:10px">
+            <div class="mock-label">Marcus Reed</div>
+            <div class="mock-sub">Master Plumber Ä‚â€šĂ‚Â· SW3 Ä‚â€šĂ‚Â· Ä‚ËĂ˘â‚¬â€ťÄąÄ… Available now</div>
+          </div>
+          <div style="text-align:right"><div class="mock-pill blue">9.4 Trust</div></div>
+        </div>
+        <div class="mock-row glass">
+          <div class="mock-avatar" style="background:linear-gradient(135deg,#8b5cf6,#5b21b6)">PS</div>
+          <div style="flex:1;margin-left:10px">
+            <div class="mock-label">Priya Shah</div>
+            <div class="mock-sub">Gas Engineer Ä‚â€šĂ‚Â· SE1 Ä‚â€šĂ‚Â· Ä‚ËĂ˘â‚¬â€ťÄąÄ… Available today</div>
+          </div>
+          <div style="text-align:right"><div class="mock-pill blue">9.1 Trust</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄÄąÂ¤</div>
+      <div class="feat-title">Natural Language Input</div>
+      <div class="feat-desc">Describe your job in plain English. The AI extracts trade type, urgency, and scope automatically.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤</div>
+      <div class="feat-title">Location-Aware</div>
+      <div class="feat-desc">Automatically uses your registered property postcodes to filter candidates by travel distance.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+      <div class="feat-title">AI Visible Badge</div>
+      <div class="feat-desc">Only vendors with active profiles and current certifications are shown Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ inactive or suspended pros never appear.</div>
+      <div class="feat-badge green">Verified Only</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ COMPARE QUOTES Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-quotes" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Compare Quotes Engine</div>
+      <div class="feat-page-desc">Side-by-side quote comparison with AI-generated insight. The Rule of 3Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›5 ensures you see competitive choice without overwhelm.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Quotes</div>
+      <h2 class="big-feat-title">Rule of 3Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›5 Ä‚â€šĂ‚Â· Side-by-Side</h2>
+      <p class="big-feat-desc">Every quote shows itemised labour, materials, and the TradeMatch platform fee. AI generates a plain-English insight card highlighting the Best Value, Most Experienced, and Fastest option so you can decide confidently.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Receive 3Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›5 quotes</strong> from vendors you invited or who responded to your posting.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>AI Insight Card</strong> at the top explains why each quote was ranked and flags anomalies (e.g. unusually large deposit).</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Select for Escrow</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ funds move into secure Stripe custody. The vendor cannot access money until you approve.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>No Upfront Deposit</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ unless required by the vendor, all payment is held in escrow and released on milestone approval.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Compare Quotes Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ TradeMatch</div>
+      </div>
+      <div class="mock-body">
+        <div class="notif" style="margin-bottom:10px">
+          <span class="notif-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</span>
+          <div class="notif-content">
+            <div class="title">AI Insight: Apex Gas Services is Best Value</div>
+            <div class="sub">Ä‚â€šÄąÂ30 cheaper than average Ä‚â€šĂ‚Â· 100% Show-Up on Gas jobs</div>
+          </div>
+        </div>
+        <table class="quote-table">
+          <thead><tr><th>Vendor</th><th>Total</th><th>Deposit</th><th>GPS</th><th></th></tr></thead>
+          <tbody>
+            <tr><td class="hl">Apex Gas</td><td class="best hl">Ä‚â€šÄąÂ520</td><td class="hl">None</td><td class="hl">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</td><td><span class="mock-pill green">Best Value</span></td></tr>
+            <tr><td class="hl">Pro Gas London</td><td class="hl">Ä‚â€šÄąÂ595</td><td class="hl">30%</td><td>Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ</td><td><span class="mock-pill amber">Most Exp.</span></td></tr>
+            <tr><td class="hl">TrustTrades</td><td class="hl">Ä‚â€šÄąÂ540</td><td class="hl">None</td><td class="hl">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</td><td><span class="mock-pill blue">Fastest</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă‚Â·Ă„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Itemised Pricing</div>
+      <div class="feat-desc">Every quote breaks down labour, materials, and the platform fee separately. No hidden costs.</div>
+      <div class="feat-badge green">Transparent</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬Â </div>
+      <div class="feat-title">AI Rank Badges</div>
+      <div class="feat-desc">Each quote is tagged: Best Value, Most Experienced, or Fastest Available Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ based on live data.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤</div>
+      <div class="feat-title">GPS Live Tracking Flag</div>
+      <div class="feat-desc">Quotes from vendors with GPS Live enabled are flagged. You'll be able to track their arrival on the job day.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Äąâ€š</div>
+      <div class="feat-title">Direct Match Option</div>
+      <div class="feat-desc">Choose to pay directly outside escrow for any quote. You lose the Money-Back Guarantee but retain GPS and Work Quality SLA.</div>
+      <div class="feat-badge amber">Limited Protection</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ ESCROW Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-escrow" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â</div>
+    <div>
+      <div class="feat-page-title">Escrow Wallet & Milestones</div>
+      <div class="feat-page-desc">Stripe-powered escrow holds your funds until you approve each stage of work. TradeMatch cannot move money without your consent.</div>
+    </div>
+  </div>
+
+  <div class="how-steps sr">
+    <div class="how-step">
+      <div class="how-step-num">STEP 01</div>
+      <div class="how-step-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Äąâ€š</div>
+      <div class="how-step-title">Fund Escrow</div>
+      <div class="how-step-desc">Pay the agreed total via Stripe. Funds are held in an FCA-regulated account under Stripe's custody.</div>
+      <div class="how-connector">Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">STEP 02</div>
+      <div class="how-step-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬â€ťĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="how-step-title">Work Begins</div>
+      <div class="how-step-desc">The tradesperson starts work. Each milestone is defined upfront in the signed quote.</div>
+      <div class="how-connector">Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">STEP 03</div>
+      <div class="how-step-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â¸</div>
+      <div class="how-step-title">Evidence Submitted</div>
+      <div class="how-step-desc">The pro uploads time-stamped photos and GPS evidence for the milestone. You receive an alert.</div>
+      <div class="how-connector">Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">STEP 04</div>
+      <div class="how-step-icon">Ä‚ËÄąâ€şĂ˘â‚¬Â¦</div>
+      <div class="how-step-title">You Approve</div>
+      <div class="how-step-desc">Review the evidence and approve to release payment Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ or reject to pause and raise a query.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Escrow</div>
+      <h2 class="big-feat-title">Milestone-by-Milestone Control</h2>
+      <p class="big-feat-desc">Every project is broken into 2Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›4 milestones in the signed quote. Payment is only released when you explicitly approve each stage. The final milestone (typically 20%) always requires a certificate or final sign-off photo.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">Ä‚ËĂ˘â‚¬ÂĂ‚Â </span><span class="step-text"><strong>View milestone photos</strong> side by side Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ compare vendor-submitted evidence against your own photos.</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËĂ˘â‚¬ÂĂ‹â€ˇ</span><span class="step-text"><strong>Quality Audit:</strong> Tap each photo to view full-res, timestamp, and GPS tag.</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËĂ˘â‚¬ÂĂ‹Â</span><span class="step-text"><strong>Reject with reason:</strong> If unsatisfied, write a note. Funds stay frozen and the vendor is notified.</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËĂ˘â‚¬ÂÄąÂ</span><span class="step-text"><strong>Immutable release record</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ every approval is timestamped and added to your Home Passport.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Milestone Feed Ä‚â€šĂ‚Â· Kitchen Extension</div>
+      </div>
+      <div class="mock-body">
+        <div class="milestone-card">
+          <div class="milestone-check done">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</div>
+          <div class="milestone-info"><div class="milestone-title">M1 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Site Preparation & Materials</div><div class="milestone-sub">Approved 22 Feb 2026 Ä‚â€šĂ‚Â· Ref TM-REL-240182</div></div>
+          <div class="milestone-amt">Ä‚â€šÄąÂ1,250</div>
+        </div>
+        <div class="milestone-card" style="border-color:rgba(245,158,11,.3)">
+          <div class="milestone-check pending">Ä‚ËÄąÄ…Äąâ€š</div>
+          <div class="milestone-info"><div class="milestone-title">M2 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ First Fix & Framework</div><div class="milestone-sub">4 photos submitted today Ä‚â€šĂ‚Â· Awaiting your review</div></div>
+          <div class="milestone-amt" style="color:var(--amber)">Ä‚â€šÄąÂ1,500</div>
+        </div>
+        <div class="milestone-card">
+          <div class="milestone-check locked">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div>
+          <div class="milestone-info"><div class="milestone-title">M3 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Second Fix & Finishing</div><div class="milestone-sub">Locked until M2 approved</div></div>
+          <div class="milestone-amt" style="color:var(--dk-t3)">Ä‚â€šÄąÂ1,000</div>
+        </div>
+        <div class="milestone-card">
+          <div class="milestone-check locked">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div>
+          <div class="milestone-info"><div class="milestone-title">M4 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Final Sign-off & Certificate</div><div class="milestone-sub">Final 20% Ä‚â€šĂ‚Â· Certificate Required</div></div>
+          <div class="milestone-amt" style="color:var(--dk-t3)">Ä‚â€šÄąÂ500</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ GPS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-gps" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤</div>
+    <div>
+      <div class="feat-page-title">Live GPS Arrival Tracking</div>
+      <div class="feat-page-desc">Track your tradesperson's real-time arrival 30 minutes before their scheduled start. Know exactly when they'll be at your door.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· GPS</div>
+      <h2 class="big-feat-title">Real-Time ETA Ä‚â€šĂ‚Â· Zero Waiting</h2>
+      <p class="big-feat-desc">When a GPS-enabled vendor is en route, a live map view opens showing their pin moving toward your property. The Show-Up Score is updated with every job Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ high scorers are rewarded with better AI matching.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>GPS activates automatically</strong> 30 minutes before the job start. You get a push notification.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Live map view</strong> shows the vendor's current location and ETA in minutes.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Show-Up Score</strong> is publicly displayed on the vendor's profile Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ a 97% score means 97 of 100 jobs arrived on time.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Missed arrival</strong> triggers an automatic alert to TradeMatch Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ the vendor's score is penalised and escrow is paused.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Live GPS Ä‚â€šĂ‚Â· En Route</div>
+      </div>
+      <div class="mock-body">
+        <div class="gps-map-bg">
+          <div class="gps-grid"></div>
+          <div class="gps-pin" style="bottom:30%;left:35%">Ă„â€ÄąĹźÄąË‡Ă˘â‚¬â€ť</div>
+          <div class="gps-pin" style="bottom:55%;right:25%;font-size:16px;animation-delay:1s">Ă„â€ÄąĹźÄąÄ…Ă‚Â </div>
+          <div class="gps-ring" style="bottom:calc(55% + 4px);right:calc(25% + 4px)"></div>
+          <div class="gps-label">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤ GPS Active Ä‚â€šĂ‚Â· ETA ~28 min Ä‚â€šĂ‚Â· 147 Abingdon Road</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <div class="mock-row glass" style="flex:1"><span class="mock-label">Jake Ä‚â€šĂ‚Â· En Route</span><span class="mock-pill green">ETA 28 min</span></div>
+          <div class="mock-row glass" style="flex:1"><span class="mock-label">Show-Up Score</span><span class="mock-pill green">97%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â€ťÄąĹşĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Interactive Map</div>
+      <div class="feat-desc">Tap "View Live Map" to open a full-screen map with the vendor's moving pin and your home as destination.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËĂ‚Â­Ă‚Â</div>
+      <div class="feat-title">Show-Up Score</div>
+      <div class="feat-desc">Visible on every vendor profile. Calculated from the last 90 days of GPS check-in data. Cannot be faked.</div>
+      <div class="feat-badge green">Verified Score</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬ĹĄ</div>
+      <div class="feat-title">No-Show Protection</div>
+      <div class="feat-desc">If a vendor misses their arrival without notice, funds stay frozen and you can raise a dispute with one tap.</div>
+      <div class="feat-badge red">Auto-Protected</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ MESSAGES Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-messages" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â¬</div>
+    <div>
+      <div class="feat-page-title">Message Centre</div>
+      <div class="feat-page-desc">All project communications in one place. Formally-logged, off-platform detection, and built-in milestone tools.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Messages</div>
+      <h2 class="big-feat-title">Protected In-App Messaging</h2>
+      <p class="big-feat-desc">Every message is logged as a formal project record. If a dispute arises, message history is automatically exported to the Document Vault and used as evidence by the Resolver.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Thread per project:</strong> Each job has its own conversation thread with the assigned vendor.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Signed Quote Preview:</strong> The accepted quote is pinned at the top of every thread for reference.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Security Alert:</strong> If phone numbers or payment requests are detected off-platform, an orange warning flag appears.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Freeze Escrow button:</strong> Instantly pause all payments from within a message thread if you have concerns.</span></li>
+        <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Milestone milestones inline:</strong> Approval cards appear directly in the message thread when a stage is submitted.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Message Centre Ä‚â€šĂ‚Â· Jake Donovan</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row neon-bg" style="margin-bottom:10px">
+          <div class="mock-avatar">JD</div>
+          <div style="flex:1;margin-left:10px">
+            <div class="mock-label">Jake Donovan</div>
+            <div class="mock-sub">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› ID Ä‚â€šĂ‚Â· Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› NICEIC Ä‚â€šĂ‚Â· Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› PLI Ä‚â€šĂ‚Â· 9.8 Trust Ä‚â€šĂ‚Â· En Route</div>
+          </div>
+          <div class="mock-pill green">Active</div>
+        </div>
+        <div class="chat">
+          <div class="chat-msg them">Morning Sarah! First fix electrical is looking great. Going ahead of schedule by 2 days. 09:12</div>
+          <div class="chat-msg me">Amazing! Can you send the milestone photos when done? 09:28</div>
+          <div class="chat-msg them">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â· Milestone 2 submitted Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ 4 photos ready for review. 10:15</div>
+          <div class="chat-system">Ä‚ËÄąË‡Ă‚Â Ă„ĹąĂ‚Â¸ÄąÄ… Security Alert: A phone number was detected. Moving off-platform forfeits your escrow protection.</div>
+          <div class="chat-msg them">Can you send the remaining Ä‚â€šÄąÂ1,500 to my personal account? 10:22</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ VERIFICATION HUB Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-verify" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹźĂ‹â€ˇĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Verification Hub</div>
+      <div class="feat-page-desc">Inspect every layer of a tradesperson's vetting before booking. Live API checks mean no document can be forged.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Trust</div>
+      <h2 class="big-feat-title">4-Level Verification Architecture</h2>
+      <p class="big-feat-desc">Tap any vendor name to open their Verification Hub. Live API integrations with NICEIC, Gas Safe, and Companies House verify credentials in real time. Insurance expiry is monitored automatically.</p>
+      <div style="margin-top:16px">
+        <div class="safe-badge">Ă„â€ÄąĹźÄąĹľÄąĹľ KYC Identity</div>
+        <div class="safe-badge">Ă„â€ÄąĹźÄąËťĂ˘â‚¬Ĺ› Trade Certs</div>
+        <div class="safe-badge">Ă„â€ÄąĹźĂ˘â‚¬ĹźĂ‹â€ˇĂ„ĹąĂ‚Â¸ÄąÄ… PLI Insurance</div>
+        <div class="safe-badge">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â DBS Check</div>
+        <div class="safe-badge">Ă„â€ÄąĹźÄąÄ…Ă‹Â Companies House</div>
+        <div class="safe-badge">Ä‚ËĂ‚Â­Ă‚Â Trust Score</div>
+      </div>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Verification Hub Ä‚â€šĂ‚Â· James Carter</div>
+      </div>
+      <div class="mock-body">
+        <div class="score-ring-wrap">
+          <div class="score-ring">
+            <svg width="90" height="90" viewBox="0 0 90 90"><circle class="score-ring-bg" cx="45" cy="45" r="40"></circle><circle class="score-ring-fill" style="--ring-offset:30" cx="45" cy="45" r="40"></circle></svg>
+            <div class="score-ring-val">876</div>
+          </div>
+          <div class="score-details">
+            <div class="score-detail-row"><span class="score-detail-label">Trust Score</span><span class="score-detail-val">876 /1000</span></div>
+            <div class="score-detail-row"><span class="score-detail-label">Show-Up</span><span class="score-detail-val" style="color:var(--neon)">99%</span></div>
+            <div class="score-detail-row"><span class="score-detail-label">Dispute Rate</span><span class="score-detail-val">0.3%</span></div>
+          </div>
+        </div>
+        <div class="verify-level">
+          <div class="verify-level-header"><span class="verify-level-num">L01</span><span class="verify-level-title">Identity Ä‚â€šĂ‚Â· KYC</span><span class="verify-level-status">Ä‚ËĂ˘â‚¬â€ťÄąÄ… Active</span></div>
+          <div class="verify-level-body">
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span> Photo ID Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Passport Verified 04 Jan 2026</div>
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span> Liveness Selfie Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Biometric match 99.2%</div>
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span> DBS Basic Check Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Clear Jan 2026</div>
+          </div>
+        </div>
+        <div class="verify-level">
+          <div class="verify-level-header"><span class="verify-level-num">L02</span><span class="verify-level-title">Trade Certs Ä‚â€šĂ‚Â· OCR Verified</span><span class="verify-level-status">Ä‚ËĂ˘â‚¬â€ťÄąÄ… Active</span></div>
+          <div class="verify-level-body">
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span> NICEIC Approved Contractor Ä‚â€šĂ‚Â· Expires Dec 2026</div>
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąË‡Ă‚Â </span> NAPIT Registration Ä‚â€šĂ‚Â· Renewal due Apr 2026</div>
+          </div>
+        </div>
+        <div class="verify-level" style="border-color:rgba(245,158,11,.3)">
+          <div class="verify-level-header"><span class="verify-level-num">L03</span><span class="verify-level-title">Insurance Ä‚â€šĂ‚Â· Auto-Monitored</span><span class="verify-level-status" style="color:var(--amber)">Ä‚ËÄąË‡Ă‚Â  12 days</span></div>
+          <div class="verify-level-body">
+            <div class="verify-item"><span class="verify-icon" style="color:var(--amber)">Ä‚ËÄąË‡Ă‚Â </span> Public Liability Ä‚â€šÄąÂ2M Ä‚â€šĂ‚Â· Expires 15 Mar 2026</div>
+            <div class="verify-item"><span class="verify-icon">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span> Employer's Liability Ä‚â€šĂ‚Â· Expires Aug 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â´</div>
+      <div class="feat-title">Insurance Expiry Alerts</div>
+      <div class="feat-desc">If a vendor's PLI is about to lapse, you're notified instantly. If it lapses, they are automatically paused from new jobs and payment is frozen.</div>
+      <div class="feat-badge red">Auto-Protected</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ„â€žĂ˘â‚¬Ë‡</div>
+      <div class="feat-title">TradeMatch Gold Tier</div>
+      <div class="feat-desc">Gold-badged vendors have completed all 4 verification levels and maintained a 9.5+ Trust Score for 6+ months.</div>
+      <div class="feat-badge amber">Premium</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąĹˇĂ‚Â</div>
+      <div class="feat-title">Live API Verification</div>
+      <div class="feat-desc">Credentials are pulled live from NICEIC, Gas Safe, and Companies House Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ not self-declared. Zero document forgery risk.</div>
+      <div class="feat-badge green">Live API</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ DISPUTE CENTRE Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-dispute" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Dispute Centre</div>
+      <div class="feat-page-desc">48-hour resolution SLA. Data-driven, time-bound disputes backed by the Escrow Interlock and an impartial TradeMatch Resolver.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Disputes</div>
+      <h2 class="big-feat-title">48h SLA Ä‚â€šĂ‚Â· 94% Resolution Rate</h2>
+      <p class="big-feat-desc">Unlike other platforms that leave you to resolve conflicts alone, TradeMatch operates a judicial-grade dispute engine. All evidence is locked, AI-pre-assessed, and reviewed by a human Resolver within 48 hours.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Try direct resolution first:</strong> Send a private message. 68% of disputes resolve this way before formal filing.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>File formal dispute:</strong> Describe the issue and upload evidence. Escrow is frozen immediately.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>48h countdown starts:</strong> A human Resolver is assigned and the vendor has 24h to submit their defence.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Resolution issued:</strong> The Resolver issues a binding decision. Funds are released or returned accordingly.</span></li>
+        <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Resolver Lite Mode:</strong> For active on-site disputes, a simplified mobile view keeps focus on your response.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Dispute Centre Ä‚â€šĂ‚Â· Case #TM-992-X</div>
+      </div>
+      <div class="mock-body">
+        <div class="dispute-timeline">
+          <div class="dispute-step">
+            <div class="dispute-dot done">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</div>
+            <div class="dispute-info"><div class="dispute-title">Dispute Filed</div><div class="dispute-sub">28 Feb 2026 Ä‚â€šĂ‚Â· 14:32 Ä‚â€šĂ‚Â· Case #TM-992-X</div></div>
+          </div>
+          <div class="dispute-step">
+            <div class="dispute-dot done">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</div>
+            <div class="dispute-info"><div class="dispute-title">Escrow Frozen</div><div class="dispute-sub">Ä‚â€šÄąÂ1,200 held pending resolution</div></div>
+          </div>
+          <div class="dispute-step">
+            <div class="dispute-dot active">Ä‚ËÄąÄ…Ă‚Â±</div>
+            <div class="dispute-info"><div class="dispute-title">Resolver Assigned Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Active</div><div class="dispute-sub">Priya M. Ä‚â€šĂ‚Â· Senior Trust & Safety Ä‚â€šĂ‚Â· 16h 44m remaining</div></div>
+          </div>
+          <div class="dispute-step">
+            <div class="dispute-dot pending">Ä‚ËĂ˘â‚¬â€ťĂ˘â‚¬Ä…</div>
+            <div class="dispute-info"><div class="dispute-title">Resolution Issued</div><div class="dispute-sub">Pending Ä‚â€šĂ‚Â· Binding decision by Resolver</div></div>
+          </div>
+        </div>
+        <div class="mock-row glass"><span class="mock-label">Ä‚â€šÄąÂ1,200 at stake</span><span class="mock-pill amber">48h SLA Active</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div>
+      <div class="feat-title">Escrow Interlock</div>
+      <div class="feat-desc">Filing a dispute instantly freezes escrow. No money moves until the Resolver issues a verdict.</div>
+      <div class="feat-badge green">Automatic</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div>
+      <div class="feat-title">AI Pre-Assessment</div>
+      <div class="feat-desc">The AI analyses GPS logs, message sentiment, milestone timestamps, and contract scope before the Resolver reviews Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ flagging conflicts automatically.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â±</div>
+      <div class="feat-title">Resolver Lite Mode</div>
+      <div class="feat-desc">A simplified mobile UI activates when you need to respond on-site. Focused view with just the evidence upload and statement tools.</div>
+      <div class="feat-badge blue">Mobile</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ DOCUMENT VAULT Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-vault" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â</div>
+    <div>
+      <div class="feat-page-title">Document Vault</div>
+      <div class="feat-page-desc">An immutable, time-stamped ledger of all project evidence. Auto-ingested from the job record when a dispute opens.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div>
+      <div class="feat-title">Immutable Ledger</div>
+      <div class="feat-desc">Every file uploaded is time-stamped, user-stamped, and locked. Nothing can be deleted once submitted Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ protecting both parties.</div>
+      <div class="feat-badge green">Locked on Upload</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+      <div class="feat-title">Auto-Ingestion (Exhibit A)</div>
+      <div class="feat-desc">When a dispute opens, 8+ items are auto-pulled from the job record: photos, GPS logs, and message exports Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ forming Exhibit A.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div>
+      <div class="feat-title">AI Conflict Detection</div>
+      <div class="feat-desc">Triage engine flags milestone mismatches, GPS on-site verifications, sentiment alerts, and undelivered contract items before Resolver review.</div>
+      <div class="feat-badge amber">3 Conflict Types</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄÄąÂ¤</div>
+      <div class="feat-title">Evidence Filtering</div>
+      <div class="feat-desc">Filter by category (Photos, Chat Logs, Contracts), status (GPS Verified, Unverified, Key Evidence), and source (Auto, Homeowner, Vendor).</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â€ťĂ˘â‚¬ĹˇĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Gallery View</div>
+      <div class="feat-desc">Switch between list and gallery view to visually scan all photo evidence. Each image shows its GPS tag and timestamp.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </div>
+      <div class="feat-title">Vault Integrity Score</div>
+      <div class="feat-desc">Shows GPS match rate, timestamp validity, and deletion count (always 0 once locked). Gives the Resolver a quality signal.</div>
+      <div class="feat-badge green">12/12 Immutable</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ HOME PASSPORT Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-passport" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźÄąÄ…Ă‚Â </div>
+    <div>
+      <div class="feat-page-title">Home Passport</div>
+      <div class="feat-page-desc">A living digital record of every certified job done on your property. Adds value when selling or letting.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Homeowner Ä‚â€šĂ‚Â· Home Passport</div>
+      <h2 class="big-feat-title">Your Property's Digital Twin</h2>
+      <p class="big-feat-desc">Every approved milestone is automatically added to your Home Passport Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ a chronological, certified history of all work completed on your property. Each entry includes photos, the tradesperson's verified credentials, and the escrow release reference.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Auto-populated</strong> when each milestone is approved and escrow released.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Shareable PDF</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ export your Home Passport to share with estate agents or solicitors.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Multiple properties</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ each property in your portfolio has its own Passport.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Certificate storage</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Gas Safe, NICEIC, and building control certs are stored alongside each job entry.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Home Passport Ä‚â€šĂ‚Â· 14 Birchwood Ave</div>
+      </div>
+      <div class="mock-body">
+        <div style="font-family:var(--fm);font-size:10px;color:var(--dk-t3);letter-spacing:.1em;margin-bottom:10px">CERTIFIED JOB HISTORY</div>
+        <div class="vault-item">
+          <div class="vault-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+          <div class="vault-name">Fuse Box Replacement Ä‚â€šĂ‚Â· NICEIC Cert</div>
+          <div class="vault-status ok">Jan 2026 Ä‚â€šĂ‚Â· Ä‚â€šÄąÂ1,240</div>
+        </div>
+        <div class="vault-item">
+          <div class="vault-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬â€ťĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+          <div class="vault-name">Kitchen Extension Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ M1 Approved</div>
+          <div class="vault-status ok">Feb 2026 Ä‚â€šĂ‚Â· Ä‚â€šÄąÂ1,250</div>
+        </div>
+        <div class="vault-item">
+          <div class="vault-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ĺľ</div>
+          <div class="vault-name">Building Control Sign-off</div>
+          <div class="vault-status ok">Ref: TM-REL-240182</div>
+        </div>
+        <div class="notif amber" style="margin-top:10px">
+          <span class="notif-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ä…</span>
+          <div class="notif-content">
+            <div class="title">+2 Certs Pending from Active Projects</div>
+            <div class="sub">Will be added automatically when milestones are approved</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ SETTINGS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-settings" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă˘â€žËĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Account Settings</div>
+      <div class="feat-page-desc">Manage your property portfolio, safety PIN, privacy preferences, notifications, and billing all from a single settings panel.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă‚ÂĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Property Portfolio</div>
+      <div class="feat-desc">Add and manage multiple properties. Each holds its own job history, document vault, and emergency contact. Supports Home, Rental Flat, or any address.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â</div>
+      <div class="feat-title">Safety PIN</div>
+      <div class="feat-desc">A unique 4-digit PIN is generated per job. Your assigned tradesperson must enter it before unlocking the job site Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ preventing impersonation.</div>
+      <div class="feat-badge red">Anti-Imposter</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹźĂ‹â€ˇĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Privacy Shield</div>
+      <div class="feat-desc">Control what vendors can see about you: exact address only shown post-booking, profile visibility toggle, and anonymised quote mode.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąâ€şĂ‚Â¨</div>
+      <div class="feat-title">Home Interests</div>
+      <div class="feat-desc">Set preferred trades, project types, and budget ranges. The AI search uses these to refine matching even further.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬ĹĄ</div>
+      <div class="feat-title">Notifications</div>
+      <div class="feat-desc">Customise alerts for: en-route arrivals, milestone submissions, new quotes, escrow movements, and dispute updates. Push, email, or both.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Äąâ€š</div>
+      <div class="feat-title">Billing & Escrow</div>
+      <div class="feat-desc">View all escrow transactions, download invoices, and manage saved payment methods. The platform is free for homeowners Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ only the platform fee (paid on completion) applies.</div>
+      <div class="feat-badge green">Free Forever</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ PAYMENT Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="ho-payment" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Äąâ€š</div>
+    <div>
+      <div class="feat-page-title">Payment Flow & Direct Match</div>
+      <div class="feat-page-desc">Two payment paths: Stripe Escrow (full protection) or Direct Match (pay the vendor yourself with limited protection).</div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card" style="border-color:var(--border-neon)">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â</div>
+      <div class="feat-title">Stripe Escrow Path</div>
+      <div class="feat-desc">Pay the full job amount into escrow. Stripe holds the funds in an FCA-regulated account. Funds are only released when you approve each milestone. The TradeMatch Money-Back Guarantee is active.</div>
+      <div class="feat-badge green">Full Protection</div>
+      <ul class="step-list" style="margin-top:12px">
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">TradeMatch Guarantee</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">Milestone control</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">Dispute resolution</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">GPS tracking</span></li>
+      </ul>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤ÄąÄ„</div>
+      <div class="feat-title">Direct Match Path</div>
+      <div class="feat-desc">Agree payment directly with the vendor (cash, bank transfer, etc.). TradeMatch still provides GPS tracking and a 48h work quality SLA, but the Money-Back Guarantee does not apply.</div>
+      <div class="feat-badge amber">Limited Protection</div>
+      <ul class="step-list" style="margin-top:12px">
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">GPS tracking</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ›</span><span class="step-text">48h Work Quality SLA</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬â€ť</span><span class="step-text" style="color:var(--red)">No TradeMatch Guarantee</span></li>
+        <li class="step-item"><span class="step-num">Ä‚ËÄąâ€şĂ˘â‚¬â€ť</span><span class="step-text" style="color:var(--red)">No escrow milestone control</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- end homeowner tab -->
+
+<!-- Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â
+     TRADESPERSON TAB
+Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â -->
+<div class="tab-content" id="tab-tradesperson">
+<div class="wrap">
+
+<div class="toc sr" id="tradesperson">
+  <div class="toc-title">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â§ Tradesperson Feature Index</div>
+  <div class="toc-cols">
+    <a class="toc-link" href="#vd-dashboard">Vendor Dashboard</a>
+    <a class="toc-link" href="#vd-leads">Live Leads & Job Feed</a>
+    <a class="toc-link" href="#vd-jobs">Active Jobs & Milestones</a>
+    <a class="toc-link" href="#vd-messages">Messages Terminal</a>
+    <a class="toc-link" href="#vd-analytics">Analytics & ROI</a>
+    <a class="toc-link" href="#vd-heatmaps">Market Intelligence Heatmaps</a>
+    <a class="toc-link" href="#vd-coverage">Coverage Map</a>
+    <a class="toc-link" href="#vd-credentials">Credentials Vault</a>
+    <a class="toc-link" href="#vd-profile">My Profile & Digital Passport</a>
+    <a class="toc-link" href="#vd-reviews">Reviews Engine</a>
+    <a class="toc-link" href="#vd-dispute">Dispute Centre</a>
+    <a class="toc-link" href="#vd-settings">Command Centre Settings</a>
+    <a class="toc-link" href="#vd-copilot">Copilot Help & Support</a>
+    <a class="toc-link" href="#vd-plans">Plans & Pricing</a>
+  </div>
+</div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ VENDOR DASHBOARD Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-dashboard" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </div>
+    <div>
+      <div class="feat-page-title">Vendor Dashboard</div>
+      <div class="feat-page-desc">Your daily command centre Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ leads received, revenue earned, win rate, profile views, and projected income at a glance.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Dashboard</div>
+      <h2 class="big-feat-title">Yield Management at a Glance</h2>
+      <p class="big-feat-desc">The dashboard shows your month-to-date performance across 4 KPIs: leads received, jobs won, revenue earned, and profile views. A Win Rate Intelligence panel compares you to the local average and top 10%.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Win Rate Position:</strong> Your percentage vs local average and top 10% Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ updated daily.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Revenue Projection:</strong> AI model forecasts your monthly earnings based on pipeline and historical win rate.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Active Pipeline:</strong> See each quote in progress with probability score and value.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Quick Actions:</strong> Browse Leads, post an update, or view your escrow balance from the top bar.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Dashboard Ä‚â€šĂ‚Â· Jake Donovan Ä‚â€šĂ‚Â· Pro Plan</div>
+      </div>
+      <div class="mock-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="mock-row glass"><div><div class="mock-sub">Leads This Month</div><div class="mock-label" style="font-size:18px;font-family:var(--ff)">24</div></div><span class="mock-pill green">+12%</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Revenue Earned</div><div class="mock-label" style="font-size:18px;font-family:var(--ff)">Ä‚â€šÄąÂ6,200</div></div><span class="mock-pill green">+Ä‚â€šÄąÂ840</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Jobs Won</div><div class="mock-label" style="font-size:18px;font-family:var(--ff)">7</div></div><span class="mock-pill green">29%</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Profile Views</div><div class="mock-label" style="font-size:18px;font-family:var(--ff)">150</div></div><span class="mock-pill amber">850/1k</span></div>
+        </div>
+        <div class="mock-row neon-bg">
+          <span class="mock-label">Win Rate vs Area Avg</span>
+          <span style="font-family:var(--fm);font-size:11px;color:var(--neon)">38% (You) vs 22% (Avg)</span>
+        </div>
+        <div style="padding:4px"><div class="prog-wrap"><div class="prog-fill" style="--prog:38%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ LEADS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-leads" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+    <div>
+      <div class="feat-page-title">Live Leads & Job Feed</div>
+      <div class="feat-page-desc">AI-matched leads delivered to your feed with match scores, job values, and proximity. OTP-verified homeowners only.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Leads</div>
+      <h2 class="big-feat-title">AI-Matched. OTP-Verified. Live.</h2>
+      <p class="big-feat-desc">The lead engine matches jobs to your exact trade category, service area, and active credentials. Each lead shows an AI match percentage, estimated job value, and whether the homeowner has OTP-verified their phone. You pay per quote Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ not per lead view.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Match Score:</strong> 94% means the job is an excellent fit for your skill set and location.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>OTP Verified badge:</strong> Only homeowners who have verified their phone number can request quotes.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Quote Now:</strong> Tap to open the quote builder. Quote is binding once the homeowner accepts.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Negative ROI Alert:</strong> If your spend isn't converting, the AI flags it and pauses charges.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Live Leads Ä‚â€šĂ‚Â· Jake Donovan</div>
+      </div>
+      <div class="mock-body">
+        <div class="lead-card">
+          <div class="lead-card-top">
+            <span class="lead-match high">94% Match</span>
+            <span class="mock-pill green">OTP Verified</span>
+          </div>
+          <div class="lead-title">Ä‚ËÄąË‡Ă‹â€ˇ Consumer Unit Upgrade</div>
+          <div class="lead-meta">E14 3BN Ä‚â€šĂ‚Â· Canary Wharf Ä‚â€šĂ‚Â· 2.1 mi</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <span class="lead-range">Ä‚â€šÄąÂ1,200 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ› Ä‚â€šÄąÂ1,800</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--neon);background:var(--neon-dim);padding:4px 10px;border-radius:var(--r5);cursor:pointer;border:1px solid var(--border-neon)">Quote Now Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</span>
+          </div>
+        </div>
+        <div class="lead-card">
+          <div class="lead-card-top">
+            <span class="lead-match med">89% Match</span>
+            <span class="mock-pill green">OTP Verified</span>
+          </div>
+          <div class="lead-title">Ă„â€ÄąĹźĂ˘â‚¬ĹĄÄąĹˇ EV Charger Installation</div>
+          <div class="lead-meta">SE1 7DP Ä‚â€šĂ‚Â· Bermondsey Ä‚â€šĂ‚Â· 4.3 mi</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <span class="lead-range">Ä‚â€šÄąÂ900 Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ› Ä‚â€šÄąÂ1,400</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--neon);background:var(--neon-dim);padding:4px 10px;border-radius:var(--r5);cursor:pointer;border:1px solid var(--border-neon)">Quote Now Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘</span>
+          </div>
+        </div>
+        <div class="notif amber" style="margin-top:4px">
+          <span class="notif-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </span>
+          <div class="notif-content">
+            <div class="title">Negative ROI Alert Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Strategy Triggered</div>
+            <div class="sub">Ä‚â€šÄąÂ200 spend Ä‚â€šĂ‚Â· 0 conversions Ä‚â€šĂ‚Â· View AI Strategy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ ACTIVE JOBS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-jobs" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬â€ťĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Active Jobs & Milestone Management</div>
+      <div class="feat-page-desc">Manage all live jobs from one screen. Upload GPS-tagged evidence, submit milestones for approval, and track escrow releases.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â¸</div>
+      <div class="feat-title">Progress Photo Upload</div>
+      <div class="feat-desc">Upload milestone photos directly from your phone. Each image is automatically GPS-tagged and timestamped Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ creating a legal record. Photos go straight into the Document Vault.</div>
+      <div class="feat-badge green">Time-Stamped Legal Record</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąâ€şĂ˘â‚¬Â¦</div>
+      <div class="feat-title">Milestone Submission</div>
+      <div class="feat-desc">Submit each milestone for homeowner review. They receive an instant alert with your photos. Escrow releases automatically when they approve.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â°</div>
+      <div class="feat-title">Escrow Vault Overview</div>
+      <div class="feat-desc">See total funds held, pending releases, and month-to-date paid out. The top bar shows your Ä‚â€šÄąÂ balance Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ all FCA-regulated via Stripe.</div>
+      <div class="feat-badge green">FCA Regulated</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </div>
+      <div class="feat-title">Show-Up Score Tracking</div>
+      <div class="feat-desc">Your on-time arrival rate is tracked per job. 96%+ is "Exceptional" Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ boosting your AI match priority and ranking in homeowner search.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ MESSAGES VENDOR Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-messages" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â¬</div>
+    <div>
+      <div class="feat-page-title">Messages Terminal</div>
+      <div class="feat-page-desc">All client conversations in a single terminal. AI Quick Quote generation, contract building, and off-platform detection built in.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+      <div class="feat-title">Quick Quote Button</div>
+      <div class="feat-desc">Generate a structured quote directly from the message thread. Pre-fills with the job details and your standard rates. Sent as a formal binding quote card.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ä…</div>
+      <div class="feat-title">AI Contract Builder</div>
+      <div class="feat-desc">Build a project contract from the chat. Specify scope, milestones, values, and dates. Both parties sign digitally Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ stored in the Vault.</div>
+      <div class="feat-badge blue">AI-Assisted</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąË‡Ă‚Â Ă„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Off-Platform Detection</div>
+      <div class="feat-desc">If a phone number, payment app, or bank detail is shared in chat, both parties are warned that moving off-platform forfeits escrow protection.</div>
+      <div class="feat-badge red">Safety Alert</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div>
+      <div class="feat-title">Escrow Badge per Thread</div>
+      <div class="feat-desc">Every thread shows the current escrow status and milestone indicator for that job Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ green (funded), amber (submitted), or grey (locked).</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă‚Â·Ă„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Smart Thread Tags</div>
+      <div class="feat-desc">Threads are auto-tagged by status: Signed (contract accepted), Escrow Active, Milestone Overdue, or Security Alert Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ so you always know where each job stands.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â</div>
+      <div class="feat-title">Message Export</div>
+      <div class="feat-desc">All messages are auto-exported to the Document Vault when a dispute opens. They form part of your legal evidence chain.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ ANALYTICS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-analytics" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â</div>
+    <div>
+      <div class="feat-page-title">Analytics & Intelligence</div>
+      <div class="feat-page-desc">Every Ä‚â€šÄąÂ1 you spend on TradeMatch tracked to the pound. Revenue vs spend, ROI, win rate, CPA, and a 30-day AI revenue forecast.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Analytics</div>
+      <h2 class="big-feat-title">ROI Attribution Funnel</h2>
+      <p class="big-feat-desc">The analytics engine tracks every lead from purchase through to completed payment, calculating your true cost per acquisition and return on spend. Unlike competitors that just take your money, TradeMatch flags underperforming spend and offers credit adjustments.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Revenue vs Spend Chart:</strong> Daily line chart showing revenue earned vs lead spend for the selected period.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>ROI Funnel:</strong> Leads purchased Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ Responded Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ Quoted Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ In Escrow Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ Paid. Pinpoints where you're losing conversions.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>CPA Analysis:</strong> Exact cost per acquired job and average revenue per customer.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>30-Day Forecast:</strong> AI model predicts earnings with confidence interval Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ week-by-week projection.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Analytics Ä‚â€šĂ‚Â· 30D Ä‚â€šĂ‚Â· Mike Harrison</div>
+      </div>
+      <div class="mock-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="mock-row glass"><div><div class="mock-sub">Revenue</div><div class="mock-label">Ä‚â€šÄąÂ6,840</div></div><span class="mock-pill green">+18%</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">ROI</div><div class="mock-label">12.0x</div></div><span class="mock-pill green">Top 8%</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Win Rate</div><div class="mock-label">33%</div></div><span class="mock-pill green">vs 22% avg</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">CPA</div><div class="mock-label">Ä‚â€šÄąÂ142.50</div></div><span class="mock-pill blue">per job</span></div>
+        </div>
+        <div style="font-family:var(--fm);font-size:10px;color:var(--dk-t3);margin-bottom:6px;letter-spacing:.08em">ROI FUNNEL Ä‚â€šĂ‚Â· 30 DAYS</div>
+        <div style="font-size:11px;color:var(--dk-t2);display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between"><span>Leads Purchased</span><span style="color:var(--dk-t1)">12 Ä‚â€šĂ‚Â· Ä‚â€šÄąÂ570</span></div>
+          <div class="prog-wrap"><div class="prog-fill" style="--prog:100%;animation-duration:.5s"></div></div>
+          <div style="display:flex;justify-content:space-between"><span>Quote Submitted</span><span style="color:var(--dk-t1)">9 Ä‚â€šĂ‚Â· 75%</span></div>
+          <div class="prog-wrap"><div class="prog-fill" style="--prog:75%;animation-duration:.7s"></div></div>
+          <div style="display:flex;justify-content:space-between"><span>Paid & Complete</span><span style="color:var(--neon)">4 Ä‚â€šĂ‚Â· 33%</span></div>
+          <div class="prog-wrap"><div class="prog-fill" style="--prog:33%;animation-duration:.9s"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ HEATMAPS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-heatmaps" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ„â€ž</div>
+    <div>
+      <div class="feat-page-title">Market Intelligence Heatmaps <span class="tag pro">PRO</span></div>
+      <div class="feat-page-desc">Demand, competition, job value, and 7-day forecast layers. Know where to position yourself before your competitors do.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Intelligence</div>
+      <h2 class="big-feat-title">See Demand Before It Happens</h2>
+      <p class="big-feat-desc">The heatmap overlays show demand intensity (unfilled leads), competition density (active vendors), average job values, and a 7-day storm forecast (which triggers boiler/roofing demand). Filter by trade, radius, and job value band.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Demand Layer:</strong> Heat colour shows unfilled lead density by postcode Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ red is hottest.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Competition Layer:</strong> Overlay active vendors to find gap zones where demand > supply.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Job Value Layer:</strong> Colour-coded by average job value per postcode.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Storm Forecast:</strong> 7-day weather forecast overlaid on the map Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ plan your availability around high-demand weather events.</span></li>
+        <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Seller's Market Index:</strong> 3.7:1 leads per vendor = strong opportunity signal.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Market Intelligence Ä‚â€šĂ‚Â· London Ä‚â€šĂ‚Â· Electrical</div>
+      </div>
+      <div class="mock-body">
+        <div class="heatmap-preview">
+          <div class="heatmap-grid"></div>
+          <div class="heat-dot" style="width:60px;height:60px;background:radial-gradient(circle,rgba(239,68,68,.6),transparent);top:20%;left:30%;animation-delay:.2s"></div>
+          <div class="heat-dot" style="width:40px;height:40px;background:radial-gradient(circle,rgba(245,158,11,.5),transparent);top:50%;left:55%;animation-delay:.8s"></div>
+          <div class="heat-dot" style="width:50px;height:50px;background:radial-gradient(circle,rgba(239,68,68,.4),transparent);bottom:15%;right:20%;animation-delay:1.2s"></div>
+          <div style="position:absolute;top:12px;right:12px;font-family:var(--fm);font-size:10px;color:var(--neon);background:rgba(0,0,0,.7);padding:4px 8px;border-radius:var(--r5)">847 Live Ä‚â€šĂ‚Â· E1 Focus</div>
+          <div style="position:absolute;bottom:12px;left:12px;font-family:var(--fm);font-size:10px;color:#fca5a5;background:rgba(0,0,0,.7);padding:4px 8px;border-radius:var(--r5)">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â´ 14 Unfilled Ä‚â€šĂ‚Â· E14</div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <div class="mock-row glass" style="flex:1"><span class="mock-sub">Open Leads</span><span class="mock-pill red">82</span></div>
+          <div class="mock-row glass" style="flex:1"><span class="mock-sub">Demand Index</span><span class="mock-pill green">3.7:1</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ COVERAGE MAP Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-coverage" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â€ťÄąĹşĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Coverage Map & Location Intelligence</div>
+      <div class="feat-page-desc">Set your service radius, see competitor positions, identify gap zones, and view trust-radius pages per postcode.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤</div>
+      <div class="feat-title">Travel-Time Rings</div>
+      <div class="feat-desc">Set concentric service zones by travel time (15/30/45 min) rather than radius. Leads outside your rings are not shown.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ÂĂ„â€ž</div>
+      <div class="feat-title">Live Competitor View</div>
+      <div class="feat-desc">See other verified vendors on the map with their rating and availability status. Identify zones where you'd face minimal competition.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Äąâ€šĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Gap Zone Alerts</div>
+      <div class="feat-desc">Areas with open leads but no active vendors are flagged as "Gap Zones" Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ highlighting expansion opportunities.</div>
+      <div class="feat-badge green">High Opportunity</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ </div>
+      <div class="feat-title">Demand vs Supply</div>
+      <div class="feat-desc">Per-postcode breakdown showing open lead count, active vendor count, average job value, and your historical win time in that area.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąĹˇĂ‚Â§Ă„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">Storm Forecast Layer</div>
+      <div class="feat-desc">7-day weather forecast overlaid on your map. Weather events spike boiler, roofing, and drainage demand Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ plan your availability accordingly.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬Â </div>
+      <div class="feat-title">Trust Radius Pages</div>
+      <div class="feat-desc">Auto-generated SEO pages per postcode (e.g. "Electrician E14") showing your profile, reviews, and credentials Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ boosting local organic visibility.</div>
+      <div class="feat-badge amber">Elite Feature</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ CREDENTIALS VAULT Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-credentials" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â€ťĂ˘â‚¬ĹľĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Credentials Vault</div>
+      <div class="feat-page-desc">Your "Verified for Life" digital passport. Live API integrations with NICEIC, Gas Safe, and Companies House Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ no document can be forged.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Credentials</div>
+      <h2 class="big-feat-title">Your Vault Score Unlocks Lead Tiers</h2>
+      <p class="big-feat-desc">The Vault Score (composite 0Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›10) determines your lead tier and maximum escrow value per job. Upload 2 missing documents to unlock Elite Verified status and Ä‚â€šÄąÂ10k+ jobs.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>OCR Document Upload:</strong> Upload any cert Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ the AI reads it, extracts expiry dates, and logs it automatically.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Auto-Renewal Alert:</strong> The system finds you a cheaper PLI quote from a TradeMatch affiliate and renews with one click.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Live API Verification:</strong> Trade certs are pulled live from NICEIC, Gas Safe, and Companies House Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ displayed on your public profile.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Export Vault PDF:</strong> Download your complete verified credential pack to share with clients outside TradeMatch.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Credentials Vault Ä‚â€šĂ‚Â· Jake Donovan</div>
+      </div>
+      <div class="mock-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div><div class="mock-sub">Vault Score</div><div class="mock-label" style="font-size:22px;font-family:var(--ff);color:var(--neon)">8.7 /10</div></div>
+          <div style="text-align:right"><div class="mock-sub">Elite Progress</div><div class="prog-wrap" style="width:100px;margin-top:4px"><div class="prog-fill" style="--prog:74%"></div></div><div class="mock-sub" style="margin-top:2px">74% Ä‚â€šĂ‚Â· Upload 2 docs</div></div>
+        </div>
+        <div class="vault-item"><div class="vault-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div><div class="vault-name">NICEIC Approved Contractor</div><div class="vault-status ok">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› Live API Ä‚â€šĂ‚Â· Dec 2026</div></div>
+        <div class="vault-item"><div class="vault-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹźĂ‹â€ˇĂ„ĹąĂ‚Â¸ÄąÄ…</div><div class="vault-name">Public Liability Insurance Ä‚â€šÄąÂ2M</div><div class="vault-status warn">Ä‚ËÄąË‡Ă‚Â  28 days Ä‚â€šĂ‚Â· Auto-Renew?</div></div>
+        <div class="vault-item"><div class="vault-icon">Ă„â€ÄąĹźÄąĹľÄąĹľ</div><div class="vault-name">KYC Identity Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Passport</div><div class="vault-status ok">Ä‚ËÄąâ€şĂ˘â‚¬Ĺ› Verified Jan 2025</div></div>
+        <div class="vault-item"><div class="vault-icon">Ă„â€ÄąĹźÄąÄ…Ă‹Â</div><div class="vault-name">Director Identity Check</div><div class="vault-status err">Ä‚ËÄąâ€şĂ˘â‚¬Ë Missing Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Required</div></div>
+        <div class="notif amber" style="margin-top:8px">
+          <span class="notif-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‹â€ˇ</span>
+          <div class="notif-content">
+            <div class="title">Auto-Renewal: Save Ä‚â€šÄąÂ188 on PLI</div>
+            <div class="sub">TradeMatch affiliate quote Ä‚â€šÄąÂ847/yr Ä‚â€šĂ‚Â· One click renews & pushes cert</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ PROFILE Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-profile" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬ÂĂ‚Â¤</div>
+    <div>
+      <div class="feat-page-title">My Profile & Digital Passport</div>
+      <div class="feat-page-desc">Your public-facing profile is a living portfolio. AI-generated specialist insights, portfolio of truth, verified reviews, and premium branding options.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div>
+      <div class="feat-title">AI Specialist Insight</div>
+      <div class="feat-desc">Generated from your 47+ verified jobs Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ describes your specialist areas, dispute-free rate, and top job types in natural language. Auto-updates as you complete more jobs.</div>
+      <div class="feat-badge blue">AI-Generated</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â¸</div>
+      <div class="feat-title">Portfolio of Truth</div>
+      <div class="feat-desc">Before/after photos from escrow-verified jobs Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ all GPS-tagged and time-stamped. Cannot be edited after upload. Homeowners know these are real.</div>
+      <div class="feat-badge green">Immutable</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬Â </div>
+      <div class="feat-title">TradeMatch ScoreÄ‚ËĂ˘â‚¬ĹľĂ‹Â</div>
+      <div class="feat-desc">Composite score from 4 dimensions: Vetting (30%), Sentiment (30%), Reliability (20%), Response (20%). Displayed prominently on your profile and in homeowner search.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąĹˇÄąĹź</div>
+      <div class="feat-title">Master Craftsman Skin <span class="tag elite">ELITE</span></div>
+      <div class="feat-desc">Exclusive high-gloss profile skin for the top 5% of vendors. Includes priority map pin, SEO boost, and the hallmark badge. Unlocked via Elite plan.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ĺľ</div>
+      <div class="feat-title">Export Digital Passport</div>
+      <div class="feat-desc">Download a verified PDF containing your credentials, reviews, portfolio, and TradeMatch Score Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ shareable with any client or architect.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â´</div>
+      <div class="feat-title">On-Site Status</div>
+      <div class="feat-desc">Your profile shows live availability status: Available, On-Site, or Unavailable Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ updated via GPS check-in. Homeowners see your real-time availability before requesting a quote.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ REVIEWS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-reviews" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËĂ‚Â­Ă‚Â</div>
+    <div>
+      <div class="feat-page-title">Trust & Reviews Engine</div>
+      <div class="feat-page-desc">Escrow-linked, AI-authenticated reviews with zero suppression. Every review is immutable and published instantly.</div>
+    </div>
+  </div>
+
+  <div class="big-feat rev sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Reviews</div>
+      <h2 class="big-feat-title">Zero Suppression Policy</h2>
+      <p class="big-feat-desc">Reviews are only possible after a job passes through escrow Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ eliminating fake reviews. The AI authentication engine checks semantic consistency, verifies the job record, and assigns an auth score to each review. You cannot delete reviews.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Escrow-Linked:</strong> Only homeowners who completed a job via TradeMatch escrow can leave a review.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>AI Auth Score:</strong> 98% auth score means the review is semantically consistent with the job record and homeowner history.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>Photo Proof:</strong> Reviews can include GPS-verified completion photos from the Document Vault.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>Import Legacy Reviews:</strong> Bring in verified reviews from other platforms. Legacy reviews are tagged but retain their auth score.</span></li>
+        <li class="step-item"><span class="step-num">5</span><span class="step-text"><strong>Request Review tool:</strong> Prompt the homeowner via the app to leave their review once escrow clears.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Reviews Engine Ä‚â€šĂ‚Â· Mike Harrison</div>
+      </div>
+      <div class="mock-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div class="mock-row glass"><div><div class="mock-sub">Avg Rating</div><div class="mock-label" style="color:var(--amber)">4.9 Ä‚ËĂ‚ÂĂ˘â‚¬Â¦</div></div></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Verified Reviews</div><div class="mock-label">47</div></div></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Auth Score Avg</div><div class="mock-label">96.2%</div></div><span class="mock-pill green">Top 3%</span></div>
+          <div class="mock-row glass"><div><div class="mock-sub">Suppressed</div><div class="mock-label">0</div></div><span class="mock-pill green">Zero</span></div>
+        </div>
+        <div style="background:var(--dk-bg4);border:1px solid var(--dk-border);border-radius:var(--r2);padding:12px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div class="mock-avatar" style="width:26px;height:26px;font-size:10px;min-width:26px">SJ</div>
+            <div><div class="mock-label" style="font-size:12px">Sarah Johnson</div><div class="mock-sub">Ä‚ËĂ‚ÂĂ˘â‚¬Â¦Ä‚ËĂ‚ÂĂ˘â‚¬Â¦Ä‚ËĂ‚ÂĂ˘â‚¬Â¦Ä‚ËĂ‚ÂĂ˘â‚¬Â¦Ä‚ËĂ‚ÂĂ˘â‚¬Â¦ Ä‚â€šĂ‚Â· 98% Auth Ä‚â€šĂ‚Â· Escrow-Linked</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--dk-t2);line-height:1.6">Mike was absolutely brilliant from start to finish. The tiling is immaculate and he sorted an unexpected issue at no extra costÄ‚ËĂ˘â€šÂ¬Ă‚Â¦</div>
+          <div style="margin-top:8px;font-family:var(--fm);font-size:10px;color:var(--dk-t3)">Bathroom Refit Ä‚â€šĂ‚Â· Ä‚â€šÄąÂ3,400 Ä‚â€šĂ‚Â· Didsbury M20 Ä‚â€šĂ‚Â· 28 Feb 2026</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ VENDOR DISPUTE Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-dispute" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Vendor Dispute Centre</div>
+      <div class="feat-page-desc">Submit your evidence, track the 48h countdown, and respond via Resolver Lite Mode in the field. Your TradeMatch Score is at stake.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â¸</div>
+      <div class="feat-title">Evidence Upload</div>
+      <div class="feat-desc">Upload photos, videos (max 30s), and PDFs as your defence. All files are time-stamped and user-stamped on upload Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ immutable once submitted.</div>
+      <div class="feat-badge green">Locked Evidence</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ä‚ËÄąÄ…Ă‚Â±Ă„ĹąĂ‚Â¸ÄąÄ…</div>
+      <div class="feat-title">48h SLA Countdown</div>
+      <div class="feat-desc">A live countdown timer shows exactly how long you have to submit your response. Missing the deadline defaults the case against you.</div>
+      <div class="feat-badge red">Time-Critical</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬Â </div>
+      <div class="feat-title">Score Accountability</div>
+      <div class="feat-desc">Disputed jobs affect your TradeMatch Score until resolved. A resolved-in-your-favour outcome can restore and even improve your score.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤ÄąÄ„</div>
+      <div class="feat-title">Cooling-Off Prompt</div>
+      <div class="feat-desc">Before any formal dispute is filed, a "try direct resolution" prompt appears. 68% of disputes resolve with a direct message Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ saving both parties time and score impact.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ä…</div>
+      <div class="feat-title">Full Audit Trail</div>
+      <div class="feat-desc">Every action Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ message, GPS log, photo, milestone approval/rejection Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ is timestamped and presented to the Resolver as an immutable audit trail.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â¬</div>
+      <div class="feat-title">Appeals Process</div>
+      <div class="feat-desc">If the Resolver's decision is unfair, you can appeal within 24h. A senior Trust & Safety member reviews the full case from scratch.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ SETTINGS VENDOR Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-settings" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ä‚ËÄąË‡Ă˘â€žËĂ„ĹąĂ‚Â¸ÄąÄ…</div>
+    <div>
+      <div class="feat-page-title">Command Centre Settings</div>
+      <div class="feat-page-desc">13 settings tabs covering every aspect of your Trust Architecture, automation logic, privacy, financial preferences, and developer tools.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźÄąĹľÄąĹľ</div><div class="feat-title">Trust & Identity</div><div class="feat-desc">Manage verification status, upload missing documents, and track your OCR automation pipeline. Missing docs directly affect lead-matching priority.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ä‚ËĂ‚Â­Ă‚Â</div><div class="feat-title">Reputation & Reviews</div><div class="feat-desc">Configure review request timing, auto-reply templates, and semantic analysis sensitivity. Review import from Checkatrade, Rated People, etc.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›ÄąÂ¤</div><div class="feat-title">GPS & Show-Up Score</div><div class="feat-desc">Enable/disable GPS tracking per job, set ETA notification triggers, and view your 90-day arrival accuracy breakdown.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div><div class="feat-title">Lead & AI Matching</div><div class="feat-desc">Set trade categories, job value ranges, maximum travel distance, and keyword preferences that the AI engine uses to filter and rank leads for you.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â¬</div><div class="feat-title">Comms & Quotes</div><div class="feat-desc">Default quote templates, auto-response windows, and notification preferences for new messages, quote acceptances, and escrow events.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â°</div><div class="feat-title">Escrow & Wallet</div><div class="feat-desc">Set your wallet top-up threshold, auto-top-up from card, and payout schedule (instant or weekly). View full escrow transaction history.</div><div class="feat-badge green">Stripe Connect</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ‚Â</div><div class="feat-title">Security & 2FA</div><div class="feat-desc">Enable two-factor authentication (TOTP or SMS), view login history, set session timeout, and revoke active tokens.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â„˘</div><div class="feat-title">Privacy & GDPR</div><div class="feat-desc">Data download, right to erasure requests, consent preferences, and controls over what homeowners can see on your profile before booking.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬ĹĄ</div><div class="feat-title">Alert Waterfall</div><div class="feat-desc">Configure a cascading alert sequence: push first Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ SMS if unread after 10 min Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ email if unread after 30 min. Priority routing for escrow and dispute alerts.</div><div class="feat-badge blue">Advanced</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹĄĂ˘â‚¬â€ť</div><div class="feat-title">Referral & Fees</div><div class="feat-desc">View your referral link, track referred vendors, and see reduced platform fees earned via referrals. Each successful referral reduces your lead purchase fee by 5%.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă˘â‚¬Ä…</div><div class="feat-title">Platform SLA & Accountability</div><div class="feat-desc">Review TradeMatch's commitments to you: response times, payout SLAs, dispute turnaround guarantees, and your rights under the Vendor Charter.</div></div>
+    <div class="feat-card"><div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬ĹźĂ‚Â Ă„ĹąĂ‚Â¸ÄąÄ…</div><div class="feat-title">Developer & Webhooks</div><div class="feat-desc">Access your API key, configure webhooks for escrow events, and integrate with CRM or invoicing systems. Supports job.created, milestone.approved, and dispute.opened events.</div><div class="feat-badge amber">Pro+</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ COPILOT Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-copilot" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</div>
+    <div>
+      <div class="feat-page-title">Copilot Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ AI Help & Support</div>
+      <div class="feat-page-desc">A contextually-aware AI assistant that knows your account, jobs, escrow status, and score in real time. 24/7 active.</div>
+    </div>
+  </div>
+
+  <div class="big-feat sr">
+    <div class="big-feat-content">
+      <div class="sec-label">Tradesperson Ä‚â€šĂ‚Â· Copilot</div>
+      <h2 class="big-feat-title">Account-Aware Ä‚â€šĂ‚Â· Zero Navigation</h2>
+      <p class="big-feat-desc">Unlike generic chatbots, TradeMatch Copilot has live read access to your account data. Ask "what's my escrow balance?" or "why is my win rate dropping?" and get a specific, personalised answer Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ not a generic help article link.</p>
+      <ul class="step-list">
+        <li class="step-item"><span class="step-num">1</span><span class="step-text"><strong>Quick Prompts:</strong> One-tap shortcuts for the most common queries Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ escrow, score, disputes, leads, win rate.</span></li>
+        <li class="step-item"><span class="step-num">2</span><span class="step-text"><strong>Contextual Detection:</strong> Copilot reads your search query and pre-populates your live status before you even ask.</span></li>
+        <li class="step-item"><span class="step-num">3</span><span class="step-text"><strong>System Health Dashboard:</strong> Live status of all 6 platform engines (Lead, Escrow, GPS, NICEIC API, Dispute, Payments) Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ visible at the top of Help & Support.</span></li>
+        <li class="step-item"><span class="step-num">4</span><span class="step-text"><strong>AEO Answer Engine:</strong> Designed to surface in Google's AI Overviews Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ search "TradeMatch electrician help" and get answers linked directly to your account.</span></li>
+      </ul>
+    </div>
+    <div class="mock sr d2">
+      <div class="mock-header">
+        <div class="mock-dots"><div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div></div>
+        <div class="mock-title-bar">Copilot Ä‚â€šĂ‚Â· 24/7 Active</div>
+      </div>
+      <div class="mock-body">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          <span class="mock-pill green" style="cursor:pointer;padding:5px 10px">Ă„â€ÄąĹźĂ˘â‚¬â„˘Ă‚Â° Escrow payment</span>
+          <span class="mock-pill blue" style="cursor:pointer;padding:5px 10px">Ă„â€ÄąĹźĂ˘â‚¬Ĺ›Ă‚Â Improve score</span>
+          <span class="mock-pill amber" style="cursor:pointer;padding:5px 10px">Ä‚ËÄąË‡Ă˘â‚¬â€śĂ„ĹąĂ‚Â¸ÄąÄ… Raise dispute</span>
+          <span class="mock-pill green" style="cursor:pointer;padding:5px 10px">Ă„â€ÄąĹźÄąËťÄąÂ» Win rate advice</span>
+        </div>
+        <div class="notif" style="margin-bottom:8px">
+          <span>Ă„â€ÄąĹźĂ‚Â¤Ă˘â‚¬â€ś</span>
+          <div class="notif-content">
+            <div class="title">Copilot Contextual Intelligence</div>
+            <div class="sub">Detected: You searched "payment" Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ here's your live escrow status</div>
+          </div>
+        </div>
+        <div style="background:var(--dk-bg4);border:1px solid var(--border-neon);border-radius:var(--r2);padding:12px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--dk-t3)">Job T48312</span><span class="mock-pill green">On-Site Ä‚â€šĂ‚Â· Active</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--dk-t3)">Frozen Escrow</span><span style="color:var(--amber);font-weight:700">Ä‚â€šÄąÂ1,850</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:var(--dk-t3)">Active Dispute</span><span class="mock-pill red">D-2847</span></div>
+        </div>
+        <div style="margin-top:8px">
+          <div style="display:flex;gap:4px;margin-bottom:4px">
+            <div style="width:8px;height:8px;background:var(--neon);border-radius:50%;margin-top:4px;animation:pulse 1.5s infinite"></div>
+            <span style="font-size:11px;color:var(--neon)">Lead Engine Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ 100% operational</span>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:4px">
+            <div style="width:8px;height:8px;background:var(--neon);border-radius:50%;margin-top:4px;animation:pulse 1.5s infinite .3s"></div>
+            <span style="font-size:11px;color:var(--neon)">Escrow Engine Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ 100% operational</span>
+          </div>
+          <div style="display:flex;gap:4px">
+            <div style="width:8px;height:8px;background:var(--amber);border-radius:50%;margin-top:4px;animation:pulse 1.5s infinite .6s"></div>
+            <span style="font-size:11px;color:var(--amber)">NICEIC API Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Minor latency (+4s)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ PLANS Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬Ä‚ËĂ˘â‚¬ĹĄĂ˘â€šÂ¬ -->
+<div id="vd-plans" class="section">
+  <div class="feat-page-header sr">
+    <div class="feat-page-icon">Ă„â€ÄąĹźĂ˘â‚¬â„˘ÄąËť</div>
+    <div>
+      <div class="feat-page-title">Plans & Pricing</div>
+      <div class="feat-page-desc">Three vendor tiers: Free, Pro, and Elite. Homeowners are always free. Vendors fund the platform.</div>
+    </div>
+  </div>
+
+  <div class="feat-grid three sr">
+    <div class="feat-card">
+      <div class="feat-icon">Ă„â€ÄąĹźĂ˘â‚¬Â Ă˘â‚¬Ĺ›</div>
+      <div class="feat-title">Free Tier</div>
+      <div class="feat-desc">Basic profile, standard lead access, escrow up to Ä‚â€šÄąÂ5k per job, standard verification tier, and community support. No monthly fee.</div>
+      <div class="feat-badge green">No Monthly Fee</div>
+    </div>
+    <div class="feat-card" style="border-color:var(--border-neon)">
+      <div class="feat-icon">Ä‚ËÄąË‡Ă‹â€ˇ</div>
+      <div class="feat-title">Pro Plan</div>
+      <div class="feat-desc">Priority lead matching, Ä‚â€šÄąÂ10k+ job access, full Analytics suite, Coverage Map, heatmap access, 1,000 monthly impressions, and faster dispute SLA.</div>
+      <div class="feat-badge amber">Most Popular</div>
+    </div>
+    <div class="feat-card" style="border-color:rgba(147,51,234,.3)">
+      <div class="feat-icon">Ă„â€ÄąĹźÄąÄ…Ă˘â‚¬Â </div>
+      <div class="feat-title">Elite Plan</div>
+      <div class="feat-desc">Everything in Pro plus: Master Craftsman profile skin, Trust Radius SEO pages, storm forecast overlay, unlimited impressions, dedicated account manager, and early access features.</div>
+      <div class="feat-badge elite">Elite</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end tradesperson tab -->
+
+<!-- Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â
+     FAQ
+Ä‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚ÂÄ‚ËĂ˘â‚¬ËĂ‚Â -->
+<div class="wrap" id="faq">
+  <div class="divider"></div>
+  <div class="sec-label sr">Help Ä‚â€šĂ‚Â· Frequently Asked Questions</div>
+  <h2 class="sec-h2 sr d1"><em>Common Questions</em></h2>
+
+  <div class="acc-section sr d2">
+    <div class="acc-section-title">For Homeowners</div>
+
+    <div class="acc-item open">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">How does Stripe Escrow protect my money?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>When you select a quote and fund escrow, your payment goes directly into a Stripe-held, FCA-regulated account. TradeMatch <strong>cannot</strong> touch these funds without your explicit milestone approval. Each milestone is released only when you review the submitted evidence (photos + GPS logs) and tap "Approve." The final 20% is locked until a certificate or final sign-off is received. Every release generates an immutable reference number added to your Home Passport.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">What happens if the tradesperson doesn't show up?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>If a GPS-enabled vendor misses their arrival window without prior notice, an automatic alert is sent to TradeMatch. The vendor's Show-Up Score is penalised and escrow is paused. You can raise a dispute from the dashboard with one tap Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ the 48h resolution clock starts immediately and all funds remain frozen until the case is resolved. Consistently absent vendors are suspended from the platform.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">Is it really free for homeowners?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>Yes. <strong>Getting quotes, managing projects, using escrow, and raising disputes are all free for homeowners</strong>. The only cost is the TradeMatch Platform Fee, which is included in the vendor's quote total Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ it covers escrow management, dispute resolution, and the TradeMatch Guarantee. You never pay a subscription. Vendors fund the platform through lead purchases and plan subscriptions.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">What is the Safety PIN and how does it work?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>Before each job, a unique 4-digit PIN is generated and sent to your TradeMatch account. Your assigned tradesperson must enter this PIN via their app before they can unlock the job on the platform and access your address details. This prevents impersonation Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ if someone arrives claiming to be your booked tradesperson but can't enter the PIN, do not let them in and report it immediately from the app.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">Can I reject a milestone and keep my money?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>Yes. If you're unsatisfied with a milestone submission, tap "Reject" and enter a written reason. Funds stay frozen and the vendor is notified to address your concerns. If you cannot reach an agreement, you can escalate to a formal Dispute, which triggers the 48h resolution process. The Resolver reviews all evidence and issues a binding decision on whether the funds should be released, partially released, or returned.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-section sr d3">
+    <div class="acc-section-title">For Tradespeople</div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">How does the AI lead matching work?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>The AI engine matches jobs to vendors based on: <strong>trade category</strong> (parsed from job description), <strong>service area</strong> (your travel-time rings vs job postcode), <strong>active credentials</strong> (only live certifications count Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ expired certs exclude you from relevant jobs), <strong>Trust Score</strong>, and <strong>availability status</strong>. A 94% match score means the job is an excellent fit across all dimensions. Your AI matching priority increases as you complete your Credentials Vault and raise your Trust Score.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">When do I get paid Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ how does escrow payout work?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>Once a homeowner approves a milestone, funds are released from escrow to your TradeMatch Wallet within <strong>minutes</strong> via Stripe Connect. From your Wallet, you can:</p>
+        <ul>
+          <li><strong>Instant payout</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ transfer to your bank immediately (small fee may apply)</li>
+          <li><strong>Weekly payout</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ automated batch transfer every Monday</li>
+          <li><strong>Use as platform credit</strong> Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ spend your wallet balance on lead purchases</li>
+        </ul>
+        <p>Configure your payout preference in Settings Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ Financial Ä‚ËĂ˘â‚¬Â Ă˘â‚¬â„˘ Escrow & Wallet.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">What happens to my account if my insurance lapses?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>TradeMatch monitors your PLI expiry date automatically. You'll receive:</p>
+        <ul>
+          <li><strong>60-day warning</strong> with an auto-renewal quote from a TradeMatch affiliate (typically cheaper than your current provider)</li>
+          <li><strong>28-day urgent alert</strong> shown on your Credentials Vault and dashboard</li>
+          <li><strong>On expiry:</strong> Your profile is paused from new job matching and a Payment Hold is applied to any active escrow. Homeowners are notified.</li>
+        </ul>
+        <p>Renew immediately via the Auto-Renewal Assistant to restore your status Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ the new certificate is automatically pushed into your Vault.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">How is my TradeMatch Score calculated?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p>The TradeMatch Score is a composite of four weighted dimensions:</p>
+        <ul>
+          <li><strong>Vetting (30%):</strong> Credential completeness, KYC pass, DBS result, and Companies House match</li>
+          <li><strong>Sentiment (30%):</strong> AI analysis of review language, message tone, and homeowner satisfaction signals</li>
+          <li><strong>Reliability (20%):</strong> Show-Up Score, on-time milestone submission rate, and dispute-free completion rate</li>
+          <li><strong>Response (20%):</strong> Average response time to messages, quote turnaround, and Copilot engagement</li>
+        </ul>
+        <p>A +20% bonus applies if all 4 verification levels are complete. The score updates daily and directly affects your AI lead matching priority and maximum escrow limit.</p>
+      </div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-trigger" onclick="toggleAcc(this)">
+        <span class="acc-q">What's the difference between Pro and Elite plans?</span>
+        <span class="acc-arrow">Ä‚ËĂ˘â‚¬â€śĂ„Ëť</span>
+      </button>
+      <div class="acc-body">
+        <p><strong>Pro Plan</strong> unlocks: priority lead matching, access to Ä‚â€šÄąÂ10k+ jobs, full analytics dashboard, coverage map, heatmaps, 1,000 monthly impressions, and faster dispute response SLA.</p>
+        <p><strong>Elite Plan</strong> includes everything in Pro plus: the exclusive Master Craftsman profile skin (top 5% only), Trust Radius SEO pages per postcode, storm forecast map overlay, unlimited impressions, a dedicated account manager, early access to new features, and a coveted hallmark badge that is prominently displayed in homeowner search results.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="wrap">
+  <div class="cta-band sr">
+    <div class="sec-label" style="justify-content:center">Get Started</div>
+    <h2 class="cta-title">Ready to use TradeMatch?</h2>
+    <p class="cta-sub">Post your first job for free. Homeowners never pay Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ tradespeople join free and upgrade when ready.</p>
+    <div class="cta-btns">
+      <a class="btn-primary" href="#">Post a Job Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ Free</a>
+      <a class="btn-ghost" href="#">Join as a Tradesperson</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">Trade<span>Match</span></div>
+        <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
+        <div class="footer-socials">
+          <a href="https://facebook.com/tradematchuk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://x.com/tradematch_uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+          <a href="https://www.linkedin.com/company/tradematch-uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="https://instagram.com/tradematch.uk" target="_blank" rel="noopener noreferrer" class="fsoc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>For Homeowners</h4>
+        <ul>
+          <li><a href="post-a-job.html">Post a Job</a></li>
+          <li><a href="how-escrow-works.html">How Escrow Works</a></li>
+          <li><a href="browse-trades.html">Browse Trades</a></li>
+          <li><a href="cost-guides.html">Cost Guides</a></li>
+          <li><a href="safety-verification.html">Safety & Verification</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Tradespeople</h4>
+        <ul>
+          <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
+          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
+          <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
+          <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Find Trades</h4>
+        <ul>
+          <li><a href="find-tradespeople.html?trade=Plumbing">Plumbers</a></li>
+          <li><a href="find-tradespeople.html?trade=Electrical">Electricians</a></li>
+          <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
+          <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
+          <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
+          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About TradeMatch</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="careers.html">Careers</a></li>
+          <li><a href="press.html">Press</a></li>
+          <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="referral.html">Referral Programme</a></li>
+          <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
+          <li><a href="apply.html">Apply</a></li>
+          <li><a href="how-it-works.html">How It Works</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
+      <div class="footer-legal">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="contact.html">Complaints</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+
+<script>
+// SCROLL REVEAL
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.sr').forEach(el => observer.observe(el));
+
+// TABS
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // re-observe new elements
+  document.querySelectorAll('#tab-' + tab + ' .sr').forEach(el => observer.observe(el));
+}
+
+// ACCORDION
+function toggleAcc(btn) {
+  const item = btn.closest('.acc-item');
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+}
+
+// KB SEARCH (simple highlight)
+function searchKB(val) {
+  if (!val) return;
+  const q = val.toLowerCase();
+  // Map to relevant section
+  const map = {
+    'escrow': '#ho-escrow', 'payment': '#ho-payment', 'gps': '#ho-gps',
+    'dispute': '#ho-dispute', 'quote': '#ho-quotes', 'review': '#vd-reviews',
+    'credential': '#vd-credentials', 'lead': '#vd-leads', 'analytics': '#vd-analytics',
+    'passport': '#ho-passport', 'vault': '#ho-vault', 'verify': '#ho-verify',
+    'heatmap': '#vd-heatmaps', 'coverage': '#vd-coverage', 'copilot': '#vd-copilot',
+    'profile': '#vd-profile', 'settings': '#ho-settings', 'milestone': '#ho-escrow',
+    'message': '#ho-messages', 'score': '#ho-verify', 'trust': '#ho-verify',
+    'insurance': '#vd-credentials', 'plan': '#vd-plans', 'free': '#vd-plans',
+  };
+  for (const [key, anchor] of Object.entries(map)) {
+    if (q.includes(key)) {
+      // Determine which tab
+      if (anchor.startsWith('#vd')) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-tradesperson').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+        document.querySelectorAll('#tab-tradesperson .sr').forEach(el => observer.observe(el));
+      } else {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-homeowner').classList.add('active');
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+      }
+      setTimeout(() => {
+        const el = document.querySelector(anchor);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+      return;
+    }
+  }
+}
+
+// PROGRESS BAR RESET for re-animation
+document.querySelectorAll('.prog-fill').forEach(el => {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = '';
+      }
+    });
+  }, { threshold: 0.5 });
+  obs.observe(el);
+});
+
+// SEARCH ENTER key
+document.getElementById('kbSearch').addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchKB(e.target.value);
+});
+</script>
+</body>
+</html>
