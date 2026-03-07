@@ -6,18 +6,35 @@ function sanitizeDatabaseUrl(rawUrl) {
   try {
     const url = new URL(rawUrl);
     url.searchParams.delete('channel_binding');
-    if (url.hostname.includes('-pooler')) {
-      url.hostname = url.hostname.replace('-pooler', '');
-    }
     return url.toString();
   } catch (error) {
     return rawUrl;
   }
 }
 
+function resolveSslConfig(connectionString) {
+  if (!connectionString) {
+    return process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
+  }
+
+  try {
+    const url = new URL(connectionString);
+    const sslMode = (url.searchParams.get('sslmode') || '').toLowerCase();
+    const needsSsl = process.env.NODE_ENV === 'production'
+      || ['require', 'verify-ca', 'verify-full'].includes(sslMode)
+      || url.hostname.includes('neon.tech');
+
+    return needsSsl ? { rejectUnauthorized: false } : false;
+  } catch (error) {
+    return process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
+  }
+}
+
+const sanitizedConnectionString = sanitizeDatabaseUrl(process.env.DATABASE_URL);
+
 const pool = new Pool({
-  connectionString: sanitizeDatabaseUrl(process.env.DATABASE_URL),
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  connectionString: sanitizedConnectionString,
+  ssl: resolveSslConfig(sanitizedConnectionString),
   max: 20, // Maximum number of connections
   idleTimeoutMillis: 60000, // How long a client is allowed to remain idle
   connectionTimeoutMillis: 15000, // How long to wait when establishing a connection

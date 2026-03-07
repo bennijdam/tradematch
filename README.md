@@ -22,6 +22,29 @@ TradeMatch now includes a component-based Next.js dashboard core in `apps/web-ne
 
 This architecture is validated by the Playwright suite (`pnpm run test:e2e`) and built with `npm --prefix apps/web-next run build`.
 
+### Dashboard Fidelity Modes
+
+The Next.js dashboard routes support two rendering modes:
+
+- **Strict parity mode (default):** vendor/customer dashboards render ZIP-backed iframe sources for pixel fidelity.
+- **Native experiment mode (opt-in):** native React dashboards are enabled only when experiment flags are set.
+
+Environment flags:
+
+- `NEXT_PUBLIC_VENDOR_NATIVE_EXPERIMENT=true` enables native vendor dashboard on `/vendor/dashboard?test-native=true`
+- `NEXT_PUBLIC_CUSTOMER_NATIVE_EXPERIMENT=true` enables native customer dashboard on `/customer/dashboard?test-native=true`
+- `NEXT_PUBLIC_UI_MODE=native` still applies, but only when the corresponding experiment flag is enabled
+
+Visual fidelity checks:
+
+```bash
+# default threshold (currently 0.07)
+npm run test:e2e:visual
+
+# stricter threshold override
+VISUAL_MAX_MISMATCH_RATIO=0.06 npm run test:e2e:visual
+```
+
 ## Environments
 
 - Production frontend: https://www.tradematch.uk

@@ -8,12 +8,25 @@ type SyntheticSession = {
 
 const LEGACY_VENDOR_REDIRECTS: Record<string, string> = {
   '/vendor-dashboard.html': '/vendor/dashboard',
+  '/vendor-dashboard-with-modals': '/vendor/dashboard',
+  '/vendor-dashboard-enhanced': '/vendor/dashboard',
+  '/vendor-analytics': '/vendor/analytics',
+  '/vendor-active-quotes': '/vendor/active-jobs',
+  '/vendor-archived-jobs': '/vendor/active-jobs',
+  '/vendor-impressions': '/vendor/dashboard',
+  '/vendor-heatmaps': '/vendor/heatmaps',
+  '/vendor-timeline': '/vendor/dashboard',
+  '/vendor-badges': '/vendor/dashboard',
+  '/vendor-billing': '/vendor/billing',
+  '/vendor-profile': '/vendor/profile',
+  '/vendor-coverage': '/vendor/coverage-map',
+  '/vendor-settings': '/vendor/settings',
   '/vendor-active-jobs.html': '/vendor/active-jobs',
   '/vendor-new-leads.html': '/vendor/leads',
   '/vendor-messages.html': '/vendor/messages',
   '/vendor-analytics.html': '/vendor/analytics',
   '/vendor-reviews.html': '/vendor/reviews',
-  '/vendor-coverage.html': '/vendor/coverage',
+  '/vendor-coverage.html': '/vendor/coverage-map',
   '/vendor-profile.html': '/vendor/profile',
   '/vendor-billing.html': '/vendor/billing',
   '/vendor-settings.html': '/vendor/settings',
@@ -27,17 +40,31 @@ const LEGACY_VENDOR_REDIRECTS: Record<string, string> = {
   '/vendor-dashboard/vendor-profile': '/vendor/profile',
   '/vendor-dashboard/vendor-billing': '/vendor/billing',
   '/vendor-dashboard/vendor-settings': '/vendor/settings',
-  '/vendor-dashboard/vendor-coverage': '/vendor/coverage',
+  '/vendor-dashboard/vendor-coverage': '/vendor/coverage-map',
   '/vendor-dashboard/vendor-timeline': '/vendor/analytics',
   '/vendor-dashboard/vendor-impressions': '/vendor/analytics',
-  '/vendor-dashboard/vendor-heatmaps': '/vendor/analytics',
+  '/vendor-dashboard/vendor-heatmaps': '/vendor/heatmaps',
   '/vendor-dashboard/vendor-badges': '/vendor/reviews',
   '/vendor-dashboard/vendor-archived-jobs': '/vendor/active-jobs',
   '/vendor-dashboard/vendor-active-quotes': '/vendor/active-jobs',
   '/vendor-dashboard/vendor-new-jobs': '/vendor/active-jobs',
+  '/leads': '/vendor/leads',
+  '/messages': '/vendor/messages',
+  '/settings': '/vendor/settings',
+  '/vendor/won-jobs': '/vendor/active-jobs',
+  '/user/dashboard': '/customer/dashboard',
+  '/user/my-jobs': '/customer/my-jobs',
+  '/user/quotes': '/customer/quotes',
+  '/user/messages': '/customer/messages',
+  '/user/saved-trades': '/customer/saved-trades',
+  '/user/reviews': '/customer/reviews',
+  '/user/notifications': '/customer/notifications',
+  '/user/billing': '/customer/billing',
+  '/user/settings': '/customer/settings',
+  '/user/profile': '/customer/profile',
   '/user-dashboard.html': '/customer/dashboard',
-  '/user-messages.html': '/customer/dashboard#messages',
-  '/user-settings.html': '/customer/dashboard',
+  '/user-messages.html': '/customer/messages',
+  '/user-settings.html': '/customer/settings',
 };
 
 function normalizePath(pathname: string) {
@@ -110,8 +137,12 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
+  const [destinationPath, destinationHash] = destination.split('#');
   const url = request.nextUrl.clone();
-  url.pathname = destination;
+  url.pathname = destinationPath;
+  if (destinationHash) {
+    url.hash = destinationHash;
+  }
   const response = NextResponse.redirect(url, 308);
   if (syntheticSession && !hasSession) {
     applySyntheticCookies(response, syntheticSession);

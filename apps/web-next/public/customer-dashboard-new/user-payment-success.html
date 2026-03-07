@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Secured — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   TRADEMATCH · PAYMENT SUCCESS — THE ARRIVAL EXPERIENCE
+   "Your Project is Now Escrow-Protected"
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.08);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-lg: 0 0 60px rgba(0,229,160,0.25);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+/* Radial bloom behind the checkmark */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,229,160,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(66,165,245,0.04) 0%, transparent 60%);
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  position: sticky; top:0; z-index:100;
+  height:64px; background:rgba(8,12,18,0.94); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 24px; gap:16px;
+}
+.topnav-logo { font-family:var(--ff); font-weight:900; font-size:18px; letter-spacing:-.03em; }
+.topnav-logo span { color:var(--neon); }
+.topnav-spacer { flex:1; }
+.topnav-secure {
+  display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-2);
+  background:var(--bg-tertiary); border:1px solid var(--border); border-radius:6px; padding:6px 12px;
+}
+.topnav-secure svg { width:13px; height:13px; color:var(--neon); }
+
+/* ── MAIN LAYOUT ── */
+.page {
+  max-width:880px; margin:0 auto; padding:40px 24px 100px;
+  position:relative; z-index:1;
+  display:flex; flex-direction:column; gap:24px;
+}
+
+/* ── SUCCESS HEADER ── */
+.success-header {
+  text-align:center; padding:40px 24px 32px;
+  animation: fadeInDown .5s ease both;
+}
+@keyframes fadeInDown {
+  from { opacity:0; transform:translateY(-20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(0.6); }
+  to   { opacity:1; transform:scale(1); }
+}
+
+/* The big neon check ring */
+.check-ring {
+  width:88px; height:88px; margin:0 auto 24px;
+  border-radius:50%; border:2px solid var(--neon);
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+  box-shadow: 0 0 40px rgba(0,229,160,0.3), inset 0 0 20px rgba(0,229,160,0.05);
+  animation: scaleIn .5s cubic-bezier(.34,1.56,.64,1) both .1s;
+}
+.check-ring::before {
+  content:''; position:absolute; inset:-8px; border-radius:50%;
+  border:1px solid rgba(0,229,160,0.2);
+}
+.check-ring::after {
+  content:''; position:absolute; inset:-16px; border-radius:50%;
+  border:1px solid rgba(0,229,160,0.1);
+}
+.check-ring svg { width:36px; height:36px; color:var(--neon); }
+.success-title {
+  font-family:var(--ff); font-weight:900; font-size:30px; color:var(--text-1);
+  letter-spacing:-.03em; line-height:1.15; margin-bottom:10px;
+  animation: fadeInDown .4s ease both .2s;
+}
+.success-title span { color:var(--neon); }
+.success-sub {
+  font-size:15px; color:var(--text-2); line-height:1.5; max-width:480px; margin:0 auto 16px;
+  animation: fadeInDown .4s ease both .3s;
+}
+.ref-row {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--bg-tertiary); border:1px solid var(--border-2);
+  border-radius:8px; padding:8px 16px;
+  animation: fadeInDown .4s ease both .35s;
+}
+.ref-badge {
+  font-family:var(--fm); font-size:12px; color:var(--text-2);
+  display:flex; align-items:center; gap:6px;
+}
+.ref-badge span { color:var(--neon); }
+.ref-divider { width:1px; height:16px; background:var(--border-2); }
+
+/* ── ESCROW STATUS CARD ── */
+.escrow-card {
+  background:linear-gradient(135deg, rgba(0,229,160,0.05) 0%, rgba(66,165,245,0.03) 100%);
+  border:1px solid var(--border-neon);
+  border-radius:16px; padding:24px;
+  position:relative; overflow:hidden;
+  animation: fadeInUp .5s ease both .2s;
+}
+.escrow-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--neon), var(--accent-blue));
+}
+.escrow-card-top {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px;
+}
+.escrow-active-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-family:var(--ff); font-weight:700; letter-spacing:.08em;
+  color:var(--neon); background:var(--neon-dim); border:1px solid var(--border-neon);
+  border-radius:20px; padding:3px 10px;
+}
+.escrow-active-dot { width:6px; height:6px; border-radius:50%; background:var(--neon); animation:blink 1.5s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.escrow-amount {
+  font-family:var(--ff); font-weight:900; font-size:42px; color:var(--text-1);
+  letter-spacing:-.04em; line-height:1;
+}
+.escrow-amount span { font-size:22px; font-weight:600; color:var(--text-2); vertical-align:super; }
+.escrow-desc { font-size:14px; color:var(--text-2); line-height:1.6; margin-top:8px; max-width:440px; }
+.escrow-desc strong { color:var(--text-1); }
+.escrow-meta-row {
+  display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;
+  padding-top:16px; border-top:1px solid var(--border);
+}
+.escrow-meta-item {
+  display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px;
+}
+.escrow-meta-label { font-size:10px; color:var(--text-3); font-family:var(--ff); font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+.escrow-meta-val { font-family:var(--fm); font-size:12px; color:var(--text-1); font-weight:500; }
+.escrow-stripe-badge {
+  display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-2);
+}
+.stripe-pill {
+  background:#6772e5; border-radius:4px; padding:2px 8px;
+  font-size:11px; font-weight:800; color:#fff; letter-spacing:-.01em;
+}
+
+/* ── TWO-COLUMN GRID ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; animation: fadeInUp .5s ease both .35s; }
+@media(max-width:640px) { .two-col { grid-template-columns:1fr; } }
+
+/* ── ARRIVAL ROADMAP ── */
+.roadmap-card {
+  background:var(--bg-secondary); border:1px solid var(--border-2);
+  border-radius:16px; padding:22px;
+}
+.card-header {
+  display:flex; align-items:center; gap:8px; margin-bottom:20px;
+}
+.card-header-icon {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--neon-dim); border:1px solid var(--border-neon);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.card-header-icon svg { width:16px; height:16px; color:var(--neon); }
+.card-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); }
+.card-sub { font-size:11px; color:var(--text-2); margin-top:1px; }
+
+/* roadmap steps */
+.roadmap { display:flex; flex-direction:column; gap:0; }
+.roadmap-step { display:flex; gap:14px; position:relative; }
+.roadmap-step:not(:last-child)::before {
+  content:''; position:absolute; left:15px; top:30px; bottom:-4px; width:1px;
+  background:var(--border-2);
+}
+.roadmap-step.active:not(:last-child)::before { background:var(--neon); opacity:.3; }
+.step-node {
+  width:30px; height:30px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border:1.5px solid var(--border-2); background:var(--bg-primary);
+  font-size:11px; color:var(--text-3); position:relative; z-index:1;
+  transition:all .3s;
+}
+.roadmap-step.active .step-node {
+  border-color:var(--neon); color:var(--neon);
+  background:var(--neon-dim);
+  box-shadow:0 0 16px rgba(0,229,160,0.2);
+}
+.roadmap-step.done .step-node {
+  border-color:var(--neon); background:var(--neon);
+  color:var(--bg-primary); font-weight:700;
+}
+.roadmap-step.pending .step-node { opacity:.5; }
+.roadmap-step.tracking .step-node {
+  border-color:var(--accent-amber); color:var(--accent-amber);
+  background:rgba(255,167,38,0.08);
+}
+.step-content { padding:4px 0 24px; }
+.step-title { font-family:var(--ff); font-weight:700; font-size:13px; color:var(--text-1); line-height:1.3; }
+.roadmap-step.pending .step-title { color:var(--text-2); }
+.step-desc { font-size:11px; color:var(--text-2); margin-top:3px; line-height:1.4; }
+.step-time { font-family:var(--fm); font-size:10px; color:var(--text-3); margin-top:3px; }
+.step-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-family:var(--ff); font-weight:700;
+  padding:2px 8px; border-radius:4px; margin-top:5px;
+}
+.step-chip.done-chip { background:rgba(0,229,160,0.1); color:var(--neon); border:1px solid rgba(0,229,160,0.2); }
+.step-chip.live-chip { background:rgba(255,167,38,0.1); color:var(--accent-amber); border:1px solid rgba(255,167,38,0.2); }
+
+/* ── LIVE TRACKING PREVIEW ── */
+.tracking-card {
+  background:var(--bg-secondary); border:1px solid var(--border-2);
+  border-radius:16px; padding:22px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.map-placeholder {
+  width:100%; height:160px; border-radius:10px;
+  background:linear-gradient(135deg, #0a1018 0%, #091015 50%, #0a1218 100%);
+  border:1px solid var(--border);
+  position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+/* Fake grid lines */
+.map-placeholder::before {
+  content:''; position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(255,255,255,0.03) 30px),
+    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(255,255,255,0.03) 30px);
+}
+.map-roads {
+  position:absolute; inset:0; pointer-events:none;
+}
+.map-road {
+  position:absolute; background:rgba(255,255,255,0.07); border-radius:2px;
+}
+.map-location-pin {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-60%);
+  display:flex; flex-direction:column; align-items:center; gap:0;
+}
+.pin-outer {
+  width:28px; height:28px; border-radius:50%;
+  background:rgba(0,229,160,0.15); border:2px solid var(--neon);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--neon-glow);
+  animation: float 3s ease-in-out infinite;
+}
+.pin-outer::before {
+  content:''; position:absolute; width:44px; height:44px; border-radius:50%;
+  border:1px solid rgba(0,229,160,0.2); animation:ping 2s ease infinite;
+}
+@keyframes ping { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.8);opacity:0} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.pin-outer svg { width:14px; height:14px; color:var(--neon); }
+.pin-dot { width:6px; height:6px; border-radius:50%; background:var(--neon); margin-top:-2px; }
+.map-vendor-route {
+  position:absolute; top:30%; left:20%; right:30%;
+  height:2px; background:linear-gradient(90deg, transparent, rgba(0,229,160,0.4), transparent);
+  border-radius:1px; animation: routePulse 2.5s ease infinite;
+}
+@keyframes routePulse { 0%,100%{opacity:.3} 50%{opacity:.8} }
+.map-label {
+  position:absolute; bottom:10px; left:10px; right:10px;
+  font-size:10px; font-family:var(--ff); font-weight:600; color:var(--text-3);
+  text-align:center;
+}
+/* GPS active status */
+.tracking-status {
+  display:flex; align-items:center; gap:10px;
+  background:var(--bg-tertiary); border:1px solid var(--border); border-radius:8px; padding:10px 12px;
+}
+.tracking-status-dot {
+  width:8px; height:8px; border-radius:50%; background:var(--accent-amber); flex-shrink:0;
+  animation:blink 2s ease infinite;
+}
+.tracking-status-text { font-size:12px; color:var(--text-2); flex:1; }
+.tracking-status-text strong { color:var(--text-1); display:block; font-size:12px; }
+.tracking-eta {
+  font-family:var(--fm); font-size:11px; color:var(--accent-amber); font-weight:500; flex-shrink:0;
+}
+
+/* ── MESSAGE CENTRE CTA ── */
+.message-cta {
+  background:var(--bg-secondary); border:1px solid var(--border-2);
+  border-radius:16px; padding:22px;
+  display:flex; align-items:center; gap:16px;
+  animation: fadeInUp .5s ease both .5s;
+  cursor:pointer; transition:border-color .2s, background .2s;
+}
+.message-cta:hover { border-color:var(--border-neon); background:var(--bg-tertiary); }
+.message-cta-icon {
+  width:48px; height:48px; border-radius:12px; flex-shrink:0;
+  background:var(--neon-dim); border:1px solid var(--border-neon);
+  display:flex; align-items:center; justify-content:center;
+}
+.message-cta-icon svg { width:24px; height:24px; color:var(--neon); }
+.message-cta-content { flex:1; }
+.message-cta-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); margin-bottom:4px; }
+.message-cta-sub { font-size:12px; color:var(--text-2); line-height:1.4; }
+.message-cta-arrow { color:var(--text-3); transition:color .2s, transform .2s; }
+.message-cta:hover .message-cta-arrow { color:var(--neon); transform:translateX(4px); }
+.message-cta-arrow svg { width:20px; height:20px; }
+
+/* ── 48hr DISPUTE WINDOW ── */
+.dispute-window {
+  background:var(--bg-secondary); border:1px solid var(--border-2);
+  border-radius:16px; padding:22px;
+  display:flex; gap:20px; align-items:flex-start;
+  animation: fadeInUp .5s ease both .55s;
+}
+.dispute-icon {
+  width:40px; height:40px; flex-shrink:0; border-radius:10px;
+  background:rgba(255,71,87,0.1); border:1px solid rgba(255,71,87,0.2);
+  display:flex; align-items:center; justify-content:center;
+}
+.dispute-icon svg { width:20px; height:20px; color:var(--accent-danger); }
+.dispute-content { flex:1; }
+.dispute-title { font-family:var(--ff); font-weight:700; font-size:13px; color:var(--text-1); margin-bottom:6px; }
+.dispute-desc { font-size:12px; color:var(--text-2); line-height:1.5; margin-bottom:12px; }
+
+/* Countdown timer */
+.countdown-wrap { display:flex; gap:8px; align-items:center; }
+.countdown-unit { text-align:center; }
+.countdown-num {
+  font-family:var(--fm); font-size:20px; font-weight:600; color:var(--text-1);
+  background:var(--bg-tertiary); border:1px solid var(--border-2);
+  border-radius:6px; padding:4px 10px; display:block; min-width:42px;
+}
+.countdown-label { font-size:9px; color:var(--text-3); font-family:var(--ff); text-transform:uppercase; margin-top:3px; letter-spacing:.06em; }
+.countdown-sep { font-size:18px; color:var(--text-3); margin-top:-10px; font-family:var(--fm); }
+.dispute-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-family:var(--ff); font-weight:700;
+  padding:8px 16px; border-radius:8px; cursor:pointer; border:none;
+  background:rgba(255,71,87,0.1); color:var(--accent-danger);
+  border:1px solid rgba(255,71,87,0.2); transition:all .2s; margin-top:12px;
+}
+.dispute-btn:hover { background:rgba(255,71,87,0.18); }
+
+/* ── INSURANCE UPSELL BANNER ── */
+.insurance-banner {
+  background:linear-gradient(135deg, rgba(156,95,233,0.08) 0%, rgba(66,165,245,0.05) 100%);
+  border:1px solid rgba(156,95,233,0.25);
+  border-radius:16px; padding:22px;
+  display:flex; gap:16px; align-items:center;
+  animation: fadeInUp .5s ease both .6s;
+}
+.insurance-badge {
+  flex-shrink:0; width:48px; height:48px; border-radius:12px;
+  background:rgba(156,95,233,0.1); border:1px solid rgba(156,95,233,0.25);
+  display:flex; align-items:center; justify-content:center;
+}
+.insurance-badge svg { width:24px; height:24px; color:var(--accent-purple); }
+.insurance-content { flex:1; }
+.insurance-label {
+  font-size:9px; font-family:var(--ff); font-weight:700; letter-spacing:.1em;
+  color:var(--accent-purple); text-transform:uppercase; margin-bottom:4px;
+}
+.insurance-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); margin-bottom:4px; }
+.insurance-desc { font-size:12px; color:var(--text-2); line-height:1.4; }
+.insurance-cta {
+  display:flex; align-items:center; gap:6px; flex-shrink:0;
+  font-size:12px; font-family:var(--ff); font-weight:700;
+  padding:10px 18px; border-radius:8px; cursor:pointer; border:none;
+  background:rgba(156,95,233,0.15); color:var(--accent-purple);
+  border:1px solid rgba(156,95,233,0.3); transition:all .2s; white-space:nowrap;
+}
+.insurance-cta:hover { background:rgba(156,95,233,0.22); }
+
+/* ── BOTTOM CTA BAR ── */
+.bottom-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:90;
+  background:rgba(8,12,18,0.96); backdrop-filter:blur(20px);
+  border-top:1px solid var(--border-2);
+  padding:14px 24px; display:flex; align-items:center; gap:12px; justify-content:center;
+}
+.btn-primary {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:13px 28px; border-radius:10px; border:none; cursor:pointer;
+  background:var(--neon); color:var(--bg-primary);
+  font-family:var(--ff); font-weight:800; font-size:14px; letter-spacing:.02em;
+  box-shadow:0 0 28px rgba(0,229,160,0.3); transition:all .25s;
+  text-decoration:none;
+}
+.btn-primary:hover { background:#00ffb2; box-shadow:var(--neon-glow); transform:translateY(-2px); }
+.btn-primary svg { width:16px; height:16px; }
+.btn-outline {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:13px 24px; border-radius:10px; cursor:pointer;
+  background:transparent; color:var(--text-1);
+  font-family:var(--ff); font-weight:700; font-size:14px;
+  border:1px solid var(--border-2); transition:all .25s;
+  text-decoration:none;
+}
+.btn-outline:hover { border-color:var(--border-neon); color:var(--neon); }
+
+/* Animations */
+.page > * { animation: fadeInUp .5s ease both; }
+.page > *:nth-child(1) { animation-delay:.1s; }
+.page > *:nth-child(2) { animation-delay:.2s; }
+.page > *:nth-child(3) { animation-delay:.32s; }
+.page > *:nth-child(4) { animation-delay:.44s; }
+.page > *:nth-child(5) { animation-delay:.52s; }
+.page > *:nth-child(6) { animation-delay:.58s; }
+
+/* ── DIRECT MATCH SUCCESS STYLES ── */
+.check-ring.direct-ring {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 40px rgba(255,167,38,0.3), inset 0 0 20px rgba(255,167,38,0.05);
+}
+.check-ring.direct-ring svg { color: var(--accent-amber); }
+.success-title.direct-title span { color: var(--accent-amber); }
+
+/* Direct info card */
+.direct-card {
+  background: linear-gradient(135deg, rgba(255,167,38,0.06) 0%, rgba(255,71,87,0.03) 100%);
+  border: 1px solid rgba(255,167,38,0.25);
+  border-radius: 16px; padding: 24px;
+  position: relative; overflow: hidden;
+  animation: fadeInUp .5s ease both .2s;
+}
+.direct-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--accent-amber), var(--accent-danger));
+}
+.direct-pill {
+  display:inline-flex; align-items:center; gap:5px; margin-bottom:14px;
+  font-size:10px; font-family:var(--ff); font-weight:700; letter-spacing:.08em;
+  color:var(--accent-amber); background:rgba(255,167,38,0.1);
+  border:1px solid rgba(255,167,38,0.25); border-radius:20px; padding:3px 10px;
+}
+.direct-pill-dot { width:6px; height:6px; border-radius:50%; background:var(--accent-amber); animation:blink 1.5s ease infinite; }
+.direct-booking-row {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px;
+}
+.direct-vendor-name {
+  font-family:var(--ff); font-weight:900; font-size:26px; color:var(--text-1);
+  letter-spacing:-.02em; line-height:1;
+}
+.direct-amount {
+  font-family:var(--ff); font-weight:900; font-size:26px; color:var(--accent-amber);
+  letter-spacing:-.02em; line-height:1; text-align:right;
+}
+.direct-amount-label { font-size:11px; color:var(--text-3); text-align:right; margin-top:3px; }
+.direct-meta-row {
+  display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;
+  padding-top:14px; border-top:1px solid var(--border);
+}
+.direct-meta-item {
+  display:flex; flex-direction:column; gap:3px; flex:1; min-width:120px;
+}
+.direct-meta-label { font-size:10px; color:var(--text-3); font-family:var(--ff); font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+.direct-meta-val { font-family:var(--fm); font-size:12px; color:var(--text-1); font-weight:500; }
+
+/* Direct checklist card */
+.direct-checklist-card {
+  background: var(--bg-secondary); border: 1px solid var(--border-2);
+  border-radius: 16px; padding: 22px;
+  animation: fadeInUp .5s ease both .35s;
+}
+.direct-checklist-title {
+  font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.direct-checklist-title svg { width:16px; height:16px; color:var(--accent-amber); }
+.dcheck-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 0; border-bottom:1px solid var(--border);
+  font-size:13px; color:var(--text-2); line-height:1.5;
+}
+.dcheck-item:last-child { border-bottom:none; padding-bottom:0; }
+.dcheck-icon {
+  width:28px; height:28px; border-radius:7px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+  background:var(--bg-tertiary); border:1px solid var(--border);
+}
+.dcheck-item strong { color:var(--text-1); display:block; margin-bottom:2px; }
+
+/* Download agreement button */
+.agreement-btn {
+  display:inline-flex; align-items:center; gap:8px; margin-top:14px;
+  padding:11px 20px; border-radius:9px; cursor:pointer; border:none;
+  background:rgba(255,167,38,0.1); color:var(--accent-amber);
+  border:1px solid rgba(255,167,38,0.25); transition:all .2s;
+  font-family:var(--ff); font-weight:700; font-size:12px; letter-spacing:.02em;
+}
+.agreement-btn:hover { background:rgba(255,167,38,0.18); transform:translateY(-1px); }
+.agreement-btn svg { width:14px; height:14px; }
+
+/* Unprotected notice banner */
+.unprotected-notice {
+  background:rgba(255,71,87,0.06); border:1px solid rgba(255,71,87,0.2);
+  border-radius:10px; padding:14px 16px;
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:12px; color:var(--text-2); line-height:1.5;
+  margin-top:14px;
+}
+.unprotected-notice svg { width:15px; height:15px; color:var(--accent-danger); flex-shrink:0; margin-top:1px; }
+.unprotected-notice strong { color:var(--accent-danger); }
+
+/* Hide / show helpers */
+.escrow-only { }
+.direct-only { display:none; }
+body.is-direct .escrow-only { display:none !important; }
+body.is-direct .direct-only { display:block; }
+body.is-direct .topnav-secure { background:rgba(255,167,38,0.08); border-color:rgba(255,167,38,0.2); color:var(--accent-amber); }
+body.is-direct .topnav-secure svg { color:var(--accent-amber); }
+
+/* ── VENDOR CONTACT CARD (Direct only) ── */
+.vendor-contact-card {
+  background: var(--bg-secondary); border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 16px; padding: 22px;
+  position: relative; overflow: hidden;
+  animation: fadeInUp .5s ease both .28s;
+}
+.vendor-contact-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--neon), var(--accent-blue));
+}
+.contact-card-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:18px;
+}
+.contact-card-avatar {
+  width:44px; height:44px; border-radius:50%;
+  background: linear-gradient(135deg, var(--neon), var(--accent-blue));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--ff); font-weight:800; font-size:16px; color:var(--bg-primary);
+  flex-shrink:0;
+}
+.contact-card-name { font-family:var(--ff); font-weight:700; font-size:15px; color:var(--text-1); }
+.contact-card-role { font-size:11px; color:var(--text-2); margin-top:2px; }
+.contact-verified-row {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:16px;
+}
+.cv-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-family:var(--ff); font-weight:700;
+  padding:2px 8px; border-radius:4px;
+}
+.cv-badge.green { background:rgba(0,229,160,0.12); color:var(--neon); border:1px solid rgba(0,229,160,0.2); }
+.cv-badge.blue  { background:rgba(66,165,245,0.12); color:var(--accent-blue); border:1px solid rgba(66,165,245,0.2); }
+.contact-detail-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;
+}
+@media(max-width:480px){ .contact-detail-grid { grid-template-columns:1fr; } }
+.contact-detail-item {
+  background:var(--bg-tertiary); border:1px solid var(--border-2);
+  border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:4px;
+}
+.contact-detail-label { font-size:9px; font-family:var(--ff); font-weight:700; color:var(--text-3); letter-spacing:.08em; text-transform:uppercase; }
+.contact-detail-val {
+  font-family:var(--fm); font-size:13px; color:var(--text-1); font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+.contact-copy-btn {
+  margin-left:auto; background:none; border:none; cursor:pointer; color:var(--text-3);
+  padding:2px; border-radius:4px; transition:color .2s;
+  display:flex; align-items:center;
+}
+.contact-copy-btn:hover { color:var(--neon); }
+.contact-copy-btn svg { width:13px; height:13px; }
+.contact-hint {
+  font-size:11px; color:var(--text-3); line-height:1.5;
+  display:flex; align-items:flex-start; gap:7px;
+}
+.contact-hint svg { width:13px; height:13px; color:var(--text-3); flex-shrink:0; margin-top:1px; }
+.contact-action-row {
+  display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;
+}
+.contact-action-btn {
+  flex:1; min-width:140px; display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  padding:10px 16px; border-radius:9px; cursor:pointer; border:none;
+  font-family:var(--ff); font-weight:700; font-size:12px; letter-spacing:.02em;
+  transition:all .2s;
+}
+.contact-action-btn.primary {
+  background:var(--neon); color:var(--bg-primary);
+  box-shadow:0 0 20px rgba(0,229,160,0.25);
+}
+.contact-action-btn.primary:hover { background:#00ffb2; transform:translateY(-1px); }
+.contact-action-btn.secondary {
+  background:rgba(66,165,245,0.1); color:var(--accent-blue);
+  border:1px solid rgba(66,165,245,0.2);
+}
+.contact-action-btn.secondary:hover { background:rgba(66,165,245,0.18); }
+.contact-action-btn svg { width:14px; height:14px; }
+
+/* ── EVIDENCE CHAIN / BEFORE PHOTOS CTA ── */
+.evidence-chain-card {
+  background: linear-gradient(135deg, rgba(66,165,245,0.05) 0%, rgba(156,95,233,0.04) 100%);
+  border: 1px solid rgba(66,165,245,0.2);
+  border-radius: 16px; padding: 22px;
+  display:flex; gap:16px; align-items:flex-start;
+  animation: fadeInUp .5s ease both .45s;
+}
+.evidence-icon {
+  width:44px; height:44px; flex-shrink:0; border-radius:12px;
+  background:rgba(66,165,245,0.1); border:1px solid rgba(66,165,245,0.25);
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+}
+.evidence-content { flex:1; }
+.evidence-label {
+  font-size:9px; font-family:var(--ff); font-weight:700; letter-spacing:.1em;
+  color:var(--accent-blue); text-transform:uppercase; margin-bottom:4px;
+}
+.evidence-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); margin-bottom:6px; }
+.evidence-desc { font-size:12px; color:var(--text-2); line-height:1.5; margin-bottom:12px; }
+.evidence-steps {
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;
+}
+.evidence-step {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-family:var(--ff); font-weight:600;
+  padding:3px 10px; border-radius:20px;
+  background:rgba(66,165,245,0.1); color:var(--accent-blue);
+  border:1px solid rgba(66,165,245,0.2);
+}
+.evidence-cta-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 20px; border-radius:9px; cursor:pointer; border:none;
+  background:var(--accent-blue); color:#fff;
+  font-family:var(--ff); font-weight:700; font-size:12px;
+  box-shadow:0 0 20px rgba(66,165,245,0.2); transition:all .2s;
+}
+.evidence-cta-btn:hover { background:#64b5f6; transform:translateY(-1px); }
+.evidence-cta-btn svg { width:14px; height:14px; }
+
+/* ── DIRECT INVOICE BUTTON ── */
+.invoice-strip {
+  background:var(--bg-tertiary); border:1px solid var(--border-2);
+  border-radius:10px; padding:14px 16px; margin-top:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.invoice-strip-text { flex:1; font-size:12px; color:var(--text-2); line-height:1.4; }
+.invoice-strip-text strong { color:var(--text-1); display:block; margin-bottom:2px; }
+.invoice-request-btn {
+  flex-shrink:0; display:inline-flex; align-items:center; gap:6px;
+  padding:9px 16px; border-radius:8px; cursor:pointer; border:none;
+  background:rgba(156,95,233,0.12); color:var(--accent-purple);
+  border:1px solid rgba(156,95,233,0.25); transition:all .2s;
+  font-family:var(--ff); font-weight:700; font-size:11px; white-space:nowrap;
+}
+.invoice-request-btn:hover { background:rgba(156,95,233,0.2); }
+.invoice-request-btn svg { width:13px; height:13px; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-logo">Trade<span>Match</span></div>
+  <div class="topnav-spacer"></div>
+  <div class="topnav-secure" id="nav-secure-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <span id="nav-secure-text">Stripe Escrow Active</span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- SUCCESS HEADER — ESCROW MODE -->
+  <div class="success-header escrow-only">
+    <div class="check-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <h1 class="success-title">Project Secured &amp;<br><span>Funds Escrowed</span></h1>
+    <p class="success-sub">Your payment is protected by Stripe Escrow and will only be released to <span id="esc-vendor-name">TrustTrades Ltd</span> when you approve each milestone.</p>
+    <div class="ref-row">
+      <div class="ref-badge">Job ID: <span>#TM-8829-X</span></div>
+      <div class="ref-divider"></div>
+      <div class="ref-badge">Transaction: <span>STRIPE_ESC_2024_991</span></div>
+      <div class="ref-divider"></div>
+      <div class="ref-badge">Status: <span>IN_PROGRESS</span></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS HEADER — DIRECT MODE -->
+  <div class="success-header direct-only">
+    <div class="check-ring direct-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <h1 class="success-title direct-title">Match Confirmed —<br><span>Direct Booking</span></h1>
+    <p class="success-sub">Your booking with <span id="dir-vendor-name-h">TrustTrades Ltd</span> is confirmed. Coordinate payment directly — TradeMatch Live tracking &amp; work quality protection still apply.</p>
+    <div class="ref-row">
+      <div class="ref-badge">Job ID: <span>#TM-8829-X</span></div>
+      <div class="ref-divider"></div>
+      <div class="ref-badge">Method: <span>DIRECT MATCH</span></div>
+      <div class="ref-divider"></div>
+      <div class="ref-badge">Status: <span>IN_PROGRESS</span></div>
+    </div>
+  </div>
+
+  <!-- ESCROW STATUS CARD (Escrow mode only) -->
+  <div class="escrow-card escrow-only">
+    <div class="escrow-card-top">
+      <div>
+        <div class="escrow-active-pill"><span class="escrow-active-dot"></span> ESCROW PROTECTION ACTIVE</div>
+        <div class="escrow-amount" style="margin-top:14px"><span>£</span><span id="esc-amount-disp">550.00</span></div>
+        <div class="escrow-desc">
+          Held securely by Stripe on behalf of TradeMatch. <strong><span id="esc-vendor-disp">TrustTrades Ltd</span> cannot access these funds</strong> until you approve each work milestone. You remain in control throughout.
+        </div>
+      </div>
+      <div class="escrow-stripe-badge">
+        <div class="stripe-pill">stripe</div>
+        Escrow
+      </div>
+    </div>
+    <div class="escrow-meta-row">
+      <div class="escrow-meta-item">
+        <span class="escrow-meta-label">Vendor</span>
+        <span class="escrow-meta-val" id="esc-meta-vendor">TrustTrades Ltd</span>
+      </div>
+      <div class="escrow-meta-item">
+        <span class="escrow-meta-label">Start Date</span>
+        <span class="escrow-meta-val">Today, 4:00pm</span>
+      </div>
+      <div class="escrow-meta-item">
+        <span class="escrow-meta-label">Milestone 1 (50%)</span>
+        <span class="escrow-meta-val">On Arrival · GPS-Verified</span>
+      </div>
+      <div class="escrow-meta-item">
+        <span class="escrow-meta-label">Milestone 2 (50%)</span>
+        <span class="escrow-meta-val">Job Complete · Your Approval</span>
+      </div>
+      <div class="escrow-meta-item">
+        <span class="escrow-meta-label">Dispute Window</span>
+        <span class="escrow-meta-val">48hrs per milestone</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECT MATCH INFO CARD (Direct mode only) -->
+  <div class="direct-card direct-only">
+    <div class="direct-pill"><span class="direct-pill-dot"></span> DIRECT MATCH ACTIVE</div>
+    <div class="direct-booking-row">
+      <div>
+        <div style="font-size:11px;color:var(--text-3);font-family:var(--ff);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Your Vendor</div>
+        <div class="direct-vendor-name" id="dir-vendor-name">TrustTrades Ltd</div>
+      </div>
+      <div>
+        <div class="direct-amount" id="dir-amount-disp">£550</div>
+        <div class="direct-amount-label">Agreed Quote</div>
+      </div>
+    </div>
+    <div class="direct-meta-row">
+      <div class="direct-meta-item">
+        <span class="direct-meta-label">Payment Method</span>
+        <span class="direct-meta-val">Direct (Cash / Transfer)</span>
+      </div>
+      <div class="direct-meta-item">
+        <span class="direct-meta-label">Escrow Protection</span>
+        <span class="direct-meta-val" style="color:var(--accent-danger)">Not Active</span>
+      </div>
+      <div class="direct-meta-item">
+        <span class="direct-meta-label">GPS Live Tracking</span>
+        <span class="direct-meta-val" style="color:var(--neon)">Active ✓</span>
+      </div>
+      <div class="direct-meta-item">
+        <span class="direct-meta-label">Work Quality SLA</span>
+        <span class="direct-meta-val" style="color:var(--neon)">48hr Window ✓</span>
+      </div>
+    </div>
+    <div class="unprotected-notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.3L2 20h20L13.7 3.3a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <span><strong>Reminder:</strong> This transaction is not covered by the TradeMatch Money-Back Guarantee. Always agree a payment schedule in writing and request a receipt. Switching to Escrow is available until work begins.</span>
+    </div>
+  </div>
+
+  <!-- DIRECT: Off-platform checklist + agreement download -->
+  <div class="direct-checklist-card direct-only">
+    <div class="direct-checklist-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>
+      Your Direct Payment Checklist
+    </div>
+    <div class="dcheck-item">
+      <div class="dcheck-icon">📋</div>
+      <div><strong>Download the Direct Payment Agreement</strong>Pre-filled with your vendor, job details, and agreed quote. Have both parties sign before work begins.</div>
+    </div>
+    <div class="dcheck-item">
+      <div class="dcheck-icon">💳</div>
+      <div><strong>Agree a payment schedule with your vendor</strong>We recommend splitting into at least two stages — arrival and completion — even for direct payments.</div>
+    </div>
+    <div class="dcheck-item">
+      <div class="dcheck-icon">🧾</div>
+      <div><strong>Request a VAT receipt or invoice</strong>This protects you for warranty claims and insurance purposes.</div>
+    </div>
+    <div class="dcheck-item">
+      <div class="dcheck-icon">📸</div>
+      <div><strong>Photo-document the work</strong>Before, during, and after photos are your evidence if any work quality dispute arises.</div>
+    </div>
+    <button class="agreement-btn" onclick="alert('In production: generates a pre-filled PDF via POST /api/v1/direct-agreements/generate')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Direct Payment Agreement
+    </button>
+
+    <!-- Revenue protection: "Request Direct Invoice" keeps homeowner in ecosystem -->
+    <div class="invoice-strip">
+      <div class="invoice-strip-text">
+        <strong>Keep a paper trail through TradeMatch</strong>
+        Request an itemised invoice from your vendor via the platform — it's timestamped, stored, and counts as evidence for any future work quality dispute.
+      </div>
+      <button class="invoice-request-btn" onclick="alert('In production: POST /api/v1/direct-invoices/request — marks vendor lead fee as Due and sends invoice request')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Request Invoice
+      </button>
+    </div>
+  </div>
+
+  <!-- VENDOR CONTACT CARD (Direct mode only) — Identity Reveal -->
+  <div class="vendor-contact-card direct-only">
+    <div class="contact-card-header">
+      <div class="contact-card-avatar" id="contact-avatar">MR</div>
+      <div>
+        <div class="contact-card-name" id="contact-name">Marcus Reed</div>
+        <div class="contact-card-role" id="contact-vendor-role">TrustTrades Ltd · Gas Safe Registered</div>
+      </div>
+    </div>
+    <div class="contact-verified-row">
+      <span class="cv-badge green">✓ ID Verified</span>
+      <span class="cv-badge green">✓ Gas Safe</span>
+      <span class="cv-badge blue">DBS Checked</span>
+      <span class="cv-badge blue">9.1 TrustScore</span>
+    </div>
+    <div class="contact-detail-grid">
+      <div class="contact-detail-item">
+        <span class="contact-detail-label">📞 Phone</span>
+        <span class="contact-detail-val">
+          <span id="contact-phone">07700 900555</span>
+          <button class="contact-copy-btn" onclick="copyToClipboard('contact-phone', this)" title="Copy phone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </span>
+      </div>
+      <div class="contact-detail-item">
+        <span class="contact-detail-label">✉️ Email</span>
+        <span class="contact-detail-val">
+          <span id="contact-email" style="font-size:11px">m.reed@trusttrades.co.uk</span>
+          <button class="contact-copy-btn" onclick="copyToClipboard('contact-email', this)" title="Copy email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </span>
+      </div>
+    </div>
+    <div class="contact-action-row">
+      <button class="contact-action-btn primary" id="btn-call-vendor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1A19.5 19.5 0 013.4 11a19.8 19.8 0 01-3-8.5A2 2 0 012.4 0h3a2 2 0 012 1.7 12.8 12.8 0 00.7 2.8 2 2 0 01-.4 2.1L6.1 7.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5 12.8 12.8 0 002.8.7A2 2 0 0122 14.9z"/></svg>
+        Call Vendor Now
+      </button>
+      <button class="contact-action-btn secondary" id="btn-email-vendor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Send Email
+      </button>
+    </div>
+    <div class="contact-hint" style="margin-top:12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <span>Contact details are revealed only after a confirmed match. TradeMatch logs this reveal event for your security audit trail.</span>
+    </div>
+  </div>
+
+  <!-- EVIDENCE CHAIN CTA (visible in both modes, more prominent in direct) -->
+  <div class="evidence-chain-card">
+    <div class="evidence-icon">📸</div>
+    <div class="evidence-content">
+      <div class="evidence-label">Evidence Chain · Legal Record of Truth</div>
+      <div class="evidence-title">Take "Before" Photos Now</div>
+      <div class="evidence-desc">
+        Document the current state of your property before the vendor arrives. These photos are timestamped and geo-tagged by TradeMatch — they become your legal baseline if any work quality dispute arises later.
+      </div>
+      <div class="evidence-steps">
+        <span class="evidence-step">📷 Wide shot of the problem area</span>
+        <span class="evidence-step">🔍 Close-up of the fault / damage</span>
+        <span class="evidence-step">📐 Any existing wear or prior repairs</span>
+      </div>
+      <button class="evidence-cta-btn" onclick="alert('In production: Opens camera upload flow → POST /api/v1/jobs/evidence/before — photos stored in job record')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Upload Before Photos
+      </button>
+    </div>
+  </div>
+
+  <!-- TWO COLUMN: Roadmap + Live Tracking -->
+  <div class="two-col">
+
+    <!-- ARRIVAL ROADMAP -->
+    <div class="roadmap-card">
+      <div class="card-header">
+        <div class="card-header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+          <div class="card-title">Project Roadmap</div>
+          <div class="card-sub">Your next steps at a glance</div>
+        </div>
+      </div>
+      <div class="roadmap">
+        <div class="roadmap-step done">
+          <div class="step-node">✓</div>
+          <div class="step-content">
+            <div class="step-title" id="roadmap-step1-title">Booking Confirmed</div>
+            <div class="step-desc" id="roadmap-step1-desc">Escrow initialised. Funds held by Stripe.</div>
+            <div class="step-time">Today · 14:22</div>
+            <span class="step-chip done-chip">✓ Complete</span>
+          </div>
+        </div>
+        <div class="roadmap-step active">
+          <div class="step-node">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 2"/></svg>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Vendor Briefing</div>
+            <div class="step-desc">Gareth (TrustTrades) is reviewing your site notes and boiler fault code E119.</div>
+            <div class="step-time">In progress · ETA 15 mins</div>
+          </div>
+        </div>
+        <div class="roadmap-step tracking">
+          <div class="step-node">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2C5.8 2 4 3.8 4 6c0 3.5 4 8 4 8s4-4.5 4-8c0-2.2-1.8-4-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+          </div>
+          <div class="step-content">
+            <div class="step-title">Live Arrival Tracking</div>
+            <div class="step-desc">GPS tracking activates 30 mins before Gareth departs for your property.</div>
+            <div class="step-time">Today · 15:30 est.</div>
+            <span class="step-chip live-chip">⚡ Activates Soon</span>
+          </div>
+        </div>
+        <div class="roadmap-step pending">
+          <div class="step-node">4</div>
+          <div class="step-content">
+            <div class="step-title">Work Starts</div>
+            <div class="step-desc">Milestone 1 funds released when Gareth arrives. You'll be notified.</div>
+            <div class="step-time">Today · 4:00pm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE TRACKING PREVIEW -->
+    <div class="tracking-card">
+      <div class="card-header">
+        <div class="card-header-icon" style="background:rgba(255,167,38,0.1);border-color:rgba(255,167,38,0.25)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" stroke-width="2"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <div>
+          <div class="card-title">TradeMatch Live</div>
+          <div class="card-sub">GPS Tracking · Activates at 15:30</div>
+        </div>
+      </div>
+
+      <!-- Static map placeholder -->
+      <div class="map-placeholder">
+        <!-- Fake road network -->
+        <div class="map-roads">
+          <div class="map-road" style="width:100%;height:2px;top:45%;opacity:.6"></div>
+          <div class="map-road" style="width:100%;height:1px;top:60%;opacity:.3"></div>
+          <div class="map-road" style="width:2px;height:100%;left:35%;opacity:.4"></div>
+          <div class="map-road" style="width:1px;height:100%;left:65%;opacity:.3"></div>
+          <div class="map-road" style="width:40%;height:1px;top:25%;left:10%;transform:rotate(-8deg);opacity:.2"></div>
+        </div>
+        <div class="map-vendor-route"></div>
+        <!-- Your location -->
+        <div class="map-location-pin">
+          <div class="pin-outer">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12m-3 0a3 3 0 106 0 3 3 0 10-6 0z"/></svg>
+          </div>
+          <div class="pin-dot"></div>
+        </div>
+        <div class="map-label">Live GPS activates 30 mins before departure · Hammersmith, W6</div>
+      </div>
+
+      <div class="tracking-status">
+        <div class="tracking-status-dot"></div>
+        <div class="tracking-status-text">
+          <strong>Gareth · TrustTrades Ltd</strong>
+          GPS tracking arm scheduled · Not yet en route
+        </div>
+        <div class="tracking-eta">ETA: 4:00pm</div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text-3);line-height:1.5;padding:4px 0">
+        You'll receive a push notification when Gareth starts his journey. Track his arrival in real-time directly in the Message Centre.
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE CENTRE CTA -->
+  <a class="message-cta" href="homeowner-messages.html">
+    <div class="message-cta-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </div>
+    <div class="message-cta-content">
+      <div class="message-cta-title">Send a site note to Gareth</div>
+      <div class="message-cta-sub">Share photos of the boiler, access notes, or the exact fault display. The more context you provide, the faster the job gets done.</div>
+    </div>
+    <div class="message-cta-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </a>
+
+  <!-- 48HR DISPUTE WINDOW (Escrow only) -->
+  <div class="dispute-window escrow-only">
+    <div class="dispute-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div class="dispute-content">
+      <div class="dispute-title">48-Hour Milestone Protection Window</div>
+      <div class="dispute-desc">After each milestone is marked complete, you have 48 hours to review the work before funds are released. If something is wrong, click "Dispute Milestone" to freeze the payout and alert our Trust &amp; Safety team.</div>
+      <div class="countdown-wrap">
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-hrs">48</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-min">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-sec">00</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+        <span style="font-size:11px;color:var(--text-3);align-self:flex-end;padding-bottom:4px;margin-left:8px">Starts when milestone is marked complete</span>
+      </div>
+      <button class="dispute-btn" onclick="alert('Dispute flow would trigger POST /api/v1/milestones/dispute and freeze payout')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.3L2 20h20L13.7 3.3a2 2 0 00-3.4 0z"/></svg>
+        Dispute a Milestone
+      </button>
+    </div>
+  </div>
+
+  <!-- PROJECT INSURANCE UPSELL (Phase 4) -->
+  <div class="insurance-banner">
+    <div class="insurance-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+    <div class="insurance-content">
+      <div class="insurance-label">Phase 4 · Coming Soon</div>
+      <div class="insurance-title">TradeMatch Project Insurance</div>
+      <div class="insurance-desc">Upgrade your protection with full structural defect cover up to £50,000. Your trust mindset is at its peak right now — protect it fully.</div>
+    </div>
+    <button class="insurance-cta">
+      Learn More →
+    </button>
+  </div>
+
+</div><!-- /page -->
+
+<!-- BOTTOM CTA BAR -->
+<div class="bottom-bar">
+  <a href="homeowner-messages.html" class="btn-primary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Open Message Centre
+  </a>
+  <a href="#" class="btn-outline escrow-only">Back to My Projects</a>
+  <a href="#" class="btn-outline direct-only" onclick="alert('In production: POST /api/v1/direct-agreements/generate')">
+    📄 Download Agreement
+  </a>
+</div>
+
+<script>
+// ── Navigation Safety ────────────────────────────────────
+// Replace the current history entry so the browser Back button takes the user
+// to the compare-quotes page rather than re-triggering the Stripe session or
+// re-opening the payment modal. This prevents double-submission on Back → Forward.
+history.replaceState(null, '', 'compare-quotes.html');
+// Then push the success page as the current entry so it remains the visible URL
+history.pushState({ page: 'success', method: new URLSearchParams(location.search).get('method') }, '', location.href);
+
+// ── Detect payment method from URL param ─────────────────
+const urlParams = new URLSearchParams(window.location.search);
+const payMethod      = urlParams.get('method')       || 'escrow';
+const vendorParam    = decodeURIComponent(urlParams.get('vendor')       || 'TrustTrades Ltd');
+const amountParam    = decodeURIComponent(urlParams.get('amount')       || '£550');
+const phoneParam     = decodeURIComponent(urlParams.get('phone')        || '07700 900555');
+const emailParam     = decodeURIComponent(urlParams.get('email')        || 'm.reed@trusttrades.co.uk');
+const contactName    = decodeURIComponent(urlParams.get('contact_name') || 'Marcus Reed');
+
+// ── Copy to clipboard helper ──────────────────────────────
+function copyToClipboard(elementId, btn) {
+  const val = document.getElementById(elementId)?.textContent?.trim();
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M20 6L9 17l-5-5"/></svg>';
+    btn.style.color = 'var(--neon)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1800);
+  });
+}
+
+if (payMethod === 'direct') {
+  document.body.classList.add('is-direct');
+  document.title = 'Match Confirmed — TradeMatch';
+
+  // Nav badge
+  document.getElementById('nav-secure-text').textContent = 'Direct Match Active';
+
+  // Success header vendor names
+  ['dir-vendor-name', 'dir-vendor-name-h'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = vendorParam;
+  });
+  const dirAmountEl = document.getElementById('dir-amount-disp');
+  if (dirAmountEl) dirAmountEl.textContent = amountParam;
+
+  // Direct info card meta
+  const dirVendorName = document.getElementById('dir-vendor-name');
+  if (dirVendorName) dirVendorName.textContent = vendorParam;
+
+  // Contact card — Identity Reveal
+  const avatarEl = document.getElementById('contact-avatar');
+  if (avatarEl) avatarEl.textContent = contactName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+
+  const contactNameEl = document.getElementById('contact-name');
+  if (contactNameEl) contactNameEl.textContent = contactName;
+
+  const contactRoleEl = document.getElementById('contact-vendor-role');
+  if (contactRoleEl) contactRoleEl.textContent = `${vendorParam} · Gas Safe Registered`;
+
+  const contactPhoneEl = document.getElementById('contact-phone');
+  if (contactPhoneEl) contactPhoneEl.textContent = phoneParam;
+
+  const contactEmailEl = document.getElementById('contact-email');
+  if (contactEmailEl) contactEmailEl.textContent = emailParam;
+
+  // Wire up call / email buttons
+  const callBtn = document.getElementById('btn-call-vendor');
+  if (callBtn && phoneParam !== '—') callBtn.onclick = () => window.location.href = `tel:${phoneParam.replace(/\s/g,'')}`;
+
+  const emailBtn = document.getElementById('btn-email-vendor');
+  if (emailBtn && emailParam !== '—') emailBtn.onclick = () => window.location.href = `mailto:${emailParam}?subject=TradeMatch%20Job%20%23TM-8829-X%20%E2%80%94%20Confirming%20Direct%20Arrangement`;
+
+  // Roadmap step 1 text
+  const s1title = document.getElementById('roadmap-step1-title');
+  const s1desc  = document.getElementById('roadmap-step1-desc');
+  if (s1title) s1title.textContent = 'Match Confirmed';
+  if (s1desc)  s1desc.textContent  = 'Direct match confirmed. Contact vendor to arrange payment.';
+
+} else {
+  // Escrow mode — populate vendor name from URL param
+  ['esc-vendor-name', 'esc-vendor-disp', 'esc-meta-vendor'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.textContent = vendorParam;
+  });
+  const amountEl = document.getElementById('esc-amount-disp');
+  if (amountEl) amountEl.textContent = amountParam.replace('£', '');
+}
+
+// ── Automated Backend Events ──────────────────────────────
+// In production fired by Stripe webhook (escrow) or direct API call:
+// POST /api/v1/jobs/transition-to-active → sets status MATCHED → IN_PROGRESS
+// If direct: marks vendor lead fee "Due" in their balance ledger
+console.log(`[TradeMatch] Success page loaded · method=${payMethod}`);
+console.log(`[TradeMatch] Firing: Job transition MATCHED → IN_PROGRESS`);
+console.log(`[TradeMatch] Vendor notification → ${vendorParam}`);
+console.log(`[TradeMatch] Scheduling: GPS Activation @ 15:30 local`);
+if (payMethod === 'escrow') {
+  console.log('[TradeMatch] Starting: 48hr Dispute SLA clock');
+} else {
+  console.log('[TradeMatch] Direct path: vendor lead fee marked Due · invoice request available');
+  console.log(`[TradeMatch] Identity Reveal logged: contact details shown for ${vendorParam}`);
+}
+
+// ── 48hr Countdown ────────────────────────────────────────
+let demoTarget = Date.now() + 48 * 3600 * 1000;
+
+function updateCountdown() {
+  const el = document.getElementById('cd-hrs');
+  if (!el) return;
+  const diff = Math.max(0, demoTarget - Date.now());
+  document.getElementById('cd-hrs').textContent = String(Math.floor(diff / 3600000)).padStart(2,'0');
+  document.getElementById('cd-min').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+  document.getElementById('cd-sec').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// ── Back-navigation guard ─────────────────────────────────
+// If the user navigates back from this page, send them to compare-quotes
+// rather than back into the payment modal (which could re-trigger Stripe)
+window.addEventListener('popstate', function() {
+  window.location.replace('compare-quotes.html');
+});
+</script>
+
+</body>
+</html>

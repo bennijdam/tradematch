@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.1);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-safe: #00E5A0;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h: 72px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,160,0.035) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(66,165,245,0.025) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+[data-theme="light"] body::after {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22,163,74,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(37,99,235,0.03) 0%, transparent 60%);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 200; transition: width 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 72px; }
+.sidebar-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 16px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: var(--neon-glow-sm);
+}
+.logo-mark svg { width: 18px; height: 18px; color: #fff; stroke-width: 2.5; }
+.logo-text-wrap { overflow: hidden; transition: opacity 0.2s; }
+.sidebar.collapsed .logo-text-wrap { opacity: 0; }
+.logo-text { font-family: var(--ff); font-size: 15px; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); white-space: nowrap; }
+.logo-sub { font-family: var(--fm); font-size: 9px; color: var(--neon); opacity: 0.8; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+
+.nav-section-label {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-3);
+  padding: 16px 16px 6px; white-space: nowrap; overflow: hidden;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-section-label { opacity: 0; }
+.sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px; }
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 10px; border-radius: 10px;
+  color: var(--text-2); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s; text-decoration: none;
+  position: relative; white-space: nowrap;
+}
+.nav-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.nav-item.active { background: var(--neon-dim); color: var(--neon); font-weight: 600; }
+.nav-item.active::before {
+  content: ''; position: absolute; left: -8px; top: 50%;
+  transform: translateY(-50%); width: 3px; height: 20px;
+  background: var(--neon); border-radius: 0 3px 3px 0; box-shadow: var(--neon-glow-sm);
+}
+.nav-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.nav-label { overflow: hidden; transition: opacity 0.2s, width 0.3s; }
+.sidebar.collapsed .nav-label { opacity: 0; width: 0; }
+.nav-badge {
+  margin-left: auto; background: var(--neon); color: #000;
+  font-family: var(--fm); font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 100px; flex-shrink: 0; transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-badge { opacity: 0; }
+
+.sidebar-footer {
+  padding: 12px; border-top: 1px solid var(--border); flex-shrink: 0; position: relative;
+}
+.profile-btn {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  border-radius: 10px; padding: 10px 8px; transition: background 0.2s;
+  width: 100%; background: transparent; border: none; text-align: left;
+}
+.profile-btn:hover { background: var(--neon-dim); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.avatar-info { overflow: hidden; transition: opacity 0.2s; flex: 1; }
+.sidebar.collapsed .avatar-info { opacity: 0; width: 0; }
+.avatar-name { font-size: 13px; font-weight: 600; color: var(--text-1); white-space: nowrap; }
+.avatar-role { font-size: 11px; color: var(--text-2); white-space: nowrap; }
+.profile-chevron { color: var(--text-3); transition: opacity 0.2s; flex-shrink: 0; }
+.profile-chevron svg { width: 14px; height: 14px; stroke-width: 2; }
+.sidebar.collapsed .profile-chevron { opacity: 0; }
+
+.profile-dropdown {
+  position: absolute; bottom: calc(100% + 8px); left: 12px; right: 12px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 300; display: none;
+  animation: dropup 0.18s cubic-bezier(0.34,1.56,0.64,1);
+}
+.profile-dropdown.open { display: block; }
+@keyframes dropup { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.profile-dropdown-header {
+  padding: 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.profile-dropdown-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.profile-dropdown-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.profile-dropdown-tier { font-family: var(--fm); font-size: 10px; color: var(--neon); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+.pd-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+  font-size: 13px; color: var(--text-2); cursor: pointer;
+  transition: background 0.15s, color 0.15s; font-weight: 500;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.pd-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.pd-item svg { width: 16px; height: 16px; stroke-width: 1.8; flex-shrink: 0; }
+.pd-item.danger { color: var(--accent-danger); }
+.pd-item.danger:hover { background: rgba(255,71,87,0.1); }
+.pd-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── TOP NAV ── */
+.topnav {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0;
+  height: var(--topnav-h);
+  background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 32px;
+  z-index: 100; gap: 16px;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+.topnav.collapsed { left: 72px; }
+.hamburger {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.2s; flex-shrink: 0;
+}
+.hamburger:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.hamburger svg { width: 16px; height: 16px; stroke-width: 2; }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.breadcrumb-sep { color: var(--text-3); }
+.breadcrumb-current { font-family: var(--ff); font-weight: 700; color: var(--text-1); font-size: 15px; }
+.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.notif-pill {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.notif-pill:hover { background: var(--neon-dim); border-color: var(--border-neon); }
+.notif-pill-bell { position: relative; }
+.notif-pill-bell svg { width: 17px; height: 17px; stroke-width: 1.8; color: var(--text-2); }
+.notif-pill-badge {
+  position: absolute; top: -5px; right: -6px;
+  background: var(--accent-danger); color: #fff;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  min-width: 16px; height: 16px; border-radius: 100px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 3px; border: 2px solid var(--bg-secondary);
+}
+.theme-toggle-btn {
+  width: 52px; height: 28px; border-radius: 100px;
+  background: #1e293b; border: 1px solid var(--border-2);
+  cursor: pointer; position: relative; transition: all 0.3s;
+  display: flex; align-items: center; padding: 0 4px; flex-shrink: 0;
+}
+[data-theme="light"] .theme-toggle-btn { background: #e0f2fe; border-color: #bae6fd; }
+.toggle-knob {
+  width: 20px; height: 20px; border-radius: 50%; background: #334155;
+  position: absolute; left: 4px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+[data-theme="light"] .toggle-knob { left: 26px; background: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.5); }
+.toggle-knob svg { width: 11px; height: 11px; color: #fff; stroke-width: 2.5; }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w); margin-top: var(--topnav-h);
+  padding: 32px; position: relative; z-index: 1;
+  transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+  min-height: calc(100vh - var(--topnav-h));
+}
+.main.collapsed { margin-left: 72px; }
+
+/* Page Header */
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 28px; gap: 20px;
+}
+.page-title-group { flex: 1; }
+.page-eyebrow {
+  font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--neon); opacity: 0.8;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+}
+.page-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--neon); opacity: 0.5; }
+.page-title { font-family: var(--ff); font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); line-height: 1.1; }
+.page-sub { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+.page-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--ff); font-size: 13px; font-weight: 700;
+  letter-spacing: -0.02em; border-radius: 10px; padding: 9px 18px;
+  cursor: pointer; border: none; transition: all 0.22s; white-space: nowrap;
+}
+.btn svg { width: 15px; height: 15px; stroke-width: 2; }
+.btn-primary { background: linear-gradient(135deg, #007a3d, var(--neon)); color: #fff; box-shadow: var(--neon-glow-sm); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--neon-glow); }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-1); border: 1px solid var(--border-2); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-neon); color: var(--neon); }
+.btn-blue { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.25); }
+.btn-blue:hover { background: rgba(66,165,245,0.2); }
+.btn-danger { background: rgba(255,71,87,0.1); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.25); }
+.btn-danger:hover { background: rgba(255,71,87,0.2); }
+.btn-amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.25); }
+.btn-amber:hover { background: rgba(255,167,38,0.2); }
+.btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); padding: 8px 14px; }
+.btn-ghost:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+/* ── SETTINGS LAYOUT ── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.settings-nav-panel {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 18px; overflow: hidden;
+  position: sticky; top: calc(var(--topnav-h) + 32px);
+}
+.settings-nav-header {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-3);
+}
+.settings-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; cursor: pointer; transition: all 0.18s;
+  font-size: 13px; font-weight: 500; color: var(--text-2);
+  border-left: 2px solid transparent;
+}
+.settings-nav-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.settings-nav-item.active {
+  background: var(--neon-dim); color: var(--neon);
+  border-left-color: var(--neon); font-weight: 600;
+}
+.settings-nav-icon { font-size: 14px; width: 20px; text-align: center; flex-shrink: 0; }
+.settings-nav-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+.settings-content { display: flex; flex-direction: column; gap: 20px; }
+
+/* FREE FOREVER banner */
+.free-banner {
+  background: linear-gradient(135deg, rgba(0,229,160,0.07), rgba(66,165,245,0.04));
+  border: 1px solid var(--border-neon);
+  border-radius: 16px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.free-banner-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.free-banner-body { flex: 1; }
+.free-banner-title { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.free-banner-sub { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+.free-forever-pill {
+  display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0;
+}
+.free-forever-val {
+  font-family: var(--ff); font-size: 15px; font-weight: 900;
+  color: var(--neon); letter-spacing: -0.04em;
+}
+.free-forever-sub { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+/* ── SETTINGS CARD ── */
+.settings-card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 18px; overflow: hidden;
+}
+.settings-card-header {
+  padding: 16px 20px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.settings-card-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.icon-green  { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.2); }
+.icon-blue   { background: rgba(66,165,245,0.12); border: 1px solid rgba(66,165,245,0.2); }
+.icon-amber  { background: rgba(255,167,38,0.12); border: 1px solid rgba(255,167,38,0.2); }
+.icon-purple { background: rgba(156,95,233,0.12); border: 1px solid rgba(156,95,233,0.2); }
+.icon-danger { background: rgba(255,71,87,0.1); border: 1px solid rgba(255,71,87,0.2); }
+.settings-card-title { font-family: var(--ff); font-size: 15px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.settings-card-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.settings-card-action { margin-left: auto; flex-shrink: 0; }
+.settings-card-body { padding: 16px 20px; }
+
+/* ── TOGGLE ROW ── */
+.toggle-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 0; border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+.toggle-row:first-child { padding-top: 0; }
+.toggle-info { flex: 1; }
+.toggle-label { font-size: 13.5px; font-weight: 600; color: var(--text-1); }
+.toggle-desc { font-size: 12px; color: var(--text-2); margin-top: 3px; line-height: 1.5; }
+.toggle-switch { position: relative; width: 46px; height: 26px; cursor: pointer; flex-shrink: 0; }
+.toggle-switch input { display: none; }
+.toggle-track {
+  position: absolute; inset: 0; background: var(--bg-tertiary);
+  border: 1px solid var(--border-2); border-radius: 13px; transition: all 0.25s;
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; background: var(--text-3);
+  border-radius: 50%; transition: all 0.25s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.toggle-switch input:checked ~ .toggle-track { background: rgba(0,229,160,0.2); border-color: var(--border-neon); }
+.toggle-switch input:checked ~ .toggle-thumb { left: 23px; background: var(--neon); box-shadow: 0 0 8px rgba(0,229,160,0.4); }
+[data-theme="light"] .toggle-switch input:checked ~ .toggle-thumb { background: var(--neon); }
+
+/* ── PROPERTY GRID ── */
+.property-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.property-card {
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.18s; position: relative; overflow: hidden;
+}
+.property-card:hover { background: var(--bg-card-hover); border-color: var(--border-neon); transform: translateY(-2px); }
+.property-card.active { border-color: var(--border-neon); background: var(--neon-dim); }
+.property-card.active::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #007a3d, var(--neon)); }
+.property-card-emoji { font-size: 22px; margin-bottom: 8px; }
+.property-card-nick { font-family: var(--ff); font-size: 13px; font-weight: 800; color: var(--text-1); letter-spacing: -0.02em; }
+.property-card-addr { font-size: 11px; color: var(--text-2); margin-top: 3px; line-height: 1.5; }
+.property-health {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 100px; margin-top: 10px;
+}
+.health-active { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.2); }
+.health-good   { background: rgba(0,229,160,0.1); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.health-ok     { background: rgba(255,167,38,0.1); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.2); }
+.property-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+}
+.property-jobs { font-family: var(--fm); font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+.property-link-btn {
+  font-size: 11px; color: var(--neon); cursor: pointer; border: none; background: none;
+  font-weight: 600; font-family: var(--fb); transition: opacity 0.2s;
+}
+.property-link-btn:hover { opacity: 0.75; }
+.add-property-card {
+  background: var(--bg-tertiary); border: 1px dashed var(--border-2);
+  border-radius: 14px; padding: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; cursor: pointer; transition: all 0.18s; min-height: 148px;
+  color: var(--text-3); font-size: 13px;
+}
+.add-property-card:hover { border-color: var(--border-neon); color: var(--neon); background: var(--neon-dim); }
+.add-property-card-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+
+/* ── PIN DISPLAY ── */
+.pin-digits { display: flex; gap: 10px; margin: 14px 0; }
+.pin-digit {
+  width: 52px; height: 60px;
+  background: var(--bg-tertiary); border: 1.5px solid var(--border-2);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 24px; font-weight: 700; color: var(--neon);
+  transition: all 0.2s;
+}
+.pin-digit.revealed { border-color: var(--border-neon); box-shadow: var(--neon-glow-sm); }
+.pin-controls { display: flex; gap: 8px; margin-top: 4px; }
+
+/* PIN Flow Diagram */
+.pin-flow {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap; margin: 14px 0;
+}
+.pin-flow-step {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 8px 12px; font-size: 12px; color: var(--text-2);
+}
+.pin-flow-num {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--neon-dim);
+  border: 1px solid var(--border-neon);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 10px; font-weight: 700; color: var(--neon); flex-shrink: 0;
+}
+.pin-flow-arrow { color: var(--text-3); font-size: 16px; }
+
+/* Address Reveal Steps */
+.reveal-steps { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.reveal-step {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 100px; padding: 4px 12px; font-size: 11px; color: var(--text-2);
+}
+.reveal-step-num {
+  width: 16px; height: 16px; border-radius: 50%; background: rgba(66,165,245,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 9px; font-weight: 700; color: var(--accent-blue);
+}
+.reveal-step-arrow { color: var(--text-3); font-size: 12px; }
+
+/* ── INFO ROWS ── */
+.info-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.info-row:last-child { border-bottom: none; }
+.info-row-label { font-size: 12px; color: var(--text-2); }
+.info-row-value { font-size: 13px; font-weight: 600; color: var(--text-1); font-family: var(--fm); }
+.info-row-value.green { color: var(--neon); }
+.info-row-value.amber { color: var(--accent-amber); }
+.info-row-value.blue  { color: var(--accent-blue); }
+
+/* ── STATUS CHIPS ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 3px 9px; border-radius: 100px;
+}
+.chip-green  { background: rgba(0,229,160,0.1); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.chip-amber  { background: rgba(255,167,38,0.1); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.2); }
+.chip-blue   { background: rgba(66,165,245,0.1); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.2); }
+.chip-danger { background: rgba(255,71,87,0.08); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.2); }
+.chip-mandatory { background: rgba(255,71,87,0.08); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.2); font-weight: 700; }
+.chip-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+@keyframes amber-badge-pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+.chip-amber.pulse { animation: amber-badge-pulse 2s infinite; }
+
+/* ── SECURITY ITEM ── */
+.security-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.security-row:first-child { padding-top: 0; }
+.security-row:last-child { border-bottom: none; padding-bottom: 0; }
+.security-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.security-label { font-size: 13px; font-weight: 600; color: var(--text-1); flex: 1; }
+.security-desc  { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+
+/* ── CREDENTIAL ROW ── */
+.credential-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.credential-row:first-child { padding-top: 0; }
+.credential-row:last-child { border-bottom: none; padding-bottom: 0; }
+.credential-icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(0,229,160,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.credential-label { font-size: 12px; font-weight: 600; color: var(--text-1); flex: 1; }
+.credential-value { font-family: var(--fm); font-size: 10px; color: var(--neon); }
+
+/* ── NOTIFICATION ROW ── */
+.notif-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.notif-row:first-child { padding-top: 0; }
+.notif-row:last-child { border-bottom: none; padding-bottom: 0; }
+.notif-priority { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+.priority-high { background: var(--accent-danger); box-shadow: 0 0 8px rgba(255,71,87,0.3); }
+.priority-med  { background: var(--accent-amber); }
+.priority-low  { background: var(--text-3); }
+.notif-icon { font-size: 16px; flex-shrink: 0; }
+.notif-label { font-size: 13px; font-weight: 600; color: var(--text-1); flex: 1; }
+.notif-desc  { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+.channel-chips { display: flex; gap: 5px; flex-shrink: 0; }
+.channel-chip {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 3px 8px; border-radius: 5px; cursor: pointer; transition: all 0.18s;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2); color: var(--text-3);
+}
+.channel-chip.active { background: rgba(0,229,160,0.1); border-color: var(--border-neon); color: var(--neon); }
+.channel-chip.disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── VAULT STATS ── */
+.vault-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+.vault-stat {
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 12px; padding: 14px; text-align: center;
+}
+.vault-stat-val { font-family: var(--ff); font-size: 20px; font-weight: 900; color: var(--accent-blue); letter-spacing: -0.04em; }
+.vault-stat-lbl { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── INTEREST CHIPS ── */
+.interest-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.interest-chip {
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; padding: 10px 8px; cursor: pointer; transition: all 0.18s;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  font-size: 12px; color: var(--text-2); text-align: center;
+}
+.interest-chip:hover { border-color: var(--border-neon); background: var(--neon-dim); color: var(--neon); }
+.interest-chip.selected { border-color: var(--border-neon); background: var(--neon-dim); color: var(--neon); }
+.interest-emoji { font-size: 18px; }
+
+/* ── ESCROW TIMELINE ── */
+.escrow-timeline { position: relative; padding-left: 22px; }
+.escrow-timeline::before { content: ''; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px; background: var(--border-2); }
+.escrow-item { position: relative; padding: 0 0 16px 14px; }
+.escrow-item:last-child { padding-bottom: 0; }
+.escrow-dot { position: absolute; left: -17px; top: 4px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--bg-primary); }
+.escrow-dot.green { background: var(--neon); }
+.escrow-dot.amber { background: var(--accent-amber); }
+.escrow-dot.blue  { background: var(--accent-blue); }
+.escrow-title { font-size: 13px; font-weight: 600; color: var(--text-1); }
+.escrow-meta  { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+.escrow-amount { font-family: var(--ff); font-size: 14px; font-weight: 900; color: var(--neon); letter-spacing: -0.03em; margin-top: 2px; }
+
+/* ── VOIP CHIP ── */
+.voip-active-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(66,165,245,0.08); border: 1px solid rgba(66,165,245,0.2);
+  border-radius: 10px; padding: 10px 14px; margin-top: 10px;
+  font-size: 12px; color: var(--accent-blue); display: none;
+}
+
+/* ── FREE PLAN BOX ── */
+.free-plan-box {
+  background: linear-gradient(135deg, rgba(0,229,160,0.06), rgba(66,165,245,0.04));
+  border: 1px solid var(--border-neon); border-radius: 14px; padding: 16px;
+}
+.free-plan-title { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--neon); letter-spacing: -0.03em; display: flex; align-items: center; gap: 8px; }
+.free-plan-desc { font-size: 12px; color: var(--text-2); margin-top: 6px; line-height: 1.6; }
+.free-plan-items { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.free-plan-item {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.15);
+  border-radius: 5px; padding: 3px 9px; color: var(--neon);
+}
+
+/* ── FIELD ── */
+.field-group { margin-bottom: 14px; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label { font-family: var(--fm); font-size: 10px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; display: block; }
+.field-input {
+  width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; padding: 11px 14px; color: var(--text-1);
+  font-family: var(--fb); font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--border-neon); }
+.field-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── SAVE BAR ── */
+.save-bar {
+  position: sticky; bottom: 0;
+  background: linear-gradient(to top, var(--bg-primary) 70%, transparent);
+  padding: 20px 0 24px; display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 4px;
+}
+
+/* ── MISC ── */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+@keyframes pulse-dot { 0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.4; transform:scale(0.6);} }
+
+/* ── TOAST ── */
+#toastContainer {
+  position: fixed; bottom: 28px; right: 28px;
+  display: flex; flex-direction: column; gap: 8px; z-index: 9999;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 12px; padding: 12px 16px;
+  font-size: 13px; color: var(--text-1); max-width: 380px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: toast-in 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  transition: opacity 0.3s, transform 0.3s;
+}
+@keyframes toast-in { from{opacity:0; transform:translateX(16px);} to{opacity:1; transform:none;} }
+.toast.success { border-color: rgba(0,229,160,0.3); }
+.toast.warning { border-color: rgba(255,167,38,0.3); }
+.toast.info    { border-color: rgba(66,165,245,0.3); }
+.toast-icon { font-size: 15px; flex-shrink: 0; }
+
+/* ── MODALS ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.22s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 22px; width: 100%; max-width: 460px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal { transform: none; }
+.modal-header {
+  padding: 22px 24px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px; position: relative;
+}
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.18s;
+}
+.modal-close:hover { background: var(--neon-dim); color: var(--text-1); border-color: var(--border-neon); }
+.modal-close svg { width: 14px; height: 14px; stroke-width: 2.5; }
+.modal-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.modal-title { font-family: var(--ff); font-size: 18px; font-weight: 800; color: var(--text-1); letter-spacing: -0.04em; }
+.modal-subtitle { font-size: 13px; color: var(--text-2); margin-top: 3px; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+</style>
+</head>
+<body>
+
+<div id="toastContainer"></div>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    </div>
+    <div class="logo-text-wrap">
+      <div class="logo-text">TradeMatch</div>
+      <div class="logo-sub">Homeowner Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">My Projects</div>
+    <a class="nav-item" href="#" onclick="showToast('My Projects','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div>
+      <span class="nav-label">My Projects</span>
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showToast('My Wallet','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg></div>
+      <span class="nav-label">My Wallet</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showToast('Message Centre','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></div>
+      <span class="nav-label">Message Centre</span>
+      <span class="nav-badge">2</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showToast('Compare Quotes','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg></div>
+      <span class="nav-label">Compare Quotes</span>
+      <span class="nav-badge">5</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px">Safety & Trust</div>
+    <a class="nav-item" href="#" onclick="showToast('Verification Hub','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></div>
+      <span class="nav-label">Verification Hub</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showToast('Dispute Centre','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+      <span class="nav-label">Dispute Centre</span>
+    </a>
+    <a class="nav-item" href="#" onclick="showToast('Document Vault','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+      <span class="nav-label">Document Vault</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px">Account</div>
+    <a class="nav-item active" href="#">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+      <span class="nav-label">Settings</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="profile-btn" onclick="toggleProfileDropdown()">
+      <div class="avatar">SE</div>
+      <div class="avatar-info">
+        <div class="avatar-name">Sarah Evans</div>
+        <div class="avatar-role">Homeowner · Free Forever</div>
+      </div>
+      <div class="profile-chevron"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg></div>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown-header">
+        <div class="profile-dropdown-avatar">SE</div>
+        <div>
+          <div class="profile-dropdown-name">Sarah Evans</div>
+          <div class="profile-dropdown-tier">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:11px;height:11px;stroke-width:2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            Verified Homeowner
+          </div>
+        </div>
+      </div>
+      <button class="pd-item" onclick="closeProfileDropdown()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>My Profile</button>
+      <div class="pd-divider"></div>
+      <button class="pd-item danger" onclick="closeProfileDropdown();showToast('Signing out…','warning')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>Sign Out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<nav class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+  <div class="breadcrumb">
+    <span>TradeMatch</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Settings</span>
+  </div>
+  <div class="topnav-right">
+    <button class="notif-pill" onclick="showToast('3 new notifications','info')">
+      <div class="notif-pill-bell">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <div class="notif-pill-badge">3</div>
+      </div>
+    </button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <div class="toggle-knob">
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+      </div>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main class="main" id="main">
+
+  <div class="page-header">
+    <div class="page-title-group">
+      <div class="page-eyebrow">Homeowner Portal</div>
+      <h1 class="page-title">Account Settings</h1>
+      <p class="page-sub">Manage your properties, privacy, safety PIN, and notification preferences.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-ghost" onclick="showToast('Changes discarded','warning')">Discard</button>
+      <button class="btn btn-primary" id="saveBtn" onclick="saveSettings()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        Save Settings
+      </button>
+    </div>
+  </div>
+
+  <!-- FREE FOREVER Banner -->
+  <div class="free-banner" style="margin-bottom:24px">
+    <div class="free-banner-icon">🎉</div>
+    <div class="free-banner-body">
+      <div class="free-banner-title">Getting quotes & managing projects is always free</div>
+      <div class="free-banner-sub">No subscription walls. No pay-to-quote. Vendors fund the platform — not you.</div>
+    </div>
+    <div class="free-forever-pill">
+      <div class="free-forever-val">Free Forever</div>
+      <div class="free-forever-sub">Homeowner pricing</div>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+
+    <!-- ── LEFT NAV ── -->
+    <div class="settings-nav-panel">
+      <div class="settings-nav-header">Settings</div>
+      <div class="settings-nav-item active" onclick="scrollTo('sec-properties')"><span class="settings-nav-icon">🏘️</span>Property Portfolio</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-pin')"><span class="settings-nav-icon">🔐</span>Safety PIN</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-privacy')"><span class="settings-nav-icon">🛡️</span>Privacy Shield</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-interests')"><span class="settings-nav-icon">✨</span>Home Interests</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-vault')"><span class="settings-nav-icon">📂</span>Document Vault</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-notifications')"><span class="settings-nav-icon">🔔</span>Notifications</div>
+      <div class="settings-nav-divider"></div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-security')"><span class="settings-nav-icon">🔑</span>Account Security</div>
+      <div class="settings-nav-item" onclick="scrollTo('sec-billing')"><span class="settings-nav-icon">💳</span>Billing & Escrow</div>
+    </div>
+
+    <!-- ── RIGHT CONTENT ── -->
+    <div class="settings-content">
+
+      <!-- ══ 1. PROPERTY PORTFOLIO ══ -->
+      <div id="sec-properties" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-blue">🏘️</div>
+          <div>
+            <div class="settings-card-title">Property Portfolio</div>
+            <div class="settings-card-sub">Your digital twin — each property holds its own job history, documents &amp; contacts</div>
+          </div>
+          <div class="settings-card-action">
+            <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px" onclick="showToast('Add Property modal coming soon','info')">+ Add Property</button>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="property-grid">
+            <div class="property-card active">
+              <div class="property-card-emoji">🏠</div>
+              <div class="property-card-nick">Home</div>
+              <div class="property-card-addr">14 Birchwood Avenue<br>Manchester, M21 9LP</div>
+              <div class="property-health health-active"><span>●</span> 2 Active Jobs</div>
+              <div class="property-footer">
+                <span class="property-jobs">8 total jobs</span>
+                <button class="property-link-btn" onclick="showToast('Opening project history for Home…','success')">History →</button>
+              </div>
+            </div>
+            <div class="property-card">
+              <div class="property-card-emoji">🏢</div>
+              <div class="property-card-nick">Rental Flat</div>
+              <div class="property-card-addr">Apt 4B, Riverside Court<br>Salford, M5 3JT</div>
+              <div class="property-health health-good"><span>✓</span> All Clear</div>
+              <div class="property-footer">
+                <span class="property-jobs">3 total jobs</span>
+                <button class="property-link-btn" onclick="showToast('Opening project history for Rental Flat…','success')">History →</button>
+              </div>
+            </div>
+            <div class="property-card">
+              <div class="property-card-emoji">👵</div>
+              <div class="property-card-nick">Mum's House</div>
+              <div class="property-card-addr">9 The Gables<br>Altrincham, WA14 2RQ</div>
+              <div class="property-health health-ok"><span>⚠</span> In Progress</div>
+              <div class="property-footer">
+                <span class="property-jobs">1 total job</span>
+                <button class="property-link-btn" onclick="showToast('Opening project history for Mum\'s House…','success')">History →</button>
+              </div>
+            </div>
+            <div class="add-property-card" onclick="showToast('Add Property modal coming soon','info')">
+              <div class="add-property-card-icon">＋</div>
+              <span>Add New Property</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+            🚨 Emergency Contact
+            <span style="font-family:var(--fm);font-size:10px;color:var(--accent-blue);font-weight:400">— Home</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:14px">Only shared with your assigned pro before job start. Auto-fills in the Dispute Centre.</div>
+          <div class="field-grid-2">
+            <div class="field-group" style="margin-bottom:0">
+              <label class="field-label">Contact Name</label>
+              <input class="field-input" type="text" value="James Evans (Husband)">
+            </div>
+            <div class="field-group" style="margin-bottom:0">
+              <label class="field-label">Phone Number</label>
+              <input class="field-input" type="tel" value="+44 7700 900 456">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 2. SAFETY PIN ══ -->
+      <div id="sec-pin" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-amber">🔐</div>
+          <div>
+            <div class="settings-card-title">Safety PIN — Arrival Verification</div>
+            <div class="settings-card-sub">Stop imposter tradespeople. The vendor must enter your PIN before unlocking the job site.</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-info">
+              <div class="toggle-label">Enable Mandatory Arrival PIN</div>
+              <div class="toggle-desc">A unique 4-digit PIN is generated per job. The pro asks you verbally, then enters it into Lite Mode to start work.</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="pinToggle" onchange="togglePinSection()">
+              <span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+
+          <div id="pinSection">
+            <div class="divider"></div>
+            <div style="font-family:var(--fm);font-size:9px;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-3);margin-bottom:10px">How It Works</div>
+            <div class="pin-flow">
+              <div class="pin-flow-step"><div class="pin-flow-num">1</div> You receive PIN <strong style="color:var(--text-1)">in-app only</strong></div>
+              <div class="pin-flow-arrow">→</div>
+              <div class="pin-flow-step"><div class="pin-flow-num">2</div> Vendor arrives <strong style="color:var(--text-1)">at your door</strong></div>
+              <div class="pin-flow-arrow">→</div>
+              <div class="pin-flow-step"><div class="pin-flow-num">3</div> Vendor asks for <strong style="color:var(--text-1)">PIN verbally</strong></div>
+              <div class="pin-flow-arrow">→</div>
+              <div class="pin-flow-step"><div class="pin-flow-num">4</div> PIN entered → <strong style="color:var(--neon)">Job unlocked</strong></div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div style="font-family:var(--fm);font-size:9px;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-3);margin-bottom:8px">Active Job PIN — Bathroom Renovation · Home</div>
+            <div class="pin-digits" id="pinDisplay">
+              <div class="pin-digit">•</div>
+              <div class="pin-digit">•</div>
+              <div class="pin-digit">•</div>
+              <div class="pin-digit">•</div>
+            </div>
+            <div class="pin-controls">
+              <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px" onclick="togglePinVisibility()">👁 Show / Hide</button>
+              <button class="btn btn-amber" style="font-size:12px;padding:7px 14px" onclick="generatePin()">🔄 Regenerate PIN</button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:8px;margin-top:14px;background:rgba(0,229,160,0.06);border:1px solid var(--border-neon);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--neon)">
+              🔒 PIN delivered via in-app push only. Only you can share it verbally — the vendor cannot view it.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 3. PRIVACY SHIELD ══ -->
+      <div id="sec-privacy" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-green">🛡️</div>
+          <div>
+            <div class="settings-card-title">Homeowner Privacy Shield</div>
+            <div class="settings-card-sub">Control exactly what tradespeople see about you before, during, and after a job</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-info">
+              <div class="toggle-label">Identity Masking</div>
+              <div class="toggle-desc">Hide your full name and exact house number from the public job feed. Vendors see only your first initial and street name until you shortlist them.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Communication Bridge (VOIP)</div>
+              <div class="toggle-desc">Route all vendor calls and texts through a platform-protected number. Vendors never see your real mobile number.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" id="voipToggle" onchange="toggleVoip()"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="voip-active-chip" id="voipChip">
+            📞 Platform number active: <strong style="font-family:var(--fm)">+44 113 ••• ••81</strong> — Expires when job closes
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Vault Photo Auto-Blur</div>
+              <div class="toggle-desc">Automatically blur faces, post-boxes, and identifiable background items in all Document Vault project photos.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Private Project History</div>
+              <div class="toggle-desc">Prevent vendors from viewing your property's full job history before quoting. They see total job count only.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+
+          <div class="divider"></div>
+
+          <div style="font-family:var(--fm);font-size:9px;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-3);margin-bottom:8px">Address Reveal Stages</div>
+          <div class="reveal-steps">
+            <div class="reveal-step"><div class="reveal-step-num">1</div> Public feed: Street &amp; town only</div>
+            <div class="reveal-step-arrow">→</div>
+            <div class="reveal-step"><div class="reveal-step-num">2</div> Shortlisted: Full street name</div>
+            <div class="reveal-step-arrow">→</div>
+            <div class="reveal-step"><div class="reveal-step-num">3</div> Quote accepted: Full address</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 4. HOME INTERESTS ══ -->
+      <div id="sec-interests" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-purple">✨</div>
+          <div>
+            <div class="settings-card-title">Home Interest Categories</div>
+            <div class="settings-card-sub">Help us surface the most relevant tradespeople and guides for your properties</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="interest-grid">
+            <div class="interest-chip selected" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🌿</span>Gardening</div>
+            <div class="interest-chip selected" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🔧</span>Plumbing</div>
+            <div class="interest-chip selected" onclick="this.classList.toggle('selected')"><span class="interest-emoji">⚡</span>Electrical</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">📱</span>Smart Home</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🎨</span>Decorating</div>
+            <div class="interest-chip selected" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🏗️</span>Extensions</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🛁</span>Bathrooms</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🍳</span>Kitchens</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🪟</span>Windows &amp; Doors</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🔥</span>Heating / HVAC</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">🏚️</span>Roofing</div>
+            <div class="interest-chip" onclick="this.classList.toggle('selected')"><span class="interest-emoji">♿</span>Accessibility</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 5. DOCUMENT VAULT ══ -->
+      <div id="sec-vault" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-blue">📂</div>
+          <div>
+            <div class="settings-card-title">Document Vault</div>
+            <div class="settings-card-sub">Your complete property history, secured and GDPR-compliant</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div style="display:flex;align-items:center;gap:10px;background:rgba(0,229,160,0.05);border:1px solid var(--border-neon);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text-2);margin-bottom:16px">
+            🏡 <span><strong style="color:var(--neon)">Pro tip:</strong> A complete Vault adds proven value at resale. Buyers trust visible maintenance history.</span>
+          </div>
+          <div class="vault-stats">
+            <div class="vault-stat"><div class="vault-stat-val">47</div><div class="vault-stat-lbl">Documents</div></div>
+            <div class="vault-stat"><div class="vault-stat-val">12</div><div class="vault-stat-lbl">Completed Jobs</div></div>
+            <div class="vault-stat"><div class="vault-stat-val">3</div><div class="vault-stat-lbl">Properties</div></div>
+          </div>
+          <div class="divider"></div>
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-info">
+              <div class="toggle-label">Auto-Archive to Cold Storage</div>
+              <div class="toggle-desc">Move completed project documents to Cold Storage 12 months after job close.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Require Vendor Signature on Uploads</div>
+              <div class="toggle-desc">Any document added by the vendor must be countersigned before it is marked as finalised.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Homebuyer Pack Mode</div>
+              <div class="toggle-desc">Format all vault documents as a consolidated PDF portfolio — perfect for your estate agent when selling.</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span></label>
+          </div>
+          <div class="divider"></div>
+          <button class="btn btn-secondary" style="width:100%;justify-content:center" id="exportBtn" onclick="handleExport()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+            Export All Project History (PDF)
+          </button>
+          <div style="text-align:center;margin-top:8px;font-family:var(--fm);font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em">🔒 GDPR Art. 20 — Right to Data Portability</div>
+        </div>
+      </div>
+
+      <!-- ══ 6. NOTIFICATIONS ══ -->
+      <div id="sec-notifications" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-amber">🔔</div>
+          <div>
+            <div class="settings-card-title">Notification Preferences</div>
+            <div class="settings-card-sub">Choose how and when TradeMatch contacts you</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="notif-row" style="padding-top:0">
+            <div class="notif-priority priority-high"></div>
+            <span class="notif-icon">⚠️</span>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="notif-label">Dispute SLA Alerts</span>
+                <span class="chip chip-mandatory">Mandatory</span>
+              </div>
+              <div class="notif-desc">48-hour window to file a dispute after job completion. Cannot be disabled.</div>
+            </div>
+            <div class="channel-chips">
+              <span class="channel-chip active">App</span>
+              <span class="channel-chip active">Email</span>
+              <span class="channel-chip active">SMS</span>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-priority priority-high"></div>
+            <span class="notif-icon">🔐</span>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="notif-label">Safety PIN Delivery</span>
+                <span class="chip chip-mandatory">Mandatory</span>
+              </div>
+              <div class="notif-desc">Per-job arrival PIN via push only — cannot be sent by email or SMS for security.</div>
+            </div>
+            <div class="channel-chips">
+              <span class="channel-chip active">App</span>
+              <span class="channel-chip disabled">Email</span>
+              <span class="channel-chip disabled">SMS</span>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-priority priority-med"></div>
+            <span class="notif-icon">💰</span>
+            <div style="flex:1">
+              <div class="notif-label">Escrow Milestones</div>
+              <div class="notif-desc">When a vendor requests milestone release or a refund is processed.</div>
+            </div>
+            <div class="channel-chips">
+              <span class="channel-chip active" onclick="this.classList.toggle('active')">App</span>
+              <span class="channel-chip active" onclick="this.classList.toggle('active')">Email</span>
+              <span class="channel-chip" onclick="this.classList.toggle('active')">SMS</span>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-priority priority-med"></div>
+            <span class="notif-icon">📩</span>
+            <div style="flex:1">
+              <div class="notif-label">New Quote Received</div>
+              <div class="notif-desc">When a tradesperson submits a quote on your job post.</div>
+            </div>
+            <div class="channel-chips">
+              <span class="channel-chip active" onclick="this.classList.toggle('active')">App</span>
+              <span class="channel-chip active" onclick="this.classList.toggle('active')">Email</span>
+              <span class="channel-chip" onclick="this.classList.toggle('active')">SMS</span>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-priority priority-low"></div>
+            <span class="notif-icon">📰</span>
+            <div style="flex:1">
+              <div class="notif-label">TradeMatch Tips &amp; News</div>
+              <div class="notif-desc">Homeowner guides, seasonal maintenance tips, platform updates.</div>
+            </div>
+            <div class="channel-chips">
+              <span class="channel-chip" onclick="this.classList.toggle('active')">App</span>
+              <span class="channel-chip active" onclick="this.classList.toggle('active')">Email</span>
+              <span class="channel-chip" onclick="this.classList.toggle('active')">SMS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 7. ACCOUNT SECURITY ══ -->
+      <div id="sec-security" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-danger">🔑</div>
+          <div>
+            <div class="settings-card-title">Account Security</div>
+            <div class="settings-card-sub">Protect your TradeMatch account and personal data</div>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div class="security-row">
+            <div class="security-icon icon-green">✅</div>
+            <div style="flex:1"><div class="security-label">Email Verification</div><div class="security-desc">s.evans@email.com</div></div>
+            <span class="chip chip-green"><span class="chip-dot"></span>Verified</span>
+          </div>
+          <div class="security-row">
+            <div class="security-icon icon-green">📱</div>
+            <div style="flex:1"><div class="security-label">Two-Factor Authentication</div><div class="security-desc">SMS code to +44 ••••• 456</div></div>
+            <span class="chip chip-green"><span class="chip-dot"></span>Enabled</span>
+          </div>
+          <div class="security-row">
+            <div class="security-icon icon-blue">🔐</div>
+            <div style="flex:1"><div class="security-label">Safety PIN — Arrival Verification</div><div class="security-desc">Per-job PINs active. Vendor must request PIN verbally before starting.</div></div>
+            <span class="chip chip-blue"><span class="chip-dot"></span>Active</span>
+          </div>
+          <div class="security-row">
+            <div class="security-icon icon-blue">🛡️</div>
+            <div style="flex:1"><div class="security-label">Privacy Mask</div><div class="security-desc">Identity masking and Vault photo blur are both enabled.</div></div>
+            <span class="chip chip-blue"><span class="chip-dot"></span>Active</span>
+          </div>
+          <div class="security-row">
+            <div class="security-icon icon-amber">🚨</div>
+            <div style="flex:1"><div class="security-label">ID Verification</div><div class="security-desc">Required for dispute resolution over £1,000</div></div>
+            <span class="chip chip-amber pulse"><span class="chip-dot"></span>Pending</span>
+          </div>
+          <div class="security-row">
+            <div class="security-icon" style="background:var(--bg-tertiary);border:1px solid var(--border)">💻</div>
+            <div style="flex:1"><div class="security-label">Active Sessions</div><div class="security-desc">iPhone 14 (Manchester) · MacBook Pro (Home)</div></div>
+            <button class="btn btn-ghost" style="font-size:11px;padding:5px 12px" onclick="showToast('Session manager','info')">Manage</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ 8. BILLING & ESCROW ══ -->
+      <div id="sec-billing" class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-icon icon-green">💳</div>
+          <div>
+            <div class="settings-card-title">Billing &amp; Escrow History</div>
+            <div class="settings-card-sub">Funds held securely in escrow until milestone approval</div>
+          </div>
+          <div class="settings-card-action">
+            <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px" onclick="showToast('Full escrow history','info')">View Full History</button>
+          </div>
+        </div>
+        <div class="settings-card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+            <!-- Left: Timeline -->
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:14px">Recent Escrow Activity</div>
+              <div class="escrow-timeline">
+                <div class="escrow-item">
+                  <div class="escrow-dot green"></div>
+                  <div class="escrow-title">Bathroom Reno — Stage 1</div>
+                  <div class="escrow-meta">Released to J. Briggs Plumbing · 14 Feb 2026</div>
+                  <div class="escrow-amount">£850.00 released</div>
+                </div>
+                <div class="escrow-item">
+                  <div class="escrow-dot amber"></div>
+                  <div class="escrow-title">Bathroom Reno — Stage 2</div>
+                  <div class="escrow-meta">Awaiting your milestone approval</div>
+                  <div class="escrow-amount" style="color:var(--accent-amber)">£1,200.00 held</div>
+                </div>
+                <div class="escrow-item">
+                  <div class="escrow-dot blue"></div>
+                  <div class="escrow-title">Garden Landscaping</div>
+                  <div class="escrow-meta">Completed · No dispute filed</div>
+                  <div class="escrow-amount">£540.00 released</div>
+                </div>
+              </div>
+            </div>
+            <!-- Right: Refund methods + free plan -->
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:14px">Refund Methods</div>
+              <div class="credential-row">
+                <div class="credential-icon">🏦</div>
+                <div><div class="credential-label">Barclays Current Account</div><div style="font-size:11px;color:var(--text-2)">•••• •••• 4821</div></div>
+                <span class="chip chip-blue">Default</span>
+              </div>
+              <div class="credential-row" style="border-bottom:none;padding-bottom:0">
+                <div class="credential-icon">💰</div>
+                <div><div class="credential-label">TradeMatch Wallet</div><div style="font-size:11px;color:var(--text-2)">Balance: £0.00</div></div>
+              </div>
+              <div class="divider"></div>
+              <div class="free-plan-box">
+                <div class="free-plan-title">🎉 Free Forever Plan</div>
+                <div class="free-plan-desc">Getting quotes, managing jobs, and your Document Vault are permanently free. Vendors fund the platform — not you.</div>
+                <div class="free-plan-items">
+                  <span class="free-plan-item">✓ Unlimited quotes</span>
+                  <span class="free-plan-item">✓ Document Vault</span>
+                  <span class="free-plan-item">✓ Safety PIN</span>
+                  <span class="free-plan-item">✓ Dispute Centre</span>
+                  <span class="free-plan-item">✓ Escrow payments</span>
+                  <span class="free-plan-item">✓ All properties</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save bar -->
+      <div class="save-bar">
+        <button class="btn btn-ghost" onclick="showToast('Changes discarded','warning')">Discard Changes</button>
+        <button class="btn btn-primary" onclick="saveSettings()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          Save All Settings
+        </button>
+      </div>
+
+    </div><!-- /settings-content -->
+  </div><!-- /settings-grid -->
+</main>
+
+<script>
+/* ── SIDEBAR TOGGLE ── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+  document.getElementById('topnav').classList.toggle('collapsed');
+  document.getElementById('main').classList.toggle('collapsed');
+}
+
+/* ── THEME ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  const icon = document.getElementById('themeIcon');
+  if (isLight) {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';
+  } else {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';
+  }
+}
+
+/* ── PROFILE DROPDOWN ── */
+function toggleProfileDropdown() {
+  document.getElementById('profileDropdown').classList.toggle('open');
+}
+function closeProfileDropdown() {
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#profileDropdown') && !e.target.closest('.profile-btn')) {
+    closeProfileDropdown();
+  }
+});
+
+/* ── SETTINGS NAV ── */
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.settings-nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+/* ── PIN MODULE ── */
+let pinVisible = false;
+const realPin = ['7','4','2','9'];
+
+function togglePinSection() {
+  const s = document.getElementById('pinSection');
+  s.style.display = document.getElementById('pinToggle').checked ? 'block' : 'none';
+}
+
+function togglePinVisibility() {
+  pinVisible = !pinVisible;
+  document.querySelectorAll('#pinDisplay .pin-digit').forEach((d, i) => {
+    d.textContent = pinVisible ? realPin[i] : '•';
+    d.classList.toggle('revealed', pinVisible);
+  });
+}
+
+function generatePin() {
+  const n = Array.from({length: 4}, () => Math.floor(Math.random() * 10));
+  n.forEach((v, i) => realPin[i] = String(v));
+  document.querySelectorAll('#pinDisplay .pin-digit').forEach((d, i) => {
+    d.textContent = pinVisible ? realPin[i] : '•';
+    d.style.borderColor = 'var(--neon)';
+    d.style.boxShadow = 'var(--neon-glow-sm)';
+    setTimeout(() => { d.style.borderColor = ''; d.style.boxShadow = ''; }, 900);
+  });
+  showToast('✓ New PIN generated and sent to your device', 'success');
+}
+
+/* ── VOIP ── */
+function toggleVoip() {
+  const chip = document.getElementById('voipChip');
+  chip.style.display = document.getElementById('voipToggle').checked ? 'flex' : 'none';
+  if (document.getElementById('voipToggle').checked) {
+    showToast('📞 Platform number activated — vendors will see a masked number', 'success');
+  }
+}
+
+/* ── EXPORT ── */
+function handleExport() {
+  const b = document.getElementById('exportBtn');
+  const orig = b.innerHTML;
+  b.innerHTML = '⏳ Generating PDF…';
+  b.disabled = true;
+  setTimeout(() => { b.innerHTML = orig; b.disabled = false; showToast('✓ Project history PDF ready to download', 'success'); }, 2200);
+}
+
+/* ── SAVE ── */
+function saveSettings() {
+  const b = document.getElementById('saveBtn');
+  const orig = b.innerHTML;
+  b.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:15px;height:15px;stroke-width:2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg> Saved!';
+  b.style.background = 'linear-gradient(135deg,#007a3d,#00E5A0)';
+  showToast('✓ All settings saved successfully', 'success');
+  setTimeout(() => { b.innerHTML = orig; b.style.background = ''; }, 2000);
+}
+
+/* ── TOAST ── */
+function showToast(msg, type = 'success') {
+  const icons = { success: '✅', warning: '⚠️', info: 'ℹ️' };
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]}</span>${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(20px)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+/* keyboard */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeProfileDropdown();
+});
+</script>
+
+</body>
+</html>

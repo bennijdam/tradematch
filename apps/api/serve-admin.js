@@ -8,13 +8,14 @@ const path = require('path');
 
 const app = express();
 const PORT = 3002;
+const webRoot = path.join(__dirname, '..', 'web');
 
 // Serve static files from super admin SPA directory
-app.use(express.static(path.join(__dirname, '..', '..', 'public', 'super-admin-dashboard')));
+app.use(express.static(webRoot));
 
 // Fallback to SPA entry
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'public', 'super-admin-dashboard', 'index.html'));
+    res.sendFile(path.join(webRoot, 'super-admin-dashboard-index.html'));
 });
 
 app.listen(PORT, () => {

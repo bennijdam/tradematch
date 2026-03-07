@@ -6,6 +6,12 @@ const LeadPricingService = require('../services/lead-pricing.service');
 module.exports = (pool) => {
   const pricingService = new LeadPricingService(pool);
 
+  function canAccessVendorCredits(reqUser, vendorId) {
+    const userId = String(reqUser?.userId || '');
+    const targetVendorId = String(vendorId || '');
+    return reqUser?.role === 'admin' || reqUser?.role === 'super_admin' || userId === targetVendorId;
+  }
+
   // ==========================================
   // GET /api/vendor-credits/balance/:vendorId
   // Get vendor's current credit balance
@@ -15,7 +21,7 @@ module.exports = (pool) => {
       const { vendorId } = req.params;
       
       // Ensure user can only access their own balance (unless admin)
-      if (req.user.userId !== parseInt(vendorId) && req.user.role !== 'admin') {
+      if (!canAccessVendorCredits(req.user, vendorId)) {
         return res.status(403).json({ error: 'Access denied' });
       }
 
@@ -223,7 +229,7 @@ module.exports = (pool) => {
       const { limit = 50, offset = 0 } = req.query;
 
       // Ensure user can only access their own transactions
-      if (req.user.userId !== parseInt(vendorId) && req.user.role !== 'admin') {
+      if (!canAccessVendorCredits(req.user, vendorId)) {
         return res.status(403).json({ error: 'Access denied' });
       }
 

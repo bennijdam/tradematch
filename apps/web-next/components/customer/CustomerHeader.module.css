@@ -1,44 +1,76 @@
-.wrap {
-  background: var(--tm-bg-surface);
-  border: 1px solid var(--tm-border);
-  border-radius: var(--tm-radius-xl);
-  padding: 20px 24px;
-  box-shadow: var(--tm-shadow-sm);
-  margin-bottom: 18px;
-}
-
-.breadcrumb {
-  color: var(--tm-text-secondary);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.title {
-  margin: 0;
-  color: var(--tm-text-primary);
-  font-size: 31px;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-.sub {
-  margin-top: 8px;
-  color: var(--tm-text-secondary);
-}
-
-.meta {
-  margin-top: 14px;
+.pageHeader {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
+  margin-bottom: 28px;
+  gap: 20px;
 }
 
-.tag {
-  font-size: 12px;
+.pageTitleGroup {
+  flex: 1;
+}
+
+.pageEyebrow {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--neon);
+  opacity: 0.8;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pageEyebrow::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--neon);
+  opacity: 0.5;
+}
+
+.pageTitle {
+  margin: 0;
+  font-family: var(--ff);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text-1);
+  line-height: 1.1;
+}
+
+.pageSub {
+  font-size: 14px;
+  color: var(--text-2);
+  margin-top: 6px;
+}
+
+.pageActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ff);
+  font-size: 13px;
   font-weight: 700;
-  color: var(--tm-green-600);
-  background: rgba(22, 163, 74, 0.12);
-  border: 1px solid rgba(22, 163, 74, 0.25);
-  border-radius: 999px;
-  padding: 5px 10px;
+  letter-spacing: -0.02em;
+  border-radius: 10px;
+  padding: 9px 18px;
+  border: 1px solid var(--border-2);
+  background: var(--bg-tertiary);
+  color: var(--text-1);
+}
+
+.actionButton svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2;
 }

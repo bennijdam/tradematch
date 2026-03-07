@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeMatch Vendor Native</title>
+<style>
+:root {
+  --bg-primary:#0A0E14; --bg-secondary:#12161E; --bg-tertiary:#1A1F2B; --bg-card:#1E2430;
+  --accent-primary:#00E5A0; --accent-secondary:#00B383; --accent-info:#42A5F5;
+  --text-primary:#FFFFFF; --text-secondary:#9CA3AF; --text-muted:#6B7280;
+  --border:rgba(255,255,255,.08); --border-hover:rgba(255,255,255,.16);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.3); --shadow-md:0 4px 16px rgba(0,0,0,.4);
+}
+[data-theme="light"] {
+  --bg-primary:#F8FAFB; --bg-secondary:#FFFFFF; --bg-tertiary:#F3F4F6; --bg-card:#FFFFFF;
+  --accent-primary:#16A34A; --accent-secondary:#15803D; --accent-info:#3B82F6;
+  --text-primary:#1A2332; --text-secondary:#4B5563; --text-muted:#6B7280;
+  --border:rgba(0,0,0,.08); --border-hover:rgba(0,0,0,.16);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08); --shadow-md:0 4px 12px rgba(0,0,0,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Archivo',sans-serif;background:var(--bg-primary);color:var(--text-primary);overflow:hidden;}
+.shell{height:100vh;}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:280px;background:var(--bg-secondary);border-right:1px solid var(--border);
+  box-shadow:var(--shadow-sm);display:flex;flex-direction:column;
+}
+.logo{padding:20px 24px;border-bottom:1px solid var(--border);font-weight:800;letter-spacing:.02em;color:var(--accent-primary);}
+.nav{padding:18px 12px;display:grid;gap:8px;}
+.nav button{
+  width:100%;height:46px;border:1px solid transparent;background:transparent;color:var(--text-secondary);
+  border-radius:12px;text-align:left;padding:0 14px;font-size:14px;font-weight:600;cursor:pointer;
+}
+.nav button:hover{background:var(--bg-tertiary);border-color:var(--border-hover);}
+.nav button.active{background:rgba(0,229,160,.12);border-color:rgba(0,229,160,.25);color:var(--accent-primary);}
+.top-nav{
+  position:fixed;top:0;left:280px;right:0;height:72px;background:var(--bg-secondary);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 32px;box-shadow:var(--shadow-sm);
+}
+.search{width:420px;max-width:55vw;height:44px;border-radius:12px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-primary);padding:0 14px;font-size:14px;}
+.badge{font-size:11px;color:var(--accent-primary);border:1px solid rgba(0,229,160,.26);border-radius:999px;padding:4px 10px;font-weight:700;}
+.main{position:fixed;top:72px;left:280px;right:0;bottom:0;overflow:auto;padding:24px 32px 30px;}
+.title{font-size:28px;font-weight:800;letter-spacing:-.03em;}
+.subtitle{font-size:14px;color:var(--text-muted);margin-top:4px;margin-bottom:18px;}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow-sm);}
+.metric{grid-column:span 3;}
+.metric .label{font-size:12px;color:var(--text-muted);margin-bottom:8px;}
+.metric .value{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+.metric .delta{font-size:12px;color:var(--accent-primary);margin-top:8px;}
+.wide{grid-column:span 8;}
+.side{grid-column:span 4;}
+.list{display:grid;gap:9px;margin-top:8px;}
+.list-row{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:11px 12px;display:flex;justify-content:space-between;gap:8px;}
+.list-row .meta{font-size:12px;color:var(--text-muted);margin-top:3px;}
+@media (max-width:1080px){
+  .sidebar{position:static;width:100%;height:auto;}
+  .top-nav{left:0;}
+  .main{left:0;}
+  .metric,.wide,.side{grid-column:span 12;}
+  .shell{height:auto;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="logo">TRADEMATCH • VENDOR</div>
+    <nav class="nav" id="vendorNativeNav"></nav>
+  </aside>
+
+  <header class="top-nav">
+    <input class="search" value="Search leads, quotes, customers..." aria-label="Search" readonly>
+    <div class="badge">NATIVE • 0.01 PARITY</div>
+  </header>
+
+  <main class="main">
+    <div class="title" id="vendorViewTitle">Vendor Analytics</div>
+    <div class="subtitle" id="vendorViewSubtitle">Lead generation and pipeline control</div>
+    <section class="grid" id="vendorViewGrid"></section>
+  </main>
+</div>
+<script src="../../shared/ui/native-parity-debug.js"></script>
+<script>
+(function(){
+  const currentTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  document.body.setAttribute('data-theme', currentTheme);
+
+  const VIEWS = {
+    analytics: { title: 'Vendor Analytics', subtitle: 'Lead generation and pipeline control' },
+    'new-leads': { title: 'New Leads', subtitle: 'Fresh inbound jobs to review' },
+    'active-quotes': { title: 'Active Quotes', subtitle: 'Quotes awaiting customer decision' },
+    messages: { title: 'Messages', subtitle: 'Conversations with customers' },
+    profile: { title: 'Business Profile', subtitle: 'Public profile and trust signals' },
+    settings: { title: 'Settings', subtitle: 'Account preferences and controls' },
+    billing: { title: 'Billing', subtitle: 'Plan, credits, and invoices' }
+  };
+
+  const runtimeOverrides = {};
+  let activeView = 'analytics';
+  const parityDebug = window.createNativeParityDebug
+    ? window.createNativeParityDebug({ label: 'PARITY DEBUG · VENDOR' })
+    : { write() {} };
+
+  function writeDebug(data) {
+    parityDebug.write(data);
+  }
+
+  const VIEW_CONTENT = {
+    analytics: {
+      metrics: [['Quotes Viewed', '42', '+12%'], ['Bids Submitted', '18', '+6%'], ['Jobs Won', '7', 'Strong'], ['Win Rate', '39%', 'Industry avg 25%']],
+      primaryTitle: 'Revenue Trend',
+      rows: [['Dec', '£8,240', '↑'], ['Jan', '£9,120', '↑'], ['Feb', '£10,450', '↑']],
+      sideTitle: 'Service Win Rate',
+      sideItems: [['Plumbing', '44%'], ['Electrical', '36%'], ['Landscaping', '31%']]
+    },
+    'new-leads': {
+      metrics: [['New Leads', '12', 'Today'], ['Urgent', '3', 'Requires reply'], ['Avg Lead Cost', '1 impression', 'Stable'], ['Balance', '150', 'Low']],
+      primaryTitle: 'Lead Queue',
+      rows: [['Emergency Boiler Repair', 'Westminster SW1', '2h ago'], ['Blocked Drain', 'Camden NW1', '3h ago'], ['Fuse Box Check', 'Hackney E8', '5h ago']],
+      sideTitle: 'Lead Actions',
+      sideItems: [['Quote now', '3'], ['View details', '12'], ['Top up balance', 'Recommended']]
+    },
+    'active-quotes': {
+      metrics: [['Total Active', '7', '+12%'], ['Viewed by Customer', '4', '57%'], ['Avg Response Time', '2.3d', '-15%'], ['Estimated Value', '£12.5k', '+28%']],
+      primaryTitle: 'Quote Follow-up',
+      rows: [['Bathroom Renovation', 'Viewed', 'Follow up today'], ['Kitchen Refit', 'Pending', '2d no reply'], ['Garden Project', 'Viewed', 'Price clarification']],
+      sideTitle: 'Quote Priority',
+      sideItems: [['High value', '2'], ['Needs follow-up', '3'], ['Likely win', '2']]
+    },
+    messages: {
+      metrics: [['Unread', '7', '2 critical'], ['Threads', '19', 'Active'], ['Sent today', '14', 'Good cadence'], ['Avg response', '36m', 'Fast']],
+      primaryTitle: 'Recent Conversations',
+      rows: [['Homeowner • SW1 boiler', 'Unread', '22m ago'], ['Customer • Kitchen wiring', 'Replied', '1h ago'], ['Lead • Garden design', 'Pending', '3h ago']],
+      sideTitle: 'Message Queue',
+      sideItems: [['Unread now', '7'], ['Awaiting files', '2'], ['Escalations', '0']]
+    },
+    profile: {
+      metrics: [['Profile Score', '88%', 'Good'], ['Reviews', '127', '+4 this month'], ['Avg Rating', '4.8', 'Top tier'], ['Trust Badges', '5', 'Verified']],
+      primaryTitle: 'Public Profile Health',
+      rows: [['Business details', 'Complete', 'Updated 1w ago'], ['Insurance docs', 'Valid', 'Expires in 8m'], ['Gallery items', '18 photos', '3 new']],
+      sideTitle: 'Profile Tasks',
+      sideItems: [['Add certifications', '1'], ['Upload recent project', '1'], ['Update availability', 'Today']]
+    },
+    settings: {
+      metrics: [['Security', 'Strong', '2FA on'], ['Alerts', '9 rules', 'Configured'], ['Service Areas', '14', 'Active'], ['Integrations', '3', 'Connected']],
+      primaryTitle: 'Settings Tabs',
+      rows: [['Account', 'Active', 'Configured'], ['Business Profile', 'Active', 'Configured'], ['Verification', 'Pending review', 'Action needed']],
+      sideTitle: 'Settings Focus',
+      sideItems: [['Verification docs', 'Pending'], ['Notification tune', 'Recommended'], ['Billing defaults', 'Set']]
+    },
+    billing: {
+      metrics: [['Current Balance', '£34.00', 'After charges'], ['Monthly Spend', '£76.40', 'This cycle'], ['Plan', 'Pro', 'Renews 14d'], ['Invoices', '12', 'Available']],
+      primaryTitle: 'Billing & Payments',
+      rows: [['Top-up #TM-2241', 'Completed', '£20.00'], ['Subscription • Pro', 'Paid', '£29.99'], ['Lead charges bundle', 'Settled', '£8.00']],
+      sideTitle: 'Billing Alerts',
+      sideItems: [['Low balance risk', 'Medium'], ['Auto top-up', 'Off'], ['Payment method', 'Visa •••• 4242']]
+    }
+  };
+
+  function metricCard([label, value, delta]) {
+    return `<article class="card metric"><div class="label">${label}</div><div class="value">${value}</div><div class="delta">${delta}</div></article>`;
+  }
+
+  function pipelineCard(content) {
+    return `
+      <article class="card wide">
+        <div class="label">${content.primaryTitle}</div>
+        <div class="list">
+          ${content.rows.map((row) => `<div class="list-row"><div><div>${row[0]}</div><div class="meta">${row[1]}</div></div><strong>${row[2]}</strong></div>`).join('')}
+        </div>
+      </article>`;
+  }
+
+  function actionCard(content) {
+    return `
+      <article class="card side">
+        <div class="label">${content.sideTitle}</div>
+        <div class="list">
+          ${content.sideItems.map((item) => `<div class="list-row"><div>${item[0]}</div><strong>${item[1]}</strong></div>`).join('')}
+        </div>
+      </article>`;
+  }
+
+  function renderNav(activeView) {
+    const nav = document.getElementById('vendorNativeNav');
+    nav.innerHTML = Object.keys(VIEWS).map((view) => `
+      <button data-view="${view}" class="${view === activeView ? 'active' : ''}">${VIEWS[view].title}</button>
+    `).join('');
+  }
+
+  function renderView(view) {
+    const next = VIEWS[view] ? view : 'analytics';
+    activeView = next;
+    const content = VIEW_CONTENT[next] || VIEW_CONTENT.analytics;
+    const hasOverride = Boolean(runtimeOverrides[next]);
+    const merged = runtimeOverrides[next]
+      ? {
+        ...content,
+        ...runtimeOverrides[next],
+        metrics: runtimeOverrides[next].metrics && runtimeOverrides[next].metrics.length ? runtimeOverrides[next].metrics : content.metrics,
+        rows: runtimeOverrides[next].rows && runtimeOverrides[next].rows.length ? runtimeOverrides[next].rows : content.rows,
+        sideText: runtimeOverrides[next].sideText || content.sideText
+      }
+      : content;
+    renderNav(next);
+    document.getElementById('vendorViewTitle').textContent = merged.title || VIEWS[next].title;
+    document.getElementById('vendorViewSubtitle').textContent = merged.subtitle || VIEWS[next].subtitle;
+    document.getElementById('vendorViewGrid').innerHTML = [
+      ...merged.metrics.map(metricCard),
+      pipelineCard(merged),
+      actionCard(merged)
+    ].join('');
+
+    writeDebug({
+      source: hasOverride ? 'runtime-legacy' : 'local-map',
+      view: next,
+      title: merged.title || VIEWS[next].title,
+      subtitle: merged.subtitle || VIEWS[next].subtitle,
+      metrics: merged.metrics,
+      rows: merged.rows
+    });
+
+    window.parent.postMessage({ type: 'dashboard-native-ready', role: 'vendor', view: next }, window.location.origin);
+  }
+
+  document.getElementById('vendorNativeNav').addEventListener('click', (event)=>{
+    const button = event.target.closest('button[data-view]');
+    if (!button) return;
+    renderView(button.dataset.view);
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  renderView(params.get('view') || window.location.hash.replace(/^#/, '') || 'analytics');
+
+  window.addEventListener('message', (event)=>{
+    const data = event && event.data ? event.data : null;
+    if (!data) return;
+    if (data.type !== 'vendor-native-nav' && data.type !== 'dashboard-native-nav') return;
+    if (data.role && data.role !== 'vendor') return;
+    renderView(data.view);
+  });
+
+  window.addEventListener('message', (event) => {
+    const data = event && event.data ? event.data : null;
+    if (!data || data.type !== 'dashboard-native-data') return;
+    if (data.role && data.role !== 'vendor') return;
+
+    const view = data.view && VIEWS[data.view] ? data.view : activeView;
+    if (!data.payload) return;
+
+    runtimeOverrides[view] = {
+      title: data.payload.title || '',
+      subtitle: data.payload.subtitle || '',
+      metrics: Array.isArray(data.payload.metrics) ? data.payload.metrics : [],
+      rows: Array.isArray(data.payload.rows) ? data.payload.rows : [],
+      sideText: data.payload.sideText || ''
+    };
+
+    if (view === activeView) {
+      writeDebug({
+        source: 'runtime-payload',
+        view,
+        payload: runtimeOverrides[view]
+      });
+      renderView(view);
+    }
+  });
+})();
+</script>
+</body>
+</html>

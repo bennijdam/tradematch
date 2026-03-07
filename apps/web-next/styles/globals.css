@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Archivo:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   BASE RESET - From Legacy CSS
+   ======================================== */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    height: 100%;
+    background: #050709;
+    color: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    overflow: hidden;
+  }
+  
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.09);
+    border-radius: 2px;
+  }
+  
+  /* Sidebar Scrollbar Hidden */
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+/* ========================================
+   COMPONENT UTILITIES
+   ======================================== */
+@layer components {
+  /* Shell Layout */
+  .shell {
+    @apply flex h-screen;
+  }
+  
+  /* Sidebar Styles - Pixel Perfect */
+  .sidebar {
+    @apply flex flex-col flex-shrink-0 z-[100] bg-bg-1 border-r border-border;
+    width: 218px;
+  }
+  
+  .sidebar-lg {
+    @apply fixed top-0 left-0 bottom-0 w-[280px] bg-bg-secondary border-r border-border shadow-card flex flex-col;
+  }
+  
+  /* Topbar */
+  .topbar {
+    @apply flex items-center px-6 gap-4 flex-shrink-0 bg-bg-1 border-b border-border;
+    height: 54px;
+  }
+  
+  .topbar-lg {
+    @apply fixed top-0 left-[280px] right-0 h-[72px] bg-bg-secondary border-b border-border shadow-card flex items-center justify-between px-8;
+  }
+  
+  /* Content Area */
+  .content {
+    @apply flex-1 overflow-y-auto px-6 py-5;
+  }
+  
+  .main-content {
+    @apply fixed top-[72px] left-[280px] right-0 bottom-0 overflow-auto px-8 py-6;
+  }
+  
+  /* View Transition */
+  .view {
+    @apply hidden;
+    animation: fadeIn 0.2s ease;
+  }
+  
+  .view.active {
+    @apply block;
+  }
+  
+  /* Section Title */
+  .section-title {
+    @apply flex items-center gap-2 mb-3 text-[10px] font-syne font-bold text-t3 uppercase tracking-wider;
+  }
+  
+  .section-title::after {
+    content: '';
+    @apply flex-1 h-px bg-border;
+  }
+  
+  /* Metric Strip Grid */
+  .metric-strip {
+    @apply grid gap-2 mb-4;
+  }
+  
+  .metric-strip-6 {
+    @apply grid-cols-metrics-6;
+  }
+  
+  .metric-strip-4 {
+    @apply grid-cols-metrics-4;
+  }
+  
+  .metric-strip-3 {
+    @apply grid-cols-metrics-3;
+  }
+  
+  /* Grid Layouts */
+  .grid-dashboard {
+    @apply grid grid-cols-dashboard gap-3 mb-3;
+  }
+  
+  .grid-wide {
+    @apply grid grid-cols-wide gap-3 mb-3;
+  }
+  
+  .grid-12 {
+    @apply grid grid-cols-12 gap-4;
+  }
+}
+
+/* ========================================
+   ROLE-SPECIFIC STYLES
+   ======================================== */
+@layer utilities {
+  /* Super Admin - Syne/DM Sans */
+  .theme-admin {
+    font-family: 'DM Sans', sans-serif;
+  }
+  
+  .theme-admin h1, .theme-admin h2, .theme-admin h3 {
+    font-family: 'Syne', sans-serif;
+  }
+  
+  /* User/Vendor - Archivo */
+  .theme-vendor, .theme-user {
+    font-family: 'Archivo', sans-serif;
+  }
+  
+  /* Data/Code - JetBrains Mono */
+  .font-data {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  /* Neon Glow Utilities */
+  .neon-glow {
+    box-shadow: 0 0 18px rgba(0,229,160,0.28);
+  }
+  
+  .neon-glow-lg {
+    box-shadow: 0 0 28px rgba(0,229,160,0.35);
+  }
+  
+  /* Ambient Background Gradient */
+  .ambient-gradient::before {
+    content: '';
+    @apply fixed -inset-1/2 z-0 pointer-events-none;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(0,229,160,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(66,165,245,0.08) 0%, transparent 50%);
+  }
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+@media (max-width: 1080px) {
+  .sidebar-lg {
+    @apply static w-full h-auto;
+  }
+  
+  .topbar-lg {
+    @apply left-0;
+  }
+  
+  .main-content {
+    @apply left-0;
+  }
+  
+  .metric-card, .wide-card, .side-card {
+    grid-column: span 12;
+  }
+  
+  .shell {
+    @apply h-auto;
+  }
+}

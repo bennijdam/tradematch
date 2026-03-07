@@ -1,9 +1,28 @@
 :root {
   --bg: #080c12;
   --panel: #111827;
-  --text: #f4f4f5;
-  --muted: #a1a1aa;
+  --text: #f0f4ff;
+  --muted: #8b95aa;
   --accent: #00e5a0;
+
+  --tm-bg-primary: #080c12;
+  --tm-bg-surface: #0e1420;
+  --tm-bg-soft: #141b28;
+  --tm-border: rgba(255, 255, 255, 0.07);
+  --tm-text-primary: #f0f4ff;
+  --tm-text-secondary: #8b95aa;
+  --tm-text-muted: #4a5568;
+  --tm-green-500: #00e5a0;
+  --tm-green-600: #00e5a0;
+  --tm-red-500: #ff4757;
+  --tm-amber-500: #ffa726;
+  --tm-blue-500: #42a5f5;
+  --tm-purple-500: #9c5fe9;
+  --tm-shadow-sm: 0 0 14px rgba(0, 229, 160, 0.18);
+  --tm-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --tm-radius-lg: 14px;
+  --tm-radius-xl: 16px;
+  --tm-sidebar-width: 268px;
 }
 
 * {
@@ -14,9 +33,22 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: Inter, Segoe UI, Arial, sans-serif;
+  font-family: var(--font-dm-sans), Segoe UI, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0, 229, 160, 0.035) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(66, 165, 245, 0.025) 0%, transparent 60%);
 }
 
 a {
@@ -31,18 +63,33 @@ a {
 }
 
 .shell {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: var(--tm-sidebar-width) 1fr;
+  background: var(--tm-bg-primary);
 }
 
 .sidebar {
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem;
+  border-right: 1px solid var(--tm-border);
+  background: var(--tm-bg-surface);
+  overflow: hidden;
 }
 
 .main {
-  padding: 1rem 1.25rem;
+  padding: 16px 20px;
+}
+
+.customer-shell {
+  display: block;
+}
+
+.customer-main {
+  margin-left: var(--tm-sidebar-width);
+  margin-top: 72px;
+  min-height: calc(100vh - 72px);
+  padding: 32px;
 }
 
 .panel {

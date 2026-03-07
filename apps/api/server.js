@@ -25,13 +25,24 @@ function sanitizeDatabaseUrl(rawUrl) {
         const url = new URL(rawUrl);
         // Node pg does not support channel_binding in libpq params
         url.searchParams.delete('channel_binding');
-        // Prefer direct Neon host for long-lived Node connections
-        if (url.hostname.includes('-pooler')) {
-            url.hostname = url.hostname.replace('-pooler', '');
-        }
         return url.toString();
     } catch (error) {
         return rawUrl;
+    }
+}
+
+function resolveSslConfig(connectionString) {
+    if (!connectionString) return false;
+
+    try {
+        const url = new URL(connectionString);
+        const sslMode = (url.searchParams.get('sslmode') || '').toLowerCase();
+        const needsSsl = ['require', 'verify-ca', 'verify-full'].includes(sslMode)
+            || url.hostname.includes('neon.tech')
+            || process.env.NODE_ENV === 'production';
+        return needsSsl ? { rejectUnauthorized: false } : false;
+    } catch (error) {
+        return process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false;
     }
 }
 
@@ -75,11 +86,13 @@ const defaultAllowedOrigins = [
     'http://localhost:3002',
     'http://localhost:3003',
     'http://localhost:8080',
+    'http://localhost:8081',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3002',
     'http://127.0.0.1:3003',
     'http://127.0.0.1:8080',
+    'http://127.0.0.1:8081',
     'http://127.0.0.1:8000'
 ];
 
@@ -106,21 +119,25 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 
-// Serve the super admin SPA
-app.use('/frontend/super-admin-dashboard', express.static(path.join(__dirname, '..', '..', 'public', 'super-admin-dashboard')));
+// Serve the super admin SPA from apps/web
+const webRoot = path.join(__dirname, '..', 'web');
+app.use('/frontend/super-admin-dashboard', express.static(webRoot));
+app.get('/frontend/super-admin-dashboard', (req, res) => {
+    res.sendFile(path.join(webRoot, 'super-admin-dashboard-index.html'));
+});
 
 // File uploads (S3 presigned URLs)
 app.use('/api/uploads', uploadLimiter, uploadsRoutes);
 
 // Database connection
+const sanitizedDatabaseUrl = sanitizeDatabaseUrl(process.env.DATABASE_URL);
 const pool = new Pool({
-    connectionString: sanitizeDatabaseUrl(process.env.DATABASE_URL),
-    ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require') ? true : false,
+    connectionString: sanitizedDatabaseUrl,
+    ssl: resolveSslConfig(sanitizedDatabaseUrl),
     connectionTimeoutMillis: 15000,
     idleTimeoutMillis: 60000,
     max: 10,
-    keepAlive: true,
-    options: '-c statement_timeout=15000'
+    keepAlive: true
 });
 
 const adminAudit = require('./middleware/admin-audit');

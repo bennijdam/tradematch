@@ -1,0 +1,130 @@
+.container {
+  display: grid;
+  gap: 16px;
+  padding-top: 0;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: var(--tm-sidebar-width);
+  right: 0;
+  height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--tm-border);
+  background: var(--tm-bg-surface);
+  z-index: 120;
+}
+
+.hamburger {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--tm-border);
+  background: transparent;
+  color: var(--tm-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.breadcrumb {
+  color: var(--tm-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.breadcrumb span {
+  color: var(--tm-text-primary);
+  font-family: var(--font-sora), sans-serif;
+  font-size: 15px;
+}
+
+.topbarCenter {
+  flex: 1;
+  max-width: 520px;
+}
+
+.topbarRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.searchStub {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--tm-bg-soft);
+  color: var(--tm-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--tm-border);
+  background: var(--tm-bg-primary);
+  color: var(--tm-text-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pillAlert {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 71, 87, 0.35);
+  background: rgba(255, 71, 87, 0.08);
+  color: #ff4757;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.postJob {
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 229, 160, 0.35);
+  background: rgba(0, 229, 160, 0.08);
+  color: #00e5a0;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

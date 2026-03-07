@@ -1,97 +1,47 @@
-'use client';
+import FullViewportFrame from '@/components/layout/FullViewportFrame';
+import NativeVendorDashboard from '@/components/vendor/NativeVendorDashboard';
 
-import { useEffect, useRef } from 'react';
-import { VendorIframeBridge } from '@/lib/vendor-iframe-bridge';
+const USE_NATIVE_UI = process.env.NEXT_PUBLIC_UI_MODE === 'native';
+const ENABLE_VENDOR_NATIVE_EXPERIMENT =
+  process.env.NEXT_PUBLIC_VENDOR_NATIVE_EXPERIMENT === 'true';
 
-declare global {
-  interface Window {
-    tradematchAdminBridge?: {
-      updateShowUpScore: (value: number) => void;
-      forceRefresh: () => void;
-      toast: (message: string) => void;
-    };
+type DashboardSearchParams = {
+  'test-native'?: string | string[];
+};
+
+function shouldUseNative(testNative: string | string[] | undefined) {
+  if (!ENABLE_VENDOR_NATIVE_EXPERIMENT) {
+    return false;
   }
+
+  if (USE_NATIVE_UI) {
+    return true;
+  }
+
+  if (Array.isArray(testNative)) {
+    return testNative.includes('true') || testNative.includes('1');
+  }
+
+  return testNative === 'true' || testNative === '1';
 }
 
-export default function VendorDashboardPage() {
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const bridgeRef = useRef<VendorIframeBridge | null>(null);
+export default async function VendorDashboardPage({
+  searchParams,
+}: {
+  searchParams?: DashboardSearchParams | Promise<DashboardSearchParams>;
+}) {
+  const params = await Promise.resolve(searchParams);
+  const nativeMode = shouldUseNative(params?.['test-native']);
 
-  useEffect(() => {
-    if (!iframeRef.current) {
-      return;
-    }
-
-    const bridge = new VendorIframeBridge({
-      iframeElement: iframeRef.current,
-      targetOrigin: window.location.origin,
-      sourceName: 'tradematch-admin-parent',
-    });
-
-    bridge.on('READY', () => {
-      bridge.stateSync({
-        vendorId: 'vendor-demo-001',
-        dashboardMode: 'iframe-hybrid',
-      });
-    });
-
-    bridge.start();
-    bridgeRef.current = bridge;
-
-    window.tradematchAdminBridge = {
-      updateShowUpScore: (value: number) => {
-        bridge.patchMetrics({ showUpRate: value });
-        iframeRef.current?.contentWindow?.postMessage({
-          type: 'PATCH_METRICS',
-          version: '1.0',
-          requestId: `direct-${Date.now()}`,
-          timestamp: Date.now(),
-          payload: { showUpRate: value },
-        }, window.location.origin);
-      },
-      forceRefresh: () => {
-        bridge.forceRefresh();
-        iframeRef.current?.contentWindow?.postMessage({
-          type: 'FORCE_REFRESH',
-          version: '1.0',
-          requestId: `direct-${Date.now()}`,
-          timestamp: Date.now(),
-          payload: { reason: 'admin-request' },
-        }, window.location.origin);
-      },
-      toast: (message: string) => {
-        bridge.toast(message, 'success');
-        iframeRef.current?.contentWindow?.postMessage({
-          type: 'TOAST',
-          version: '1.0',
-          requestId: `direct-${Date.now()}`,
-          timestamp: Date.now(),
-          payload: { message, tone: 'success' },
-        }, window.location.origin);
-      },
-    };
-
-    return () => {
-      bridge.destroy();
-      bridgeRef.current = null;
-      delete window.tradematchAdminBridge;
-    };
-  }, []);
+  if (nativeMode) {
+    return <NativeVendorDashboard />;
+  }
 
   return (
-    <iframe
-      ref={iframeRef}
+    <FullViewportFrame
       src="/vendor-dashboard-new/vendor-dashboard.html"
       title="Vendor Dashboard"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        border: '0',
-        zIndex: 2147483647,
-        background: '#080C12',
-      }}
+      background="#080C12"
     />
   );
 }

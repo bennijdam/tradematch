@@ -4,7 +4,8 @@
     function normalizePath(hash) {
         if (!hash) return "";
         const cleaned = hash.replace(/^#/, "");
-        return cleaned.startsWith("/") ? cleaned : `/${cleaned}`;
+        const pathOnly = cleaned.split("?")[0];
+        return pathOnly.startsWith("/") ? pathOnly : `/${pathOnly}`;
     }
 
     function createSuperAdminRouter(options) {

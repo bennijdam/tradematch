@@ -1,0 +1,396 @@
+.container {
+  display: grid;
+  gap: 0;
+}
+
+.topnav {
+  position: fixed;
+  top: 0;
+  left: var(--tm-sidebar-width);
+  right: 0;
+  height: 72px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.hamburger {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-2);
+  background: transparent;
+  color: var(--text-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.sep {
+  color: var(--text-3);
+}
+
+.current {
+  color: var(--text-1);
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.aeoBar {
+  flex: 1;
+  min-width: 220px;
+}
+
+.aeoInput {
+  border: 1px solid var(--border-2);
+  background: var(--bg-tertiary);
+  color: var(--text-2);
+  border-radius: 10px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topnavRight {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill {
+  background: rgba(66, 165, 245, 0.12);
+  color: var(--accent-blue);
+  border: 1px solid rgba(66, 165, 245, 0.25);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-family: var(--fm);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.alert {
+  background: rgba(255, 167, 38, 0.12);
+  color: var(--accent-amber);
+  border: 1px solid rgba(255, 167, 38, 0.25);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-family: var(--fm);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.postJob {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #007a3d, var(--neon));
+}
+
+.aeoOverlay {
+  display: none;
+}
+
+.main {
+  margin-left: var(--tm-sidebar-width);
+  margin-top: 72px;
+  min-height: calc(100vh - 72px);
+  padding: 32px;
+}
+
+.escrowCustodyCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.escrowCustodyBanner {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(66, 165, 245, 0.06) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stripeBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(99, 91, 255, 0.1);
+  border: 1px solid rgba(99, 91, 255, 0.25);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-family: var(--fm);
+  font-size: 10px;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.stripeBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a78bfa;
+}
+
+.escrowCustodyMessage {
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.escrowCustodyMessage strong {
+  color: var(--text-1);
+}
+
+.ghostBtn {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.threeStateWrap {
+  padding: 14px 20px 0;
+}
+
+.escrowThreeState {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.estCell {
+  padding: 12px 14px;
+  display: grid;
+  gap: 2px;
+  background: var(--bg-tertiary);
+}
+
+.estCellFunded {
+  background: rgba(66, 165, 245, 0.08);
+}
+
+.estCellEscrow {
+  background: rgba(255, 167, 38, 0.06);
+}
+
+.estCellReleased {
+  background: rgba(0, 229, 160, 0.08);
+}
+
+.estLabel {
+  font-family: var(--fm);
+  font-size: 9px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.estAmount {
+  font-family: var(--ff);
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 900;
+  color: var(--text-1);
+  letter-spacing: -0.04em;
+}
+
+.estSub {
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+.releaseAlert {
+  display: none;
+  background: rgba(255, 167, 38, 0.08);
+  border-top: 1px solid rgba(255, 167, 38, 0.2);
+  border-bottom: 1px solid rgba(255, 167, 38, 0.2);
+  padding: 12px 20px;
+  align-items: center;
+  gap: 12px;
+}
+
+.releaseAlert.visible {
+  display: flex;
+}
+
+.releaseAlertIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.releaseAlertText {
+  flex: 1;
+  font-size: 13px;
+  color: var(--accent-amber);
+  font-weight: 600;
+}
+
+.releaseAlertText span {
+  font-weight: 400;
+  color: var(--text-2);
+  font-size: 12px;
+  display: block;
+  margin-top: 1px;
+}
+
+.amberBtn {
+  background: rgba(255, 167, 38, 0.12);
+  color: var(--accent-amber);
+  border: 1px solid rgba(255, 167, 38, 0.25);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.escrowMilestones {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.escrowMilestoneRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.milestoneStepBadge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fm);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.milestoneStepBadge.done {
+  background: rgba(0, 229, 160, 0.15);
+  color: var(--neon);
+}
+
+.milestoneStepBadge.active {
+  background: rgba(255, 167, 38, 0.15);
+  color: var(--accent-amber);
+}
+
+.milestoneStepBadge.locked {
+  background: var(--border);
+  color: var(--text-3);
+}
+
+.milestoneRowName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  flex: 1;
+}
+
+.milestoneRowAmount {
+  font-family: var(--ff);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-1);
+  letter-spacing: -0.03em;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.milestoneRowStatus {
+  font-family: var(--fm);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.milestoneRowStatus.doneStatus {
+  color: var(--neon);
+}
+
+.milestoneRowStatus.pendingStatus {
+  color: var(--accent-amber);
+}
+
+.milestoneRowStatus.lockedStatus {
+  color: var(--text-3);
+}
+
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboardRight {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+}

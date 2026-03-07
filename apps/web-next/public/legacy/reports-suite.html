@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeMatch Legacy Reports Suite</title>
+  <style>
+    html,body{margin:0;height:100%;background:#050709;color:#fff;font-family:Arial,sans-serif}
+    .wrap{height:100%;display:grid;place-items:center}
+    .card{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:18px;background:rgba(15,18,25,.92)}
+    .tag{font-size:11px;color:#42a5f5;margin-bottom:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="tag">LEGACY CORE</div>
+      <h2>Reports Suite (Legacy)</h2>
+      <p>Compatibility shim page for parity orchestrator.</p>
+    </div>
+  </div>
+  <script>
+    window.parent?.postMessage({ type: 'tm:legacy:ready', payload: { view: 'reports-suite' } }, window.location.origin);
+  </script>
+</body>
+</html>

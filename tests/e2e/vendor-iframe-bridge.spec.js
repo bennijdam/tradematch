@@ -1,23 +1,11 @@
 const { test, expect } = require('@playwright/test');
 
-test('@sanity vendor iframe bridge patches Show-up Rate', async ({ page }) => {
+test('@sanity vendor native dashboard renders extracted components', async ({ page }) => {
   await page.goto('/vendor/dashboard', { waitUntil: 'domcontentloaded' });
 
-  const frameLocator = page.frameLocator('iframe[title="Vendor Dashboard"]');
-  const showUpRateValue = frameLocator
-    .locator('.rel-row', { hasText: 'Show-up Rate' })
-    .locator('.rel-val')
-    .first();
-
-  await expect(showUpRateValue).toHaveText('100%');
-
-  await page.waitForFunction(() => {
-    return Boolean(window.tradematchAdminBridge && window.tradematchAdminBridge.updateShowUpScore);
-  });
-
-  await page.evaluate(() => {
-    window.tradematchAdminBridge.updateShowUpScore(92);
-  });
-
-  await expect(showUpRateValue).toHaveText('92%');
+  await expect(page.getByRole('heading', { name: 'Good morning, Jake 👋' })).toBeVisible();
+  await expect(page.getByText('Leads Received')).toBeVisible();
+  await expect(page.getByText('Reliability Rating')).toBeVisible();
+  await expect(page.getByText('Show-up Rate')).toBeVisible();
+  await expect(page.locator('iframe')).toHaveCount(0);
 });

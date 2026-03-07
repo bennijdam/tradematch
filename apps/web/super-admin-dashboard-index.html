@@ -1,7 +1,17 @@
 ﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-    <script defer src="/_vercel/analytics/script.js"></script>
+    <script>
+        (function loadVercelAnalytics() {
+            const host = window.location.hostname;
+            const isLocal = window.location.protocol === 'file:' || host === 'localhost' || host === '127.0.0.1';
+            if (isLocal) return;
+            const script = document.createElement('script');
+            script.defer = true;
+            script.src = '/_vercel/analytics/script.js';
+            document.head.appendChild(script);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeMatch Super Admin</title>

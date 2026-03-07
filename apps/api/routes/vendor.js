@@ -229,7 +229,7 @@ router.get('/dashboard', async (req, res) => {
         COALESCE(SUM(CASE WHEN p.status = 'paid' THEN p.amount END), 0) as total_earnings,
         COUNT(DISTINCT CASE WHEN p.status = 'paid' THEN p.id END) as completed_jobs
        FROM bids b
-       LEFT JOIN payments p ON b.id = p.bid_id
+       LEFT JOIN payments p ON p.quote_id = b.quote_id AND p.vendor_id = b.vendor_id
        WHERE b.vendor_id = $1`,
       [vendorId]
     );

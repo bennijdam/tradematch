@@ -5361,3 +5361,46 @@ document.addEventListener('DOMContentLoaded', initNetworkAnimations);
   }
 })();
 </script>
+
+<script>
+(function () {
+  function normalize(label) {
+    return (label || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+
+  const routeMap = [
+    { match: 'dashboard', href: '/vendor/dashboard' },
+    { match: 'active jobs', href: '/vendor/active-jobs' },
+    { match: 'leads', href: '/vendor/leads' },
+    { match: 'messages', href: '/vendor/messages' },
+    { match: 'quotes', href: '/vendor/billing' },
+    { match: 'billing', href: '/vendor/billing' },
+    { match: 'analytics', href: '/vendor/analytics' },
+    { match: 'reputation', href: '/vendor/reviews' },
+    { match: 'coverage map', href: '/vendor/coverage-map' },
+    { match: 'my profile', href: '/vendor/profile' },
+    { match: 'settings', href: '/vendor/settings' },
+    { match: 'heatmaps', href: '/vendor/heatmaps' },
+  ];
+
+  function wireLinks() {
+    document.querySelectorAll('a.nav-item').forEach((anchor) => {
+      const label = normalize(anchor.textContent);
+      const mapped = routeMap.find((item) => label.includes(item.match));
+      if (!mapped) {
+        return;
+      }
+
+      anchor.setAttribute('href', mapped.href);
+      anchor.setAttribute('target', '_top');
+      anchor.removeAttribute('onclick');
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireLinks);
+  } else {
+    wireLinks();
+  }
+})();
+</script>
