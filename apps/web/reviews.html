@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Reviews â€” TradeMatch Vendor Dashboard</title>
+    <title>Customer Reviews — TradeMatch Vendor Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Favicon â€” matches existing pages -->
+    <!-- Favicon — matches existing pages -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 
     <style>
-        /* â”€â”€ CSS Variables (dark + light) â€” identical to codebase â”€â”€ */
+        /* â”€â”€ CSS Variables (dark + light) — identical to codebase â”€â”€ */
         :root {
             --bg-primary: #0A0E14;
             --bg-secondary: #12161E;
@@ -72,7 +72,7 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* â”€â”€ Ambient Background â€” identical to codebase â”€â”€ */
+        /* â”€â”€ Ambient Background — identical to codebase â”€â”€ */
         body::before {
             content: '';
             position: fixed;
@@ -91,7 +91,7 @@
         }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SIDEBAR  â€” exact copy from codebase (not modified)
+           SIDEBAR  — exact copy from codebase (not modified)
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .sidebar {
             position: fixed; top: 0; left: 0;
@@ -174,7 +174,7 @@
         .sidebar.collapsed .collapse-btn svg { transform: scaleX(-1); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           TOP NAV  â€” exact copy from codebase (not modified)
+           TOP NAV  — exact copy from codebase (not modified)
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .top-nav {
             position: fixed; top: 0; left: 280px; right: 0; height: 72px;
@@ -253,7 +253,7 @@
         .theme-toggle-icon { width: 12px; height: 12px; color: white; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           MAIN CONTENT SHELL â€” exact spacing from codebase
+           MAIN CONTENT SHELL — exact spacing from codebase
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .main-content {
             margin-left: 280px; margin-top: 72px;
@@ -265,7 +265,7 @@
         .main-content.sidebar-collapsed { margin-left: 80px; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           PAGE HEADER  â€” matches .dashboard-header pattern
+           PAGE HEADER  — matches .dashboard-header pattern
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .dashboard-header { margin-bottom: 28px; }
         .dashboard-title {
@@ -276,7 +276,7 @@
         .dashboard-subtitle { font-size: 16px; color: var(--text-secondary); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 1  â€” Summary stat cards
+           SECTION 1  — Summary stat cards
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .stats-grid {
             display: grid;
@@ -339,7 +339,7 @@
         .stat-subtext { font-size: 13px; color: var(--text-secondary); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 3  â€” Filter bar (sits above the list)
+           SECTION 3  — Filter bar (sits above the list)
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .filter-bar {
             background: var(--bg-card); border: 1px solid var(--border);
@@ -387,7 +387,7 @@
         .form-select option { background: var(--bg-card); color: var(--text-primary); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 2  â€” Reviews list (card-based)
+           SECTION 2  — Reviews list (card-based)
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .reviews-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
 
@@ -400,7 +400,7 @@
         }
         .review-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
-        /* Accent stripe on left â€” echoes nav-item.active::before style language */
+        /* Accent stripe on left — echoes nav-item.active::before style language */
         .review-card::before {
             content: ''; position: absolute; left: 0; top: 0; bottom: 0;
             width: 3px; background: var(--accent-primary);
@@ -420,7 +420,7 @@
 
         .review-meta-right { display: flex; align-items: center; gap: 10px; }
 
-        /* Status pills â€” Verified / Flagged */
+        /* Status pills — Verified / Flagged */
         .status-badge {
             display: inline-flex; align-items: center; gap: 5px;
             padding: 5px 10px; border-radius: 6px;
@@ -457,7 +457,7 @@
         .review-footer-item:last-child { margin-left: auto; }
         .review-footer-date  { font-size: 12px; color: var(--text-muted); font-family: 'Space Mono', monospace; }
 
-        /* Action row â€” Reply + Report */
+        /* Action row — Reply + Report */
         .review-actions { display: flex; gap: 10px; margin-top: 14px; }
         .btn {
             padding: 8px 18px; border-radius: 10px;
@@ -476,7 +476,7 @@
         .btn svg { width: 14px; height: 14px; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 4  â€” Insights panel (two-col grid)
+           SECTION 4  — Insights panel (two-col grid)
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .insights-grid {
             display: grid;
@@ -538,7 +538,7 @@
         .comparison-text strong { color: var(--text-primary); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 5  â€” Review Requests
+           SECTION 5  — Review Requests
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .pending-jobs { display: flex; flex-direction: column; gap: 10px; }
         .pending-job-row {
@@ -567,7 +567,7 @@
         }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           SECTION 6  â€” Trust & Badges
+           SECTION 6  — Trust & Badges
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .badges-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .badge-card {
@@ -597,7 +597,7 @@
         .badge-name { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
         .badge-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; }
 
-        /* Progress bar â€” reuses codebase shimmer pattern */
+        /* Progress bar — reuses codebase shimmer pattern */
         .progress-bar-bg {
             width: 100%; height: 7px;
             background: var(--bg-card); border-radius: 4px;
@@ -641,7 +641,7 @@
         .cta-banner-desc  { font-size: 13px; color: var(--text-secondary); }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           REPLY MODAL  â€” follows settings.html modal pattern
+           REPLY MODAL  — follows settings.html modal pattern
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
         .modal.active { display: flex; }
@@ -686,7 +686,7 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
 
         /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-           ANIMATIONS â€” staggered fadeIn matching codebase
+           ANIMATIONS — staggered fadeIn matching codebase
            â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(18px); }
@@ -741,7 +741,7 @@
 <body>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     SIDEBAR  â€” unchanged from codebase; "Reviews" nav item is active
+     SIDEBAR  — unchanged from codebase; "Reviews" nav item is active
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -792,7 +792,7 @@
             </a>
         </div>
 
-        <!-- Reputation â€” Reviews is ACTIVE here -->
+        <!-- Reputation — Reviews is ACTIVE here -->
         <div class="nav-section">
             <div class="nav-section-title">Reputation</div>
             <a href="/user/reviews" class="nav-item active">
@@ -829,13 +829,13 @@
 </aside>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     TOP NAV  â€” unchanged from codebase
+     TOP NAV  — unchanged from codebase
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <header class="top-nav" id="topNav">
     <div class="top-nav-left">
         <div class="search-container">
             <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" class="search-input" placeholder="Search reviews, jobs, customersâ€¦">
+            <input type="text" class="search-input" placeholder="Search reviews, jobs, customers…">
         </div>
     </div>
     <div class="top-nav-right">
@@ -859,7 +859,7 @@
 </header>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     MAIN CONTENT  â€” Reviews page only; sidebar + topbar untouched
+     MAIN CONTENT  — Reviews page only; sidebar + topbar untouched
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <main class="main-content" id="mainContent">
 
@@ -870,7 +870,7 @@
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 1  â€” Summary stat cards
+         SECTION 1  — Summary stat cards
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="stats-grid">
 
@@ -910,24 +910,24 @@
             </div>
             <div class="stat-label">Badges Earned</div>
             <div class="stat-value">3</div>
-            <div class="stat-subtext">Verified Â· Top Rated Â· Loyal</div>
+            <div class="stat-subtext">Verified · Top Rated · Loyal</div>
         </div>
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 3  â€” Filter bar (rendered above the list)
+         SECTION 3  — Filter bar (rendered above the list)
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="filter-bar">
         <!-- Rating filter pills -->
         <div class="filter-group">
             <label>Rating</label>
             <div class="rating-pills">
-                <button class="rating-pill active" onclick="setRatingFilter(this, 'all')"><span class="star-small">â…</span> All</button>
-                <button class="rating-pill" onclick="setRatingFilter(this, '5')"><span class="star-small">â…</span> 5</button>
-                <button class="rating-pill" onclick="setRatingFilter(this, '4')"><span class="star-small">â…</span> 4</button>
-                <button class="rating-pill" onclick="setRatingFilter(this, '3')"><span class="star-small">â…</span> 3</button>
-                <button class="rating-pill" onclick="setRatingFilter(this, '2')"><span class="star-small">â…</span> 2</button>
-                <button class="rating-pill" onclick="setRatingFilter(this, '1')"><span class="star-small">â…</span> 1</button>
+                <button class="rating-pill active" onclick="setRatingFilter(this, 'all')"><span class="star-small">★</span> All</button>
+                <button class="rating-pill" onclick="setRatingFilter(this, '5')"><span class="star-small">★</span> 5</button>
+                <button class="rating-pill" onclick="setRatingFilter(this, '4')"><span class="star-small">★</span> 4</button>
+                <button class="rating-pill" onclick="setRatingFilter(this, '3')"><span class="star-small">★</span> 3</button>
+                <button class="rating-pill" onclick="setRatingFilter(this, '2')"><span class="star-small">★</span> 2</button>
+                <button class="rating-pill" onclick="setRatingFilter(this, '1')"><span class="star-small">★</span> 1</button>
             </div>
         </div>
 
@@ -965,14 +965,14 @@
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 2  â€” Reviews list (placeholder data Ă— 5)
+         SECTION 2  — Reviews list (placeholder data Ă— 5)
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="reviews-list" id="reviewsList">
         <!-- Reviews are injected by renderReviews() via the placeholder JSON below -->
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 4  â€” Insights panel (two-col)
+         SECTION 4  — Insights panel (two-col)
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="insights-grid">
 
@@ -983,7 +983,7 @@
                 <span class="panel-badge">Last 6 months</span>
             </div>
 
-            <!-- SVG line chart placeholder â€” hook: replace path + circles with live data -->
+            <!-- SVG line chart placeholder — hook: replace path + circles with live data -->
             <div class="trend-chart-wrap">
                 <svg viewBox="0 0 560 140" preserveAspectRatio="none">
                     <defs>
@@ -1063,7 +1063,7 @@
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 5  â€” Review Requests
+         SECTION 5  — Review Requests
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="panel" style="margin-bottom:28px;">
         <div class="panel-header">
@@ -1076,7 +1076,7 @@
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 6  â€” Trust & Badges
+         SECTION 6  — Trust & Badges
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="panel">
         <div class="panel-header">
@@ -1093,7 +1093,7 @@
             </div>
             <div class="cta-banner-text">
                 <div class="cta-banner-title">Improve your rating to unlock priority placement</div>
-                <div class="cta-banner-desc">Maintain a 4.5â… average to appear higher in customer search results and earn the <strong>Elite</strong> badge.</div>
+                <div class="cta-banner-desc">Maintain a 4.5★ average to appear higher in customer search results and earn the <strong>Elite</strong> badge.</div>
             </div>
             <a class="btn btn-primary btn-sm" style="flex-shrink:0;" href="/help-centre">Learn more</a>
         </div>
@@ -1101,7 +1101,7 @@
 </main>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     REPLY MODAL  â€” follows settings.html modal conventions
+     REPLY MODAL  — follows settings.html modal conventions
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <div class="modal" id="replyModal">
     <div class="modal-content">
@@ -1110,12 +1110,12 @@
             <h2 class="modal-title">Reply to Review</h2>
             <p class="modal-desc">Your reply will be visible on your public profile.</p>
         </div>
-        <!-- Preview of the review being replied to â€” populated by openReplyModal() -->
+        <!-- Preview of the review being replied to — populated by openReplyModal() -->
         <div class="review-preview" id="replyPreview">
-            <div class="review-preview-quote">"Placeholder review textâ€¦"</div>
-            <div class="review-preview-author">â€” Customer Â· Job Title</div>
+            <div class="review-preview-quote">"Placeholder review text…"</div>
+            <div class="review-preview-author">— Customer · Job Title</div>
         </div>
-        <textarea class="reply-textarea" id="replyTextarea" placeholder="Write a professional replyâ€¦" oninput="updateCharCount(this)" maxlength="300"></textarea>
+        <textarea class="reply-textarea" id="replyTextarea" placeholder="Write a professional reply…" oninput="updateCharCount(this)" maxlength="300"></textarea>
         <div class="reply-char-count"><span id="replyCharCount">0</span> / 300</div>
         <div class="modal-actions">
             <button class="btn btn-ghost" onclick="closeReplyModal()">Cancel</button>
@@ -1126,7 +1126,7 @@
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
      PLACEHOLDER JSON DATA  +  RENDER LOGIC
-     (No backend required â€” hooks marked with API comments)
+     (No backend required — hooks marked with API comments)
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <script>
 // â”€â”€â”€ Placeholder data arrays â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1136,10 +1136,10 @@ const REVIEWS = [
     {
         id: "rev-001",
         rating: 5,
-        text: "James was absolutely brilliant â€” arrived on time, did an outstanding job on the bathroom refit, and cleaned up perfectly afterwards. Would definitely use again and have already recommended him to friends.",
+        text: "James was absolutely brilliant — arrived on time, did an outstanding job on the bathroom refit, and cleaned up perfectly afterwards. Would definitely use again and have already recommended him to friends.",
         customerName: "Sarah",
         jobTitle: "Bathroom Renovation",
-        location: "SW1 Â· London",
+        location: "SW1 · London",
         dateSubmitted: "28 Jan 2026",
         status: "verified",       // verified | flagged
         badgeContrib: "Top Rated" // null if this review didn't contribute to a badge
@@ -1150,7 +1150,7 @@ const REVIEWS = [
         text: "Fantastic work on the kitchen extension. Very professional, kept to the agreed timeline, and the finish is exactly what we wanted. Highly recommend.",
         customerName: "Michael",
         jobTitle: "Kitchen Extension",
-        location: "EC2 Â· London",
+        location: "EC2 · London",
         dateSubmitted: "22 Jan 2026",
         status: "verified",
         badgeContrib: null
@@ -1161,7 +1161,7 @@ const REVIEWS = [
         text: "Great quality work on the electrical rewire. Only small knock-off was a slight delay getting started, but once underway it was done quickly and neatly. Would recommend.",
         customerName: "Emma",
         jobTitle: "Full Electrical Rewire",
-        location: "W1 Â· London",
+        location: "W1 · London",
         dateSubmitted: "15 Jan 2026",
         status: "verified",
         badgeContrib: null
@@ -1169,10 +1169,10 @@ const REVIEWS = [
     {
         id: "rev-004",
         rating: 5,
-        text: "Replaced our boiler and fitted new radiators throughout. Worked over a weekend to get it done before the cold snap â€” really went above and beyond. 10/10.",
+        text: "Replaced our boiler and fitted new radiators throughout. Worked over a weekend to get it done before the cold snap — really went above and beyond. 10/10.",
         customerName: "David",
         jobTitle: "Boiler Replacement & Radiators",
-        location: "N7 Â· London",
+        location: "N7 · London",
         dateSubmitted: "8 Jan 2026",
         status: "verified",
         badgeContrib: "Verified"
@@ -1183,7 +1183,7 @@ const REVIEWS = [
         text: "The work itself was fine quality, but pricing felt a bit high compared to other quotes we received. Follow-up communication could have been a bit quicker.",
         customerName: "Laura",
         jobTitle: "Loft Conversion",
-        location: "SE4 Â· London",
+        location: "SE4 · London",
         dateSubmitted: "2 Jan 2026",
         status: "flagged",
         badgeContrib: null
@@ -1192,9 +1192,9 @@ const REVIEWS = [
 
 // HOOK: Replace with fetch('/api/vendor/pending-review-requests')
 const PENDING_JOBS = [
-    { id: "pj-001", title: "Conservatory Glazing",       meta: "Completed 30 Jan 2026 Â· Ref #4821", sent: false },
-    { id: "pj-002", title: "Garage Conversion",          meta: "Completed 27 Jan 2026 Â· Ref #4798", sent: true  },
-    { id: "pj-003", title: "Driveway Resin Surfacing",   meta: "Completed 24 Jan 2026 Â· Ref #4780", sent: false }
+    { id: "pj-001", title: "Conservatory Glazing",       meta: "Completed 30 Jan 2026 · Ref #4821", sent: false },
+    { id: "pj-002", title: "Garage Conversion",          meta: "Completed 27 Jan 2026 · Ref #4798", sent: true  },
+    { id: "pj-003", title: "Driveway Resin Surfacing",   meta: "Completed 24 Jan 2026 · Ref #4780", sent: false }
 ];
 
 // HOOK: Replace with fetch('/api/vendor/badges')
@@ -1211,7 +1211,7 @@ const BADGES = [
     {
         id: "badge-top-rated",
         name: "Top Rated",
-        desc: "Maintain a 4.5â…+ average across 20+ reviews.",
+        desc: "Maintain a 4.5★+ average across 20+ reviews.",
         icon: "star",
         colour: "gold",
         progress: 100,
@@ -1229,7 +1229,7 @@ const BADGES = [
     {
         id: "badge-elite",
         name: "Elite",
-        desc: "4.8â…+ average, 50+ reviews, and verified status.",
+        desc: "4.8★+ average, 50+ reviews, and verified status.",
         icon: "trophy",
         colour: "purple",
         progress: 68,            // 68% toward unlocking
@@ -1265,7 +1265,7 @@ function renderReviews(list) {
             <!-- Review body -->
             <p class="review-text">"${r.text}"</p>
 
-            <!-- Footer: customer Â· job Â· location Â· date -->
+            <!-- Footer: customer · job · location · date -->
             <div class="review-footer">
                 <div class="review-footer-item">
                     <svg class="review-footer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -1302,7 +1302,7 @@ function renderReviews(list) {
 // Helper: 5 filled/empty star spans
 function renderStars(rating) {
     return Array.from({length: 5}, (_, i) =>
-        `<span class="star ${i < rating ? 'filled' : 'empty'}">â…</span>`
+        `<span class="star ${i < rating ? 'filled' : 'empty'}">★</span>`
     ).join('');
 }
 
@@ -1373,7 +1373,7 @@ function applyFilters() {
     if (status === 'verified')
         filtered = filtered.filter(r => r.status === 'verified');
 
-    // jobType & period filters: placeholder â€” wire to real data shape as needed
+    // jobType & period filters: placeholder — wire to real data shape as needed
     renderReviews(filtered);
 }
 
@@ -1392,8 +1392,8 @@ function openReplyModal(reviewId) {
     currentReplyId = reviewId;
     const review = REVIEWS.find(r => r.id === reviewId);
     document.getElementById('replyPreview').innerHTML = `
-        <div class="review-preview-quote">"${review.text.slice(0, 90)}${review.text.length > 90 ? 'â€¦' : ''}"</div>
-        <div class="review-preview-author">â€” ${review.customerName} Â· ${review.jobTitle}</div>
+        <div class="review-preview-quote">"${review.text.slice(0, 90)}${review.text.length > 90 ? '…' : ''}"</div>
+        <div class="review-preview-author">— ${review.customerName} · ${review.jobTitle}</div>
     `;
     document.getElementById('replyTextarea').value = '';
     document.getElementById('replyCharCount').textContent = '0';

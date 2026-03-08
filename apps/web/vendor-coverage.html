@@ -4,7 +4,7 @@
     <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coverage Areas â€” TradeMatch Vendor Dashboard</title>
+    <title>Coverage Areas — TradeMatch Vendor Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 
 <style>
 /* ================================================================
-   DESIGN-SYSTEM TOKENS â€” verbatim from index.html
+   DESIGN-SYSTEM TOKENS — verbatim from index.html
    ================================================================ */
 :root {
     --bg-primary:#0A0E14; --bg-secondary:#12161E; --bg-tertiary:#1A1F2B; --bg-card:#1E2430;
@@ -162,7 +162,7 @@ body::before{
 .main-content.sidebar-collapsed{ margin-left:80px; }
 
 /* ================================================================
-   SHARED COMPONENTS (btn, table, alert, progress, select â€” from index/heatmaps)
+   SHARED COMPONENTS (btn, table, alert, progress, select — from index/heatmaps)
    ================================================================ */
 .btn{ padding:10px 20px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; border:none; font-family:'Archivo',sans-serif; }
 .btn-primary{ background:var(--accent-primary); color:#fff; }
@@ -172,7 +172,7 @@ body::before{
 .btn-danger{ background:transparent; color:var(--accent-danger); border:1px solid rgba(255,71,87,.25); }
 .btn-danger:hover{ background:rgba(255,71,87,.1); border-color:var(--accent-danger); }
 
-/* table â€” verbatim from index */
+/* table — verbatim from index */
 .table-container{ background:var(--bg-card); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); }
 .table-header{ padding:24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
 .table-title{ font-size:18px; font-weight:700; }
@@ -184,13 +184,13 @@ tbody tr{ border-bottom:1px solid var(--border); transition:background .2s; }
 tbody tr:hover{ background:var(--bg-tertiary); }
 td{ padding:18px 24px; font-size:14px; color:var(--text-secondary); vertical-align:middle; }
 
-/* status badge â€” reused from index */
+/* status badge — reused from index */
 .status-badge{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:6px; font-size:12px; font-weight:700; font-family:'Space Mono',monospace; }
 .status-active{ background:rgba(0,229,160,.12); color:var(--accent-primary); }
 .status-paused{ background:rgba(255,167,38,.12); color:var(--accent-warning); }
 .status-badge .dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
 
-/* alert banner â€” verbatim from index */
+/* alert banner — verbatim from index */
 .alert-banner{
     background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.12));
     border:1px solid rgba(245,158,11,.3); border-radius:12px; padding:16px 20px;
@@ -212,7 +212,7 @@ td{ padding:18px 24px; font-size:14px; color:var(--text-secondary); vertical-ali
 .alert-action:hover{ background:rgba(255,255,255,.14); }
 [data-theme="light"] .alert-action:hover{ background:rgba(0,0,0,.08); }
 
-/* progress bar â€” from index + impressions warning variant */
+/* progress bar — from index + impressions warning variant */
 .progress-bar-bg{ width:100%; height:8px; background:var(--bg-tertiary); border-radius:4px; overflow:hidden; }
 .progress-bar-fill{ height:100%; background:linear-gradient(90deg,var(--accent-primary),var(--accent-info)); border-radius:4px; transition:width .6s cubic-bezier(.4,0,.2,1); position:relative; }
 .progress-bar-fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 2s infinite; }
@@ -223,7 +223,7 @@ td{ padding:18px 24px; font-size:14px; color:var(--text-secondary); vertical-ali
 .progress-label{ color:var(--text-muted); }
 .progress-value{ color:var(--accent-primary); font-weight:700; }
 
-/* select input â€” from heatmaps */
+/* select input — from heatmaps */
 .select-input{
     height:44px; background:var(--bg-tertiary); border:1px solid var(--border);
     border-radius:12px; padding:0 16px; color:var(--text-primary); font-size:14px;
@@ -242,7 +242,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .page-header-left{}
 .page-title{ font-size:32px; font-weight:800; background:linear-gradient(135deg,var(--text-primary),var(--text-secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
 .page-subtitle{ font-size:15px; color:var(--text-secondary); }
-/* postcodes-used pill â€” right-aligned */
+/* postcodes-used pill — right-aligned */
 .postcodes-pill{
     display:flex; align-items:center; gap:14px;
     background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
@@ -262,7 +262,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .section-sub{ font-size:13px; color:var(--text-muted); margin-top:3px; }
 
 /* ================================================================
-   SECTION 2 â€” ACTIVE COVERAGE TABLE
+   SECTION 2 — ACTIVE COVERAGE TABLE
    tag badges that float inside the postcode cell
    ================================================================ */
 .postcode-cell{ display:flex; align-items:center; gap:10px; }
@@ -279,7 +279,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .level-med{ background:var(--demand-med-bg); color:var(--demand-med); }
 .level-low{ background:var(--demand-low-bg); color:var(--demand-low); }
 .level-chip .lvl-dot{ width:7px; height:7px; border-radius:50%; background:currentColor; }
-/* row action buttons â€” compact */
+/* row action buttons — compact */
 .row-actions{ display:flex; gap:8px; }
 .btn-row{ padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; font-family:'Archivo',sans-serif; border:1px solid var(--border); background:transparent; color:var(--text-secondary); }
 .btn-row:hover{ border-color:var(--border-hover); color:var(--text-primary); background:var(--bg-tertiary); }
@@ -287,7 +287,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .btn-row.danger:hover{ background:rgba(255,71,87,.08); border-color:var(--accent-danger); }
 
 /* ================================================================
-   SECTION 3 â€” POSTCODE CAP CARD
+   SECTION 3 — POSTCODE CAP CARD
    ================================================================ */
 .cap-card{
     background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
@@ -319,7 +319,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .cap-limit-banner.visible{ display:block; }
 
 /* ================================================================
-   SECTION 4 â€” ADD POSTCODE INPUT + PREVIEW PANEL
+   SECTION 4 — ADD POSTCODE INPUT + PREVIEW PANEL
    ================================================================ */
 .add-postcode-row{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; }
 .input-wrap{ display:flex; flex-direction:column; gap:6px; }
@@ -365,7 +365,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 }
 
 /* ================================================================
-   SECTION 5 â€” AI SUGGESTIONS (locked overlay pattern from heatmaps)
+   SECTION 5 — AI SUGGESTIONS (locked overlay pattern from heatmaps)
    ================================================================ */
 .ai-section{ position:relative; }
 .ai-suggestions-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
@@ -380,7 +380,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .ai-card__reason{ font-size:13px; color:var(--text-secondary); line-height:1.4; margin-bottom:14px; }
 .ai-card__btn{ width:100%; padding:8px 0; border-radius:8px; border:1px solid var(--accent-primary); background:transparent; color:var(--accent-primary); font-size:13px; font-weight:700; cursor:pointer; font-family:'Archivo',sans-serif; transition:all .2s; }
 .ai-card__btn:hover{ background:rgba(0,229,160,.1); }
-/* blurred lock overlay â€” same pattern as heatmaps map-overlay */
+/* blurred lock overlay — same pattern as heatmaps map-overlay */
 .ai-lock-overlay{
     position:absolute; inset:0; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
     background:rgba(10,14,20,.82); border-radius:16px; display:flex; align-items:center;
@@ -395,14 +395,14 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .ai-lock-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 24px rgba(0,229,160,.4); }
 
 /* ================================================================
-   SECTION 6 â€” SATURATION ALERTS (reuses alert-banner pattern)
+   SECTION 6 — SATURATION ALERTS (reuses alert-banner pattern)
    ================================================================ */
-/* already covered by .alert-banner â€” just need the postcode list inside */
+/* already covered by .alert-banner — just need the postcode list inside */
 .sat-postcode-list{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
 .sat-postcode-chip{ padding:4px 10px; background:rgba(255,71,87,.1); border:1px solid rgba(255,71,87,.2); border-radius:6px; font-size:12px; font-weight:700; font-family:'Space Mono',monospace; color:var(--accent-danger); }
 
 /* ================================================================
-   SECTION 7 â€” COVERAGE MAP (placeholder from heatmaps pattern)
+   SECTION 7 — COVERAGE MAP (placeholder from heatmaps pattern)
    ================================================================ */
 .map-container{
     background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
@@ -427,7 +427,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     background-size:cover, 100px 100px;
     position:relative; display:flex; align-items:center; justify-content:center;
 }
-/* SVG-based abstract UK postcode map pins â€” purely decorative placeholder */
+/* SVG-based abstract UK postcode map pins — purely decorative placeholder */
 .map-pins{ position:absolute; inset:0; pointer-events:none; }
 /* each pin is absolutely positioned; colour set inline via class */
 .map-pin{
@@ -464,7 +464,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 .map-placeholder-text strong{ color:var(--text-secondary); display:block; margin-bottom:4px; font-size:16px; }
 
 /* ================================================================
-   SECTION 8 â€” HOW COVERAGE AFFECTS LEADS (info cards)
+   SECTION 8 — HOW COVERAGE AFFECTS LEADS (info cards)
    ================================================================ */
 .info-cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 .info-card{
@@ -521,7 +521,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 <body>
 
 <!-- ============================================================
-     SIDEBAR â€” identical shell; "Coverage" nav-item is .active
+     SIDEBAR — identical shell; "Coverage" nav-item is .active
      ============================================================ -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -597,7 +597,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                 <span class="nav-label">Badges</span>
             </a>
         </div>
-        <!-- Business â€” "Coverage" is active -->
+        <!-- Business — "Coverage" is active -->
         <div class="nav-section">
             <div class="nav-section-title">Business</div>
             <a href="vendor-billing" class="nav-item">
@@ -608,7 +608,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 <span class="nav-label">Profile</span>
             </a>
-            <!-- Coverage â€” ACTIVE -->
+            <!-- Coverage — ACTIVE -->
             <a href="vendor-coverage" class="nav-item active">
                 <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 12.414a1 1 0 00-.707-.293H5a1 1 0 00-1 1v.5A2.5 2.5 0 007.5 16h1m6.657.657L13.414 12.414m4.243 4.243a2 2 0 01-2.828 0l-4.586-4.586a1 1 0 01-.293-.707V5a1 1 0 011-1h2.586a1 1 0 01.707.293l4.586 4.586a2 2 0 010 2.828z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span class="nav-label">Coverage</span>
@@ -627,7 +627,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 </aside>
 
 <!-- ============================================================
-     TOP NAVIGATION â€” identical
+     TOP NAVIGATION — identical
      ============================================================ -->
 <nav class="top-nav" id="topNav">
     <div class="top-nav-left">
@@ -664,12 +664,12 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
 </nav>
 
 <!-- ============================================================
-     MAIN CONTENT â€” Coverage Areas page
+     MAIN CONTENT — Coverage Areas page
      ============================================================ -->
 <main class="main-content" id="mainContent">
 
     <!-- --------------------------------------------------------
-         SECTION 1 â€” Page Header + Postcodes-Used Pill
+         SECTION 1 — Page Header + Postcodes-Used Pill
          -------------------------------------------------------- -->
     <div class="page-header anim d1">
         <div class="page-header-left">
@@ -684,7 +684,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
             </div>
             <div class="postcodes-pill__bar">
                 <div class="progress-bar-bg">
-                    <!-- 7/10 = 70 %; warning class kicks in at 80 % â€” set via JS on load -->
+                    <!-- 7/10 = 70 %; warning class kicks in at 80 % — set via JS on load -->
                     <div class="progress-bar-fill" id="headerProgressFill" style="width:70%"></div>
                 </div>
             </div>
@@ -692,14 +692,14 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 6 â€” Saturation Alerts  (placed high for visibility)
+         SECTION 6 — Saturation Alerts  (placed high for visibility)
          Two of the vendor's postcodes are flagged; banner + CTA.
          -------------------------------------------------------- -->
     <div class="alert-banner anim d2" id="saturationAlert">
         <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
         <div class="alert-content">
             <div class="alert-title">Saturation Warning</div>
-            <div class="alert-message">2 of your postcodes are heavily saturated â€” you may be losing leads to competitors in these areas.</div>
+            <div class="alert-message">2 of your postcodes are heavily saturated — you may be losing leads to competitors in these areas.</div>
             <div class="sat-postcode-list">
                 <span class="sat-postcode-chip">SW1A</span>
                 <span class="sat-postcode-chip">EC1A</span>
@@ -709,8 +709,8 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 2 â€” Active Coverage Areas Table
-         Columns: Postcode Â· Town / City Â· Demand Â· Saturation Â· Status Â· Actions
+         SECTION 2 — Active Coverage Areas Table
+         Columns: Postcode · Town / City · Demand · Saturation · Status · Actions
          Sample data: 7 rows (mix of statuses, demand & saturation levels, micro-badges)
          -------------------------------------------------------- -->
     <div class="section-block anim d3">
@@ -725,7 +725,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
             <div class="table-header">
                 <div class="table-title">Your Postcodes</div>
                 <div class="table-actions">
-                    <!-- filter select â€” reuses heatmaps select-input -->
+                    <!-- filter select — reuses heatmaps select-input -->
                     <select class="select-input" style="width:160px;" onchange="filterTable(this.value)">
                         <option value="all">All statuses</option>
                         <option value="active">Active only</option>
@@ -746,14 +746,14 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                     </tr>
                 </thead>
                 <tbody id="coverageTableBody">
-                    <!-- rows injected by JS from SAMPLE_DATA â€” see <script> -->
+                    <!-- rows injected by JS from SAMPLE_DATA — see <script> -->
                 </tbody>
             </table>
         </div>
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 3 â€” Postcode Cap + Upgrade Packs
+         SECTION 3 — Postcode Cap + Upgrade Packs
          Shows remaining slots, a progress bar, and two purchasable
          packs (+5 / +10 postcodes).  A "limit reached" banner is
          toggled by JS when slots hit zero.
@@ -774,7 +774,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                     This is in line with industry benchmarks. Paused postcodes still count toward your total.
                 </div>
 
-                <!-- Limit-reached warning â€” hidden until slots = 0 -->
+                <!-- Limit-reached warning — hidden until slots = 0 -->
                 <div class="cap-limit-banner" id="limitBanner">
                     đźš« You've reached your postcode limit. Purchase an additional pack below to expand.
                 </div>
@@ -809,7 +809,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 4 â€” Add New Postcode
+         SECTION 4 — Add New Postcode
          Input with live validation, a preview panel that surfaces
          estimated lead volume + saturation + impression impact,
          and a contextual warning when the area is competitive.
@@ -832,24 +832,24 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                 <div class="input-feedback" id="inputFeedback"></div>
             </div>
 
-            <!-- Preview panel â€” hidden until a valid, non-duplicate postcode is typed -->
+            <!-- Preview panel — hidden until a valid, non-duplicate postcode is typed -->
             <div class="postcode-preview" id="postcodePreview">
                 <div class="preview-stat">
                     <div class="preview-stat__label">Est. Leads / Month</div>
-                    <div class="preview-stat__value" id="previewLeads">â€”</div>
+                    <div class="preview-stat__value" id="previewLeads">—</div>
                     <div class="preview-stat__sub">based on current demand</div>
                 </div>
                 <div class="preview-stat">
                     <div class="preview-stat__label">Saturation</div>
-                    <div class="preview-stat__value" id="previewSat">â€”</div>
+                    <div class="preview-stat__value" id="previewSat">—</div>
                     <div class="preview-stat__sub">competitors in area</div>
                 </div>
                 <div class="preview-stat">
                     <div class="preview-stat__label">Est. Impressions / Month</div>
-                    <div class="preview-stat__value" id="previewImpressions">â€”</div>
+                    <div class="preview-stat__value" id="previewImpressions">—</div>
                     <div class="preview-stat__sub">at current lead rate</div>
                 </div>
-                <!-- conditional warning â€” shown via JS when saturation is high -->
+                <!-- conditional warning — shown via JS when saturation is high -->
                 <div class="preview-warning" id="previewWarning" style="display:none;">
                     âš ď¸Ź This postcode is highly competitive. You may receive fewer leads than estimated.
                 </div>
@@ -858,7 +858,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 5 â€” AI Suggested Postcodes (Pro Feature)
+         SECTION 5 — AI Suggested Postcodes (Pro Feature)
          6 suggestion cards behind a blurred lock overlay.
          Clicking "Upgrade to Pro" would redirect to Stripe.
          -------------------------------------------------------- -->
@@ -880,7 +880,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                         <div class="ai-card__postcode">SE1</div>
                         <div class="ai-card__leads">~34 leads/mo</div>
                     </div>
-                    <div class="ai-card__reason">High demand, low saturation â€” strong match for your electrical trade.</div>
+                    <div class="ai-card__reason">High demand, low saturation — strong match for your electrical trade.</div>
                     <button class="ai-card__btn">+ Add to coverage</button>
                 </div>
                 <!-- Card 2 -->
@@ -898,7 +898,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                         <div class="ai-card__postcode">N7</div>
                         <div class="ai-card__leads">~19 leads/mo</div>
                     </div>
-                    <div class="ai-card__reason">Nearby area â€” 2 won jobs from similar vendors this month.</div>
+                    <div class="ai-card__reason">Nearby area — 2 won jobs from similar vendors this month.</div>
                     <button class="ai-card__btn">+ Add to coverage</button>
                 </div>
                 <!-- Card 4 -->
@@ -907,7 +907,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                         <div class="ai-card__postcode">E14</div>
                         <div class="ai-card__leads">~41 leads/mo</div>
                     </div>
-                    <div class="ai-card__reason">Highest lead volume in London â€” medium saturation.</div>
+                    <div class="ai-card__reason">Highest lead volume in London — medium saturation.</div>
                     <button class="ai-card__btn">+ Add to coverage</button>
                 </div>
                 <!-- Card 5 -->
@@ -916,7 +916,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                         <div class="ai-card__postcode">KT1</div>
                         <div class="ai-card__leads">~15 leads/mo</div>
                     </div>
-                    <div class="ai-card__reason">Suburban expansion zone â€” your conversion rate here would likely be high.</div>
+                    <div class="ai-card__reason">Suburban expansion zone — your conversion rate here would likely be high.</div>
                     <button class="ai-card__btn">+ Add to coverage</button>
                 </div>
                 <!-- Card 6 -->
@@ -925,17 +925,17 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                         <div class="ai-card__postcode">CR0</div>
                         <div class="ai-card__leads">~22 leads/mo</div>
                     </div>
-                    <div class="ai-card__reason">Rising demand â€” heatmap trending upward over last 30 days.</div>
+                    <div class="ai-card__reason">Rising demand — heatmap trending upward over last 30 days.</div>
                     <button class="ai-card__btn">+ Add to coverage</button>
                 </div>
             </div>
 
-            <!-- Lock overlay â€” remove or set display:none to "unlock" for Pro users -->
+            <!-- Lock overlay — remove or set display:none to "unlock" for Pro users -->
             <div class="ai-lock-overlay" id="aiLockOverlay">
                 <div class="ai-lock-panel">
                     <div class="ai-lock-icon">đź”</div>
                     <div class="ai-lock-title">Pro Feature</div>
-                    <div class="ai-lock-desc">Upgrade to Pro to unlock smart postcode suggestions powered by TradeMatch AI â€” tailored to your trade, location, and past performance.</div>
+                    <div class="ai-lock-desc">Upgrade to Pro to unlock smart postcode suggestions powered by TradeMatch AI — tailored to your trade, location, and past performance.</div>
                     <button class="ai-lock-btn" onclick="upgradeToAI()">Upgrade to Pro</button>
                 </div>
             </div>
@@ -943,10 +943,10 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 7 â€” Coverage Map (Visual Aid)
+         SECTION 7 — Coverage Map (Visual Aid)
          Abstract placeholder with colour-coded pins for each active
          postcode.  Tooltips show demand on hover.  No real map tile
-         dependency â€” ready to swap in Mapbox / Google Maps.
+         dependency — ready to swap in Mapbox / Google Maps.
          -------------------------------------------------------- -->
     <div class="section-block anim d7">
         <div class="map-container">
@@ -960,41 +960,41 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                 </div>
             </div>
             <div class="map-area">
-                <!-- Decorative pins â€” positions are illustrative; swap with real geocoding -->
+                <!-- Decorative pins — positions are illustrative; swap with real geocoding -->
                 <div class="map-pins">
-                    <!-- SW11 â€” high demand, active -->
+                    <!-- SW11 — high demand, active -->
                     <div class="map-pin pin-high" style="top:38%;left:22%;">
-                        <span class="pin-tip"><strong>SW11</strong>Battersea Â· High demand</span>
+                        <span class="pin-tip"><strong>SW11</strong>Battersea · High demand</span>
                         SW11
                     </div>
-                    <!-- EC2A â€” medium demand -->
+                    <!-- EC2A — medium demand -->
                     <div class="map-pin pin-med" style="top:28%;left:42%;">
-                        <span class="pin-tip"><strong>EC2A</strong>Shoreditch Â· Med demand</span>
+                        <span class="pin-tip"><strong>EC2A</strong>Shoreditch · Med demand</span>
                         EC2A
                     </div>
-                    <!-- SW1A â€” saturated / high demand (red) -->
+                    <!-- SW1A — saturated / high demand (red) -->
                     <div class="map-pin pin-high" style="top:44%;left:38%;">
-                        <span class="pin-tip"><strong>SW1A</strong>Westminster Â· Saturated âš ď¸Ź</span>
+                        <span class="pin-tip"><strong>SW1A</strong>Westminster · Saturated âš ď¸Ź</span>
                         SW1A
                     </div>
-                    <!-- N1 â€” medium -->
+                    <!-- N1 — medium -->
                     <div class="map-pin pin-med" style="top:22%;left:35%;">
-                        <span class="pin-tip"><strong>N1</strong>Islington Â· Med demand</span>
+                        <span class="pin-tip"><strong>N1</strong>Islington · Med demand</span>
                         N1
                     </div>
-                    <!-- EC1A â€” saturated -->
+                    <!-- EC1A — saturated -->
                     <div class="map-pin pin-high" style="top:32%;left:40%;">
-                        <span class="pin-tip"><strong>EC1A</strong>Clerkenwell Â· Saturated âš ď¸Ź</span>
+                        <span class="pin-tip"><strong>EC1A</strong>Clerkenwell · Saturated âš ď¸Ź</span>
                         EC1A
                     </div>
-                    <!-- SE1 â€” low demand (AI suggestion preview) -->
+                    <!-- SE1 — low demand (AI suggestion preview) -->
                     <div class="map-pin pin-low" style="top:50%;left:44%; opacity:.5; border:2px dashed var(--accent-info);" >
-                        <span class="pin-tip"><strong>SE1</strong>Lambeth Â· AI suggested</span>
+                        <span class="pin-tip"><strong>SE1</strong>Lambeth · AI suggested</span>
                         SE1
                     </div>
-                    <!-- W2 â€” active, low -->
+                    <!-- W2 — active, low -->
                     <div class="map-pin pin-active" style="top:35%;left:26%;">
-                        <span class="pin-tip"><strong>W2</strong>Paddington Â· Active</span>
+                        <span class="pin-tip"><strong>W2</strong>Paddington · Active</span>
                         W2
                     </div>
                 </div>
@@ -1008,7 +1008,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 8 â€” How Coverage Affects Leads
+         SECTION 8 — How Coverage Affects Leads
          Three educational info-cards; non-salesy, plain language.
          -------------------------------------------------------- -->
     <div class="section-block anim d8">
@@ -1031,7 +1031,7 @@ option{ background:var(--bg-tertiary); color:var(--text-primary); }
                 <div class="info-card__icon">âš–ď¸Ź</div>
                 <div class="info-card__title">Saturation affects quality</div>
                 <div class="info-card__body">
-                    In heavily saturated areas, customers receive more quotes â€” which can lower your win rate. Choosing less competitive postcodes often delivers a better return on your impressions.
+                    In heavily saturated areas, customers receive more quotes — which can lower your win rate. Choosing less competitive postcodes often delivers a better return on your impressions.
                 </div>
             </div>
             <div class="info-card">
@@ -1076,7 +1076,7 @@ function toggleSidebar(){
 }
 
 // ============================================================
-// SAMPLE DATA â€” replace with API calls in production
+// SAMPLE DATA — replace with API calls in production
 // Each object maps to one <tr> in the coverage table AND a map pin.
 // ============================================================
 const SAMPLE_DATA = [
@@ -1192,7 +1192,7 @@ function updateCapUI(){
 updateCapUI(); // run once on load
 
 // ============================================================
-// SECTION 4 â€” postcode input + live preview
+// SECTION 4 — postcode input + live preview
 // Simulates validation & preview data (swap with real API)
 // ============================================================
 // Fake "known postcode" lookup for demo purposes
@@ -1278,7 +1278,7 @@ function addPostcode(){
     // push into sample data
     SAMPLE_DATA.push({
         postcode: raw,
-        town:     'New area',          // placeholder â€” real geocoding would fill this
+        town:     'New area',          // placeholder — real geocoding would fill this
         demand:   data.saturation === 'high' ? 'high' : data.leads > 25 ? 'med' : 'low',
         saturation: data.saturation,
         status:   'active',
@@ -1306,7 +1306,7 @@ function upgradeToAI(){
     window.location.href = ‘/vendor-billing?action=upgrade&plan=pro’;
 }
 
-// â”€â”€ Scroll helper (saturation alert â†’ AI suggestions) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Scroll helper (saturation alert → AI suggestions) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function scrollToSuggestions(){
     document.getElementById('aiSuggestionsSection').scrollIntoView({ behavior:'smooth', block:'start' });
 }

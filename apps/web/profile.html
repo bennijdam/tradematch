@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Profile â€” TradeMatch Vendor Dashboard</title>
+    <title>Business Profile — TradeMatch Vendor Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,7 +11,7 @@
 
 <style>
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   CSS VARIABLES  â€” dark + light, exact codebase tokens
+   CSS VARIABLES  — dark + light, exact codebase tokens
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 :root {
     --bg-primary:#0A0E14; --bg-secondary:#12161E; --bg-tertiary:#1A1F2B; --bg-card:#1E2430;
@@ -44,7 +44,7 @@ body{
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     transition:background .3s ease, color .3s ease;
 }
-/* Ambient background â€” identical to every other page */
+/* Ambient background — identical to every other page */
 body::before{
     content:''; position:fixed; top:-50%; left:-50%; width:200%; height:200%;
     background:radial-gradient(circle at 20% 50%,var(--ambient-gradient-1) 0%,transparent 50%),
@@ -54,7 +54,7 @@ body::before{
 @keyframes ambient{ 0%,100%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(-5%,-5%) rotate(5deg)} }
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SIDEBAR  â€” verbatim from codebase, not modified
+   SIDEBAR  — verbatim from codebase, not modified
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .sidebar{position:fixed;top:0;left:0;width:280px;height:100vh;background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:101;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-sm)}
 .sidebar.collapsed{width:80px}
@@ -84,7 +84,7 @@ body::before{
 .sidebar.collapsed .collapse-btn svg{transform:scaleX(-1)}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   TOP NAV  â€” verbatim from codebase, not modified
+   TOP NAV  — verbatim from codebase, not modified
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .top-nav{position:fixed;top:0;left:280px;right:0;height:72px;background:var(--bg-secondary);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;z-index:100;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow-sm)}
 [data-theme="light"] .top-nav{background:rgba(255,255,255,.95)}
@@ -127,7 +127,7 @@ body::before{
 .header-actions{display:flex;gap:10px;align-items:center}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   COMPLETENESS BAR  â€” sits just below header
+   COMPLETENESS BAR  — sits just below header
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .completeness-strip{
     background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
@@ -173,7 +173,7 @@ body::before{
 .section-subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:22px;line-height:1.5}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   FORM SYSTEM  â€” from settings.html, extended
+   FORM SYSTEM  — from settings.html, extended
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .form-grid--3{grid-template-columns:repeat(3,1fr)}
@@ -242,7 +242,7 @@ body::before{
 .multiselect-option.selected{color:var(--accent-primary);background:rgba(0,229,160,.06)}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION 3  â€” Verification upload zones + upsell
+   SECTION 3  — Verification upload zones + upsell
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .verification-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
 .upload-card{
@@ -311,7 +311,7 @@ body::before{
 .upsell-benefit svg{width:16px;height:16px;color:var(--accent-primary);flex-shrink:0}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION 4  â€” Work Gallery
+   SECTION 4  — Work Gallery
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .upload-zone{
     border:2px dashed var(--border);border-radius:14px;
@@ -351,7 +351,7 @@ body::before{
 .gallery-ba-badge--after{background:rgba(0,229,160,.85)}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION 5  â€” Reputation Snapshot
+   SECTION 5  — Reputation Snapshot
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .rep-grid{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
 .rep-score-block{text-align:center}
@@ -388,10 +388,10 @@ body::before{
 .enquiries-callout-text strong{color:var(--text-primary)}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION 6  â€” Visibility Controls
+   SECTION 6  — Visibility Controls
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .visibility-top{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
-/* Toggle rows â€” from settings.html */
+/* Toggle rows — from settings.html */
 .toggle-group{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}
 .toggle-group:last-child{border-bottom:none}
 .toggle-info{flex:1}
@@ -425,7 +425,7 @@ body::before{
 .saturation-badge--moderate .dot{background:var(--accent-warning)}
 .saturation-badge--high .dot{background:var(--accent-danger)}
 
-/* AI-suggested postcodes â€” locked behind Pro */
+/* AI-suggested postcodes — locked behind Pro */
 .pro-lock-strip{
     margin-top:16px;padding:16px 18px;border-radius:12px;
     background:var(--bg-tertiary);border:1px dashed var(--border);
@@ -439,7 +439,7 @@ body::before{
 .badge-pro{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;font-family:'Space Mono',monospace}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   SECTION 7  â€” Sticky action bar
+   SECTION 7  — Sticky action bar
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .action-bar{
     position:sticky;bottom:24px;margin-top:8px;
@@ -458,7 +458,7 @@ body::before{
 .action-bar-right{display:flex;gap:10px}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   BUTTONS  â€” from codebase, plus ghost variant
+   BUTTONS  — from codebase, plus ghost variant
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .btn{padding:10px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;font-family:'Archivo',sans-serif;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
 .btn svg{width:16px;height:16px}
@@ -469,7 +469,7 @@ body::before{
 .btn-sm{padding:7px 16px;font-size:13px;border-radius:8px}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   TOAST  â€” from settings.html
+   TOAST  — from settings.html
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;box-shadow:var(--shadow-lg);z-index:2000;display:none;align-items:center;gap:12px;min-width:300px;max-width:380px}
 .toast.active{display:flex;animation:toastIn .3s cubic-bezier(.4,0,.2,1)}
@@ -501,7 +501,7 @@ body::before{
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   ANIMATIONS  â€” staggered fadeIn, codebase convention
+   ANIMATIONS  — staggered fadeIn, codebase convention
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @keyframes fadeIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .completeness-strip,.section-card{animation:fadeIn .55s cubic-bezier(.4,0,.2,1) backwards}
@@ -546,7 +546,7 @@ body::before{
 <body>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     SIDEBAR  â€” "Profile & Services" > "Business Profile" is active
+     SIDEBAR  — "Profile & Services" > "Business Profile" is active
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -597,7 +597,7 @@ body::before{
                 <span class="nav-label">Reviews</span>
             </a>
         </div>
-        <!-- Profile & Services â€” ACTIVE section -->
+        <!-- Profile & Services — ACTIVE section -->
         <div class="nav-section">
             <div class="nav-section-title">Profile & Services</div>
             <a href="/user/profile" class="nav-item active">
@@ -637,13 +637,13 @@ body::before{
 </aside>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     TOP NAV  â€” verbatim, not modified
+     TOP NAV  — verbatim, not modified
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <header class="top-nav" id="topNav">
     <div class="top-nav-left">
         <div class="search-container">
             <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" class="search-input" placeholder="Search jobs, leads, customersâ€¦">
+            <input type="text" class="search-input" placeholder="Search jobs, leads, customers…">
         </div>
     </div>
     <div class="top-nav-right">
@@ -667,7 +667,7 @@ body::before{
 </header>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     MAIN CONTENT  â€” Profile page. Sidebar & topbar untouched.
+     MAIN CONTENT  — Profile page. Sidebar & topbar untouched.
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <main class="main-content" id="mainContent">
 
@@ -705,7 +705,7 @@ body::before{
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 2  â€” Business Details (editable form)
+         SECTION 2  — Business Details (editable form)
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="section-card">
         <div class="section-head">
@@ -719,7 +719,7 @@ body::before{
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 3  â€” Trust & Verification
+         SECTION 3  — Trust & Verification
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="section-card">
         <div class="section-head">
@@ -739,7 +739,7 @@ body::before{
             </div>
             <div class="vsr-text">
                 <div class="vsr-title">Overall Verification Status</div>
-                <div class="vsr-sub">All core documents verified â€” accreditation optional</div>
+                <div class="vsr-sub">All core documents verified — accreditation optional</div>
             </div>
             <span class="vsr-badge vsr-badge--verified">Verified</span>
         </div>
@@ -788,13 +788,13 @@ body::before{
                         Trust badge on profile
                     </div>
                 </div>
-                <button class="btn btn-primary btn-sm" onclick="showToast('success','Upgrade Started','Redirecting to billingâ€¦')">Upgrade Now</button>
+                <button class="btn btn-primary btn-sm" onclick="showToast('success','Upgrade Started','Redirecting to billing…')">Upgrade Now</button>
             </div>
         </div>
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 4  â€” Work Gallery
+         SECTION 4  — Work Gallery
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="section-card">
         <div class="section-head">
@@ -808,16 +808,16 @@ body::before{
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:48px;height:48px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             </div>
             <div class="upload-zone-title">Drag & drop photos here</div>
-            <div class="upload-zone-meta">or <span>browse files</span> â€” JPG, PNG up to 8 MB each</div>
+            <div class="upload-zone-meta">or <span>browse files</span> — JPG, PNG up to 8 MB each</div>
             <input type="file" id="galleryFileInput" multiple accept="image/*" style="display:none" onchange="handleGalleryUpload(event)">
         </div>
 
-        <!-- Photo grid â€” rendered by renderGallery() -->
+        <!-- Photo grid — rendered by renderGallery() -->
         <div class="gallery-grid" id="galleryGrid"></div>
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 5  â€” Ratings & Reputation Snapshot
+         SECTION 5  — Ratings & Reputation Snapshot
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="section-card">
         <div class="section-head">
@@ -832,7 +832,7 @@ body::before{
                     <svg viewBox="0 0 120 120">
                         <circle class="rep-score-ring-bg" cx="60" cy="60" r="50"/>
                         <!-- stroke-dasharray = circumference = 2Ď€Ă—50 â‰ 314.16 -->
-                        <!-- 4.8/5 = 96% â†’ dashoffset = 314.16 Ă— (1-0.96) = 12.57 -->
+                        <!-- 4.8/5 = 96% → dashoffset = 314.16 Ă— (1-0.96) = 12.57 -->
                         <circle class="rep-score-ring-fill" cx="60" cy="60" r="50"
                                 stroke-dasharray="314.16" stroke-dashoffset="12.57"/>
                     </svg>
@@ -858,7 +858,7 @@ body::before{
                     </div>
                     <div class="rep-stat-info">
                         <div class="rep-stat-label">Latest Review</div>
-                        <div class="rep-stat-value rep-stat-value--snippet">"Absolutely brilliant workâ€¦"</div>
+                        <div class="rep-stat-value rep-stat-value--snippet">"Absolutely brilliant work…"</div>
                         <a href="/user/reviews" class="rep-link">View all reviews <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></a>
                     </div>
                 </div>
@@ -873,7 +873,7 @@ body::before{
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 6  â€” Profile Visibility Controls
+         SECTION 6  — Profile Visibility Controls
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="section-card">
         <div class="section-head">
@@ -927,7 +927,7 @@ body::before{
     </div>
 
     <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-         SECTION 7  â€” Sticky Save / Preview bar
+         SECTION 7  — Sticky Save / Preview bar
          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
     <div class="action-bar">
         <div class="action-bar-left">
@@ -955,11 +955,11 @@ body::before{
     <div class="modal-content">
         <button class="modal-close" onclick="closeCaptionModal()">âś•</button>
         <h2 class="modal-title">Edit Caption</h2>
-        <p class="modal-desc">Describe the work â€” customers use captions to understand scope.</p>
+        <p class="modal-desc">Describe the work — customers use captions to understand scope.</p>
         <div class="modal-thumb" id="captionModalThumb"></div>
         <div class="form-group">
             <label class="form-label">Caption</label>
-            <input type="text" class="form-input" id="captionInput" placeholder="e.g. Kitchen refit â€” granite worktop install" oninput="markUnsaved()">
+            <input type="text" class="form-input" id="captionInput" placeholder="e.g. Kitchen refit — granite worktop install" oninput="markUnsaved()">
         </div>
         <div class="form-group" style="margin-top:14px">
             <label class="form-label">Type</label>
@@ -1001,7 +1001,7 @@ const VENDOR_PROFILE = {
     primaryTrade: "plumbing",
     secondaryTrades: ["heating", "bathroom"],
     yearsInBusiness: 12,
-    description: "Family-run plumbing and heating business serving central and north London for over a decade. We pride ourselves on punctuality, quality workmanship, and honest pricing. From emergency repairs to full bathroom refits â€” no job too big or small.",
+    description: "Family-run plumbing and heating business serving central and north London for over a decade. We pride ourselves on punctuality, quality workmanship, and honest pricing. From emergency repairs to full bathroom refits — no job too big or small.",
     serviceAreas: "SW1, EC2, W1, N7, SE4",
     website: "https://daviespumbing.co.uk",
     phone: "020 7123 4567",
@@ -1012,16 +1012,16 @@ const VERIFICATION_DOCS = [
     { id:"doc-crn",   icon:"doc",    title:"Company Registration",       meta:"Companies House number required",        status:"uploaded", file:"Davies_Plumbing_Ltd_CH.pdf" },
     { id:"doc-ch",    icon:"doc",    title:"Companies House Document",  meta:"Certificate of incorporation",            status:"uploaded", file:"Certificate_Inc_2013.pdf" },
     { id:"doc-ins",   icon:"shield", title:"Public Liability Insurance",meta:"Must be current & valid",                  status:"uploaded", file:"PLI_2025-2026.pdf" },
-    { id:"doc-acc",   icon:"cert",   title:"Trade Accreditation",       meta:"Optional â€” e.g. CIPHE, Gas Safe",        status:"pending",  file:"GasSafe_Reg.pdf" }
+    { id:"doc-acc",   icon:"cert",   title:"Trade Accreditation",       meta:"Optional — e.g. CIPHE, Gas Safe",        status:"pending",  file:"GasSafe_Reg.pdf" }
 ];
 
 const GALLERY_IMAGES = [
-    { id:"img-1", thumbClass:"gallery-thumb--1", caption:"Full bathroom refit â€” SW1",            type:"after" },
+    { id:"img-1", thumbClass:"gallery-thumb--1", caption:"Full bathroom refit — SW1",            type:"after" },
     { id:"img-2", thumbClass:"gallery-thumb--2", caption:"Kitchen extension plumbing",           type:"general" },
-    { id:"img-3", thumbClass:"gallery-thumb--3", caption:"Boiler replacement â€” N7",              type:"after" },
-    { id:"img-4", thumbClass:"gallery-thumb--4", caption:"Before â€” original bathroom fixtures",  type:"before" },
+    { id:"img-3", thumbClass:"gallery-thumb--3", caption:"Boiler replacement — N7",              type:"after" },
+    { id:"img-4", thumbClass:"gallery-thumb--4", caption:"Before — original bathroom fixtures",  type:"before" },
     { id:"img-5", thumbClass:"gallery-thumb--5", caption:"Radiator system upgrade",              type:"general" },
-    { id:"img-6", thumbClass:"gallery-thumb--6", caption:"After â€” heated towel rails + re-tiled", type:"after" }
+    { id:"img-6", thumbClass:"gallery-thumb--6", caption:"After — heated towel rails + re-tiled", type:"after" }
 ];
 
 const POSTCODES = [
@@ -1067,7 +1067,7 @@ function renderBusinessForm() {
                         const label = TRADES.find(t=>t.key===k)?.label || k;
                         return `<span class="tag">${label}<span class="tag-remove" onclick="removeTag(event,'${k}')">&times;</span></span>`;
                     }).join('')}
-                    <input type="text" class="multiselect-input" placeholder="Add tradeâ€¦" oninput="filterMultiselect(this)" autocomplete="off">
+                    <input type="text" class="multiselect-input" placeholder="Add trade…" oninput="filterMultiselect(this)" autocomplete="off">
                 </div>
                 <div class="multiselect-dropdown" id="multiDropdown">
                     ${TRADES.filter(t => t.key!==p.primaryTrade).map(t =>
@@ -1101,12 +1101,12 @@ function renderBusinessForm() {
         </div>
         <div class="form-group">
             <label class="form-label">Website</label>
-            <input type="url" class="form-input" value="${p.website}" oninput="markUnsaved()" placeholder="https://â€¦">
+            <input type="url" class="form-input" value="${p.website}" oninput="markUnsaved()" placeholder="https://…">
         </div>
         <div class="form-group">
             <label class="form-label">Phone Number</label>
             <input type="tel" class="form-input" value="${p.phone}" oninput="markUnsaved()">
-            <div class="form-helper">Masked publicly â€” customers see last 4 digits only</div>
+            <div class="form-helper">Masked publicly — customers see last 4 digits only</div>
         </div>
         <div class="form-group">
             <label class="form-label">VAT Registered</label>
@@ -1149,7 +1149,7 @@ function renderGallery() {
     document.getElementById('galleryGrid').innerHTML = GALLERY_IMAGES.map((img, i) => `
         <div class="gallery-item" draggable="true" data-index="${i}"
              ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragend="dragEnd(event)">
-            <div class="gallery-thumb ${img.thumbClass}">${img.caption.slice(0,18)}â€¦</div>
+            <div class="gallery-thumb ${img.thumbClass}">${img.caption.slice(0,18)}…</div>
             ${img.type!=='general' ? `<span class="gallery-ba-badge gallery-ba-badge--${img.type}">${img.type}</span>` : ''}
             <div class="gallery-overlay">
                 <div class="gallery-caption">${img.caption}</div>
@@ -1229,7 +1229,7 @@ function handleGalleryUpload(e){
     e.target.value='';
 }
 function triggerDocUpload(docId){
-    // HOOK: open native file picker â†’ POST /api/vendor/verification/:docId
+    // HOOK: open native file picker → POST /api/vendor/verification/:docId
     showToast('success','Upload Triggered','File picker opened for '+docId);
 }
 
@@ -1281,8 +1281,8 @@ function saveProfile(){
     clearUnsaved();
     showToast('success','Profile Saved','Changes are under review and will go live shortly.');
 }
-function previewProfile(){ showToast('success','Preview','Opening public profile previewâ€¦') }
-function viewSearchAppearance(){ showToast('success','Search Appearance','Opening local search simulatorâ€¦') }
+function previewProfile(){ showToast('success','Preview','Opening public profile preview…') }
+function viewSearchAppearance(){ showToast('success','Search Appearance','Opening local search simulator…') }
 
 // â”€â”€â”€ Toast system â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let toastTimeout;

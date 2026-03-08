@@ -4,17 +4,17 @@
     <script defer src="/_vercel/analytics/script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trust Badges â€” TradeMatch Vendor Dashboard</title>
+    <title>Trust Badges — TradeMatch Vendor Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Favicon â€” identical to rest of suite -->
+    <!-- Favicon — identical to rest of suite -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300E5A0'/%3E%3Cstop offset='100%25' style='stop-color:%2342A5F5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='70' font-family='Arial, sans-serif' font-size='60' font-weight='800' fill='%23ffffff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 
     <style>
         /* ============================================================
-           DESIGN-SYSTEM TOKENS â€” copied verbatim from index.html
+           DESIGN-SYSTEM TOKENS — copied verbatim from index.html
            ============================================================ */
         :root {
             --bg-primary: #0A0E14;
@@ -68,7 +68,7 @@
         }
 
         /* ============================================================
-           GLOBAL RESET + BODY â€” identical to index.html
+           GLOBAL RESET + BODY — identical to index.html
            ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -82,7 +82,7 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Ambient animated background â€” identical */
+        /* Ambient animated background — identical */
         body::before {
             content: '';
             position: fixed;
@@ -101,7 +101,7 @@
         }
 
         /* ============================================================
-           THEME TOGGLE â€” identical
+           THEME TOGGLE — identical
            ============================================================ */
         .theme-toggle {
             position: relative;
@@ -128,7 +128,7 @@
         .theme-toggle-icon { width: 12px; height: 12px; color: white; }
 
         /* ============================================================
-           TOP NAVIGATION â€” identical
+           TOP NAVIGATION — identical
            ============================================================ */
         .top-nav {
             position: fixed; top: 0; left: 280px; right: 0;
@@ -214,7 +214,7 @@
         .user-role { font-size: 12px; color: var(--text-muted); }
 
         /* ============================================================
-           SIDEBAR â€” identical to index.html
+           SIDEBAR — identical to index.html
            ============================================================ */
         .sidebar {
             position: fixed; top: 0; left: 0;
@@ -314,7 +314,7 @@
         .collapse-btn:hover { border-color: var(--border-hover); color: var(--text-primary); }
 
         /* ============================================================
-           MAIN CONTENT SHELL â€” identical margins / padding
+           MAIN CONTENT SHELL — identical margins / padding
            ============================================================ */
         .main-content {
             margin-left: 280px;
@@ -393,7 +393,7 @@
         }
         .dashboard-subtitle { font-size: 16px; color: var(--text-secondary); }
 
-        /* Header summary bar â€” trust-level pill + badge count */
+        /* Header summary bar — trust-level pill + badge count */
         .badges-summary-bar {
             display: flex;
             align-items: center;
@@ -425,7 +425,7 @@
         .summary-pill__sub   { font-size: 12px; color: var(--text-muted); }
 
         /* ============================================================
-           EARNED BADGES GRID â€” Section 2
+           EARNED BADGES GRID — Section 2
            ============================================================ */
         .section-header {
             display: flex;
@@ -460,7 +460,7 @@
             border-color: var(--border-hover);
             box-shadow: var(--shadow-md);
         }
-        /* Top accent stripe that appears on hover â€” matches stat-card pattern */
+        /* Top accent stripe that appears on hover — matches stat-card pattern */
         .badge-card::before {
             content: '';
             position: absolute; top: 0; left: 0; right: 0;
@@ -553,7 +553,7 @@
         .badge-card:hover .badge-card__tooltip { display: block; }
 
         /* ============================================================
-           LOCKED BADGES â€” Section 3
+           LOCKED BADGES — Section 3
            ============================================================ */
         .badge-card.locked {
             opacity: 0.58;
@@ -628,7 +628,7 @@
         }
 
         /* ============================================================
-           PAID VERIFICATION CARD â€” Section 4
+           PAID VERIFICATION CARD — Section 4
            ============================================================ */
         .paid-badge-section { margin-bottom: 40px; }
 
@@ -644,7 +644,7 @@
         }
         .paid-badge-card:hover { box-shadow: var(--shadow-lg); }
 
-        /* Left panel â€” preview + price */
+        /* Left panel — preview + price */
         .paid-badge-card__preview {
             padding: 40px 36px;
             display: flex;
@@ -699,7 +699,7 @@
             color: var(--text-muted);
         }
 
-        /* Right panel â€” benefits + CTA */
+        /* Right panel — benefits + CTA */
         .paid-badge-card__details {
             padding: 40px 36px;
             display: flex;
@@ -765,7 +765,7 @@
         .paid-status-label { font-size: 13px; color: var(--text-muted); }
 
         /* ============================================================
-           BADGE IMPACT INSIGHTS â€” Section 5
+           BADGE IMPACT INSIGHTS — Section 5
            ============================================================ */
         .insights-section { margin-bottom: 40px; }
 
@@ -776,7 +776,7 @@
             margin-bottom: 24px;
         }
 
-        /* Insight stat card â€” slim version */
+        /* Insight stat card — slim version */
         .insight-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -872,7 +872,7 @@
         .corr-bar-pair { display: flex; flex-direction: column; gap: 4px; }
 
         /* ============================================================
-           HOW BADGES AFFECT VISIBILITY â€” Section 6
+           HOW BADGES AFFECT VISIBILITY — Section 6
            ============================================================ */
         .visibility-section { margin-bottom: 40px; }
 
@@ -925,7 +925,7 @@
         .info-strip__copy strong { color: var(--text-primary); }
 
         /* ============================================================
-           STAGGERED ENTRANCE ANIMATIONS â€” same pattern as index.html
+           STAGGERED ENTRANCE ANIMATIONS — same pattern as index.html
            ============================================================ */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(18px); }
@@ -974,7 +974,7 @@
 <body>
 
 <!-- ============================================================
-     SIDEBAR â€” identical markup to index.html; "Badges" is .active
+     SIDEBAR — identical markup to index.html; "Badges" is .active
      ============================================================ -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -1062,7 +1062,7 @@
             </a>
         </div>
 
-        <!-- Reputation â€” "Badges" is active -->
+        <!-- Reputation — "Badges" is active -->
         <div class="nav-section">
             <div class="nav-section-title">Reputation</div>
             <a href="/reviews" class="nav-item">
@@ -1114,7 +1114,7 @@
 </aside>
 
 <!-- ============================================================
-     TOP NAVIGATION â€” identical markup
+     TOP NAVIGATION — identical markup
      ============================================================ -->
 <nav class="top-nav" id="topNav">
     <div class="top-nav-left">
@@ -1161,7 +1161,7 @@
 </nav>
 
 <!-- ============================================================
-     MAIN CONTENT â€” the Badges page body
+     MAIN CONTENT — the Badges page body
      ============================================================ -->
 <main class="main-content" id="mainContent">
 
@@ -1239,7 +1239,7 @@
             <div class="badge-card__tooltip">âś¦ Boosts your position in badge-weighted search results</div>
             <div class="badge-card__icon">â­</div>
             <div class="badge-card__name">Top Rated</div>
-            <div class="badge-card__desc">Achieved a 4.8â… average across 12 reviews.</div>
+            <div class="badge-card__desc">Achieved a 4.8★ average across 12 reviews.</div>
             <div class="badge-card__meta">
                 <span class="badge-card__date">Earned 02 Feb 2025</span>
                 <span class="badge-card__status"><span class="dot"></span> Active</span>
@@ -1248,7 +1248,7 @@
 
         <!-- Badge 4: Fast Responder -->
         <div class="badge-card earned anim anim-d6">
-            <div class="badge-card__tooltip">âś¦ Customers filter by response speed â€” this badge keeps you visible</div>
+            <div class="badge-card__tooltip">âś¦ Customers filter by response speed — this badge keeps you visible</div>
             <div class="badge-card__icon">âšˇ</div>
             <div class="badge-card__name">Fast Responder</div>
             <div class="badge-card__desc">Average quote response under 4 hours for 30 days.</div>
@@ -1286,7 +1286,7 @@
     </div>
 
     <div class="badges-grid">
-        <!-- Locked 1: Local Expert â€” progress-based -->
+        <!-- Locked 1: Local Expert — progress-based -->
         <div class="badge-card locked anim anim-d4">
             <div class="badge-card__icon">đź—şď¸Ź</div>
             <div class="badge-card__name">Local Expert</div>
@@ -1316,7 +1316,7 @@
             <button class="btn-unlock">27 days remaining</button>
         </div>
 
-        <!-- Locked 2: Elite Reviewer â€” review-count based -->
+        <!-- Locked 2: Elite Reviewer — review-count based -->
         <div class="badge-card locked anim anim-d5">
             <div class="badge-card__icon">đź“ť</div>
             <div class="badge-card__name">Elite Reviewer</div>
@@ -1327,7 +1327,7 @@
                     <span class="req-icon">âś“</span> 5+ reviews received
                 </li>
                 <li class="unmet">
-                    <span class="req-icon">â—‹</span> 10 reviews with 4.5â…+
+                    <span class="req-icon">â—‹</span> 10 reviews with 4.5★+
                 </li>
                 <li class="unmet">
                     <span class="req-icon">â—‹</span> No negative reviews in 60 days
@@ -1335,7 +1335,7 @@
             </ul>
 
             <div class="badge-card__progress-wrap">
-                <div class="badge-card__progress-label">Reviews at 4.5â…+ <span>7 / 10</span></div>
+                <div class="badge-card__progress-label">Reviews at 4.5★+ <span>7 / 10</span></div>
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" style="width: 70%"></div>
                 </div>
@@ -1344,11 +1344,11 @@
             <button class="btn-unlock">Unlock this badge</button>
         </div>
 
-        <!-- Locked 3: Premium Verified â€” paid badge (teaser) -->
+        <!-- Locked 3: Premium Verified — paid badge (teaser) -->
         <div class="badge-card locked anim anim-d6">
             <div class="badge-card__icon">đź’Ž</div>
             <div class="badge-card__name">Premium Verified</div>
-            <div class="badge-card__desc">Premium trust signal â€” purchase required.</div>
+            <div class="badge-card__desc">Premium trust signal — purchase required.</div>
 
             <ul class="badge-card__requirements">
                 <li class="unmet">
@@ -1366,12 +1366,12 @@
                 </div>
             </div>
 
-            <button class="btn-unlock">ÂŁ4.99 / month â€” see details â†“</button>
+            <button class="btn-unlock">ÂŁ4.99 / month — see details â†“</button>
         </div>
     </div>
 
     <!-- --------------------------------------------------------
-         SECTION 4: Paid Verification Badge â€” monetisation hero
+         SECTION 4: Paid Verification Badge — monetisation hero
          Two-column card: left = animated badge preview + price,
          right = benefit list + status + CTA.
          -------------------------------------------------------- -->
@@ -1426,7 +1426,7 @@
                 </div>
 
                 <!-- Primary CTA -->
-                <button class="btn btn-primary" style="width:100%; padding: 13px 0; font-size: 15px;">Subscribe â€” ÂŁ4.99 / month</button>
+                <button class="btn btn-primary" style="width:100%; padding: 13px 0; font-size: 15px;">Subscribe — ÂŁ4.99 / month</button>
             </div>
         </div>
     </div>
@@ -1475,7 +1475,7 @@
         <!-- Correlation bar chart: badges vs no-badges across 3 metrics -->
         <div class="correlation-chart">
             <div class="correlation-chart__header">
-                <div class="correlation-chart__title">Badges â†’ Performance Correlation</div>
+                <div class="correlation-chart__title">Badges → Performance Correlation</div>
                 <div class="correlation-chart__legend">
                     <div class="legend-item"><div class="legend-dot badges"></div> With badges</div>
                     <div class="legend-item"><div class="legend-dot no-badges"></div> Without badges</div>
@@ -1495,9 +1495,9 @@
                 </div>
             </div>
 
-            <!-- Metric 2: Quote â†’ Won Conversion -->
+            <!-- Metric 2: Quote → Won Conversion -->
             <div class="corr-bar-group">
-                <div class="corr-bar-label">Quote â†’ Won Conversion <span>percentage</span></div>
+                <div class="corr-bar-label">Quote → Won Conversion <span>percentage</span></div>
                 <div class="corr-bar-pair">
                     <div class="corr-bar-track">
                         <div class="corr-bar-fill badges-bar" style="width: 58%">58%</div>
@@ -1549,14 +1549,14 @@
                 <div class="visibility-card__icon">đź“‹</div>
                 <div class="visibility-card__title">Quote Results</div>
                 <div class="visibility-card__body">
-                    When a customer compares quotes, earned badges are displayed next to your price and timeline â€” making your quote stand out in a crowded comparison view.
+                    When a customer compares quotes, earned badges are displayed next to your price and timeline — making your quote stand out in a crowded comparison view.
                 </div>
             </div>
             <div class="visibility-card">
                 <div class="visibility-card__icon">đź‘¤</div>
                 <div class="visibility-card__title">Profile Cards</div>
                 <div class="visibility-card__body">
-                    Every time your profile card is shown â€” in search, on job leads, or in messages â€” active badges render as compact chips beneath your business name.
+                    Every time your profile card is shown — in search, on job leads, or in messages — active badges render as compact chips beneath your business name.
                 </div>
             </div>
         </div>
@@ -1572,7 +1572,7 @@
         <div class="info-strip" style="margin-top: 12px;">
             <div class="info-strip__icon">đźŽŻ</div>
             <div class="info-strip__copy">
-                <p><strong>Lead eligibility:</strong> Certain premium job categories â€” such as high-value renovations and commercial contracts â€” require a minimum badge count to be eligible. Unlocking more badges expands the range of leads you can receive.</p>
+                <p><strong>Lead eligibility:</strong> Certain premium job categories — such as high-value renovations and commercial contracts — require a minimum badge count to be eligible. Unlocking more badges expands the range of leads you can receive.</p>
             </div>
         </div>
     </div>
@@ -1580,7 +1580,7 @@
 </main><!-- end .main-content -->
 
 <!-- ============================================================
-     JAVASCRIPT â€” theme toggle + sidebar collapse (identical)
+     JAVASCRIPT — theme toggle + sidebar collapse (identical)
      ============================================================ -->
 <script>
     // â”€â”€ Theme Toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

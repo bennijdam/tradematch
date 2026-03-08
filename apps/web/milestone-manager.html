@@ -428,13 +428,13 @@
         <div class="nav-container">
             <a href="/" class="logo">Trade<span>Match</span></a>
 <div class="nav-links">
-                <a href="/how-it-works">How It Works</a>
-                <a href="/find-tradespeople">Find Trades</a>
-                <a href="/about">About</a>
-                <a href="/contact">Contact</a>
-                <a href="/help">Help</a>
-                <a href="/login" class="btn btn-primary">Sign In</a>
-            </div>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="post-a-job.html" class="nav-link">Post a Job</a>
+      <a href="browse-trades.html" class="nav-link">Browse Trades</a>
+      <a href="pricing.html" class="nav-link">Pricing</a>
+      <a href="blog.html" class="nav-link">Blog</a>
+      <a href="help-centre.html" class="nav-link">Help</a>
+    </div>
         </div>
     </header>
 
@@ -464,7 +464,7 @@
         
         async function loadMilestones() {
             const container = document.getElementById('milestoneTimeline');
-            container.innerHTML = '<div style="text-align:center;padding:3rem;color:#94a3b8;display:flex;align-items:center;justify-content:center;gap:.75rem;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Loading milestonesâ€¦</div>';
+            container.innerHTML = '<div style="text-align:center;padding:3rem;color:#94a3b8;display:flex;align-items:center;justify-content:center;gap:.75rem;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Loading milestones…</div>';
             try {
                 const response = await fetch(`${API_URL}/api/payments/milestones/${quoteId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -620,7 +620,7 @@
     <!-- FOOTER -->
 <footer class="footer">
   <div class="wrap">
-    <div class="footer-grid">
+        <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-brand-name">Trade<span>Match</span></div>
         <p>The UK's only trades platform built on aligned incentives. We only earn when your job gets done. Protecting homeowners from cowboy builders and tradespeople from dead leads since 2026.</p>
@@ -638,14 +638,14 @@
           <li><a href="how-escrow-works.html">How Escrow Works</a></li>
           <li><a href="browse-trades.html">Browse Trades</a></li>
           <li><a href="cost-guides.html">Cost Guides</a></li>
-          <li><a href="safety-verification.html">Safety & Verification</a></li>
+          <li><a href="safety-verification.html">Safety &amp; Verification</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>For Tradespeople</h4>
         <ul>
           <li><a href="register.html?role=tradesperson">Create a Profile</a></li>
-          <li><a href="pricing.html">Pricing & Fees</a></li>
+          <li><a href="pricing.html">Pricing &amp; Fees</a></li>
           <li><a href="trade-accreditations.html">Trade Accreditations</a></li>
           <li><a href="TradeMatch-Pro.html">TradeMatch Pro</a></li>
           <li><a href="dispute-resolution.html">Dispute Resolution</a></li>
@@ -659,7 +659,7 @@
           <li><a href="find-tradespeople.html?trade=Extensions">Builders</a></li>
           <li><a href="find-tradespeople.html?trade=Gas">Gas Engineers</a></li>
           <li><a href="find-tradespeople.html?trade=Roofing">Roofers</a></li>
-          <li><a href="browse-trades.html">All 48 Trades â†’</a></li>
+          <li><a href="browse-trades.html">All 48 Trades →</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -670,20 +670,23 @@
           <li><a href="careers.html">Careers</a></li>
           <li><a href="press.html">Press</a></li>
           <li><a href="help-centre.html">Help Centre</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
           <li><a href="knowledge-base.html">Knowledge Base</a></li>
+          <li><a href="verification-process.html">Verification Process</a></li>
+          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
           <li><a href="referral.html">Referral Programme</a></li>
           <li><a href="affiliate-register-page.html">Affiliate Register</a></li>
           <li><a href="apply.html">Apply</a></li>
-          <li><a href="how-it-works.html">How It Works</a></li>
-          <li><a href="9-layer-framework.html">9-Layer Framework</a></li>
-          <li><a href="verification-process.html">Verification Process</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="mailto:hello@tradematch.uk">hello@tradematch.uk</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>Â© 2026 TradeMatch UK Ltd Â· Registered in England & Wales Â· Pay-Per-Lead Â· Max 5 Vendors Per Job</p>
+      <p>© 2026 TradeMatch UK Ltd · Registered in England & Wales · Pay-Per-Lead · Max 5 Vendors Per Job</p>
       <div class="footer-legal">
         <a href="privacy.html">Privacy Policy</a>
         <a href="terms.html">Terms & Conditions</a>

@@ -639,7 +639,7 @@
             </a>
         </div>
 
-        <!-- Insights (Timeline lives here â€” active) -->
+        <!-- Insights (Timeline lives here — active) -->
         <div class="nav-section">
             <div class="nav-section-title">Insights</div>
             <a href="vendor-impressions" class="nav-item">
@@ -802,19 +802,19 @@
 </main>
 
 <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     SAMPLE DATA  â€“  mirrors the backend tables defined in the
+     SAMPLE DATA  –  mirrors the backend tables defined in the
      architecture doc.  In production this arrives from
      GET /api/vendor/timeline?from=&to=&type=
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <script>
 // â”€â”€â”€ Sample Timeline Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Each object maps to one or more backend tables:
-//   lead       â†’ job_leads + impression_events
-//   quote      â†’ quotes
-//   job        â†’ quotes (status won/completed/archived)
-//   impression â†’ impressions_ledger + impression_events
-//   billing    â†’ subscriptions + top_up_purchases
-//   review     â†’ reviews
+//   lead       → job_leads + impression_events
+//   quote      → quotes
+//   job        → quotes (status won/completed/archived)
+//   impression → impressions_ledger + impression_events
+//   billing    → subscriptions + top_up_purchases
+//   review     → reviews
 
 const TIMELINE_DATA = [
     // â”€â”€ 3 Feb 2026 â”€â”€
@@ -824,7 +824,7 @@ const TIMELINE_DATA = [
         time: "09:41",
         type: "lead",
         title: "New job lead delivered",
-        desc: "Bathroom renovation â€“ Plumbing & Heating",
+        desc: "Bathroom renovation – Plumbing & Heating",
         meta: { Trade: "Plumbing & Heating", Location: "SW1A", Impressions: "â’1" }
     },
     {
@@ -843,7 +843,7 @@ const TIMELINE_DATA = [
         time: "07:02",
         type: "quote",
         title: "Quote viewed by customer",
-        desc: "Kitchen Extension Build â€“ your quote was opened.",
+        desc: "Kitchen Extension Build – your quote was opened.",
         meta: { Lead: "Kitchen Extension", Quote_ID: "Q-2847", Customer: "Anon" }
     },
     // â”€â”€ 2 Feb 2026 â”€â”€
@@ -854,7 +854,7 @@ const TIMELINE_DATA = [
         type: "review",
         title: "New review received",
         desc: "Great quality work, very professional. Highly recommend.",
-        meta: { Rating: "â…â…â…â…â…", Job: "Loft Conversion", Customer: "Sarah M." }
+        meta: { Rating: "★★★★★", Job: "Loft Conversion", Customer: "Sarah M." }
     },
     {
         id: "evt-005",
@@ -862,7 +862,7 @@ const TIMELINE_DATA = [
         time: "16:05",
         type: "job",
         title: "Job completed",
-        desc: "Loft Conversion â€“ marked as finished by customer.",
+        desc: "Loft Conversion – marked as finished by customer.",
         meta: { Lead: "Loft Conversion", Location: "LS1", Won: "28 Jan" }
     },
     {
@@ -871,7 +871,7 @@ const TIMELINE_DATA = [
         time: "14:22",
         type: "lead",
         title: "New job lead delivered",
-        desc: "Garden Landscaping â€“ Landscaping",
+        desc: "Garden Landscaping – Landscaping",
         meta: { Trade: "Landscaping", Location: "BS1", Impressions: "â’1" }
     },
     {
@@ -899,7 +899,7 @@ const TIMELINE_DATA = [
         time: "17:45",
         type: "job",
         title: "Job won",
-        desc: "Complete House Rewiring â€“ customer accepted your quote.",
+        desc: "Complete House Rewiring – customer accepted your quote.",
         meta: { Lead: "House Rewiring", Location: "B1", Price: "ÂŁ6,200" }
     },
     {
@@ -917,7 +917,7 @@ const TIMELINE_DATA = [
         time: "12:00",
         type: "lead",
         title: "New job lead delivered",
-        desc: "Complete House Rewiring â€“ Electrical & Lighting",
+        desc: "Complete House Rewiring – Electrical & Lighting",
         meta: { Trade: "Electrical & Lighting", Location: "B1", Impressions: "â’1" }
     },
     {
@@ -936,7 +936,7 @@ const TIMELINE_DATA = [
         time: "16:20",
         type: "impression",
         title: "Auto-pause activated",
-        desc: "Impressions reached 100 % â€“ lead delivery paused until top-up or new period.",
+        desc: "Impressions reached 100 % – lead delivery paused until top-up or new period.",
         meta: { Used: "100", Balance: "0", Status: "Paused" },
         severity: "danger"
     },
@@ -956,7 +956,7 @@ const TIMELINE_DATA = [
         time: "11:33",
         type: "job",
         title: "Job archived",
-        desc: "Kitchen Extension Build â€“ no response; automatically archived.",
+        desc: "Kitchen Extension Build – no response; automatically archived.",
         meta: { Lead: "Kitchen Extension", Reason: "Expired", Age: "14 days" }
     },
     {
@@ -965,7 +965,7 @@ const TIMELINE_DATA = [
         time: "08:45",
         type: "lead",
         title: "New job lead delivered",
-        desc: "Kitchen Extension Build â€“ Building & Construction",
+        desc: "Kitchen Extension Build – Building & Construction",
         meta: { Trade: "Building & Construction", Location: "SW1A", Impressions: "â’1" }
     },
     // â”€â”€ 30 Jan 2026 â”€â”€
@@ -976,7 +976,7 @@ const TIMELINE_DATA = [
         type: "review",
         title: "New review received",
         desc: "Solid work, on time and on budget. Will use again.",
-        meta: { Rating: "â…â…â…â…â†", Job: "Bathroom Reno", Customer: "Mike T." }
+        meta: { Rating: "★★★★â†", Job: "Bathroom Reno", Customer: "Mike T." }
     },
     {
         id: "evt-018",
@@ -993,7 +993,7 @@ const TIMELINE_DATA = [
         time: "10:22",
         type: "job",
         title: "Job lost to another vendor",
-        desc: "Patio Paving â€“ customer chose a different quote.",
+        desc: "Patio Paving – customer chose a different quote.",
         meta: { Lead: "Patio Paving", Location: "EC1", Outcome: "Lost" }
     },
     {
@@ -1077,7 +1077,7 @@ function renderTimeline(events) {
                 Object.entries(ev.meta).forEach(([k, v]) => {
                     // Render star ratings as actual star characters
                     let displayVal = v;
-                    if (typeof v === 'string' && v.includes('â…')) {
+                    if (typeof v === 'string' && v.includes('★')) {
                         displayVal = `<span class="stars">${v.replace(/â†/g, '<span class="empty">â†</span>')}</span>`;
                     }
                     metaHtml += `<div class="meta-item"><span class="meta-key">${k.replace(/_/g,' ')}</span><span class="meta-val">${displayVal}</span></div>`;

@@ -1867,7 +1867,7 @@
         }
 
         function getOutcomeBadge(outcome) {
-            if (!outcome) return '<span class="outcome-badge outcome-none">â€”</span>';
+            if (!outcome) return '<span class="outcome-badge outcome-none">—</span>';
             if (outcome === 'won') return '<span class="outcome-badge outcome-won">âś“ Won</span>';
             return '<span class="outcome-badge outcome-lost">âś— Not Won</span>';
         }
@@ -2008,7 +2008,7 @@
                     ${job.review ? `
                     <div class="review-card">
                         <div class="review-rating">
-                            ${[1,2,3,4,5].map(i => `<span class="star ${i <= job.review.rating ? '' : 'empty'}">â…</span>`).join('')}
+                            ${[1,2,3,4,5].map(i => `<span class="star ${i <= job.review.rating ? '' : 'empty'}">★</span>`).join('')}
                         </div>
                         <div class="review-comment">"${job.review.comment}"</div>
                     </div>

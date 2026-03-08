@@ -274,6 +274,19 @@
   ],
   "headers": [
     {
+      "source": "/sitemaps/(.*)\\.xml\\.gz",
+      "headers": [
+        {
+          "key": "Content-Encoding",
+          "value": "gzip"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
