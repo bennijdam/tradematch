@@ -31,6 +31,10 @@ Disallow: /*.tmp$
 Disallow: /*.log$
 Disallow: /*.cache$
 
+# Avoid crawl-budget waste on low-intent filtered/sorted variants
+Disallow: /*?sort=
+Disallow: /*?filter=
+
 # Crawl delay (optional)
 Crawl-delay: 1
 
