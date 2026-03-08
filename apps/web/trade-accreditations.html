@@ -63,7 +63,24 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* -- Mobile hamburger -- */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:1px solid rgba(0,0,0,.1);padding:8px 10px;border-radius:9px;flex-shrink:0;transition:border-color .2s}
+.nav-hamburger:hover{border-color:var(--border-neon)}
+.nav-hamburger span{display:block;width:20px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.34,1.38,.64,1)}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* -- Mobile drawer -- */
+.nav-mobile-drawer{display:none;position:fixed;top:86px;left:16px;right:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.04);z-index:999;overflow:hidden}
+.nav-mobile-drawer.open{display:block;animation:drawerFadeIn .2s ease both}
+@keyframes drawerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-mobile-drawer a{display:block;padding:14px 20px;color:#3d5060;text-decoration:none;font-weight:500;font-size:14px;font-family:var(--fb);border-bottom:1px solid rgba(0,0,0,.06);transition:all .15s}
+.nav-mobile-drawer a:hover,.nav-mobile-drawer a:active{background:rgba(0,194,104,.06);color:var(--neon3)}
+.nav-mobile-drawer a:last-child{border-bottom:none}
+.nav-mobile-drawer-ctas{display:flex;gap:10px;padding:14px 20px;border-top:1px solid rgba(0,0,0,.06)}
+.nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
+@media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* HERO */
@@ -332,7 +349,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <span class="hero-badge"><i data-lucide="zap" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>NICEIC Verified</span>
         <span class="hero-badge"><i data-lucide="award" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>CSCS Checked</span>
         <span class="hero-badge"><i data-lucide="lock" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>DBS Screened</span>
-        <span class="hero-badge"><i data-lucide="file-check" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>ÂŁ5M+ Insurance Verified</span>
+        <span class="hero-badge"><i data-lucide="file-check" style="width:13px;height:13px;color:#00c268;stroke-width:2.3"></i>£5M+ Insurance Verified</span>
       </div>
       <div class="hero-stats">
         <div class="hstat"><div class="hstat-val">48</div><div class="hstat-lbl">Trade categories covered</div></div>
@@ -376,7 +393,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <div class="framework-step-num">03 <span style="flex:1;height:1px;background:var(--dk-border)"></span></div>
         <div class="framework-icon"><i data-lucide="shield" style="width:22px;height:22px;color:#00c268;stroke-width:2"></i></div>
         <div class="framework-step-title">Insurance Validation</div>
-        <div class="framework-step-desc">Public liability (min ÂŁ2M) and employer's liability verified via live insurer document scan.</div>
+        <div class="framework-step-desc">Public liability (min £2M) and employer's liability verified via live insurer document scan.</div>
       </div>
       <div class="framework-step sr d4">
         <div class="framework-step-num">04 <span style="flex:1;height:1px;background:var(--dk-border)"></span></div>
@@ -423,7 +440,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
         <div class="stat-sub">Last 12 months</div>
       </div>
       <div class="sr d2" style="text-align:center">
-        <div class="stat-val">ÂŁ0</div>
+        <div class="stat-val">£0</div>
         <div class="stat-label">Customer losses to fraud since launch</div>
         <div class="stat-sub">Protected by escrow</div>
       </div>
@@ -672,7 +689,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Gas Engineer</td>
             <td>Gas Safe Register</td>
             <td>IGEM / APHC</td>
-            <td>ÂŁ2M PLI</td>
+            <td>£2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -680,7 +697,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Electrician</td>
             <td>NICEIC / NAPIT</td>
             <td>ELECSA / Part P</td>
-            <td>ÂŁ2M PLI</td>
+            <td>£2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -688,7 +705,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Plumber</td>
             <td>WaterSafe / APHC</td>
             <td>CIPHE</td>
-            <td>ÂŁ1M PLI</td>
+            <td>£1M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -696,7 +713,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Builder</td>
             <td>FMB / NHBC</td>
             <td>LABC / RICS</td>
-            <td>ÂŁ5M PLI</td>
+            <td>£5M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -704,7 +721,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Roofer</td>
             <td>NFRC</td>
             <td>CompetentRoofer</td>
-            <td>ÂŁ2M PLI</td>
+            <td>£2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -712,7 +729,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Carpenter</td>
             <td>IoC / C&amp;G 6571</td>
             <td>NVQ Level 2+</td>
-            <td>ÂŁ1M PLI</td>
+            <td>£1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -720,7 +737,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Plasterer</td>
             <td>FIS / NVQ L2</td>
             <td>Portfolio Review</td>
-            <td>ÂŁ1M PLI</td>
+            <td>£1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -728,7 +745,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Tiler</td>
             <td>CTDA / NVQ L2</td>
             <td>Portfolio Review</td>
-            <td>ÂŁ1M PLI</td>
+            <td>£1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill optional"><i data-lucide="circle" style="width:9px;height:9px;stroke-width:2.5"></i>Verified</span></td>
           </tr>
@@ -736,7 +753,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Landscaper</td>
             <td>APL / BALI</td>
             <td>RHS / PA1</td>
-            <td>ÂŁ1M PLI</td>
+            <td>£1M PLI</td>
             <td>Optional</td>
             <td><span class="cert-badge-pill industry"><i data-lucide="leaf" style="width:9px;height:9px;stroke-width:2.5"></i>Industry</span></td>
           </tr>
@@ -744,7 +761,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#f0f4ff;overflow-
             <td>Solar Installer</td>
             <td>MCS Certified</td>
             <td>RECC / NAPIT</td>
-            <td>ÂŁ2M PLI</td>
+            <td>£2M PLI</td>
             <td>Standard</td>
             <td><span class="cert-badge-pill required"><i data-lucide="check-circle" style="width:9px;height:9px;stroke-width:2.5"></i>Required</span></td>
           </tr>
@@ -919,7 +936,7 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.sr, .sr-l, .sr-r').forEach(el => observer.observe(el));
 
 // Ticker
-const certs = ['Gas Safe Registered','NICEIC Verified','NAPIT Approved','DBS Screened','CSCS Checked','ÂŁ5M Insurance Validated','FMB Members','NHBC Approved','WaterSafe Members','ELECSA Certified','MCS Accredited','BALI Members','CTDA Verified','NVQ Level 2+','Part P Compliant','OFTEC Registered','CIPHE Members','RICS Regulated'];
+const certs = ['Gas Safe Registered','NICEIC Verified','NAPIT Approved','DBS Screened','CSCS Checked','£5M Insurance Validated','FMB Members','NHBC Approved','WaterSafe Members','ELECSA Certified','MCS Accredited','BALI Members','CTDA Verified','NVQ Level 2+','Part P Compliant','OFTEC Registered','CIPHE Members','RICS Regulated'];
 const ticker = document.getElementById('ticker');
 [...certs,...certs].forEach(c => {
   const item = document.createElement('span');

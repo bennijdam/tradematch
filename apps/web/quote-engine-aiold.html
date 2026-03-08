@@ -1479,7 +1479,7 @@
 
                     <div class="form-group">
                         <label for="budget">Your Budget</label>
-                        <div class="budget-display" id="budgetDisplay">ÂŁ5,000 - ÂŁ10,000</div>
+                        <div class="budget-display" id="budgetDisplay">£5,000 - £10,000</div>
                         <input type="range" id="budgetSlider" min="500" max="100000" step="500" value="7500">
                     </div>
                 </div>
@@ -1841,7 +1841,7 @@
             const value = parseInt(e.target.value);
             const min = value;
             const max = Math.min(value * 2, 100000);
-            const display = `ÂŁ${min.toLocaleString()} - ÂŁ${max.toLocaleString()}`;
+            const display = `£${min.toLocaleString()} - £${max.toLocaleString()}`;
             budgetDisplay.textContent = display;
             formData.budget = display;
             formData.budgetMin = min;
@@ -2196,7 +2196,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
             document.getElementById('reviewService').textContent = formData.serviceName || '-';
             document.getElementById('reviewPostcode').textContent = formData.postcode || '-';
             document.getElementById('reviewProperty').textContent = formData.propertyType || '-';
-            const budgetText = formData.budget || (formData.budgetMin ? `ÂŁ${formData.budgetMin.toLocaleString()} - ÂŁ${formData.budgetMax?.toLocaleString() || ''}` : '-');
+            const budgetText = formData.budget || (formData.budgetMin ? `£${formData.budgetMin.toLocaleString()} - £${formData.budgetMax?.toLocaleString() || ''}` : '-');
             document.getElementById('reviewBudget').textContent = budgetText;
             document.getElementById('reviewUrgency').textContent = formData.urgencyLabel || '-';
             document.getElementById('reviewDescription').textContent = formData.description || '-';

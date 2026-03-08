@@ -501,7 +501,7 @@
                 </div>
                 <div class="info-box">
                     <div class="info-box-label">Budget Range</div>
-                    <div class="info-box-value" data-job-field="budget">ÂŁ8,000 - ÂŁ12,000</div>
+                    <div class="info-box-value" data-job-field="budget">£8,000 - £12,000</div>
                 </div>
                 <div class="info-box">
                     <div class="info-box-label">Property Type</div>
@@ -610,7 +610,7 @@
                                 <div class="timeline-title">First Quote Received</div>
                                 <div class="timeline-date">4th Feb 2026, 2:15 PM</div>
                             </div>
-                            <div class="timeline-desc">Kitchen Bros Ltd submitted a quote of ÂŁ8,500 with a 3-4 week timeline.</div>
+                            <div class="timeline-desc">Kitchen Bros Ltd submitted a quote of £8,500 with a 3-4 week timeline.</div>
                         </div>
                     </div>
 
@@ -763,7 +763,7 @@
         }
 
         function parseBudgetRange(value) {
-            const match = value.match(/ÂŁ\s*([\d,]+)\s*-\s*ÂŁ\s*([\d,]+)/i);
+            const match = value.match(/£\s*([\d,]+)\s*-\s*£\s*([\d,]+)/i);
             if (!match) return { min: '', max: '' };
             return {
                 min: match[1].replace(/,/g, ''),
@@ -858,7 +858,7 @@
             });
 
             const budgetValue = budgetMin && budgetMax
-                ? `ÂŁ${Number(budgetMin).toLocaleString('en-GB')} - ÂŁ${Number(budgetMax).toLocaleString('en-GB')}`
+                ? `£${Number(budgetMin).toLocaleString('en-GB')} - £${Number(budgetMax).toLocaleString('en-GB')}`
                 : getJobDetailText('[data-job-field="budget"]');
 
             const descriptionEl = document.querySelector('[data-job-field="description"]');

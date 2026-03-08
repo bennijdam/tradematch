@@ -65,7 +65,24 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* -- Mobile hamburger -- */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:1px solid rgba(0,0,0,.1);padding:8px 10px;border-radius:9px;flex-shrink:0;transition:border-color .2s}
+.nav-hamburger:hover{border-color:var(--border-neon)}
+.nav-hamburger span{display:block;width:20px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.34,1.38,.64,1)}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* -- Mobile drawer -- */
+.nav-mobile-drawer{display:none;position:fixed;top:86px;left:16px;right:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.04);z-index:999;overflow:hidden}
+.nav-mobile-drawer.open{display:block;animation:drawerFadeIn .2s ease both}
+@keyframes drawerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-mobile-drawer a{display:block;padding:14px 20px;color:#3d5060;text-decoration:none;font-weight:500;font-size:14px;font-family:var(--fb);border-bottom:1px solid rgba(0,0,0,.06);transition:all .15s}
+.nav-mobile-drawer a:hover,.nav-mobile-drawer a:active{background:rgba(0,194,104,.06);color:var(--neon3)}
+.nav-mobile-drawer a:last-child{border-bottom:none}
+.nav-mobile-drawer-ctas{display:flex;gap:10px;padding:14px 20px;border-top:1px solid rgba(0,0,0,.06)}
+.nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
+@media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* â”€â”€ BUTTONS â”€â”€ */
@@ -613,7 +630,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="hs-item"><div class="hs-val"><em>98.7%</em></div><div class="hs-lbl">Disputes Resolved</div></div>
           <div class="hs-item"><div class="hs-val"><em>8.3d</em></div><div class="hs-lbl">Avg Resolution Time</div></div>
           <div class="hs-item"><div class="hs-val"><em>14d</em></div><div class="hs-lbl">Guaranteed Outcome</div></div>
-          <div class="hs-item"><div class="hs-val"><em>ÂŁ0</em></div><div class="hs-lbl">Mediation Cost</div></div>
+          <div class="hs-item"><div class="hs-val"><em>£0</em></div><div class="hs-lbl">Mediation Cost</div></div>
         </div>
       </div>
     </div>
@@ -703,7 +720,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="proc-stat"><div class="proc-stat-val g">48h</div><div class="proc-stat-lbl">First response SLA</div></div>
           <div class="proc-stat"><div class="proc-stat-val g">8.3d</div><div class="proc-stat-lbl">Avg resolution time</div></div>
           <div class="proc-stat"><div class="proc-stat-val a">14d</div><div class="proc-stat-lbl">Max binding timeline</div></div>
-          <div class="proc-stat"><div class="proc-stat-val g">ÂŁ0</div><div class="proc-stat-lbl">Cost to homeowner</div></div>
+          <div class="proc-stat"><div class="proc-stat-val g">£0</div><div class="proc-stat-lbl">Cost to homeowner</div></div>
         </div>
       </div>
     </div>
@@ -1044,7 +1061,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       </div>
       <div class="cta-trust">
         <div class="cta-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>FCA-regulated escrow</div>
-        <div class="cta-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>ÂŁ0 mediation cost</div>
+        <div class="cta-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>£0 mediation cost</div>
         <div class="cta-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>14-day guaranteed outcome</div>
         <div class="cta-trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Independent panel</div>
       </div>
@@ -1147,7 +1164,7 @@ document.querySelectorAll('.sr,.sl,.srr').forEach(el=>obs.observe(el));
 // Ticker
 const ticks=[
   {l:'Escrow protected',v:'All payments',c:'green'},{l:'Disputes resolved',v:'98.7%',c:'green'},
-  {l:'Avg resolution',v:'8.3 days',c:'amber'},{l:'Mediation cost',v:'ÂŁ0 to homeowner',c:'green'},
+  {l:'Avg resolution',v:'8.3 days',c:'amber'},{l:'Mediation cost',v:'£0 to homeowner',c:'green'},
   {l:'Panel ruling',v:'Within 14 days',c:'amber'},{l:'Evidence preserved',v:'100% tamper-proof',c:'green'},
   {l:'Tradespeople suspended',v:'340+ removed',c:'amber'},{l:'FCA regulated',v:'Client escrow',c:'green'},
   {l:'Site inspections',v:'Trade-qualified',c:'amber'},{l:'Cases open',v:'Zero unresolved',c:'green'},

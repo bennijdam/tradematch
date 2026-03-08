@@ -468,7 +468,7 @@
                     <div class="price-item">
                         <input type="text" placeholder="Item name" class="form-control">
                         <input type="text" placeholder="Description" class="form-control">
-                        <input type="number" placeholder="Amount (ÂŁ)" class="form-control" step="0.01">
+                        <input type="number" placeholder="Amount (£)" class="form-control" step="0.01">
                     </div>
                 </div>
                 <button type="button" class="add-item" onclick="addPriceItem()">+ Add Item</button>
@@ -478,7 +478,7 @@
                     <div class="milestone-item">
                         <div class="milestone-header">
                             <input type="text" placeholder="Milestone title" class="form-control" style="flex: 1;">
-                            <span class="milestone-amount">ÂŁ0</span>
+                            <span class="milestone-amount">£0</span>
                         </div>
                         <textarea placeholder="Description of this milestone" class="form-control"></textarea>
                     </div>
@@ -486,7 +486,7 @@
                 <button type="button" class="add-item" onclick="addMilestone()">+ Add Milestone</button>
                 
                 <div class="total-section">
-                    <div>Total Proposal Amount: <span class="total-amount" id="totalAmount">ÂŁ0.00</span></div>
+                    <div>Total Proposal Amount: <span class="total-amount" id="totalAmount">£0.00</span></div>
                 </div>
             </form>
         </div>
@@ -519,7 +519,7 @@
                     data.quotes.forEach(quote => {
                         const option = document.createElement('option');
                         option.value = quote.id;
-                        option.textContent = `${quote.title} - ÂŁ${quote.budget}`;
+                        option.textContent = `${quote.title} - £${quote.budget}`;
                         select.appendChild(option);
                     });
                 } else {
@@ -539,7 +539,7 @@
             item.innerHTML = `
                 <input type="text" placeholder="Item name" class="form-control">
                 <input type="text" placeholder="Description" class="form-control">
-                <input type="number" placeholder="Amount (ÂŁ)" class="form-control" step="0.01" onchange="updateTotal()">
+                <input type="number" placeholder="Amount (£)" class="form-control" step="0.01" onchange="updateTotal()">
             `;
             container.appendChild(item);
         }
@@ -551,7 +551,7 @@
             milestone.innerHTML = `
                 <div class="milestone-header">
                     <input type="text" placeholder="Milestone title" class="form-control" style="flex: 1;">
-                    <span class="milestone-amount">ÂŁ0</span>
+                    <span class="milestone-amount">£0</span>
                 </div>
                 <textarea placeholder="Description of this milestone" class="form-control"></textarea>
             `;
@@ -566,7 +566,7 @@
                 total += parseFloat(input.value) || 0;
             });
             
-            document.getElementById('totalAmount').textContent = `ÂŁ${total.toFixed(2)}`;
+            document.getElementById('totalAmount').textContent = `£${total.toFixed(2)}`;
         }
         
         async function saveDraft() {
@@ -648,7 +648,7 @@
                 projectDescription: document.getElementById('projectDescription').value,
                 priceItems,
                 milestones,
-                totalAmount: parseFloat(document.getElementById('totalAmount').textContent.replace('ÂŁ', '')),
+                totalAmount: parseFloat(document.getElementById('totalAmount').textContent.replace('£', '')),
                 vendor: {
                     companyName: 'Your Company Name',
                     address: 'Your Address',

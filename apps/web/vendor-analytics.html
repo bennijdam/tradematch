@@ -515,7 +515,7 @@
                 
                 <div class="metric-card">
                     <div class="metric-label">Total Revenue</div>
-                    <div class="metric-value">ÂŁ${metrics.revenue.toLocaleString()}</div>
+                    <div class="metric-value">£${metrics.revenue.toLocaleString()}</div>
                     <div class="metric-change positive">â†‘ 18% from last period</div>
                 </div>
                 
@@ -534,7 +534,7 @@
                 data: {
                     labels: data.map(d => d.month).reverse(),
                     datasets: [{
-                        label: 'Revenue (ÂŁ)',
+                        label: 'Revenue (£)',
                         data: data.map(d => parseFloat(d.total)).reverse(),
                         borderColor: 'var(--emerald)',
                         backgroundColor: 'rgba(22, 163, 74, 0.1)',
@@ -552,7 +552,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: value => 'ÂŁ' + value.toLocaleString()
+                                callback: value => '£' + value.toLocaleString()
                             }
                         }
                     }

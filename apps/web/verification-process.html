@@ -63,7 +63,24 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;border:none;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* -- Mobile hamburger -- */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:1px solid rgba(0,0,0,.1);padding:8px 10px;border-radius:9px;flex-shrink:0;transition:border-color .2s}
+.nav-hamburger:hover{border-color:var(--border-neon)}
+.nav-hamburger span{display:block;width:20px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.34,1.38,.64,1)}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* -- Mobile drawer -- */
+.nav-mobile-drawer{display:none;position:fixed;top:86px;left:16px;right:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.04);z-index:999;overflow:hidden}
+.nav-mobile-drawer.open{display:block;animation:drawerFadeIn .2s ease both}
+@keyframes drawerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-mobile-drawer a{display:block;padding:14px 20px;color:#3d5060;text-decoration:none;font-weight:500;font-size:14px;font-family:var(--fb);border-bottom:1px solid rgba(0,0,0,.06);transition:all .15s}
+.nav-mobile-drawer a:hover,.nav-mobile-drawer a:active{background:rgba(0,194,104,.06);color:var(--neon3)}
+.nav-mobile-drawer a:last-child{border-bottom:none}
+.nav-mobile-drawer-ctas{display:flex;gap:10px;padding:14px 20px;border-top:1px solid rgba(0,0,0,.06)}
+.nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
+@media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* â”€â”€ BUTTONS â”€â”€ */
@@ -500,7 +517,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="vp-stat-item"><div class="vp-stat-val"><em>14,200+</em></div><div class="vp-stat-lbl">Verified Tradespeople</div></div>
           <div class="vp-stat-item"><div class="vp-stat-val"><em>9</em></div><div class="vp-stat-lbl">Verification Layers</div></div>
           <div class="vp-stat-item"><div class="vp-stat-val"><em>4.2%</em></div><div class="vp-stat-lbl">Application Rejection Rate</div></div>
-          <div class="vp-stat-item"><div class="vp-stat-val"><em>ÂŁ0</em></div><div class="vp-stat-lbl">Customer Losses to Fraud</div></div>
+          <div class="vp-stat-item"><div class="vp-stat-val"><em>£0</em></div><div class="vp-stat-lbl">Customer Losses to Fraud</div></div>
         </div>
       </div>
     </div>
@@ -532,7 +549,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="ov-step-num">Check 03</div>
         <div class="ov-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="ov-title">Insurance Validation</div>
-        <div class="ov-desc">Public liability minimum ÂŁ2M verified via live insurer document scan. Cover must be current and uninterrupted.</div>
+        <div class="ov-desc">Public liability minimum £2M verified via live insurer document scan. Cover must be current and uninterrupted.</div>
       </div>
       <div class="ov-card sr d4">
         <div class="ov-step-num">Check 04</div>
@@ -655,14 +672,14 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <div class="step-img-overlay" style="background:linear-gradient(90deg,rgba(13,17,23,.35) 0%,transparent 55%),linear-gradient(180deg,transparent 35%,rgba(13,17,23,.75) 100%)"></div>
       <div class="img-badge-float bottom-left">
         <div class="ibf-label">Minimum cover accepted</div>
-        <div class="ibf-val">ÂŁ2M</div>
+        <div class="ibf-val">£2M</div>
         <div class="ibf-sub">Public liability insurance</div>
       </div>
     </div>
     <div class="step-text-pane">
       <div class="step-num"><div class="step-num-badge">3</div>Insurance &amp; Liability</div>
       <h2 class="step-title">If anything goes wrong, <em>you're covered.</em></h2>
-      <p class="step-body">All tradespeople must hold valid public liability insurance — minimum ÂŁ2M — before joining. We scan the certificate document, verify the insurer directly, and confirm cover is both current and adequate for the category of work being performed.</p>
+      <p class="step-body">All tradespeople must hold valid public liability insurance — minimum £2M — before joining. We scan the certificate document, verify the insurer directly, and confirm cover is both current and adequate for the category of work being performed.</p>
       <div class="step-features">
         <div class="step-feature">
           <div class="step-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
@@ -670,7 +687,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         </div>
         <div class="step-feature">
           <div class="step-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
-          <div><div class="step-feature-lbl">Tiered minimums by trade</div><div class="step-feature-sub">Structural builders require ÂŁ5M. Gas engineers require ÂŁ2M. Handymen and decorators require ÂŁ1M minimum.</div></div>
+          <div><div class="step-feature-lbl">Tiered minimums by trade</div><div class="step-feature-sub">Structural builders require £5M. Gas engineers require £2M. Handymen and decorators require £1M minimum.</div></div>
         </div>
         <div class="step-feature">
           <div class="step-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/></svg></div>
@@ -859,7 +876,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="mstat-bar-wrap"><div class="mstat-bar" style="--w:75%;width:0" data-width="75%"></div></div>
         </div>
         <div class="mstat">
-          <div class="mstat-top"><div class="mstat-val">ÂŁ0</div><div class="mstat-label" style="color:var(--dk-t2);font-size:12px">Customer losses to unverified contractor fraud</div></div>
+          <div class="mstat-top"><div class="mstat-val">£0</div><div class="mstat-label" style="color:var(--dk-t2);font-size:12px">Customer losses to unverified contractor fraud</div></div>
           <div class="mstat-bar-wrap"><div class="mstat-bar" style="--w:100%;width:0" data-width="100%"></div></div>
         </div>
       </div>
@@ -1045,7 +1062,7 @@ const items = [
   { label: 'CSCS Checked', val: '9,800+' },
   { label: 'References Validated', val: '28,400+' },
   { label: 'Annual Re-Checks', val: 'Live' },
-  { label: 'Fraud Losses', val: 'ÂŁ0' },
+  { label: 'Fraud Losses', val: '£0' },
   { label: 'Rejection Rate', val: '4.2%' },
   { label: 'Avg. Approval Time', val: '18h' },
   { label: 'WaterSafe Members', val: '2,600+' },

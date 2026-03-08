@@ -63,7 +63,24 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .nav-cta{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));padding:9px 20px;border-radius:var(--r5);text-decoration:none;box-shadow:var(--neon-glow-sm);transition:all .25s}
 .nav-cta:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
 .nav-cta-pip{width:5px;height:5px;border-radius:50%;background:#fff;opacity:.7;animation:pulse 2s infinite}
-@media(max-width:900px){.nav-links{display:none}}
+/* -- Mobile hamburger -- */
+.nav-hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;background:none;border:1px solid rgba(0,0,0,.1);padding:8px 10px;border-radius:9px;flex-shrink:0;transition:border-color .2s}
+.nav-hamburger:hover{border-color:var(--border-neon)}
+.nav-hamburger span{display:block;width:20px;height:2px;background:#0f1923;border-radius:2px;transition:all .3s cubic-bezier(.34,1.38,.64,1)}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* -- Mobile drawer -- */
+.nav-mobile-drawer{display:none;position:fixed;top:86px;left:16px;right:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(28px) saturate(1.6);-webkit-backdrop-filter:blur(28px) saturate(1.6);border:1px solid rgba(0,0,0,.09);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.04);z-index:999;overflow:hidden}
+.nav-mobile-drawer.open{display:block;animation:drawerFadeIn .2s ease both}
+@keyframes drawerFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.nav-mobile-drawer a{display:block;padding:14px 20px;color:#3d5060;text-decoration:none;font-weight:500;font-size:14px;font-family:var(--fb);border-bottom:1px solid rgba(0,0,0,.06);transition:all .15s}
+.nav-mobile-drawer a:hover,.nav-mobile-drawer a:active{background:rgba(0,194,104,.06);color:var(--neon3)}
+.nav-mobile-drawer a:last-child{border-bottom:none}
+.nav-mobile-drawer-ctas{display:flex;gap:10px;padding:14px 20px;border-top:1px solid rgba(0,0,0,.06)}
+.nav-mobile-drawer-ctas .nav-btn-ghost,.nav-mobile-drawer-ctas .nav-cta{flex:1;text-align:center;justify-content:center}
+@media(max-width:900px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(max-width:600px){.nav-btn-ghost{display:none}}
 @media(max-width:600px){.nav-btn-ghost{display:none}}
 
 /* â”€â”€ BUTTONS â”€â”€ */
@@ -544,7 +561,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="hs-item"><div class="hs-val"><em>14,200+</em></div><div class="hs-lbl">Verified Trades</div></div>
           <div class="hs-item"><div class="hs-val"><em>9</em></div><div class="hs-lbl">Non-Negotiable Layers</div></div>
           <div class="hs-item"><div class="hs-val"><em>4.2%</em></div><div class="hs-lbl">Rejection Rate</div></div>
-          <div class="hs-item"><div class="hs-val"><em>ÂŁ0</em></div><div class="hs-lbl">Customer Fraud Losses</div></div>
+          <div class="hs-item"><div class="hs-val"><em>£0</em></div><div class="hs-lbl">Customer Fraud Losses</div></div>
         </div>
       </div>
     </div>
@@ -636,10 +653,10 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="layer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
           <div>
             <div class="layer-title">Insurance Validation</div>
-            <div class="layer-desc">Certificate scanned with OCR. Insurer contacted directly to confirm active cover, minimum ÂŁ2M public liability, correct trade category.</div>
+            <div class="layer-desc">Certificate scanned with OCR. Insurer contacted directly to confirm active cover, minimum £2M public liability, correct trade category.</div>
           </div>
         </div>
-        <div class="layer-badge"><span class="lb-inner lb-required">Min ÂŁ2M</span></div>
+        <div class="layer-badge"><span class="lb-inner lb-required">Min £2M</span></div>
         <div class="layer-progress"></div>
       </div>
       <!-- Layer 4 -->
@@ -783,7 +800,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <div class="dd-img-ov" style="background:linear-gradient(90deg,transparent 40%,rgba(243,247,244,.55) 100%)"></div>
       <div class="ibf tr light">
         <div class="ibf-lbl d">Minimum required</div>
-        <div class="ibf-val d">ÂŁ2M</div>
+        <div class="ibf-val d">£2M</div>
         <div class="ibf-sub d">Public liability</div>
       </div>
     </div>
@@ -794,7 +811,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <div class="dd-points">
         <div class="dd-point">
           <div class="dd-point-icon d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
-          <div><div class="dd-point-lbl dark">Tiered minimums by trade</div><div class="dd-point-sub dark">Structural builders ÂŁ5M. Gas engineers ÂŁ2M. Decorators and handymen ÂŁ1M.</div></div>
+          <div><div class="dd-point-lbl dark">Tiered minimums by trade</div><div class="dd-point-sub dark">Structural builders £5M. Gas engineers £2M. Decorators and handymen £1M.</div></div>
         </div>
         <div class="dd-point">
           <div class="dd-point-icon d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
@@ -995,7 +1012,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="ostat-bar-wrap"><div class="ostat-bar" style="background:linear-gradient(90deg,#ef4444,#f87171)" data-w="4.2%"></div></div>
         </div>
         <div class="ostat">
-          <div class="ostat-top"><div class="ostat-val">ÂŁ0</div><div class="ostat-lbl" style="color:var(--dk-t2);font-size:12px">Customer losses to unverified contractor fraud</div></div>
+          <div class="ostat-top"><div class="ostat-val">£0</div><div class="ostat-lbl" style="color:var(--dk-t2);font-size:12px">Customer losses to unverified contractor fraud</div></div>
           <div class="ostat-bar-wrap"><div class="ostat-bar" data-w="100%"></div></div>
         </div>
       </div>
@@ -1138,7 +1155,7 @@ const ticks=[
   {l:'Layer 5 — Competence',v:'CSCS confirmed'},{l:'Layer 6 — Portfolio',v:'Human reviewed'},
   {l:'Layer 7 — References',v:'Directly contacted'},{l:'Layer 8 — Right to Work',v:'Home Office'},
   {l:'Layer 9 — Annual',v:'Auto re-check'},{l:'Rejection Rate',v:'4.2%'},
-  {l:'Verified Trades',v:'14,200+'},{l:'Fraud Losses',v:'ÂŁ0'},
+  {l:'Verified Trades',v:'14,200+'},{l:'Fraud Losses',v:'£0'},
 ];
 const track=document.getElementById('ticker-track');
 [...ticks,...ticks].forEach(({l,v})=>{
