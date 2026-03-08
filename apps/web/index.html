@@ -17,8 +17,8 @@
 <!-- Non-blocking Google Fonts (eliminates render-blocking resource) -->
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
-<!-- Preload LCP image -->
-<link rel="preload" as="image" href="images/roofing-optimized.webp" fetchpriority="high">
+<!-- Preload LCP image — desktop only (card stack is display:none on mobile <601px) -->
+<link rel="preload" as="image" href="images/roofing-optimized.webp" fetchpriority="high" media="(min-width:601px)">
 <!-- Lucide icons — loaded at end of body; removed from head -->
 
 <style>
@@ -295,17 +295,17 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
   <!-- Full-width mosaic photo background -->
   <div class="hiw-hero-collage" aria-hidden="true">
     <div class="hiw-mosaic-grid">
-      <div class="mc r2"><picture><source srcset="images/img-construction-worker.avif" type="image/avif"><img src="images/img-construction-worker.webp" alt="" loading="eager"></picture></div>
-      <div class="mc"><picture><source srcset="images/img-handyman-drilling.avif" type="image/avif"><img src="images/img-handyman-drilling.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-man-roof.avif" type="image/avif"><img src="images/img-man-roof.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-helmets-clipboard.avif" type="image/avif"><img src="images/img-helmets-clipboard.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-pointing-sketch.avif" type="image/avif"><img src="images/img-pointing-sketch.webp" alt=""></picture></div>
-      <div class="mc r2"><picture><source srcset="images/img-young-craftsman.avif" type="image/avif"><img src="images/img-young-craftsman.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-painting-walls.avif" type="image/avif"><img src="images/img-painting-walls.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-working-blueprint.avif" type="image/avif"><img src="images/img-working-blueprint.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-industrial-builder.avif" type="image/avif"><img src="images/img-industrial-builder.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-flooring-boards.avif" type="image/avif"><img src="images/img-flooring-boards.webp" alt=""></picture></div>
-      <div class="mc"><picture><source srcset="images/img-tiling-floor.avif" type="image/avif"><img src="images/img-tiling-floor.webp" alt=""></picture></div>
+      <div class="mc r2"><picture><source srcset="images/img-construction-worker.avif" type="image/avif"><img src="images/img-construction-worker.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-handyman-drilling.avif" type="image/avif"><img src="images/img-handyman-drilling.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-man-roof.avif" type="image/avif"><img src="images/img-man-roof.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-helmets-clipboard.avif" type="image/avif"><img src="images/img-helmets-clipboard.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-pointing-sketch.avif" type="image/avif"><img src="images/img-pointing-sketch.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc r2"><picture><source srcset="images/img-young-craftsman.avif" type="image/avif"><img src="images/img-young-craftsman.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-painting-walls.avif" type="image/avif"><img src="images/img-painting-walls.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-working-blueprint.avif" type="image/avif"><img src="images/img-working-blueprint.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-industrial-builder.avif" type="image/avif"><img src="images/img-industrial-builder.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-flooring-boards.avif" type="image/avif"><img src="images/img-flooring-boards.webp" alt="" loading="eager" decoding="async"></picture></div>
+      <div class="mc"><picture><source srcset="images/img-tiling-floor.avif" type="image/avif"><img src="images/img-tiling-floor.webp" alt="" loading="eager" decoding="async"></picture></div>
     </div>
   </div>
   <div class="hiw-hero-overlay" aria-hidden="true"></div>
@@ -367,10 +367,10 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <div class="hiw-hero-right">
         <div class="hiw-card-stack">
           <div class="hiw-img-main">
-            <img src="images/roofing-optimized.webp" alt="Roofer working on a roof" fetchpriority="high" loading="eager">
+            <img src="images/roofing-optimized.webp" alt="Roofer working on a roof" fetchpriority="high" loading="eager" decoding="async">
           </div>
           <div class="hiw-img-sec">
-            <img src="images/plumbing.avif" alt="Plumber at work" loading="eager">
+            <img src="images/plumbing.avif" alt="Plumber at work" loading="lazy" decoding="async">
           </div>
           <!-- Floating trust card -->
           <div class="hiw-float-card">
@@ -437,7 +437,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <a href="register.html" class="step-cta-link">Post for free today <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
     <div class="step-img-pane">
-      <img src="images/img-working-blueprint.webp" alt="Tradesperson reviewing blueprints" loading="lazy">
+      <img src="images/img-working-blueprint.webp" alt="Tradesperson reviewing blueprints" loading="lazy" decoding="async">
       <div class="step-img-overlay" style="background:linear-gradient(to right,rgba(17,22,32,.7) 0%,transparent 40%)"></div>
       <!-- Floating badge -->
       <div class="img-badge-float bottom-left">
@@ -488,7 +488,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <a href="register.html" class="step-cta-link" style="color:var(--neon3)">See example profiles <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
     <div class="step-img-pane">
-      <img src="images/img-industrial-builder.webp" alt="Builder cutting bricks with angle grinder" loading="lazy">
+      <img src="images/img-industrial-builder.webp" alt="Builder cutting bricks with angle grinder" loading="lazy" decoding="async">
       <div class="step-img-overlay" style="background:linear-gradient(to left,rgba(243,247,244,.75) 0%,transparent 40%)"></div>
       <!-- Floating quote cards -->
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;gap:8px;z-index:5">
@@ -562,7 +562,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <a href="register.html" class="step-cta-link">Start comparing quotes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
     <div class="step-img-pane">
-      <img src="images/img-handyman-drilling.webp" alt="Tradesperson drilling into wall" loading="lazy">
+      <img src="images/img-handyman-drilling.webp" alt="Tradesperson drilling into wall" loading="lazy" decoding="async">
       <div class="step-img-overlay" style="background:linear-gradient(to right,rgba(17,22,32,.65) 0%,transparent 40%)"></div>
       <div class="img-badge-float top-right" style="border-color:rgba(0,194,104,.25)">
         <div class="ibf-label">Verified Reviews</div>
@@ -609,7 +609,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
       <a href="/how-escrow-works" class="step-cta-link" style="color:var(--neon3)">Learn about escrow <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
     </div>
     <div class="step-img-pane" style="background:#0d1117">
-      <img src="images/img-tiling-floor.webp" alt="Tradesperson laying floor tiles" style="filter:brightness(.7)" loading="lazy">
+      <img src="images/img-tiling-floor.webp" alt="Tradesperson laying floor tiles" style="filter:brightness(.7)" loading="lazy" decoding="async">
       <div class="step-img-overlay" style="background:linear-gradient(to left,rgba(243,247,244,.8) 0%,transparent 45%)"></div>
       <!-- Escrow UI overlay -->
       <div class="escrow-overlay">
@@ -658,7 +658,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 
     <div class="gallery-bento">
       <div class="g-cell g-c1 g-big sr d1">
-        <img src="images/img-industrial-builder.webp" alt="Builders on site" loading="lazy">
+        <img src="images/img-industrial-builder.webp" alt="Builders on site" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Construction</div>
@@ -667,7 +667,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
       <div class="g-cell g-c2 sr d2">
-        <img src="images/img-handyman-drilling.webp" alt="Electrician working" loading="lazy">
+        <img src="images/img-handyman-drilling.webp" alt="Electrician working" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Electrical</div>
@@ -676,7 +676,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
       <div class="g-cell g-c3 sr d3">
-        <img src="images/plumbing.avif" alt="Plumber at work" loading="lazy">
+        <img src="images/plumbing.avif" alt="Plumber at work" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Plumbing</div>
@@ -685,7 +685,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
       <div class="g-cell g-c4 sr d1">
-        <img src="images/roofing-optimized.webp" alt="Roofer on a roof" loading="lazy">
+        <img src="images/roofing-optimized.webp" alt="Roofer on a roof" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Roofing</div>
@@ -694,7 +694,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
       <div class="g-cell g-c5 sr d2">
-        <img src="images/img-flooring-boards.webp" alt="Kitchen fitter" loading="lazy">
+        <img src="images/img-flooring-boards.webp" alt="Kitchen fitter" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Interiors</div>
@@ -703,7 +703,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
         <div class="g-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
       </div>
       <div class="g-cell g-c6 sr d3">
-        <img src="images/landscaping.avif" alt="Landscaper working in a garden" loading="lazy">
+        <img src="images/landscaping.avif" alt="Landscaper working in a garden" loading="lazy" decoding="async">
         <div class="g-overlay"></div>
         <div class="g-label">
           <div class="g-cat">Outdoor</div>
@@ -720,9 +720,9 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="sec-journey">
   <div class="journey-bg-imgs" aria-hidden="true">
-    <img src="images/builders.avif" alt="" loading="lazy">
-    <img src="images/plumbing.avif" alt="" loading="lazy">
-    <img src="images/electricians.avif" alt="" loading="lazy">
+    <img src="images/builders.avif" alt="" loading="lazy" decoding="async">
+    <img src="images/plumbing.avif" alt="" loading="lazy" decoding="async">
+    <img src="images/electricians.avif" alt="" loading="lazy" decoding="async">
   </div>
   <div class="journey-bg-grid" aria-hidden="true"></div>
   <div class="journey-bloom" aria-hidden="true"></div>
@@ -862,7 +862,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
     <div class="trust-layout">
       <div class="trust-visual sr d1">
         <div class="trust-img-wrap">
-          <img src="images/roofing-optimized.webp" alt="Verified tradesperson at work" loading="lazy">
+          <img src="images/roofing-optimized.webp" alt="Verified tradesperson at work" loading="lazy" decoding="async">
           <div class="trust-img-wrap-overlay"></div>
           <div class="tv-badge tl">
             <div class="tv-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
@@ -1074,10 +1074,10 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
 <section class="sec-cta-final">
   <div class="cta-final-imgs" aria-hidden="true">
-    <div class="cfa-strip cfa-s1"><img src="images/builders.avif" alt="" loading="lazy"></div>
-    <div class="cfa-strip cfa-s2"><img src="images/kitchenfitting.jpg" alt="" loading="lazy"></div>
-    <div class="cfa-strip cfa-s3"><img src="images/electricians.avif" alt="" loading="lazy"></div>
-    <div class="cfa-strip cfa-s4"><img src="images/landscaping.avif" alt="" loading="lazy"></div>
+    <div class="cfa-strip cfa-s1"><img src="images/builders.avif" alt="" loading="lazy" decoding="async"></div>
+    <div class="cfa-strip cfa-s2"><img src="images/kitchenfitting.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="cfa-strip cfa-s3"><img src="images/electricians.avif" alt="" loading="lazy" decoding="async"></div>
+    <div class="cfa-strip cfa-s4"><img src="images/landscaping.avif" alt="" loading="lazy" decoding="async"></div>
   </div>
   <div class="wrap">
     <div class="sr">
@@ -2686,8 +2686,7 @@ function handleHeroSearch(e) {
 }
 
 </style>
-<!-- Lucide icons — deferred, non-render-blocking -->
-<script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+<!-- Lucide removed: no data-lucide icons on this page (all icons are inline SVGs) -->
 <script>
 (function(){
   var token = localStorage.getItem('token') || localStorage.getItem('authToken');
