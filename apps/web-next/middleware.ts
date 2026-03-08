@@ -25,6 +25,7 @@ const ROLE_ROUTES: Record<string, string[]> = {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const isDev = process.env.NODE_ENV === 'development';
   
   // Only protect dashboard routes
   if (!pathname.startsWith('/dashboards')) {
@@ -37,6 +38,10 @@ export function middleware(request: NextRequest) {
 
   // If no token, redirect to login
   if (!token) {
+    if (isDev) {
+      return NextResponse.next();
+    }
+
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
@@ -71,6 +76,10 @@ export function middleware(request: NextRequest) {
     return response;
     
   } catch (error) {
+    if (isDev) {
+      return NextResponse.next();
+    }
+
     // Invalid or expired session, clear cookies and redirect to login
     const response = NextResponse.redirect(new URL('/login', request.url));
     response.cookies.delete('token');

@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeMatch — Super Admin Command Centre v2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg-0:#050709; --bg-1:#0a0d14; --bg-2:#0f1219; --bg-3:#141720;
+  --bg-4:#191d28; --bg-5:#1e2330;
+  --border:rgba(255,255,255,0.055); --border-2:rgba(255,255,255,0.09);
+  --border-3:rgba(255,255,255,0.13);
+  --neon:#00E5A0; --neon-dim:rgba(0,229,160,0.07); --neon-glow:0 0 18px rgba(0,229,160,0.28);
+  --danger:#FF4757; --danger-dim:rgba(255,71,87,0.08);
+  --amber:#FFA726; --amber-dim:rgba(255,167,38,0.08);
+  --blue:#42A5F5; --blue-dim:rgba(66,165,245,0.08);
+  --purple:#B39DDB; --purple-dim:rgba(179,157,219,0.08);
+  --gold:#FFD700; --gold-dim:rgba(255,215,0,0.08);
+  --t1:#ffffff; --t2:rgba(255,255,255,0.68); --t3:rgba(255,255,255,0.38); --t4:rgba(255,255,255,0.2);
+  --ff:'Syne',sans-serif; --fm:'JetBrains Mono',monospace; --fb:'DM Sans',sans-serif;
+  --sw:218px; --th:54px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg-0);color:var(--t1);font-family:var(--fb);font-size:13px;overflow:hidden;}
+
+/* ── LAYOUT ── */
+.shell{display:flex;height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sw);background:var(--bg-1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:100;}
+.sb-logo{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sb-badge{width:28px;height:28px;border-radius:7px;background:var(--neon);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:#000;flex-shrink:0;}
+.sb-name{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--t1);}
+.sb-role{font-family:var(--fm);font-size:7.5px;color:var(--neon);letter-spacing:.14em;text-transform:uppercase;margin-top:1px;}
+.sb-section{font-family:var(--fm);font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--t4);padding:14px 14px 5px;}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;color:var(--t3);font-size:12px;font-weight:500;transition:all .15s;border-left:2px solid transparent;position:relative;}
+.ni:hover{background:var(--neon-dim);color:var(--t2);}
+.ni.active{background:var(--neon-dim);color:var(--neon);border-left-color:var(--neon);}
+.ni.d-active{background:var(--danger-dim);color:var(--danger);border-left-color:var(--danger);}
+.ni.a-active{background:var(--amber-dim);color:var(--amber);border-left-color:var(--amber);}
+.ni svg{width:13px;height:13px;flex-shrink:0;}
+.nb{margin-left:auto;font-family:var(--fm);font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:100px;}
+.nb-r{background:var(--danger);color:#fff;}
+.nb-a{background:var(--amber);color:#000;}
+.nb-g{background:var(--bg-5);color:var(--t4);border:1px solid var(--border);}
+.sb-footer{margin-top:auto;padding:10px 14px;border-top:1px solid var(--border);}
+.admin-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border);}
+.admin-av{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.admin-nm{font-size:11px;font-weight:600;color:var(--t1);}
+.admin-rl{font-family:var(--fm);font-size:7.5px;color:var(--neon);letter-spacing:.05em;}
+.sb-scroll{overflow-y:auto;flex:1;}
+.sb-scroll::-webkit-scrollbar{width:0;}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{height:var(--th);background:var(--bg-1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;flex-shrink:0;}
+.tb-title{font-family:var(--ff);font-size:14px;font-weight:700;}
+.tb-sub{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.07em;margin-top:2px;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.pulse-wrap{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:8.5px;color:var(--neon);}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:var(--neon-glow);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+.tb-btn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--border-2);background:var(--bg-3);color:var(--t3);font-family:var(--fb);}
+.tb-btn:hover{background:var(--bg-4);color:var(--t2);}
+.tb-btn.primary{background:var(--neon);color:#000;border-color:var(--neon);font-weight:600;}
+.tb-btn.primary:hover{opacity:.85;}
+.tb-btn.danger{background:var(--danger-dim);color:var(--danger);border-color:rgba(255,71,87,.3);}
+.live-time{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--neon);letter-spacing:-.01em;}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:18px 22px 30px;}
+.content::-webkit-scrollbar{width:3px;}
+.content::-webkit-scrollbar-track{background:transparent;}
+.content::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+
+/* ── VIEWS ── */
+.view{display:none;animation:fadeIn .2s ease;}
+.view.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SECTION TITLE ── */
+.st{font-family:var(--ff);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.st::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── METRIC STRIP ── */
+.ms{display:grid;gap:9px;margin-bottom:14px;}
+.ms-6{grid-template-columns:repeat(6,1fr);}
+.ms-4{grid-template-columns:repeat(4,1fr);}
+.ms-3{grid-template-columns:repeat(3,1fr);}
+.mc{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:13px 13px 11px;transition:border-color .2s;}
+.mc:hover{border-color:var(--border-2);}
+.mc.danger{border-color:rgba(255,71,87,.22);background:rgba(255,71,87,.03);}
+.mc.amber{border-color:rgba(255,167,38,.22);background:rgba(255,167,38,.03);}
+.mc.neon{border-color:rgba(0,229,160,.22);background:rgba(0,229,160,.03);}
+.mc.blue{border-color:rgba(66,165,245,.22);background:rgba(66,165,245,.03);}
+.mc-label{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.13em;text-transform:uppercase;margin-bottom:7px;}
+.mc-val{font-family:var(--ff);font-size:21px;font-weight:800;color:var(--t1);letter-spacing:-.03em;line-height:1;}
+.mc-val.danger{color:var(--danger);}
+.mc-val.amber{color:var(--amber);}
+.mc-val.neon{color:var(--neon);}
+.mc-val.blue{color:var(--blue);}
+.mc-delta{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-top:5px;}
+.delta-up{color:var(--neon);}
+.delta-dn{color:var(--danger);}
+
+/* ── LAYOUTS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.g-main{display:grid;grid-template-columns:1fr 320px;gap:12px;margin-bottom:12px;}
+.g-wide{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px;}
+
+/* ── PANEL ── */
+.panel{background:var(--bg-2);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:12px;}
+.panel-last{margin-bottom:0;}
+.ph{padding:12px 15px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ph-title{font-family:var(--ff);font-size:11.5px;font-weight:700;color:var(--t1);}
+.ph-sub{font-size:9.5px;color:var(--t4);margin-top:1px;}
+.ph-right{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.pb{padding:13px 15px;}
+.pb-sm{padding:10px 15px;}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:1.5px 7px;border-radius:100px;font-family:var(--fm);font-size:8.5px;font-weight:600;letter-spacing:.04em;}
+.b-neon{background:rgba(0,229,160,.1);color:var(--neon);border:1px solid rgba(0,229,160,.18);}
+.b-danger{background:var(--danger-dim);color:var(--danger);border:1px solid rgba(255,71,87,.18);}
+.b-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,167,38,.18);}
+.b-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(66,165,245,.18);}
+.b-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(179,157,219,.18);}
+.b-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(255,215,0,.18);}
+.b-grey{background:var(--bg-5);color:var(--t4);border:1px solid var(--border);}
+
+/* ── TABLE ── */
+.dt{width:100%;border-collapse:collapse;}
+.dt th{font-family:var(--fm);font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--t4);padding:0 11px 7px;text-align:left;border-bottom:1px solid var(--border);}
+.dt td{padding:9px 11px;border-bottom:1px solid var(--border);font-size:11.5px;color:var(--t2);vertical-align:middle;}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:rgba(255,255,255,.015);}
+.td-name{font-weight:600;color:var(--t1);}
+.td-mono{font-family:var(--fm);font-size:9.5px;color:var(--t4);}
+
+/* ── PANEL BTN ── */
+.pbtn{padding:3.5px 9px;border-radius:5px;font-size:9.5px;font-weight:600;cursor:pointer;border:1px solid var(--border-2);background:var(--bg-4);color:var(--t3);font-family:var(--fb);transition:all .15s;white-space:nowrap;}
+.pbtn:hover{color:var(--t1);background:var(--bg-5);}
+.pbtn.neon{color:var(--neon);border-color:rgba(0,229,160,.28);}
+.pbtn.neon:hover{background:rgba(0,229,160,.07);}
+.pbtn.danger{color:var(--danger);border-color:rgba(255,71,87,.28);background:var(--danger-dim);}
+.pbtn.amber{color:var(--amber);border-color:rgba(255,167,38,.28);}
+.pbtn.amber:hover{background:var(--amber-dim);}
+.pbtn.blue{color:var(--blue);border-color:rgba(66,165,245,.28);}
+
+/* ── BAR ── */
+.bar-wrap{margin-bottom:9px;}
+.bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-size:10.5px;color:var(--t3);}
+.bar-lbl strong{color:var(--t1);}
+.bar{height:3px;background:var(--bg-5);border-radius:100px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:100px;transition:width 1.2s ease;}
+
+/* ── DISPUTE ROW ── */
+.dr{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .15s;position:relative;}
+.dr:last-child{border-bottom:none;}
+.dr:hover{background:rgba(255,255,255,.015);}
+.dr.urgent{border-left:3px solid var(--danger);}
+.dr.review{border-left:3px solid var(--amber);}
+.dr.sla-critical{border-left:3px solid var(--danger);animation:sla-pulse 1.5s infinite;}
+@keyframes sla-pulse{0%,100%{background:transparent;}50%{background:rgba(255,71,87,.04);}}
+.dr-ico{width:34px;height:34px;border-radius:8px;background:var(--bg-4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.dr-body{flex:1;min-width:0;}
+.dr-title{font-weight:600;color:var(--t1);font-size:11.5px;margin-bottom:2px;}
+.dr-meta{font-size:10.5px;color:var(--t3);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.dr-amount{font-family:var(--ff);font-size:13px;font-weight:800;color:var(--danger);margin-left:auto;flex-shrink:0;text-align:right;}
+.dr-timer{font-family:var(--fm);font-size:8.5px;color:var(--amber);margin-top:2px;}
+
+/* ── VQ ── */
+.vq-item{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+.vq-item:last-child{border-bottom:none;}
+.vq-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;flex-shrink:0;}
+.vq-name{font-weight:600;font-size:11.5px;color:var(--t1);}
+.vq-trade{font-size:9.5px;color:var(--t4);margin-top:1px;}
+.vq-actions{display:flex;gap:4px;margin-left:auto;}
+.vq-btn{padding:3px 8px;border-radius:4px;font-size:9.5px;font-weight:600;cursor:pointer;border:none;font-family:var(--fb);transition:all .15s;}
+.vqb-ok{background:rgba(0,229,160,.1);color:var(--neon);}
+.vqb-ok:hover{background:rgba(0,229,160,.18);}
+.vqb-rev{background:var(--amber-dim);color:var(--amber);}
+.vqb-rev:hover{background:rgba(255,167,38,.16);}
+.vqb-no{background:var(--danger-dim);color:var(--danger);}
+.vqb-no:hover{background:rgba(255,71,87,.16);}
+
+/* ── FEED ── */
+.feed-item{padding:8px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--t3);}
+.feed-item:last-child{border-bottom:none;}
+.fdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.fdot-n{background:var(--neon);}
+.fdot-d{background:var(--danger);}
+.fdot-a{background:var(--amber);}
+.fdot-b{background:var(--blue);}
+.ftime{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-left:auto;flex-shrink:0;}
+.fstrong{color:var(--t2);font-weight:600;}
+
+/* ── INFRA HEALTH ── */
+.svc-card{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;overflow:hidden;}
+.svc-card.ok{border-color:rgba(0,229,160,.2);}
+.svc-card.warn{border-color:rgba(255,167,38,.25);}
+.svc-card.crit{border-color:rgba(255,71,87,.3);animation:svc-pulse 2s infinite;}
+@keyframes svc-pulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 2px rgba(255,71,87,.15);}}
+.svc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.svc-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.svc-name{font-family:var(--ff);font-size:12px;font-weight:700;color:var(--t1);}
+.svc-role{font-size:9.5px;color:var(--t4);}
+.svc-status{margin-left:auto;}
+.svc-metric{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);margin-bottom:5px;}
+.svc-metric-val{font-family:var(--fm);font-size:10px;font-weight:600;}
+.svc-indicator{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.si-ok{background:var(--neon);box-shadow:0 0 6px rgba(0,229,160,.5);}
+.si-warn{background:var(--amber);box-shadow:0 0 6px rgba(255,167,38,.4);}
+.si-crit{background:var(--danger);box-shadow:0 0 6px rgba(255,71,87,.5);animation:pulse 1s infinite;}
+
+/* ── CHART BAR (BI) ── */
+.chart-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.chart-bar-label{font-size:10.5px;color:var(--t3);width:80px;flex-shrink:0;text-align:right;}
+.chart-bar-track{flex:1;height:14px;background:var(--bg-4);border-radius:3px;overflow:hidden;position:relative;}
+.chart-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;}
+.chart-bar-val{font-family:var(--fm);font-size:8.5px;font-weight:600;color:rgba(0,0,0,.7);}
+.chart-bar-val-out{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-left:6px;}
+
+/* ── LIFECYCLE ── */
+.lc-wrap{display:flex;align-items:center;padding:14px 15px;overflow-x:auto;gap:0;}
+.lc-wrap::-webkit-scrollbar{height:0;}
+.lc-node{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:82px;}
+.lc-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;}
+.ld-done{background:rgba(0,229,160,.12);border:2px solid var(--neon);}
+.ld-active{background:rgba(66,165,245,.12);border:2px solid var(--blue);box-shadow:0 0 10px rgba(66,165,245,.25);}
+.ld-warn{background:var(--amber-dim);border:2px solid var(--amber);}
+.ld-crit{background:var(--danger-dim);border:2px solid var(--danger);animation:dp 2s infinite;}
+@keyframes dp{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 5px rgba(255,71,87,0);}}
+.lc-lbl{font-family:var(--fm);font-size:7.5px;color:var(--t4);text-align:center;line-height:1.3;}
+.lc-arrow{width:20px;height:1px;background:var(--border-2);flex-shrink:0;position:relative;}
+.lc-arrow::after{content:'▶';position:absolute;right:-4px;top:-4px;font-size:6px;color:var(--border-2);}
+
+/* ── KILL SWITCH ── */
+.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.ks-item{background:var(--bg-3);border:1px solid var(--border);border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:all .15s;}
+.ks-item:hover{border-color:rgba(255,71,87,.28);background:rgba(255,71,87,.04);}
+.ks-ico{font-size:18px;flex-shrink:0;}
+.ks-lbl{font-size:11px;font-weight:600;color:var(--t1);}
+.ks-desc{font-size:9px;color:var(--t4);margin-top:1px;line-height:1.3;}
+.ks-toggle{margin-left:auto;width:30px;height:16px;border-radius:8px;background:var(--bg-5);border:1px solid var(--border-2);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+.ks-toggle.on{background:var(--danger);border-color:var(--danger);}
+.ks-toggle::after{content:'';position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--t4);transition:all .2s;}
+.ks-toggle.on::after{left:16px;background:#fff;}
+
+/* ── SCORE PILLARS ── */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pillar{background:var(--bg-4);border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
+.p-label{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.p-bar-row{display:flex;align-items:center;gap:7px;}
+.p-bar{flex:1;height:3px;background:var(--bg-0);border-radius:100px;overflow:hidden;}
+.p-bar-fill{height:100%;border-radius:100px;}
+.p-val{font-family:var(--fm);font-size:9.5px;font-weight:600;flex-shrink:0;}
+
+/* ── API ENDPOINTS ── */
+.ep{display:flex;align-items:center;gap:9px;padding:8px 15px;border-bottom:1px solid var(--border);}
+.ep:last-child{border-bottom:none;}
+.ep-m{font-family:var(--fm);font-size:8px;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.ep-get{background:var(--blue-dim);color:var(--blue);}
+.ep-post{background:rgba(0,229,160,.09);color:var(--neon);}
+.ep-patch{background:var(--amber-dim);color:var(--amber);}
+.ep-delete{background:var(--danger-dim);color:var(--danger);}
+.ep-wh{background:var(--purple-dim);color:var(--purple);}
+.ep-path{font-family:var(--fm);font-size:9.5px;color:var(--t2);flex:1;}
+.ep-desc{font-size:9.5px;color:var(--t4);text-align:right;}
+
+/* ── SCHEMA ── */
+.schema-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;}
+.schema-scroll::-webkit-scrollbar{height:3px;}
+.schema-scroll::-webkit-scrollbar-track{background:transparent;}
+.schema-scroll::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+.sch-tbl{background:var(--bg-3);border:1px solid var(--border);border-radius:7px;min-width:148px;flex-shrink:0;}
+.sch-h{padding:7px 11px;border-bottom:1px solid var(--border);font-family:var(--ff);font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:5px;}
+.sch-f{padding:4px 11px;border-bottom:1px solid var(--border);font-family:var(--fm);font-size:8.5px;color:var(--t3);display:flex;justify-content:space-between;gap:6px;}
+.sch-f:last-child{border-bottom:none;}
+.sf-pk{color:var(--amber);}
+.sf-fk{color:var(--blue);}
+.sf-t{color:var(--t4);}
+
+/* ── COC VISUALIZER ── */
+.coc-chain{display:flex;align-items:stretch;gap:0;}
+.coc-node{background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;min-width:130px;flex-shrink:0;position:relative;}
+.coc-node.active-link{border-color:rgba(0,229,160,.3);box-shadow:0 0 10px rgba(0,229,160,.08);}
+.coc-node.evidence-link{border-color:rgba(255,71,87,.3);}
+.coc-label{font-family:var(--fm);font-size:7.5px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.coc-value{font-size:10.5px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.coc-meta{font-family:var(--fm);font-size:8.5px;color:var(--t4);}
+.coc-arrow{display:flex;align-items:center;padding:0 6px;color:var(--border-3);font-size:14px;}
+
+/* ── AUDIT LOG ── */
+.audit-row{display:flex;align-items:center;gap:9px;padding:8px 15px;border-bottom:1px solid var(--border);font-size:10.5px;}
+.audit-row:last-child{border-bottom:none;}
+.audit-level{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.al-high{background:var(--danger);}
+.al-med{background:var(--amber);}
+.al-low{background:var(--blue);}
+.al-info{background:var(--t4);}
+.audit-who{font-weight:600;color:var(--t2);flex-shrink:0;}
+.audit-action{color:var(--t3);flex:1;}
+.audit-time{font-family:var(--fm);font-size:8.5px;color:var(--t4);flex-shrink:0;}
+.audit-ip{font-family:var(--fm);font-size:8px;color:var(--t4);}
+
+/* ── FINANCIAL ── */
+.fin-stat{background:var(--bg-3);border:1px solid var(--border);border-radius:8px;padding:11px 13px;display:flex;align-items:center;gap:10px;}
+.fin-icon{font-size:20px;flex-shrink:0;}
+.fin-val{font-family:var(--ff);font-size:16px;font-weight:800;letter-spacing:-.02em;}
+.fin-label{font-size:9.5px;color:var(--t4);margin-top:1px;}
+
+/* ── AI GOVERNANCE ── */
+.model-badge{background:var(--purple-dim);border:1px solid rgba(179,157,219,.25);border-radius:6px;padding:6px 10px;display:flex;align-items:center;gap:8px;}
+.token-meter{background:var(--bg-4);border-radius:6px;padding:10px 12px;border:1px solid var(--border);margin-bottom:8px;}
+.token-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:10.5px;color:var(--t3);}
+.token-val{font-family:var(--fm);font-size:10px;font-weight:600;}
+
+/* ── REPORTS BI ── */
+.report-card{background:var(--bg-3);border:1px solid var(--border);border-radius:9px;padding:13px;margin-bottom:8px;}
+.rc-title{font-family:var(--ff);font-size:11px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.rc-sub{font-size:9.5px;color:var(--t4);margin-bottom:10px;}
+
+/* ── MONITOR HEADER ── */
+.mh{background:linear-gradient(135deg,rgba(0,229,160,.04),rgba(66,165,245,.03));border:1px solid rgba(0,229,160,.1);border-radius:11px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.mh-ico{font-size:26px;}
+.mh-title{font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;}
+.mh-sub{font-size:10.5px;color:var(--t3);margin-top:2px;}
+.mh-right{margin-left:auto;text-align:right;}
+
+/* ── RESOLVER GRID ── */
+.resolver-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.r-btn{padding:9px 11px;border-radius:7px;cursor:pointer;border:1px solid var(--border);background:var(--bg-3);text-align:left;transition:all .18s;}
+.r-btn:hover{transform:translateY(-1px);}
+.r-btn.rn:hover{border-color:rgba(0,229,160,.35);background:rgba(0,229,160,.04);}
+.r-btn.rd:hover{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.04);}
+.r-btn.ra:hover{border-color:rgba(255,167,38,.35);background:rgba(255,167,38,.04);}
+.r-btn.rb:hover{border-color:rgba(66,165,245,.35);background:rgba(66,165,245,.04);}
+.r-ico{font-size:16px;margin-bottom:4px;}
+.r-label{font-size:10.5px;font-weight:600;color:var(--t1);}
+.r-desc{font-size:9px;color:var(--t4);margin-top:1px;line-height:1.35;}
+
+/* ── IMPERSONATION ── */
+.imp-row{display:flex;align-items:center;gap:9px;padding:9px 15px;border-bottom:1px solid var(--border);}
+.imp-row:last-child{border-bottom:none;}
+.imp-av{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;flex-shrink:0;}
+.imp-name{font-weight:600;font-size:11.5px;color:var(--t1);}
+.imp-role{font-size:9.5px;color:var(--t4);}
+.imp-actions{margin-left:auto;display:flex;gap:5px;}
+
+/* ── MINI CODE ── */
+.code-block{background:var(--bg-0);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--fm);font-size:9.5px;color:var(--neon);line-height:1.7;overflow-x:auto;}
+.c-key{color:var(--blue);}
+.c-str{color:var(--amber);}
+.c-val{color:var(--neon);}
+.c-cmt{color:var(--t4);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:18px;right:18px;z-index:9999;padding:9px 15px;border-radius:8px;font-size:11.5px;background:var(--bg-5);border:1px solid var(--border-2);color:var(--t1);transform:translateY(16px);opacity:0;transition:all .28s;pointer-events:none;max-width:280px;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{border-color:rgba(0,229,160,.35);background:rgba(0,229,160,.07);color:var(--neon);}
+#toast.warning{border-color:rgba(255,167,38,.35);background:rgba(255,167,38,.07);color:var(--amber);}
+#toast.error{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.07);color:var(--danger);}
+
+.sep{height:1px;background:var(--border);margin:12px 0;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-badge">TM</div>
+    <div><div class="sb-name">TradeMatch</div><div class="sb-role">Super Admin v2</div></div>
+  </div>
+  <div class="sb-scroll">
+    <div class="sb-section">Command</div>
+    <div class="ni active" onclick="nav('god','God View','REAL-TIME ECOSYSTEM OVERVIEW',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3"/></svg>
+      God View
+    </div>
+    <div class="ni" onclick="nav('dispute','Dispute Centre','48-HOUR DIGITAL COURTROOM · SLA ENGINE',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+      Dispute Centre <span class="nb nb-r">3</span>
+    </div>
+    <div class="ni" onclick="nav('verify','Verification Queue','VENDOR HUB AUDIT · INSURANCE MONITORING',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      Verification Queue <span class="nb nb-a">7</span>
+    </div>
+    <div class="ni" onclick="nav('escrow','Escrow Monitor','FUNDS MANAGEMENT · MILESTONE TRACKING',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375"/></svg>
+      Escrow Monitor
+    </div>
+    <div class="ni" onclick="nav('impersonate','Impersonation Tool','HIGH-AUDIT EVENT · VIEW AS USER/VENDOR',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+      Impersonate User
+    </div>
+    <div class="ni" onclick="nav('pin','Arrival PIN Monitor','SITE SAFETY · IMPERSONATION DETECTION',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+      Arrival PIN Monitor
+    </div>
+
+    <div class="sb-section">Infrastructure</div>
+    <div class="ni" onclick="nav('infra','Infrastructure Health','3RD-PARTY API VITALS · SERVICE MONITOR',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+      Infra Health <span class="nb nb-a">1</span>
+    </div>
+    <div class="ni" onclick="nav('ai','AI Governance','MODEL VERSIONING · TOKEN USAGE · HITL',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+      AI Governance
+    </div>
+    <div class="ni" onclick="nav('reports','Reports & Analytics','BUSINESS INTELLIGENCE · INVESTOR-READY SUITE',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      Reports & Analytics
+    </div>
+    <div class="ni" onclick="nav('financial','Financial Reconciliation','REVENUE · REFUND LEDGER · PAYOUT SETTINGS',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Financial Audit
+    </div>
+
+    <div class="sb-section">Architecture</div>
+    <div class="ni" onclick="nav('blueprint','System Blueprint','BUSINESS LOGIC · STATE MAPPING · LITE vs PRO',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5"/></svg>
+      System Blueprint
+    </div>
+    <div class="ni" onclick="nav('api','API Inventory','REST ENDPOINTS · WEBHOOKS · ADMIN ROUTES',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg>
+      API Inventory
+    </div>
+    <div class="ni" onclick="nav('schema','DB Schema','ENTITY RELATIONSHIPS · DATA MODEL',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg>
+      DB Schema
+    </div>
+    <div class="ni" onclick="nav('coc','Chain of Custody','DOCUMENT VAULT · EVIDENCE LEDGER',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+      Chain of Custody
+    </div>
+
+    <div class="sb-section">Controls</div>
+    <div class="ni d-active" onclick="nav('kill','Kill Switches','PLATFORM CONTROLS · EMERGENCY OVERRIDES',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
+      Kill Switches
+    </div>
+    <div class="ni" onclick="nav('trust','Trust Score Engine','SCORE FORMULA · TIER THRESHOLDS · OVERRIDES',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+      Trust Score Engine
+    </div>
+    <div class="ni" onclick="nav('audit','Audit Trail','ADMIN ACTIVITY LOG · SECURITY EVENTS',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+      Audit Trail
+    </div>
+  </div>
+  <div class="sb-footer">
+    <div class="admin-chip">
+      <div class="admin-av">JD</div>
+      <div><div class="admin-nm">James D.</div><div class="admin-rl">Super Admin · L5</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="tb-title">Global Trust Monitor</div>
+      <div class="tb-sub" id="tb-sub">REAL-TIME ECOSYSTEM OVERVIEW</div>
+    </div>
+    <div class="tb-right">
+      <div class="pulse-wrap"><div class="pulse-dot"></div>LIVE</div>
+      <div class="live-time" id="clock">--:--:--</div>
+      <button class="tb-btn" onclick="toast('Generating weekly PDF report…','success')">📄 Export</button>
+      <button class="tb-btn primary" onclick="toast('All systems nominal — Stripe ✓ Resend ✓ S3 ✓','success')">⚡ System OK</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ══ GOD VIEW ══ -->
+  <div class="view active" id="v-god">
+    <div class="mh">
+      <div class="mh-ico">🌐</div>
+      <div><div class="mh-title">Global Trust Monitor</div><div class="mh-sub">Complete ecosystem oversight — escrow, disputes, verifications, arrivals, and 3rd-party health</div></div>
+      <div class="mh-right" style="font-family:var(--fm);font-size:9px;color:var(--t4)">03 MARCH 2026<br><span style="color:var(--neon);font-size:11px;">£124,890</span> under management</div>
+    </div>
+    <div class="ms ms-6">
+      <div class="mc danger"><div class="mc-label">Escrow at Risk</div><div class="mc-val danger">£18,450</div><div class="mc-delta delta-dn">↑ 3 active disputes</div></div>
+      <div class="mc amber"><div class="mc-label">Verification Queue</div><div class="mc-val amber">7</div><div class="mc-delta">⏱ Oldest: 14hrs</div></div>
+      <div class="mc"><div class="mc-label">Total Escrow Held</div><div class="mc-val">£124,890</div><div class="mc-delta delta-up">↑ £8.2k today</div></div>
+      <div class="mc neon"><div class="mc-label">Arrival PIN Rate</div><div class="mc-val neon">94.2%</div><div class="mc-delta">48h rolling</div></div>
+      <div class="mc"><div class="mc-label">Active Jobs</div><div class="mc-val">312</div><div class="mc-delta delta-up">↑ 23 today</div></div>
+      <div class="mc neon"><div class="mc-label">Avg Show-Up Score</div><div class="mc-val neon">91.4%</div><div class="mc-delta delta-up">↑ 1.2% this week</div></div>
+    </div>
+
+    <!-- Infra mini-strip -->
+    <div class="ms ms-4" style="margin-bottom:14px;">
+      <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;">
+        <span style="font-size:16px;">💳</span>
+        <div><div class="mc-label" style="margin-bottom:2px;">Stripe</div><div style="font-family:var(--fm);font-size:10px;color:var(--neon);font-weight:600;">Operational</div></div>
+        <div class="svc-indicator si-ok" style="margin-left:auto;"></div>
+      </div>
+      <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;">
+        <span style="font-size:16px;">📧</span>
+        <div><div class="mc-label" style="margin-bottom:2px;">Resend</div><div style="font-family:var(--fm);font-size:10px;color:var(--neon);font-weight:600;">99.1% delivery</div></div>
+        <div class="svc-indicator si-ok" style="margin-left:auto;"></div>
+      </div>
+      <div class="mc amber" style="display:flex;align-items:center;gap:8px;padding:9px 12px;">
+        <span style="font-size:16px;">☁️</span>
+        <div><div class="mc-label" style="margin-bottom:2px;">AWS S3</div><div style="font-family:var(--fm);font-size:10px;color:var(--amber);font-weight:600;">82% capacity</div></div>
+        <div class="svc-indicator si-warn" style="margin-left:auto;"></div>
+      </div>
+      <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;">
+        <span style="font-size:16px;">🤖</span>
+        <div><div class="mc-label" style="margin-bottom:2px;">Claude API</div><div style="font-family:var(--fm);font-size:10px;color:var(--neon);font-weight:600;">HITL: OFF</div></div>
+        <div class="svc-indicator si-ok" style="margin-left:auto;"></div>
+      </div>
+    </div>
+
+    <!-- Job Lifecycle -->
+    <div class="st">Job Lifecycle — Live State Distribution</div>
+    <div class="panel">
+      <div class="lc-wrap">
+        <div style="display:flex;align-items:center;gap:0;" id="lc-chain">
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-done">📋</div><div class="lc-lbl">REQUESTED<br><span style="color:var(--neon)">84</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-done">💬</div><div class="lc-lbl">QUOTED<br><span style="color:var(--neon)">61</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-done">🔒</div><div class="lc-lbl">ESCROW FUNDED<br><span style="color:var(--neon)">47</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-active">📍</div><div class="lc-lbl">PIN VERIFIED<br><span style="color:var(--blue)">38</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-active">🔨</div><div class="lc-lbl">IN PROGRESS<br><span style="color:var(--blue)">312</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-done">✅</div><div class="lc-lbl">COMPLETED<br><span style="color:var(--neon)">1,841</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-warn">⚖️</div><div class="lc-lbl">DISPUTED<br><span style="color:var(--amber)">3</span></div></div>
+            <div class="lc-arrow"></div>
+          </div>
+          <div class="lc-node"><div class="lc-dot ld-crit">🔴</div><div class="lc-lbl">FROZEN<br><span style="color:var(--danger)">1</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g-main">
+      <div>
+        <div class="st">Active Disputes — SLA Critical First</div>
+        <div class="panel">
+          <div class="dr sla-critical" onclick="nav('dispute','Dispute Centre','48-HOUR DIGITAL COURTROOM',document.querySelector('.ni:nth-of-type(3)'))">
+            <div class="dr-ico">⚡</div>
+            <div class="dr-body">
+              <div class="dr-title">Consumer Unit Upgrade — Hackney E8 · #T48101</div>
+              <div class="dr-meta"><span class="badge b-danger">⚠ 1h 48m REMAINING</span> James Harlow vs ElectroFix Pro</div>
+              <div class="dr-timer">⏱ Step 6 Senior Review · SLA expires 18:42 today · PULSE ACTIVE</div>
+            </div>
+            <div><div class="dr-amount">£1,200</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--t4);text-align:right">FROZEN</div></div>
+          </div>
+          <div class="dr review">
+            <div class="dr-ico">🔧</div>
+            <div class="dr-body">
+              <div class="dr-title">Boiler Replacement — Islington N1 · #T48089</div>
+              <div class="dr-meta"><span class="badge b-amber">UNDER REVIEW · 19h</span> Patricia Osei vs HeatPro Services</div>
+              <div class="dr-timer">⏱ Evidence collection · Step 3 · 29h remaining</div>
+            </div>
+            <div><div class="dr-amount">£3,800</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--amber);text-align:right">PROTECTED</div></div>
+          </div>
+          <div class="dr">
+            <div class="dr-ico">🏗️</div>
+            <div class="dr-body">
+              <div class="dr-title">Extension Foundation — Croydon CR0 · #T47990</div>
+              <div class="dr-meta"><span class="badge b-blue">STEP 5 · 31h</span> Marcus Webb vs SouthBuild Ltd</div>
+              <div class="dr-timer">⏱ Awaiting homeowner response · 17h remaining</div>
+            </div>
+            <div><div class="dr-amount">£13,450</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--blue);text-align:right">HELD</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Live Activity Feed</div>
+        <div class="panel">
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #8841</span> verified — Plumber on site</span><span class="ftime">2m</span></div>
+          <div class="feed-item"><div class="fdot fdot-b"></div><span>Escrow <span class="fstrong">£2,000</span> released — #T48051</span><span class="ftime">7m</span></div>
+          <div class="feed-item"><div class="fdot fdot-a"></div><span>S3 bucket at <span class="fstrong">82%</span> — warning threshold</span><span class="ftime">9m</span></div>
+          <div class="feed-item"><div class="fdot fdot-a"></div><span>Insurance expiring — Vendor <span class="fstrong">TM-4821</span></span><span class="ftime">12m</span></div>
+          <div class="feed-item"><div class="fdot fdot-d"></div><span><span class="fstrong">Dispute opened</span> — Job #T48101</span><span class="ftime">18m</span></div>
+          <div class="feed-item"><div class="fdot fdot-n"></div><span>Vendor <span class="fstrong">GreenLeaf</span> verified ✓</span><span class="ftime">24m</span></div>
+          <div class="feed-item"><div class="fdot fdot-b"></div><span>Milestone approved · <span class="fstrong">£4,500</span> queued</span><span class="ftime">31m</span></div>
+          <div class="feed-item"><div class="fdot fdot-d"></div><span><span class="fstrong">PIN failure</span> × 3 — Job #T48066</span><span class="ftime">45m</span></div>
+          <div class="feed-item"><div class="fdot fdot-a"></div><span>Admin <span class="fstrong">James D.</span> viewed #T48101</span><span class="ftime">1h</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g3">
+      <div>
+        <div class="st">Escrow Health</div>
+        <div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Safe (In Progress)</span><strong style="color:var(--neon)">£98,440</strong></div><div class="bar"><div class="bar-fill" style="width:79%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Disputed</span><strong style="color:var(--amber)">£18,450</strong></div><div class="bar"><div class="bar-fill" style="width:15%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Frozen (Admin)</span><strong style="color:var(--danger)">£1,200</strong></div><div class="bar"><div class="bar-fill" style="width:1%;background:var(--danger)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Clearing (2-day)</span><strong style="color:var(--blue)">£6,800</strong></div><div class="bar"><div class="bar-fill" style="width:5%;background:var(--blue)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4)"><span>Total GMV managed</span><strong style="color:var(--t1)">£124,890</strong></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">SLA Compliance</div>
+        <div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>First Response &lt;4h</span><strong style="color:var(--neon)">100%</strong></div><div class="bar"><div class="bar-fill" style="width:100%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Assessment &lt;8h</span><strong style="color:var(--neon)">96.4%</strong></div><div class="bar"><div class="bar-fill" style="width:96%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Simple &lt;24h</span><strong style="color:var(--amber)">88.1%</strong></div><div class="bar"><div class="bar-fill" style="width:88%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Complex &lt;48h</span><strong style="color:var(--amber)">91.7%</strong></div><div class="bar"><div class="bar-fill" style="width:92%;background:var(--amber)"></div></div></div>
+          <div class="sep"></div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--t4);text-align:center">£25 credit on SLA breach · 2 issued this month</div>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">Trust Score Distribution</div>
+        <div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Elite 9.4+</span><strong style="color:var(--neon)">312</strong></div><div class="bar"><div class="bar-fill" style="width:17%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Gold 8.5–9.3</span><strong style="color:var(--blue)">704</strong></div><div class="bar"><div class="bar-fill" style="width:39%;background:var(--blue)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Silver 7.0–8.4</span><strong style="color:var(--amber)">518</strong></div><div class="bar"><div class="bar-fill" style="width:29%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Bronze &lt;7.0</span><strong style="color:var(--danger)">266</strong></div><div class="bar"><div class="bar-fill" style="width:15%;background:var(--danger)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4)"><span>Platform avg score</span><strong style="color:var(--neon)">8.43 / 10</strong></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INFRASTRUCTURE HEALTH ══ -->
+  <div class="view" id="v-infra">
+    <div class="st">3rd-Party Infrastructure Health — Real-Time Vitals</div>
+    <div style="background:rgba(255,167,38,.05);border:1px solid rgba(255,167,38,.2);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:10.5px;color:var(--amber);">⚠ AWS S3 storage at 82% — approaching warning threshold. Consider cache purge or tier upgrade.</div>
+    <div class="g2">
+      <!-- Stripe -->
+      <div class="svc-card ok">
+        <div class="svc-header">
+          <div class="svc-logo" style="background:#635BFF22;">💳</div>
+          <div><div class="svc-name">Stripe</div><div class="svc-role">Escrow · Payments · Webhooks</div></div>
+          <div class="svc-status"><span class="badge b-neon">● Operational</span></div>
+        </div>
+        <div class="svc-metric"><span>Webhook latency</span><span class="svc-metric-val" style="color:var(--neon)">320ms</span></div>
+        <div class="svc-metric"><span>Webhook success rate</span><span class="svc-metric-val" style="color:var(--neon)">99.7%</span></div>
+        <div class="svc-metric"><span>Pending webhooks</span><span class="svc-metric-val" style="color:var(--t2)">0</span></div>
+        <div class="svc-metric"><span>Balance API last ping</span><span class="svc-metric-val" style="color:var(--t4)">14s ago</span></div>
+        <div class="sep"></div>
+        <div style="display:flex;gap:6px;">
+          <button class="pbtn neon" onclick="toast('Force reconciling all pending Stripe webhooks…','success')">Force Reconcile</button>
+          <button class="pbtn" onclick="toast('Opening Stripe dashboard…','success')">Stripe Dash ↗</button>
+          <button class="pbtn" onclick="toast('Syncing metadata for stuck payment…','warning')">Sync Stuck</button>
+        </div>
+      </div>
+      <!-- Resend -->
+      <div class="svc-card ok">
+        <div class="svc-header">
+          <div class="svc-logo" style="background:#00D4AA22;">📧</div>
+          <div><div class="svc-name">Resend</div><div class="svc-role">Safety PINs · Dispute Alerts · Certificates</div></div>
+          <div class="svc-status"><span class="badge b-neon">● Operational</span></div>
+        </div>
+        <div class="svc-metric"><span>Delivery rate (24h)</span><span class="svc-metric-val" style="color:var(--neon)">99.1%</span></div>
+        <div class="svc-metric"><span>Bounce rate</span><span class="svc-metric-val" style="color:var(--neon)">0.9%</span></div>
+        <div class="svc-metric"><span>Emails sent today</span><span class="svc-metric-val" style="color:var(--t2)">1,847</span></div>
+        <div class="svc-metric"><span>PIN delivery success</span><span class="svc-metric-val" style="color:var(--neon)">98.4%</span></div>
+        <div class="sep"></div>
+        <div style="display:flex;gap:6px;">
+          <button class="pbtn neon" onclick="toast('Resending verification email to user…','success')">Resend Verification</button>
+          <button class="pbtn amber" onclick="toast('SMS fallback enabled — PINs via Twilio','warning')">SMS Fallback</button>
+        </div>
+      </div>
+      <!-- AWS S3 -->
+      <div class="svc-card warn">
+        <div class="svc-header">
+          <div class="svc-logo" style="background:#FF990022;">☁️</div>
+          <div><div class="svc-name">AWS S3</div><div class="svc-role">Document Vault · Photo Evidence · Certificates</div></div>
+          <div class="svc-status"><span class="badge b-amber">⚠ Warning</span></div>
+        </div>
+        <div class="svc-metric"><span>Bucket capacity used</span><span class="svc-metric-val" style="color:var(--amber)">82%</span></div>
+        <div class="svc-metric"><span>Total stored</span><span class="svc-metric-val" style="color:var(--t2)">41.2 GB</span></div>
+        <div class="svc-metric"><span>Upload latency (avg)</span><span class="svc-metric-val" style="color:var(--neon)">180ms</span></div>
+        <div class="svc-metric"><span>Temp files (purgeable)</span><span class="svc-metric-val" style="color:var(--amber)">2.8 GB</span></div>
+        <div class="sep"></div>
+        <div style="display:flex;gap:6px;">
+          <button class="pbtn danger" onclick="toast('Purging 2.8GB temp cache — storage freed','success')">Purge Temp Cache</button>
+          <button class="pbtn amber" onclick="toast('Moving old files to Glacier cold storage…','warning')">Cold Archive</button>
+        </div>
+      </div>
+      <!-- Claude API -->
+      <div class="svc-card ok">
+        <div class="svc-header">
+          <div class="svc-logo" style="background:#B39DDB22;">🤖</div>
+          <div><div class="svc-name">Claude API (Anthropic)</div><div class="svc-role">Dispute AI Assessment · Sentiment Analysis</div></div>
+          <div class="svc-status"><span class="badge b-neon">● Operational</span></div>
+        </div>
+        <div class="svc-metric"><span>Model version</span><span class="svc-metric-val" style="color:var(--purple)">claude-sonnet-4-6</span></div>
+        <div class="svc-metric"><span>Tokens used today</span><span class="svc-metric-val" style="color:var(--t2)">284,100</span></div>
+        <div class="svc-metric"><span>Est. daily cost</span><span class="svc-metric-val" style="color:var(--amber)">£4.26</span></div>
+        <div class="svc-metric"><span>Human-in-Loop toggle</span><span class="svc-metric-val" style="color:var(--neon)">OFF (auto)</span></div>
+        <div class="sep"></div>
+        <div style="display:flex;gap:6px;">
+          <button class="pbtn amber" onclick="toast('HITL mode ON — all disputes to human review','warning')">Enable HITL</button>
+          <button class="pbtn" onclick="nav('ai','AI Governance','',null)">AI Governance →</button>
+        </div>
+      </div>
+    </div>
+    <div class="st">Alert Hierarchy — Level Definitions</div>
+    <div class="panel"><div class="pb">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.15);border-radius:8px;padding:10px 13px;">
+          <div style="font-family:var(--fm);font-size:8px;color:var(--neon);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">Level 1 — Green</div>
+          <div style="font-size:10.5px;color:var(--t2);">Normal operations. All services within SLA. No action required.</div>
+        </div>
+        <div style="background:var(--amber-dim);border:1px solid rgba(255,167,38,.2);border-radius:8px;padding:10px 13px;">
+          <div style="font-family:var(--fm);font-size:8px;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">Level 2 — Amber</div>
+          <div style="font-size:10.5px;color:var(--t2);">3rd-party latency &gt;5s. Storage &gt;80%. Bounce rate &gt;2%. Manual review recommended.</div>
+        </div>
+        <div style="background:var(--danger-dim);border:1px solid rgba(255,71,87,.2);border-radius:8px;padding:10px 13px;">
+          <div style="font-family:var(--fm);font-size:8px;color:var(--danger);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">Level 3 — Critical</div>
+          <div style="font-size:10.5px;color:var(--t2);">PIN delivery failing. Stripe webhook timeout. Auto-triggers Global Kill Switch.</div>
+        </div>
+      </div>
+    </div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+      <div><div class="st">New API Endpoints (Infrastructure)</div>
+      <div class="panel">
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/infra/status</span><span class="ep-desc">Ping all services · 30s poll</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/system/flush-cache</span><span class="ep-desc">Purge S3 temp files</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/infra/stripe/events</span><span class="ep-desc">Missed webhook log</span></div>
+        <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/infra/email/resend</span><span class="ep-desc">Force resend verification</span></div>
+        <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/admin/infra/email/sms-fallback</span><span class="ep-desc">Toggle Twilio SMS</span></div>
+        <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/infra/ai/usage</span><span class="ep-desc">Token cost tracker</span></div>
+      </div></div>
+      <div><div class="st">Webhook Registry</div>
+      <div class="panel">
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">stripe/payment.intent.succeeded</span><span class="ep-desc">Escrow fund confirmed</span></div>
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">stripe/transfer.failed</span><span class="ep-desc">Payout failure alert</span></div>
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">insurance/expiry.30day</span><span class="ep-desc">Auto vendor warning</span></div>
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">insurance/lapsed</span><span class="ep-desc">Auto-suspend + hold</span></div>
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">sla/breach.imminent</span><span class="ep-desc">Escalation + £25 credit</span></div>
+        <div class="ep"><span class="ep-m ep-wh">WH</span><span class="ep-path">pin/threshold.exceeded</span><span class="ep-desc">3 failures → admin alert</span></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ══ AI GOVERNANCE ══ -->
+  <div class="view" id="v-ai">
+    <div class="st">AI Governance Panel — Model Control & Cost Management</div>
+    <div class="ms ms-4">
+      <div class="mc"><div class="mc-label">Model Running</div><div class="mc-val" style="font-size:12px;color:var(--purple)">claude-sonnet-4-6</div><div class="mc-delta">Anthropic</div></div>
+      <div class="mc"><div class="mc-label">Tokens Today</div><div class="mc-val">284.1K</div><div class="mc-delta delta-up">↑ 12% vs yesterday</div></div>
+      <div class="mc amber"><div class="mc-label">Est. Daily Cost</div><div class="mc-val amber">£4.26</div><div class="mc-delta">£127 MTD</div></div>
+      <div class="mc neon"><div class="mc-label">AI Accuracy Rate</div><div class="mc-val neon">87%</div><div class="mc-delta">vs human decisions</div></div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Model Versioning & HITL Controls</div>
+        <div class="panel"><div class="pb">
+          <div class="model-badge" style="margin-bottom:12px;">
+            <span style="font-size:18px;">🤖</span>
+            <div>
+              <div style="font-family:var(--ff);font-size:11px;font-weight:700;color:var(--t1);">claude-sonnet-4-6</div>
+              <div style="font-family:var(--fm);font-size:8.5px;color:var(--purple);">Active dispute assessment model</div>
+            </div>
+            <button class="pbtn blue" style="margin-left:auto;" onclick="toast('Model swap requires 2FA confirmation','warning')">Swap Model</button>
+          </div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Human-in-the-Loop Toggle</div>
+          <div style="background:var(--bg-4);border-radius:8px;padding:11px 13px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <div>
+              <div style="font-size:11px;font-weight:600;color:var(--t1);">Auto AI Resolution</div>
+              <div style="font-size:9.5px;color:var(--t4);margin-top:1px;">AI handles disputes under £500 automatically. 87% accuracy confirmed.</div>
+            </div>
+            <div class="ks-toggle" id="hitl-toggle" onclick="toggleKS(this,'HITL mode — all disputes routed to human reviewers','AI auto-resolution re-enabled')"></div>
+          </div>
+          <div style="background:var(--bg-4);border-radius:8px;padding:11px 13px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+            <div>
+              <div style="font-size:11px;font-weight:600;color:var(--t1);">High-Value Override (&gt;£5k)</div>
+              <div style="font-size:9.5px;color:var(--t4);margin-top:1px;">Jobs over £5,000 always require human review regardless of HITL setting.</div>
+            </div>
+            <div class="ks-toggle on" id="hv-toggle" onclick="toggleKS(this,'High-value override disabled — NOT recommended','High-value override re-enabled')"></div>
+          </div>
+        </div></div>
+        <div class="st">AI vs Human Decision Log</div>
+        <div class="panel">
+          <table class="dt">
+            <thead><tr><th>Dispute</th><th>AI Suggest</th><th>Admin Decision</th><th>Match</th></tr></thead>
+            <tbody>
+              <tr><td class="td-mono">#T48080</td><td>70/30</td><td>70/30</td><td><span class="badge b-neon">✓ Match</span></td></tr>
+              <tr><td class="td-mono">#T48071</td><td>Full Refund</td><td>80/20</td><td><span class="badge b-amber">≈ Near</span></td></tr>
+              <tr><td class="td-mono">#T48059</td><td>50/50</td><td>50/50</td><td><span class="badge b-neon">✓ Match</span></td></tr>
+              <tr><td class="td-mono">#T48044</td><td>100/0</td><td>Full Refund</td><td><span class="badge b-danger">✗ Override</span></td></tr>
+              <tr><td class="td-mono">#T48031</td><td>80/20</td><td>80/20</td><td><span class="badge b-neon">✓ Match</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="st">Token Usage by Feature</div>
+        <div class="panel"><div class="pb">
+          <div class="token-meter">
+            <div class="token-row"><span>Dispute Pre-Assessment</span><span class="token-val" style="color:var(--amber)">141,200 tok</span></div>
+            <div class="bar"><div class="bar-fill" style="width:50%;background:var(--amber)"></div></div>
+          </div>
+          <div class="token-meter">
+            <div class="token-row"><span>Review Sentiment Analysis</span><span class="token-val" style="color:var(--blue)">85,600 tok</span></div>
+            <div class="bar"><div class="bar-fill" style="width:30%;background:var(--blue)"></div></div>
+          </div>
+          <div class="token-meter">
+            <div class="token-row"><span>Quote AI Assistant</span><span class="token-val" style="color:var(--neon)">42,100 tok</span></div>
+            <div class="bar"><div class="bar-fill" style="width:15%;background:var(--neon)"></div></div>
+          </div>
+          <div class="token-meter">
+            <div class="token-row"><span>Marketplace Liquidity Report</span><span class="token-val" style="color:var(--purple)">15,200 tok</span></div>
+            <div class="bar"><div class="bar-fill" style="width:5%;background:var(--purple)"></div></div>
+          </div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4)"><span>Daily budget cap</span><strong style="color:var(--amber)">£10 / day</strong></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4);margin-top:4px"><span>Current spend</span><strong style="color:var(--neon)">£4.26 (42.6%)</strong></div>
+        </div></div>
+        <div class="st">Cost Projection</div>
+        <div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>This month (MTD)</span><strong style="color:var(--t1)">£127</strong></div><div class="bar"><div class="bar-fill" style="width:63%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Budget (monthly)</span><strong style="color:var(--t2)">£200</strong></div><div class="bar"><div class="bar-fill" style="width:100%;background:var(--bg-5)"></div></div></div>
+          <div class="sep"></div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--t4)">Projected month-end: £201 · Marginal overage</div>
+          <button class="pbtn amber" style="margin-top:8px;width:100%;" onclick="toast('Budget cap lowered to £150/month','warning')">Lower AI Budget Cap</button>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ REPORTS & ANALYTICS ══ -->
+  <div class="view" id="v-reports">
+    <div class="st">Business Intelligence Suite — Marketplace & Trust Analytics</div>
+    <div class="ms ms-4">
+      <div class="mc neon"><div class="mc-label">Platform Revenue (MTD)</div><div class="mc-val neon">£38,420</div><div class="mc-delta delta-up">↑ 18% vs last month</div></div>
+      <div class="mc"><div class="mc-label">Total GMV (Jobs)</div><div class="mc-val">£2.1M</div><div class="mc-delta">Since launch</div></div>
+      <div class="mc amber"><div class="mc-label">Avg Vendor LTV</div><div class="mc-val amber">£1,240</div><div class="mc-delta">12-month rolling</div></div>
+      <div class="mc"><div class="mc-label">Job Liquidity Ratio</div><div class="mc-val">3.4x</div><div class="mc-delta">Quotes per job</div></div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Marketplace Liquidity Report — By Trade</div>
+        <div class="panel"><div class="pb">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:10px;">Quotes received per job posted. &lt;2.0x = Vendor recruitment needed.</div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Plumbing</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:85%;background:var(--neon)"><span class="chart-bar-val">4.3x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Electrical</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:72%;background:var(--neon)"><span class="chart-bar-val">3.6x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Building</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:60%;background:var(--blue)"><span class="chart-bar-val">3.0x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Roofing</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:44%;background:var(--amber)"><span class="chart-bar-val">2.2x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Surveying</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:28%;background:var(--danger)"><span class="chart-bar-val">1.4x</span></div><span class="chart-bar-val-out">⚠ Low</span></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Plastering</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:24%;background:var(--danger)"><span class="chart-bar-val">1.2x</span></div><span class="chart-bar-val-out">⚠ Recruit</span></div></div>
+          <div class="sep"></div>
+          <button class="pbtn amber" onclick="toast('Recruitment campaign triggered for Surveying & Plastering','warning')">Trigger Recruitment Alert</button>
+        </div></div>
+
+        <div class="st">Trust System Efficacy — Fraud Deflection</div>
+        <div class="panel"><div class="pb">
+          <div class="ms ms-3" style="gap:8px;margin-bottom:0;">
+            <div class="mc neon" style="padding:9px;"><div class="mc-label">PIN Handshakes (24h)</div><div class="mc-val neon" style="font-size:17px;">168</div></div>
+            <div class="mc danger" style="padding:9px;"><div class="mc-label">PIN Failures</div><div class="mc-val danger" style="font-size:17px;">10</div></div>
+            <div class="mc" style="padding:9px;"><div class="mc-label">Dispute Rate (PIN jobs)</div><div class="mc-val" style="font-size:17px;">2.1%</div></div>
+          </div>
+          <div class="sep"></div>
+          <div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:7px;padding:9px 12px;font-size:10.5px;color:var(--t2);line-height:1.5;">
+            📊 <strong style="color:var(--neon)">Key Insight:</strong> Jobs with a successful Arrival PIN handshake have a <strong>40% lower dispute rate</strong> than non-PIN jobs (2.1% vs 3.5%). This validates the Safety PIN as a core trust mechanism for investor reporting.
+          </div>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">Financial Leakage Report</div>
+        <div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Gross Lead Revenue</span><strong style="color:var(--neon)">£38,420</strong></div><div class="bar"><div class="bar-fill" style="width:100%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Stripe Fees (2.9%+20p)</span><strong style="color:var(--danger)">-£1,190</strong></div><div class="bar"><div class="bar-fill" style="width:3%;background:var(--danger)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>AI API Costs</span><strong style="color:var(--amber)">-£127</strong></div><div class="bar"><div class="bar-fill" style="width:0.5%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>S3 Storage</span><strong style="color:var(--amber)">-£84</strong></div><div class="bar"><div class="bar-fill" style="width:0.2%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Resend (email)</span><strong style="color:var(--t4)">-£31</strong></div><div class="bar"><div class="bar-fill" style="width:0.1%;background:var(--t4)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--t4);margin-bottom:4px"><span>Net Margin</span><strong style="color:var(--neon)">£36,988 (96.3%)</strong></div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--neon)">✓ Above 75% target margin</div>
+        </div></div>
+
+        <div class="st">Scheduled Report Settings</div>
+        <div class="panel"><div class="pb">
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <span style="font-size:16px;">📅</span>
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Monday Morning Brief</div><div style="font-size:9px;color:var(--t4);">Weekly PDF — revenue, disputes, vendors · 08:00 UTC</div></div>
+              <div class="ks-toggle on" onclick="toggleKS(this,'Monday brief disabled','Monday brief re-enabled')"></div>
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <span style="font-size:16px;">🚨</span>
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Emergency SLA Alert</div><div style="font-size:9px;color:var(--t4);">&gt;5 disputes within 1h of auto-resolve · Instant push</div></div>
+              <div class="ks-toggle on" onclick="toggleKS(this,'SLA alert disabled','SLA alert re-enabled')"></div>
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+              <span style="font-size:16px;">💰</span>
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Monthly Financial Audit PDF</div><div style="font-size:9px;color:var(--t4);">Tax-ready GMV vs revenue · 1st of each month</div></div>
+              <div class="ks-toggle on" onclick="toggleKS(this,'Monthly audit disabled','Monthly audit re-enabled')"></div>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <button class="pbtn neon" onclick="toast('Generating Monday brief now — email sent','success')" style="width:100%;">Generate Report Now</button>
+        </div></div>
+      </div>
+    </div>
+    <div class="st">New Analytics API Endpoints</div>
+    <div class="panel">
+      <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/reports/liquidity</span><span class="ep-desc">Quote-to-job ratio by trade/postcode</span></div>
+      <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/reports/trust-efficacy</span><span class="ep-desc">PIN success vs dispute correlation</span></div>
+      <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/reports/ai-accuracy</span><span class="ep-desc">AI vs human resolution comparison</span></div>
+      <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/audit/financials</span><span class="ep-desc">GMV vs platform revenue (monthly)</span></div>
+      <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/reports/schedule</span><span class="ep-desc">Configure Monday brief / SLA alerts</span></div>
+    </div>
+  </div>
+
+  <!-- ══ FINANCIAL RECONCILIATION ══ -->
+  <div class="view" id="v-financial">
+    <div class="st">Financial Reconciliation — Revenue · Refund Ledger · Payout Settings</div>
+    <div style="background:rgba(255,71,87,.04);border:1px solid rgba(255,71,87,.15);border-radius:8px;padding:9px 13px;margin-bottom:13px;font-size:10px;color:var(--danger);">⚠ All manual refunds are logged as High-Risk events. Unusual refund patterns trigger automated fraud review.</div>
+    <div class="g2">
+      <div>
+        <div class="st">Platform Revenue Tracker</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div class="fin-stat"><div class="fin-icon">💸</div><div><div class="fin-val" style="color:var(--neon)">£38,420</div><div class="fin-label">Lead Fees (MTD)</div></div></div>
+          <div class="fin-stat"><div class="fin-icon">🏆</div><div><div class="fin-val" style="color:var(--gold)">£4,200</div><div class="fin-label">Gold Tier Subs (MTD)</div></div></div>
+          <div class="fin-stat"><div class="fin-icon">🔒</div><div><div class="fin-val" style="color:var(--blue)">£1,840</div><div class="fin-label">Escrow Fees (1.5%)</div></div></div>
+          <div class="fin-stat"><div class="fin-icon">📌</div><div><div class="fin-val" style="color:var(--purple)">£620</div><div class="fin-label">Featured Placements</div></div></div>
+        </div>
+        <div class="st">Payout Delay Settings (Safety Buffer)</div>
+        <div class="panel"><div class="pb">
+          <div style="font-size:10.5px;color:var(--t3);margin-bottom:10px;">Safety buffer prevents "Hit & Run" vendors from withdrawing immediately after job sign-off.</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Standard Payout Hold</div><div style="font-size:9px;color:var(--t4);">Applied to all milestone releases</div></div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--amber);">48 hours</div>
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Post-Dispute Hold (won)</div><div style="font-size:9px;color:var(--t4);">Extra buffer after disputed job</div></div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--danger);">7 days</div>
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:10.5px;font-weight:600;color:var(--t1);">Auto-Release (no response)</div><div style="font-size:9px;color:var(--t4);">If homeowner doesn't respond to milestone</div></div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--blue);">10 biz days</div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">Refund Ledger — Admin-Initiated (High Risk)</div>
+        <div class="panel">
+          <table class="dt">
+            <thead><tr><th>Date</th><th>Job</th><th>Amount</th><th>Admin</th><th>Reason</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="td-mono">02/03</td><td class="td-mono">#T48044</td>
+                <td><strong style="color:var(--danger)">£850</strong></td>
+                <td class="td-mono">Sarah K.</td>
+                <td><span class="badge b-danger">Fraud</span></td>
+              </tr>
+              <tr>
+                <td class="td-mono">01/03</td><td class="td-mono">#T48021</td>
+                <td><strong style="color:var(--amber)">£320</strong></td>
+                <td class="td-mono">James D.</td>
+                <td><span class="badge b-amber">Workmanship</span></td>
+              </tr>
+              <tr>
+                <td class="td-mono">28/02</td><td class="td-mono">#T47980</td>
+                <td><strong style="color:var(--amber)">£1,200</strong></td>
+                <td class="td-mono">Sarah K.</td>
+                <td><span class="badge b-amber">No-show</span></td>
+              </tr>
+              <tr>
+                <td class="td-mono">25/02</td><td class="td-mono">#T47911</td>
+                <td><strong style="color:var(--blue)">£180</strong></td>
+                <td class="td-mono">James D.</td>
+                <td><span class="badge b-blue">Overcharge</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:10px 15px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4);">
+            <span>MTD manual refunds</span>
+            <strong style="color:var(--danger)">£2,550</strong>
+          </div>
+        </div>
+        <div class="st">IP Intelligence — Bot/Farm Detection</div>
+        <div class="panel"><div class="pb">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:8px;">Multiple verified accounts from same IP indicate bot farm or fraudulent agency.</div>
+          <div style="background:rgba(255,71,87,.05);border:1px solid rgba(255,71,87,.2);border-radius:7px;padding:9px 12px;margin-bottom:8px;">
+            <div style="font-family:var(--fm);font-size:9px;color:var(--danger);margin-bottom:4px;">⚠ FLAG: 5 vendor accounts from 82.34.111.220</div>
+            <div style="font-size:10px;color:var(--t3);">Accounts: TM-VND-4820, 4821, 4822, 4823, 4824 · Registered same day</div>
+            <button class="pbtn danger" style="margin-top:8px;" onclick="toast('IP 82.34.111.220 blocked — 5 accounts flagged for review','error')">Block IP & Flag Accounts</button>
+          </div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--t4);">GET /api/admin/logs/security — Failed logins, PIN failures, duplicate IPs</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ IMPERSONATION TOOL ══ -->
+  <div class="view" id="v-impersonate">
+    <div style="background:rgba(179,157,219,.06);border:1px solid rgba(179,157,219,.2);border-radius:9px;padding:11px 15px;margin-bottom:14px;font-size:10.5px;color:var(--purple);">
+      🔒 <strong>High-Audit Event Zone.</strong> Every "Login As" session is logged with admin ID, timestamp, IP address, and session duration. Sessions expire in 60 minutes. This cannot be disabled.
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Homeowner Accounts</div>
+        <div class="panel">
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#1565c0,#1976d2);">JH</div>
+            <div><div class="imp-name">James Harlow</div><div class="imp-role">Homeowner · Pro · Hackney E8</div></div>
+            <div class="imp-actions">
+              <button class="pbtn blue" onclick="toast('Impersonation session started · James Harlow · Logged as HIGH AUDIT EVENT','warning')">View as User</button>
+              <button class="pbtn" onclick="toast('Viewing James Harlow full account log','success')">Activity Log</button>
+            </div>
+          </div>
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#4a148c,#6a1b9a);">PO</div>
+            <div><div class="imp-name">Patricia Osei</div><div class="imp-role">Homeowner · Lite · Islington N1</div></div>
+            <div class="imp-actions">
+              <button class="pbtn blue" onclick="toast('Impersonation session started · Patricia Osei · Logged','warning')">View as User</button>
+              <button class="pbtn" onclick="toast('Viewing activity log','success')">Activity Log</button>
+            </div>
+          </div>
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#1b5e20,#2e7d32);">MW</div>
+            <div><div class="imp-name">Marcus Webb</div><div class="imp-role">Homeowner · Pro · Croydon CR0</div></div>
+            <div class="imp-actions">
+              <button class="pbtn blue" onclick="toast('Impersonation session started · Marcus Webb · Logged','warning')">View as User</button>
+              <button class="pbtn" onclick="toast('Viewing activity log','success')">Activity Log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Vendor Accounts</div>
+        <div class="panel">
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#b71c1c,#c62828);">EP</div>
+            <div><div class="imp-name">ElectroFix Pro Ltd</div><div class="imp-role">Vendor · TM-VND-4821 · Gold Tier</div></div>
+            <div class="imp-actions">
+              <button class="pbtn amber" onclick="toast('Vendor impersonation — ElectroFix Pro · LOGGED','warning')">View as Vendor</button>
+            </div>
+          </div>
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#e65100,#ef6c00);">HP</div>
+            <div><div class="imp-name">HeatPro Services</div><div class="imp-role">Vendor · TM-VND-5109 · Silver Tier</div></div>
+            <div class="imp-actions">
+              <button class="pbtn amber" onclick="toast('Vendor impersonation — HeatPro · LOGGED','warning')">View as Vendor</button>
+            </div>
+          </div>
+          <div class="imp-row">
+            <div class="imp-av" style="background:linear-gradient(135deg,#006064,#00838f);">SB</div>
+            <div><div class="imp-name">SouthBuild Ltd</div><div class="imp-role">Vendor · TM-VND-4990 · Gold Tier</div></div>
+            <div class="imp-actions">
+              <button class="pbtn amber" onclick="toast('Vendor impersonation — SouthBuild · LOGGED','warning')">View as Vendor</button>
+            </div>
+          </div>
+        </div>
+        <div class="st">PostMessage Bridge — Iframe Integration</div>
+        <div class="panel"><div class="pb">
+          <div class="code-block">
+<span class="c-cmt">// AdminBridge.js — Sends signals to dashboard iframes</span>
+<span class="c-key">function</span> sendBridgeSignal(vendorId, action) {
+  <span class="c-key">const</span> frame = document.getElementById(<span class="c-str">'vendor-iframe'</span>);
+  frame.contentWindow.postMessage({
+    <span class="c-key">type</span>: <span class="c-str">'ADMIN_ACTION'</span>,
+    <span class="c-key">vendorId</span>: vendorId,
+    <span class="c-key">action</span>: action, <span class="c-cmt">// 'FLAG' | 'FREEZE' | 'SUSPEND'</span>
+    <span class="c-key">adminId</span>: <span class="c-str">'james-d'</span>,
+    <span class="c-key">timestamp</span>: Date.now()
+  }, <span class="c-str">'https://vendor.tradematch.uk'</span>);
+}</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHAIN OF CUSTODY ══ -->
+  <div class="view" id="v-coc">
+    <div class="st">Chain of Custody Visualizer — Evidence Ledger</div>
+    <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.12);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:10.5px;color:var(--t2);">
+      This view confirms the <strong style="color:var(--neon)">Immutable Ledger</strong> is working. Every vendor photo in Lite Mode is SHA-256 hashed at upload and automatically linked as evidence when a dispute opens. Admin can trace any file from origin to court submission.
+    </div>
+    <div class="st" style="margin-bottom:8px;">Evidence Trace — Job #T48101 → Dispute #D-8841</div>
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="pb">
+        <div style="overflow-x:auto;padding-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:6px;min-width:800px;">
+            <div class="coc-node active-link">
+              <div class="coc-label" style="color:var(--blue);">📱 VENDOR UPLOAD</div>
+              <div class="coc-value">Photo_site_01.jpg</div>
+              <div class="coc-meta">Uploaded by TM-VND-4821<br>20 Feb 2026 · 09:14 UTC<br>SHA: a3f8…d291</div>
+            </div>
+            <div class="coc-arrow">→</div>
+            <div class="coc-node active-link">
+              <div class="coc-label" style="color:var(--neon);">☁️ S3 STORAGE</div>
+              <div class="coc-value">Vault Entry #V-44921</div>
+              <div class="coc-meta">Linked to Job #T48101<br>Hash verified ✓<br>Chain log started</div>
+            </div>
+            <div class="coc-arrow">→</div>
+            <div class="coc-node">
+              <div class="coc-label" style="color:var(--t4);">👁️ ACCESS LOG</div>
+              <div class="coc-value">Viewed × 3</div>
+              <div class="coc-meta">Homeowner: 21 Feb<br>Vendor: 21 Feb<br>Admin: 03 Mar</div>
+            </div>
+            <div class="coc-arrow">→</div>
+            <div class="coc-node evidence-link">
+              <div class="coc-label" style="color:var(--danger);">⚖️ DISPUTE LINKED</div>
+              <div class="coc-value">Dispute #D-8841</div>
+              <div class="coc-meta">Locked: 03 Mar 14:21<br>dispute_locked: TRUE<br>Cannot be deleted</div>
+            </div>
+            <div class="coc-arrow">→</div>
+            <div class="coc-node evidence-link">
+              <div class="coc-label" style="color:var(--danger);">🤖 AI ANALYSIS</div>
+              <div class="coc-value">Analyzed ✓</div>
+              <div class="coc-meta">Confidence: 84%<br>Suggests: 70/30<br>Against vendor scope</div>
+            </div>
+            <div class="coc-arrow">→</div>
+            <div class="coc-node" style="border-color:rgba(179,157,219,.3);">
+              <div class="coc-label" style="color:var(--purple);">📦 ADMIN EXPORT</div>
+              <div class="coc-value">Exportable</div>
+              <div class="coc-meta">GET /vault/export<br>/D-8841<br>ZIP + manifest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Evidence Items — Dispute #D-8841</div>
+        <div class="panel">
+          <table class="dt">
+            <thead><tr><th>File</th><th>Uploaded By</th><th>Date</th><th>Hash</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="td-name">Photo_site_01.jpg</td><td class="td-mono">Vendor</td><td class="td-mono">20 Feb</td><td class="td-mono">a3f8…d291</td><td><span class="badge b-neon">✓ Locked</span></td></tr>
+              <tr><td class="td-name">Photo_site_02.jpg</td><td class="td-mono">Vendor</td><td class="td-mono">20 Feb</td><td class="td-mono">b71c…e882</td><td><span class="badge b-neon">✓ Locked</span></td></tr>
+              <tr><td class="td-name">Original_Quote.pdf</td><td class="td-mono">Vendor</td><td class="td-mono">15 Feb</td><td class="td-mono">c92d…f441</td><td><span class="badge b-neon">✓ Locked</span></td></tr>
+              <tr><td class="td-name">Counter_photo_HO.jpg</td><td class="td-mono">Homeowner</td><td class="td-mono">03 Mar</td><td class="td-mono">d44e…g129</td><td><span class="badge b-amber">Pending</span></td></tr>
+              <tr><td class="td-name">Message_thread.json</td><td class="td-mono">Platform</td><td class="td-mono">Auto</td><td class="td-mono">e55f…h770</td><td><span class="badge b-neon">✓ Auto-cap.</span></td></tr>
+              <tr><td class="td-name">Arrival_PIN_log.json</td><td class="td-mono">Platform</td><td class="td-mono">Auto</td><td class="td-mono">f66g…i991</td><td><span class="badge b-neon">✓ Verified</span></td></tr>
+            </tbody>
+          </table>
+          <div style="padding:10px 15px;border-top:1px solid var(--border);display:flex;gap:6px;">
+            <button class="pbtn neon" onclick="toast('Exporting COC ZIP with SHA manifest…','success')">Export ZIP + Manifest</button>
+            <button class="pbtn" onclick="toast('Viewing full access log for all files','success')">Full Access Log</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Chain of Custody Logic</div>
+        <div class="panel"><div class="pb">
+          <div style="display:flex;flex-direction:column;gap:7px;font-size:10.5px;">
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);">
+              <div style="font-family:var(--fm);font-size:8px;color:var(--blue);text-transform:uppercase;margin-bottom:4px;">Upload</div>
+              SHA-256 hash generated at upload. file_hash, uploader_id, timestamp written to evidence table. Linked to job_id immediately.
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);">
+              <div style="font-family:var(--fm);font-size:8px;color:var(--amber);text-transform:uppercase;margin-bottom:4px;">Access Log</div>
+              Every view, download, or AI read is appended to custody_log JSONB array. Actor ID + timestamp. Immutable — no delete permission.
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid rgba(255,71,87,.2);">
+              <div style="font-family:var(--fm);font-size:8px;color:var(--danger);text-transform:uppercase;margin-bottom:4px;">Dispute Lock</div>
+              On dispute open: all evidence for job_id set dispute_locked = TRUE. Platform blocks any delete or overwrite. Hash re-verified hourly.
+            </div>
+            <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);">
+              <div style="font-family:var(--fm);font-size:8px;color:var(--neon);text-transform:uppercase;margin-bottom:4px;">Admin Export</div>
+              GET /api/vault/export/:dispute_id returns timestamped ZIP containing all files + SHA manifest + full custody log. Court-ready.
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DISPUTE CENTRE ══ -->
+  <div class="view" id="v-dispute">
+    <div class="ms ms-4">
+      <div class="mc danger"><div class="mc-label">Active Disputes</div><div class="mc-val danger">3</div><div class="mc-delta">£18,450 at risk</div></div>
+      <div class="mc amber"><div class="mc-label">Avg Resolution</div><div class="mc-val amber">31h</div><div class="mc-delta">vs 48h target</div></div>
+      <div class="mc neon"><div class="mc-label">AI Accuracy</div><div class="mc-val neon">87%</div><div class="mc-delta">5 recent cases</div></div>
+      <div class="mc"><div class="mc-label">Resolved (Month)</div><div class="mc-val">28</div><div class="mc-delta delta-up">↑ 4 vs prior month</div></div>
+    </div>
+    <div class="g-main">
+      <div>
+        <div class="st">Case #T48101 — ⚠ 1h 48m Remaining (SLA PULSE ACTIVE)</div>
+        <div class="panel">
+          <div class="ph"><div><div class="ph-title">Consumer Unit Upgrade — Hackney E8</div><div class="ph-sub">James Harlow vs. ElectroFix Pro Ltd (TM-VND-4821)</div></div><div class="ph-right"><span class="badge b-danger">STEP 6 · SENIOR REVIEW</span></div></div>
+          <div class="pb-sm">
+            <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+              <span class="badge b-danger">Workmanship</span>
+              <span class="badge b-amber">Overcharge £180</span>
+              <span class="badge b-blue">PIN Verified ✓</span>
+            </div>
+            <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.12);border-radius:7px;padding:9px 12px;margin-bottom:10px;font-size:10.5px;color:var(--t2);line-height:1.5;">
+              🤖 <strong style="color:var(--neon)">AI Assessment:</strong> Partial 70/30 in homeowner favour. Milestone photos show incomplete conduit routing vs. scope. Quote comparison: £180 parts overcharge. PIN confirmed on-site attendance. Confidence: 84%.
+            </div>
+            <div class="st" style="font-size:8.5px;">Evidence (6 items)</div>
+            <table class="dt" style="margin-bottom:10px;">
+              <thead><tr><th>Item</th><th>Source</th><th>Auto</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td class="td-name">Job record</td><td class="td-mono">Platform DB</td><td><span class="badge b-neon">YES</span></td><td><span class="badge b-neon">✓</span></td></tr>
+                <tr><td class="td-name">Message thread (48)</td><td class="td-mono">Platform DB</td><td><span class="badge b-neon">YES</span></td><td><span class="badge b-neon">✓</span></td></tr>
+                <tr><td class="td-name">Arrival PIN log</td><td class="td-mono">Platform DB</td><td><span class="badge b-neon">YES</span></td><td><span class="badge b-neon">✓ Verified</span></td></tr>
+                <tr><td class="td-name">Milestone photos (7)</td><td class="td-mono">Document Vault</td><td><span class="badge b-neon">YES</span></td><td><span class="badge b-neon">✓ Timestamped</span></td></tr>
+                <tr><td class="td-name">Counter photos (HO)</td><td class="td-mono">User Upload</td><td><span class="badge b-grey">NO</span></td><td><span class="badge b-amber">Pending</span></td></tr>
+                <tr><td class="td-name">Original quote PDF</td><td class="td-mono">Vault</td><td><span class="badge b-neon">YES</span></td><td><span class="badge b-neon">✓</span></td></tr>
+              </tbody>
+            </table>
+            <div class="st" style="font-size:8.5px;">Resolver Actions</div>
+            <div class="resolver-grid">
+              <div class="r-btn rn" onclick="toast('Full £1,200 released to ElectroFix Pro','success')"><div class="r-ico">💸</div><div class="r-label">Release in Full</div><div class="r-desc">Evidence supports vendor claim.</div></div>
+              <div class="r-btn rd" onclick="toast('Full £1,200 refund to homeowner processed','error')"><div class="r-ico">↩️</div><div class="r-label">Full Refund</div><div class="r-desc">Evidence supports homeowner.</div></div>
+              <div class="r-btn ra" onclick="toast('AI 70/30 split applied — £840 vendor / £360 HO','warning')"><div class="r-ico">⚖️</div><div class="r-label">Apply AI Split (70/30)</div><div class="r-desc">Binding. Triggers escrow release.</div></div>
+              <div class="r-btn rb" onclick="toast('Evidence request sent to both parties — SLA paused','warning')"><div class="r-ico">📎</div><div class="r-label">Request Evidence</div><div class="r-desc">Pause SLA. Request specific docs.</div></div>
+              <div class="r-btn ra" onclick="toast('Three-way call scheduled — 17:00 today','warning')"><div class="r-ico">📞</div><div class="r-label">Schedule Call</div><div class="r-desc">30-min mediation. Senior resolver.</div></div>
+              <div class="r-btn rd" onclick="toast('Case escalated to external arbitration board','error')"><div class="r-ico">🏛️</div><div class="r-label">Escalate Arbitration</div><div class="r-desc">Cannot resolve at admin level.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Custom Split Tool</div>
+        <div class="panel"><div class="pb">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:9px;">Select binding payment split. Immediately triggers escrow logic.</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;gap:5px;"><button class="pbtn" style="flex:1;" onclick="toast('100/0 — Full release to vendor','success')">100/0 Vendor</button><button class="pbtn" style="flex:1;" onclick="toast('80/20 split applied','success')">80/20</button></div>
+            <div style="display:flex;gap:5px;"><button class="pbtn neon" style="flex:1;" onclick="toast('AI 70/30 — £840 vendor / £360 HO','success')">★ 70/30 (AI)</button><button class="pbtn" style="flex:1;" onclick="toast('50/50 split applied','success')">50/50</button></div>
+            <button class="pbtn danger" style="width:100%;" onclick="toast('Full refund — £1,200 to homeowner','error')">0/100 Full Refund</button>
+          </div>
+          <div class="sep"></div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--t4);line-height:1.5;">Upheld dispute → −5 Show-Up Score pts<br>+ profile flag for vendor TM-VND-4821</div>
+        </div></div>
+        <div class="st">Vendor Impact Preview</div>
+        <div class="panel"><div class="pb">
+          <div class="pillar-grid">
+            <div class="pillar"><div class="p-label">Show-Up Score</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:87%;background:var(--neon)"></div></div><div class="p-val" style="color:var(--neon)">87%</div></div></div>
+            <div class="pillar"><div class="p-label">Reliability</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:82%;background:var(--blue)"></div></div><div class="p-val" style="color:var(--blue)">8.2</div></div></div>
+            <div class="pillar"><div class="p-label">Dispute Rate</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:25%;background:var(--amber)"></div></div><div class="p-val" style="color:var(--amber)">2.5%</div></div></div>
+            <div class="pillar"><div class="p-label">Vetting Pillar</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:91%;background:var(--neon)"></div></div><div class="p-val" style="color:var(--neon)">9.1</div></div></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ VERIFICATION ══ -->
+  <div class="view" id="v-verify">
+    <div class="ms ms-4">
+      <div class="mc amber"><div class="mc-label">Awaiting Review</div><div class="mc-val amber">7</div><div class="mc-delta">Oldest: 14hrs</div></div>
+      <div class="mc danger"><div class="mc-label">Insurance Expiring</div><div class="mc-val danger">4</div><div class="mc-delta">Within 30 days</div></div>
+      <div class="mc neon"><div class="mc-label">Verified This Week</div><div class="mc-val neon">23</div><div class="mc-delta delta-up">↑ 6 vs prior</div></div>
+      <div class="mc"><div class="mc-label">Auto-Suspended</div><div class="mc-val">2</div><div class="mc-delta">Insurance lapsed</div></div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Verification Queue</div>
+        <div class="panel">
+          <div class="vq-item">
+            <div class="vq-av" style="background:linear-gradient(135deg,#1565c0,#1976d2)">RK</div>
+            <div><div class="vq-name">Raj Kapoor · PlumbRight Ltd</div><div class="vq-trade">Plumbing · Gas Safe · 3 docs pending · 14hrs ago</div></div>
+            <div class="vq-actions"><button class="vq-btn vqb-ok" onclick="toast('Kapoor approved ✓ Escrow unlocked','success')">Approve</button><button class="vq-btn vqb-rev" onclick="toast('Flagged for manual review','warning')">Flag</button><button class="vq-btn vqb-no" onclick="toast('Application rejected','error')">Reject</button></div>
+          </div>
+          <div class="vq-item">
+            <div class="vq-av" style="background:linear-gradient(135deg,#b71c1c,#c62828)">SB</div>
+            <div><div class="vq-name">Steve Blake · QuickFix Electrical</div><div class="vq-trade">Electrical · <strong style="color:var(--danger)">Insurance EXPIRED 28 Feb</strong></div></div>
+            <div class="vq-actions"><button class="vq-btn vqb-no" onclick="toast('Blake auto-suspended — insurance lapsed. Payment hold applied.','error')">Suspend</button></div>
+          </div>
+          <div class="vq-item">
+            <div class="vq-av" style="background:linear-gradient(135deg,#004d40,#00695c)">MW</div>
+            <div><div class="vq-name">Mike Williams · GreenScape UK</div><div class="vq-trade">Landscaping · Public Liability · 2 docs · 6hrs ago</div></div>
+            <div class="vq-actions"><button class="vq-btn vqb-ok" onclick="toast('Williams verified ✓','success')">Approve</button><button class="vq-btn vqb-rev" onclick="toast('Flagged','warning')">Flag</button></div>
+          </div>
+          <div class="vq-item">
+            <div class="vq-av" style="background:linear-gradient(135deg,#1a237e,#283593)">AC</div>
+            <div><div class="vq-name">Amanda Chen · ChenBuild Ltd</div><div class="vq-trade">Building · <span style="color:var(--amber)">Expiring in 18 days</span></div></div>
+            <div class="vq-actions"><button class="vq-btn vqb-rev" onclick="toast('Renewal reminder sent to ChenBuild','warning')">Remind</button></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Document Requirements</div>
+        <div class="panel"><div class="pb">
+          <div style="font-family:var(--fm);font-size:7.5px;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">ID Verification</div>
+          <table class="dt" style="margin-bottom:10px;"><tbody>
+            <tr><td>Government photo ID</td><td><span class="badge b-danger">REQUIRED</span></td></tr>
+            <tr><td>Proof of address (3mo)</td><td><span class="badge b-danger">REQUIRED</span></td></tr>
+            <tr><td>Companies House no.</td><td><span class="badge b-amber">If Ltd Co.</span></td></tr>
+          </tbody></table>
+          <div style="font-family:var(--fm);font-size:7.5px;color:var(--neon);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Professional</div>
+          <table class="dt" style="margin-bottom:10px;"><tbody>
+            <tr><td>Trade qualification</td><td><span class="badge b-danger">REQUIRED</span></td></tr>
+            <tr><td>Regulatory body reg.</td><td><span class="badge b-amber">Trade-specific</span></td></tr>
+          </tbody></table>
+          <div style="font-family:var(--fm);font-size:7.5px;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Insurance (Auto-monitored)</div>
+          <table class="dt"><tbody>
+            <tr><td>Public Liability (min £1M)</td><td><span class="badge b-danger">REQUIRED</span></td></tr>
+            <tr><td>Employer Liability</td><td><span class="badge b-amber">If employees</span></td></tr>
+            <tr><td>Professional Indemnity</td><td><span class="badge b-grey">Recommended</span></td></tr>
+          </tbody></table>
+          <div class="sep"></div>
+          <div style="font-family:var(--fm);font-size:8.5px;color:var(--t4);line-height:1.5;">Lapse → auto-pause from new leads<br>Payment hold on active escrow · HO notified 30min</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ESCROW VIEW ══ -->
+  <div class="view" id="v-escrow">
+    <div class="ms ms-4">
+      <div class="mc neon"><div class="mc-label">Total Under Mgmt</div><div class="mc-val neon">£124,890</div><div class="mc-delta delta-up">↑ £8.2k today</div></div>
+      <div class="mc danger"><div class="mc-label">At Risk (Disputed)</div><div class="mc-val danger">£18,450</div><div class="mc-delta">3 disputes</div></div>
+      <div class="mc amber"><div class="mc-label">Clearing (48h hold)</div><div class="mc-val amber">£6,800</div><div class="mc-delta">4 transactions</div></div>
+      <div class="mc"><div class="mc-label">Released Today</div><div class="mc-val">£12,100</div><div class="mc-delta delta-up">8 milestones</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="ph-title">Active Escrow Transactions</div><div class="ph-right"><button class="pbtn neon" onclick="toast('Exporting CSV…','success')">Export CSV</button></div></div>
+      <table class="dt">
+        <thead><tr><th>Job ID</th><th>Homeowner</th><th>Vendor</th><th>Escrow</th><th>Status</th><th>Milestone</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td class="td-mono">#T48101</td><td class="td-name">James Harlow</td><td>ElectroFix Pro</td><td><strong style="color:var(--danger)">£1,200</strong></td><td><span class="badge b-danger">FROZEN</span></td><td>Final</td><td><button class="pbtn danger" onclick="toast('Frozen — dispute active','error')">Frozen</button></td></tr>
+          <tr><td class="td-mono">#T48089</td><td class="td-name">Patricia Osei</td><td>HeatPro Services</td><td><strong style="color:var(--amber)">£3,800</strong></td><td><span class="badge b-amber">PROTECTED</span></td><td>3 of 4</td><td><button class="pbtn" onclick="toast('Viewing transaction log','success')">View</button></td></tr>
+          <tr><td class="td-mono">#T47990</td><td class="td-name">Marcus Webb</td><td>SouthBuild Ltd</td><td><strong style="color:var(--amber)">£13,450</strong></td><td><span class="badge b-blue">HELD</span></td><td>2 of 6</td><td><button class="pbtn" onclick="toast('Viewing transaction log','success')">View</button></td></tr>
+          <tr><td class="td-mono">#T48051</td><td class="td-name">Sarah Mitchell</td><td>DrainClear UK</td><td><strong style="color:var(--neon)">£8,500</strong></td><td><span class="badge b-neon">ACTIVE</span></td><td>4 of 5</td><td><button class="pbtn neon" onclick="toast('£2,000 release initiated','success')">Release £2k</button></td></tr>
+          <tr><td class="td-mono">#T48030</td><td class="td-name">David Okafor</td><td>PaintPro London</td><td><strong style="color:var(--neon)">£2,200</strong></td><td><span class="badge b-neon">ACTIVE</span></td><td>Final approval</td><td><button class="pbtn amber" onclick="toast('Auto-release in 3 days if no HO response','warning')">Monitor</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ KILL SWITCHES ══ -->
+  <div class="view" id="v-kill">
+    <div style="background:rgba(255,71,87,.04);border:1px solid rgba(255,71,87,.2);border-radius:9px;padding:10px 14px;margin-bottom:13px;font-size:10.5px;color:var(--danger);">⚠ All kill switch actions are irreversible within the session. Logged with admin ID, IP, and timestamp. 2FA required in production.</div>
+    <div class="st">Platform-Wide Controls</div>
+    <div class="ks-grid">
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Escrow freeze active — all releases paused','Escrow releases restored')"><div class="ks-ico">🔒</div><div><div class="ks-lbl">Freeze All Escrow</div><div class="ks-desc">Block all release operations</div></div><div class="ks-toggle"></div></div>
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'New job posting suspended','Job posting restored')"><div class="ks-ico">🛑</div><div><div class="ks-lbl">Pause Job Posting</div><div class="ks-desc">Halt all new submissions</div></div><div class="ks-toggle"></div></div>
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Lead distribution paused','Lead distribution restored')"><div class="ks-ico">📤</div><div><div class="ks-lbl">Pause Lead Distribution</div><div class="ks-desc">Stop sending leads to vendors</div></div><div class="ks-toggle"></div></div>
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Verification approvals suspended','Verifications restored')"><div class="ks-ico">🛡️</div><div><div class="ks-lbl">Suspend Verifications</div><div class="ks-desc">Freeze queue approvals</div></div><div class="ks-toggle"></div></div>
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Maintenance mode ON — Redis key set','Maintenance mode OFF — site restored')"><div class="ks-ico">⚙️</div><div><div class="ks-lbl">Maintenance Mode</div><div class="ks-desc">Redirects all traffic to static page</div></div><div class="ks-toggle"></div></div>
+      <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'AI disabled — all disputes to human review','AI auto-resolution restored')"><div class="ks-ico">🤖</div><div><div class="ks-lbl">Disable AI Assessment</div><div class="ks-desc">Force manual review on all cases</div></div><div class="ks-toggle"></div></div>
+    </div>
+    <div class="st">Per-Vendor Kill Controls</div>
+    <div class="panel">
+      <div class="ph"><div class="ph-title">Targeted Vendor Actions</div></div>
+      <table class="dt">
+        <thead><tr><th>Vendor</th><th>Status</th><th>Verification</th><th>Escrow</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="td-name">ElectroFix Pro Ltd</div><div class="td-mono">TM-VND-4821</div></td>
+            <td><span class="badge b-neon">Active</span></td>
+            <td><span class="badge b-neon">Verified</span></td>
+            <td><span class="badge b-danger">£1,200 Frozen</span></td>
+            <td style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button class="pbtn danger" onclick="toast('ElectroFix Pro suspended pending investigation','error')">Suspend</button>
+              <button class="pbtn amber" onclick="toast('Verification hub paused for TM-VND-4821','warning')">Pause Hub</button>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="td-name">QuickFix Electrical</div><div class="td-mono">TM-VND-5502</div></td>
+            <td><span class="badge b-amber">Restricted</span></td>
+            <td><span class="badge b-danger">Ins. Lapsed</span></td>
+            <td><span class="badge b-amber">Payment Hold</span></td>
+            <td style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button class="pbtn neon" onclick="toast('Renewal request sent to vendor','success')">Request Renewal</button>
+              <button class="pbtn danger" onclick="toast('QuickFix permanently banned','error')">Ban</button>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="td-name">FastBuild UK</div><div class="td-mono">TM-VND-3847</div></td>
+            <td><span class="badge b-danger">Flagged</span></td>
+            <td><span class="badge b-neon">Verified</span></td>
+            <td><span class="badge b-neon">Active</span></td>
+            <td style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button class="pbtn danger" onclick="toast('FastBuild suspended — PIN investigation','error')">Suspend</button>
+              <button class="pbtn" onclick="toast('Investigation notes saved to audit trail','success')">Investigate</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ PIN MONITOR ══ -->
+  <div class="view" id="v-pin">
+    <div class="ms ms-4">
+      <div class="mc neon"><div class="mc-label">Success Rate (48h)</div><div class="mc-val neon">94.2%</div><div class="mc-delta">168 of 178</div></div>
+      <div class="mc danger"><div class="mc-label">Failures</div><div class="mc-val danger">10</div><div class="mc-delta">5.8% rate</div></div>
+      <div class="mc amber"><div class="mc-label">Flagged (3+ attempts)</div><div class="mc-val amber">2</div><div class="mc-delta">Possible impersonation</div></div>
+      <div class="mc"><div class="mc-label">Opted Out</div><div class="mc-val">24</div><div class="mc-delta">13.5% of jobs</div></div>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="st">Recent PIN Events</div>
+        <div class="panel">
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #8841 VERIFIED</span> · Plumber on site · Job #T48150</span><span class="ftime">2m</span></div>
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #7204 VERIFIED</span> · Electrician · Job #T48142</span><span class="ftime">11m</span></div>
+          <div class="feed-item" style="background:rgba(255,71,87,.03);"><div class="fdot fdot-d"></div><span><span class="fstrong">PIN #6619 — 3 FAILURES</span> · Builder · Job #T48066 · FLAGGED</span><span class="ftime">45m</span></div>
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #5512 VERIFIED</span> · Roofer · Job #T48098</span><span class="ftime">1h 2m</span></div>
+          <div class="feed-item" style="background:rgba(255,167,38,.02);"><div class="fdot fdot-a"></div><span><span class="fstrong">PIN #4388 — 1 FAILURE</span> · Decorator · Job #T48039</span><span class="ftime">2h 15m</span></div>
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #3901 VERIFIED</span> · Gas Engineer · Job #T48021</span><span class="ftime">3h 40m</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Flagged Incident — Job #T48066</div>
+        <div class="panel">
+          <div class="ph"><div class="ph-title">⚠️ Potential Impersonation Risk</div><span class="badge b-danger" style="margin-left:auto;">3 FAILURES</span></div>
+          <div class="pb">
+            <table class="dt" style="margin-bottom:10px;">
+              <tbody>
+                <tr><td class="td-name">Job</td><td class="td-mono">#T48066 · Bathroom reno</td></tr>
+                <tr><td class="td-name">Vendor</td><td class="td-mono">TM-VND-3847 · FastBuild UK</td></tr>
+                <tr><td class="td-name">Homeowner</td><td class="td-mono">Angela Torres · Hackney E9</td></tr>
+                <tr><td class="td-name">Attempts</td><td><span class="badge b-danger">3 × at 13:42, 13:43, 13:44</span></td></tr>
+                <tr><td class="td-name">GPS on attempt</td><td class="td-mono">51.5462, -0.0525 (≈50m)</td></tr>
+              </tbody>
+            </table>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <button class="tb-btn danger" style="width:100%;font-size:10.5px;" onclick="toast('Job #T48066 frozen — Angela Torres notified via SMS','error')">🔴 Freeze Job & Alert Homeowner</button>
+              <button class="tb-btn" style="width:100%;font-size:10.5px;" onclick="toast('Calling homeowner Angela Torres…','warning')">📞 Contact Homeowner</button>
+              <button class="tb-btn" style="width:100%;font-size:10.5px;" onclick="toast('FastBuild UK profile flagged for investigation','warning')">🚩 Flag Vendor Profile</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BLUEPRINT ══ -->
+  <div class="view" id="v-blueprint">
+    <div class="st">System Blueprint — Business Logic, State Mapping & Mode Enforcement</div>
+    <div class="g2">
+      <div>
+        <div class="st">Trust Score Formula</div>
+        <div class="panel"><div class="pb">
+          <div class="code-block">
+TradeMatch Score =
+  (Vetting × <span class="c-val">0.30</span>) +
+  (Sentiment × <span class="c-val">0.25</span>) +
+  (ShowUpScore × <span class="c-val">0.25</span>) +
+  (Reliability × <span class="c-val">0.20</span>)
+
+ShowUpScore = (Confirmed ÷ Scheduled) × <span class="c-val">100</span>
+<span class="c-cmt">// Confirmed = check-in within 90min window</span>
+<span class="c-cmt">// Min 3 visits before score displays</span>
+
+<span class="c-key">Dispute penalty:</span> −<span class="c-val">5</span> pts per upheld case
+<span class="c-key">Insurance lapse:</span> Vetting pillar → <span class="c-val">0</span>
+          </div>
+        </div></div>
+        <div class="st">Arrival PIN Flow</div>
+        <div class="panel"><div class="pb">
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:10.5px;">
+            <div style="background:var(--bg-4);border-radius:6px;padding:7px 11px;border:1px solid var(--border);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--blue);font-weight:700;">1</span><span style="color:var(--t3)">HO enables Mandatory PIN in Settings → 4-digit PIN generated per job_id</span></div>
+            <div style="background:var(--bg-4);border-radius:6px;padding:7px 11px;border:1px solid var(--border);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--blue);font-weight:700;">2</span><span style="color:var(--t3)">PIN stored in DB linked to job_id + homeowner_id. Not visible to vendor in advance.</span></div>
+            <div style="background:var(--bg-4);border-radius:6px;padding:7px 11px;border:1px solid var(--border);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--blue);font-weight:700;">3</span><span style="color:var(--t3)">Vendor arrives on site → asks HO verbally → enters PIN into Vendor Lite Mode app</span></div>
+            <div style="background:var(--bg-4);border-radius:6px;padding:7px 11px;border:1px solid rgba(0,229,160,.15);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--neon);font-weight:700;">4</span><span style="color:var(--t3)"><strong style="color:var(--neon)">POST /api/jobs/:id/pin-verify</strong> validates against DB. Timestamp + GPS recorded.</span></div>
+            <div style="background:var(--bg-4);border-radius:6px;padding:7px 11px;border:1px solid rgba(0,229,160,.15);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--neon);font-weight:700;">5</span><span style="color:var(--t3)">Success → status = IN_PROGRESS. Admin monitors PIN success/failure ratio in real-time.</span></div>
+            <div style="background:var(--danger-dim);border-radius:6px;padding:7px 11px;border:1px solid rgba(255,71,87,.2);display:flex;gap:8px;align-items:center;"><span style="font-family:var(--fm);font-size:9px;color:var(--danger);font-weight:700;">⚠</span><span style="color:var(--t3)">3 failures → Admin alert raised. Potential impersonation flag. Admin can freeze job.</span></div>
+          </div>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">Lite vs Pro Mode Enforcement</div>
+        <div class="panel"><div class="pb">
+          <table class="dt">
+            <thead><tr><th>Feature</th><th>HO Lite</th><th>HO Pro</th><th>Vnd Lite</th><th>Vnd Pro</th></tr></thead>
+            <tbody>
+              <tr><td>Escrow Milestones</td><td><span class="badge b-amber">2 max</span></td><td><span class="badge b-neon">Unlimited</span></td><td><span class="badge b-amber">View</span></td><td><span class="badge b-neon">Full</span></td></tr>
+              <tr><td>Dispute Centre</td><td><span class="badge b-amber">File only</span></td><td><span class="badge b-neon">Full suite</span></td><td><span class="badge b-amber">Respond</span></td><td><span class="badge b-neon">Full</span></td></tr>
+              <tr><td>Document Vault</td><td><span class="badge b-amber">5 docs</span></td><td><span class="badge b-neon">Unlimited+COC</span></td><td><span class="badge b-amber">Upload</span></td><td><span class="badge b-neon">COC + export</span></td></tr>
+              <tr><td>Verification Hub</td><td><span class="badge b-grey">View</span></td><td><span class="badge b-neon">Full audit</span></td><td><span class="badge b-amber">Upload docs</span></td><td><span class="badge b-neon">Full score</span></td></tr>
+              <tr><td>Analytics</td><td><span class="badge b-grey">None</span></td><td><span class="badge b-blue">Insights</span></td><td><span class="badge b-grey">None</span></td><td><span class="badge b-neon">Heatmaps</span></td></tr>
+              <tr><td>AI Quote</td><td><span class="badge b-grey">None</span></td><td><span class="badge b-blue">AI-assisted</span></td><td><span class="badge b-amber">Template</span></td><td><span class="badge b-neon">AI-generated</span></td></tr>
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ API INVENTORY ══ -->
+  <div class="view" id="v-api">
+    <div class="st">Complete API Inventory — All Endpoints + Admin Routes</div>
+    <div class="g2">
+      <div>
+        <div class="st">Auth & Users</div>
+        <div class="panel panel-last">
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/auth/login</span><span class="ep-desc">JWT issue</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/auth/otp/verify</span><span class="ep-desc">Phone OTP</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/users/:id</span><span class="ep-desc">Homeowner profile</span></div>
+          <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/users/:id/settings</span><span class="ep-desc">Update prefs</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/user/impersonate</span><span class="ep-desc">1hr session token · HIGH AUDIT</span></div>
+        </div>
+        <div class="st">Jobs & Lifecycle</div>
+        <div class="panel panel-last">
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/jobs</span><span class="ep-desc">Create job</span></div>
+          <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/jobs/:id/status</span><span class="ep-desc">State transition</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/jobs/:id/pin-verify</span><span class="ep-desc">Arrival PIN validate</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/jobs/:id/milestone/complete</span><span class="ep-desc">Mark milestone done</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/jobs/:id/milestone/approve</span><span class="ep-desc">Homeowner sign-off</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/jobs/:id/certificate</span><span class="ep-desc">Completion PDF</span></div>
+        </div>
+        <div class="st">Escrow</div>
+        <div class="panel panel-last">
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/escrow/fund</span><span class="ep-desc">Lock funds (Stripe)</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/escrow/release</span><span class="ep-desc">Release milestone</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/escrow/freeze</span><span class="ep-desc">Admin freeze</span></div>
+          <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/admin/escrow/split</span><span class="ep-desc">Custom 70/30 split</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/escrow/refund</span><span class="ep-desc">Full refund</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="st">Disputes & Vault</div>
+        <div class="panel panel-last">
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/dispute/open</span><span class="ep-desc">Open dispute</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/dispute/:id/resolve</span><span class="ep-desc">Apply resolution</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/dispute/:id/ai-assessment</span><span class="ep-desc">AI pre-assessment</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/dispute/:id/escalate</span><span class="ep-desc">Escalate arbitration</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/vault/export/:dispute_id</span><span class="ep-desc">COC ZIP export</span></div>
+        </div>
+        <div class="st">Admin & Infrastructure</div>
+        <div class="panel panel-last">
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/infra/status</span><span class="ep-desc">Service health · 30s poll</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/system/flush-cache</span><span class="ep-desc">Purge S3 temp</span></div>
+          <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/admin/verify/insurance</span><span class="ep-desc">Update verified badge</span></div>
+          <div class="ep"><span class="ep-m ep-post">POST</span><span class="ep-path">/api/admin/trust/override</span><span class="ep-desc">Score override (logged)</span></div>
+          <div class="ep"><span class="ep-m ep-patch">PATCH</span><span class="ep-path">/api/admin/system/maintenance</span><span class="ep-desc">Global kill switch</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/logs/security</span><span class="ep-desc">Failed PINs, IPs, logins</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/reports/liquidity</span><span class="ep-desc">Quote:job ratio by trade</span></div>
+          <div class="ep"><span class="ep-m ep-get">GET</span><span class="ep-path">/api/admin/audit/financials</span><span class="ep-desc">GMV vs revenue</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DB SCHEMA ══ -->
+  <div class="view" id="v-schema">
+    <div class="st">Database Schema — Entity Relationships</div>
+    <div class="panel" style="margin-bottom:14px;">
+      <div class="pb">
+        <div class="schema-scroll">
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--blue)">👤 users</div><div class="sch-f"><span class="sf-pk">user_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span>email</span><span class="sf-t">VARCHAR</span></div><div class="sch-f"><span>phone_verified</span><span class="sf-t">BOOL</span></div><div class="sch-f"><span>tier</span><span class="sf-t">ENUM(lite,pro)</span></div><div class="sch-f"><span>created_at</span><span class="sf-t">TIMESTAMP</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--neon)">🔨 vendors</div><div class="sch-f"><span class="sf-pk">vendor_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span>show_up_score</span><span class="sf-t">DECIMAL</span></div><div class="sch-f"><span>tradematch_score</span><span class="sf-t">DECIMAL</span></div><div class="sch-f"><span>insurance_expiry</span><span class="sf-t">DATE</span></div><div class="sch-f"><span>verification_status</span><span class="sf-t">ENUM</span></div><div class="sch-f"><span>escrow_ready</span><span class="sf-t">BOOL</span></div><div class="sch-f"><span>tier</span><span class="sf-t">ENUM</span></div><div class="sch-f"><span>suspended_at</span><span class="sf-t">TIMESTAMP</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--amber)">🏘️ properties</div><div class="sch-f"><span class="sf-pk">property_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">user_id</span><span class="sf-t">FK→users</span></div><div class="sch-f"><span>address</span><span class="sf-t">TEXT</span></div><div class="sch-f"><span>postcode</span><span class="sf-t">VARCHAR</span></div><div class="sch-f"><span>property_type</span><span class="sf-t">ENUM</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--purple)">💼 jobs</div><div class="sch-f"><span class="sf-pk">job_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">user_id</span><span class="sf-t">FK→users</span></div><div class="sch-f"><span class="sf-fk">vendor_id</span><span class="sf-t">FK→vendors</span></div><div class="sch-f"><span class="sf-fk">property_id</span><span class="sf-t">FK→properties</span></div><div class="sch-f"><span>status</span><span class="sf-t">ENUM(9 states)</span></div><div class="sch-f"><span>arrival_pin</span><span class="sf-t">VARCHAR(4)</span></div><div class="sch-f"><span>pin_verified_at</span><span class="sf-t">TIMESTAMP</span></div><div class="sch-f"><span>escrow_total</span><span class="sf-t">DECIMAL</span></div><div class="sch-f"><span>live_enabled</span><span class="sf-t">BOOL</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--danger)">⚖️ disputes</div><div class="sch-f"><span class="sf-pk">dispute_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">job_id</span><span class="sf-t">FK→jobs</span></div><div class="sch-f"><span class="sf-fk">resolver_id</span><span class="sf-t">FK→admins</span></div><div class="sch-f"><span>status</span><span class="sf-t">ENUM(8 states)</span></div><div class="sch-f"><span>sla_opened_at</span><span class="sf-t">TIMESTAMP</span></div><div class="sch-f"><span>sla_deadline</span><span class="sf-t">TIMESTAMP</span></div><div class="sch-f"><span>resolution_split</span><span class="sf-t">VARCHAR</span></div><div class="sch-f"><span>ai_recommendation</span><span class="sf-t">JSONB</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--amber)">📂 evidence</div><div class="sch-f"><span class="sf-pk">evidence_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">dispute_id</span><span class="sf-t">FK→disputes</span></div><div class="sch-f"><span class="sf-fk">job_id</span><span class="sf-t">FK→jobs</span></div><div class="sch-f"><span class="sf-fk">uploaded_by</span><span class="sf-t">FK→users</span></div><div class="sch-f"><span>file_hash</span><span class="sf-t">SHA-256</span></div><div class="sch-f"><span>custody_log</span><span class="sf-t">JSONB[]</span></div><div class="sch-f"><span>dispute_locked</span><span class="sf-t">BOOL</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--blue)">💰 escrow_tx</div><div class="sch-f"><span class="sf-pk">tx_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">job_id</span><span class="sf-t">FK→jobs</span></div><div class="sch-f"><span class="sf-fk">milestone_id</span><span class="sf-t">FK→milestones</span></div><div class="sch-f"><span>amount</span><span class="sf-t">DECIMAL</span></div><div class="sch-f"><span>status</span><span class="sf-t">ENUM</span></div><div class="sch-f"><span>stripe_ref</span><span class="sf-t">VARCHAR</span></div><div class="sch-f"><span>triggered_by</span><span class="sf-t">ENUM</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--neon)">📍 job_visits</div><div class="sch-f"><span class="sf-pk">visit_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">job_id</span><span class="sf-t">FK→jobs</span></div><div class="sch-f"><span class="sf-fk">vendor_id</span><span class="sf-t">FK→vendors</span></div><div class="sch-f"><span>scheduled_at</span><span class="sf-t">TIMESTAMP</span></div><div class="sch-f"><span>checked_in_at</span><span class="sf-t">TIMESTAMP</span></div><div class="sch-f"><span>gps_coords</span><span class="sf-t">POINT</span></div><div class="sch-f"><span>pin_verified</span><span class="sf-t">BOOL</span></div></div>
+          <div class="sch-tbl"><div class="sch-h" style="color:var(--purple)">📋 admin_actions</div><div class="sch-f"><span class="sf-pk">action_id</span><span class="sf-t">UUID PK</span></div><div class="sch-f"><span class="sf-fk">admin_id</span><span class="sf-t">FK→admins</span></div><div class="sch-f"><span>action_type</span><span class="sf-t">VARCHAR</span></div><div class="sch-f"><span>target_id</span><span class="sf-t">UUID</span></div><div class="sch-f"><span>ip_address</span><span class="sf-t">INET</span></div><div class="sch-f"><span>created_at</span><span class="sf-t">TIMESTAMP</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TRUST SCORE ══ -->
+  <div class="view" id="v-trust">
+    <div class="st">Trust Score Engine — Formula, Tiers & Admin Overrides</div>
+    <div class="g2">
+      <div>
+        <div class="st">Score Architecture</div>
+        <div class="panel"><div class="pb">
+          <div class="code-block" style="margin-bottom:10px;">
+<span class="c-cmt">// TradeMatch Score (0–10)</span>
+Score = (Vetting × <span class="c-val">.30</span>) + (Sentiment × <span class="c-val">.25</span>)
+      + (ShowUp × <span class="c-val">.25</span>) + (Reliability × <span class="c-val">.20</span>)
+
+ShowUp = (arrivals ÷ scheduled) × <span class="c-val">100</span>
+<span class="c-cmt">// arrival = check-in within 90min window</span>
+<span class="c-cmt">// Dispute penalty: −5pts per upheld case</span>
+<span class="c-cmt">// Insurance lapse → Vetting = 0</span>
+          </div>
+          <div class="st" style="font-size:8.5px;">Tier Thresholds</div>
+          <table class="dt">
+            <thead><tr><th>Tier</th><th>Score</th><th>Badge</th><th>Lead Tier</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge b-gold">Elite</span></td><td class="td-mono">9.4–10</td><td>⭐ Gold Shield</td><td>£10k+</td></tr>
+              <tr><td><span class="badge b-neon">Gold</span></td><td class="td-mono">8.5–9.3</td><td>🔵 Blue Check</td><td>£5k+</td></tr>
+              <tr><td><span class="badge b-amber">Silver</span></td><td class="td-mono">7.0–8.4</td><td>🟡 Standard</td><td>£2k+</td></tr>
+              <tr><td><span class="badge b-danger">Bronze</span></td><td class="td-mono">&lt;7.0</td><td>🔴 Flag</td><td>Basic</td></tr>
+            </tbody>
+          </table>
+        </div></div>
+      </div>
+      <div>
+        <div class="st">Admin Score Override</div>
+        <div class="panel"><div class="pb">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:9px;">Manual override — permanent audit trail. Use only in exceptional circumstances.</div>
+          <div style="background:var(--bg-4);border-radius:7px;padding:9px 12px;border:1px solid var(--border);margin-bottom:9px;">
+            <div style="font-size:9.5px;color:var(--t4);margin-bottom:3px;">Target vendor</div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--t1)">TM-VND-4821 · ElectroFix Pro · Score: 8.7</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <button class="pbtn danger" onclick="toast('−10 penalty applied · Logged to audit trail','error')">−10 Penalty</button>
+            <button class="pbtn neon" onclick="toast('+5 adjustment applied · Logged','success')">+5 Adjustment</button>
+            <button class="pbtn" onclick="toast('Score recalculated from raw data','success')">Recalculate</button>
+            <button class="pbtn amber" onclick="toast('Score flagged for manual review','warning')">Flag Score</button>
+          </div>
+          <div class="sep"></div>
+          <div class="st" style="font-size:8.5px;">Platform Score Health</div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Elite 9.4+</span><strong style="color:var(--neon)">312</strong></div><div class="bar"><div class="bar-fill" style="width:17%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Gold 8.5–9.3</span><strong style="color:var(--blue)">704</strong></div><div class="bar"><div class="bar-fill" style="width:39%;background:var(--blue)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Silver 7–8.4</span><strong style="color:var(--amber)">518</strong></div><div class="bar"><div class="bar-fill" style="width:29%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Bronze &lt;7</span><strong style="color:var(--danger)">266</strong></div><div class="bar"><div class="bar-fill" style="width:15%;background:var(--danger)"></div></div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AUDIT TRAIL ══ -->
+  <div class="view" id="v-audit">
+    <div class="st">Admin Audit Trail — Complete Activity Log</div>
+    <div style="background:rgba(179,157,219,.05);border:1px solid rgba(179,157,219,.15);border-radius:9px;padding:10px 14px;margin-bottom:13px;font-size:10px;color:var(--purple);">Every admin action is immutable and cannot be deleted. Stored in admin_actions table with IP address, timestamp, and actor ID. Required for legal protection and anti-fraud compliance.</div>
+    <div class="ms ms-4">
+      <div class="mc danger"><div class="mc-label">High-Risk Events</div><div class="mc-val danger">8</div><div class="mc-delta">This month</div></div>
+      <div class="mc amber"><div class="mc-label">Manual Interventions</div><div class="mc-val amber">31</div><div class="mc-delta">This month</div></div>
+      <div class="mc"><div class="mc-label">Total Log Entries</div><div class="mc-val">2,847</div><div class="mc-delta">Since launch</div></div>
+      <div class="mc neon"><div class="mc-label">Unique Admin IPs</div><div class="mc-val neon">4</div><div class="mc-delta">Active admins</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div class="ph-title">Activity Log</div><div class="ph-right"><button class="pbtn neon" onclick="toast('Exporting audit CSV…','success')">Export CSV</button><button class="pbtn danger" onclick="toast('Filtering HIGH RISK events only','warning')">High Risk Only</button></div></div>
+      <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">James D.</div><div class="audit-action">Opened impersonation session for Vendor TM-VND-4821 (ElectroFix Pro)</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">14:21 today</div></div>
+      <div class="audit-row"><div class="audit-level al-med"></div><div class="audit-who">James D.</div><div class="audit-action">Applied dispute resolution 70/30 to case #D-8841 — escrow split executed</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">13:55 today</div></div>
+      <div class="audit-row"><div class="audit-level al-med"></div><div class="audit-who">Sarah K.</div><div class="audit-action">Vendor TM-VND-5502 insurance lapse confirmed — auto-suspension applied</div><div class="audit-ip">91.22.44.11</div><div class="audit-time">11:30 today</div></div>
+      <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">Sarah K.</div><div class="audit-action">Manual refund £850 issued for Job #T48044 — fraud reason logged</div><div class="audit-ip">91.22.44.11</div><div class="audit-time">10:14 today</div></div>
+      <div class="audit-row"><div class="audit-level al-low"></div><div class="audit-who">James D.</div><div class="audit-action">Vendor RK Kapoor (PlumbRight Ltd) verified and approved — escrow unlocked</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">09:40 today</div></div>
+      <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">James D.</div><div class="audit-action">IP 82.34.111.220 blocked — 5 vendor accounts flagged for bot farm investigation</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">02/03 16:22</div></div>
+      <div class="audit-row"><div class="audit-level al-med"></div><div class="audit-who">Sarah K.</div><div class="audit-action">Kill Switch activated: Escrow Freeze (global) — reason: Stripe webhook timeout</div><div class="audit-ip">91.22.44.11</div><div class="audit-time">01/03 08:11</div></div>
+      <div class="audit-row"><div class="audit-level al-low"></div><div class="audit-who">James D.</div><div class="audit-action">Trust Score override: TM-VND-3901 +5 adjustment — dispute resolved in vendor favour</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">28/02 15:44</div></div>
+      <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">Sarah K.</div><div class="audit-action">Maintenance Mode activated — Stripe API degradation detected. Duration: 14min</div><div class="audit-ip">91.22.44.11</div><div class="audit-time">25/02 03:12</div></div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<div id="toast"></div>
+
+<script>
+// Clock
+function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false});}
+tick();setInterval(tick,1000);
+
+// Navigation
+function nav(id,title,sub,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const v=document.getElementById('v-'+id);
+  if(v)v.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active','d-active','a-active'));
+  if(el){
+    const cls=id==='kill'?'d-active':id==='infra'?'a-active':'active';
+    el.classList.add(cls);
+  }
+  document.getElementById('tb-title').textContent=title;
+  document.getElementById('tb-sub').textContent=sub;
+}
+
+// Toast
+let tt;
+function toast(msg,type=''){
+  const e=document.getElementById('toast');
+  e.textContent=msg;e.className='show '+(type||'');
+  clearTimeout(tt);tt=setTimeout(()=>{e.className='';},3200);
+}
+
+// Kill switch toggle
+function toggleKS(el,onMsg,offMsg){
+  if(!el)return;
+  const on=el.classList.toggle('on');
+  toast(on?onMsg:offMsg,on?'error':'success');
+}
+</script>
+</body>
+</html>

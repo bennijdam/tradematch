@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Message Centre — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   TRADEMATCH · HOMEOWNER MESSAGE CENTRE
+   "The Legal Record of Truth" — Secure Workspace Design
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.08);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-safe: #00E5A0;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --thread-sidebar-w: 300px;
+  --topnav-h: 64px;
+  --trust-banner-h: 68px;
+}
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+}
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,160,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(66,165,245,0.02) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+/* ═══════════ LAYOUT SHELL ═══════════ */
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: var(--topnav-h) 1fr;
+  height: 100vh;
+  position: relative; z-index: 1;
+}
+
+/* ═══════════ LEFT NAV SIDEBAR ═══════════ */
+.sidebar {
+  grid-row: 1 / -1;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden; z-index: 200;
+  transition: background 0.3s;
+}
+.sidebar-header {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.logo-mark {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--neon-glow-sm); flex-shrink: 0;
+}
+.logo-mark svg { width: 16px; height: 16px; color: #fff; stroke-width: 2.5; }
+.logo-text { font-family: var(--ff); font-size: 14px; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); }
+.logo-sub { font-family: var(--fm); font-size: 9px; color: var(--neon); opacity: 0.8; letter-spacing: 0.12em; text-transform: uppercase; }
+
+.nav-section {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-3);
+  padding: 14px 16px 5px;
+}
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 6px 8px; }
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 9px;
+  color: var(--text-2); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s; text-decoration: none;
+  position: relative; white-space: nowrap;
+}
+.nav-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.nav-item.active { background: var(--neon-dim); color: var(--neon); font-weight: 600; }
+.nav-item.active::before {
+  content:''; position: absolute; left: -8px; top: 50%;
+  transform: translateY(-50%); width: 3px; height: 18px;
+  background: var(--neon); border-radius: 0 3px 3px 0;
+  box-shadow: var(--neon-glow-sm);
+}
+.nav-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-icon svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.nav-badge {
+  margin-left: auto; background: var(--neon); color: #000;
+  font-family: var(--fm); font-size: 9px; font-weight: 600;
+  padding: 2px 6px; border-radius: 100px;
+}
+.nav-badge.amber { background: var(--accent-amber); }
+.nav-badge.red { background: var(--accent-danger); }
+
+/* Thread list in sidebar */
+.thread-list { padding: 6px 8px; flex: 1; overflow-y: auto; }
+.thread-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 10px; border-radius: 10px;
+  cursor: pointer; transition: all 0.18s;
+  border: 1px solid transparent; margin-bottom: 3px;
+}
+.thread-item:hover { background: var(--bg-tertiary); }
+.thread-item.active { background: var(--neon-dim); border-color: var(--border-neon); }
+.thread-avatar {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 13px; font-weight: 800; color: #fff;
+  flex-shrink: 0; position: relative;
+}
+.thread-avatar-online {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--neon); border: 2px solid var(--bg-secondary);
+  animation: pulse-dot 2s infinite;
+}
+.thread-meta { flex: 1; min-width: 0; }
+.thread-name { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--text-1); }
+.thread-preview { font-size: 11.5px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.thread-time { font-family: var(--fm); font-size: 9px; color: var(--text-3); flex-shrink: 0; }
+.thread-unread {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--neon); flex-shrink: 0; margin-top: 4px;
+  animation: pulse-dot 2s infinite;
+}
+.trust-score-mini {
+  font-family: var(--fm); font-size: 9px; color: var(--neon);
+  background: var(--neon-dim); border: 1px solid var(--border-neon);
+  border-radius: 4px; padding: 1px 5px; margin-top: 3px;
+  display: inline-block;
+}
+
+.sidebar-footer {
+  padding: 10px 12px; border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.profile-btn {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; border-radius: 10px; padding: 8px;
+  transition: background 0.2s; border: none; background: transparent; width: 100%; text-align: left;
+}
+.profile-btn:hover { background: var(--neon-dim); }
+.avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.avatar-name { font-size: 12px; font-weight: 600; color: var(--text-1); }
+.avatar-role { font-size: 10px; color: var(--text-2); }
+
+/* ═══════════ TOP NAV ═══════════ */
+.topnav {
+  grid-column: 2;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 24px; gap: 12px; z-index: 100;
+}
+.breadcrumb { font-size: 13px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.breadcrumb-current { font-family: var(--ff); font-weight: 700; color: var(--text-1); font-size: 14px; }
+.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 9px; font-family: var(--fb);
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.18s;
+  border: none; white-space: nowrap;
+}
+.btn svg { width: 14px; height: 14px; stroke-width: 2; flex-shrink: 0; }
+.btn-primary { background: var(--neon); color: #000; }
+.btn-primary:hover { box-shadow: var(--neon-glow-sm); transform: translateY(-1px); }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-1); border: 1px solid var(--border-2); }
+.btn-secondary:hover { border-color: var(--border-neon); background: var(--neon-dim); color: var(--neon); }
+.btn-danger { background: rgba(255,71,87,0.12); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.25); }
+.btn-danger:hover { background: rgba(255,71,87,0.2); }
+.btn-amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.25); }
+.btn-amber:hover { background: rgba(255,167,38,0.2); }
+.btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border-2); }
+.btn-ghost:hover { background: var(--bg-tertiary); color: var(--text-1); }
+
+.theme-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-2); transition: all 0.2s;
+}
+.theme-btn:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.theme-btn svg { width: 14px; height: 14px; stroke-width: 2; }
+
+/* ═══════════ MAIN CONTENT AREA ═══════════ */
+.main-content {
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: var(--trust-banner-h) 1fr;
+  overflow: hidden;
+}
+
+/* ═══════════ TRUST BANNER ═══════════ */
+.trust-banner {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px; gap: 14px;
+  flex-shrink: 0;
+}
+.tb-avatar {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 16px; font-weight: 900; color: #fff;
+  flex-shrink: 0; position: relative;
+}
+.tb-avatar-live {
+  position: absolute; bottom: -3px; right: -3px;
+  background: var(--neon); border-radius: 50%;
+  width: 13px; height: 13px; border: 2px solid var(--bg-secondary);
+  animation: pulse-dot 1.5s infinite;
+}
+.tb-info { flex: 1; min-width: 0; }
+.tb-name-row { display: flex; align-items: center; gap: 8px; }
+.tb-name { font-family: var(--ff); font-size: 15px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.tb-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 5px; padding: 2px 7px;
+  font-family: var(--fm); font-size: 9px; color: var(--neon);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.tb-badge.danger { background: rgba(255,71,87,0.1); border-color: rgba(255,71,87,0.25); color: var(--accent-danger); }
+.tb-badge.amber { background: rgba(255,167,38,0.1); border-color: rgba(255,167,38,0.25); color: var(--accent-amber); }
+.tb-meta { display: flex; align-items: center; gap: 10px; margin-top: 3px; flex-wrap: wrap; }
+.tb-meta-item { font-size: 12px; color: var(--text-2); display: flex; align-items: center; gap: 4px; }
+.tb-meta-item svg { width: 11px; height: 11px; stroke-width: 2; flex-shrink: 0; }
+.trust-score-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 5px 10px; flex-shrink: 0;
+}
+.trust-score-val { font-family: var(--ff); font-size: 20px; font-weight: 900; color: var(--neon); letter-spacing: -0.05em; }
+.trust-score-label { font-family: var(--fm); font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+.en-route-indicator {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(0,229,160,0.08); border: 1px solid var(--border-neon);
+  border-radius: 9px; padding: 5px 10px; flex-shrink: 0;
+  animation: live-pulse 2s infinite;
+}
+@keyframes live-pulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(0,229,160,0); }
+  50%{ box-shadow: 0 0 12px rgba(0,229,160,0.2); }
+}
+.en-route-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon); animation: pulse-dot 1.5s infinite; }
+.en-route-text { font-family: var(--fm); font-size: 10px; color: var(--neon); text-transform: uppercase; letter-spacing: 0.1em; }
+.en-route-eta { font-family: var(--ff); font-size: 13px; font-weight: 800; color: var(--neon); }
+
+/* Dispute SLA Clock */
+.sla-clock-header {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.25);
+  border-radius: 9px; padding: 5px 10px; flex-shrink: 0;
+}
+.sla-clock-header svg { width: 12px; height: 12px; color: var(--accent-danger); stroke-width: 2.5; }
+.sla-clock-label { font-family: var(--fm); font-size: 9px; color: var(--accent-danger); text-transform: uppercase; letter-spacing: 0.1em; }
+.sla-clock-time { font-family: var(--ff); font-size: 14px; font-weight: 900; color: var(--accent-danger); letter-spacing: -0.04em; }
+
+/* ═══════════ CONTENT LAYOUT: CHAT + SIDEBAR ═══════════ */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 1fr var(--thread-sidebar-w);
+  overflow: hidden;
+}
+
+/* ═══════════ CHAT AREA ═══════════ */
+.chat-area {
+  display: flex; flex-direction: column;
+  overflow: hidden; border-right: 1px solid var(--border);
+}
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 6px;
+  scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+/* Date dividers */
+.date-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 10px 0; color: var(--text-3);
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.15em;
+}
+.date-divider::before,.date-divider::after {
+  content:''; flex:1; height:1px; background: var(--border);
+}
+
+/* Message bubbles */
+.msg-row {
+  display: flex; align-items: flex-end; gap: 9px;
+  max-width: 78%; animation: msg-appear 0.25s ease-out;
+}
+.msg-row.from-vendor { align-self: flex-start; }
+.msg-row.from-me { align-self: flex-end; flex-direction: row-reverse; }
+@keyframes msg-appear {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.msg-avatar {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 10px; font-weight: 800; color: #fff;
+}
+.msg-bubble {
+  padding: 10px 13px; border-radius: 14px;
+  font-size: 13.5px; line-height: 1.5;
+  max-width: 100%;
+}
+.from-vendor .msg-bubble {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  color: var(--text-1); border-bottom-left-radius: 4px;
+}
+.from-me .msg-bubble {
+  background: rgba(0,229,160,0.12); border: 1px solid var(--border-neon);
+  color: var(--text-1); border-bottom-right-radius: 4px;
+}
+.msg-time {
+  font-family: var(--fm); font-size: 9px; color: var(--text-3);
+  margin-top: 3px; padding: 0 3px;
+}
+.from-vendor .msg-time { text-align: left; }
+.from-me .msg-time { text-align: right; }
+
+/* System Event Cards */
+.system-card {
+  align-self: center; width: 100%; max-width: 540px;
+  margin: 8px auto;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+  animation: msg-appear 0.3s ease-out;
+}
+.system-card.milestone { border-color: var(--border-neon); }
+.system-card.quote { border-color: rgba(66,165,245,0.3); }
+.system-card.dispute { border-color: rgba(255,71,87,0.3); }
+.system-card.warning { border-color: rgba(255,167,38,0.5); }
+.system-card.complete { border-color: rgba(0,229,160,0.4); background: rgba(0,229,160,0.03); }
+
+.sc-header {
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.sc-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.sc-icon.green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.2); }
+.sc-icon.blue { background: rgba(66,165,245,0.12); border: 1px solid rgba(66,165,245,0.2); }
+.sc-icon.amber { background: rgba(255,167,38,0.12); border: 1px solid rgba(255,167,38,0.2); }
+.sc-icon.danger { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.2); }
+.sc-icon.purple { background: rgba(156,95,233,0.12); border: 1px solid rgba(156,95,233,0.2); }
+.sc-title { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.sc-sub { font-size: 11.5px; color: var(--text-2); margin-top: 1px; }
+.sc-badge {
+  margin-left: auto; flex-shrink: 0;
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 3px 8px; border-radius: 100px;
+}
+.sc-badge.green { background: rgba(0,229,160,0.12); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.sc-badge.amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.2); animation: amber-pulse 2s infinite; }
+.sc-badge.blue { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.2); }
+.sc-badge.danger { background: rgba(255,71,87,0.12); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.25); }
+@keyframes amber-pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+.sc-body { padding: 14px 16px; }
+.sc-info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12.5px;
+}
+.sc-info-row:last-child { border-bottom: none; }
+.sc-info-label { color: var(--text-2); }
+.sc-info-value { font-weight: 600; color: var(--text-1); font-family: var(--fm); font-size: 12px; }
+.sc-info-value.green { color: var(--neon); }
+.sc-info-value.amber { color: var(--accent-amber); }
+
+/* Photo strip in system card */
+.sc-photos {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 6px;
+  padding: 12px 16px; border-top: 1px solid var(--border);
+}
+.sc-photo {
+  aspect-ratio: 1; border-radius: 8px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; transition: all 0.18s; position: relative;
+}
+.sc-photo:hover { border-color: var(--border-neon); transform: scale(1.03); }
+.sc-photo-viewed { position: absolute; inset: 0; border-radius: 8px; background: rgba(0,229,160,0.15); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.sc-photo.viewed .sc-photo-viewed { opacity: 1; }
+
+.sc-actions { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+.sc-note { padding: 8px 16px 12px; font-size: 11.5px; color: var(--text-3); font-style: italic; text-align: center; }
+
+/* Security Warning Card */
+.security-warning {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,167,38,0.06); border: 1px solid rgba(255,167,38,0.3);
+  border-left: 3px solid var(--accent-amber);
+  border-radius: 12px; padding: 12px 14px; margin: 4px 0;
+  align-self: center; width: 100%; max-width: 540px;
+  animation: msg-appear 0.3s ease-out;
+}
+.sw-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.sw-title { font-family: var(--ff); font-size: 13px; font-weight: 800; color: var(--accent-amber); }
+.sw-body { font-size: 12px; color: var(--text-2); margin-top: 3px; line-height: 1.5; }
+.sw-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+/* AI Copilot Flag */
+.ai-flag {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(156,95,233,0.06); border: 1px solid rgba(156,95,233,0.2);
+  border-radius: 12px; padding: 10px 13px; margin: 4px 0;
+  align-self: center; width: 100%; max-width: 540px;
+  animation: msg-appear 0.3s ease-out;
+}
+.ai-flag-icon { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(135deg, #7C3AED, #42A5F5); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+.ai-flag-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.ai-flag-text strong { color: var(--accent-purple); }
+
+/* Blocked message */
+.blocked-msg {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,71,87,0.05); border: 1px solid rgba(255,71,87,0.2);
+  border-radius: 10px; padding: 10px 13px;
+  font-size: 12px; color: var(--accent-danger);
+  font-family: var(--fm); letter-spacing: 0.03em;
+  align-self: center; width: 100%; max-width: 380px;
+  animation: msg-appear 0.2s ease-out;
+}
+.blocked-msg svg { width: 14px; height: 14px; flex-shrink: 0; stroke-width: 2.5; }
+
+/* ═══════════ CHAT INPUT AREA ═══════════ */
+.chat-input-area {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  background: var(--bg-secondary); flex-shrink: 0;
+}
+.chat-input-toolbar {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+}
+.toolbar-btn {
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border-2); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-3); transition: all 0.18s;
+}
+.toolbar-btn:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.toolbar-btn svg { width: 13px; height: 13px; stroke-width: 2; }
+.toolbar-divider { width: 1px; height: 16px; background: var(--border-2); }
+
+.chat-input-row {
+  display: flex; align-items: flex-end; gap: 10px;
+}
+.chat-input-wrap {
+  flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 12px; overflow: hidden; transition: all 0.2s;
+}
+.chat-input-wrap:focus-within { border-color: var(--border-neon); box-shadow: var(--neon-glow-sm); }
+.chat-input {
+  width: 100%; min-height: 42px; max-height: 120px;
+  padding: 11px 14px; background: transparent;
+  border: none; outline: none; resize: none;
+  font-family: var(--fb); font-size: 13.5px; color: var(--text-1);
+  line-height: 1.5;
+}
+.chat-input::placeholder { color: var(--text-3); }
+.send-btn {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: var(--neon); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0; color: #000;
+}
+.send-btn:hover { box-shadow: var(--neon-glow-sm); transform: translateY(-1px); }
+.send-btn svg { width: 16px; height: 16px; stroke-width: 2.5; }
+.chat-security-note {
+  display: flex; align-items: center; gap: 5px; margin-top: 6px;
+  font-family: var(--fm); font-size: 9px; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.chat-security-note svg { width: 10px; height: 10px; stroke-width: 2.5; }
+
+/* ═══════════ RIGHT SIDEBAR: ESCROW TIMELINE ═══════════ */
+.thread-sidebar {
+  background: var(--bg-secondary);
+  overflow-y: auto; overflow-x: hidden;
+}
+.thread-sidebar::-webkit-scrollbar { width: 3px; }
+.thread-sidebar::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+.ts-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.ts-title {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-3); margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ts-title a {
+  color: var(--neon); font-size: 9px; cursor: pointer;
+  text-decoration: none;
+}
+.ts-title a:hover { text-decoration: underline; }
+
+/* Escrow status widget */
+.escrow-widget {
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px;
+}
+.escrow-total-row {
+  display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px;
+}
+.escrow-total-val { font-family: var(--ff); font-size: 22px; font-weight: 900; color: var(--text-1); letter-spacing: -0.04em; }
+.escrow-total-label { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+.stripe-badge-mini {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(99,91,255,0.1); border: 1px solid rgba(99,91,255,0.2);
+  border-radius: 5px; padding: 2px 6px; margin-bottom: 10px;
+  font-family: var(--fm); font-size: 8px; color: #8b84ff; letter-spacing: 0.06em;
+}
+.stripe-badge-mini svg { width: 8px; height: 8px; flex-shrink: 0; }
+.escrow-breakdown { display: flex; flex-direction: column; gap: 5px; }
+.escrow-line { display: flex; justify-content: space-between; font-size: 11.5px; }
+.escrow-line-label { color: var(--text-2); }
+.escrow-line-val { font-family: var(--fm); font-size: 11px; font-weight: 600; }
+.escrow-line-val.green { color: var(--neon); }
+.escrow-line-val.blue { color: var(--accent-blue); }
+.escrow-line-val.amber { color: var(--accent-amber); }
+
+/* Milestone timeline */
+.milestone-timeline { display: flex; flex-direction: column; }
+.mt-item {
+  display: flex; gap: 10px; position: relative;
+  padding-bottom: 12px;
+}
+.mt-item:last-child { padding-bottom: 0; }
+.mt-item:last-child .mt-line { display: none; }
+.mt-dot-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.mt-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 9px; font-weight: 700; flex-shrink: 0;
+}
+.mt-dot.done { background: rgba(0,229,160,0.15); color: var(--neon); border: 1.5px solid rgba(0,229,160,0.3); }
+.mt-dot.active { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1.5px solid rgba(255,167,38,0.3); animation: amber-pulse 2s infinite; }
+.mt-dot.locked { background: var(--bg-tertiary); color: var(--text-3); border: 1.5px solid var(--border); }
+.mt-line { flex: 1; width: 1.5px; background: var(--border); margin-top: 3px; min-height: 10px; }
+.mt-content { flex: 1; min-width: 0; }
+.mt-name { font-size: 12px; font-weight: 600; color: var(--text-1); }
+.mt-amount { font-family: var(--fm); font-size: 10px; color: var(--text-2); margin-top: 1px; }
+.mt-status {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 1px 6px; border-radius: 100px;
+  display: inline-flex; margin-top: 3px;
+}
+.mt-status.done { background: rgba(0,229,160,0.1); color: var(--neon); }
+.mt-status.pending { background: rgba(255,167,38,0.1); color: var(--accent-amber); }
+.mt-status.locked { background: var(--bg-tertiary); color: var(--text-3); }
+.mt-status.progress { background: rgba(66,165,245,0.1); color: var(--accent-blue); }
+
+/* Release button CTA */
+.release-cta {
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,229,160,0.08));
+  border: 1.5px solid var(--neon); color: var(--neon);
+  font-family: var(--ff); font-size: 13px; font-weight: 800;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 7px; transition: all 0.2s; margin-top: 10px;
+  box-shadow: var(--neon-glow-sm);
+}
+.release-cta:hover { box-shadow: var(--neon-glow); background: rgba(0,229,160,0.2); transform: translateY(-1px); }
+.release-cta:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.release-cta svg { width: 14px; height: 14px; stroke-width: 2.5; }
+
+/* Evidence vault section */
+.evidence-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 6px;
+}
+.evidence-thumb {
+  aspect-ratio: 1; border-radius: 8px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; transition: all 0.18s;
+  position: relative; overflow: hidden;
+}
+.evidence-thumb:hover { border-color: var(--border-neon); }
+.evidence-thumb-label {
+  position: absolute; bottom: 2px; left: 2px; right: 2px;
+  font-family: var(--fm); font-size: 7px; color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.5); border-radius: 3px; padding: 1px 3px;
+  text-align: center; text-transform: uppercase; letter-spacing: 0.08em;
+}
+[data-theme="light"] .evidence-thumb-label { color: rgba(0,0,0,0.7); background: rgba(255,255,255,0.7); }
+
+/* Quote comparison */
+.quote-compare-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; border-radius: 9px; border: 1px solid var(--border);
+  background: var(--bg-tertiary); cursor: pointer; transition: all 0.18s;
+  margin-bottom: 5px;
+}
+.quote-compare-row:hover { border-color: var(--border-neon); background: var(--neon-dim); }
+.quote-compare-name { font-size: 12px; font-weight: 600; color: var(--text-1); }
+.quote-compare-val { font-family: var(--fm); font-size: 11px; color: var(--neon); }
+.quote-compare-date { font-family: var(--fm); font-size: 9px; color: var(--text-3); }
+
+/* AI Copilot sidebar */
+.copilot-sidebar {
+  background: var(--bg-tertiary); border: 1px solid rgba(156,95,233,0.2);
+  border-radius: 12px; padding: 12px; margin: 0 2px;
+}
+.copilot-header-mini {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.copilot-icon-mini {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: linear-gradient(135deg, #7C3AED, #42A5F5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.copilot-name { font-family: var(--ff); font-size: 12px; font-weight: 700; color: var(--text-1); }
+.copilot-status { font-size: 10px; color: var(--text-3); }
+.copilot-alert {
+  font-size: 11.5px; color: var(--text-2); line-height: 1.5;
+  padding: 8px 10px; border-radius: 8px; margin-bottom: 5px;
+  border: 1px solid;
+}
+.copilot-alert.good { background: rgba(0,229,160,0.05); border-color: rgba(0,229,160,0.15); }
+.copilot-alert.warn { background: rgba(255,167,38,0.05); border-color: rgba(255,167,38,0.2); color: var(--accent-amber); }
+
+/* ═══════════ QUOTE COMPARISON MODAL ═══════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.22s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 22px; width: 100%; max-width: 760px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal { transform: none; }
+.modal.wide { max-width: 900px; }
+.modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; position: relative;
+}
+.modal-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.modal-icon.green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.2); }
+.modal-icon.amber { background: rgba(255,167,38,0.12); border: 1px solid rgba(255,167,38,0.2); }
+.modal-icon.blue { background: rgba(66,165,245,0.12); border: 1px solid rgba(66,165,245,0.2); }
+.modal-icon.danger { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.2); }
+.modal-title { font-family: var(--ff); font-size: 17px; font-weight: 800; color: var(--text-1); letter-spacing: -0.04em; }
+.modal-subtitle { font-size: 12.5px; color: var(--text-2); margin-top: 2px; }
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.18s;
+}
+.modal-close:hover { background: var(--neon-dim); color: var(--text-1); }
+.modal-close svg { width: 12px; height: 12px; stroke-width: 2.5; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Quote comparison layout */
+.quote-compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.qc-panel {
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.qc-panel.current { border-color: var(--border-neon); }
+.qc-panel-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.qc-panel-label { font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); }
+.qc-panel-label.current { color: var(--neon); }
+.qc-total { font-family: var(--ff); font-size: 22px; font-weight: 900; letter-spacing: -0.04em; }
+.qc-total.current { color: var(--neon); }
+.qc-body { padding: 14px 16px; }
+.qc-line { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+.qc-line:last-child { border-bottom: none; }
+.qc-line-label { color: var(--text-2); }
+.qc-line-val { font-family: var(--fm); font-size: 11px; font-weight: 600; color: var(--text-1); }
+.qc-diff { font-family: var(--fm); font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+.qc-diff.cheaper { background: rgba(0,229,160,0.12); color: var(--neon); }
+.qc-diff.pricier { background: rgba(255,71,87,0.1); color: var(--accent-danger); }
+
+/* Milestone release modal */
+.photo-review-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+.review-photo {
+  aspect-ratio: 1; border-radius: 10px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.review-photo:hover { border-color: var(--border-neon); transform: scale(1.03); }
+.review-photo.viewed { border-color: rgba(0,229,160,0.4); }
+.review-photo .check-overlay {
+  position: absolute; inset: 0; border-radius: 10px;
+  background: rgba(0,229,160,0.18); display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s; font-size: 20px;
+}
+.review-photo.viewed .check-overlay { opacity: 1; }
+.photo-gate-hint {
+  text-align: center; padding: 8px 0; font-size: 12px;
+  color: var(--accent-amber); font-family: var(--fm);
+  letter-spacing: 0.03em;
+}
+.photo-gate-hint.satisfied { color: var(--neon); }
+
+/* Dispute modal */
+.dispute-type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.dispute-type-card {
+  padding: 12px; border-radius: 12px; border: 1px solid var(--border-2);
+  background: var(--bg-tertiary); cursor: pointer; transition: all 0.18s;
+  text-align: center;
+}
+.dispute-type-card:hover { border-color: var(--border-2); }
+.dispute-type-card.selected { border-color: var(--accent-danger); background: rgba(255,71,87,0.05); }
+.dispute-type-card-icon { font-size: 24px; margin-bottom: 6px; }
+.dispute-type-card-label { font-size: 12px; font-weight: 600; color: var(--text-1); }
+.field-group { margin-bottom: 14px; }
+.field-label { font-family: var(--fm); font-size: 10px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.field-input {
+  width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 9px; padding: 10px 13px; color: var(--text-1);
+  font-family: var(--fb); font-size: 13px; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--border-neon); }
+textarea.field-input { resize: vertical; min-height: 80px; }
+.sla-countdown { display: flex; gap: 8px; margin: 12px 0; justify-content: center; }
+.sla-block { background: var(--bg-tertiary); border: 1px solid var(--border-2); border-radius: 9px; padding: 8px 12px; text-align: center; min-width: 56px; }
+.sla-val { font-family: var(--ff); font-size: 20px; font-weight: 900; color: var(--accent-danger); letter-spacing: -0.04em; }
+.sla-lbl { font-family: var(--fm); font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 1px; }
+
+/* Toast */
+#toastContainer { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 12px; padding: 12px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  font-size: 13px; color: var(--text-1); max-width: 340px;
+  animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  transition: opacity 0.3s, transform 0.3s;
+}
+@keyframes toast-in { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform:none; } }
+.toast.success { border-color: rgba(0,229,160,0.3); }
+.toast.warning { border-color: rgba(255,167,38,0.3); }
+.toast.info { border-color: rgba(66,165,245,0.3); }
+.toast.danger { border-color: rgba(255,71,87,0.3); }
+.toast-icon { font-size: 15px; flex-shrink: 0; }
+
+/* Animations */
+@keyframes pulse-dot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.4; transform:scale(0.7); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+/* Divider util */
+.divider { height: 1px; background: var(--border); margin: 10px 0; }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.info-label { font-size: 12px; color: var(--text-2); }
+.info-value { font-size: 12px; font-weight: 600; color: var(--text-1); font-family: var(--fm); font-size: 11px; }
+.info-value.green { color: var(--neon); }
+.info-value.amber { color: var(--accent-amber); }
+
+/* Photo lightbox */
+.lightbox {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.lightbox.open { opacity: 1; pointer-events: all; }
+.lightbox-inner {
+  text-align: center; max-width: 500px;
+}
+.lightbox-photo {
+  width: 280px; height: 280px; border-radius: 16px;
+  background: var(--bg-card); border: 1px solid var(--border-neon);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px; margin: 0 auto 16px;
+}
+.lightbox-meta { font-family: var(--fm); font-size: 11px; color: var(--text-2); margin-bottom: 6px; letter-spacing: 0.05em; }
+.lightbox-caption { font-size: 13px; color: var(--text-1); margin-bottom: 14px; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  :root { --thread-sidebar-w: 240px; }
+}
+@media (max-width: 900px) {
+  .chat-layout { grid-template-columns: 1fr; }
+  .thread-sidebar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══════════════ LEFT SIDEBAR ══════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">TradeMatch</div>
+        <div class="logo-sub">Message Centre</div>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section">Navigation</div>
+      <a class="nav-item" href="#" onclick="showToast('My Projects','info'); return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div>
+        My Projects
+      </a>
+      <a class="nav-item" href="#" onclick="showToast('My Wallet','info'); return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg></div>
+        My Wallet
+        <span class="nav-badge amber">Review</span>
+      </a>
+      <a class="nav-item active" href="#" onclick="return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></div>
+        Message Centre
+        <span class="nav-badge">2</span>
+      </a>
+      <a class="nav-item" href="#" onclick="showToast('Compare Quotes','info'); return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg></div>
+        Compare Quotes
+      </a>
+      <a class="nav-item" href="#" onclick="openModal('disputeModal'); return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+        Dispute Centre
+      </a>
+      <a class="nav-item" href="#" onclick="showToast('Document Vault opened','info'); return false;">
+        <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+        Document Vault
+        <span class="nav-badge">6</span>
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Active Threads</div>
+    </div>
+
+    <!-- Thread List -->
+    <div class="thread-list">
+      <div class="thread-item active" onclick="return false;">
+        <div class="thread-avatar" style="background:linear-gradient(135deg,#007a3d,#00E5A0)">
+          JD
+          <div class="thread-avatar-online"></div>
+        </div>
+        <div class="thread-meta">
+          <div class="thread-name">Jake Donovan</div>
+          <div class="thread-preview">📷 Milestone 2 photos submitted for your review</div>
+          <span class="trust-score-mini">9.8 · Verified ✓</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="thread-time">9:41am</div>
+          <div class="thread-unread"></div>
+        </div>
+      </div>
+
+      <div class="thread-item" onclick="switchThread()">
+        <div class="thread-avatar" style="background:linear-gradient(135deg,#D97706,#F59E0B)">
+          MR
+        </div>
+        <div class="thread-meta">
+          <div class="thread-name">Marcus Reed</div>
+          <div class="thread-preview">Quote updated — £3,450 total</div>
+          <span class="trust-score-mini">8.9 · Verified ✓</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="thread-time">Yesterday</div>
+        </div>
+      </div>
+
+      <div class="thread-item" onclick="showToast('Sarah C. thread opened','info')">
+        <div class="thread-avatar" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">
+          PC
+        </div>
+        <div class="thread-meta">
+          <div class="thread-name">Pete Collier</div>
+          <div class="thread-preview">Can you send the money directly to my...</div>
+          <span class="trust-score-mini" style="background:rgba(255,71,87,0.1);border-color:rgba(255,71,87,0.25);color:var(--accent-danger)">⚠ Security Alert</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="thread-time">Mon</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="profile-btn">
+        <div class="avatar">SB</div>
+        <div>
+          <div class="avatar-name">Sarah Bennett</div>
+          <div class="avatar-role">Homeowner · London SW1</div>
+        </div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════ TOP NAV ══════════════ -->
+  <header class="topnav">
+    <div class="breadcrumb">
+      <span>TradeMatch</span>
+      <span style="color:var(--text-3)">›</span>
+      <span class="breadcrumb-current">Message Centre</span>
+    </div>
+    <div class="topnav-right">
+      <button class="btn btn-danger" style="font-size:12px" onclick="openModal('disputeModal')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374L10.052 3.378c.866-1.5 3.032-1.5 3.898 0l5.353 9.748zM12 15.75h.007v.008H12v-.008z"/></svg>
+        Freeze Escrow
+      </button>
+      <button class="btn btn-secondary" style="font-size:12px" onclick="openModal('quoteCompareModal')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+        Compare Quotes
+      </button>
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+        <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════ MAIN CONTENT ══════════════ -->
+  <div class="main-content">
+
+    <!-- TRUST BANNER -->
+    <div class="trust-banner">
+      <div class="tb-avatar">
+        JD
+        <div class="tb-avatar-live"></div>
+      </div>
+      <div class="tb-info">
+        <div class="tb-name-row">
+          <div class="tb-name">Jake Donovan</div>
+          <span class="tb-badge">✓ ID Verified</span>
+          <span class="tb-badge">✓ NICEIC Reg</span>
+          <span class="tb-badge">✓ PLI Active</span>
+          <span class="tb-badge" id="insuranceBadge">AXA · £2M · Valid</span>
+        </div>
+        <div class="tb-meta">
+          <span class="tb-meta-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.562.562 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+            4.92 · 127 jobs
+          </span>
+          <span class="tb-meta-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+            SW1A · London
+          </span>
+          <span class="tb-meta-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            Show-Up Score: 97%
+          </span>
+          <span class="tb-meta-item" style="color:var(--text-3);font-family:var(--fm);font-size:10px;">
+            Kitchen Extension · Ref: TM-2026-KE-4821
+          </span>
+        </div>
+      </div>
+
+      <!-- Trust Score Pill -->
+      <div class="trust-score-pill">
+        <div>
+          <div class="trust-score-val">9.8</div>
+          <div class="trust-score-label">Trust<br>Score</div>
+        </div>
+      </div>
+
+      <!-- En Route Indicator -->
+      <div class="en-route-indicator" style="cursor:pointer" onclick="openModal('etaModal')">
+        <div class="en-route-dot"></div>
+        <div>
+          <div class="en-route-text">En Route</div>
+          <div class="en-route-eta">~28 min</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;color:var(--neon);stroke-width:2;margin-left:4px"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+      </div>
+    </div>
+
+    <!-- CHAT LAYOUT -->
+    <div class="chat-layout">
+
+      <!-- ══ CHAT AREA ══ -->
+      <div class="chat-area">
+        <div class="chat-messages" id="chatMessages">
+
+          <div class="date-divider">Wednesday, 26 Feb 2026</div>
+
+          <!-- Quote Accepted System Card -->
+          <div class="system-card quote">
+            <div class="sc-header">
+              <div class="sc-icon blue">📋</div>
+              <div>
+                <div class="sc-title">Formal Quote Accepted</div>
+                <div class="sc-sub">Kitchen Extension Electrical Works · Ref TM-Q-2026-0241</div>
+              </div>
+              <span class="sc-badge green">Binding</span>
+            </div>
+            <div class="sc-body">
+              <div class="sc-info-row"><span class="sc-info-label">Total Project Value</span><span class="sc-info-value green">£4,250</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">4 Milestones</span><span class="sc-info-value">M1 £1,250 → M2 £1,500 → M3 £1,000 → M4 £500</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Payment Method</span><span class="sc-info-value">Stripe Escrow · Funds Protected</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Start Date</span><span class="sc-info-value">14 Feb 2026</span></div>
+            </div>
+            <div class="sc-actions">
+              <button class="btn btn-secondary" style="font-size:12px" onclick="openModal('quoteCompareModal')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                Compare with Other Quotes
+              </button>
+              <button class="btn btn-primary" style="font-size:12px" onclick="showToast('Viewing signed quote PDF…','info')">
+                View Signed Quote PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Milestone 1 Released System Card -->
+          <div class="system-card complete">
+            <div class="sc-header">
+              <div class="sc-icon green">✅</div>
+              <div>
+                <div class="sc-title">Milestone 1 — Approved & Paid</div>
+                <div class="sc-sub">Site Preparation & Materials · 22 Feb 2026</div>
+              </div>
+              <span class="sc-badge green">£1,250 Released</span>
+            </div>
+            <div class="sc-body">
+              <div class="sc-info-row"><span class="sc-info-label">Approved by</span><span class="sc-info-value">Sarah Bennett · 22 Feb 2026 at 14:22</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Escrow Reference</span><span class="sc-info-value">TM-REL-240182</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Photos reviewed</span><span class="sc-info-value green">3 of 3 ✓</span></div>
+            </div>
+            <div class="sc-note">This release is permanently recorded. Ref: TM-REL-240182 · Added to Home Passport</div>
+          </div>
+
+          <div class="date-divider">Today · Monday, 3 March 2026</div>
+
+          <!-- Vendor message -->
+          <div class="msg-row from-vendor">
+            <div class="msg-avatar">JD</div>
+            <div>
+              <div class="msg-bubble">Morning Sarah! First fix electrical is looking great. I've just finished running all the circuits for the new kitchen — going ahead of schedule by about 2 days.</div>
+              <div class="msg-time">09:12 AM</div>
+            </div>
+          </div>
+
+          <!-- My message -->
+          <div class="msg-row from-me">
+            <div>
+              <div class="msg-bubble">Amazing, thanks Jake! Really pleased to hear it's ahead of schedule. Can't wait to see the progress photos 👍</div>
+              <div class="msg-time">09:18 AM</div>
+            </div>
+          </div>
+
+          <!-- Vendor message -->
+          <div class="msg-row from-vendor">
+            <div class="msg-avatar">JD</div>
+            <div>
+              <div class="msg-bubble">Just uploaded all the photos now — 4 shots of the first fix work, board prep, cable runs and the junction boxes. Should have everything ready for the milestone sign-off later today.</div>
+              <div class="msg-time">09:38 AM</div>
+            </div>
+          </div>
+
+          <!-- ★ MILESTONE COMPLETE SYSTEM CARD — requires homeowner action -->
+          <div class="system-card milestone" id="m2Card">
+            <div class="sc-header">
+              <div class="sc-icon amber">🔍</div>
+              <div>
+                <div class="sc-title">Milestone 2 — Review Required</div>
+                <div class="sc-sub">First Fix & Framework · Submitted by Jake Donovan · 09:41 AM</div>
+              </div>
+              <span class="sc-badge amber">⏳ Awaiting You</span>
+            </div>
+            <div class="sc-body">
+              <div class="sc-info-row"><span class="sc-info-label">Release Amount</span><span class="sc-info-value amber">£1,500</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Photos Submitted</span><span class="sc-info-value">4 photos · GPS-tagged · Today 09:39</span></div>
+              <div class="sc-info-row"><span class="sc-info-label">Jake's Note</span><span class="sc-info-value">"All circuits run, board prepped, ready for second fix."</span></div>
+            </div>
+            <div class="sc-photos">
+              <div class="sc-photo" id="scp1" onclick="viewPhoto('scp1','🔧','First Fix Cable Run','Today 09:39 · GPS: SW1A')">🔧<div class="sc-photo-viewed">✓</div></div>
+              <div class="sc-photo" id="scp2" onclick="viewPhoto('scp2','⚡','Consumer Board Prep','Today 09:39 · GPS: SW1A')">⚡<div class="sc-photo-viewed">✓</div></div>
+              <div class="sc-photo" id="scp3" onclick="viewPhoto('scp3','🏗️','Junction Box Install','Today 09:39 · GPS: SW1A')">🏗️<div class="sc-photo-viewed">✓</div></div>
+              <div class="sc-photo" id="scp4" onclick="viewPhoto('scp4','📐','Cable Management','Today 09:39 · GPS: SW1A')">📐<div class="sc-photo-viewed">✓</div></div>
+            </div>
+            <div class="sc-actions">
+              <button class="btn btn-danger" style="font-size:12px" onclick="openModal('disputeModal')">
+                ✗ Raise Dispute
+              </button>
+              <button class="btn btn-primary" id="m2ApproveBtn" style="font-size:12px" onclick="openModal('releaseModal')" disabled>
+                🔒 View Photos to Approve
+              </button>
+              <span id="m2Hint" style="font-size:11px;color:var(--accent-amber);margin-left:4px;font-family:var(--fm)">Tap all 4 photos first</span>
+            </div>
+          </div>
+
+          <!-- AI Copilot flag -->
+          <div class="ai-flag">
+            <div class="ai-flag-icon">🤖</div>
+            <div>
+              <div class="ai-flag-text"><strong>AI Copilot:</strong> I've reviewed Jake's 4 milestone photos. Cable runs, board prep, and junction boxes are consistent with the first-fix scope in your signed quote. All photos are GPS-verified to your property address and timestamped correctly. <strong>No anomalies detected.</strong></div>
+            </div>
+          </div>
+
+        </div><!-- /chat-messages -->
+
+        <!-- Chat Input Area -->
+        <div class="chat-input-area">
+          <div class="chat-input-toolbar">
+            <button class="toolbar-btn" onclick="showToast('Photo attachment opened','info')" title="Attach photo">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            </button>
+            <button class="toolbar-btn" onclick="showToast('File attachment opened','info')" title="Attach file">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+            </button>
+            <div class="toolbar-divider"></div>
+            <button class="toolbar-btn" onclick="openModal('quoteCompareModal')" title="Compare quotes">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+            </button>
+            <button class="toolbar-btn" onclick="openModal('releaseModal')" title="Release payment">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg>
+            </button>
+            <div class="toolbar-divider"></div>
+            <span style="font-family:var(--fm);font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-left:2px">🔒 End-to-End Encrypted · Legal Record</span>
+          </div>
+          <div class="chat-input-row">
+            <div class="chat-input-wrap">
+              <textarea class="chat-input" id="chatInput" placeholder="Type a message… All messages are permanently logged as legal evidence." rows="1" oninput="autoResize(this)" onkeydown="handleChatKey(event)"></textarea>
+            </div>
+            <button class="send-btn" onclick="sendMessage()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+            </button>
+          </div>
+          <div class="chat-security-note">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+            Protected by TradeMatch Trust Architecture · All messages stored as legal record · Dispute SLA: 48h
+          </div>
+        </div>
+      </div><!-- /chat-area -->
+
+      <!-- ══ RIGHT SIDEBAR: ESCROW TIMELINE ══ -->
+      <div class="thread-sidebar">
+
+        <!-- Escrow Widget -->
+        <div class="ts-section">
+          <div class="ts-title">
+            Escrow Status
+            <a onclick="showToast('Opening escrow wallet…','info')">View All →</a>
+          </div>
+          <div class="escrow-widget">
+            <div class="escrow-total-row">
+              <div class="escrow-total-val">£4,250</div>
+              <div class="escrow-total-label">Total<br>Protected</div>
+            </div>
+            <div class="stripe-badge-mini">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+              Stripe Secure · TM-ESC-4821
+            </div>
+            <div class="escrow-breakdown">
+              <div class="escrow-line">
+                <span class="escrow-line-label">Released to Jake</span>
+                <span class="escrow-line-val green">£1,250</span>
+              </div>
+              <div class="escrow-line">
+                <span class="escrow-line-label">Pending Review (M2)</span>
+                <span class="escrow-line-val amber">£1,500</span>
+              </div>
+              <div class="escrow-line">
+                <span class="escrow-line-label">Locked in Escrow</span>
+                <span class="escrow-line-val blue">£1,500</span>
+              </div>
+            </div>
+            <button class="release-cta" id="mainReleaseCta" onclick="openModal('releaseModal')" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+              Review Photos First
+            </button>
+          </div>
+        </div>
+
+        <!-- Milestone Timeline -->
+        <div class="ts-section">
+          <div class="ts-title">Project Roadmap</div>
+          <div class="milestone-timeline">
+            <div class="mt-item">
+              <div class="mt-dot-col">
+                <div class="mt-dot done">✓</div>
+                <div class="mt-line"></div>
+              </div>
+              <div class="mt-content">
+                <div class="mt-name">M1 — Site Preparation</div>
+                <div class="mt-amount">£1,250 · Released 22 Feb</div>
+                <span class="mt-status done">Paid</span>
+              </div>
+            </div>
+            <div class="mt-item">
+              <div class="mt-dot-col">
+                <div class="mt-dot active">2</div>
+                <div class="mt-line"></div>
+              </div>
+              <div class="mt-content">
+                <div class="mt-name">M2 — First Fix</div>
+                <div class="mt-amount">£1,500 · Awaiting review</div>
+                <span class="mt-status pending">⏳ Review Required</span>
+              </div>
+            </div>
+            <div class="mt-item">
+              <div class="mt-dot-col">
+                <div class="mt-dot locked">3</div>
+                <div class="mt-line"></div>
+              </div>
+              <div class="mt-content">
+                <div class="mt-name">M3 — Second Fix</div>
+                <div class="mt-amount">£1,000 · Unlocks after M2</div>
+                <span class="mt-status locked">Locked</span>
+              </div>
+            </div>
+            <div class="mt-item">
+              <div class="mt-dot-col">
+                <div class="mt-dot locked">4</div>
+                <div class="mt-line"></div>
+              </div>
+              <div class="mt-content">
+                <div class="mt-name">M4 — Final Sign-off</div>
+                <div class="mt-amount">£500 · Cert required</div>
+                <span class="mt-status locked">Cert Gate</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence Vault -->
+        <div class="ts-section">
+          <div class="ts-title">
+            Evidence Vault
+            <a onclick="showToast('Opening Document Vault with all 7 photos…','info')">View All →</a>
+          </div>
+          <div class="evidence-grid">
+            <div class="evidence-thumb" onclick="showToast('M1 — Before photo · 22 Feb','info')">🏗️<div class="evidence-thumb-label">M1</div></div>
+            <div class="evidence-thumb" onclick="showToast('M1 — Materials delivered · 22 Feb','info')">📦<div class="evidence-thumb-label">M1</div></div>
+            <div class="evidence-thumb" onclick="showToast('M1 — Site ready · 22 Feb','info')">✅<div class="evidence-thumb-label">M1</div></div>
+            <div class="evidence-thumb" onclick="viewPhoto('ev1','🔧','First Fix Cable Run','Today 09:39 · GPS Verified')">🔧<div class="evidence-thumb-label">M2</div></div>
+            <div class="evidence-thumb" onclick="viewPhoto('ev2','⚡','Consumer Board Prep','Today 09:39 · GPS Verified')">⚡<div class="evidence-thumb-label">M2</div></div>
+            <div class="evidence-thumb" onclick="showToast('+2 more M2 photos in vault','info')">+2<div class="evidence-thumb-label">M2</div></div>
+          </div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--text-3);margin-top:8px;text-align:center;text-transform:uppercase;letter-spacing:0.08em;">7 photos · Immutable · 7yr retention</div>
+        </div>
+
+        <!-- AI Copilot Widget -->
+        <div class="ts-section">
+          <div class="ts-title">AI Copilot</div>
+          <div class="copilot-sidebar">
+            <div class="copilot-header-mini">
+              <div class="copilot-icon-mini">🤖</div>
+              <div>
+                <div class="copilot-name">TradeMatch AI</div>
+                <div class="copilot-status">Monitoring this thread</div>
+              </div>
+            </div>
+            <div class="copilot-alert good">✅ All milestone photos verified. No payment protection concerns in this thread.</div>
+            <div class="copilot-alert good">✅ Jake's PLI (AXA £2M) auto-renewed and verified this morning.</div>
+            <div class="copilot-alert warn" style="cursor:pointer" onclick="showToast('Thread "Pete Collier" flagged for off-platform payment request — escrow pre-frozen','warning')">⚠ In thread "Pete Collier": possible cash request detected. Tap to review.</div>
+          </div>
+        </div>
+
+        <!-- Quote comparison history -->
+        <div class="ts-section">
+          <div class="ts-title">Quote History
+            <a onclick="openModal('quoteCompareModal')">Compare →</a>
+          </div>
+          <div class="quote-compare-row" onclick="openModal('quoteCompareModal')">
+            <div>
+              <div class="quote-compare-name">Jake Donovan · Current</div>
+              <div class="quote-compare-date">Accepted 26 Feb 2026</div>
+            </div>
+            <div class="quote-compare-val">£4,250</div>
+          </div>
+          <div class="quote-compare-row" onclick="openModal('quoteCompareModal')">
+            <div>
+              <div class="quote-compare-name">Marcus Reed</div>
+              <div class="quote-compare-date">Received 24 Feb 2026</div>
+            </div>
+            <div class="quote-compare-val" style="color:var(--accent-amber)">£3,900</div>
+          </div>
+          <div class="quote-compare-row" onclick="openModal('quoteCompareModal')">
+            <div>
+              <div class="quote-compare-name">Priya Shah</div>
+              <div class="quote-compare-date">Received 23 Feb 2026</div>
+            </div>
+            <div class="quote-compare-val" style="color:var(--accent-amber)">£4,750</div>
+          </div>
+        </div>
+
+      </div><!-- /thread-sidebar -->
+
+    </div><!-- /chat-layout -->
+  </div><!-- /main-content -->
+
+</div><!-- /app-shell -->
+
+<!-- ════════════════════════════════
+     TOAST CONTAINER
+     ════════════════════════════════ -->
+<div id="toastContainer"></div>
+
+<!-- ════════════════════════════════
+     LIGHTBOX
+     ════════════════════════════════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <div class="lightbox-photo" id="lightboxPhoto">🔧</div>
+    <div class="lightbox-meta" id="lightboxMeta">Today 09:39 · GPS: SW1A · Immutable Record</div>
+    <div class="lightbox-caption" id="lightboxCaption">First Fix Cable Run</div>
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button class="btn btn-secondary" onclick="showToast('Saving to Document Vault…','success');closeLightbox()">Save to Vault</button>
+      <button class="btn btn-ghost" onclick="closeLightbox()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL: MILESTONE RELEASE
+     ════════════════════════════════ -->
+<div class="modal-overlay" id="releaseModal" onclick="handleOverlayClick(event,'releaseModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon amber">🔍</div>
+      <div>
+        <div class="modal-title">Review & Release Milestone 2</div>
+        <div class="modal-subtitle">Evidence-First Review · £1,500 held in Stripe Escrow</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('releaseModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="font-family:var(--fm);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:10px;">Step 1 — View All 4 Milestone Photos</div>
+      <div class="photo-review-grid" id="modalPhotoGrid">
+        <div class="review-photo" id="rp1" onclick="reviewPhoto('rp1')">🔧<div class="check-overlay">✓</div></div>
+        <div class="review-photo" id="rp2" onclick="reviewPhoto('rp2')">⚡<div class="check-overlay">✓</div></div>
+        <div class="review-photo" id="rp3" onclick="reviewPhoto('rp3')">🏗️<div class="check-overlay">✓</div></div>
+        <div class="review-photo" id="rp4" onclick="reviewPhoto('rp4')">📐<div class="check-overlay">✓</div></div>
+      </div>
+      <div class="photo-gate-hint" id="photoGateHint">
+        ⚠ Tap each photo to review before releasing payment
+      </div>
+      <div class="divider"></div>
+      <div style="font-family:var(--fm);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:10px;">Step 2 — Confirm Release</div>
+      <div class="info-row"><span class="info-label">Milestone</span><span class="info-value">M2 — First Fix & Framework</span></div>
+      <div class="info-row"><span class="info-label">Release Amount</span><span class="info-value" style="color:var(--neon)">£1,500</span></div>
+      <div class="info-row"><span class="info-label">Remaining in Escrow After</span><span class="info-value">£1,500</span></div>
+      <div class="info-row"><span class="info-label">Vendor</span><span class="info-value">Jake Donovan · NICEIC</span></div>
+      <div class="info-row"><span class="info-label">Stripe Reference</span><span class="info-value">TM-ESC-4821</span></div>
+      <div class="divider"></div>
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px;border-radius:10px;border:1px solid var(--border-neon);background:rgba(0,229,160,0.04);">
+        <input type="checkbox" id="releaseConfirm" style="width:16px;height:16px;accent-color:var(--neon);margin-top:1px;flex-shrink:0;" onchange="toggleReleaseCta()">
+        <span style="font-size:12.5px;color:var(--text-2);line-height:1.5;">I confirm I have reviewed all milestone photos and am satisfied with the quality of work. I authorise the release of <strong style="color:var(--text-1)">£1,500</strong> from escrow to Jake Donovan.</span>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="closeModal('releaseModal');openModal('disputeModal')">✗ Raise Dispute Instead</button>
+      <button class="btn btn-ghost" onclick="closeModal('releaseModal')">Cancel</button>
+      <button class="btn btn-primary" id="confirmReleaseBtn" disabled onclick="confirmRelease()">
+        🔒 Photos First
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL: QUOTE COMPARISON
+     ════════════════════════════════ -->
+<div class="modal-overlay" id="quoteCompareModal" onclick="handleOverlayClick(event,'quoteCompareModal')">
+  <div class="modal wide">
+    <div class="modal-header">
+      <div class="modal-icon blue">📊</div>
+      <div>
+        <div class="modal-title">Quote Comparison · Side-by-Side</div>
+        <div class="modal-subtitle">Kitchen Extension Electrical · 3 quotes received</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('quoteCompareModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(0,229,160,0.05);border:1px solid var(--border-neon);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-2);">
+        🤖 <strong style="color:var(--neon)">AI Analysis:</strong> Jake Donovan's quote is mid-range. Marcus Reed is £350 cheaper but has a lower Trust Score (8.9 vs 9.8) and no NICEIC certification. Priya Shah is most expensive. Jake's superior credentials may justify the £350 premium.
+      </div>
+      <div class="quote-compare-grid">
+        <div class="qc-panel current">
+          <div class="qc-panel-header">
+            <div>
+              <div class="qc-panel-label current">✓ Accepted · Jake Donovan</div>
+              <div style="font-size:12px;color:var(--text-2);margin-top:2px">NICEIC · Trust Score 9.8 · 97% Show-Up</div>
+            </div>
+            <div class="qc-total current">£4,250</div>
+          </div>
+          <div class="qc-body">
+            <div class="qc-line"><span class="qc-line-label">Site Preparation</span><span class="qc-line-val">£1,250</span></div>
+            <div class="qc-line"><span class="qc-line-label">First Fix Electrical</span><span class="qc-line-val">£1,500</span></div>
+            <div class="qc-line"><span class="qc-line-label">Second Fix & Test</span><span class="qc-line-val">£1,000</span></div>
+            <div class="qc-line"><span class="qc-line-label">Final Certificate</span><span class="qc-line-val">£500</span></div>
+            <div class="qc-line"><span class="qc-line-label">NICEIC Certificate</span><span class="qc-line-val" style="color:var(--neon)">Included ✓</span></div>
+            <div class="qc-line"><span class="qc-line-label">PLI £2M (AXA)</span><span class="qc-line-val" style="color:var(--neon)">Verified ✓</span></div>
+            <div class="qc-line"><span class="qc-line-label">Warranty</span><span class="qc-line-val">12 months</span></div>
+          </div>
+        </div>
+        <div class="qc-panel">
+          <div class="qc-panel-header">
+            <div>
+              <div class="qc-panel-label">Marcus Reed</div>
+              <div style="font-size:12px;color:var(--text-2);margin-top:2px">No NICEIC · Trust Score 8.9 · 88% Show-Up</div>
+            </div>
+            <div class="qc-total" style="color:var(--accent-amber)">£3,900</div>
+          </div>
+          <div class="qc-body">
+            <div class="qc-line"><span class="qc-line-label">Site Preparation</span><span class="qc-line-val">£1,100 <span class="qc-diff cheaper">−£150</span></span></div>
+            <div class="qc-line"><span class="qc-line-label">First Fix Electrical</span><span class="qc-line-val">£1,300 <span class="qc-diff cheaper">−£200</span></span></div>
+            <div class="qc-line"><span class="qc-line-label">Second Fix & Test</span><span class="qc-line-val">£1,000</span></div>
+            <div class="qc-line"><span class="qc-line-label">Final Certificate</span><span class="qc-line-val">£500</span></div>
+            <div class="qc-line"><span class="qc-line-label">NICEIC Certificate</span><span class="qc-line-val" style="color:var(--accent-amber)">Not Included ⚠</span></div>
+            <div class="qc-line"><span class="qc-line-label">PLI £2M</span><span class="qc-line-val" style="color:var(--neon)">Verified ✓</span></div>
+            <div class="qc-line"><span class="qc-line-label">Warranty</span><span class="qc-line-val">6 months</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:10px;text-align:center;font-size:11px;color:var(--text-3);font-family:var(--fm);">Priya Shah · £4,750 — NICEIC · Trust 9.1 · 94% Show-Up · All quotes verified by TradeMatch</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('quoteCompareModal')">Close</button>
+      <button class="btn btn-primary" onclick="closeModal('quoteCompareModal');showToast('Quote comparison saved to Document Vault','success')">Save Comparison to Vault</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL: DISPUTE
+     ════════════════════════════════ -->
+<div class="modal-overlay" id="disputeModal" onclick="handleOverlayClick(event,'disputeModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon danger">⚠️</div>
+      <div>
+        <div class="modal-title">Freeze Escrow & Raise Dispute</div>
+        <div class="modal-subtitle">TradeMatch Trust & Safety · 48-Hour SLA Guaranteed</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('disputeModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(255,71,87,0.06);border:1px solid rgba(255,71,87,0.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:var(--text-2);">
+        🔒 <strong style="color:var(--accent-danger)">Escrow will be immediately frozen</strong> — Jake Donovan's wallet will be locked for this job. Our Trust & Safety team will review all evidence within 48 hours.
+      </div>
+      <div style="font-family:var(--fm);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);margin-bottom:8px;">48-Hour Resolution SLA</div>
+      <div class="sla-countdown">
+        <div class="sla-block"><div class="sla-val" id="slaH">47</div><div class="sla-lbl">Hours</div></div>
+        <div class="sla-block"><div class="sla-val" id="slaM">59</div><div class="sla-lbl">Mins</div></div>
+        <div class="sla-block"><div class="sla-val" id="slaS">00</div><div class="sla-lbl">Secs</div></div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Dispute Type</div>
+        <div class="dispute-type-cards">
+          <div class="dispute-type-card selected" onclick="selectDispute(this)">
+            <div class="dispute-type-card-icon">🔨</div>
+            <div class="dispute-type-card-label">Quality of Work</div>
+          </div>
+          <div class="dispute-type-card" onclick="selectDispute(this)">
+            <div class="dispute-type-card-icon">💸</div>
+            <div class="dispute-type-card-label">Overcharging</div>
+          </div>
+          <div class="dispute-type-card" onclick="selectDispute(this)">
+            <div class="dispute-type-card-icon">🚫</div>
+            <div class="dispute-type-card-label">No-Show / Abandonment</div>
+          </div>
+          <div class="dispute-type-card" onclick="selectDispute(this)">
+            <div class="dispute-type-card-icon">📋</div>
+            <div class="dispute-type-card-label">Scope Disagreement</div>
+          </div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Describe the Issue (min 20 chars)</div>
+        <textarea class="field-input" id="disputeDesc" placeholder="Describe what happened in as much detail as possible. This will be reviewed by our Trust & Safety team alongside all photos and messages from this thread…" rows="4"></textarea>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-2);padding:10px 12px;background:var(--bg-tertiary);border-radius:8px;line-height:1.6;">
+        📎 All <strong>7 photos</strong>, check-in/out logs, quote document, and full message history will be automatically attached as evidence.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('disputeModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="submitDispute()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374L10.052 3.378c.866-1.5 3.032-1.5 3.898 0l5.353 9.748zM12 15.75h.007v.008H12v-.008z"/></svg>
+        Freeze Escrow & Submit
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     MODAL: ETA MAP
+     ════════════════════════════════ -->
+<div class="modal-overlay" id="etaModal" onclick="handleOverlayClick(event,'etaModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon green">📍</div>
+      <div>
+        <div class="modal-title">Jake is on his way</div>
+        <div class="modal-subtitle">GPS Live · Kitchen Extension · 147 Abingdon Road SW1A</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('etaModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--bg-tertiary);border:1px solid var(--border-neon);border-radius:14px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;margin-bottom:16px;">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,160,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.05) 1px,transparent 1px);background-size:22px 22px;"></div>
+        <div style="font-size:32px;position:relative;z-index:1;">🚐</div>
+        <div style="font-family:var(--fm);font-size:11px;color:var(--neon);position:relative;z-index:1;text-transform:uppercase;letter-spacing:0.1em;">Jake · En Route</div>
+        <div style="font-size:11px;color:var(--text-3);position:relative;z-index:1;">GPS tracking active · Last update: 30 seconds ago</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+        <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:11px;padding:12px;text-align:center;">
+          <div style="font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--neon);letter-spacing:-0.04em;">~28m</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">ETA</div>
+        </div>
+        <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:11px;padding:12px;text-align:center;">
+          <div style="font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--accent-amber);letter-spacing:-0.04em;">97%</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Show-Up</div>
+        </div>
+        <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:11px;padding:12px;text-align:center;">
+          <div style="font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--accent-blue);letter-spacing:-0.04em;">9.8</div>
+          <div style="font-family:var(--fm);font-size:8px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Trust</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('etaModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════
+   THEME
+   ════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const icon = document.getElementById('themeIcon');
+  if (icon) {
+    icon.innerHTML = isDark
+      ? '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>'
+      : '<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';
+  }
+}
+
+/* ════════════════
+   MODALS
+   ════════════════ */
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
+}
+function handleOverlayClick(e, id) {
+  if (e.target === e.currentTarget) closeModal(id);
+}
+
+/* ════════════════
+   TOAST
+   ════════════════ */
+function showToast(msg, type = 'info') {
+  const icons = { success: '✅', warning: '⚠️', info: 'ℹ️', danger: '🔴' };
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span>${msg}`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(20px)'; setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+/* ════════════════
+   MILESTONE PHOTOS (inline chat card)
+   ════════════════ */
+const chatPhotosViewed = new Set();
+const chatPhotoIds = ['scp1','scp2','scp3','scp4'];
+
+function viewPhoto(id, emoji, caption, meta) {
+  // Mark as viewed
+  chatPhotosViewed.add(id.replace('ev','scp'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('viewed');
+  // Open lightbox
+  document.getElementById('lightboxPhoto').textContent = emoji;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightboxMeta').textContent = meta + ' · Immutable Record · Auto-saved to Evidence Vault';
+  document.getElementById('lightbox').classList.add('open');
+  // Sync to vault
+  showToast(`📷 ${caption} — auto-synced to Evidence Vault`, 'success');
+  checkChatPhotosReady();
+}
+
+function checkChatPhotosReady() {
+  const allViewed = chatPhotoIds.every(id => chatPhotosViewed.has(id));
+  const approveBtn = document.getElementById('m2ApproveBtn');
+  const hint = document.getElementById('m2Hint');
+  const releaseCta = document.getElementById('mainReleaseCta');
+  if (allViewed) {
+    if (approveBtn) {
+      approveBtn.disabled = false;
+      approveBtn.textContent = '✓ Approve & Release £1,500';
+    }
+    if (hint) hint.style.display = 'none';
+    if (releaseCta) {
+      releaseCta.disabled = false;
+      releaseCta.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;stroke-width:2.5;flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>Release £1,500 Now';
+      releaseCta.style.background = 'linear-gradient(135deg,rgba(0,229,160,0.2),rgba(0,229,160,0.12))';
+    }
+    showToast('All 4 photos reviewed — Release button unlocked', 'success');
+  }
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+/* ════════════════
+   RELEASE MODAL PHOTO GATE
+   ════════════════ */
+const modalPhotosViewed = new Set();
+const modalPhotoIds = ['rp1','rp2','rp3','rp4'];
+
+function reviewPhoto(id) {
+  modalPhotosViewed.add(id);
+  const el = document.getElementById(id);
+  if (el) el.classList.add('viewed');
+  const allViewed = modalPhotoIds.every(id => modalPhotosViewed.has(id));
+  const releaseConfirm = document.getElementById('releaseConfirm');
+  const hint = document.getElementById('photoGateHint');
+  if (allViewed) {
+    if (hint) { hint.className = 'photo-gate-hint satisfied'; hint.textContent = '✓ All photos reviewed — confirm release below'; }
+    showToast('All photos reviewed — tick the confirmation box to unlock release', 'success');
+  } else {
+    if (hint) hint.textContent = `✓ ${modalPhotosViewed.size} of 4 reviewed — tap remaining photos`;
+  }
+}
+
+function toggleReleaseCta() {
+  const cb = document.getElementById('releaseConfirm');
+  const btn = document.getElementById('confirmReleaseBtn');
+  const allViewed = modalPhotoIds.every(id => modalPhotosViewed.has(id));
+  if (cb.checked && allViewed) {
+    btn.disabled = false;
+    btn.textContent = '✓ Release £1,500 to Jake';
+  } else if (cb.checked && !allViewed) {
+    showToast('Please view all 4 photos before confirming', 'warning');
+    cb.checked = false;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🔒 Photos First';
+  }
+}
+
+function confirmRelease() {
+  closeModal('releaseModal');
+  // Update chat
+  const caseRef = 'TM-REL-' + Date.now().toString().slice(-6);
+  appendSystemMessage('released', caseRef);
+  // Update sidebar
+  document.querySelector('.escrow-line-val.amber').textContent = '£0';
+  document.querySelector('.escrow-line-val.amber').className = 'escrow-line-val green';
+  document.querySelector('.escrow-line-val.green').textContent = '£2,750';
+  // Update release CTA
+  const cta = document.getElementById('mainReleaseCta');
+  cta.disabled = true;
+  cta.textContent = '✓ M2 Released';
+  // Update m2 card badge
+  const m2Card = document.getElementById('m2Card');
+  if (m2Card) {
+    const badge = m2Card.querySelector('.sc-badge');
+    if (badge) { badge.className = 'sc-badge green'; badge.textContent = '£1,500 Released'; }
+    const approveBtn = document.getElementById('m2ApproveBtn');
+    if (approveBtn) { approveBtn.disabled = true; approveBtn.textContent = '✓ Approved & Released'; }
+  }
+  // Update milestone timeline M2
+  const m2Dot = document.querySelectorAll('.mt-dot')[1];
+  if (m2Dot) { m2Dot.className = 'mt-dot done'; m2Dot.textContent = '✓'; }
+  const m2Status = document.querySelectorAll('.mt-status')[1];
+  if (m2Status) { m2Status.className = 'mt-status done'; m2Status.textContent = 'Paid'; }
+  showToast(`✓ £1,500 released to Jake Donovan via Stripe · Ref: ${caseRef} · Added to Home Passport`, 'success');
+}
+
+function appendSystemMessage(type, ref) {
+  const msgs = document.getElementById('chatMessages');
+  const card = document.createElement('div');
+  card.className = 'system-card complete';
+  card.innerHTML = `
+    <div class="sc-header">
+      <div class="sc-icon green">✅</div>
+      <div>
+        <div class="sc-title">Milestone 2 — Approved & Paid</div>
+        <div class="sc-sub">First Fix & Framework · Released today · Ref: ${ref}</div>
+      </div>
+      <span class="sc-badge green">£1,500 Released</span>
+    </div>
+    <div class="sc-body">
+      <div class="sc-info-row"><span class="sc-info-label">Approved by</span><span class="sc-info-value">Sarah Bennett · Just now</span></div>
+      <div class="sc-info-row"><span class="sc-info-label">Release Ref</span><span class="sc-info-value">${ref}</span></div>
+      <div class="sc-info-row"><span class="sc-info-label">4 Photos Reviewed</span><span class="sc-info-value green">✓ Evidence on record</span></div>
+    </div>
+    <div class="sc-note">Permanently recorded · Ref: ${ref} · Added to Home Passport</div>
+  `;
+  msgs.appendChild(card);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+/* ════════════════
+   DISPUTE
+   ════════════════ */
+function selectDispute(el) {
+  document.querySelectorAll('.dispute-type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function submitDispute() {
+  const desc = document.getElementById('disputeDesc').value;
+  if (desc.length < 20) { showToast('Please describe the issue (min 20 characters)', 'warning'); return; }
+  const caseRef = 'TM-2026-' + Math.floor(10000 + Math.random() * 90000);
+  closeModal('disputeModal');
+  showToast(`🔒 Escrow frozen · Case #${caseRef} opened · SLA: 48h · All evidence auto-attached`, 'danger');
+  // Add dispute system card
+  setTimeout(() => {
+    const msgs = document.getElementById('chatMessages');
+    const card = document.createElement('div');
+    card.className = 'system-card dispute';
+    card.innerHTML = `
+      <div class="sc-header">
+        <div class="sc-icon danger">⚠️</div>
+        <div>
+          <div class="sc-title">Dispute Raised · Escrow Frozen</div>
+          <div class="sc-sub">Case #${caseRef} · Trust & Safety reviewing · 48h SLA active</div>
+        </div>
+        <span class="sc-badge danger">SLA: 48h</span>
+      </div>
+      <div class="sc-body">
+        <div class="sc-info-row"><span class="sc-info-label">Escrow Status</span><span class="sc-info-value" style="color:var(--accent-danger)">🔒 Frozen — No funds can move</span></div>
+        <div class="sc-info-row"><span class="sc-info-label">Case Reference</span><span class="sc-info-value">${caseRef}</span></div>
+        <div class="sc-info-row"><span class="sc-info-label">Evidence Auto-Attached</span><span class="sc-info-value">7 photos, full message log, check-in records</span></div>
+      </div>
+      <div class="sc-note">Our Trust & Safety team will contact you within 48 hours · Your funds are protected</div>
+    `;
+    msgs.appendChild(card);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 300);
+}
+
+/* ════════════════
+   SLA CLOCK
+   ════════════════ */
+let slaSeconds = 47 * 3600 + 59 * 60;
+function updateSla() {
+  const h = Math.floor(slaSeconds / 3600);
+  const m = Math.floor((slaSeconds % 3600) / 60);
+  const s = slaSeconds % 60;
+  const hEl = document.getElementById('slaH');
+  const mEl = document.getElementById('slaM');
+  const sEl = document.getElementById('slaS');
+  if (hEl) hEl.textContent = String(h).padStart(2,'0');
+  if (mEl) mEl.textContent = String(m).padStart(2,'0');
+  if (sEl) sEl.textContent = String(s).padStart(2,'0');
+  if (slaSeconds > 0) slaSeconds--;
+}
+setInterval(updateSla, 1000);
+
+/* ════════════════
+   CHAT INPUT
+   ════════════════ */
+// Off-platform detection patterns
+const offPlatformPatterns = [
+  /\b(cash|whatsapp|whats app|direct transfer|bank transfer|pay me directly|outside[- ]platform|off[- ]platform|my account|personal account)\b/i,
+  /\b(paypal|venmo|cash app|revolut|bacs|faster payment)\b/i,
+];
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  // AI consumer protection filter
+  const isOffPlatform = offPlatformPatterns.some(p => p.test(msg));
+
+  if (isOffPlatform) {
+    input.value = '';
+    input.style.height = 'auto';
+    const msgs = document.getElementById('chatMessages');
+    // Block message
+    const blocked = document.createElement('div');
+    blocked.className = 'blocked-msg';
+    blocked.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>🔒 Message blocked — off-platform payment reference detected`;
+    msgs.appendChild(blocked);
+    // Security warning
+    const warn = document.createElement('div');
+    warn.className = 'security-warning';
+    warn.innerHTML = `
+      <div class="sw-icon">🛡️</div>
+      <div>
+        <div class="sw-title">Security Warning — Off-Platform Reference Detected</div>
+        <div class="sw-body">Your AI Copilot flagged this message as it references a payment or communication channel outside TradeMatch. Moving payments off-platform removes all escrow protection and legal recourse. <strong>All payments must stay in Stripe Escrow.</strong></div>
+        <div class="sw-actions">
+          <button class="btn btn-amber" style="font-size:11px;padding:5px 10px" onclick="showToast('Reporting to Trust & Safety…','warning')">Report Attempt</button>
+          <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="this.closest('.security-warning').style.display='none'">Dismiss</button>
+        </div>
+      </div>
+    `;
+    msgs.appendChild(warn);
+    msgs.scrollTop = msgs.scrollHeight;
+    showToast('⚠ Off-platform payment reference blocked — you are protected', 'warning');
+    return;
+  }
+
+  // Normal message
+  const msgs = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'msg-row from-me';
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  row.innerHTML = `
+    <div>
+      <div class="msg-bubble">${escapeHtml(msg)}</div>
+      <div class="msg-time">${time}</div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Simulate vendor typing response
+  setTimeout(() => simulateVendorReply(), 1200 + Math.random() * 1000);
+}
+
+function escapeHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const vendorReplies = [
+  "Sounds good Sarah! I'll have all the details sorted.",
+  "No problem at all, I can get that done this afternoon.",
+  "Everything is looking great on site — really happy with how it's coming together.",
+  "Just checking in — should be at yours in about 25 minutes, traffic is light.",
+  "I've uploaded the latest photos to the milestone. Let me know when you've had a chance to review them.",
+];
+let replyIdx = 0;
+
+function simulateVendorReply() {
+  const msgs = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'msg-row from-vendor';
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  row.innerHTML = `
+    <div class="msg-avatar">JD</div>
+    <div>
+      <div class="msg-bubble">${vendorReplies[replyIdx % vendorReplies.length]}</div>
+      <div class="msg-time">${time}</div>
+    </div>
+  `;
+  msgs.appendChild(row);
+  msgs.scrollTop = msgs.scrollHeight;
+  replyIdx++;
+}
+
+/* ════════════════
+   THREAD SWITCH
+   ════════════════ */
+function switchThread() {
+  document.querySelectorAll('.thread-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  showToast('Marcus Reed thread opened','info');
+}
+
+/* ════════════════
+   KEYBOARD
+   ════════════════ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+</script>
+
+</body>
+</html>

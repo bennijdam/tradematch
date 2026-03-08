@@ -277,5 +277,3 @@ export function Topbar() {
 
 // Import useClock
 import { useClock } from '@/hooks/useClock';
-
-export default Navigation;

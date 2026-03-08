@@ -1,0 +1,2615 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dispute Centre — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   TRADEMATCH DISPUTE CENTRE
+   Design system cloned exactly from homeowner_dashboard_v3
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── TOKENS ── */
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.1);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-safe: #00E5A0;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h: 72px;
+}
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+/* Radial wallpaper — exact match from dashboard */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,160,0.035) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(66,165,245,0.025) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+[data-theme="light"] body::after {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22,163,74,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(37,99,235,0.03) 0%, transparent 60%);
+}
+
+/* ── SIDEBAR — exact clone ── */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 200;
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 72px; }
+
+.sidebar-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: var(--neon-glow-sm);
+}
+.logo-mark svg { width: 18px; height: 18px; color: #fff; stroke-width: 2.5; }
+.logo-text-wrap { overflow: hidden; transition: opacity 0.2s; }
+.sidebar.collapsed .logo-text-wrap { opacity: 0; }
+.logo-text { font-family: var(--ff); font-size: 15px; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); white-space: nowrap; }
+.logo-sub { font-family: var(--fm); font-size: 9px; color: var(--neon); opacity: 0.8; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+
+.nav-section-label {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.15em; color: var(--text-3);
+  padding: 16px 16px 6px; white-space: nowrap;
+  overflow: hidden; transition: opacity 0.2s;
+  display: flex; align-items: center;
+}
+.sidebar.collapsed .nav-section-label { opacity: 0; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px; }
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 10px 10px; border-radius: 10px;
+  color: var(--text-2); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s;
+  text-decoration: none; position: relative; white-space: nowrap;
+}
+.nav-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.nav-item.active { background: var(--neon-dim); color: var(--neon); font-weight: 600; }
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: -8px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--neon); border-radius: 0 3px 3px 0;
+  box-shadow: var(--neon-glow-sm);
+}
+/* Danger active state for Dispute Centre */
+.nav-item.active-danger { background: rgba(255,71,87,0.08); color: var(--accent-danger); font-weight: 600; }
+.nav-item.active-danger::before {
+  content: '';
+  position: absolute; left: -8px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--accent-danger); border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 14px rgba(255,71,87,0.3);
+}
+
+.nav-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.nav-label { overflow: hidden; transition: opacity 0.2s, width 0.3s; }
+.sidebar.collapsed .nav-label { opacity: 0; width: 0; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--neon); color: #000;
+  font-family: var(--fm); font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 100px;
+  flex-shrink: 0; transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-badge { opacity: 0; }
+
+.nav-badge-danger {
+  margin-left: auto;
+  background: var(--accent-danger); color: #fff;
+  font-family: var(--fm); font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 100px;
+  flex-shrink: 0; transition: opacity 0.2s;
+  animation: danger-badge-pulse 2s infinite;
+}
+@keyframes danger-badge-pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+.sidebar.collapsed .nav-badge-danger { opacity: 0; }
+
+.nav-badge-amber {
+  margin-left: auto;
+  background: var(--accent-amber); color: #000;
+  font-family: var(--fm); font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 100px;
+  flex-shrink: 0; transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-badge-amber { opacity: 0; }
+
+.nav-pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--neon); flex-shrink: 0;
+  animation: pulse-dot 2s infinite; margin-left: auto;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-pulse { opacity: 0; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
+
+/* Home Passport sidebar entries */
+.passport-entry {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px; margin: 0 8px 4px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.18s;
+}
+.passport-entry:hover { border-color: var(--border-neon); background: var(--neon-dim); }
+.passport-entry-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.passport-entry-info { flex: 1; overflow: hidden; }
+.passport-entry-name { font-size: 12px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.passport-entry-meta { font-family: var(--fm); font-size: 9px; color: var(--text-3); margin-top: 1px; }
+.passport-dl-btn {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.18s; flex-shrink: 0; color: var(--neon);
+}
+.passport-dl-btn:hover { background: rgba(0,229,160,0.2); }
+.passport-dl-btn svg { width: 12px; height: 12px; stroke-width: 2.5; }
+.passport-pending-note { font-size: 11px; color: var(--text-3); padding: 6px 18px 10px; text-align: center; font-style: italic; }
+.passport-nav-badge {
+  background: rgba(0,229,160,0.12); color: var(--neon);
+  font-family: var(--fm); font-size: 8px; font-weight: 600;
+  border: 1px solid rgba(0,229,160,0.2); border-radius: 100px;
+  padding: 1px 7px; letter-spacing: 0.08em; margin-left: auto;
+}
+
+/* Sidebar Footer */
+.sidebar-footer { padding: 12px; border-top: 1px solid var(--border); flex-shrink: 0; position: relative; }
+.profile-btn {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  border-radius: 10px; padding: 10px 8px; transition: background 0.2s;
+  width: 100%; background: transparent; border: none; text-align: left;
+}
+.profile-btn:hover { background: var(--neon-dim); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.avatar-info { overflow: hidden; transition: opacity 0.2s; flex: 1; }
+.sidebar.collapsed .avatar-info { opacity: 0; width: 0; }
+.avatar-name { font-size: 13px; font-weight: 600; color: var(--text-1); white-space: nowrap; }
+.avatar-role { font-size: 11px; color: var(--text-2); white-space: nowrap; }
+.profile-chevron { color: var(--text-3); transition: opacity 0.2s; flex-shrink: 0; }
+.profile-chevron svg { width: 14px; height: 14px; stroke-width: 2; }
+.sidebar.collapsed .profile-chevron { opacity: 0; }
+
+.profile-dropdown {
+  position: absolute; bottom: calc(100% + 8px); left: 12px; right: 12px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 300; display: none;
+  animation: dropup 0.18s cubic-bezier(0.34,1.56,0.64,1);
+}
+.profile-dropdown.open { display: block; }
+@keyframes dropup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.profile-dropdown-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.profile-dropdown-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.profile-dropdown-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.profile-dropdown-tier { font-family: var(--fm); font-size: 10px; color: var(--accent-blue); margin-top: 2px; display: flex; align-items: center; gap: 5px; }
+.pd-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+  font-size: 13px; color: var(--text-2); cursor: pointer;
+  transition: background 0.15s, color 0.15s; font-weight: 500;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.pd-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.pd-item svg { width: 16px; height: 16px; stroke-width: 1.8; flex-shrink: 0; }
+.pd-item.danger { color: var(--accent-danger); }
+.pd-item.danger:hover { background: rgba(255,71,87,0.1); }
+.pd-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── TOP NAV — exact clone ── */
+.topnav {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0;
+  height: var(--topnav-h);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 32px; z-index: 100; gap: 16px;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+.topnav.collapsed { left: 72px; }
+
+.hamburger {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.2s; flex-shrink: 0;
+}
+.hamburger:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.hamburger svg { width: 16px; height: 16px; stroke-width: 2; }
+
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.breadcrumb-sep { color: var(--text-3); }
+.breadcrumb-current { font-family: var(--ff); font-weight: 700; color: var(--text-1); font-size: 15px; }
+
+.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* Escrow pill — frozen state */
+.escrow-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  background: rgba(255,71,87,0.1);
+  border: 1px solid rgba(255,71,87,0.3);
+  border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  animation: danger-pill-pulse 2s infinite;
+}
+@keyframes danger-pill-pulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 16px rgba(255,71,87,0.2)} }
+.escrow-pill:hover { background: rgba(255,71,87,0.16); }
+.escrow-pill-icon { font-size: 15px; flex-shrink: 0; }
+.escrow-pill-label { font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-danger); opacity: 0.8; }
+.escrow-pill-amount { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--accent-danger); letter-spacing: -0.03em; }
+
+.notif-pill {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 9px; cursor: pointer; transition: all 0.2s; position: relative; flex-shrink: 0;
+}
+.notif-pill:hover { background: var(--neon-dim); border-color: var(--border-neon); }
+.notif-pill-bell { position: relative; }
+.notif-pill-bell svg { width: 17px; height: 17px; stroke-width: 1.8; color: var(--text-2); }
+.notif-pill-badge {
+  position: absolute; top: -5px; right: -6px;
+  background: var(--accent-danger); color: #fff;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  min-width: 16px; height: 16px; border-radius: 100px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 3px; border: 2px solid var(--bg-secondary);
+}
+.notif-pill-label { font-size: 12px; font-weight: 600; color: var(--text-2); }
+
+.stripe-shield {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(99,91,255,0.1); border: 1px solid rgba(99,91,255,0.2);
+  border-radius: 6px; padding: 2px 7px;
+  font-family: var(--fm); font-size: 9px;
+  color: #8b84ff; letter-spacing: 0.06em; white-space: nowrap; cursor: help;
+}
+.stripe-shield svg { width: 9px; height: 9px; flex-shrink: 0; }
+
+/* Theme toggle — compact icon button */
+.topnav-icon-btn {
+  width: 34px; height: 34px; border-radius: 9px;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.2s; flex-shrink: 0;
+}
+.topnav-icon-btn:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.topnav-icon-btn svg { width: 16px; height: 16px; stroke-width: 1.8; }
+[data-theme="light"] .topnav-icon-btn { border-color: #bae6fd; background: #e0f2fe; color: #f59e0b; }
+[data-theme="light"] .topnav-icon-btn:hover { background: #fef3c7; }
+
+/* ── MAIN — exact clone ── */
+.main {
+  margin-left: var(--sidebar-w); margin-top: var(--topnav-h);
+  padding: 32px; position: relative; z-index: 1;
+  transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+  min-height: calc(100vh - var(--topnav-h));
+}
+.main.collapsed { margin-left: 72px; }
+
+/* Page header — exact structure from dashboard */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 20px; }
+.page-title-group { flex: 1; }
+.page-eyebrow {
+  font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--accent-danger); opacity: 0.9;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+}
+.page-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--accent-danger); opacity: 0.5; }
+.page-title { font-family: var(--ff); font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); line-height: 1.1; }
+.page-sub { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+.page-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* Buttons — exact from dashboard */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--ff); font-size: 13px; font-weight: 700;
+  letter-spacing: -0.02em; border-radius: 10px; padding: 9px 18px;
+  cursor: pointer; border: none; transition: all 0.22s; white-space: nowrap;
+}
+.btn svg { width: 15px; height: 15px; stroke-width: 2; }
+.btn-primary { background: linear-gradient(135deg, #007a3d, var(--neon)); color: #fff; box-shadow: var(--neon-glow-sm); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--neon-glow); }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-1); border: 1px solid var(--border-2); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-neon); color: var(--neon); }
+.btn-danger { background: rgba(255,71,87,0.1); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.25); }
+.btn-danger:hover { background: rgba(255,71,87,0.2); }
+.btn-danger-solid {
+  background: var(--accent-danger); color: #fff;
+  box-shadow: 0 0 20px rgba(255,71,87,0.3);
+}
+.btn-danger-solid:hover { transform: translateY(-1px); box-shadow: 0 4px 28px rgba(255,71,87,0.45); }
+.btn-blue { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.25); }
+.btn-blue:hover { background: rgba(66,165,245,0.2); }
+.btn-amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.25); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* View switcher — styled like dashboard tab group */
+.view-switcher {
+  display: flex; background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 12px; padding: 4px; gap: 3px;
+}
+.view-btn {
+  padding: 8px 16px; border-radius: 9px;
+  font-family: var(--ff); font-size: 12.5px; font-weight: 700;
+  cursor: pointer; border: none; background: transparent;
+  color: var(--text-2); transition: all 0.18s; white-space: nowrap;
+  display: flex; align-items: center; gap: 6px;
+}
+.view-btn:hover:not(.active) { background: var(--bg-tertiary); color: var(--text-1); }
+.view-btn.active { background: var(--accent-danger); color: #fff; box-shadow: 0 0 14px rgba(255,71,87,0.3); }
+.view-btn.active-green { background: var(--neon); color: #080C12; box-shadow: var(--neon-glow-sm); }
+.view-btn.active-blue { background: var(--accent-blue); color: #fff; box-shadow: 0 0 14px rgba(66,165,245,0.3); }
+
+/* ── SLA PRESSURE BAR — glassmorphism per brief ── */
+.sla-banner {
+  background: rgba(17,24,39,0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  position: relative; overflow: hidden;
+}
+[data-theme="light"] .sla-banner { background: rgba(255,255,255,0.7); }
+
+/* top accent strip — changes with urgency */
+.sla-banner::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--neon); box-shadow: var(--neon-glow-sm);
+  transition: background 0.6s, box-shadow 0.6s;
+}
+.sla-banner.phase-amber::before { background: var(--accent-amber); box-shadow: 0 0 14px rgba(255,167,38,0.4); }
+.sla-banner.phase-red::before {
+  background: var(--accent-danger);
+  animation: sla-strip-pulse 1s ease-in-out infinite;
+}
+@keyframes sla-strip-pulse { 0%,100%{opacity:1;box-shadow:0 0 14px rgba(255,71,87,0.5)} 50%{opacity:0.5;box-shadow:none} }
+
+.sla-clock-wrap { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+.sla-icon-wrap {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: var(--neon-dim); border: 1px solid var(--border-neon);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  flex-shrink: 0; transition: all 0.5s;
+}
+.sla-banner.phase-amber .sla-icon-wrap { background: rgba(255,167,38,0.1); border-color: rgba(255,167,38,0.3); }
+.sla-banner.phase-red .sla-icon-wrap { background: rgba(255,71,87,0.1); border-color: rgba(255,71,87,0.3); }
+
+.sla-time-label { font-family: var(--fm); font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; }
+.sla-time-val {
+  font-family: var(--fm); font-size: 30px; font-weight: 500; color: var(--neon);
+  letter-spacing: -1px; line-height: 1; transition: color 0.5s;
+}
+.sla-banner.phase-amber .sla-time-val { color: var(--accent-amber); }
+.sla-banner.phase-red .sla-time-val { color: var(--accent-danger); }
+.sla-phase-desc { font-size: 12px; color: var(--text-2); margin-top: 3px; }
+
+.sla-track-wrap { flex: 1; min-width: 220px; }
+.sla-track-labels { display: flex; justify-content: space-between; font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.sla-track { height: 8px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
+.sla-track-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, #007a3d, var(--neon));
+  box-shadow: var(--neon-glow-sm);
+  transition: width 1s linear, background 0.5s;
+}
+.sla-banner.phase-amber .sla-track-fill { background: var(--accent-amber); box-shadow: 0 0 12px rgba(255,167,38,0.3); }
+.sla-banner.phase-red .sla-track-fill { background: var(--accent-danger); box-shadow: 0 0 12px rgba(255,71,87,0.35); }
+
+/* Phase badges */
+.sla-phases { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+.phase-chip {
+  padding: 5px 12px; border-radius: 100px;
+  font-family: var(--fm); font-size: 10px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: 1px solid var(--border); color: var(--text-3); background: var(--bg-tertiary);
+  transition: all 0.3s;
+}
+.phase-chip.active { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.phase-chip.active.amber { background: rgba(255,167,38,0.1); color: var(--accent-amber); border-color: rgba(255,167,38,0.3); }
+.phase-chip.active.red { background: rgba(255,71,87,0.08); color: var(--accent-danger); border-color: rgba(255,71,87,0.3); }
+
+/* ── GRID LAYOUT ── */
+.dispute-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start; }
+
+/* ── CARD — exact from dashboard ── */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 18px; overflow: hidden; transition: background 0.3s, border-color 0.3s;
+}
+.card-header {
+  padding: 16px 20px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-family: var(--ff); font-size: 15px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.card-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.card-body { padding: 18px 20px 20px; }
+
+/* Section title inside cards */
+.section-title { font-family: var(--fm); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; width: 14px; height: 1px; background: currentColor; opacity: 0.4; }
+
+/* ── JOB BANNER ── */
+.job-banner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; background: var(--bg-tertiary);
+  border: 1px solid var(--border-2); border-radius: 12px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.job-banner-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 14px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.job-banner-info { flex: 1; min-width: 0; }
+.job-banner-name { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.job-banner-meta { font-family: var(--fm); font-size: 11px; color: var(--text-2); margin-top: 2px; }
+.escrow-chip {
+  padding: 5px 12px; border-radius: 100px;
+  font-family: var(--fm); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; flex-shrink: 0;
+}
+.escrow-chip.protected { background: var(--neon-dim); color: var(--neon); border: 1px solid var(--border-neon); }
+.escrow-chip.frozen { background: rgba(255,71,87,0.1); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.3); animation: danger-badge-pulse 2s infinite; }
+.escrow-chip.unprotected { background: rgba(255,167,38,0.1); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.3); }
+
+/* Warning banners */
+.warn-banner {
+  display: none; border-radius: 12px; padding: 14px 16px;
+  font-size: 13px; line-height: 1.5; margin-bottom: 16px;
+}
+.warn-banner.show { display: block; }
+.warn-banner.danger { background: rgba(255,71,87,0.06); border: 1px solid rgba(255,71,87,0.2); color: var(--accent-danger); }
+.warn-banner.amber { background: rgba(255,167,38,0.06); border: 1px solid rgba(255,167,38,0.2); color: var(--accent-amber); }
+.warn-banner strong { display: block; font-weight: 700; margin-bottom: 3px; }
+
+/* ── TRIAGE GRID ── */
+.triage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.triage-card {
+  padding: 14px 16px; background: var(--bg-tertiary);
+  border: 1.5px solid var(--border); border-radius: 14px;
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.triage-card:hover { border-color: var(--border-2); background: var(--bg-card-hover); }
+.triage-card.selected { border-color: var(--accent-danger); background: rgba(255,71,87,0.06); }
+.triage-card-icon { font-size: 22px; margin-bottom: 7px; }
+.triage-card-title { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+.triage-card-desc { font-size: 11px; color: var(--text-2); }
+
+/* ── EVIDENCE VAULT ── */
+/* TM Live Sync banner */
+.tm-live-bar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; background: var(--neon-dim);
+  border: 1px solid var(--border-neon); border-radius: 12px;
+  margin-bottom: 12px; cursor: pointer; transition: all 0.18s;
+}
+.tm-live-bar:hover { background: rgba(0,229,160,0.14); }
+.tm-live-bar.imported { opacity: 0.55; cursor: default; pointer-events: none; }
+.tm-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--neon); animation: pulse-dot 1.5s infinite; flex-shrink: 0; }
+.tm-live-text { flex: 1; }
+.tm-live-title { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--neon); }
+.tm-live-desc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.tm-import-btn {
+  padding: 7px 14px; background: var(--neon); color: #080C12;
+  border: none; border-radius: 8px; font-family: var(--ff);
+  font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: opacity 0.18s;
+}
+.tm-import-btn:hover { opacity: 0.88; }
+
+/* Upload zone */
+.upload-zone {
+  border: 1.5px dashed var(--border-2); border-radius: 12px;
+  padding: 20px; text-align: center; cursor: pointer; transition: all 0.18s;
+}
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--neon); background: var(--neon-dim); }
+.upload-zone-icon { font-size: 28px; margin-bottom: 6px; }
+.upload-zone-text { font-size: 13px; color: var(--text-2); margin-bottom: 4px; }
+.upload-zone-hint { font-family: var(--fm); font-size: 10px; color: var(--text-3); }
+
+/* Evidence photo grid — identical aspect-ratio & border-radius as dashboard milestone photos */
+.evidence-photo-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px;
+}
+.evidence-photo {
+  border-radius: 10px; overflow: hidden;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; transition: all 0.18s; position: relative;
+}
+.evidence-photo:hover { border-color: var(--border-neon); transform: scale(1.02); }
+.evidence-photo-label {
+  position: absolute; bottom: 4px; left: 4px; right: 4px;
+  font-family: var(--fm); font-size: 8px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.7);
+  text-align: center; background: rgba(0,0,0,0.5); border-radius: 4px; padding: 2px;
+}
+[data-theme="light"] .evidence-photo-label { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.7); }
+
+.evidence-count-strip {
+  display: flex; align-items: center; gap: 6px; margin-top: 10px;
+  font-family: var(--fm); font-size: 11px; color: var(--neon);
+}
+.evidence-count-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); }
+
+/* Photo mandate notice */
+.photo-mandate {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px;
+  font-family: var(--fm); font-size: 11px; color: var(--accent-amber);
+}
+
+/* ── FORM ELEMENTS ── */
+.form-row { margin-bottom: 18px; }
+.form-label { font-family: var(--fm); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 8px; display: block; }
+
+.tm-select {
+  width: 100%; padding: 11px 36px 11px 14px;
+  background: var(--bg-tertiary); border: 1.5px solid var(--border);
+  border-radius: 10px; color: var(--text-1); font-family: var(--fb); font-size: 14px;
+  outline: none; cursor: pointer; transition: border-color 0.18s; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238B95AA' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+}
+.tm-select:focus { border-color: var(--accent-danger); }
+.tm-select option { background: var(--bg-secondary); }
+
+.tm-textarea {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg-tertiary); border: 1.5px solid var(--border);
+  border-radius: 10px; color: var(--text-1); font-family: var(--fb); font-size: 14px;
+  outline: none; resize: vertical; min-height: 80px; transition: border-color 0.18s;
+}
+.tm-textarea:focus { border-color: var(--accent-danger); }
+.tm-textarea::placeholder { color: var(--text-3); }
+
+/* Partial amount input */
+.amount-row { display: flex; align-items: center; gap: 0; background: var(--bg-tertiary); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 10px; transition: border-color 0.18s; }
+.amount-row:focus-within { border-color: var(--accent-danger); }
+.amount-prefix { padding: 12px 14px; font-size: 15px; font-weight: 700; color: var(--text-2); background: var(--bg-card); border-right: 1px solid var(--border); }
+.amount-input { flex: 1; padding: 12px 14px; background: transparent; border: none; outline: none; color: var(--text-1); font-family: var(--fm); font-size: 15px; }
+
+/* SOP checklist */
+.sop-list { display: flex; flex-direction: column; gap: 10px; }
+.sop-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-2); }
+.sop-dot {
+  width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; transition: all 0.3s;
+  background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-3);
+}
+.sop-dot.pass { background: var(--neon-dim); border-color: var(--border-neon); color: var(--neon); }
+.sop-dot.fail { background: rgba(255,71,87,0.1); border-color: rgba(255,71,87,0.3); color: var(--accent-danger); }
+
+/* Legal disclaimer tooltip on submit */
+.legal-disclaimer {
+  font-size: 11px; color: var(--text-3); text-align: center; margin-top: 8px; line-height: 1.4;
+  padding: 0 4px;
+}
+
+/* Meta rows in sidebar cards — same as dashboard doc rows */
+.meta-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+.meta-key { color: var(--text-2); }
+.meta-val { font-family: var(--fm); font-size: 12px; font-weight: 600; color: var(--text-1); }
+.meta-val.green { color: var(--neon); }
+.meta-val.red { color: var(--accent-danger); }
+.meta-val.amber { color: var(--accent-amber); }
+
+/* ── TIMELINE — same as dashboard milestone feed ── */
+.case-timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
+.tl-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 15px; top: 32px; bottom: 0;
+  width: 1px; background: var(--border);
+}
+.tl-dot {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; background: var(--bg-tertiary); border: 1.5px solid var(--border);
+  z-index: 1; transition: all 0.3s;
+}
+.tl-dot.done { background: var(--neon-dim); border-color: var(--border-neon); }
+.tl-dot.current { background: rgba(255,71,87,0.1); border-color: rgba(255,71,87,0.35); animation: tl-pulse 1.6s ease-in-out infinite; }
+@keyframes tl-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,0.35)} 50%{box-shadow:0 0 0 5px rgba(255,71,87,0)} }
+.tl-content { flex: 1; padding-top: 4px; }
+.tl-title { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+.tl-desc { font-size: 12px; color: var(--text-2); line-height: 1.4; }
+.tl-time { font-family: var(--fm); font-size: 10px; color: var(--text-3); margin-top: 3px; }
+
+/* ── VIEW PANELS ── */
+.view-panel { display: none; animation: panel-in 0.22s ease; }
+.view-panel.active { display: block; }
+@keyframes panel-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+/* ── ACTIVE CASE — evidence doc rows ── */
+.evidence-doc {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; background: var(--bg-tertiary); border: 1px solid var(--border);
+  margin-bottom: 6px; cursor: pointer; transition: all 0.18s;
+}
+.evidence-doc:hover { border-color: var(--border-neon); background: var(--neon-dim); }
+.evidence-doc-icon { font-size: 18px; flex-shrink: 0; }
+.evidence-doc-name { font-family: var(--fm); font-size: 12px; color: var(--text-1); flex: 1; }
+.evidence-doc-tag { font-family: var(--fm); font-size: 9px; text-transform: uppercase; padding: 2px 7px; border-radius: 100px; flex-shrink: 0; }
+.evidence-doc-tag.exhibit { background: var(--neon-dim); color: var(--neon); border: 1px solid var(--border-neon); }
+.evidence-doc-tag.pending { background: rgba(255,167,38,0.1); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.25); }
+
+/* Dual evidence split — Resolver view */
+.dual-evidence { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.evidence-side { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.evidence-side-title { font-family: var(--fm); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* Scope comparison grid */
+.scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.scope-panel { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.scope-panel.deficient { background: rgba(255,71,87,0.04); border-color: rgba(255,71,87,0.15); }
+.scope-panel-label { font-family: var(--fm); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 10px; }
+.scope-item { font-size: 13px; color: var(--text-1); line-height: 1.8; }
+
+/* Resolver action buttons */
+.resolver-btn-grid { display: flex; flex-direction: column; gap: 10px; }
+.resolver-btn {
+  width: 100%; padding: 14px 18px; border: none; border-radius: 12px;
+  font-family: var(--ff); font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; text-align: center;
+}
+.resolver-btn span { font-size: 11px; font-weight: 400; opacity: 0.75; }
+.resolver-btn.for-homeowner { background: var(--neon); color: #080C12; box-shadow: var(--neon-glow-sm); }
+.resolver-btn.for-vendor { background: var(--accent-blue); color: #fff; box-shadow: 0 0 14px rgba(66,165,245,0.3); }
+.resolver-btn.split { background: var(--accent-amber); color: #080C12; box-shadow: 0 0 14px rgba(255,167,38,0.3); }
+.resolver-btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+/* Appeals notice */
+.appeals-notice {
+  background: rgba(156,95,233,0.07); border: 1px solid rgba(156,95,233,0.2);
+  border-radius: 10px; padding: 12px 14px; font-size: 12px; color: var(--accent-purple); line-height: 1.5; margin-top: 12px;
+}
+
+/* Rebuttal zone */
+.rebuttal-zone {
+  text-align: center; padding: 28px 20px;
+  background: rgba(66,165,245,0.05); border: 1.5px dashed rgba(66,165,245,0.25); border-radius: 12px; margin-bottom: 12px;
+}
+.rebuttal-zone-title { font-family: var(--ff); font-size: 15px; font-weight: 800; color: var(--accent-blue); margin-bottom: 6px; }
+.rebuttal-zone-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; margin-bottom: 16px; }
+.rebuttal-timer { font-family: var(--fm); font-size: 22px; color: var(--accent-amber); letter-spacing: -0.5px; margin-bottom: 14px; }
+
+/* ── SUCCESS MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,12,18,0.82); backdrop-filter: blur(10px);
+  z-index: 500; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg-card); border: 1px solid var(--border-neon);
+  border-radius: 22px; padding: 40px 36px; max-width: 440px; width: 92%;
+  text-align: center; box-shadow: 0 0 60px rgba(0,229,160,0.1);
+  animation: modal-pop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modal-pop { from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-icon { font-size: 56px; margin-bottom: 16px; }
+.modal-title { font-family: var(--ff); font-size: 22px; font-weight: 800; color: var(--text-1); letter-spacing: -0.04em; margin-bottom: 8px; }
+.modal-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 22px; }
+.modal-case-id {
+  font-family: var(--fm); font-size: 20px; color: var(--neon); letter-spacing: 1px;
+  background: var(--neon-dim); border: 1px solid var(--border-neon);
+  border-radius: 10px; padding: 12px 20px; margin-bottom: 22px;
+}
+.modal-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── TOAST — exact from dashboard ── */
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; border-radius: 12px; min-width: 280px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+  animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  font-size: 13.5px; font-weight: 500; color: var(--text-1);
+  transition: opacity 0.3s, transform 0.3s;
+}
+@keyframes toast-in { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:none} }
+.toast.success { background: var(--bg-card); border: 1px solid rgba(0,229,160,0.3); }
+.toast.warning { background: var(--bg-card); border: 1px solid rgba(255,167,38,0.3); }
+.toast.info { background: var(--bg-card); border: 1px solid rgba(66,165,245,0.3); }
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) { .dispute-grid{grid-template-columns:1fr} .dual-evidence{grid-template-columns:1fr} .scope-grid{grid-template-columns:1fr} }
+@media(max-width:768px) { :root{--sidebar-w:0px} .sidebar{transform:translateX(-100%)} .topnav{left:0} .triage-grid{grid-template-columns:1fr} }
+
+/* ══════════════════════════════════════════════════════════
+   LITE MODE — "One Screen, One Action"
+   True cognitive-load reduction for tradespeople on site.
+   The full portal is hidden. Only the Lite Overlay is shown.
+   ══════════════════════════════════════════════════════════ */
+
+/* Lite mode toggle button in topnav */
+.lite-toggle-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 10px; cursor: pointer;
+  font-family: var(--ff); font-size: 12px; font-weight: 700;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  color: var(--text-2); transition: all 0.18s; white-space: nowrap;
+}
+.lite-toggle-btn:hover { background: rgba(255,167,38,0.1); border-color: rgba(255,167,38,0.3); color: var(--accent-amber); }
+body.lite-mode .lite-toggle-btn { background: rgba(255,167,38,0.12); border-color: rgba(255,167,38,0.35); color: var(--accent-amber); }
+
+/* When lite-mode is active, hide the entire portal chrome */
+body.lite-mode .sidebar,
+body.lite-mode .topnav,
+body.lite-mode .main { display: none !important; }
+
+/* Show the full-screen lite overlay instead */
+body.lite-mode #liteOverlay { display: flex; }
+
+/* ── LITE OVERLAY — the entire replacement screen ── */
+#liteOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg-primary);
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Thin top bar — clock + escape hatch */
+.lite-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 12px;
+}
+.lite-topbar-brand {
+  display: flex; align-items: center; gap: 10px;
+}
+.lite-topbar-logo {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: linear-gradient(135deg, #007a3d, var(--neon));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.lite-topbar-logo svg { width: 14px; height: 14px; color: #fff; stroke-width: 2.5; }
+.lite-topbar-title { font-family: var(--ff); font-size: 13px; font-weight: 800; color: var(--text-1); }
+.lite-topbar-sub { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 1px; }
+
+.lite-escape-btn {
+  font-family: var(--fm); font-size: 10px; color: var(--text-3);
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 7px; padding: 5px 10px; cursor: pointer;
+  transition: all 0.18s; white-space: nowrap; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.lite-escape-btn:hover { color: var(--text-2); border-color: var(--border-2); }
+/* Locked state — shown during final 8h auto-force */
+.lite-escape-btn.locked { opacity: 0.35; cursor: not-allowed; }
+.lite-escape-btn.locked:hover { color: var(--text-3); border-color: var(--border); }
+
+/* Auto-forced warning strip */
+.lite-auto-strip {
+  display: none;
+  align-items: center; gap: 10px;
+  padding: 10px 20px;
+  background: rgba(255,71,87,0.08);
+  border-bottom: 1px solid rgba(255,71,87,0.2);
+  font-family: var(--fm); font-size: 11px; color: var(--accent-danger);
+  flex-shrink: 0;
+}
+.lite-auto-strip.show { display: flex; }
+.lite-auto-strip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-danger); animation: pulse-dot 1s infinite; flex-shrink: 0; }
+
+/* ── THE THREE PANELS ── */
+.lite-body {
+  flex: 1; display: flex; flex-direction: column;
+  gap: 0; max-width: 600px; width: 100%; margin: 0 auto;
+  padding: 20px 16px 32px;
+}
+
+/* ── PANEL 1: THE CLOCK ── */
+.lite-clock-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 20px; padding: 24px 24px 20px;
+  text-align: center; margin-bottom: 14px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.5s, box-shadow 0.5s;
+}
+.lite-clock-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--neon); transition: background 0.5s;
+}
+.lite-clock-panel.phase-amber { border-color: rgba(255,167,38,0.35); }
+.lite-clock-panel.phase-amber::before { background: var(--accent-amber); }
+.lite-clock-panel.phase-red {
+  border-color: rgba(255,71,87,0.4);
+  box-shadow: 0 0 32px rgba(255,71,87,0.1);
+}
+.lite-clock-panel.phase-red::before {
+  background: var(--accent-danger);
+  animation: sla-strip-pulse 1s ease-in-out infinite;
+}
+.lite-clock-eyebrow {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--text-3); margin-bottom: 10px;
+}
+.lite-clock-digits {
+  font-family: var(--fm); font-size: 52px; font-weight: 500; letter-spacing: -2px;
+  color: var(--neon); line-height: 1; margin-bottom: 8px;
+  transition: color 0.5s;
+}
+.lite-clock-panel.phase-amber .lite-clock-digits { color: var(--accent-amber); }
+.lite-clock-panel.phase-red .lite-clock-digits {
+  color: var(--accent-danger);
+  animation: lite-clock-throb 1s ease-in-out infinite;
+}
+@keyframes lite-clock-throb {
+  0%,100% { opacity: 1; } 50% { opacity: 0.6; }
+}
+.lite-clock-status {
+  font-family: var(--ff); font-size: 13px; font-weight: 600; color: var(--text-2);
+  margin-bottom: 14px;
+}
+/* Mini progress bar inside clock panel */
+.lite-clock-track {
+  height: 5px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden;
+}
+.lite-clock-fill {
+  height: 100%; border-radius: 100px;
+  background: var(--neon);
+  box-shadow: var(--neon-glow-sm);
+  transition: width 1s linear, background 0.5s;
+}
+.lite-clock-panel.phase-amber .lite-clock-fill { background: var(--accent-amber); box-shadow: none; }
+.lite-clock-panel.phase-red .lite-clock-fill { background: var(--accent-danger); box-shadow: none; }
+
+/* ── PANEL 2: THE CLAIM ── */
+.lite-claim-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 20px; padding: 20px 22px;
+  margin-bottom: 14px;
+}
+.lite-claim-eyebrow {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--text-3); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.lite-claim-eyebrow::before { content: ''; width: 14px; height: 1px; background: currentColor; opacity: 0.4; }
+.lite-claim-avatar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.lite-claim-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.lite-claim-who { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.lite-claim-who-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+/* The one-sentence claim — big, bold, unmissable */
+.lite-claim-sentence {
+  font-family: var(--ff); font-size: 17px; font-weight: 700; color: var(--text-1);
+  line-height: 1.45; letter-spacing: -0.02em;
+  padding: 14px 16px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 12px; margin-bottom: 10px;
+}
+.lite-claim-sentence em { font-style: normal; color: var(--accent-danger); }
+
+/* Escrow amount row */
+.lite-claim-escrow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255,71,87,0.06); border: 1px solid rgba(255,71,87,0.18);
+  border-radius: 10px;
+  font-size: 13px; color: var(--text-2);
+}
+.lite-claim-escrow strong { font-family: var(--ff); font-size: 18px; font-weight: 900; color: var(--accent-danger); letter-spacing: -0.04em; }
+
+/* ── PANEL 3: THE UPLOAD BUTTON ── */
+.lite-upload-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 20px; padding: 22px;
+  margin-bottom: 14px;
+}
+.lite-upload-eyebrow {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.18em; color: var(--text-3); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.lite-upload-eyebrow::before { content: ''; width: 14px; height: 1px; background: currentColor; opacity: 0.4; }
+
+/* THE massive upload button */
+.lite-upload-btn {
+  width: 100%; height: 88px;
+  background: var(--neon); color: #080C12;
+  border: none; border-radius: 16px;
+  font-family: var(--ff); font-size: 18px; font-weight: 800;
+  letter-spacing: -0.02em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  box-shadow: var(--neon-glow); transition: all 0.2s;
+  margin-bottom: 10px;
+}
+.lite-upload-btn:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,229,160,0.45); }
+.lite-upload-btn:active { transform: translateY(0); }
+.lite-upload-btn .lb-icon { font-size: 30px; flex-shrink: 0; }
+.lite-upload-btn .lb-text { text-align: left; }
+.lite-upload-btn .lb-sub { font-size: 11px; font-weight: 500; opacity: 0.7; display: block; margin-top: 2px; }
+
+/* Secondary text area button */
+.lite-text-btn {
+  width: 100%; padding: 16px 18px; height: 60px;
+  background: var(--bg-tertiary); border: 1.5px solid var(--border-2);
+  border-radius: 14px; font-family: var(--ff); font-size: 15px; font-weight: 700;
+  color: var(--text-1); cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.lite-text-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(66,165,245,0.06); }
+.lite-text-btn .lb-icon { font-size: 22px; flex-shrink: 0; }
+
+/* Uploaded files strip */
+.lite-uploaded-strip {
+  display: none; flex-direction: column; gap: 6px; margin-top: 6px;
+}
+.lite-uploaded-strip.has-files { display: flex; }
+.lite-file-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--neon-dim);
+  border: 1px solid var(--border-neon); border-radius: 10px;
+  font-size: 13px; color: var(--text-1);
+}
+.lite-file-row .lf-icon { font-size: 16px; flex-shrink: 0; }
+.lite-file-row .lf-name { flex: 1; font-family: var(--fm); font-size: 11px; color: var(--neon); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lite-file-row .lf-size { font-family: var(--fm); font-size: 10px; color: var(--text-3); flex-shrink: 0; }
+.lite-file-count {
+  font-family: var(--fm); font-size: 11px; color: var(--neon);
+  display: flex; align-items: center; gap: 6px; margin-top: 6px;
+}
+.lite-file-count-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); }
+
+/* Lite description textarea */
+.lite-desc-area {
+  display: none; margin-top: 10px;
+}
+.lite-desc-area.show { display: block; }
+.lite-desc-area textarea {
+  width: 100%; padding: 14px 16px; min-height: 100px;
+  background: var(--bg-tertiary); border: 1.5px solid var(--border);
+  border-radius: 12px; color: var(--text-1); font-family: var(--fb); font-size: 15px;
+  outline: none; resize: vertical; transition: border-color 0.18s;
+}
+.lite-desc-area textarea:focus { border-color: var(--neon); }
+.lite-desc-area textarea::placeholder { color: var(--text-3); }
+
+/* Submit row */
+.lite-submit-row { margin-top: 6px; }
+.lite-submit-btn {
+  width: 100%; height: 68px;
+  background: var(--accent-danger); color: #fff;
+  border: none; border-radius: 16px;
+  font-family: var(--ff); font-size: 16px; font-weight: 800;
+  letter-spacing: -0.02em; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 0 28px rgba(255,71,87,0.3);
+  transition: all 0.2s; margin-bottom: 10px;
+}
+.lite-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 40px rgba(255,71,87,0.45); }
+.lite-submit-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+.lite-legal {
+  font-family: var(--fm); font-size: 10px; color: var(--text-3);
+  text-align: center; line-height: 1.5; padding: 0 8px;
+}
+
+/* Direct match override in lite mode */
+.lite-upload-btn.direct-mode {
+  background: var(--accent-amber); color: #080C12;
+  box-shadow: 0 0 28px rgba(255,167,38,0.3);
+}
+
+/* Vendor Lite quick-action panel — kept for JS compatibility, hidden by CSS */
+.vendor-lite-panel { display: none; }
+
+/* Old liteModeBar — replaced by lite overlay, hidden */
+#liteModeBar { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    </div>
+    <div class="logo-text-wrap">
+      <div class="logo-text">TradeMatch</div>
+      <div class="logo-sub">Homeowner Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">My Projects</div>
+
+    <a class="nav-item" href="#" onclick="showToast('Navigating to My Projects…','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div>
+      <span class="nav-label">My Projects</span>
+      <span class="nav-badge">3</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Escrow Wallet','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg></div>
+      <span class="nav-label">My Wallet</span>
+      <span class="nav-badge-amber" id="walletNavBadge">Review</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Message Centre','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></div>
+      <span class="nav-label">Message Centre</span>
+      <span class="nav-badge">2</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Compare Quotes','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg></div>
+      <span class="nav-label">Compare Quotes</span>
+      <span class="nav-badge">5</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px">Safety & Trust</div>
+
+    <a class="nav-item" href="#" onclick="showToast('Verification Hub','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></div>
+      <span class="nav-label">Verification Hub</span>
+    </a>
+
+    <a class="nav-item active-danger" href="#">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+      <span class="nav-label">Dispute Centre</span>
+      <span class="nav-badge-danger">1</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Document Vault','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+      <span class="nav-label">Document Vault</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px">Home Passport <span class="passport-nav-badge">1 Cert</span></div>
+    <div class="passport-entry" onclick="showToast('Opening Fuse Box Replacement certificate…','success')">
+      <div class="passport-entry-icon">⚡</div>
+      <div class="passport-entry-info">
+        <div class="passport-entry-name">Fuse Box Replacement</div>
+        <div class="passport-entry-meta">Jan 2026 · £1,240 · NICEIC</div>
+      </div>
+      <button class="passport-dl-btn" onclick="event.stopPropagation();showToast('Downloading TM-CERT-2026-0112.pdf…','success')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+      </button>
+    </div>
+    <p class="passport-pending-note">+2 certs pending (active projects)</p>
+
+    <div class="nav-section-label" style="margin-top:8px">Account</div>
+    <a class="nav-item" href="#" onclick="showToast('Account Settings','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+      <span class="nav-label">Settings</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="profile-btn" onclick="toggleProfileDropdown()">
+      <div class="avatar" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">SB</div>
+      <div class="avatar-info">
+        <div class="avatar-name">Sarah Bennett</div>
+        <div class="avatar-role">Homeowner · London SW1</div>
+      </div>
+      <div class="profile-chevron"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg></div>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown-header">
+        <div class="profile-dropdown-avatar" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">SB</div>
+        <div>
+          <div class="profile-dropdown-name">Sarah Bennett</div>
+          <div class="profile-dropdown-tier"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:11px;height:11px;stroke-width:2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg> Verified Homeowner</div>
+        </div>
+      </div>
+      <button class="pd-item" onclick="closeProfileDropdown();showToast('My Profile','info')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>My Profile</button>
+      <button class="pd-item" onclick="closeProfileDropdown();showToast('Escrow Wallet','info')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg>Escrow Wallet</button>
+      <div class="pd-divider"></div>
+      <button class="pd-item danger" onclick="closeProfileDropdown();showToast('Signed out','warning')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>Sign Out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════ TOP NAV ════════════════ -->
+<header class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+  <div class="breadcrumb">
+    <span>TradeMatch</span>
+    <span class="breadcrumb-sep">›</span>
+    <span>My Projects</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Dispute Centre</span>
+  </div>
+  <div class="topnav-right">
+    <!-- Escrow frozen — amount only, no text label -->
+    <button class="escrow-pill" onclick="showToast('Escrow is frozen pending dispute resolution','warning')" title="Escrow frozen · Dispute active">
+      <div class="escrow-pill-icon">🔐</div>
+      <div class="escrow-pill-amount" id="escrowAmount">£1,200</div>
+    </button>
+    <!-- Stripe shield — icon only -->
+    <span class="stripe-shield" title="Funds held by Stripe Connect — TradeMatch cannot move them without resolution">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+    </span>
+    <!-- Bell — icon only, red dot badge -->
+    <button class="topnav-icon-btn" onclick="showToast('1 dispute alert','warning')" title="Notifications" style="position:relative">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent-danger);border:2px solid var(--bg-secondary)"></span>
+    </button>
+    <!-- Lite Mode — icon only -->
+    <button class="topnav-icon-btn" onclick="toggleLiteMode()" id="liteModeBtn" title="Lite Mode — simplified field view for tradespeople" style="position:relative">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 8.25h3m-3 3h3m-3 3h3"/></svg>
+      <span id="liteModeIndicator" style="display:none;position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--accent-amber);border:2px solid var(--bg-secondary)"></span>
+    </button>
+    <!-- Theme — icon only, clickable -->
+    <button class="topnav-icon-btn" onclick="toggleTheme()" title="Toggle light / dark theme" id="themeBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" id="themeIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ════════════════ LITE OVERLAY — "One Screen, One Action" ════════════════ -->
+<!-- Replaces the entire portal when lite-mode is active.
+     Surfaced for: ?role=vendor URL param, manual toggle, auto-force at T+40h  -->
+<div id="liteOverlay">
+
+  <!-- Thin top bar: brand + escape hatch -->
+  <div class="lite-topbar">
+    <div class="lite-topbar-brand">
+      <div class="lite-topbar-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+      </div>
+      <div>
+        <div class="lite-topbar-title">TradeMatch</div>
+        <div class="lite-topbar-sub">Dispute Response · Case #TM-992-X</div>
+      </div>
+    </div>
+    <button class="lite-escape-btn" id="liteEscapeBtn" onclick="exitLiteMode()" title="Switch to full portal">
+      ⬡ Full View
+    </button>
+  </div>
+
+  <!-- Auto-forced strip — shown when final 8h triggers lite -->
+  <div class="lite-auto-strip" id="liteAutoStrip">
+    <div class="lite-auto-strip-dot"></div>
+    <span>Final 8 hours — Lite Mode locked to keep focus on your defense. <span id="liteAutoUnlockCountdown"></span></span>
+  </div>
+
+  <div class="lite-body">
+
+    <!-- ── PANEL 1: THE CLOCK ── -->
+    <div class="lite-clock-panel" id="liteClockPanel">
+      <div class="lite-clock-eyebrow">Time Left to Respond</div>
+      <div class="lite-clock-digits" id="liteClockDigits">— — : — —</div>
+      <div class="lite-clock-status" id="liteClockStatus">Waiting for dispute to be filed</div>
+      <div class="lite-clock-track">
+        <div class="lite-clock-fill" id="liteClockFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: THE CLAIM ── -->
+    <div class="lite-claim-panel">
+      <div class="lite-claim-eyebrow">What They're Claiming</div>
+      <div class="lite-claim-avatar-row">
+        <div class="lite-claim-avatar">SB</div>
+        <div>
+          <div class="lite-claim-who">Sarah Bennett · Homeowner</div>
+          <div class="lite-claim-who-sub">Project #TM-8821 · Bathroom Plumbing</div>
+        </div>
+      </div>
+      <div class="lite-claim-sentence" id="liteClaimSentence">
+        Sarah says: <em>"The work was not completed to the agreed standard"</em> and is requesting a <em id="liteClaimAsk">full refund</em>.
+      </div>
+      <div class="lite-claim-escrow" id="liteClaimEscrow">
+        <span>Amount at stake</span>
+        <strong id="liteClaimAmount">£1,200.00</strong>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: UPLOAD & RESPOND ── -->
+    <div class="lite-upload-panel">
+      <div class="lite-upload-eyebrow">Your Response</div>
+
+      <!-- Primary action: camera / file -->
+      <button class="lite-upload-btn" id="liteUploadBtn" onclick="document.getElementById('liteFileInput').click()">
+        <div class="lb-icon">📸</div>
+        <div class="lb-text">
+          Take Photo / Upload Evidence
+          <span class="lb-sub">Photos, videos or documents from the job</span>
+        </div>
+      </button>
+      <input type="file" id="liteFileInput" multiple hidden
+        accept="image/*,video/*,.pdf"
+        capture="environment"
+        onchange="handleLiteUpload(event)">
+
+      <!-- Uploaded files list -->
+      <div class="lite-uploaded-strip" id="liteUploadedStrip"></div>
+      <div class="lite-file-count" id="liteFileCount" style="display:none">
+        <div class="lite-file-count-dot"></div>
+        <span id="liteFileCountText">0 files ready</span>
+      </div>
+
+      <!-- Secondary action: write defense -->
+      <button class="lite-text-btn" onclick="toggleLiteDesc()">
+        <div class="lb-icon">✍️</div>
+        Write a Written Statement (optional)
+      </button>
+
+      <!-- Expandable text area -->
+      <div class="lite-desc-area" id="liteDescArea">
+        <textarea id="liteDescField" placeholder="Briefly explain what was completed and why. Keep it factual — dates, materials, what was agreed vs what was done."></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div class="lite-submit-row">
+        <button class="lite-submit-btn" id="liteSubmitBtn" onclick="liteSubmit()" disabled>
+          🔒 Submit My Defense
+        </button>
+        <div class="lite-legal">
+          By submitting, your evidence is locked to this case and shared with the TradeMatch Resolver.<br>
+          48-hour SLA · Case #TM-992-X · Early Adopter: £0 filing fee
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<main class="main" id="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <div class="page-eyebrow">48-Hour Resolution SLA · Legal Record of Truth</div>
+      <h1 class="page-title">Dispute Centre</h1>
+      <p class="page-sub">Project #TM-8821 · Marcus Reed (Plumbing) · £1,200 in escrow</p>
+    </div>
+    <div class="page-actions">
+      <div class="view-switcher">
+        <button class="view-btn active" id="vbFile" onclick="switchView('file', this)">⚖️ Raise Dispute</button>
+        <button class="view-btn" id="vbActive" onclick="switchView('active', this)">📡 Active Case</button>
+        <button class="view-btn" id="vbResolver" onclick="switchView('resolver', this)">🛡 Resolver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lite Mode active bar — shown only in lite-mode -->
+  <div id="liteModeBar">
+    <div class="lite-label">Lite Mode Active — Simplified for field use</div>
+    <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="toggleLiteMode()">Switch to Full View</button>
+  </div>
+
+  <!-- SLA Pressure Bar — glassmorphism -->
+  <div class="sla-banner" id="slaBanner">
+    <div class="sla-clock-wrap">
+      <div class="sla-icon-wrap" id="slaIcon">⏳</div>
+      <div>
+        <div class="sla-time-label">SLA Countdown</div>
+        <div class="sla-time-val" id="slaTimer">— — : — —</div>
+        <div class="sla-phase-desc" id="slaDesc">File a dispute to start the 48-hour resolution clock.</div>
+      </div>
+    </div>
+    <div class="sla-track-wrap">
+      <div class="sla-track-labels">
+        <span>T+0h</span>
+        <span id="slaTrackLabel">No active dispute</span>
+        <span>T+48h</span>
+      </div>
+      <div class="sla-track"><div class="sla-track-fill" id="slaFill" style="width:0%"></div></div>
+    </div>
+    <div class="sla-phases">
+      <div class="phase-chip" id="phase1">Evidence</div>
+      <div class="phase-chip" id="phase2">Vendor Reply</div>
+      <div class="phase-chip" id="phase3">Resolver Review</div>
+      <div class="phase-chip" id="phase4">Final Ruling</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: FILE DISPUTE ═══════════ -->
+  <div class="view-panel active" id="view-file">
+    <div class="dispute-grid">
+
+      <!-- LEFT: Filing Form -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Raise Formal Dispute</div>
+              <div class="card-sub">Project #TM-8821 · Phase: Evidence Gathering</div>
+            </div>
+            <div id="filingEscrowChip" class="escrow-chip protected">🔒 Escrow Protected</div>
+          </div>
+          <div class="card-body">
+
+            <!-- Job info -->
+            <div class="job-banner">
+              <div class="job-banner-avatar">MR</div>
+              <div class="job-banner-info">
+                <div class="job-banner-name">Marcus Reed · Master Plumber</div>
+                <div class="job-banner-meta">#TM-8821 · Started 3 days ago · Show-Up Score: 72/100</div>
+              </div>
+            </div>
+
+            <!-- Direct match warning (hidden unless toggled) -->
+            <div class="warn-banner danger" id="directMatchBanner">
+              <strong>⚠️ No Escrow Protection — Mediation Only</strong>
+              This job was processed as a Direct Match outside the TradeMatch payment system. We can investigate and issue a formal ruling, but cannot freeze or claw back funds paid directly.
+            </div>
+
+            <!-- Cool-down warning (hidden unless toggled) -->
+            <div class="warn-banner amber" id="cooldownBanner">
+              <strong>⏱ 2-Hour Cool-Down Active</strong>
+              Disputes cannot be filed within 2 hours of a job starting. This prevents frivolous claims. Please wait before proceeding (SOP Section 2.1).
+            </div>
+
+            <!-- Vendor Lite Mode — three big tap-target buttons (visible only in lite-mode) -->
+            <div class="vendor-lite-panel" id="vendorLitePanel">
+              <button class="vendor-lite-btn photos" onclick="document.getElementById('fileInput').click()">
+                <div class="vl-icon">📸</div>
+                <div class="vl-text">Upload My Photos<span class="vl-sub">Attach site photos as your defense evidence</span></div>
+              </button>
+              <button class="vendor-lite-btn defense" onclick="document.getElementById('descField').focus();showToast('Write your defense in the text field below','info')">
+                <div class="vl-icon">✍️</div>
+                <div class="vl-text">Write My Defense<span class="vl-sub">Explain what work was completed and why</span></div>
+              </button>
+              <button class="vendor-lite-btn refund" onclick="document.getElementById('resolutionSelect').value='partial';onResolutionChange();document.getElementById('partialAmountWrap').style.display='block';showToast('Enter the refund amount you're offering below','info')">
+                <div class="vl-icon">💷</div>
+                <div class="vl-text">Offer a Refund<span class="vl-sub">Propose a partial refund to settle quickly</span></div>
+              </button>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="section-title">Step 1 — Primary Issue</div>
+            <div class="triage-grid">
+              <div class="triage-card" onclick="setType('quality')" data-type="quality">
+                <div class="triage-card-icon">🛠️</div>
+                <div class="triage-card-title">Work Quality</div>
+                <div class="triage-card-desc">Damage, poor finish, defects</div>
+              </div>
+              <div class="triage-card" onclick="setType('ghosting')" data-type="ghosting">
+                <div class="triage-card-icon">👻</div>
+                <div class="triage-card-title">Ghosting / Lateness</div>
+                <div class="triage-card-desc">Vendor stopped showing up</div>
+              </div>
+              <div class="triage-card" onclick="setType('overcharge')" data-type="overcharge">
+                <div class="triage-card-icon">💰</div>
+                <div class="triage-card-title">Payment / Overcharge</div>
+                <div class="triage-card-desc">Billing beyond agreed quote</div>
+              </div>
+              <div class="triage-card" onclick="setType('conduct')" data-type="conduct">
+                <div class="triage-card-icon">⚠️</div>
+                <div class="triage-card-title">Safety / Conduct</div>
+                <div class="triage-card-desc">Professionalism or safety risk</div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="section-title">Step 2 — Evidence Vault</div>
+            <div class="tm-live-bar" id="tmLiveBar" onclick="importLiveEvidence()">
+              <div class="tm-live-dot"></div>
+              <div class="tm-live-text">
+                <div class="tm-live-title">⚡ TradeMatch Live Sync Available</div>
+                <div class="tm-live-desc">4 milestone photos + 2 GPS check-ins detected. Import as Exhibit A?</div>
+              </div>
+              <button class="tm-import-btn" onclick="importLiveEvidence();event.stopPropagation()">Import</button>
+            </div>
+
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+              <div class="upload-zone-icon">📎</div>
+              <div class="upload-zone-text">Drag & drop additional evidence here</div>
+              <div class="upload-zone-hint">JPG · PNG · MP4 · PDF — max 50MB each</div>
+              <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.pdf" onchange="handleUpload(event)">
+            </div>
+
+            <div id="evidencePhotoGrid" class="evidence-photo-grid" style="display:none"></div>
+
+            <div id="evidenceCountStrip" class="evidence-count-strip" style="display:none">
+              <div class="evidence-count-dot"></div>
+              <span id="evidenceCountText">0 items ready</span>
+            </div>
+
+            <div class="photo-mandate" id="photoMandate" style="display:none">
+              ⚠️ Work Quality disputes require at least 3 photos — <span id="photoMandateCt">0</span>/3 uploaded
+            </div>
+
+            <!-- Step 3 -->
+            <div class="section-title" style="margin-top:20px">Step 3 — Description</div>
+            <div class="form-row">
+              <textarea class="tm-textarea" id="descField" placeholder="Describe the issue clearly. Include dates, agreed scope vs delivered work, and any prior communications…"></textarea>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="section-title">Step 4 — Desired Resolution</div>
+            <div class="form-row">
+              <select class="tm-select" id="resolutionSelect" onchange="onResolutionChange()">
+                <option value="">— Select your desired outcome —</option>
+                <option value="full_refund">Full Refund of Escrow (£1,200) — Early Adopter: Free to file</option>
+                <option value="partial">Partial Refund (specify amount)</option>
+                <option value="fix">Vendor to return and fix within 48 hours</option>
+                <option value="terminate">Contract Termination — release remaining funds</option>
+              </select>
+              <div id="partialAmountWrap" style="display:none">
+                <div class="amount-row">
+                  <div class="amount-prefix">£</div>
+                  <input class="amount-input" type="number" id="partialAmount" placeholder="Enter amount" min="1" max="1200">
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <button class="btn btn-danger-solid" id="submitBtn" style="width:100%;padding:15px;font-size:14px;border-radius:12px;margin-top:4px" onclick="submitDispute()" disabled>
+              🔒 Lock Escrow &amp; Open Dispute
+            </button>
+            <div class="legal-disclaimer" id="legalDisclaimer">
+              By filing this dispute, you acknowledge the 48-hour resolution SLA is legally binding for both parties. Early Adopter filing fee: £0.
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Sidebar cards -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Case summary -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 Case Summary</div></div>
+          <div class="card-body">
+            <div class="meta-row"><span class="meta-key">Dispute Type</span><span class="meta-val" id="metaType">Not selected</span></div>
+            <div class="meta-row"><span class="meta-key">Escrow Value</span><span class="meta-val green">£1,200.00</span></div>
+            <div class="meta-row"><span class="meta-key">Protection</span><span class="meta-val green" id="metaProtection">✅ Escrow Match</span></div>
+            <div class="meta-row"><span class="meta-key">Evidence Items</span><span class="meta-val" id="metaEvidence">0</span></div>
+            <div class="meta-row"><span class="meta-key">Resolution Ask</span><span class="meta-val" id="metaResolution">—</span></div>
+            <div class="meta-row" style="padding-bottom:0;border:none"><span class="meta-key">Filing Fee</span><span class="meta-val green">£0 — Early Adopter</span></div>
+          </div>
+        </div>
+
+        <!-- SOP checklist -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">✅ SOP Compliance</div></div>
+          <div class="card-body">
+            <div class="sop-list">
+              <div class="sop-item"><div class="sop-dot pass" id="sop-cooldown">✓</div><span>2-hour cool-down passed (SOP 2.1)</span></div>
+              <div class="sop-item"><div class="sop-dot" id="sop-type">○</div><span>Dispute type selected</span></div>
+              <div class="sop-item"><div class="sop-dot" id="sop-evidence">○</div><span>Minimum evidence uploaded</span></div>
+              <div class="sop-item"><div class="sop-dot" id="sop-resolution">○</div><span>Resolution outcome stated</span></div>
+              <div class="sop-item"><div class="sop-dot pass" id="sop-escrow">✓</div><span>Escrow protection verified</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- What happens next -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">📜 What Happens Next</div></div>
+          <div class="card-body">
+            <div class="case-timeline">
+              <div class="tl-item">
+                <div class="tl-dot done">🔒</div>
+                <div class="tl-content">
+                  <div class="tl-title">Escrow Frozen (T+0h)</div>
+                  <div class="tl-desc">All milestone payouts paused on submission. Stripe holds funds.</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot">📲</div>
+                <div class="tl-content">
+                  <div class="tl-title">Vendor Notified (T+0h)</div>
+                  <div class="tl-desc">SMS + push. 24-hour window to upload rebuttal (SOP 4.1).</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot">🔍</div>
+                <div class="tl-content">
+                  <div class="tl-title">Double-Blind Review (T+24h)</div>
+                  <div class="tl-desc">Two Resolvers review evidence independently for consistency.</div>
+                </div>
+              </div>
+              <div class="tl-item" style="padding-bottom:0">
+                <div class="tl-dot">⚖️</div>
+                <div class="tl-content">
+                  <div class="tl-title">Final Determination (T+48h)</div>
+                  <div class="tl-desc">Ruling issued. Escrow released per determination.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: ACTIVE CASE ═══════════ -->
+  <div class="view-panel" id="view-active">
+    <div class="dispute-grid">
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Vendor rebuttal zone -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Vendor Rebuttal Window</div><div class="card-sub">Marcus Reed has 24 hours to respond</div></div>
+            <div style="font-family:var(--fm);font-size:13px;color:var(--accent-amber)" id="rebuttalClock">23:59:41 remaining</div>
+          </div>
+          <div class="card-body">
+            <div class="rebuttal-zone">
+              <div class="rebuttal-zone-title">Awaiting Vendor Response</div>
+              <div class="rebuttal-timer" id="rebuttalTimerDisplay">23:59:41</div>
+              <div class="rebuttal-zone-desc">Marcus Reed has until <strong>Wed 4 Mar, 14:32</strong> to upload a defense. If no rebuttal is received, the Resolver may rule by default in favour of the homeowner (SOP 4.1).</div>
+              <button class="btn btn-blue" onclick="showToast('Vendor upload portal sent via SMS','success')">📤 Resend Vendor Upload Link</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evidence vault -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">📁 Evidence Vault — Case #TM-992-X</div></div>
+          <div class="card-body">
+            <div class="dual-evidence">
+              <div class="evidence-side">
+                <div class="evidence-side-title">🏠 Homeowner Evidence</div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">milestone_photo_1.jpg</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">milestone_photo_2.jpg</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">milestone_photo_3.jpg</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📍</div><div class="evidence-doc-name">gps_checkin_1.json</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📍</div><div class="evidence-doc-name">gps_checkin_2.json</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">💬</div><div class="evidence-doc-name">chat_transcript.pdf</div><div class="evidence-doc-tag exhibit">Auto-linked</div></div>
+              </div>
+              <div class="evidence-side">
+                <div class="evidence-side-title">🔧 Vendor Evidence</div>
+                <div style="text-align:center;padding:32px 12px;color:var(--text-3)">
+                  <div style="font-size:36px;margin-bottom:10px">⏳</div>
+                  <div style="font-size:13px;margin-bottom:4px">Awaiting vendor upload</div>
+                  <div style="font-family:var(--fm);font-size:10px">Rebuttal window open · 24h</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live case timeline -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">📡 Live Case Timeline</div></div>
+          <div class="card-body">
+            <div class="case-timeline">
+              <div class="tl-item"><div class="tl-dot done">✅</div><div class="tl-content"><div class="tl-title">Dispute Filed</div><div class="tl-desc">Escrow frozen. SLA started. Vendor notified via SMS &amp; push.</div><div class="tl-time">Mon 2 Mar, 14:32 · Sarah B.</div></div></div>
+              <div class="tl-item"><div class="tl-dot done">✅</div><div class="tl-content"><div class="tl-title">TradeMatch Live Evidence Imported</div><div class="tl-desc">4 milestone photos + 2 GPS check-ins logged as Exhibit A. API call: <code style="font-family:var(--fm);font-size:10px;color:var(--neon)">/api/v1/escrow/freeze</code> confirmed.</div><div class="tl-time">Mon 2 Mar, 14:32 · automated</div></div></div>
+              <div class="tl-item"><div class="tl-dot current">📨</div><div class="tl-content"><div class="tl-title">Awaiting Vendor Rebuttal</div><div class="tl-desc">Marcus Reed has until Tue 3 Mar, 14:32 to respond. No response = default ruling may apply.</div><div class="tl-time">Window closes in ~24h</div></div></div>
+              <div class="tl-item"><div class="tl-dot">🔍</div><div class="tl-content"><div class="tl-title">Double-Blind Resolver Review</div><div class="tl-desc">Two TradeMatch Resolvers will independently review evidence (SOP Section 6).</div><div class="tl-time">Scheduled: Tue 3 Mar, 14:32</div></div></div>
+              <div class="tl-item" style="padding-bottom:0"><div class="tl-dot">⚖️</div><div class="tl-content"><div class="tl-title">Final Determination</div><div class="tl-desc">SLA deadline. Ruling must be issued before breach is triggered.</div><div class="tl-time">Deadline: Wed 4 Mar, 14:32</div></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right sidebar — active case -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">📋 Active Case</div></div>
+          <div class="card-body">
+            <div class="meta-row"><span class="meta-key">Case ID</span><span class="meta-val green">#TM-992-X</span></div>
+            <div class="meta-row"><span class="meta-key">Type</span><span class="meta-val">Work Quality</span></div>
+            <div class="meta-row"><span class="meta-key">Escrow Status</span><span class="meta-val red">🔒 FROZEN</span></div>
+            <div class="meta-row"><span class="meta-key">Frozen Amount</span><span class="meta-val red">£1,200.00</span></div>
+            <div class="meta-row"><span class="meta-key">Phase</span><span class="meta-val amber">Vendor Rebuttal</span></div>
+            <div class="meta-row" style="border:none;padding-bottom:0"><span class="meta-key">Resolution Ask</span><span class="meta-val">Full Refund</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 Vendor Profile Snapshot</div></div>
+          <div class="card-body">
+            <div class="meta-row"><span class="meta-key">Show-Up Score</span><span class="meta-val amber">72 / 100</span></div>
+            <div class="meta-row"><span class="meta-key">Completed Jobs</span><span class="meta-val">47</span></div>
+            <div class="meta-row"><span class="meta-key">Prior Disputes</span><span class="meta-val red">2</span></div>
+            <div class="meta-row" style="border:none;padding-bottom:0"><span class="meta-key">GPS Misses (30d)</span><span class="meta-val amber">3</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔔 Notifications</div></div>
+          <div class="card-body">
+            <div style="font-size:13px;color:var(--text-2);line-height:1.8">
+              You will be notified when:<br>
+              <span style="color:var(--text-1)">• Vendor uploads rebuttal</span><br>
+              <span style="color:var(--text-1)">• Resolver requests more evidence</span><br>
+              <span style="color:var(--text-1)">• Phase changes (T+24h, T+40h)</span><br>
+              <span style="color:var(--text-1)">• Final determination issued</span>
+            </div>
+            <div class="appeals-notice">
+              📣 <strong>7-Day Appeals Window:</strong> Once a ruling is made, either party may appeal with new material evidence (e.g. a formal survey report). SOP Section 10.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ VIEW: RESOLVER ═══════════ -->
+  <div class="view-panel" id="view-resolver">
+    <div class="dispute-grid">
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">🛡 Resolver Dashboard — Case #TM-992-X</div><div class="card-sub">Double-blind review · Trust &amp; Safety team only</div></div>
+            <div style="font-family:var(--fm);font-size:10px;background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);color:var(--accent-danger);padding:4px 10px;border-radius:100px">Internal Only</div>
+          </div>
+          <div class="card-body">
+
+            <div class="section-title">Full Evidence Comparison</div>
+            <div class="dual-evidence">
+              <div class="evidence-side">
+                <div class="evidence-side-title">🏠 Claimant — Sarah Bennett</div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">milestone_photo_1.jpg</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">milestone_photo_2.jpg</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">damage_photo.jpg</div><div class="evidence-doc-tag exhibit">Uploaded</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📍</div><div class="evidence-doc-name">gps_checkin_1.json</div><div class="evidence-doc-tag exhibit">Exhibit A</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">💬</div><div class="evidence-doc-name">chat_transcript.pdf</div><div class="evidence-doc-tag exhibit">Auto-linked</div></div>
+              </div>
+              <div class="evidence-side">
+                <div class="evidence-side-title">🔧 Defendant — Marcus Reed</div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📸</div><div class="evidence-doc-name">completion_photo.jpg</div><div class="evidence-doc-tag exhibit">Uploaded</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📄</div><div class="evidence-doc-name">invoice_v2.pdf</div><div class="evidence-doc-tag exhibit">Uploaded</div></div>
+                <div class="evidence-doc"><div class="evidence-doc-icon">📄</div><div class="evidence-doc-name">vendor_statement.pdf</div><div class="evidence-doc-tag exhibit">Uploaded</div></div>
+              </div>
+            </div>
+
+            <div class="section-title">Agreed Scope vs. Delivered Work</div>
+            <div class="scope-grid">
+              <div class="scope-panel">
+                <div class="scope-panel-label">📋 Contract Scope</div>
+                <div class="scope-item">✅ Replace boiler unit<br>✅ Install radiators × 3<br>✅ Pressure test + certificate<br>✅ Clear existing pipework</div>
+              </div>
+              <div class="scope-panel deficient">
+                <div class="scope-panel-label">🔍 Delivered Work</div>
+                <div class="scope-item">✅ Replace boiler unit<br>⚠️ Only 2 of 3 radiators fitted<br>❌ No pressure certificate<br>✅ Pipework cleared</div>
+              </div>
+            </div>
+
+            <div class="section-title">Resolver Notes (Internal · Double-Blind)</div>
+            <textarea class="tm-textarea" style="margin-bottom:0" placeholder="Enter internal assessment and reasoning for the ruling. This is not visible to either party until determination.">Reviewed photographic evidence and contract. Two deliverables clearly missing: 1 radiator and no gas pressure certificate. Partial completion confirmed. Recommend split determination: 75% homeowner / 25% vendor based on work-completed estimate.</textarea>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Resolver action sidebar -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <div class="card-header"><div class="card-title">⚖️ Issue Determination</div></div>
+          <div class="card-body">
+            <div class="resolver-btn-grid">
+              <button class="resolver-btn for-homeowner" onclick="issueRuling('homeowner')">
+                🏠 Rule for Homeowner
+                <span>Full or partial refund from escrow</span>
+              </button>
+              <button class="resolver-btn for-vendor" onclick="issueRuling('vendor')">
+                🔧 Rule for Vendor
+                <span>Release escrow · dismiss complaint</span>
+              </button>
+              <button class="resolver-btn split" onclick="issueRuling('split')">
+                ✂️ Split Determination
+                <span>Mediated % split by work completed</span>
+              </button>
+            </div>
+            <div class="appeals-notice">
+              After ruling, both parties have <strong>7 days</strong> to appeal with new material evidence. SOP Section 10 applies.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">📊 Case Stats</div></div>
+          <div class="card-body">
+            <div class="meta-row"><span class="meta-key">Filed</span><span class="meta-val">Mon 2 Mar, 14:32</span></div>
+            <div class="meta-row"><span class="meta-key">SLA Deadline</span><span class="meta-val amber">Wed 4 Mar, 14:32</span></div>
+            <div class="meta-row"><span class="meta-key">Double-Blind</span><span class="meta-val green">2 Resolvers ✓</span></div>
+            <div class="meta-row"><span class="meta-key">Show-Up Impact</span><span class="meta-val red">−15 pts if at fault</span></div>
+            <div class="meta-row" style="border:none;padding-bottom:0"><span class="meta-key">Review Locking</span><span class="meta-val amber">Active until resolved</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ════════════════ SUCCESS MODAL ════════════════ -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">Dispute Filed</div>
+    <div class="modal-desc">Escrow frozen. Marcus Reed has been notified by SMS. The 48-hour resolution SLA is now legally binding for both parties.</div>
+    <div class="modal-case-id">Case #TM-992-X</div>
+    <div class="modal-actions">
+      <button class="btn btn-danger-solid" style="width:100%;padding:14px;font-size:14px;border-radius:12px" onclick="viewActiveCase()">📡 View Active Case →</button>
+      <button class="btn btn-secondary" style="width:100%;padding:12px;font-size:13px;border-radius:10px;margin-top:0" onclick="document.getElementById('successModal').classList.remove('open');showToast('Case saved. You can view it in Active Case.','success')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ TOAST ════════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   TRADEMATCH DISPUTE CENTRE · JavaScript
+   All logic aligned with homeowner_dashboard_v3 patterns
+   ═══════════════════════════════════════════════════════ */
+
+let sidebarCollapsed = false;
+let disputeType = null;
+let evidenceItems = [];
+let photoCount = 0;
+let resolution = '';
+let slaInterval = null;
+let rebuttalInterval = null;
+let disputeStartTime = null;
+
+const DISPUTE_TYPES = {
+  quality:   { label: 'Work Quality',       requirePhotos: true, minPhotos: 3, priority: 1 },
+  ghosting:  { label: 'Ghosting / Lateness', requirePhotos: false, requireGPS: true, priority: 2 },
+  overcharge:{ label: 'Payment / Overcharge',requirePhotos: false, priority: 2 },
+  conduct:   { label: 'Safety / Conduct',    requirePhotos: false, priority: 1 }
+};
+
+const RESOLUTION_LABELS = {
+  full_refund: 'Full Refund (£1,200)', partial: 'Partial Refund',
+  fix: 'Remedial Work', terminate: 'Contract Termination'
+};
+
+/* ─── SIDEBAR ─────────────────────────────── */
+function toggleSidebar() {
+  sidebarCollapsed = !sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('topnav').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('main').classList.toggle('collapsed', sidebarCollapsed);
+}
+
+/* ─── THEME ─────────────────────────────── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const icon = document.getElementById('themeIcon');
+  if (isDark) {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';
+  } else {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';
+  }
+}
+
+/* ─── TOAST — exact from dashboard ─────────── */
+function showToast(msg, type = 'success') {
+  const icons = { success: '✅', warning: '⚠️', info: 'ℹ️' };
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]}</span>${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+/* ─── VIEW SWITCHING ─────────────────────── */
+function switchView(name, btn) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.view-btn').forEach(b => { b.classList.remove('active','active-green','active-blue'); });
+  document.getElementById('view-' + name).classList.add('active');
+  if (name === 'file') btn.classList.add('active');
+  else if (name === 'active') btn.classList.add('active-green');
+  else btn.classList.add('active-blue');
+}
+
+/* ─── PROFILE DROPDOWN ─────────────────── */
+function toggleProfileDropdown() {
+  document.getElementById('profileDropdown').classList.toggle('open');
+}
+function closeProfileDropdown() {
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#profileDropdown') && !e.target.closest('.profile-btn')) closeProfileDropdown();
+});
+
+/* ─── DISPUTE TYPE SELECTION ────────────── */
+function setType(type) {
+  disputeType = type;
+  document.querySelectorAll('.triage-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.type === type);
+  });
+
+  const cfg = DISPUTE_TYPES[type];
+  document.getElementById('metaType').textContent = cfg.label;
+  setSopDot('sop-type', 'pass');
+
+  const mandate = document.getElementById('photoMandate');
+  mandate.style.display = cfg.requirePhotos ? 'flex' : 'none';
+  if (cfg.requirePhotos) updatePhotoMandate();
+
+  validate();
+}
+
+/* ─── TRADEMATCH LIVE IMPORT ────────────── */
+function importLiveEvidence() {
+  const bar = document.getElementById('tmLiveBar');
+  if (bar.classList.contains('imported')) return;
+  bar.classList.add('imported');
+  bar.querySelector('.tm-live-title').textContent = '✅ TradeMatch Live Evidence Imported';
+  bar.querySelector('.tm-live-desc').textContent = '4 milestone photos + 2 GPS check-ins added as Exhibit A';
+
+  const exhibits = [
+    { label: 'M1', icon: '📸', isPhoto: true },
+    { label: 'M2', icon: '📸', isPhoto: true },
+    { label: 'M3', icon: '📸', isPhoto: true },
+    { label: 'M4', icon: '📸', isPhoto: true },
+    { label: 'GPS-1', icon: '📍', isPhoto: false },
+    { label: 'GPS-2', icon: '📍', isPhoto: false },
+  ];
+  exhibits.forEach(e => { evidenceItems.push(e); if (e.isPhoto) photoCount++; });
+  renderEvidenceGrid();
+  validate();
+  showToast('TradeMatch Live evidence imported as Exhibit A', 'success');
+}
+
+/* ─── FILE UPLOAD ───────────────────────── */
+/* ─── FILE UPLOAD — FormData handler ────── */
+// Stores actual File objects for FormData submission
+const fileStore = [];
+
+function handleUpload(event) {
+  processFiles(Array.from(event.target.files));
+}
+
+function processFiles(files) {
+  const validTypes = ['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/quicktime','application/pdf'];
+  const maxBytes = 50 * 1024 * 1024; // 50MB
+
+  files.forEach(file => {
+    if (!validTypes.includes(file.type)) {
+      showToast(`⚠️ ${file.name}: unsupported file type`, 'warning'); return;
+    }
+    if (file.size > maxBytes) {
+      showToast(`⚠️ ${file.name}: exceeds 50MB limit`, 'warning'); return;
+    }
+
+    const isPhoto = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    fileStore.push(file);
+    evidenceItems.push({ label: file.name.slice(0, 10), icon: isPhoto ? '🖼️' : isVideo ? '🎥' : '📄', isPhoto, file });
+    if (isPhoto) photoCount++;
+  });
+
+  renderEvidenceGrid();
+  renderRealPreviews();
+  validate();
+}
+
+function renderRealPreviews() {
+  const grid = document.getElementById('evidencePhotoGrid');
+  // Render real image thumbnails for photos; icons for others
+  evidenceItems.forEach((item, i) => {
+    const cell = grid.children[i];
+    if (!cell) return;
+    if (item.isPhoto && item.file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        cell.style.backgroundImage = `url(${e.target.result})`;
+        cell.style.backgroundSize = 'cover';
+        cell.style.backgroundPosition = 'center';
+        cell.style.fontSize = '0';
+      };
+      reader.readAsDataURL(item.file);
+    }
+  });
+}
+
+// Build FormData for submission — called inside submitDispute()
+function buildFormData() {
+  const fd = new FormData();
+  fd.append('jobId', 'TM-8821');
+  fd.append('disputeType', disputeType || '');
+  fd.append('resolution', resolution || '');
+  fd.append('description', document.getElementById('descField').value || '');
+  fileStore.forEach((file, i) => fd.append(`evidence_${i}`, file, file.name));
+  return fd;
+}
+
+// Drag & drop
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
+  processFiles(Array.from(e.dataTransfer.files));
+});
+
+function renderEvidenceGrid() {
+  const grid = document.getElementById('evidencePhotoGrid');
+  const strip = document.getElementById('evidenceCountStrip');
+  const countText = document.getElementById('evidenceCountText');
+
+  if (evidenceItems.length === 0) { grid.style.display = 'none'; strip.style.display = 'none'; return; }
+
+  grid.style.display = 'grid';
+  strip.style.display = 'flex';
+  countText.textContent = `${evidenceItems.length} item${evidenceItems.length !== 1 ? 's' : ''} ready`;
+
+  grid.innerHTML = evidenceItems.slice(0, 9).map(item => `
+    <div class="evidence-photo" title="${item.label}">
+      ${item.icon}
+      <div class="evidence-photo-label">${item.label}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('metaEvidence').textContent = evidenceItems.length;
+  if (disputeType === 'quality') updatePhotoMandate();
+}
+
+function updatePhotoMandate() {
+  const el = document.getElementById('photoMandateCt');
+  if (el) el.textContent = photoCount;
+  const mandate = document.getElementById('photoMandate');
+  if (photoCount >= 3) { mandate.style.color = 'var(--neon)'; mandate.innerHTML = `✅ Photo requirement met (${photoCount}/3)`; }
+  else { mandate.style.color = 'var(--accent-amber)'; mandate.innerHTML = `⚠️ Work Quality requires at least 3 photos — <span id="photoMandateCt">${photoCount}</span>/3 uploaded`; }
+}
+
+/* ─── RESOLUTION CHANGE ──────────────────── */
+function onResolutionChange() {
+  const val = document.getElementById('resolutionSelect').value;
+  resolution = val;
+  const pw = document.getElementById('partialAmountWrap');
+  pw.style.display = val === 'partial' ? 'block' : 'none';
+  document.getElementById('metaResolution').textContent = RESOLUTION_LABELS[val] || '—';
+  setSopDot('sop-resolution', val ? 'pass' : '');
+  validate();
+}
+
+/* ─── FORM VALIDATION ────────────────────── */
+function validate() {
+  const typeOk = !!disputeType;
+  const resOk = !!resolution;
+
+  let evidenceOk = evidenceItems.length > 0;
+  if (disputeType === 'quality') evidenceOk = photoCount >= 3;
+
+  setSopDot('sop-evidence', evidenceOk ? 'pass' : '');
+
+  const allOk = typeOk && resOk && evidenceOk;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = !allOk;
+}
+
+function setSopDot(id, state) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'sop-dot' + (state === 'pass' ? ' pass' : state === 'fail' ? ' fail' : '');
+  el.textContent = state === 'pass' ? '✓' : state === 'fail' ? '✗' : '○';
+}
+
+/* ─── SUBMIT DISPUTE ─────────────────────── */
+async function submitDispute() {
+  const btn = document.getElementById('submitBtn');
+  const isDirect = btn.getAttribute('data-direct') === 'true';
+  btn.disabled = true;
+  btn.textContent = '↻ Locking funds…';
+  await delay(600);
+  btn.textContent = '↻ Packaging evidence…';
+
+  // Build real FormData with attached files
+  const fd = buildFormData();
+
+  await delay(400);
+  btn.textContent = '↻ Notifying vendor…';
+
+  try {
+    // Production endpoint — uncomment when backend is live:
+    // const res = await fetch('/api/v1/escrow/freeze', { method: 'POST', body: fd });
+    // const data = await res.json();
+    // Audit trail (SOP Section 8)
+    console.log('[TradeMatch] POST /api/v1/escrow/freeze');
+    console.log('[TradeMatch] Files attached:', fileStore.length);
+    console.log('[TradeMatch] Evidence items total:', evidenceItems.length);
+    console.log('[TradeMatch] Dispute type:', disputeType);
+    console.log('[TradeMatch] Resolution ask:', resolution);
+    console.log('[TradeMatch] Direct match:', isDirect);
+    console.log('[TradeMatch] Case #TM-992-X | SLA: 48:00:00 started');
+  } catch(e) { console.error('[TradeMatch] API error:', e); }
+
+  await delay(500);
+  btn.textContent = '↻ Starting SLA clock…';
+  await delay(400);
+
+  disputeStartTime = Date.now();
+  startSlaClock(disputeStartTime);
+
+  // Update escrow chip — only freeze if not direct match
+  const chip = document.getElementById('filingEscrowChip');
+  if (!isDirect) { chip.className = 'escrow-chip frozen'; chip.textContent = '🔒 FROZEN'; }
+
+  document.getElementById('successModal').classList.add('open');
+}
+
+function viewActiveCase() {
+  document.getElementById('successModal').classList.remove('open');
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active','active-green','active-blue'));
+  document.getElementById('view-active').classList.add('active');
+  document.getElementById('vbActive').classList.add('active-green');
+  // Demo: simulate 14h elapsed so we're in the vendor rebuttal phase
+  startSlaClock(Date.now() - (14 * 60 * 60 * 1000));
+  showToast('Case #TM-992-X is active. Vendor rebuttal window open.', 'success');
+}
+
+/* ─── SLA CLOCK ─────────────────────────── */
+const SLA_MS = 48 * 60 * 60 * 1000;
+
+function startSlaClock(fromTs) {
+  disputeStartTime = fromTs;
+  if (slaInterval) clearInterval(slaInterval);
+  tickSla();
+  slaInterval = setInterval(tickSla, 1000);
+}
+
+function tickSla() {
+  const now = Date.now();
+  const elapsed = now - disputeStartTime;
+  const remaining = Math.max(0, SLA_MS - elapsed);
+  const pct = Math.min(100, (elapsed / SLA_MS) * 100);
+  const elapsedH = elapsed / 3600000;
+
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+
+  const banner = document.getElementById('slaBanner');
+  const timer = document.getElementById('slaTimer');
+  const fill = document.getElementById('slaFill');
+  const icon = document.getElementById('slaIcon');
+  const desc = document.getElementById('slaDesc');
+  const trackLabel = document.getElementById('slaTrackLabel');
+  const p1 = document.getElementById('phase1');
+  const p2 = document.getElementById('phase2');
+  const p3 = document.getElementById('phase3');
+  const p4 = document.getElementById('phase4');
+
+  if (remaining <= 0) {
+    timer.textContent = '⚠️ SLA BREACHED';
+    desc.textContent = 'Escalated to Head of Trust & Safety';
+    fill.style.width = '100%';
+    return;
+  }
+
+  timer.textContent = `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+  fill.style.width = pct + '%';
+
+  // Reset all phase chips
+  [p1, p2, p3, p4].forEach(p => p.className = 'phase-chip');
+  banner.classList.remove('phase-amber', 'phase-red');
+
+  if (elapsedH < 24) {
+    desc.textContent = '⏳ Waiting for vendor rebuttal (24h window open)';
+    trackLabel.textContent = `${h}h ${m}m remaining`;
+    icon.textContent = '⏳';
+    p1.classList.add('active'); p2.classList.add('active');
+  } else if (elapsedH < 40) {
+    banner.classList.add('phase-amber');
+    desc.textContent = '🔍 TradeMatch Resolver reviewing both sides (Double-Blind)';
+    trackLabel.textContent = 'Resolver Review Phase';
+    icon.textContent = '🔍';
+    p3.classList.add('active', 'amber');
+  } else {
+    banner.classList.add('phase-red');
+    desc.textContent = '🚨 Final Determination Imminent — Resolver must act now';
+    trackLabel.textContent = 'Final Ruling Due';
+    icon.textContent = '🚨';
+    p4.classList.add('active', 'red');
+  }
+
+  // Keep lite overlay clock in sync with main SLA clock
+  syncLiteClock();
+  // Auto-force lite at T+40h (final 8 hours)
+  checkAutoForceLite(elapsedH, remaining);
+}
+
+/* ─── REBUTTAL TIMER ─────────────────────── */
+function startRebuttalTimer() {
+  let secs = 23 * 3600 + 59 * 60 + 41;
+  function tick() {
+    secs = Math.max(0, secs - 1);
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    const str = secs === 0 ? '⚠️ Window Closed' : `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} remaining`;
+    const el1 = document.getElementById('rebuttalClock');
+    const el2 = document.getElementById('rebuttalTimerDisplay');
+    if (el1) el1.textContent = str;
+    if (el2) el2.textContent = str;
+  }
+  tick();
+  rebuttalInterval = setInterval(tick, 1000);
+}
+
+/* ─── RESOLVER RULING ─────────────────────── */
+function issueRuling(party) {
+  const rulings = {
+    homeowner: { msg: '⚖️ Ruled for homeowner. Escrow refunded to Sarah Bennett. Show-Up Score impact: −15 pts.', type: 'success' },
+    vendor:    { msg: '⚖️ Ruled for vendor. Escrow released to Marcus Reed. Complaint dismissed.', type: 'info' },
+    split:     { msg: '✂️ Split determination: 75% homeowner / 25% vendor. Both parties notified.', type: 'warning' }
+  };
+  const r = rulings[party];
+  showToast(r.msg, r.type);
+  // In production: fetch('/api/v1/escrow/resolve', { method:'POST', body: JSON.stringify({caseId:'TM-992-X', ruling:party}) })
+  console.log('[TradeMatch] Ruling issued:', party, '| Case: TM-992-X');
+}
+
+/* ─── DIRECT MATCH DETECTION ─────────────── */
+function checkDirectMatchStatus() {
+  const params = new URLSearchParams(window.location.search);
+  const isDirect = params.get('method') === 'direct';
+  if (!isDirect) return;
+
+  // Show inline banner
+  const banner = document.getElementById('directMatchBanner');
+  if (banner) banner.classList.add('show');
+
+  // Flip escrow chip to amber
+  const chip = document.getElementById('filingEscrowChip');
+  if (chip) { chip.className = 'escrow-chip unprotected'; chip.textContent = '⚠️ Unprotected Match'; }
+
+  // Update topnav escrow pill to amber warning state
+  const pill = document.querySelector('.escrow-pill');
+  if (pill) {
+    pill.style.cssText = 'background:rgba(255,167,38,0.1);border-color:rgba(255,167,38,0.35);animation:none';
+    const lbl = pill.querySelector('.escrow-pill-label');
+    const amt = pill.querySelector('.escrow-pill-amount');
+    if (lbl) { lbl.style.color = 'var(--accent-amber)'; lbl.textContent = 'Unprotected'; }
+    if (amt) { amt.style.color = 'var(--accent-amber)'; }
+  }
+
+  // Update page subtitle
+  const sub = document.querySelector('.page-sub');
+  if (sub) sub.textContent = 'Direct Match detected. TradeMatch is acting as mediator only — no funds held in escrow.';
+
+  // SOP check — escrow not verified
+  setSopDot('sop-escrow', 'fail');
+
+  // Protection meta row
+  const metaProt = document.getElementById('metaProtection');
+  if (metaProt) { metaProt.textContent = '⚠️ Direct Match — No Escrow'; metaProt.className = 'meta-val amber'; }
+
+  // Relabel full refund option
+  const refundOpt = document.querySelector('option[value="full_refund"]');
+  if (refundOpt) refundOpt.textContent = 'Request Refund from Vendor (Non-Escrow)';
+
+  // Retitle submit button
+  const btn = document.getElementById('submitBtn');
+  if (btn) btn.setAttribute('data-direct', 'true');
+}
+
+/* ════════════════════════════════════════════════════════
+   LITE MODE ENGINE — "One Screen, One Action"
+   ════════════════════════════════════════════════════════
+
+   Entry points:
+     1. ?role=vendor in URL → auto-activate on load
+     2. Manual "Site View" button in topnav → toggleLiteMode()
+     3. Auto-force at T+40h (final 8h) → autoForceLite()
+
+   Exit point:
+     - "Business View" button in lite overlay → exitLiteMode()
+     - Locked during auto-force; only unlockable after T+48h
+       OR by power-user override after confirming they understand urgency
+
+   Business logic added:
+     - ?role=vendor param activates lite AND updates claim sentence
+       from URL params (?type=quality&ask=full_refund&amount=1200)
+     - Lite upload has capture="environment" for direct camera on mobile
+     - liteFileCount drives liteSubmitBtn enable/disable
+     - Auto-force stores timestamp so 24h cooldown prevents re-entry
+       after the crisis window (prevents confusion post-ruling)
+   ════════════════════════════════════════════════════════ */
+
+let liteFilesStore = [];
+let autoForced = false;
+let liteDescVisible = false;
+
+/* ─── ACTIVATE LITE ─────────────────────── */
+function activateLite(reason) {
+  document.body.classList.add('lite-mode');
+  try { localStorage.setItem('tm_ui_style', 'lite'); } catch(e) {}
+  const dot = document.getElementById('liteModeIndicator');
+  if (dot) dot.style.display = 'block';
+  // Sync the lite clock from the running SLA clock if active
+  syncLiteClock();
+}
+
+/* ─── TOGGLE LITE (manual button) ──────── */
+function toggleLiteMode() {
+  if (document.body.classList.contains('lite-mode')) {
+    exitLiteMode();
+  } else {
+    activateLite('manual');
+    showToast('📱 Lite Mode active — one screen, one task', 'info');
+  }
+}
+
+/* ─── EXIT LITE ─────────────────────────── */
+function exitLiteMode() {
+  // Block exit during auto-forced final 8h window
+  if (autoForced) {
+    const btn = document.getElementById('liteEscapeBtn');
+    btn.classList.add('locked');
+    showToast('🚨 Final 8 hours active — Lite Mode is locked to protect your response', 'warning');
+    setTimeout(() => btn.classList.remove('locked'), 2000);
+    return;
+  }
+  document.body.classList.remove('lite-mode');
+  try { localStorage.setItem('tm_ui_style', 'pro'); } catch(e) {}
+  const dot = document.getElementById('liteModeIndicator');
+  if (dot) dot.style.display = 'none';
+  showToast('💼 Full View restored', 'info');
+}
+
+/* ─── AUTO-FORCE AT T+40h (final 8h) ────── */
+function checkAutoForceLite(elapsedH, remaining) {
+  if (elapsedH >= 40 && !autoForced) {
+    autoForced = true;
+    activateLite('auto');
+
+    // Show the auto-forced warning strip
+    const strip = document.getElementById('liteAutoStrip');
+    if (strip) strip.classList.add('show');
+
+    // Lock the escape button
+    const btn = document.getElementById('liteEscapeBtn');
+    if (btn) btn.classList.add('locked');
+
+    showToast('🚨 Final 8 hours — Lite Mode locked. Focus on your defense.', 'warning');
+  }
+
+  // Live countdown in the auto-strip
+  if (autoForced) {
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    const el = document.getElementById('liteAutoUnlockCountdown');
+    if (el) el.textContent = `${h}h ${m}m until SLA deadline.`;
+  }
+}
+
+/* ─── SYNC LITE CLOCK from main SLA ────── */
+function syncLiteClock() {
+  if (!disputeStartTime) return;
+  const now = Date.now();
+  const elapsed = now - disputeStartTime;
+  const remaining = Math.max(0, SLA_MS - elapsed);
+  const pct = Math.min(100, (elapsed / SLA_MS) * 100);
+  const elapsedH = elapsed / 3600000;
+
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+
+  const digits = document.getElementById('liteClockDigits');
+  const status = document.getElementById('liteClockStatus');
+  const fill   = document.getElementById('liteClockFill');
+  const panel  = document.getElementById('liteClockPanel');
+
+  if (!digits) return;
+
+  if (remaining <= 0) {
+    digits.textContent = 'SLA BREACHED';
+    status.textContent = 'Escalated to TradeMatch Head of Trust & Safety';
+    fill.style.width = '100%';
+    panel.className = 'lite-clock-panel phase-red';
+    return;
+  }
+
+  digits.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  fill.style.width = pct + '%';
+
+  if (elapsedH < 24) {
+    status.textContent = 'Upload your evidence before the rebuttal window closes';
+    panel.className = 'lite-clock-panel';
+  } else if (elapsedH < 40) {
+    status.textContent = 'Resolver is reviewing both sides — await determination';
+    panel.className = 'lite-clock-panel phase-amber';
+  } else {
+    status.textContent = '🚨 Final 8 hours — Resolver issuing ruling imminently';
+    panel.className = 'lite-clock-panel phase-red';
+  }
+}
+
+/* ─── INIT LITE FROM URL PARAMS ─────────── */
+function initLiteModeFromUrl() {
+  const p = new URLSearchParams(window.location.search);
+
+  // ?role=vendor → auto activate lite for vendor SMS links
+  if (p.get('role') === 'vendor') {
+    activateLite('url');
+    // Vendor SMS links include job context in URL so we can
+    // pre-populate the claim sentence without the vendor needing to navigate
+    const type = p.get('type') || 'work quality';
+    const ask  = p.get('ask')  || 'a full refund';
+    const amt  = p.get('amount') ? `£${p.get('amount')}` : '£1,200';
+
+    const sentence = document.getElementById('liteClaimSentence');
+    if (sentence) {
+      sentence.innerHTML = `Sarah says the <em>${decodeURIComponent(type)}</em> issue was not resolved and is requesting <em>${decodeURIComponent(ask)}</em>.`;
+    }
+    const amountEl = document.getElementById('liteClaimAmount');
+    if (amountEl) amountEl.textContent = amt;
+
+    // Update escrow pill in background too
+    const pill = document.querySelector('.escrow-pill .escrow-pill-amount');
+    if (pill) pill.textContent = amt;
+  }
+}
+
+/* ─── INIT LITE FROM LOCALSTORAGE ──────── */
+function initUISettings() {
+  try {
+    const pref = localStorage.getItem('tm_ui_style');
+    if (pref === 'lite') activateLite('pref');
+  } catch(e) {}
+}
+
+/* ─── LITE FILE UPLOAD ───────────────────── */
+function handleLiteUpload(event) {
+  const files = Array.from(event.target.files);
+  const valid = ['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/quicktime','application/pdf'];
+  const max = 50 * 1024 * 1024;
+
+  files.forEach(file => {
+    if (!valid.includes(file.type)) { showToast(`⚠️ ${file.name}: unsupported type`, 'warning'); return; }
+    if (file.size > max) { showToast(`⚠️ ${file.name}: over 50MB`, 'warning'); return; }
+    liteFilesStore.push(file);
+    // Also push into the main fileStore so FormData picks them up
+    fileStore.push(file);
+    const isPhoto = file.type.startsWith('image/');
+    evidenceItems.push({ label: file.name.slice(0,10), icon: isPhoto ? '🖼️' : '📄', isPhoto, file });
+    if (isPhoto) photoCount++;
+  });
+
+  renderLiteFiles();
+  renderRealPreviews();
+  validate();
+
+  // Haptic feedback on mobile
+  if (navigator.vibrate) navigator.vibrate([40, 20, 40]);
+  if (liteFilesStore.length > 0) showToast(`✅ ${liteFilesStore.length} file${liteFilesStore.length > 1 ? 's' : ''} ready — tap Submit when done`, 'success');
+}
+
+function renderLiteFiles() {
+  const strip = document.getElementById('liteUploadedStrip');
+  const count = document.getElementById('liteFileCount');
+  const countText = document.getElementById('liteFileCountText');
+  const submitBtn = document.getElementById('liteSubmitBtn');
+
+  if (!strip) return;
+
+  if (liteFilesStore.length === 0) {
+    strip.className = 'lite-uploaded-strip';
+    count.style.display = 'none';
+    if (submitBtn) submitBtn.disabled = true;
+    return;
+  }
+
+  strip.className = 'lite-uploaded-strip has-files';
+  count.style.display = 'flex';
+  countText.textContent = `${liteFilesStore.length} file${liteFilesStore.length > 1 ? 's' : ''} ready to submit`;
+
+  strip.innerHTML = liteFilesStore.slice(-3).map(f => {
+    const kb = (f.size / 1024).toFixed(0);
+    const isPhoto = f.type.startsWith('image/');
+    return `<div class="lite-file-row">
+      <div class="lf-icon">${isPhoto ? '📸' : f.type.includes('video') ? '🎥' : '📄'}</div>
+      <div class="lf-name">${f.name}</div>
+      <div class="lf-size">${kb > 1024 ? (kb/1024).toFixed(1)+'MB' : kb+'KB'}</div>
+    </div>`;
+  }).join('');
+
+  if (liteFilesStore.length > 3) {
+    strip.innerHTML += `<div class="lite-file-row" style="color:var(--text-3);font-family:var(--fm);font-size:11px">+${liteFilesStore.length - 3} more files attached</div>`;
+  }
+
+  if (submitBtn) submitBtn.disabled = false;
+}
+
+/* ─── LITE DESC TOGGLE ───────────────────── */
+function toggleLiteDesc() {
+  liteDescVisible = !liteDescVisible;
+  const area = document.getElementById('liteDescArea');
+  if (area) {
+    area.classList.toggle('show', liteDescVisible);
+    if (liteDescVisible) document.getElementById('liteDescField').focus();
+  }
+}
+
+/* ─── LITE SUBMIT ────────────────────────── */
+async function liteSubmit() {
+  const btn = document.getElementById('liteSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = '↻ Packaging evidence…';
+  await delay(500);
+  btn.textContent = '↻ Submitting to Resolver…';
+
+  // Copy lite description to main descField for FormData
+  const liteDesc = document.getElementById('liteDescField');
+  const mainDesc = document.getElementById('descField');
+  if (liteDesc && mainDesc && liteDesc.value) mainDesc.value = liteDesc.value;
+
+  const fd = buildFormData();
+
+  try {
+    // fetch('/api/v1/dispute/vendor-rebuttal', { method: 'POST', body: fd });
+    console.log('[TradeMatch] POST /api/v1/dispute/vendor-rebuttal | Files:', liteFilesStore.length);
+    console.log('[TradeMatch] Case #TM-992-X | Vendor rebuttal submitted');
+  } catch(e) { console.error('[TradeMatch] API error:', e); }
+
+  await delay(400);
+
+  btn.textContent = '✅ Defense Submitted';
+  btn.style.background = 'var(--neon)';
+  btn.style.color = '#080C12';
+  btn.style.boxShadow = 'var(--neon-glow)';
+
+  // Update rebuttal zone in Active Case view
+  showToast('✅ Your defense has been submitted to the Resolver. They will review within 24 hours.', 'success');
+  if (navigator.vibrate) navigator.vibrate([60, 30, 60, 30, 120]);
+
+  // Auto-exit lite after success so they can see the Active Case timeline
+  setTimeout(() => {
+    autoForced = false; // allow exit after successful submission
+    exitLiteMode();
+    switchView('active', document.getElementById('vbActive'));
+    showToast('📡 You can track the case status here', 'info');
+  }, 2200);
+}
+
+/* ─── UTILITY ───────────────────────────── */
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ─── INIT ──────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  validate();
+  startRebuttalTimer();
+  checkDirectMatchStatus();
+  initUISettings();
+  initLiteModeFromUrl();
+});
+
+/* Keyboard shortcuts */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.getElementById('successModal').classList.remove('open');
+    closeProfileDropdown();
+  }
+});
+</script>
+</body>
+</html>

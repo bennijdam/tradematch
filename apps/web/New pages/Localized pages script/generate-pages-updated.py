@@ -28,6 +28,15 @@ OUTPUT_DIR        = BASE_DIR / "generated-pages"
 TEMPLATE_FILE     = BASE_DIR / "city-trade-seo-page-v2.html"
 LOCATIONS_CSV     = BASE_DIR / "uk-locations.csv"
 
+AI_SNIPPET_FIELDS = [
+    "meta_description",
+    "hero_subheadline",
+    "local_intro_p1",
+    "local_intro_p2",
+    "local_insight",
+    "service_lore",
+]
+
 # ─── SERVICES LIST ────────────────────────────────────────────────
 SERVICES = [
     # Core Trades
@@ -560,6 +569,370 @@ def gen_reviews_schema(service, location):
         })
     return json.dumps(revs, ensure_ascii=False)
 
+
+CITY_WIKIDATA = {
+    "london": "https://www.wikidata.org/wiki/Q84",
+    "birmingham": "https://www.wikidata.org/wiki/Q2256",
+    "manchester": "https://www.wikidata.org/wiki/Q18125",
+    "liverpool": "https://www.wikidata.org/wiki/Q24826",
+    "leeds": "https://www.wikidata.org/wiki/Q39121",
+    "glasgow": "https://www.wikidata.org/wiki/Q4093",
+    "edinburgh": "https://www.wikidata.org/wiki/Q23436",
+    "bristol": "https://www.wikidata.org/wiki/Q23154",
+    "cardiff": "https://www.wikidata.org/wiki/Q1013",
+    "belfast": "https://www.wikidata.org/wiki/Q10686",
+}
+
+SERVICE_OFFER_EXAMPLES = {
+    "plumbing": ["Boiler Repair", "Emergency Leak Repair", "Drain Unblocking"],
+    "electrical": ["Consumer Unit Upgrade", "Fault Finding", "EV Charger Installation"],
+    "roofing-flat": ["Flat Roof Repair", "Roof Membrane Replacement", "Gutter Repair"],
+    "roofing-pitched": ["Tile Replacement", "Ridge Repair", "Chimney Repointing"],
+    "central-heating": ["Boiler Service", "Radiator Balancing", "Heat Pump Assessment"],
+    "default": ["Site Survey", "Fixed Quote", "Certified Installation"],
+}
+
+
+def get_wikidata_same_as(location):
+    return CITY_WIKIDATA.get(location["slug"], "")
+
+
+def infer_uk_region(location):
+    slug = location["slug"].lower()
+    county = (location.get("county") or "").lower()
+    source = f"{slug} {county}"
+
+    if any(x in source for x in ["london", "croydon", "islington", "camden", "wandsworth"]):
+        return "London"
+    if any(x in source for x in ["kent", "surrey", "sussex", "berkshire", "oxfordshire", "hampshire"]):
+        return "South East"
+    if any(x in source for x in ["glasgow", "edinburgh", "aberdeen", "dundee", "stirling", "scotland"]):
+        return "Scotland"
+    if any(x in source for x in ["manchester", "liverpool", "leeds", "sheffield", "newcastle", "yorkshire", "lancashire"]):
+        return "North"
+    if any(x in source for x in ["cardiff", "swansea", "wales", "powys", "carmarthenshire"]):
+        return "Wales"
+    return "Midlands"
+
+
+def get_trade_rates(service, location):
+    base_rates = {
+        "plumbing": 45,
+        "electrical": 48,
+        "gas-work": 52,
+        "central-heating": 52,
+        "carpentry": 38,
+        "painting-decorating": 28,
+        "roofing-flat": 45,
+        "roofing-pitched": 45,
+        "landscaping": 30,
+        "handyman": 30,
+    }
+    multipliers = {
+        "London": 1.5,
+        "South East": 1.3,
+        "Scotland": 1.1,
+        "Midlands": 1.0,
+        "North": 0.95,
+        "Wales": 0.9,
+    }
+
+    base = base_rates.get(service["slug"], 35)
+    mult = multipliers.get(infer_uk_region(location), 1.0)
+    hourly = round(base * mult)
+    emergency = round(hourly * 1.8)
+    return {
+        "hourly": hourly,
+        "emergency": emergency,
+        "day": round(hourly * 7.5),
+        "range_min": max(20, round(hourly * 0.8)),
+        "range_max": round(hourly * 1.45),
+    }
+
+
+def build_schema_blocks(service, location, review_count, rating_value, reviews, rates):
+    location_name = location["name"]
+    area_served = {
+        "@type": "City",
+        "name": location_name,
+    }
+    wikidata = get_wikidata_same_as(location)
+    if wikidata:
+        area_served["sameAs"] = wikidata
+
+    offers = SERVICE_OFFER_EXAMPLES.get(service["slug"], SERVICE_OFFER_EXAMPLES["default"])
+
+    service_schema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": f"{service['name']} Services in {location_name}",
+        "serviceType": service["name"],
+        "provider": {"@type": "Organization", "name": "TradeMatch UK", "url": BASE_URL},
+        "areaServed": area_served,
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": f"{rating_value:.1f}",
+            "reviewCount": str(review_count),
+            "bestRating": "5",
+            "worstRating": "1",
+        },
+        "review": reviews,
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": f"{service['name']} Services in {location_name}",
+            "itemListElement": [
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": offer}}
+                for offer in offers
+            ],
+        },
+    }
+
+    professional_service_schema = {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": f"TradeMatch {service['name']} Marketplace - {location_name}",
+        "url": f"{BASE_URL}/services/{service['slug']}/{location['slug']}",
+        "areaServed": area_served,
+        "provider": {"@type": "Organization", "name": "TradeMatch UK", "url": BASE_URL},
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": f"{rating_value:.1f}",
+            "reviewCount": str(review_count),
+            "bestRating": "5",
+            "worstRating": "1",
+        },
+    }
+
+    breadcrumb_schema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "TradeMatch", "item": BASE_URL},
+            {"@type": "ListItem", "position": 2, "name": "Services", "item": f"{BASE_URL}/services"},
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": service["name"],
+                "item": f"{BASE_URL}/services/{service['slug']}",
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": location_name,
+                "item": f"{BASE_URL}/services/{service['slug']}/{location['slug']}",
+            },
+        ],
+    }
+
+    faq_schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": f"What is the average hourly rate for a {service['name']} in {location_name}?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": (
+                        f"In 2026, the average hourly rate for a {service['name']} in {location_name} is "
+                        f"approximately £{rates['hourly']}. Emergency call-outs are typically around "
+                        f"£{rates['emergency']} per hour."
+                    ),
+                },
+            },
+            {
+                "@type": "Question",
+                "name": f"How much does a typical {service['name']} job cost in {location_name}?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": (
+                        f"A standard {service['name']} job in {location_name} usually ranges from "
+                        f"£{rates['range_min']} to £{rates['range_max']}, depending on labour, materials, and urgency."
+                    ),
+                },
+            },
+        ],
+    }
+
+    return [service_schema, professional_service_schema, breadcrumb_schema, faq_schema]
+
+
+def inject_schema_scripts(html, schema_objs):
+    script_html = "\n".join(
+        [
+            '<script type="application/ld+json">'
+            + json.dumps(obj, ensure_ascii=False)
+            + '</script>'
+            for obj in schema_objs
+        ]
+    )
+
+    if "</head>" in html:
+        return html.replace("</head>", f"{script_html}\n</head>", 1)
+    return f"{html}\n{script_html}"
+
+
+def build_local_price_guide_html(service, location, rates):
+    return (
+        '<section class="local-price-guide" style="padding:40px 28px;background:#f7faf9;border-top:1px solid rgba(0,0,0,.08)">'
+        '<div style="max-width:1240px;margin:0 auto">'
+        f'<h2 style="font-family:Sora,sans-serif;font-size:1.6rem;margin-bottom:12px;color:#0f1923">{service["name"]} Price Guide in {location["name"]} (2026)</h2>'
+        f'<p style="color:#374151;line-height:1.7;margin-bottom:8px">Typical hourly rate: <strong>GBP {rates["hourly"]}</strong> | Day rate: <strong>GBP {rates["day"]}</strong> | Emergency rate: <strong>GBP {rates["emergency"]}</strong>.</p>'
+        f'<p style="color:#4b5563;line-height:1.7">Most {service["name"]} jobs in {location["name"]} range from <strong>GBP {rates["range_min"]}</strong> to <strong>GBP {rates["range_max"]}</strong>, depending on complexity, materials, and urgency.</p>'
+        '</div>'
+        '</section>'
+    )
+
+
+def get_sitemap_priority(location):
+    tier = classify_location_tier(location)
+    if tier == "high":
+        return "0.9"
+    if tier == "regional":
+        return "0.7"
+    return "0.5"
+
+
+HIGH_REVENUE_CITY_SLUGS = {
+    "london",
+    "manchester",
+    "birmingham",
+    "liverpool",
+    "leeds",
+    "glasgow",
+    "edinburgh",
+    "bristol",
+    "cardiff",
+    "belfast",
+}
+
+REGIONAL_CITY_SLUGS = {
+    "sheffield",
+    "newcastle",
+    "nottingham",
+    "southampton",
+    "leicester",
+    "coventry",
+    "bradford",
+    "oxford",
+    "plymouth",
+    "derby",
+    "portsmouth",
+    "wolverhampton",
+    "stoke-on-trent",
+    "swansea",
+    "milton-keynes",
+    "luton",
+    "reading",
+    "preston",
+    "hull",
+    "blackpool",
+}
+
+
+def generate_hreflang_tags(service, location):
+    page_url = f"{BASE_URL}/services/{service['slug']}/{location['slug']}"
+    default_url = f"{BASE_URL}/services/{service['slug']}"
+    return (
+        f'    <xhtml:link rel="alternate" hreflang="en-gb" href="{page_url}"/>\n'
+        f'    <xhtml:link rel="alternate" hreflang="x-default" href="{default_url}"/>'
+    )
+
+
+def classify_location_tier(location):
+    slug = location.get("slug", "")
+    if slug in HIGH_REVENUE_CITY_SLUGS:
+        return "high"
+
+    if slug in REGIONAL_CITY_SLUGS:
+        return "regional"
+
+    population = int(location.get("population", 0) or 0)
+    if population >= 100_000:
+        return "regional"
+
+    return "long_tail"
+
+
+def build_sitemap_url_entry(service, location, today):
+    url = f"{BASE_URL}/services/{service['slug']}/{location['slug']}"
+    priority = get_sitemap_priority(location)
+    hreflang_tags = generate_hreflang_tags(service, location)
+    return (
+        "  <url>\n"
+        f"    <loc>{url}</loc>\n"
+        f"    <lastmod>{today}</lastmod>\n"
+        "    <changefreq>weekly</changefreq>\n"
+        f"    <priority>{priority}</priority>\n"
+        f"{hreflang_tags}\n"
+        "  </url>\n"
+    )
+
+
+def write_sitemap_chunks(sitemap_dir, prefix, pairs, today):
+    files = []
+    if not pairs:
+        return files
+
+    n_maps = max(1, (len(pairs) + SITEMAP_URL_LIMIT - 1) // SITEMAP_URL_LIMIT)
+    for idx in range(n_maps):
+        start = idx * SITEMAP_URL_LIMIT
+        chunk = pairs[start : start + SITEMAP_URL_LIMIT]
+        suffix = "" if n_maps == 1 else f"_{idx + 1}"
+        path = sitemap_dir / f"{prefix}{suffix}.xml"
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(
+                '<?xml version="1.0" encoding="UTF-8"?>\n'
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+                'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+            )
+            for service, location in chunk:
+                f.write(build_sitemap_url_entry(service, location, today))
+            f.write("</urlset>")
+        files.append(path)
+
+    return files
+
+
+def generate_weighted_sitemaps(pairs):
+    sitemap_dir = OUTPUT_DIR / "sitemaps"
+    sitemap_dir.mkdir(parents=True, exist_ok=True)
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    for old in sitemap_dir.glob("*.xml"):
+        try:
+            old.unlink()
+        except OSError:
+            pass
+
+    high_pairs = []
+    regional_pairs = []
+    long_tail_pairs = []
+
+    for service, location in pairs:
+        tier = classify_location_tier(location)
+        if tier == "high":
+            high_pairs.append((service, location))
+        elif tier == "regional":
+            regional_pairs.append((service, location))
+        else:
+            long_tail_pairs.append((service, location))
+
+    files = []
+    files.extend(write_sitemap_chunks(sitemap_dir, "high_revenue_hubs", high_pairs, today))
+    files.extend(write_sitemap_chunks(sitemap_dir, "regional_cities", regional_pairs, today))
+    files.extend(write_sitemap_chunks(sitemap_dir, "long_tail_districts", long_tail_pairs, today))
+
+    if files:
+        idx = sitemap_dir / "sitemap-index.xml"
+        with open(idx, "w", encoding="utf-8") as f:
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+            for sf in files:
+                f.write(f'  <sitemap><loc>{BASE_URL}/sitemaps/{sf.name}</loc><lastmod>{today}</lastmod></sitemap>\n')
+            f.write("</sitemapindex>")
+
+    return files
+
 # ─── SERVICE LORE SNIPPETS ────────────────────────────────────────
 # 10 unique lore snippets per category (hybrid cache approach).
 # The generator seeds selection by service+location so every page
@@ -840,6 +1213,7 @@ def try_watermark(src, dst, text):
             fnt = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
         except Exception:
             fnt = ImageFont.load_default()
+
         w, h  = img.size
         label = f"Verified: {text}"
         bb    = drw.textbbox((0, 0), label, font=fnt)
@@ -850,6 +1224,7 @@ def try_watermark(src, dst, text):
         drw.text((x, y), label, font=fnt, fill=(0, 229, 130, 255))
         Image.alpha_composite(img, ov).convert("RGB").save(dst, "WEBP", quality=82)
         return True
+
     except Exception:
         return False
 
@@ -960,19 +1335,46 @@ def build_page_hero_image(
 
 # ─── PAGE ASSEMBLY ────────────────────────────────────────────────
 
-def build_page(template, service, location, county_index, hero_image_url):
+def build_page(template, service, location, county_index, hero_image_url, ai_snippet=None, ai_mode="prefer"):
     pc = _pro_count(location)
     rc = _review_count(location)
 
-    meta_desc        = gen_meta(service, location, pc, rc)
-    hero_sub         = gen_hero_sub(service, location, pc)
-    p1, p2           = gen_intro(service, location)
-    local_insight    = gen_local_insight(service, location)
+    meta_desc = gen_meta(service, location, pc, rc)
+    hero_sub = gen_hero_sub(service, location, pc)
+    p1, p2 = gen_intro(service, location)
+    local_insight = gen_local_insight(service, location)
+    service_lore = gen_service_lore(service, location)
+
+    if ai_mode != "off" and ai_snippet:
+        meta_desc = normalize_meta_description(ai_snippet.get("meta_description") or meta_desc)
+        hero_sub = ai_snippet.get("hero_subheadline") or hero_sub
+        p1 = ai_snippet.get("local_intro_p1") or p1
+        p2 = ai_snippet.get("local_intro_p2") or p2
+        local_insight_text = ai_snippet.get("local_insight")
+        if local_insight_text:
+            local_insight = (
+                '<div class="local-insight-block sr d5">'
+                '<div class="lib-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>'
+                f'<div class="lib-text"><strong>Local insight:</strong> {_clean_text(local_insight_text)}</div>'
+                '</div>'
+            )
+        service_lore = ai_snippet.get("service_lore") or service_lore
     cost_intro, cost_rows, cost_tip, faq_cost = gen_cost(service, location)
     nearby_cards, footer_links = gen_nearby(service, location, county_index)
     comparison_html  = gen_comparison_table(service, location)
     reviews_schema   = gen_reviews_schema(service, location)
     vendors          = gen_vendors(service, location)
+    rates = get_trade_rates(service, location)
+    reviews_data = json.loads(reviews_schema)
+    rating_value = 4.6 + ((_seed(service["slug"], location["slug"], "rating") % 4) * 0.1)
+    schema_blocks = build_schema_blocks(
+        service=service,
+        location=location,
+        review_count=rc,
+        rating_value=rating_value,
+        reviews=reviews_data,
+        rates=rates,
+    )
 
     replacements = {
         "{TRADE}":                 service["name"],
@@ -1009,7 +1411,7 @@ def build_page(template, service, location, county_index, hero_image_url):
         "{VENDOR_3_SPECIALISM}":   vendors[2]["specialism"],
         "{VENDOR_3_CERTS}":        vendors[2]["certs"],
         "{LOCAL_INSIGHT}":         local_insight,
-        "{SERVICE_LORE}":          gen_service_lore(service, location),
+        "{SERVICE_LORE}":          service_lore,
         "{COMPARISON_SECTION}":    comparison_html,
         "{REVIEWS_SCHEMA}":        reviews_schema,
     }
@@ -1032,6 +1434,10 @@ def build_page(template, service, location, county_index, hero_image_url):
     for legacy_img in image_aliases:
         html = html.replace(legacy_img, hero_image_url)
 
+    # Keep FAQ pricing claims visible in body to align with FAQ schema content requirements.
+    html = html.replace("</body>", build_local_price_guide_html(service, location, rates) + "\n</body>", 1)
+    html = inject_schema_scripts(html, schema_blocks)
+
     return html
 
 def write_page(html, service, location):
@@ -1045,45 +1451,11 @@ def write_page(html, service, location):
 # ─── SITEMAP ────────────────────────────────────────────────────
 
 def generate_sitemap(services, locations):
-    sitemap_dir = OUTPUT_DIR / "sitemaps"
-    sitemap_dir.mkdir(parents=True, exist_ok=True)
-    total  = len(services) * len(locations)
-    n_maps = max(1, (total + SITEMAP_URL_LIMIT - 1) // SITEMAP_URL_LIMIT)
-    files  = []
-    count  = 0
-    sm_idx = 1
-    today  = datetime.now().strftime("%Y-%m-%d")
-
-    curr = sitemap_dir / f"sitemap-{sm_idx}.xml"
-    files.append(curr)
-    f = open(curr, "w", encoding="utf-8")
-    f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-
-    for svc in services:
-        for loc in locations:
-            url = f"{BASE_URL}/services/{svc['slug']}/{loc['slug']}"
-            f.write(f'  <url><loc>{url}</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n')
-            count += 1
-            if count >= SITEMAP_URL_LIMIT and sm_idx < n_maps:
-                f.write("</urlset>")
-                f.close()
-                sm_idx += 1; count = 0
-                curr = sitemap_dir / f"sitemap-{sm_idx}.xml"
-                files.append(curr)
-                f = open(curr, "w", encoding="utf-8")
-                f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-
-    f.write("</urlset>"); f.close()
-
-    if n_maps > 1:
-        idx = sitemap_dir / "sitemap-index.xml"
-        with open(idx, "w", encoding="utf-8") as f:
-            f.write('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-            for sf in files:
-                f.write(f'  <sitemap><loc>{BASE_URL}/sitemaps/{sf.name}</loc><lastmod>{today}</lastmod></sitemap>\n')
-            f.write("</sitemapindex>")
-        print(f"  Sitemap index: {idx.name}")
-    return files
+    pairs = []
+    for service in services:
+        for location in locations:
+            pairs.append((service, location))
+    return generate_weighted_sitemaps(pairs)
 
 # ─── MAIN ─────────────────────────────────────────────────────────
 
@@ -1147,6 +1519,36 @@ def parse_args():
         default="",
         help="Optional Unsplash access key; if omitted uses UNSPLASH_ACCESS_KEY env var",
     )
+    parser.add_argument(
+        "--openai-batch-export-file",
+        type=str,
+        default="",
+        help="Write OpenAI Batch API JSONL requests for selected pages",
+    )
+    parser.add_argument(
+        "--openai-batch-model",
+        type=str,
+        default="gpt-4.1-mini",
+        help="Model name for exported OpenAI Batch requests",
+    )
+    parser.add_argument(
+        "--openai-batch-results-file",
+        type=str,
+        default="",
+        help="Path to OpenAI Batch output JSONL file to apply AI-authored snippets",
+    )
+    parser.add_argument(
+        "--ai-snippet-mode",
+        type=str,
+        default="prefer",
+        choices=["off", "prefer", "require"],
+        help="AI snippet behavior: off, prefer (fallback to deterministic), require (fail if missing)",
+    )
+    parser.add_argument(
+        "--batch-export-only",
+        action="store_true",
+        help="Only export OpenAI batch JSONL and exit",
+    )
     return parser.parse_args()
 
 
@@ -1172,6 +1574,117 @@ def maybe_confirm(auto_yes):
 
     resp = input("Ready to generate? (y/n): ").strip().lower()
     return resp == "y"
+
+
+def iter_page_targets(services, locations, target_pages):
+    emitted = 0
+    for service in services:
+        for location in locations:
+            if emitted >= target_pages:
+                return
+            yield service, location
+            emitted += 1
+
+
+def build_batch_user_prompt(service, location):
+    return (
+        "Create high-quality UK-localized SEO copy for a trade service page. "
+        "Return ONLY valid JSON with these keys exactly: "
+        "meta_description, hero_subheadline, local_intro_p1, local_intro_p2, local_insight, service_lore.\n"
+        f"Service: {service['name']}\n"
+        f"Service slug: {service['slug']}\n"
+        f"Category: {service.get('category', '')}\n"
+        f"Location: {location['name']}\n"
+        f"County: {location['county']}\n"
+        f"Postcode area: {location.get('postcode_area', '')}\n"
+        "Constraints:\n"
+        "- meta_description must be 120-160 chars\n"
+        "- Use British English\n"
+        "- Do not use markdown\n"
+        "- Avoid keyword stuffing\n"
+        "- local_insight should be one concise sentence about local context\n"
+        "- service_lore should be one concise sentence with practical detail\n"
+    )
+
+
+def export_openai_batch_jsonl(services, locations, target_pages, output_file, model):
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, "w", encoding="utf-8") as f:
+        for service, location in iter_page_targets(services, locations, target_pages):
+            custom_id = f"{service['slug']}|{location['slug']}"
+            obj = {
+                "custom_id": custom_id,
+                "method": "POST",
+                "url": "/v1/chat/completions",
+                "body": {
+                    "model": model,
+                    "response_format": {"type": "json_object"},
+                    "temperature": 0.7,
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "You are an expert UK SEO copywriter for local trades services pages.",
+                        },
+                        {
+                            "role": "user",
+                            "content": build_batch_user_prompt(service, location),
+                        },
+                    ],
+                },
+            }
+            f.write(json.dumps(obj, ensure_ascii=True) + "\n")
+
+
+def _clean_text(value):
+    if value is None:
+        return ""
+    return " ".join(str(value).split())
+
+
+def parse_batch_content_json(raw_content):
+    try:
+        payload = json.loads(raw_content)
+    except Exception:
+        return None
+
+    parsed = {}
+    for key in AI_SNIPPET_FIELDS:
+        if key in payload:
+            parsed[key] = _clean_text(payload.get(key))
+    return parsed if parsed else None
+
+
+def load_openai_batch_results(batch_results_file):
+    snippets = {}
+    with open(batch_results_file, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+
+            try:
+                row = json.loads(line)
+            except Exception:
+                continue
+
+            custom_id = row.get("custom_id", "")
+            if not custom_id or "|" not in custom_id:
+                continue
+
+            body = (row.get("response") or {}).get("body") or {}
+            choices = body.get("choices") or []
+            if not choices:
+                continue
+
+            content = ((choices[0].get("message") or {}).get("content") or "").strip()
+            if not content:
+                continue
+
+            parsed = parse_batch_content_json(content)
+            if parsed:
+                snippets[custom_id] = parsed
+
+    return snippets
 
 
 def main():
@@ -1217,7 +1730,30 @@ def main():
     print(f"  Output    : {OUTPUT_DIR}")
     print(f"  Dry run   : {'yes' if args.dry_run else 'no'}")
     print(f"  Images    : {args.image_strategy}")
+    print(f"  AI mode   : {args.ai_snippet_mode}")
     print()
+
+    if args.openai_batch_export_file:
+        export_path = Path(args.openai_batch_export_file).resolve()
+        export_openai_batch_jsonl(
+            services=selected_services,
+            locations=locations,
+            target_pages=target_pages,
+            output_file=export_path,
+            model=args.openai_batch_model,
+        )
+        print(f"OpenAI Batch request JSONL written: {export_path}")
+        if args.batch_export_only:
+            return
+
+    ai_snippets = {}
+    if args.openai_batch_results_file:
+        results_path = Path(args.openai_batch_results_file).resolve()
+        if not results_path.exists():
+            print(f"ERROR: OpenAI batch results file not found: {results_path}")
+            return
+        ai_snippets = load_openai_batch_results(results_path)
+        print(f"Loaded AI snippets: {len(ai_snippets):,}")
 
     if not maybe_confirm(args.yes):
         print("Cancelled.")
@@ -1266,12 +1802,19 @@ def main():
     print()
 
     generated = 0
+    missing_ai = 0
     for idx, service in enumerate(selected_services, 1):
         print(f"[{idx:02d}/{len(selected_services)}] {service['name']:<36}", end="", flush=True)
         generated_in_service = 0
         for location in locations:
             if generated >= target_pages:
                 break
+
+            custom_id = f"{service['slug']}|{location['slug']}"
+            ai_snippet = ai_snippets.get(custom_id)
+            if args.ai_snippet_mode == "require" and not ai_snippet:
+                missing_ai += 1
+                continue
 
             hero_source = hero_src
             if args.image_strategy == "pexels-watermark":
@@ -1286,7 +1829,15 @@ def main():
                 asset_base_url=args.asset_base_url,
             )
 
-            html = build_page(template, service, location, county_index, hero_image_url)
+            html = build_page(
+                template,
+                service,
+                location,
+                county_index,
+                hero_image_url,
+                ai_snippet=ai_snippet,
+                ai_mode=args.ai_snippet_mode,
+            )
             if not args.dry_run:
                 write_page(html, service, location)
             generated += 1
@@ -1294,6 +1845,10 @@ def main():
         print(f"  {generated_in_service:,} pages done")
         if generated >= target_pages:
             break
+
+    if args.ai_snippet_mode == "require" and missing_ai > 0:
+        print(f"ERROR: Missing AI snippets for {missing_ai} target pages in require mode")
+        return
 
     print()
     print(f"Total: {generated:,} pages generated")
@@ -1316,24 +1871,7 @@ def main():
                     flat_urls.append((service, location))
                 if len(flat_urls) >= generated:
                     break
-
-            sitemap_dir = OUTPUT_DIR / "sitemaps"
-            sitemap_dir.mkdir(parents=True, exist_ok=True)
-            today = datetime.now().strftime("%Y-%m-%d")
-            sitemap_path = sitemap_dir / "sitemap-1.xml"
-            with open(sitemap_path, "w", encoding="utf-8") as f:
-                f.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-                for service, location in flat_urls:
-                    url = f"{BASE_URL}/services/{service['slug']}/{location['slug']}"
-                    f.write(f'  <url><loc>{url}</loc><lastmod>{today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n')
-                f.write("</urlset>")
-            sm_files = [sitemap_path]
-
-            idx = sitemap_dir / "sitemap-index.xml"
-            with open(idx, "w", encoding="utf-8") as f:
-                f.write('<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-                f.write(f'  <sitemap><loc>{BASE_URL}/sitemaps/{sitemap_path.name}</loc><lastmod>{today}</lastmod></sitemap>\n')
-                f.write("</sitemapindex>")
+            sm_files = generate_weighted_sitemaps(flat_urls)
 
         print(f"{len(sm_files)} sitemap file(s) created")
 
@@ -1350,6 +1888,8 @@ def main():
                     "service_filter": args.services,
                     "image_strategy": args.image_strategy,
                     "asset_base_url": args.asset_base_url,
+                    "ai_snippet_mode": args.ai_snippet_mode,
+                    "openai_batch_results_file": args.openai_batch_results_file,
                 },
                 f,
                 indent=2,

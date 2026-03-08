@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Profile 2.0 — TradeMatch Digital Passport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.1);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h: 72px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--fb);background:var(--bg-primary);color:var(--text-1);overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background 0.3s,color 0.3s;min-height:100vh}
+
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 900px 600px at 20% 10%,rgba(0,229,160,0.04) 0%,transparent 70%),radial-gradient(ellipse 600px 400px at 80% 80%,rgba(66,165,245,0.03) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:width 0.3s cubic-bezier(0.4,0,0.2,1)}
+.sidebar.collapsed{width:72px}
+.sidebar-logo{height:var(--topnav-h);display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);gap:12px;flex-shrink:0}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:20px;height:20px;color:#fff;stroke-width:2.5}
+.logo-text{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-0.04em;color:var(--text-1);white-space:nowrap;overflow:hidden}
+.logo-text span{color:var(--neon)}
+.sidebar.collapsed .logo-text,.sidebar.collapsed .nav-label,.sidebar.collapsed .nav-section-label,.sidebar.collapsed .sidebar-footer,.sidebar.collapsed .nav-badge,.sidebar.collapsed .nav-badge-danger,.sidebar.collapsed .expiry-dot{display:none}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.nav-section-label{font-family:var(--fm);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-3);padding:6px 12px;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all 0.18s;color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;position:relative;margin-bottom:2px}
+.nav-item:hover{background:var(--bg-tertiary);color:var(--text-1)}
+.nav-item.active{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.nav-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px;stroke-width:1.8}
+.nav-label{white-space:nowrap;overflow:hidden;flex:1}
+.nav-badge{background:var(--neon-dim);color:var(--neon);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid var(--border-neon);margin-left:auto}
+.nav-badge-danger{background:rgba(255,71,87,0.12);color:var(--accent-danger);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto}
+.expiry-dot{width:7px;height:7px;border-radius:50%;background:var(--accent-amber);margin-left:auto;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);flex-shrink:0}
+.profile-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg-tertiary);border:1px solid var(--border);cursor:pointer;transition:all 0.2s;text-align:left}
+.avatar-large{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.avatar-info{flex:1;min-width:0}
+.avatar-name{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-1)}
+.avatar-role{font-size:11px;color:var(--text-2)}
+.sidebar-upgrade-slim{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(66,165,245,0.06));border:1px solid var(--border-neon);cursor:pointer;transition:all 0.2s;margin-top:8px}
+.sidebar-upgrade-slim:hover{background:linear-gradient(135deg,rgba(0,229,160,0.14),rgba(66,165,245,0.1));box-shadow:var(--neon-glow-sm)}
+.sidebar-upgrade-slim-icon{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-upgrade-slim-icon svg{width:14px;height:14px;color:#fff;stroke-width:2.5}
+.sidebar-upgrade-slim-body{flex:1;text-align:left}
+.sidebar-upgrade-slim-title{font-family:var(--ff);font-size:12px;font-weight:700;color:var(--neon)}
+.sidebar-upgrade-slim-sub{font-size:10px;color:var(--text-2)}
+.sidebar-upgrade-slim-arrow{width:14px;height:14px;color:var(--text-3);flex-shrink:0}
+
+/* ── TOP NAV ── */
+.topnav{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topnav-h);background:rgba(8,12,18,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:90;transition:left 0.3s cubic-bezier(0.4,0,0.2,1)}
+[data-theme="light"] .topnav{background:rgba(240,244,248,0.9)}
+.topnav.collapsed{left:72px}
+.hamburger{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all 0.2s;flex-shrink:0}
+.hamburger:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.hamburger svg{width:16px;height:16px;stroke-width:2}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-2)}
+.breadcrumb-sep{color:var(--text-3)}
+.breadcrumb-current{font-family:var(--ff);font-weight:700;color:var(--text-1);font-size:15px}
+.topnav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.notif-pill{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-tertiary);cursor:pointer;transition:all 0.2s;color:var(--text-2);font-size:13px;font-weight:500}
+.notif-pill:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.notif-pill-bell{position:relative;display:flex}
+.notif-pill-bell svg{width:16px;height:16px;stroke-width:1.8}
+.notif-pill-badge{position:absolute;top:-5px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--accent-danger);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-secondary)}
+.balance-info-btn{display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:10px;background:var(--neon-dim);border:1px solid var(--border-neon);cursor:pointer;transition:all 0.2s}
+.balance-info-btn:hover{background:rgba(0,229,160,0.15);box-shadow:var(--neon-glow-sm)}
+.balance-info-btn-icon{font-size:16px}
+.balance-info-btn-label{font-family:var(--fm);font-size:10px;color:var(--neon);opacity:0.7;text-transform:uppercase;letter-spacing:0.08em}
+.balance-info-btn-amount{font-family:var(--ff);font-size:15px;font-weight:800;color:var(--neon);letter-spacing:-0.03em}
+.theme-toggle-btn{width:52px;height:28px;border-radius:100px;background:#1e293b;border:1px solid var(--border-2);cursor:pointer;position:relative;transition:all 0.3s;display:flex;align-items:center;padding:0 4px;flex-shrink:0}
+[data-theme="light"] .theme-toggle-btn{background:#e0f2fe;border-color:#bae6fd}
+.toggle-knob{width:20px;height:20px;border-radius:50%;background:#334155;position:absolute;left:4px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+[data-theme="light"] .toggle-knob{left:26px;background:#f59e0b;box-shadow:0 0 10px rgba(245,158,11,0.5)}
+.toggle-knob svg{width:11px;height:11px;color:#fff;stroke-width:2.5}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);margin-top:var(--topnav-h);position:relative;z-index:1;transition:margin-left 0.3s cubic-bezier(0.4,0,0.2,1);min-height:calc(100vh - var(--topnav-h))}
+.main.collapsed{margin-left:72px}
+
+/* ── PROFILE HERO BANNER ── */
+.profile-hero{position:relative;background:var(--bg-secondary);border-bottom:1px solid var(--border);overflow:hidden;padding:36px 40px 0}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,160,0.05) 0%,rgba(66,165,245,0.03) 50%,transparent 100%);pointer-events:none}
+.hero-bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,160,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+
+.live-indicator{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,160,0.1);border:1px solid var(--border-neon);border-radius:20px;padding:5px 12px;font-family:var(--fm);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--neon);margin-bottom:20px;cursor:default}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--neon);animation:live-pulse 1.4s ease-in-out infinite}
+@keyframes live-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,0.7)}50%{box-shadow:0 0 0 6px rgba(0,229,160,0)}}
+
+.hero-layout{display:grid;grid-template-columns:auto 1fr auto;gap:32px;align-items:flex-start;padding-bottom:28px}
+
+/* Avatar with status ring */
+.avatar-wrap{position:relative;flex-shrink:0}
+.avatar-photo{width:100px;height:100px;border-radius:20px;background:linear-gradient(135deg,#1a2840,#243454);border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:2.2rem;font-weight:900;color:var(--neon);position:relative;overflow:hidden}
+.avatar-photo::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:conic-gradient(var(--neon) 0deg 310deg,transparent 310deg 360deg);z-index:-1;animation:ring-spin 8s linear infinite}
+@keyframes ring-spin{to{transform:rotate(360deg)}}
+.avatar-photo-inner{width:96px;height:96px;border-radius:18px;background:linear-gradient(135deg,#1a2840,#243454);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:2.2rem;font-weight:900;color:var(--neon)}
+.on-site-badge{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:var(--neon);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:0.08em;padding:3px 10px;border-radius:20px;white-space:nowrap;border:2px solid var(--bg-secondary)}
+
+/* Profile info */
+.profile-info{min-width:0}
+.profile-name-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.profile-name{font-family:var(--ff);font-size:1.85rem;font-weight:900;letter-spacing:-0.04em;color:var(--text-1);line-height:1}
+.elite-crown{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(156,95,233,0.15),rgba(66,165,245,0.1));border:1px solid rgba(156,95,233,0.3);border-radius:20px;padding:4px 12px;font-family:var(--fm);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent-purple);font-weight:700}
+.elite-crown svg{width:12px;height:12px;stroke-width:2.5}
+.verified-badge{display:inline-flex;align-items:center;gap:5px;background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:20px;padding:4px 10px;font-family:var(--fm);font-size:10px;letter-spacing:0.08em;color:var(--neon);font-weight:700}
+.verified-badge svg{width:12px;height:12px;stroke-width:2.5}
+.profile-trade{font-size:14px;color:var(--text-2);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.profile-trade-pill{background:var(--bg-tertiary);border:1px solid var(--border-2);border-radius:8px;padding:3px 10px;font-size:12px;color:var(--text-1);font-weight:600}
+.profile-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-2)}
+.meta-item svg{width:14px;height:14px;stroke-width:1.8;flex-shrink:0;color:var(--text-3)}
+.meta-item strong{color:var(--text-1)}
+
+/* TradeMatch Score widget */
+.tm-score-widget{background:var(--bg-card);border:1px solid var(--border-neon);border-radius:20px;padding:24px 28px;min-width:240px;position:relative;overflow:hidden;flex-shrink:0}
+.tm-score-widget::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#007a3d,var(--neon),var(--accent-blue))}
+.tm-score-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tm-score-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:var(--neon);animation:live-pulse 1.4s infinite}
+.tm-score-value{font-family:var(--ff);font-size:3.2rem;font-weight:900;letter-spacing:-0.06em;color:var(--text-1);line-height:1;margin-bottom:2px}
+.tm-score-value span{color:var(--neon)}
+.tm-score-label{font-size:12px;color:var(--text-2);margin-bottom:16px}
+.tm-pillars{display:flex;flex-direction:column;gap:7px}
+.pillar-row{display:flex;align-items:center;gap:8px}
+.pillar-name{font-size:11px;color:var(--text-2);width:100px;flex-shrink:0}
+.pillar-track{flex:1;height:5px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.pillar-fill{height:100%;border-radius:100px;transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+.pillar-fill.vetting{background:linear-gradient(90deg,#007a3d,var(--neon))}
+.pillar-fill.sentiment{background:linear-gradient(90deg,var(--accent-blue),rgba(66,165,245,0.5))}
+.pillar-fill.reliability{background:linear-gradient(90deg,var(--accent-purple),rgba(156,95,233,0.5))}
+.pillar-fill.response{background:linear-gradient(90deg,var(--accent-amber),rgba(255,167,38,0.5))}
+.pillar-pct{font-family:var(--fm);font-size:10px;color:var(--text-2);width:28px;text-align:right;flex-shrink:0}
+
+/* Profile nav tabs */
+.profile-tabs{display:flex;gap:0;border-top:1px solid var(--border);padding:0 40px;background:var(--bg-secondary);position:sticky;top:var(--topnav-h);z-index:50}
+.ptab{padding:14px 20px;font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-3);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.18s;white-space:nowrap}
+.ptab.active{color:var(--neon);border-bottom-color:var(--neon)}
+.ptab:hover:not(.active){color:var(--text-2)}
+
+/* Content */
+.profile-content{padding:32px 40px;max-width:1400px}
+
+/* Cards */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:16px}
+.card-title{font-family:var(--ff);font-size:1rem;font-weight:700;letter-spacing:-0.03em;color:var(--text-1)}
+.card-sub{font-size:12px;color:var(--text-2);margin-top:2px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-0.02em;border-radius:10px;padding:9px 18px;cursor:pointer;border:none;transition:all 0.22s;white-space:nowrap}
+.btn svg{width:14px;height:14px;stroke-width:2}
+.btn-primary{background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;box-shadow:var(--neon-glow-sm)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text-1);border:1px solid var(--border-2)}
+.btn-secondary:hover{background:var(--bg-card-hover);border-color:var(--border-neon);color:var(--neon)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border);padding:7px 14px;font-size:12px}
+.btn-ghost:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:8px}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ── AI INSIGHT BOX ── */
+.ai-insight{background:linear-gradient(135deg,rgba(0,229,160,0.06),rgba(66,165,245,0.04));border:1px solid var(--border-neon);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden;margin-bottom:20px}
+.ai-insight::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--neon),var(--accent-blue))}
+.ai-insight-label{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--neon);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.ai-insight-label svg{width:13px;height:13px;stroke-width:2}
+.ai-insight-title{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-0.03em;color:var(--text-1);margin-bottom:6px}
+.ai-insight-text{font-size:13px;color:var(--text-2);line-height:1.6}
+.ai-insight-text strong{color:var(--text-1)}
+.ai-insight-text em{color:var(--neon);font-style:normal;font-weight:700}
+
+/* ── RADAR CHART ── */
+.radar-wrap{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.radar-svg-wrap{position:relative;flex-shrink:0}
+.radar-legend{flex:1;min-width:200px}
+.radar-legend-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.radar-legend-item:last-child{border-bottom:none}
+.radar-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.radar-legend-name{font-size:12px;font-weight:600;color:var(--text-1);flex:1}
+.radar-legend-level{font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.radar-legend-level.elite{background:rgba(0,229,160,0.1);color:var(--neon);border:1px solid rgba(0,229,160,0.2)}
+.radar-legend-level.high{background:rgba(66,165,245,0.1);color:var(--accent-blue);border:1px solid rgba(66,165,245,0.2)}
+.radar-legend-level.medium{background:rgba(255,167,38,0.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,0.2)}
+
+/* ── PERFORMANCE STATS ── */
+.perf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.perf-card{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;position:relative;overflow:hidden;transition:all 0.2s}
+.perf-card:hover{border-color:var(--border-2);background:var(--bg-card-hover)}
+.perf-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.perf-card.green::after{background:linear-gradient(90deg,var(--neon),transparent)}
+.perf-card.blue::after{background:linear-gradient(90deg,var(--accent-blue),transparent)}
+.perf-card.purple::after{background:linear-gradient(90deg,var(--accent-purple),transparent)}
+.perf-card.amber::after{background:linear-gradient(90deg,var(--accent-amber),transparent)}
+.perf-emoji{font-size:22px;margin-bottom:8px}
+.perf-value{font-family:var(--ff);font-size:1.6rem;font-weight:900;letter-spacing:-0.04em;margin-bottom:2px}
+.perf-value.green{color:var(--neon)}
+.perf-value.blue{color:var(--accent-blue)}
+.perf-value.purple{color:var(--accent-purple)}
+.perf-value.amber{color:var(--accent-amber)}
+.perf-label{font-size:11px;color:var(--text-2)}
+.perf-trend{font-family:var(--fm);font-size:10px;color:var(--neon);margin-top:4px}
+
+/* ── PORTFOLIO GRID ── */
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.portfolio-item{border-radius:12px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:all 0.22s;position:relative;background:var(--bg-tertiary)}
+.portfolio-item:hover{border-color:var(--border-neon);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.portfolio-photo{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:relative;overflow:hidden}
+.portfolio-photo-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--bg-tertiary),var(--bg-card));display:flex;align-items:center;justify-content:center;font-size:3rem}
+.verified-photo-tag{position:absolute;top:8px;left:8px;background:var(--neon);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:0.08em;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:4px}
+.verified-photo-tag svg{width:10px;height:10px;stroke-width:3}
+.portfolio-info{padding:12px}
+.portfolio-job-title{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:4px}
+.portfolio-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-3)}
+.portfolio-stars{color:var(--accent-amber)}
+.portfolio-overlay{position:absolute;inset:0;background:rgba(0,229,160,0.08);opacity:0;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center}
+.portfolio-item:hover .portfolio-overlay{opacity:1}
+.portfolio-overlay-btn{background:var(--bg-secondary);border:1px solid var(--border-neon);border-radius:8px;padding:6px 12px;font-family:var(--ff);font-size:11px;font-weight:700;color:var(--neon)}
+
+/* ── REVIEWS ── */
+.review-list{display:flex;flex-direction:column;gap:14px}
+.review-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:all 0.18s}
+.review-item:hover{border-color:var(--border-2)}
+.review-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:12px}
+.review-author-row{display:flex;align-items:center;gap:10px}
+.review-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:11px;font-weight:800;flex-shrink:0}
+.review-avatar.a1{background:linear-gradient(135deg,rgba(0,229,160,0.2),rgba(66,165,245,0.1));color:var(--neon)}
+.review-avatar.a2{background:linear-gradient(135deg,rgba(66,165,245,0.2),rgba(156,95,233,0.1));color:var(--accent-blue)}
+.review-avatar.a3{background:linear-gradient(135deg,rgba(156,95,233,0.2),rgba(255,167,38,0.1));color:var(--accent-purple)}
+.review-avatar.a4{background:linear-gradient(135deg,rgba(255,167,38,0.15),rgba(0,229,160,0.1));color:var(--accent-amber)}
+.review-author-name{font-size:13px;font-weight:700;color:var(--text-1)}
+.review-author-loc{font-size:11px;color:var(--text-3)}
+.review-right{text-align:right;flex-shrink:0}
+.review-stars{color:var(--accent-amber);font-size:13px;margin-bottom:2px}
+.review-date{font-size:11px;color:var(--text-3)}
+.review-text{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:8px}
+.review-tags{display:flex;gap:6px;flex-wrap:wrap}
+.review-tag{font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:20px;background:var(--neon-dim);color:var(--neon);border:1px solid rgba(0,229,160,0.15)}
+.review-verified-job{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--accent-blue);margin-top:6px}
+.review-verified-job svg{width:12px;height:12px;stroke-width:2.5}
+.sentiment-chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:20px;margin-left:8px}
+.sentiment-chip.positive{background:var(--neon-dim);color:var(--neon);border:1px solid rgba(0,229,160,0.2)}
+
+/* ── LEGACY TRUST ── */
+.legacy-card{background:linear-gradient(135deg,rgba(66,165,245,0.06),rgba(156,95,233,0.04));border:1px solid rgba(66,165,245,0.2);border-radius:16px;padding:24px;margin-bottom:20px}
+.legacy-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.legacy-icon{width:44px;height:44px;border-radius:12px;background:rgba(66,165,245,0.1);border:1px solid rgba(66,165,245,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.legacy-icon svg{width:22px;height:22px;stroke-width:1.8;color:var(--accent-blue)}
+.legacy-label{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-blue);margin-bottom:3px}
+.legacy-title{font-family:var(--ff);font-size:1rem;font-weight:700;color:var(--text-1)}
+.legacy-platforms{display:flex;gap:12px;flex-wrap:wrap}
+.legacy-platform{background:var(--bg-secondary);border:1px solid var(--border-2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;flex:1;min-width:160px}
+.legacy-platform-logo{font-size:18px;flex-shrink:0}
+.legacy-platform-name{font-size:12px;font-weight:600;color:var(--text-1)}
+.legacy-platform-stat{font-family:var(--fm);font-size:10px;color:var(--text-3)}
+.legacy-platform-score{font-family:var(--ff);font-size:1.1rem;font-weight:800;color:var(--accent-blue);margin-left:auto}
+.legacy-validated{display:inline-flex;align-items:center;gap:5px;background:rgba(66,165,245,0.1);color:var(--accent-blue);font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:20px;border:1px solid rgba(66,165,245,0.2);margin-left:4px}
+
+/* ── VIDEO VERIFICATION ── */
+.video-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.video-preview{background:linear-gradient(135deg,#0a1628,#141b28);border:1px solid var(--border-2);border-radius:12px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer;margin-bottom:14px}
+.video-preview:hover .play-btn{transform:scale(1.08);background:var(--neon)}
+.video-preview-face{font-size:4rem;position:relative;z-index:1}
+.video-bg-grad{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(0,229,160,0.08) 0%,transparent 70%)}
+.play-btn{width:56px;height:56px;border-radius:50%;background:rgba(0,229,160,0.2);border:2px solid var(--neon);display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:absolute;z-index:2}
+.play-btn svg{width:22px;height:22px;fill:var(--neon);stroke:none;margin-left:3px}
+.video-duration{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.6);color:#fff;font-family:var(--fm);font-size:11px;padding:3px 8px;border-radius:6px}
+.video-caption-tags{display:flex;gap:6px;flex-wrap:wrap}
+.caption-tag{font-family:var(--fm);font-size:10px;padding:3px 10px;border-radius:20px;background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-2)}
+.caption-tag.ai{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+
+/* ── CREDENTIALS ── */
+.cred-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cred-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px;transition:all 0.2s}
+.cred-item:hover{border-color:var(--border-2)}
+.cred-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.cred-icon.pass{background:var(--neon-dim);border:1px solid var(--border-neon)}
+.cred-icon.fail{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.2)}
+.cred-icon.pending{background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.2)}
+.cred-name{font-size:12px;font-weight:600;color:var(--text-1);margin-bottom:2px}
+.cred-status{font-family:var(--fm);font-size:10px}
+.cred-status.pass{color:var(--neon)}
+.cred-status.fail{color:var(--accent-danger)}
+.cred-status.pending{color:var(--accent-amber)}
+.cred-expiry{font-size:10px;color:var(--text-3)}
+
+/* Analytics bar */
+.analytics-bar{display:flex;gap:16px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;flex-wrap:wrap}
+.analytics-item{flex:1;min-width:120px;text-align:center;padding:0 12px;border-right:1px solid var(--border)}
+.analytics-item:last-child{border-right:none}
+.analytics-label{font-family:var(--fm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+.analytics-value{font-family:var(--ff);font-size:1.2rem;font-weight:800;letter-spacing:-0.03em;color:var(--text-1)}
+.analytics-delta{font-size:10px;color:var(--neon);margin-top:2px}
+
+/* Master Craftsman banner */
+.master-banner{background:linear-gradient(135deg,rgba(156,95,233,0.1),rgba(66,165,245,0.07));border:1px solid rgba(156,95,233,0.25);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:18px;margin-bottom:20px;position:relative;overflow:hidden}
+.master-banner::before{content:'';position:absolute;top:0;right:0;width:200px;height:100%;background:radial-gradient(ellipse 200px 100px at right center,rgba(156,95,233,0.1),transparent)}
+.master-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent-purple),var(--accent-blue));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 20px rgba(156,95,233,0.3)}
+.master-icon svg{width:24px;height:24px;color:#fff;stroke-width:2}
+.master-info{flex:1}
+.master-label{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent-purple);margin-bottom:3px}
+.master-title{font-family:var(--ff);font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:3px}
+.master-desc{font-size:12px;color:var(--text-2)}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.anim-1{animation:fadeUp 0.5s ease both}
+.anim-2{animation:fadeUp 0.5s 0.1s ease both}
+.anim-3{animation:fadeUp 0.5s 0.2s ease both}
+.anim-4{animation:fadeUp 0.5s 0.3s ease both}
+
+@media(max-width:1100px){.perf-grid{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.portfolio-grid{grid-template-columns:1fr 1fr}.cred-grid{grid-template-columns:1fr 1fr}.hero-layout{grid-template-columns:auto 1fr;gap:20px}}
+@media(max-width:800px){.tm-score-widget{display:none}.portfolio-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/></svg>
+    </div>
+    <div class="logo-text">Trade<span>Match</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Workspace</div>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div><span class="nav-label">Dashboard</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58"/></svg></div><span class="nav-label">Leads</span><span class="nav-badge">3 New</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg></div><span class="nav-label">Messages</span><span class="nav-badge-danger">2</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg></div><span class="nav-label">Quotes & Proposals</span></a>
+    <div class="nav-section-label" style="margin-top:14px">Analytics</div>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div><span class="nav-label">Analytics</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg></div><span class="nav-label">Coverage Map</span></a>
+    <div class="nav-section-label" style="margin-top:14px">Account</div>
+    <a class="nav-item active" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg></div><span class="nav-label">My Profile</span></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75"/></svg></div><span class="nav-label">Credentials Vault</span><div class="expiry-dot"></div></a>
+    <a class="nav-item" href="#"><div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="profile-btn">
+      <div class="avatar-large">JD</div>
+      <div class="avatar-info"><div class="avatar-name">Jake Donovan</div><div class="avatar-role">Electrician · Pro Plan</div></div>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;color:var(--text-3)"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg>
+    </div>
+    <button class="sidebar-upgrade-slim">
+      <div class="sidebar-upgrade-slim-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg></div>
+      <div class="sidebar-upgrade-slim-body"><div class="sidebar-upgrade-slim-title">Upgrade to Elite</div><div class="sidebar-upgrade-slim-sub">Master Craftsman profile skin</div></div>
+      <svg class="sidebar-upgrade-slim-arrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════════════ TOP NAV ═══════════════ -->
+<header class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+  <div class="breadcrumb">
+    <span>TradeMatch</span>
+    <span class="breadcrumb-sep">›</span>
+    <span>Account</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">My Profile</span>
+  </div>
+  <div class="topnav-right">
+    <button class="notif-pill">
+      <div class="notif-pill-bell">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span class="notif-pill-badge">3</span>
+      </div>
+      <span class="notif-pill-label">Alerts</span>
+    </button>
+    <button class="balance-info-btn">
+      <div class="balance-info-btn-icon">💳</div>
+      <div><div class="balance-info-btn-label">Balance</div><div class="balance-info-btn-amount">£47.50</div></div>
+    </button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <div class="toggle-knob" id="toggleKnob">
+        <svg xmlns="http://www.w3.org/2000/svg" id="themeIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+      </div>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="main" id="main">
+
+  <!-- ═══ HERO ═══ -->
+  <div class="profile-hero anim-1">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-grid"></div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        Currently On-Site · Job #T48312 · GPS Active
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Preview Public View
+        </button>
+        <button class="btn btn-secondary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/></svg>
+          Edit Profile
+        </button>
+        <button class="btn btn-primary btn-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+          Export Digital Passport
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-layout">
+      <!-- Avatar -->
+      <div class="avatar-wrap">
+        <div class="avatar-photo">
+          <div class="avatar-photo-inner">JD</div>
+        </div>
+        <div class="on-site-badge">● On-Site</div>
+      </div>
+
+      <!-- Info -->
+      <div class="profile-info">
+        <div class="profile-name-row">
+          <span class="profile-name">Jake Donovan</span>
+          <span class="elite-crown">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+            Elite Vendor
+          </span>
+          <span class="verified-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            TradeMatch Verified
+          </span>
+        </div>
+        <div class="profile-trade">
+          <span class="profile-trade-pill">⚡ Electrician</span>
+          <span class="profile-trade-pill">🔌 EV Charging</span>
+          <span class="profile-trade-pill">🏠 Rewiring</span>
+          <span class="profile-trade-pill">📋 EICR Certificates</span>
+        </div>
+        <div class="profile-meta">
+          <div class="meta-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg><strong>East London</strong> · E1 &amp; surrounding</div>
+          <div class="meta-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Member since <strong>Jan 2023</strong></div>
+          <div class="meta-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/></svg><strong>7 years</strong> industry experience</div>
+          <div class="meta-item" style="color:var(--neon)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:var(--neon)"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><strong>47 jobs</strong> completed via TradeMatch</div>
+          <div class="meta-item"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75"/></svg>Avg quote response: <strong>47 min</strong></div>
+        </div>
+      </div>
+
+      <!-- TradeMatch Score Widget -->
+      <div class="tm-score-widget">
+        <div class="tm-score-eyebrow">
+          <div class="tm-score-eyebrow-dot"></div>
+          TradeMatch Score™
+        </div>
+        <div class="tm-score-value">8.<span>7</span></div>
+        <div class="tm-score-label">Top 18% in East London · Electricians</div>
+        <div class="tm-pillars">
+          <div class="pillar-row">
+            <div class="pillar-name" style="font-size:10px;color:var(--text-3)">Vetting (30%)</div>
+            <div class="pillar-track"><div class="pillar-fill vetting" id="p1" style="width:0%"></div></div>
+            <div class="pillar-pct" style="color:var(--neon)">96%</div>
+          </div>
+          <div class="pillar-row">
+            <div class="pillar-name" style="font-size:10px;color:var(--text-3)">Sentiment (30%)</div>
+            <div class="pillar-track"><div class="pillar-fill sentiment" id="p2" style="width:0%"></div></div>
+            <div class="pillar-pct" style="color:var(--accent-blue)">88%</div>
+          </div>
+          <div class="pillar-row">
+            <div class="pillar-name" style="font-size:10px;color:var(--text-3)">Reliability (20%)</div>
+            <div class="pillar-track"><div class="pillar-fill reliability" id="p3" style="width:0%"></div></div>
+            <div class="pillar-pct" style="color:var(--accent-purple)">91%</div>
+          </div>
+          <div class="pillar-row">
+            <div class="pillar-name" style="font-size:10px;color:var(--text-3)">Response (20%)</div>
+            <div class="pillar-track"><div class="pillar-fill response" id="p4" style="width:0%"></div></div>
+            <div class="pillar-pct" style="color:var(--accent-amber)">79%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Nav Tabs -->
+  <div class="profile-tabs anim-2">
+    <button class="ptab active" onclick="switchProfileTab(this,'overview')">Overview</button>
+    <button class="ptab" onclick="switchProfileTab(this,'portfolio')">Portfolio of Truth</button>
+    <button class="ptab" onclick="switchProfileTab(this,'reviews')">Reviews</button>
+    <button class="ptab" onclick="switchProfileTab(this,'credentials')">Credentials</button>
+    <button class="ptab" onclick="switchProfileTab(this,'analytics')">Analytics</button>
+  </div>
+
+  <!-- ═══ CONTENT ═══ -->
+  <div class="profile-content anim-3">
+
+    <!-- ── TAB: OVERVIEW ── -->
+    <div id="tab-overview">
+
+      <!-- Master Craftsman Banner -->
+      <div class="master-banner">
+        <div class="master-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
+        </div>
+        <div class="master-info">
+          <div class="master-label">Premium Feature · Elite Tier</div>
+          <div class="master-title">Unlock "Master Craftsman" Branding</div>
+          <div class="master-desc">Exclusive high-gloss UI skin for the top 5% of vendors. Includes priority map pin placement, profile SEO boost, and the coveted Master Craftsman hallmark badge.</div>
+        </div>
+        <button class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"/></svg>
+          Upgrade to Elite
+        </button>
+      </div>
+
+      <!-- AI Specialist Insight -->
+      <div class="ai-insight">
+        <div class="ai-insight-label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+          AI Specialist Insight — Generated from 47 verified jobs
+        </div>
+        <div class="ai-insight-title">Specialist in High-Complexity Residential Electrical Work</div>
+        <div class="ai-insight-text">Jake specialises in <em>Victorian and Edwardian terrace renovations</em> across East London, with a <strong>94% dispute-free completion rate</strong> through TradeMatch Escrow. He demonstrates <strong>Elite-tier competency</strong> in consumer unit upgrades and full rewires, and has rapidly built expertise in <em>EV charging installation</em> — completing 11 EV charger installs in the past 6 months with a 5.0★ rating on that sub-category. His average <strong>response window of 47 minutes</strong> places him in the top quartile for E1 electricians. Homeowners typically describe him as <em>"professional," "tidy,"</em> and <em>"communicates clearly."</em></div>
+      </div>
+
+      <!-- Analytics Bar -->
+      <div class="analytics-bar">
+        <div class="analytics-item">
+          <div class="analytics-label">Profile Views (30d)</div>
+          <div class="analytics-value">1,284</div>
+          <div class="analytics-delta">↑ +18% vs last month</div>
+        </div>
+        <div class="analytics-item">
+          <div class="analytics-label">Quote Requests</div>
+          <div class="analytics-value">24</div>
+          <div class="analytics-delta">↑ +3 this week</div>
+        </div>
+        <div class="analytics-item">
+          <div class="analytics-label">Quote → Win Rate</div>
+          <div class="analytics-value">38%</div>
+          <div class="analytics-delta">vs 22% area avg</div>
+        </div>
+        <div class="analytics-item">
+          <div class="analytics-label">Escrow Released</div>
+          <div class="analytics-value">44/47</div>
+          <div class="analytics-delta">dispute-free completion</div>
+        </div>
+        <div class="analytics-item">
+          <div class="analytics-label">Show-Up Score</div>
+          <div class="analytics-value">98%</div>
+          <div class="analytics-delta">GPS-verified arrivals</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- LEFT: Performance + Radar -->
+        <div>
+          <!-- Live Performance Module -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">TradeMatch Live Performance</div>
+                <div class="card-sub">Real-time accountability data — impossible to fake</div>
+              </div>
+              <span style="font-family:var(--fm);font-size:9px;background:rgba(0,229,160,0.1);color:var(--neon);border:1px solid var(--border-neon);padding:3px 10px;border-radius:20px;letter-spacing:0.1em">LIVE</span>
+            </div>
+            <div class="perf-grid">
+              <div class="perf-card green">
+                <div class="perf-emoji">✅</div>
+                <div class="perf-value green">44</div>
+                <div class="perf-label">Escrow Released<br>Dispute-Free</div>
+                <div class="perf-trend">↑ 94% rate</div>
+              </div>
+              <div class="perf-card blue">
+                <div class="perf-emoji">📍</div>
+                <div class="perf-value blue">98%</div>
+                <div class="perf-label">GPS Show-Up<br>Score</div>
+                <div class="perf-trend" style="color:var(--accent-blue)">↑ Top 5%</div>
+              </div>
+              <div class="perf-card purple">
+                <div class="perf-emoji">⭐</div>
+                <div class="perf-value purple">4.87</div>
+                <div class="perf-label">Sentiment<br>Score (AI)</div>
+                <div class="perf-trend" style="color:var(--accent-purple)">From 34 reviews</div>
+              </div>
+              <div class="perf-card amber">
+                <div class="perf-emoji">⚡</div>
+                <div class="perf-value amber">47m</div>
+                <div class="perf-label">Avg First<br>Response</div>
+                <div class="perf-trend" style="color:var(--accent-amber)">Top 25% E1</div>
+              </div>
+            </div>
+            <!-- Currently on site -->
+            <div style="background:linear-gradient(135deg,rgba(0,229,160,0.06),rgba(0,229,160,0.02));border:1px solid var(--border-neon);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;gap:12px">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--neon);animation:live-pulse 1.4s infinite;flex-shrink:0"></div>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--text-1)">Currently Delivering Quality</div>
+                <div style="font-size:11px;color:var(--text-2)">Job #T48312 · Full Rewire · Farringdon EC1 · GPS verified 08:42</div>
+              </div>
+              <div style="margin-left:auto;font-family:var(--fm);font-size:10px;color:var(--neon);background:var(--neon-dim);padding:3px 8px;border-radius:20px;border:1px solid var(--border-neon)">On-Site ●</div>
+            </div>
+          </div>
+
+          <!-- Legacy Trust -->
+          <div class="legacy-card">
+            <div class="legacy-header">
+              <div class="legacy-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+              </div>
+              <div>
+                <div class="legacy-label">Anti-Cold Start · Reputation Carryover</div>
+                <div class="legacy-title">Legacy Trust — Verified External History</div>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.5">Jake's 10-year review history from other platforms has been imported and <strong style="color:var(--text-1)">cryptographically validated</strong> by TradeMatch. His reputation doesn't start from zero — it carries over.</div>
+            <div class="legacy-platforms">
+              <div class="legacy-platform">
+                <div class="legacy-platform-logo">🟠</div>
+                <div>
+                  <div class="legacy-platform-name">Checkatrade <span class="legacy-validated">✓ Validated</span></div>
+                  <div class="legacy-platform-stat">127 reviews · 2014–2022</div>
+                </div>
+                <div class="legacy-platform-score">4.8★</div>
+              </div>
+              <div class="legacy-platform">
+                <div class="legacy-platform-logo">🔵</div>
+                <div>
+                  <div class="legacy-platform-name">MyBuilder <span class="legacy-validated">✓ Validated</span></div>
+                  <div class="legacy-platform-stat">43 reviews · 2018–2021</div>
+                </div>
+                <div class="legacy-platform-score">4.9★</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Technical DNA + Video -->
+        <div>
+          <!-- Technical DNA Radar -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Technical DNA Map</div>
+                <div class="card-sub">Skill distribution derived from 47 real verified jobs</div>
+              </div>
+              <span style="font-family:var(--fm);font-size:9px;background:rgba(156,95,233,0.1);color:var(--accent-purple);border:1px solid rgba(156,95,233,0.2);padding:3px 10px;border-radius:20px">AI-Derived</span>
+            </div>
+            <div class="radar-wrap">
+              <div class="radar-svg-wrap">
+                <svg id="radarChart" viewBox="0 0 240 240" width="220" height="220">
+                  <!-- Grid rings -->
+                  <polygon points="120,40 192,80 192,160 120,200 48,160 48,80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                  <polygon points="120,65 172,92.5 172,147.5 120,175 68,147.5 68,92.5" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                  <polygon points="120,90 152,105 152,135 120,150 88,135 88,105" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                  <!-- Axes -->
+                  <line x1="120" y1="120" x2="120" y2="40" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <line x1="120" y1="120" x2="192" y2="80" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <line x1="120" y1="120" x2="192" y2="160" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <line x1="120" y1="120" x2="120" y2="200" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <line x1="120" y1="120" x2="48" y2="160" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <line x1="120" y1="120" x2="48" y2="80" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <!-- Data polygon (Jake's skills) - high values -->
+                  <!-- Consumer Units: 98%, EV: 90%, Rewiring: 95%, Emergency: 80%, Maintenance: 85%, Installation: 92% -->
+                  <polygon id="radarPoly" 
+                    points="120,42 188,81 188,153 120,191 60,147 56,84"
+                    fill="rgba(0,229,160,0.15)" stroke="rgba(0,229,160,0.7)" stroke-width="2" stroke-linejoin="round"
+                    style="opacity:0;transition:opacity 0.8s ease"/>
+                  <!-- Data points -->
+                  <circle cx="120" cy="42" r="4" fill="var(--neon)" style="filter:drop-shadow(0 0 4px rgba(0,229,160,0.8));opacity:0;transition:opacity 0.8s ease 0.3s" id="rd1"/>
+                  <circle cx="188" cy="81" r="4" fill="var(--accent-blue)" style="filter:drop-shadow(0 0 4px rgba(66,165,245,0.8));opacity:0;transition:opacity 0.8s ease 0.4s" id="rd2"/>
+                  <circle cx="188" cy="153" r="4" fill="var(--neon)" style="filter:drop-shadow(0 0 4px rgba(0,229,160,0.8));opacity:0;transition:opacity 0.8s ease 0.5s" id="rd3"/>
+                  <circle cx="120" cy="191" r="4" fill="var(--accent-amber)" style="filter:drop-shadow(0 0 4px rgba(255,167,38,0.8));opacity:0;transition:opacity 0.8s ease 0.6s" id="rd4"/>
+                  <circle cx="60" cy="147" r="4" fill="var(--accent-blue)" style="filter:drop-shadow(0 0 4px rgba(66,165,245,0.8));opacity:0;transition:opacity 0.8s ease 0.7s" id="rd5"/>
+                  <circle cx="56" cy="84" r="4" fill="var(--neon)" style="filter:drop-shadow(0 0 4px rgba(0,229,160,0.8));opacity:0;transition:opacity 0.8s ease 0.8s" id="rd6"/>
+                  <!-- Labels -->
+                  <text x="120" y="32" text-anchor="middle" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">Consumer Unit</text>
+                  <text x="204" y="78" text-anchor="start" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">EV Charge</text>
+                  <text x="204" y="162" text-anchor="start" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">Rewiring</text>
+                  <text x="120" y="218" text-anchor="middle" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">Emergency</text>
+                  <text x="36" y="162" text-anchor="end" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">Maintenance</text>
+                  <text x="36" y="80" text-anchor="end" fill="rgba(240,244,255,0.7)" font-size="10" font-family="'JetBrains Mono',monospace">Installation</text>
+                </svg>
+              </div>
+              <div class="radar-legend">
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--neon)"></div>
+                  <div class="radar-legend-name">Consumer Unit Upgrades</div>
+                  <span class="radar-legend-level elite">Elite</span>
+                </div>
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--accent-blue)"></div>
+                  <div class="radar-legend-name">EV Charging Installation</div>
+                  <span class="radar-legend-level high">High</span>
+                </div>
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--neon)"></div>
+                  <div class="radar-legend-name">Full Rewiring</div>
+                  <span class="radar-legend-level elite">Elite</span>
+                </div>
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--accent-amber)"></div>
+                  <div class="radar-legend-name">Emergency Repairs</div>
+                  <span class="radar-legend-level medium">Medium</span>
+                </div>
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--accent-blue)"></div>
+                  <div class="radar-legend-name">Maintenance</div>
+                  <span class="radar-legend-level high">High</span>
+                </div>
+                <div class="radar-legend-item">
+                  <div class="radar-dot" style="background:var(--neon)"></div>
+                  <div class="radar-legend-name">General Installation</div>
+                  <span class="radar-legend-level elite">Elite</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Verification -->
+          <div class="video-card">
+            <div class="card-header" style="margin-bottom:14px">
+              <div>
+                <div class="card-title">Video Verification — "Meet the Pro"</div>
+                <div class="card-sub">Homeowners are 60% more likely to hire after watching</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                Re-Record
+              </button>
+            </div>
+            <div class="video-preview">
+              <div class="video-bg-grad"></div>
+              <div class="video-preview-face">👷</div>
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <div class="video-duration">0:28</div>
+            </div>
+            <div style="font-size:12px;color:var(--text-2);margin-bottom:10px">AI has auto-captioned and trust-tagged this video. The following signals were detected:</div>
+            <div class="video-caption-tags">
+              <span class="caption-tag ai">✓ Professional language</span>
+              <span class="caption-tag ai">✓ Trade-specific terminology</span>
+              <span class="caption-tag ai">✓ NICEIC mentioned</span>
+              <span class="caption-tag ai">✓ Clear pricing discussion</span>
+              <span class="caption-tag">Face visible</span>
+              <span class="caption-tag">UK accent</span>
+              <span class="caption-tag">Indoor — workshop</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: PORTFOLIO ── (hidden by default) -->
+    <div id="tab-portfolio" style="display:none">
+      <div class="ai-insight" style="margin-bottom:20px">
+        <div class="ai-insight-label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Portfolio of Truth — Every photo linked to a verified transaction
+        </div>
+        <div class="ai-insight-text">Unlike Bark or RatedPeople where vendors upload any stock photo, every image here is <strong>tagged to a real escrow-released job</strong>. Homeowners can click any photo to see the anonymous job scope and the verified review left for that exact project.</div>
+      </div>
+
+      <div class="portfolio-grid">
+        <!-- Portfolio items -->
+        <div class="portfolio-item">
+          <div class="portfolio-photo">
+            <div class="portfolio-photo-bg">🔌</div>
+            <div class="verified-photo-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Verified Job</div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-job-title">Consumer Unit Upgrade — Hackney</div>
+            <div class="portfolio-meta"><span>Feb 2026</span><span class="portfolio-stars">★★★★★</span><span style="color:var(--neon);font-size:10px">£1,850</span></div>
+          </div>
+          <div class="portfolio-overlay"><span class="portfolio-overlay-btn">View Job + Review</span></div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-photo">
+            <div class="portfolio-photo-bg">🏠</div>
+            <div class="verified-photo-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Verified Job</div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-job-title">Full Rewire — 3-Bed Victorian Terrace</div>
+            <div class="portfolio-meta"><span>Jan 2026</span><span class="portfolio-stars">★★★★★</span><span style="color:var(--neon);font-size:10px">£4,200</span></div>
+          </div>
+          <div class="portfolio-overlay"><span class="portfolio-overlay-btn">View Job + Review</span></div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-photo">
+            <div class="portfolio-photo-bg">🚗</div>
+            <div class="verified-photo-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Verified Job</div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-job-title">EV Charger Install — Islington</div>
+            <div class="portfolio-meta"><span>Jan 2026</span><span class="portfolio-stars">★★★★★</span><span style="color:var(--neon);font-size:10px">£890</span></div>
+          </div>
+          <div class="portfolio-overlay"><span class="portfolio-overlay-btn">View Job + Review</span></div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-photo">
+            <div class="portfolio-photo-bg">💡</div>
+            <div class="verified-photo-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Verified Job</div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-job-title">16x LED Downlight Install — Shoreditch</div>
+            <div class="portfolio-meta"><span>Dec 2025</span><span class="portfolio-stars">★★★★★</span><span style="color:var(--neon);font-size:10px">£1,100</span></div>
+          </div>
+          <div class="portfolio-overlay"><span class="portfolio-overlay-btn">View Job + Review</span></div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-photo">
+            <div class="portfolio-photo-bg">🏢</div>
+            <div class="verified-photo-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Verified Job</div>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-job-title">Commercial Office Rewire — Farringdon</div>
+            <div class="portfolio-meta"><span>Nov 2025</span><span class="portfolio-stars">★★★★★</span><span style="color:var(--neon);font-size:10px">£6,800</span></div>
+          </div>
+          <div class="portfolio-overlay"><span class="portfolio-overlay-btn">View Job + Review</span></div>
+        </div>
+        <div class="portfolio-item" style="border-style:dashed;border-color:var(--border-2);cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:180px;flex-direction:column;gap:8px;transition:all 0.2s">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:28px;height:28px;stroke-width:1.5;color:var(--text-3)"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          <div style="font-size:12px;color:var(--text-3)">Add Verified Photo</div>
+          <div style="font-size:11px;color:var(--text-3)">Linked to a completed job</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: REVIEWS ── (hidden) -->
+    <div id="tab-reviews" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div>
+          <div style="font-family:var(--ff);font-size:1.1rem;font-weight:800;letter-spacing:-0.03em;color:var(--text-1)">34 Verified Reviews</div>
+          <div style="font-size:12px;color:var(--text-2);margin-top:2px">AI Sentiment Score: 4.87 / 5.0 · All reviews linked to real escrow-released jobs</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-ghost btn-sm">Filter by Rating</button>
+          <button class="btn btn-ghost btn-sm">Filter by Job Type</button>
+        </div>
+      </div>
+      <div class="review-list">
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author-row">
+              <div class="review-avatar a1">SR</div>
+              <div>
+                <div class="review-author-name">Sarah R. <span class="sentiment-chip positive">😊 Positive</span></div>
+                <div class="review-author-loc">Hackney, E8</div>
+              </div>
+            </div>
+            <div class="review-right">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-date">28 Feb 2026</div>
+            </div>
+          </div>
+          <div class="review-text">Jake was punctual — arrived exactly when he said he would. The consumer unit upgrade was done in a single day with no mess left behind. He explained everything clearly before starting and the EICR certificate arrived the same afternoon. Genuinely professional from start to finish.</div>
+          <div class="review-tags">
+            <span class="review-tag">punctual</span>
+            <span class="review-tag">tidy</span>
+            <span class="review-tag">professional</span>
+            <span class="review-tag">communicates clearly</span>
+            <span class="review-tag">EICR same day</span>
+          </div>
+          <div class="review-verified-job">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Linked to Job #T48101 · Consumer Unit Upgrade · £1,850 · Escrow Released
+          </div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author-row">
+              <div class="review-avatar a2">DR</div>
+              <div>
+                <div class="review-author-name">Daniel R. <span class="sentiment-chip positive">😊 Positive</span></div>
+                <div class="review-author-loc">Islington, N1</div>
+              </div>
+            </div>
+            <div class="review-right">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-date">25 Feb 2026</div>
+            </div>
+          </div>
+          <div class="review-text">Full rewire on our 4-bedroom Victorian terrace. Jake managed the whole job across 3 days — brilliant project management. His quote was competitive and he didn't try to upsell us on anything unnecessary. Would not hesitate to recommend to anyone.</div>
+          <div class="review-tags">
+            <span class="review-tag">great value</span>
+            <span class="review-tag">no upselling</span>
+            <span class="review-tag">project management</span>
+            <span class="review-tag">Victorian terrace</span>
+          </div>
+          <div class="review-verified-job">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Linked to Job #T48089 · Full Rewire 4-Bed · £4,200 · Escrow Released
+          </div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div class="review-author-row">
+              <div class="review-avatar a3">EK</div>
+              <div>
+                <div class="review-author-name">Emma K. <span class="sentiment-chip positive">😊 Positive</span></div>
+                <div class="review-author-loc">Shoreditch, E1</div>
+              </div>
+            </div>
+            <div class="review-right">
+              <div class="review-stars">★★★★★</div>
+              <div class="review-date">1 Mar 2026</div>
+            </div>
+          </div>
+          <div class="review-text">Used the Instant Book feature for a bathroom light fitting replacement. Jake arrived within an hour, job was done in 45 minutes. Perfect for small jobs — no fuss, great result. Will use again for the bigger rewire we're planning.</div>
+          <div class="review-tags">
+            <span class="review-tag">fast</span>
+            <span class="review-tag">instant book</span>
+            <span class="review-tag">efficient</span>
+          </div>
+          <div class="review-verified-job">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Linked to Job #T48298 · Instant Book · Light Fitting · £145 · Escrow Released
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: CREDENTIALS ── (hidden) -->
+    <div id="tab-credentials" style="display:none">
+      <div class="ai-insight" style="margin-bottom:20px">
+        <div class="ai-insight-label"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg> Credentials Vault — Vetting Status (30% of TradeMatch Score)</div>
+        <div class="ai-insight-text">All documents are verified directly against UK regulatory bodies. <strong>2 documents</strong> are pending — uploading them will boost your score from <em>8.7 → 9.4+</em> and unlock Elite map pin placement.</div>
+      </div>
+      <div class="cred-grid">
+        <div class="cred-item">
+          <div class="cred-icon pass">✅</div>
+          <div>
+            <div class="cred-name">Public Liability Insurance</div>
+            <div class="cred-status pass">Verified · Active</div>
+            <div class="cred-expiry">Expires Dec 2026</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon pass">⚡</div>
+          <div>
+            <div class="cred-name">NICEIC Approved</div>
+            <div class="cred-status pass">Verified · Active</div>
+            <div class="cred-expiry">Renewed Jan 2026</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon pass">📋</div>
+          <div>
+            <div class="cred-name">ID & Right to Work</div>
+            <div class="cred-status pass">Verified</div>
+            <div class="cred-expiry">Passport checked</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon pass">🔌</div>
+          <div>
+            <div class="cred-name">Part P Competency</div>
+            <div class="cred-status pass">Verified · Active</div>
+            <div class="cred-expiry">Valid through 2027</div>
+          </div>
+        </div>
+        <div class="cred-item" style="border-color:rgba(255,167,38,0.3)">
+          <div class="cred-icon pending">⚠️</div>
+          <div>
+            <div class="cred-name">Employer's Liability</div>
+            <div class="cred-status pending">Upload Required</div>
+            <div class="cred-expiry">+0.4 score if uploaded</div>
+          </div>
+        </div>
+        <div class="cred-item" style="border-color:rgba(255,167,38,0.3)">
+          <div class="cred-icon pending">🚗</div>
+          <div>
+            <div class="cred-name">Vehicle Insurance</div>
+            <div class="cred-status pending">Upload Required</div>
+            <div class="cred-expiry">+0.3 score if uploaded</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <button class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+          Upload Missing Documents (+0.7 to Score)
+        </button>
+      </div>
+    </div>
+
+    <!-- ── TAB: ANALYTICS ── (hidden) -->
+    <div id="tab-analytics" style="display:none">
+      <div class="ai-insight" style="margin-bottom:20px">
+        <div class="ai-insight-label"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg> Premium Feature · Profile Analytics — Click-level data</div>
+        <div class="ai-insight-text">See exactly where homeowners spend time on your profile. <strong>Reviews</strong> are viewed 3.2× more than credentials. Your <strong>video intro</strong> has a 73% watch-through rate. Homeowners who view your Technical DNA Map are <em>2.1× more likely to send a quote request</em>.</div>
+      </div>
+      <div class="grid-3">
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">👁</div>
+          <div style="font-family:var(--ff);font-size:2rem;font-weight:900;color:var(--neon);letter-spacing:-0.04em">1,284</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:4px">Profile Views (30 days)</div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--neon)">↑ +18% vs prior period</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">🎥</div>
+          <div style="font-family:var(--ff);font-size:2rem;font-weight:900;color:var(--accent-blue);letter-spacing:-0.04em">73%</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:4px">Video Watch-Through Rate</div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--accent-blue)">Industry avg: 41%</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:2rem;margin-bottom:8px">💬</div>
+          <div style="font-family:var(--ff);font-size:2rem;font-weight:900;color:var(--accent-amber);letter-spacing:-0.04em">38%</div>
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:4px">View → Quote Conversion</div>
+          <div style="font-family:var(--fm);font-size:10px;color:var(--accent-amber)">↑ vs 12% Checkatrade avg</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:4px">
+        <div class="card-header"><div class="card-title">Section Engagement Heatmap</div><div class="card-sub">Where homeowners spend the most time</div></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:110px;font-size:12px;color:var(--text-2)">Reviews</div>
+            <div style="flex:1;height:8px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden"><div style="height:100%;width:88%;background:linear-gradient(90deg,#007a3d,var(--neon));border-radius:100px"></div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--neon);width:32px">88%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:110px;font-size:12px;color:var(--text-2)">Portfolio</div>
+            <div style="flex:1;height:8px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden"><div style="height:100%;width:74%;background:linear-gradient(90deg,var(--accent-blue),rgba(66,165,245,0.4));border-radius:100px"></div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--accent-blue);width:32px">74%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:110px;font-size:12px;color:var(--text-2)">Technical DNA</div>
+            <div style="flex:1;height:8px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden"><div style="height:100%;width:61%;background:linear-gradient(90deg,var(--accent-purple),rgba(156,95,233,0.4));border-radius:100px"></div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--accent-purple);width:32px">61%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:110px;font-size:12px;color:var(--text-2)">Video Intro</div>
+            <div style="flex:1;height:8px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden"><div style="height:100%;width:55%;background:linear-gradient(90deg,var(--accent-amber),rgba(255,167,38,0.4));border-radius:100px"></div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--accent-amber);width:32px">55%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:110px;font-size:12px;color:var(--text-2)">Credentials</div>
+            <div style="flex:1;height:8px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden"><div style="height:100%;width:38%;background:var(--text-3);border-radius:100px"></div></div>
+            <div style="font-family:var(--fm);font-size:11px;color:var(--text-3);width:32px">38%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /profile-content -->
+</div><!-- /main -->
+
+<script>
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const m=document.getElementById('main');
+  const t=document.getElementById('topnav');
+  s.classList.toggle('collapsed');
+  m.classList.toggle('collapsed');
+  t.classList.toggle('collapsed');
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.getAttribute('data-theme')==='light';
+  html.setAttribute('data-theme',isLight?'dark':'light');
+  const icon=document.getElementById('themeIcon');
+  if(isLight){icon.innerHTML='<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';}
+  else{icon.innerHTML='<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';}
+}
+
+function switchProfileTab(el, tabId){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  // Hide all tabs
+  ['overview','portfolio','reviews','credentials','analytics'].forEach(id=>{
+    const el=document.getElementById('tab-'+id);
+    if(el) el.style.display='none';
+  });
+  const target=document.getElementById('tab-'+tabId);
+  if(target) target.style.display='block';
+}
+
+// Animate pillar bars on load
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const pillars=[{id:'p1',w:'96%'},{id:'p2',w:'88%'},{id:'p3',w:'91%'},{id:'p4',w:'79%'}];
+    pillars.forEach((p,i)=>{
+      setTimeout(()=>{
+        const el=document.getElementById(p.id);
+        if(el) el.style.width=p.w;
+      },i*120);
+    });
+    // Animate radar
+    setTimeout(()=>{
+      const poly=document.getElementById('radarPoly');
+      if(poly) poly.style.opacity='1';
+      ['rd1','rd2','rd3','rd4','rd5','rd6'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.style.opacity='1';
+      });
+    },400);
+  },600);
+});
+</script>
+</body>
+</html>

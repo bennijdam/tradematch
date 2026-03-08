@@ -1,0 +1,3098 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Projects — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   TRADEMATCH HOMEOWNER DASHBOARD · CSS
+   Matching vendor dashboard design system exactly
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.1);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-safe: #00E5A0;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h: 72px;
+}
+
+[data-theme="light"] {
+  --bg-primary: #F0F4F8;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F7F9FC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F7F4;
+  --neon: #16A34A;
+  --neon-dim: rgba(22,163,74,0.08);
+  --neon-glow: 0 0 28px rgba(22,163,74,0.25);
+  --neon-glow-sm: 0 0 14px rgba(22,163,74,0.18);
+  --accent-blue: #2563EB;
+  --accent-amber: #D97706;
+  --accent-danger: #DC2626;
+  --accent-purple: #7C3AED;
+  --text-1: #0F172A;
+  --text-2: #475569;
+  --text-3: #94A3B8;
+  --border: rgba(0,0,0,0.07);
+  --border-2: rgba(0,0,0,0.13);
+  --border-neon: rgba(22,163,74,0.25);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+/* Wallpaper */
+body { position: relative; }
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,229,160,0.035) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(66,165,245,0.025) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="light"] body::after {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(22,163,74,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(37,99,235,0.03) 0%, transparent 60%);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 72px; }
+
+/* Sidebar Header */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--neon-glow-sm);
+}
+.logo-mark svg { width: 18px; height: 18px; color: #fff; stroke-width: 2.5; }
+.logo-text-wrap { overflow: hidden; transition: opacity 0.2s; }
+.sidebar.collapsed .logo-text-wrap { opacity: 0; }
+.logo-text { font-family: var(--ff); font-size: 15px; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); white-space: nowrap; }
+.logo-sub { font-family: var(--fm); font-size: 9px; color: var(--neon); opacity: 0.8; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+
+/* Sidebar Nav Section */
+.nav-section-label {
+  font-family: var(--fm);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-3);
+  padding: 16px 16px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-section-label { opacity: 0; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px; }
+.sidebar-nav::-webkit-scrollbar { width: 3px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 10px; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-decoration: none;
+  position: relative;
+  white-space: nowrap;
+}
+.nav-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.nav-item.active { background: var(--neon-dim); color: var(--neon); font-weight: 600; }
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: -8px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--neon);
+  border-radius: 0 3px 3px 0;
+  box-shadow: var(--neon-glow-sm);
+}
+
+.nav-icon { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.nav-icon svg { width: 18px; height: 18px; stroke-width: 1.8; }
+.nav-label { overflow: hidden; transition: opacity 0.2s, width 0.3s; }
+.sidebar.collapsed .nav-label { opacity: 0; width: 0; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--neon);
+  color: #000;
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-badge { opacity: 0; }
+
+.nav-badge-amber {
+  margin-left: auto;
+  background: var(--accent-amber);
+  color: #000;
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 100px;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-badge-amber { opacity: 0; }
+
+.nav-pulse {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--neon);
+  flex-shrink: 0;
+  animation: pulse-dot 2s infinite;
+  margin-left: auto;
+  transition: opacity 0.2s;
+}
+.sidebar.collapsed .nav-pulse { opacity: 0; }
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.6); }
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+}
+.profile-btn {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  border-radius: 10px; padding: 10px 8px; transition: background 0.2s;
+  width: 100%; background: transparent; border: none; text-align: left;
+}
+.profile-btn:hover { background: var(--neon-dim); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 13px; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.avatar-info { overflow: hidden; transition: opacity 0.2s; flex: 1; }
+.sidebar.collapsed .avatar-info { opacity: 0; width: 0; }
+.avatar-name { font-size: 13px; font-weight: 600; color: var(--text-1); white-space: nowrap; }
+.avatar-role { font-size: 11px; color: var(--text-2); white-space: nowrap; }
+.profile-chevron { color: var(--text-3); transition: opacity 0.2s; flex-shrink: 0; }
+.profile-chevron svg { width: 14px; height: 14px; stroke-width: 2; }
+.sidebar.collapsed .profile-chevron { opacity: 0; }
+
+.profile-dropdown {
+  position: absolute; bottom: calc(100% + 8px); left: 12px; right: 12px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 300; display: none;
+  animation: dropup 0.18s cubic-bezier(0.34,1.56,0.64,1);
+}
+.profile-dropdown.open { display: block; }
+@keyframes dropup {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.profile-dropdown-header {
+  padding: 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.profile-dropdown-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #7C3AED);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.profile-dropdown-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.profile-dropdown-tier {
+  font-family: var(--fm); font-size: 10px; color: var(--accent-blue);
+  margin-top: 2px; display: flex; align-items: center; gap: 5px;
+}
+.pd-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 16px;
+  font-size: 13px; color: var(--text-2); cursor: pointer;
+  transition: background 0.15s, color 0.15s; font-weight: 500;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.pd-item:hover { background: var(--neon-dim); color: var(--text-1); }
+.pd-item svg { width: 16px; height: 16px; stroke-width: 1.8; flex-shrink: 0; }
+.pd-item.danger { color: var(--accent-danger); }
+.pd-item.danger:hover { background: rgba(255,71,87,0.1); }
+.pd-divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── TOP NAV ── */
+.topnav {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0;
+  height: var(--topnav-h);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 32px;
+  z-index: 100; gap: 16px;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+.topnav.collapsed { left: 72px; }
+
+.hamburger {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.2s; flex-shrink: 0;
+}
+.hamburger:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.hamburger svg { width: 16px; height: 16px; stroke-width: 2; }
+
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.breadcrumb-sep { color: var(--text-3); }
+.breadcrumb-current { font-family: var(--ff); font-weight: 700; color: var(--text-1); font-size: 15px; }
+
+/* AEO Intent Bar */
+.aeo-bar {
+  flex: 1;
+  max-width: 520px;
+  position: relative;
+}
+.aeo-bar-inner {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  padding: 0 14px 0 12px;
+  height: 42px;
+  transition: all 0.2s;
+  cursor: text;
+}
+.aeo-bar-inner:focus-within {
+  border-color: var(--border-neon);
+  background: var(--bg-card);
+  box-shadow: var(--neon-glow-sm);
+}
+.aeo-icon { color: var(--neon); flex-shrink: 0; }
+.aeo-icon svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.aeo-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--fb); font-size: 13.5px; color: var(--text-1);
+  min-width: 0;
+}
+.aeo-input::placeholder { color: var(--text-3); font-style: italic; }
+.aeo-kbd {
+  font-family: var(--fm); font-size: 10px; color: var(--text-3);
+  background: var(--bg-primary); border: 1px solid var(--border-2);
+  border-radius: 5px; padding: 2px 6px; flex-shrink: 0;
+}
+.aeo-results {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  z-index: 500; display: none;
+  animation: dropdown 0.16s cubic-bezier(0.4,0,0.2,1);
+}
+.aeo-results.open { display: block; }
+@keyframes dropdown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+.aeo-results-header {
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--fm); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--neon); opacity: 0.8;
+  display: flex; align-items: center; gap: 8px;
+}
+.aeo-results-header::before { content: ''; width: 14px; height: 1px; background: var(--neon); opacity: 0.5; }
+.aeo-vendor-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px; cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.aeo-vendor-card:last-child { border-bottom: none; }
+.aeo-vendor-card:hover { background: var(--neon-dim); }
+.aeo-vendor-avatar {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 14px; font-weight: 800;
+  color: #fff; flex-shrink: 0;
+}
+.aeo-vendor-name { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.aeo-vendor-meta { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.aeo-vendor-score {
+  margin-left: auto; text-align: right; flex-shrink: 0;
+}
+.aeo-score-val {
+  font-family: var(--ff); font-size: 16px; font-weight: 900;
+  color: var(--neon); letter-spacing: -0.04em;
+}
+.aeo-score-label { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+.aeo-ai-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 100px; padding: 2px 8px;
+  font-family: var(--fm); font-size: 9px; color: var(--neon);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.aeo-ai-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--neon); animation: pulse-dot 1.5s infinite; }
+
+.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* Escrow Wallet Topnav Pill */
+.escrow-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 14px;
+  background: rgba(66,165,245,0.1);
+  border: 1px solid rgba(66,165,245,0.25);
+  border-radius: 10px;
+  cursor: pointer; transition: all 0.2s;
+}
+.escrow-pill:hover { background: rgba(66,165,245,0.18); }
+.escrow-pill.pending-release {
+  background: rgba(255,167,38,0.12);
+  border-color: rgba(255,167,38,0.35);
+  animation: amber-pulse 2s infinite;
+}
+@keyframes amber-pulse {
+  0%,100% { box-shadow: none; }
+  50% { box-shadow: 0 0 16px rgba(255,167,38,0.3); }
+}
+.escrow-pill-icon { font-size: 15px; flex-shrink: 0; }
+.escrow-pill-body {}
+.escrow-pill-label { font-family: var(--fm); font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-blue); opacity: 0.8; }
+.escrow-pill.pending-release .escrow-pill-label { color: var(--accent-amber); }
+.escrow-pill-amount { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--accent-blue); letter-spacing: -0.03em; }
+.escrow-pill.pending-release .escrow-pill-amount { color: var(--accent-amber); }
+
+.notif-pill {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  position: relative;
+}
+.notif-pill:hover { background: var(--neon-dim); border-color: var(--border-neon); }
+.notif-pill-bell { position: relative; }
+.notif-pill-bell svg { width: 17px; height: 17px; stroke-width: 1.8; color: var(--text-2); }
+.notif-pill-badge {
+  position: absolute; top: -5px; right: -6px;
+  background: var(--accent-danger); color: #fff;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  min-width: 16px; height: 16px; border-radius: 100px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 3px; border: 2px solid var(--bg-secondary);
+}
+.notif-pill-label { font-size: 12px; font-weight: 600; color: var(--text-2); }
+
+.theme-toggle-btn {
+  width: 52px; height: 28px; border-radius: 100px;
+  background: #1e293b; border: 1px solid var(--border-2);
+  cursor: pointer; position: relative; transition: all 0.3s;
+  display: flex; align-items: center; padding: 0 4px; flex-shrink: 0;
+}
+[data-theme="light"] .theme-toggle-btn { background: #e0f2fe; border-color: #bae6fd; }
+.toggle-knob {
+  width: 20px; height: 20px; border-radius: 50%; background: #334155;
+  position: absolute; left: 4px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+[data-theme="light"] .toggle-knob { left: 26px; background: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.5); }
+.toggle-knob svg { width: 11px; height: 11px; color: #fff; stroke-width: 2.5; }
+
+/* ── MAIN CONTENT ── */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--topnav-h);
+  padding: 32px;
+  position: relative; z-index: 1;
+  transition: margin-left 0.3s cubic-bezier(0.4,0,0.2,1);
+  min-height: calc(100vh - var(--topnav-h));
+}
+.main.collapsed { margin-left: 72px; }
+
+/* Page Header */
+.page-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px; gap: 20px;
+}
+.page-title-group { flex: 1; }
+.page-eyebrow {
+  font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--neon); opacity: 0.8;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+}
+.page-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--neon); opacity: 0.5; }
+.page-title { font-family: var(--ff); font-size: 1.9rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text-1); line-height: 1.1; }
+.page-sub { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+.page-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--ff); font-size: 13px; font-weight: 700;
+  letter-spacing: -0.02em; border-radius: 10px; padding: 9px 18px;
+  cursor: pointer; border: none; transition: all 0.22s; white-space: nowrap;
+}
+.btn svg { width: 15px; height: 15px; stroke-width: 2; }
+.btn-primary { background: linear-gradient(135deg, #007a3d, var(--neon)); color: #fff; box-shadow: var(--neon-glow-sm); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: var(--neon-glow); }
+.btn-secondary { background: var(--bg-tertiary); color: var(--text-1); border: 1px solid var(--border-2); }
+.btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-neon); color: var(--neon); }
+.btn-blue { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.25); }
+.btn-blue:hover { background: rgba(66,165,245,0.2); }
+.btn-danger { background: rgba(255,71,87,0.1); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.25); }
+.btn-danger:hover { background: rgba(255,71,87,0.2); }
+.btn-amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.25); }
+.btn-amber:hover { background: rgba(255,167,38,0.2); }
+.btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); padding: 8px 14px; }
+.btn-ghost:hover { background: var(--neon-dim); color: var(--neon); border-color: var(--border-neon); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+/* ═════════════════════════════════════
+   STRIPE CUSTODY BADGE (Escrow Widget)
+   ═════════════════════════════════════ */
+.escrow-custody-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 24px;
+}
+.escrow-custody-card.pending-release {
+  border-color: rgba(255,167,38,0.4);
+  animation: card-amber-pulse 2s infinite;
+}
+@keyframes card-amber-pulse {
+  0%,100% { box-shadow: none; }
+  50% { box-shadow: 0 0 28px rgba(255,167,38,0.15); }
+}
+.escrow-custody-banner {
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(66,165,245,0.06) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.stripe-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(99,91,255,0.1);
+  border: 1px solid rgba(99,91,255,0.25);
+  border-radius: 8px; padding: 5px 12px;
+  font-family: var(--fm); font-size: 10px; color: #a78bfa;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.stripe-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; animation: pulse-dot 2s infinite; }
+.escrow-custody-message { font-size: 12.5px; color: var(--text-2); line-height: 1.4; flex: 1; }
+.escrow-custody-message strong { color: var(--text-1); }
+
+/* Pending Release Alert */
+.release-alert {
+  display: none;
+  background: rgba(255,167,38,0.08);
+  border-bottom: 1px solid rgba(255,167,38,0.2);
+  padding: 12px 20px;
+  align-items: center; gap: 12px;
+}
+.release-alert.visible { display: flex; }
+.release-alert-icon { font-size: 20px; flex-shrink: 0; }
+.release-alert-text { flex: 1; font-size: 13px; color: var(--accent-amber); font-weight: 600; }
+.release-alert-text span { font-weight: 400; color: var(--text-2); font-size: 12px; display: block; margin-top: 1px; }
+
+/* Escrow Milestones List */
+.escrow-milestones { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.escrow-milestone-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg-tertiary); border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: all 0.18s;
+}
+.escrow-milestone-row:hover { border-color: var(--border-2); }
+.milestone-step-badge {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+.milestone-step-badge.done { background: rgba(0,229,160,0.15); color: var(--neon); }
+.milestone-step-badge.active { background: rgba(255,167,38,0.15); color: var(--accent-amber); }
+.milestone-step-badge.locked { background: var(--border); color: var(--text-3); }
+.milestone-row-name { font-size: 13px; font-weight: 600; color: var(--text-1); flex: 1; }
+.milestone-row-amount { font-family: var(--ff); font-size: 14px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; margin-left: auto; flex-shrink: 0; }
+.milestone-row-status { font-family: var(--fm); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; flex-shrink: 0; margin-left: 8px; }
+.milestone-row-status.done { color: var(--neon); }
+.milestone-row-status.pending { color: var(--accent-amber); }
+.milestone-row-status.locked { color: var(--text-3); }
+
+/* ═══════════════════
+   LAYOUT GRID
+   ═══════════════════ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+.dashboard-left { display: flex; flex-direction: column; gap: 20px; }
+.dashboard-right { display: flex; flex-direction: column; gap: 20px; }
+
+/* ═══════════════
+   SECTION HEADER
+   ═══════════════ */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-title {
+  font-family: var(--ff); font-size: 16px; font-weight: 800;
+  color: var(--text-1); letter-spacing: -0.03em;
+}
+.section-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+/* ═══════════════════════════
+   ACTIVE JOB CARD (TradeMatch Live)
+   ═══════════════════════════ */
+.active-job-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.active-job-header {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.active-job-title { font-family: var(--ff); font-size: 15px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.active-job-meta { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.25);
+  border-radius: 100px; padding: 4px 12px;
+  font-family: var(--fm); font-size: 10px; color: var(--neon);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon); animation: pulse-dot 1.5s infinite; }
+
+/* GPS Map Card */
+.gps-map-area {
+  background: var(--bg-tertiary);
+  position: relative; overflow: hidden;
+  height: 200px;
+  display: flex; align-items: center; justify-content: center;
+}
+.map-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+[data-theme="light"] .map-grid {
+  background-image:
+    linear-gradient(rgba(22,163,74,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,163,74,0.08) 1px, transparent 1px);
+}
+.map-road-h {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: rgba(255,255,255,0.06);
+}
+.map-road-v {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: rgba(255,255,255,0.06);
+}
+[data-theme="light"] .map-road-h, [data-theme="light"] .map-road-v { background: rgba(0,0,0,0.06); }
+.vendor-pin {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; animation: vendor-move 4s infinite alternate ease-in-out;
+}
+@keyframes vendor-move {
+  0% { transform: translate(-30px, 20px); }
+  100% { transform: translate(20px, -10px); }
+}
+.vendor-pin-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-card); border: 3px solid var(--neon);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 11px; font-weight: 800; color: var(--neon);
+  box-shadow: 0 0 20px rgba(0,229,160,0.4);
+  position: relative;
+}
+.vendor-pin-dot::after {
+  content: '';
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,229,160,0.25);
+  animation: ring-expand 2s infinite;
+}
+@keyframes ring-expand {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+.vendor-pin-label {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 6px; padding: 3px 8px;
+  font-family: var(--fm); font-size: 9px; color: var(--text-1);
+  white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.home-pin {
+  position: absolute; right: 60px; bottom: 50px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.home-pin-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(66,165,245,0.15); border: 2px solid var(--accent-blue);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent-blue);
+}
+.home-pin-dot svg { width: 14px; height: 14px; stroke-width: 2.5; }
+.home-pin-label {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 6px; padding: 3px 8px;
+  font-family: var(--fm); font-size: 9px; color: var(--text-1); white-space: nowrap;
+}
+.eta-chip {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--bg-card); border: 1px solid var(--border-neon);
+  border-radius: 8px; padding: 8px 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.eta-chip-label { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+.eta-chip-time { font-family: var(--ff); font-size: 16px; font-weight: 900; color: var(--neon); letter-spacing: -0.04em; margin-top: 1px; }
+.gps-offline {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center; padding: 20px;
+}
+.gps-offline-icon { font-size: 36px; opacity: 0.4; }
+.gps-offline-text { font-size: 13px; color: var(--text-2); }
+
+/* Job progress footer */
+.active-job-footer {
+  padding: 14px 20px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.job-progress-bar-wrap { flex: 1; }
+.job-progress-label { display: flex; justify-content: space-between; font-family: var(--fm); font-size: 10px; color: var(--text-3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.job-progress-track { height: 6px; background: var(--bg-tertiary); border-radius: 100px; overflow: hidden; }
+.job-progress-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #007a3d, var(--neon)); transition: width 0.6s ease; }
+
+/* ═══════════════════════
+   MILESTONE FEED
+   ═══════════════════════ */
+.milestone-feed { display: flex; flex-direction: column; gap: 12px; }
+.milestone-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+}
+.milestone-card.awaiting-review {
+  border-color: rgba(255,167,38,0.4);
+}
+.milestone-card-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.milestone-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+.milestone-num.done { background: rgba(0,229,160,0.15); color: var(--neon); }
+.milestone-num.review { background: rgba(255,167,38,0.15); color: var(--accent-amber); }
+.milestone-num.locked { background: var(--bg-tertiary); color: var(--text-3); }
+.milestone-card-title { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.milestone-card-sub { font-size: 12px; color: var(--text-2); margin-top: 1px; }
+.milestone-status-chip {
+  margin-left: auto; flex-shrink: 0;
+  padding: 3px 10px; border-radius: 100px;
+  font-family: var(--fm); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.milestone-status-chip.done { background: rgba(0,229,160,0.12); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.milestone-status-chip.review { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.2); animation: amber-badge-pulse 2s infinite; }
+@keyframes amber-badge-pulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
+.milestone-status-chip.locked { background: var(--bg-tertiary); color: var(--text-3); border: 1px solid var(--border); }
+
+/* Photo Evidence Area */
+.milestone-photos {
+  padding: 12px 16px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.milestone-photo {
+  border-radius: 10px; overflow: hidden;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; transition: all 0.18s; position: relative;
+}
+.milestone-photo:hover { border-color: var(--border-neon); transform: scale(1.02); }
+.milestone-photo-label {
+  position: absolute; bottom: 4px; left: 4px; right: 4px;
+  font-family: var(--fm); font-size: 8px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.7);
+  text-align: center; background: rgba(0,0,0,0.5); border-radius: 4px; padding: 2px;
+}
+[data-theme="light"] .milestone-photo-label { color: rgba(0,0,0,0.6); background: rgba(255,255,255,0.7); }
+
+/* Quality Audit Side-by-Side */
+.quality-audit-area {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.quality-audit-area.visible { display: block; }
+.quality-audit-label { font-family: var(--fm); font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.quality-audit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.audit-panel {
+  border-radius: 10px; border: 1px solid var(--border);
+  background: var(--bg-tertiary); padding: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; transition: all 0.18s;
+}
+.audit-panel:hover { border-color: var(--border-2); }
+.audit-panel-label { font-family: var(--fm); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); }
+.audit-panel-icon { font-size: 32px; }
+.audit-panel-action { font-size: 11px; color: var(--text-2); text-align: center; }
+.audit-panel.upload-zone {
+  border-style: dashed; border-color: var(--border-2);
+  cursor: pointer;
+}
+.audit-panel.upload-zone:hover { border-color: var(--accent-amber); background: rgba(255,167,38,0.04); }
+
+.milestone-actions {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+
+/* ═══════════════════════
+   DOCUMENT VAULT CARD
+   ═══════════════════════ */
+.doc-card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+}
+.doc-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.doc-list { padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+.doc-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.18s;
+}
+.doc-row:hover { border-color: var(--border-neon); background: var(--neon-dim); }
+.doc-row.locked { opacity: 0.5; cursor: not-allowed; }
+.doc-row.locked:hover { border-color: var(--border); background: var(--bg-tertiary); }
+.doc-icon { font-size: 20px; flex-shrink: 0; }
+.doc-name { font-size: 13px; font-weight: 600; color: var(--text-1); flex: 1; }
+.doc-meta { font-size: 11px; color: var(--text-2); margin-top: 1px; }
+.doc-status { flex-shrink: 0; }
+.doc-status-chip {
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 2px 8px; border-radius: 100px;
+}
+.doc-status-chip.ready { background: rgba(0,229,160,0.12); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.doc-status-chip.generating { background: rgba(66,165,245,0.1); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.2); animation: pulse-dot 2s infinite; }
+.doc-status-chip.locked { background: var(--bg-tertiary); color: var(--text-3); border: 1px solid var(--border); }
+
+/* ═══════════════════════
+   VENDOR PROFILE CARD (Sidebar right)
+   ═══════════════════════ */
+.vendor-profile-card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+}
+.vendor-profile-header {
+  padding: 20px 16px; border-bottom: 1px solid var(--border);
+  text-align: center;
+  background: linear-gradient(135deg, rgba(0,229,160,0.04), rgba(66,165,245,0.03));
+}
+.vendor-avatar-large {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-size: 20px; font-weight: 900; color: #fff;
+  margin: 0 auto 12px; border: 3px solid rgba(0,229,160,0.3);
+  box-shadow: 0 0 20px rgba(0,229,160,0.2);
+}
+.vendor-name { font-family: var(--ff); font-size: 16px; font-weight: 800; color: var(--text-1); letter-spacing: -0.03em; }
+.vendor-trade { font-size: 13px; color: var(--text-2); margin-top: 3px; }
+.vendor-score-row {
+  display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 10px;
+}
+.vendor-score-big { font-family: var(--ff); font-size: 22px; font-weight: 900; color: var(--neon); letter-spacing: -0.04em; }
+.vendor-score-stars { font-size: 13px; color: var(--accent-amber); }
+.trust-badges { display: flex; justify-content: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.trust-badge {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 8px;
+  font-family: var(--fm); font-size: 9px; color: var(--text-2);
+}
+.trust-badge.verified { border-color: rgba(0,229,160,0.25); color: var(--neon); background: rgba(0,229,160,0.08); }
+.trust-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.vendor-credentials { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
+.credential-row { display: flex; align-items: center; gap: 10px; }
+.credential-icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(0,229,160,0.1); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.credential-label { font-size: 12px; font-weight: 600; color: var(--text-1); flex: 1; }
+.credential-value { font-family: var(--fm); font-size: 10px; color: var(--neon); }
+.vendor-actions { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ═══════════════════════
+   AI COPILOT CARD
+   ═══════════════════════ */
+.copilot-card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+}
+.copilot-header {
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.copilot-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, #7C3AED, #42A5F5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.copilot-title { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.copilot-sub { font-size: 11px; color: var(--text-2); }
+.copilot-online { margin-left: auto; }
+.copilot-messages { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; }
+.copilot-msg {
+  padding: 10px 12px; border-radius: 10px;
+  font-size: 13px; line-height: 1.5;
+}
+.copilot-msg.ai {
+  background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.15);
+  color: var(--text-1); align-self: flex-start;
+}
+.copilot-msg.alert {
+  background: rgba(255,167,38,0.08); border: 1px solid rgba(255,167,38,0.2);
+  color: var(--accent-amber);
+}
+.copilot-msg.good {
+  background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.15);
+  color: var(--neon);
+}
+.copilot-msg-time { font-family: var(--fm); font-size: 9px; color: var(--text-3); margin-top: 4px; }
+.copilot-input-area {
+  padding: 12px 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 8px;
+}
+.copilot-input {
+  flex: 1; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 8px; padding: 9px 12px;
+  font-family: var(--fb); font-size: 13px; color: var(--text-1);
+  outline: none; transition: border-color 0.2s;
+}
+.copilot-input:focus { border-color: rgba(124,58,237,0.4); }
+.copilot-send-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, #7C3AED, #42A5F5);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0; transition: all 0.2s;
+}
+.copilot-send-btn:hover { opacity: 0.85; transform: scale(1.05); }
+.copilot-send-btn svg { width: 15px; height: 15px; stroke-width: 2.5; }
+
+/* ═══════════════════════
+   NOTIFICATIONS PANEL (rightmost card)
+   ═══════════════════════ */
+.alerts-card {
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 16px; overflow: hidden;
+}
+.alerts-card-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.alerts-list { padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+.alert-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 10px; border-radius: 10px; cursor: pointer; transition: background 0.15s;
+}
+.alert-row:hover { background: var(--bg-tertiary); }
+.alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.alert-dot.green { background: var(--neon); }
+.alert-dot.amber { background: var(--accent-amber); animation: pulse-dot 2s infinite; }
+.alert-dot.blue { background: var(--accent-blue); }
+.alert-text { font-size: 12.5px; color: var(--text-1); line-height: 1.4; }
+.alert-time { font-family: var(--fm); font-size: 9px; color: var(--text-3); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ═══════════════════════════════
+   MODALS (common base)
+   ═══════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.22s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-2);
+  border-radius: 22px;
+  width: 100%; max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal { transform: none; }
+.modal-header {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px; position: relative;
+}
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--border-2); background: var(--bg-tertiary);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); transition: all 0.18s;
+}
+.modal-close:hover { background: var(--neon-dim); color: var(--text-1); border-color: var(--border-neon); }
+.modal-close svg { width: 14px; height: 14px; stroke-width: 2.5; }
+.modal-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.modal-icon.green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.2); }
+.modal-icon.amber { background: rgba(255,167,38,0.12); border: 1px solid rgba(255,167,38,0.2); }
+.modal-icon.blue { background: rgba(66,165,245,0.12); border: 1px solid rgba(66,165,245,0.2); }
+.modal-icon.danger { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.2); }
+.modal-icon.purple { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.2); }
+.modal-title { font-family: var(--ff); font-size: 18px; font-weight: 800; color: var(--text-1); letter-spacing: -0.04em; }
+.modal-subtitle { font-size: 13px; color: var(--text-2); margin-top: 3px; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ═══════════════════════════════
+   MODAL: FUND MILESTONE
+   ═══════════════════════════════ */
+.fund-milestone-stages { display: flex; flex-direction: column; gap: 10px; }
+.fund-stage {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px; border-radius: 12px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.18s;
+}
+.fund-stage:hover { border-color: var(--border-2); }
+.fund-stage.selected { border-color: var(--border-neon); background: var(--neon-dim); }
+.fund-stage-radio {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--border-2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.fund-stage.selected .fund-stage-radio { border-color: var(--neon); background: var(--neon); }
+.fund-stage.selected .fund-stage-radio::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #000; }
+.fund-stage-info { flex: 1; }
+.fund-stage-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
+.fund-stage-desc { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.fund-stage-amount { font-family: var(--ff); font-size: 16px; font-weight: 900; color: var(--neon); letter-spacing: -0.04em; }
+
+.escrow-info-box {
+  margin-top: 16px; padding: 14px 16px;
+  background: rgba(99,91,255,0.07);
+  border: 1px solid rgba(99,91,255,0.2);
+  border-radius: 12px; font-size: 12.5px;
+  color: var(--text-2); line-height: 1.6;
+}
+.escrow-info-box strong { color: var(--text-1); }
+.stripe-logo-inline {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--fm); font-size: 11px; color: #a78bfa;
+}
+
+/* ═══════════════════════════════════
+   MODAL: MILESTONE SIGN-OFF (Review)
+   ═══════════════════════════════════ */
+.signoff-photo-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px;
+}
+.signoff-photo {
+  aspect-ratio: 1; border-radius: 10px; overflow: hidden;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.signoff-photo:hover { border-color: var(--border-neon); }
+.signoff-photo-check {
+  position: absolute; inset: 0;
+  background: rgba(0,229,160,0.12);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s;
+  font-size: 28px;
+}
+.signoff-photo.viewed .signoff-photo-check { opacity: 1; }
+.signoff-photos-required {
+  background: rgba(255,167,38,0.08); border: 1px solid rgba(255,167,38,0.2);
+  border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+  font-size: 12.5px; color: var(--accent-amber);
+  display: flex; align-items: center; gap: 8px;
+}
+.signoff-viewed-count { font-family: var(--fm); font-size: 12px; color: var(--text-3); margin-bottom: 14px; }
+.signoff-viewed-count span { color: var(--neon); font-weight: 700; }
+
+/* Reject Upload Zone */
+.reject-upload-zone {
+  border: 2px dashed rgba(255,71,87,0.3); border-radius: 12px;
+  padding: 24px; text-align: center; cursor: pointer;
+  transition: all 0.18s; display: none;
+}
+.reject-upload-zone.visible { display: block; }
+.reject-upload-zone:hover { border-color: var(--accent-danger); background: rgba(255,71,87,0.04); }
+.reject-upload-icon { font-size: 28px; margin-bottom: 6px; }
+.reject-upload-text { font-size: 13px; color: var(--text-2); }
+.reject-upload-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+/* Completion Gate */
+.completion-gate-notice {
+  background: rgba(255,167,38,0.08); border: 1px solid rgba(255,167,38,0.2);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+  font-size: 13px; color: var(--text-2); line-height: 1.6;
+}
+.completion-gate-notice strong { color: var(--accent-amber); }
+.completion-cert-preview {
+  background: var(--bg-tertiary); border: 1px solid var(--border-neon);
+  border-radius: 12px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px; cursor: pointer;
+  transition: all 0.2s;
+}
+.completion-cert-preview:hover { background: var(--neon-dim); }
+.cert-icon { font-size: 28px; flex-shrink: 0; }
+.cert-preview-title { font-family: var(--ff); font-size: 14px; font-weight: 700; color: var(--text-1); }
+.cert-preview-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.cert-preview-badge {
+  margin-left: auto; padding: 3px 10px; border-radius: 100px;
+  font-family: var(--fm); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.1em; background: var(--neon-dim);
+  border: 1px solid var(--border-neon); color: var(--neon); flex-shrink: 0;
+}
+
+/* ═══════════════════════════════
+   MODAL: DISPUTE RAISE
+   ═══════════════════════════════ */
+.dispute-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.dispute-type-card {
+  padding: 14px; border-radius: 12px;
+  background: var(--bg-tertiary); border: 2px solid var(--border);
+  cursor: pointer; transition: all 0.18s; text-align: center;
+}
+.dispute-type-card:hover { border-color: var(--border-2); }
+.dispute-type-card.selected { border-color: var(--accent-danger); background: rgba(255,71,87,0.05); }
+.dispute-type-icon { font-size: 24px; margin-bottom: 6px; }
+.dispute-type-label { font-size: 13px; font-weight: 700; color: var(--text-1); }
+.dispute-type-sub { font-size: 11px; color: var(--text-2); margin-top: 3px; }
+.dispute-evidence-checklist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.evidence-check-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  background: var(--bg-tertiary); border-radius: 10px; border: 1px solid var(--border);
+}
+.evidence-check-icon { font-size: 16px; flex-shrink: 0; }
+.evidence-check-label { font-size: 13px; color: var(--text-1); flex: 1; }
+.evidence-check-status { font-family: var(--fm); font-size: 10px; }
+.evidence-check-status.auto { color: var(--neon); }
+.evidence-check-status.manual { color: var(--accent-amber); }
+.dispute-textarea {
+  width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; padding: 12px 14px; color: var(--text-1);
+  font-family: var(--fb); font-size: 13px; resize: vertical; min-height: 80px; outline: none;
+  transition: border-color 0.2s;
+}
+.dispute-textarea:focus { border-color: rgba(255,71,87,0.4); }
+.dispute-sla-badge {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.15);
+  border-radius: 10px; padding: 12px 14px; margin-top: 12px;
+}
+.dispute-sla-badge-icon { font-size: 18px; flex-shrink: 0; }
+.dispute-sla-text { font-size: 13px; color: var(--text-2); }
+.dispute-sla-text strong { color: var(--neon); }
+
+/* ══════════════════════════════
+   TOAST
+   ══════════════════════════════ */
+.toast-container {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; border-radius: 12px; min-width: 280px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+  animation: toast-in 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  font-size: 13.5px; font-weight: 500; color: var(--text-1);
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: none; }
+}
+.toast.success { background: var(--bg-card); border: 1px solid rgba(0,229,160,0.3); }
+.toast.warning { background: var(--bg-card); border: 1px solid rgba(255,167,38,0.3); }
+.toast.info { background: var(--bg-card); border: 1px solid rgba(66,165,245,0.3); }
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+
+/* ══════════════════════════════════════
+   EN ROUTE HUD (Live Tracking Banner)
+   ══════════════════════════════════════ */
+.en-route-hud {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 350;
+  background: linear-gradient(90deg, #020D06 0%, #061A14 50%, #020D06 100%);
+  border-bottom: 1.5px solid rgba(0,229,160,0.4);
+  box-shadow: 0 2px 20px rgba(0,229,160,0.12);
+  padding: 9px 32px;
+  align-items: center;
+  gap: 14px;
+  height: 44px;
+}
+.en-route-hud.active { display: flex; }
+.hud-pulse-ring {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--neon); flex-shrink: 0;
+  animation: hud-ring 1.6s ease-in-out infinite;
+}
+@keyframes hud-ring {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,229,160,0.7); }
+  50%      { box-shadow: 0 0 0 8px rgba(0,229,160,0); }
+}
+.hud-live-chip {
+  font-family: var(--fm); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--neon); background: rgba(0,229,160,0.1);
+  border: 1px solid rgba(0,229,160,0.25); border-radius: 5px;
+  padding: 2px 9px; flex-shrink: 0;
+}
+.hud-vendor-info {
+  flex: 1; font-size: 13px; color: rgba(180,210,195,0.9);
+}
+.hud-vendor-info strong { color: var(--neon); font-weight: 700; }
+.hud-eta-pill {
+  font-family: var(--fm); font-size: 11px; color: var(--text-2);
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 100px; padding: 4px 12px; flex-shrink: 0;
+}
+.hud-map-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--neon); color: #001A0F;
+  border: none; border-radius: 8px; padding: 6px 14px;
+  font-family: var(--ff); font-size: 12px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.hud-map-btn:hover { background: #00C88A; box-shadow: var(--neon-glow-sm); }
+.hud-map-btn svg { width: 13px; height: 13px; stroke-width: 2.5; }
+/* When HUD active, push everything down by HUD height */
+body.hud-active .topnav { top: 44px; }
+body.hud-active .sidebar { top: 44px; }
+body.hud-active .main { margin-top: calc(var(--topnav-h) + 44px); }
+
+/* ═══════════════════════════════════════════
+   ESCROW THREE-STATE FLOW
+   ═══════════════════════════════════════════ */
+.escrow-three-state {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border-2);
+  margin-bottom: 16px; position: relative;
+}
+.escrow-three-state::before,
+.escrow-three-state::after {
+  content: '›';
+  position: absolute; top: 50%; transform: translateY(-50%);
+  color: var(--text-3); font-size: 16px; pointer-events: none; z-index: 1;
+}
+.escrow-three-state::before { left: calc(33.33% - 7px); }
+.escrow-three-state::after  { left: calc(66.66% - 7px); }
+.est-cell {
+  padding: 12px 8px; text-align: center;
+  border-right: 1px solid var(--border);
+}
+.est-cell:last-child { border-right: none; }
+.est-cell-funded   { background: rgba(0,229,160,0.05); }
+.est-cell-escrow   { background: rgba(255,167,38,0.06); }
+.est-cell-released { background: rgba(66,165,245,0.05); }
+.est-label {
+  font-family: var(--fm); font-size: 8px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 5px;
+}
+.est-cell-funded .est-label   { color: var(--neon); }
+.est-cell-escrow .est-label   { color: var(--accent-amber); }
+.est-cell-released .est-label { color: var(--accent-blue); }
+.est-amount {
+  font-family: var(--ff); font-size: 1.05rem; font-weight: 900;
+  letter-spacing: -0.04em; color: var(--text-1);
+}
+.est-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+
+/* ══════════════════════════════════════
+   HOME PASSPORT
+   ══════════════════════════════════════ */
+.passport-entry {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 10px; margin: 0 8px 4px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.18s;
+}
+.passport-entry:hover { border-color: var(--border-neon); background: var(--neon-dim); }
+.passport-entry-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.passport-entry-info { flex: 1; overflow: hidden; }
+.passport-entry-name {
+  font-size: 12px; font-weight: 600; color: var(--text-1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.passport-entry-meta { font-family: var(--fm); font-size: 9px; color: var(--text-3); margin-top: 1px; }
+.passport-dl-btn {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.18s; flex-shrink: 0;
+  color: var(--neon);
+}
+.passport-dl-btn:hover { background: rgba(0,229,160,0.2); }
+.passport-dl-btn svg { width: 12px; height: 12px; stroke-width: 2.5; }
+.passport-pending-note {
+  font-size: 11px; color: var(--text-3); padding: 6px 18px 10px;
+  text-align: center; font-style: italic;
+}
+.passport-nav-badge {
+  background: rgba(0,229,160,0.12); color: var(--neon);
+  font-family: var(--fm); font-size: 8px; font-weight: 600;
+  border: 1px solid rgba(0,229,160,0.2); border-radius: 100px;
+  padding: 1px 7px; letter-spacing: 0.08em; margin-left: auto;
+}
+
+/* ══════════════════════════════════════
+   GATED RELEASE — Confirmation block
+   ══════════════════════════════════════ */
+.release-confirm-block {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(0,229,160,0.05); border: 1px solid var(--border-neon);
+  border-radius: 12px; padding: 14px; margin-bottom: 16px; cursor: pointer;
+}
+.release-confirm-block input[type=checkbox] {
+  width: 17px; height: 17px; accent-color: var(--neon);
+  margin-top: 1px; flex-shrink: 0; cursor: pointer;
+}
+.release-confirm-label {
+  font-size: 13px; color: var(--text-2); line-height: 1.55; cursor: pointer;
+}
+.release-confirm-label strong { color: var(--text-1); }
+
+/* ══════════════════════════════════════
+   ETA MAP MODAL
+   ══════════════════════════════════════ */
+.eta-map-mock {
+  background: var(--bg-tertiary); border: 1px solid var(--border-neon);
+  border-radius: 14px; height: 180px; margin-bottom: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; position: relative; overflow: hidden;
+}
+.eta-map-mock::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,160,0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.eta-map-icon { font-size: 32px; position: relative; z-index: 1; }
+.eta-map-label { font-family: var(--fm); font-size: 11px; color: var(--neon); position: relative; z-index: 1; }
+.eta-map-sub { font-size: 11px; color: var(--text-3); position: relative; z-index: 1; }
+.eta-stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.eta-stat-block {
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px; text-align: center;
+}
+.eta-stat-val { font-family: var(--ff); font-size: 1.3rem; font-weight: 900; letter-spacing: -0.04em; }
+.eta-stat-val.green { color: var(--neon); }
+.eta-stat-val.amber { color: var(--accent-amber); }
+.eta-stat-val.blue  { color: var(--accent-blue); }
+.eta-stat-lbl { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+
+
+.field-label { font-family: var(--fm); font-size: 11px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.field-input {
+  width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; padding: 11px 14px; color: var(--text-1);
+  font-family: var(--fb); font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--border-neon); }
+.field-group { margin-bottom: 16px; }
+
+/* ══════════════════
+   MISC
+   ══════════════════ */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+.info-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.info-row:last-child { border-bottom: none; }
+.info-row-label { font-size: 12px; color: var(--text-2); }
+.info-row-value { font-size: 13px; font-weight: 600; color: var(--text-1); font-family: var(--fm); }
+.info-row-value.green { color: var(--neon); }
+.info-row-value.amber { color: var(--accent-amber); }
+.info-row-value.red { color: var(--accent-danger); }
+
+/* 48h SLA clock in disputes */
+.sla-clock {
+  display: flex; gap: 8px; margin: 16px 0;
+  justify-content: center;
+}
+.sla-block {
+  background: var(--bg-tertiary); border: 1px solid var(--border-2);
+  border-radius: 10px; padding: 10px 14px; text-align: center; min-width: 64px;
+}
+.sla-block-val { font-family: var(--ff); font-size: 22px; font-weight: 900; color: var(--accent-danger); letter-spacing: -0.04em; }
+.sla-block-label { font-family: var(--fm); font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+/* ══════════════════════════════
+   EN ROUTE STATE · PROJECT CARD
+   ══════════════════════════════ */
+.status-en-route .view-map-btn {
+  animation: neon-pulse-btn 1.4s ease-in-out infinite;
+  border-color: var(--neon) !important;
+  color: var(--neon) !important;
+}
+@keyframes neon-pulse-btn {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,229,160,0); background: rgba(0,229,160,0.1); }
+  50% { box-shadow: 0 0 18px 4px rgba(0,229,160,0.35); background: rgba(0,229,160,0.2); }
+}
+.live-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3);
+  border-radius: 100px; padding: 3px 9px;
+  font-family: var(--fm); font-size: 9px; font-weight: 700;
+  color: var(--neon); text-transform: uppercase; letter-spacing: 0.12em;
+  animation: live-badge-pulse 1.5s ease-in-out infinite;
+}
+.live-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--neon);
+  animation: pulse-dot 1.5s infinite;
+}
+@keyframes live-badge-pulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(0,229,160,0); }
+  50%{ box-shadow: 0 0 10px 2px rgba(0,229,160,0.25); }
+}
+.en-route-map-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
+  opacity: 0;
+  border-top: none;
+}
+.status-en-route .en-route-map-panel {
+  max-height: 200px;
+  opacity: 1;
+  border-top: 1px solid var(--border-neon);
+}
+
+/* ══════════════════════════════
+   STRIPE SECURE SHIELD
+   ══════════════════════════════ */
+.stripe-shield {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(99,91,255,0.1); border: 1px solid rgba(99,91,255,0.2);
+  border-radius: 6px; padding: 2px 7px;
+  font-family: var(--fm); font-size: 9px;
+  color: #8b84ff; letter-spacing: 0.06em; white-space: nowrap;
+  cursor: help;
+}
+.stripe-shield svg { width: 9px; height: 9px; flex-shrink: 0; }
+
+/* ══════════════════════════════
+   COMPLETION STATE · JOB SUCCESS
+   ══════════════════════════════ */
+.project-card.job-complete {
+  border-color: rgba(0,229,160,0.35) !important;
+  background: linear-gradient(135deg, rgba(0,229,160,0.03), rgba(66,165,245,0.02)) !important;
+}
+.project-card.job-complete .card-header {
+  background: linear-gradient(135deg, rgba(0,229,160,0.05), transparent);
+  border-bottom-color: rgba(0,229,160,0.2) !important;
+}
+.complete-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.25);
+  border-radius: 10px; padding: 8px 14px;
+  font-family: var(--fm); font-size: 10px; color: var(--neon);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+}
+.passport-download-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,229,160,0.08));
+  border: 1.5px solid var(--neon);
+  border-radius: 12px;
+  font-family: var(--ff); font-size: 14px; font-weight: 800;
+  color: var(--neon); cursor: pointer; transition: all 0.2s;
+  letter-spacing: -0.02em;
+  box-shadow: var(--neon-glow-sm);
+}
+.passport-download-btn:hover {
+  background: rgba(0,229,160,0.2);
+  box-shadow: var(--neon-glow);
+  transform: translateY(-1px);
+}
+.passport-download-btn svg { width: 18px; height: 18px; stroke-width: 2.2; flex-shrink: 0; }
+.completion-cert-section {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0,229,160,0.2);
+  text-align: center;
+}
+.completion-cert-section .cert-stamp {
+  font-family: var(--fm); font-size: 9px; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-top: 8px;
+}
+
+/* ══════════════════════════════
+   AEO SEARCH OVERLAY
+   ══════════════════════════════ */
+.aeo-search-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(8,12,18,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.aeo-search-overlay.active { opacity: 1; pointer-events: all; }
+.aeo-search-overlay-box {
+  text-align: center; max-width: 440px; padding: 20px;
+}
+.aeo-search-spinner {
+  width: 56px; height: 56px;
+  border: 2px solid rgba(0,229,160,0.15);
+  border-top-color: var(--neon);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.aeo-search-heading {
+  font-family: var(--ff); font-size: 20px; font-weight: 800;
+  color: var(--text-1); letter-spacing: -0.04em; margin-bottom: 6px;
+}
+.aeo-search-sub {
+  font-size: 13px; color: var(--text-2); margin-bottom: 20px;
+}
+.aeo-search-progress-bar {
+  height: 3px; background: var(--bg-tertiary);
+  border-radius: 100px; overflow: hidden; margin-bottom: 12px;
+}
+.aeo-search-progress-fill {
+  height: 100%; background: linear-gradient(90deg, #007a3d, var(--neon));
+  border-radius: 100px;
+  animation: search-fill 2.2s ease-in-out forwards;
+}
+@keyframes search-fill {
+  0% { width: 0%; }
+  40% { width: 45%; }
+  70% { width: 72%; }
+  100% { width: 95%; }
+}
+.aeo-search-steps {
+  display: flex; flex-direction: column; gap: 8px; text-align: left;
+}
+.aeo-search-step {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text-3);
+  font-family: var(--fm); opacity: 0;
+  animation: step-appear 0.4s ease forwards;
+}
+.aeo-search-step.s1 { animation-delay: 0.2s; }
+.aeo-search-step.s2 { animation-delay: 0.7s; }
+.aeo-search-step.s3 { animation-delay: 1.3s; }
+.aeo-search-step .step-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--neon); flex-shrink: 0;
+}
+@keyframes step-appear {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ═══════════════════════
+   RESPONSIVE
+   ═══════════════════════ */
+@media (max-width: 1100px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-right { order: -1; display: grid; grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.mobile-open { transform: none; width: 268px; }
+  .topnav { left: 0; padding: 0 16px; }
+  .main { margin-left: 0; padding: 20px 16px; }
+  .dashboard-right { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ EN ROUTE HUD ══════════════ -->
+<!-- Activates when data-vendor-live="true" is set on <body> -->
+<div class="en-route-hud" id="enRouteHud">
+  <div class="hud-pulse-ring"></div>
+  <span class="hud-live-chip">Live</span>
+  <div class="hud-vendor-info">
+    <strong>Jake Donovan (Master Electrician)</strong> is En Route ·
+    Kitchen Extension — 147 Abingdon Road, SW1A
+  </div>
+  <span class="hud-eta-pill">ETA · ~28 min</span>
+  <button class="hud-map-btn" onclick="openModal('etaMapModal')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+    </svg>
+    View ETA Map
+  </button>
+</div>
+
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    </div>
+    <div class="logo-text-wrap">
+      <div class="logo-text">TradeMatch</div>
+      <div class="logo-sub">Homeowner Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">My Projects</div>
+
+    <a class="nav-item active" href="#" onclick="showToast('My Projects','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div>
+      <span class="nav-label">My Projects</span>
+      <span class="nav-badge">3</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="openModal('escrowModal')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg></div>
+      <span class="nav-label">My Wallet</span>
+      <span class="nav-badge-amber" id="walletNavBadge" style="display:none">Review</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Messages','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></div>
+      <span class="nav-label">Message Centre</span>
+      <span class="nav-badge">2</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="showToast('Quote comparison','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/></svg></div>
+      <span class="nav-label">Compare Quotes</span>
+      <span class="nav-badge">5</span>
+    </a>
+
+    <div class="nav-section-label" style="margin-top:8px">Safety & Trust</div>
+
+    <a class="nav-item" href="#" onclick="showToast('Verification Hub','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg></div>
+      <span class="nav-label">Verification Hub</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="openModal('disputeRaiseModal')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+      <span class="nav-label">Dispute Centre</span>
+    </a>
+
+    <a class="nav-item" href="#" onclick="openModal('docVaultModal')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+      <span class="nav-label">Document Vault</span>
+    </a>
+
+    <!-- 5 · HOME PASSPORT -->
+    <div class="nav-section-label" style="margin-top:8px">
+      Home Passport
+      <span class="passport-nav-badge">1 Cert</span>
+    </div>
+    <div class="passport-entry" onclick="showToast('Opening Fuse Box Replacement certificate…','success')">
+      <div class="passport-entry-icon">⚡</div>
+      <div class="passport-entry-info">
+        <div class="passport-entry-name">Fuse Box Replacement</div>
+        <div class="passport-entry-meta">Jan 2026 · £1,240 · NICEIC</div>
+      </div>
+      <button class="passport-dl-btn" onclick="event.stopPropagation();showToast('Downloading TM-CERT-2026-0112.pdf…','success')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+      </button>
+    </div>
+    <p class="passport-pending-note">+2 certs pending (active projects)</p>
+
+    <div class="nav-section-label" style="margin-top:8px">Account</div>
+
+    <a class="nav-item" href="#" onclick="showToast('Account Settings','info')">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+      <span class="nav-label">Settings</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="profile-btn" onclick="toggleProfileDropdown()">
+      <div class="avatar" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">SB</div>
+      <div class="avatar-info">
+        <div class="avatar-name">Sarah Bennett</div>
+        <div class="avatar-role">Homeowner · London SW1</div>
+      </div>
+      <div class="profile-chevron"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg></div>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown-header">
+        <div class="profile-dropdown-avatar" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">SB</div>
+        <div>
+          <div class="profile-dropdown-name">Sarah Bennett</div>
+          <div class="profile-dropdown-tier" style="color:var(--accent-blue)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:11px;height:11px;stroke-width:2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+            Verified Homeowner
+          </div>
+        </div>
+      </div>
+      <button class="pd-item" onclick="closeProfileDropdown();showToast('My Profile','info')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+        My Profile
+      </button>
+      <button class="pd-item" onclick="closeProfileDropdown();openModal('escrowModal')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18-3a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3m18-3V6"/></svg>
+        Escrow Wallet
+      </button>
+      <button class="pd-item" onclick="closeProfileDropdown();openModal('docVaultModal')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+        Document Vault
+      </button>
+      <div class="pd-divider"></div>
+      <button class="pd-item danger" onclick="closeProfileDropdown();showToast('Signed out','warning')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<header class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+  </button>
+
+  <div class="breadcrumb">
+    <span>TradeMatch</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">My Projects</span>
+  </div>
+
+  <!-- AEO Natural Language Intent Bar -->
+  <div class="aeo-bar" id="aeoBar">
+    <div class="aeo-bar-inner" onclick="focusAeo()">
+      <div class="aeo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+      </div>
+      <input type="text" class="aeo-input" id="aeoInput"
+        placeholder="Find me a certified electrician for a consumer unit upgrade in NW1 with High Show-Up Score…"
+        onfocus="showAeoResults()"
+        onblur="setTimeout(()=>hideAeoResults(),200)"
+        onkeydown="handleAeoKey(event)">
+      <span class="aeo-kbd">AI Search</span>
+    </div>
+    <div class="aeo-results" id="aeoResults">
+      <div class="aeo-results-header">Top 3 AI-Matched Vendors · AI Visible Only</div>
+      <div class="aeo-vendor-card" onclick="showToast('Opening Jake Donovan profile…','success')">
+        <div class="aeo-vendor-avatar">JD</div>
+        <div>
+          <div class="aeo-vendor-name">Jake Donovan</div>
+          <div class="aeo-vendor-meta">Master Electrician · SW1A · 127 jobs · <span style="color:var(--neon)">●</span> Available now</div>
+          <div style="margin-top:4px"><span class="aeo-ai-badge"><span class="aeo-ai-dot"></span>AI Visible</span></div>
+        </div>
+        <div class="aeo-vendor-score">
+          <div class="aeo-score-val">9.8</div>
+          <div class="aeo-score-label">Trust Score</div>
+        </div>
+      </div>
+      <div class="aeo-vendor-card" onclick="showToast('Opening Marcus Reed profile…','success')">
+        <div class="aeo-vendor-avatar" style="background:linear-gradient(135deg,#2563EB,#7C3AED)">MR</div>
+        <div>
+          <div class="aeo-vendor-name">Marcus Reed</div>
+          <div class="aeo-vendor-meta">Master Plumber · SW3 · 89 jobs · <span style="color:var(--neon)">●</span> Available now</div>
+          <div style="margin-top:4px"><span class="aeo-ai-badge"><span class="aeo-ai-dot"></span>AI Visible</span></div>
+        </div>
+        <div class="aeo-vendor-score">
+          <div class="aeo-score-val">9.4</div>
+          <div class="aeo-score-label">Trust Score</div>
+        </div>
+      </div>
+      <div class="aeo-vendor-card" onclick="showToast('Opening Priya Shah profile…','success')">
+        <div class="aeo-vendor-avatar" style="background:linear-gradient(135deg,#D97706,#F59E0B)">PS</div>
+        <div>
+          <div class="aeo-vendor-name">Priya Shah</div>
+          <div class="aeo-vendor-meta">Gas Engineer · SE1 · 62 jobs · <span style="color:var(--neon)">●</span> Available today</div>
+          <div style="margin-top:4px"><span class="aeo-ai-badge"><span class="aeo-ai-dot"></span>AI Visible</span></div>
+        </div>
+        <div class="aeo-vendor-score">
+          <div class="aeo-score-val">9.1</div>
+          <div class="aeo-score-label">Trust Score</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topnav-right">
+    <!-- Escrow Balance Pill - pulses amber when milestone pending -->
+    <button class="escrow-pill" id="escrowTopPill" onclick="openModal('escrowModal')">
+      <div class="escrow-pill-icon">🔐</div>
+      <div class="escrow-pill-body">
+        <div class="escrow-pill-label">In Escrow</div>
+        <div class="escrow-pill-amount">£4,250</div>
+      </div>
+    </button>
+    <span class="stripe-shield" title="Funds are secured and held by Stripe Connect — TradeMatch cannot move them without your approval">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      Stripe Secure
+    </span>
+
+    <button class="notif-pill" onclick="showToast('3 new alerts','info')">
+      <div class="notif-pill-bell">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span class="notif-pill-badge">3</span>
+      </div>
+      <span class="notif-pill-label">Alerts</span>
+    </button>
+
+    <!-- + Post a Job -->
+    <button class="btn btn-primary" onclick="openModal('postJobModal')">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      Post a Job
+    </button>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme">
+      <div class="toggle-knob" id="toggleKnob">
+        <svg xmlns="http://www.w3.org/2000/svg" id="themeIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+        </svg>
+      </div>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════ AEO SEARCH OVERLAY ══════════════ -->
+<div class="aeo-search-overlay" id="aeoSearchOverlay" onclick="this.classList.remove('active')">
+  <div class="aeo-search-overlay-box">
+    <div class="aeo-search-spinner"></div>
+    <div class="aeo-search-heading">Searching Verified Pros…</div>
+    <div class="aeo-search-sub" id="aeoSearchQueryDisplay">Finding certified tradespeople for your query</div>
+    <div class="aeo-search-progress-bar">
+      <div class="aeo-search-progress-fill" id="aeoProgressFill"></div>
+    </div>
+    <div class="aeo-search-steps">
+      <div class="aeo-search-step s1"><div class="step-dot"></div>Scanning 847 verified tradespeople in your area…</div>
+      <div class="aeo-search-step s2"><div class="step-dot"></div>Cross-referencing Trust Scores, certifications & availability…</div>
+      <div class="aeo-search-step s3"><div class="step-dot"></div>Applying AI matching algorithm — ranking top candidates…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MAIN CONTENT ══════════════ -->
+<main class="main" id="main">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <div class="page-eyebrow">TradeMatch Protected Workspace</div>
+      <h1 class="page-title">Good morning, Sarah 👋</h1>
+      <p class="page-sub">You have 1 active project, £4,250 in secure escrow, and 1 milestone awaiting your review.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary" onclick="openModal('postJobModal')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+        Post New Job
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STRIPE CUSTODY BADGE ══ -->
+  <div class="escrow-custody-card" id="escrowCustodyCard">
+    <div class="escrow-custody-banner">
+      <div class="stripe-badge">
+        <div class="stripe-badge-dot"></div>
+        Stripe Custody
+      </div>
+      <div class="escrow-custody-message">
+        <strong>Funds held in secure Stripe Escrow</strong> — TradeMatch cannot move these funds without your explicit milestone approval. Your money is protected at every stage.
+      </div>
+      <button class="btn btn-ghost" style="font-size:12px;padding:6px 12px" onclick="openModal('escrowModal')">View Details</button>
+    </div>
+
+    <!-- 1 · THREE-STATE ESCROW FLOW (Funded → In Escrow → Released) -->
+    <div style="padding: 14px 20px 0;">
+      <div class="escrow-three-state">
+        <div class="est-cell est-cell-funded">
+          <div class="est-label">Funded</div>
+          <div class="est-amount">£4,250</div>
+          <div class="est-sub">Your bank</div>
+        </div>
+        <div class="est-cell est-cell-escrow">
+          <div class="est-label">In Escrow</div>
+          <div class="est-amount">£3,000</div>
+          <div class="est-sub">TM custody</div>
+        </div>
+        <div class="est-cell est-cell-released">
+          <div class="est-label">Released</div>
+          <div class="est-amount">£1,250</div>
+          <div class="est-sub">To vendor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Amber pending-release alert — shows when vendor submits milestone -->
+    <div class="release-alert" id="releaseAlert">
+      <div class="release-alert-icon">🔔</div>
+      <div class="release-alert-text">
+        Milestone 2 Review Requested by Jake Donovan
+        <span>Jake has uploaded 4 progress photos. Review them to approve or reject the £1,500 release.</span>
+      </div>
+      <button class="btn btn-amber" onclick="openModal('signoffModal')">Review &amp; Release →</button>
+    </div>
+
+    <!-- Escrow Milestones Summary -->
+    <div class="escrow-milestones">
+      <div class="escrow-milestone-row">
+        <div class="milestone-step-badge done">✓</div>
+        <div class="milestone-row-name">Milestone 1 — Site Preparation &amp; Materials</div>
+        <div class="milestone-row-amount">£1,250</div>
+        <div class="milestone-row-status done">Released</div>
+      </div>
+      <div class="escrow-milestone-row" style="border-color:rgba(255,167,38,0.3)">
+        <div class="milestone-step-badge active">2</div>
+        <div class="milestone-row-name">Milestone 2 — First Fix &amp; Framework</div>
+        <div class="milestone-row-amount">£1,500</div>
+        <div class="milestone-row-status pending">⏳ Awaiting Review</div>
+      </div>
+      <div class="escrow-milestone-row">
+        <div class="milestone-step-badge locked">3</div>
+        <div class="milestone-row-name">Milestone 3 — Second Fix &amp; Finishing</div>
+        <div class="milestone-row-amount">£1,000</div>
+        <div class="milestone-row-status locked">Locked</div>
+      </div>
+      <div class="escrow-milestone-row">
+        <div class="milestone-step-badge locked">4</div>
+        <div class="milestone-row-name">Milestone 4 — Final Sign-off &amp; Certificate</div>
+        <div class="milestone-row-amount" style="color:var(--accent-amber)">£500</div>
+        <div class="milestone-row-status locked">Final 20% · Cert Required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN DASHBOARD GRID ══ -->
+  <div class="dashboard-grid">
+
+    <!-- LEFT: Active Job + Milestone Feed -->
+    <div class="dashboard-left">
+
+      <!-- Active Job — TradeMatch Live -->
+      <div>
+        <div class="section-header">
+          <div>
+            <div class="section-title">🏗️ Kitchen Extension — Active Project</div>
+            <div class="section-sub">147 Abingdon Road, London SW1A · Started 14 Feb 2026</div>
+          </div>
+          <button class="btn btn-secondary" style="font-size:12px" onclick="toggleGps()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+            <span id="gpsToggleLabel">Track Arrival</span>
+          </button>
+        </div>
+
+        <div class="active-job-card status-en-route" id="activeJobCard" data-vendor-status="en-route">
+          <div class="active-job-header">
+            <div>
+              <div class="active-job-title">Jake Donovan · Electrician</div>
+              <div class="active-job-meta">En Route · 28 min ETA · Show-Up Score 97%</div>
+            </div>
+            <span class="live-badge"><span class="live-badge-dot"></span>Live · En Route</span>
+          </div>
+
+          <!-- En Route Auto-Expanded Map Panel -->
+          <div class="en-route-map-panel" id="enRouteMapPanel">
+            <div style="padding:14px 16px; display:flex; align-items:center; justify-content:space-between; background:rgba(0,229,160,0.04);">
+              <div>
+                <div style="font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-1)">Jake is on his way 📍</div>
+                <div style="font-size:11px;color:var(--text-2);margin-top:2px">GPS active · ETA <strong style="color:var(--neon)">~28 minutes</strong> · 147 Abingdon Road</div>
+              </div>
+              <button class="btn btn-primary view-map-btn" style="font-size:11px;padding:6px 12px" onclick="openModal('etaMapModal')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:13px;height:13px"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                View Live Map
+              </button>
+            </div>
+          </div>
+
+          <!-- Map Area: GPS Online -->
+          <div class="gps-map-area" id="gpsMapArea">
+            <div class="map-grid"></div>
+            <div class="map-road-h" style="top:35%"></div>
+            <div class="map-road-h" style="top:65%"></div>
+            <div class="map-road-v" style="left:30%"></div>
+            <div class="map-road-v" style="left:70%"></div>
+            <div class="vendor-pin" id="vendorPin" style="display:none; left:40%; top:45%;">
+              <div class="vendor-pin-dot">JD</div>
+              <div class="vendor-pin-label">Jake · En Route</div>
+            </div>
+            <div class="home-pin">
+              <div class="home-pin-dot">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+              </div>
+              <div class="home-pin-label">Your Home</div>
+            </div>
+            <div class="eta-chip" id="etaChip" style="display:none">
+              <div class="eta-chip-label">ETA</div>
+              <div class="eta-chip-time">28 min</div>
+            </div>
+            <!-- Offline state -->
+            <div class="gps-offline" id="gpsOffline">
+              <div class="gps-offline-icon">📍</div>
+              <div class="gps-offline-text">GPS tracking offline<br><small>Enable to see real-time arrival</small></div>
+            </div>
+          </div>
+
+          <div class="active-job-footer">
+            <div class="job-progress-bar-wrap">
+              <div class="job-progress-label">
+                <span>Project Progress</span>
+                <span>45% complete</span>
+              </div>
+              <div class="job-progress-track">
+                <div class="job-progress-fill" style="width:45%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone Feed -->
+      <div>
+        <div class="section-header">
+          <div>
+            <div class="section-title">📋 Milestone Feed</div>
+            <div class="section-sub">Approve or reject each stage to control escrow releases</div>
+          </div>
+        </div>
+
+        <div class="milestone-feed">
+
+          <!-- M1: Completed -->
+          <div class="milestone-card">
+            <div class="milestone-card-header">
+              <div class="milestone-num done">✓</div>
+              <div>
+                <div class="milestone-card-title">Milestone 1 — Site Preparation &amp; Materials</div>
+                <div class="milestone-card-sub">Approved 22 Feb 2026 · £1,250 released</div>
+              </div>
+              <div class="milestone-status-chip done">Approved</div>
+            </div>
+            <div class="milestone-photos">
+              <div class="milestone-photo">🏗️<div class="milestone-photo-label">Before</div></div>
+              <div class="milestone-photo">📦<div class="milestone-photo-label">Materials</div></div>
+              <div class="milestone-photo">✅<div class="milestone-photo-label">Site Ready</div></div>
+            </div>
+          </div>
+
+          <!-- M2: Awaiting Review -->
+          <div class="milestone-card awaiting-review">
+            <div class="milestone-card-header">
+              <div class="milestone-num review">2</div>
+              <div>
+                <div class="milestone-card-title">Milestone 2 — First Fix &amp; Framework</div>
+                <div class="milestone-card-sub">Submitted today · £1,500 awaiting your approval</div>
+              </div>
+              <div class="milestone-status-chip review">⏳ Review Required</div>
+            </div>
+            <div class="milestone-photos" id="signoffPhotos">
+              <div class="milestone-photo" id="photo1" onclick="markViewed('photo1')">🔧<div class="milestone-photo-label">Tap to view</div><div class="signoff-photo-check">✓</div></div>
+              <div class="milestone-photo" id="photo2" onclick="markViewed('photo2')">⚡<div class="milestone-photo-label">Tap to view</div><div class="signoff-photo-check">✓</div></div>
+              <div class="milestone-photo" id="photo3" onclick="markViewed('photo3')">🏗️<div class="milestone-photo-label">Tap to view</div><div class="signoff-photo-check">✓</div></div>
+              <div class="milestone-photo" id="photo4" onclick="markViewed('photo4')">📐<div class="milestone-photo-label">Tap to view</div><div class="signoff-photo-check">✓</div></div>
+            </div>
+            <div class="quality-audit-area" id="qualityAudit">
+              <div class="quality-audit-label">Quality Audit — Compare Evidence</div>
+              <div class="quality-audit-grid">
+                <div class="audit-panel">
+                  <div class="audit-panel-label">Vendor Photos</div>
+                  <div class="audit-panel-icon">📸</div>
+                  <div class="audit-panel-action">4 photos submitted by Jake</div>
+                </div>
+                <div class="audit-panel upload-zone" onclick="triggerRejectUpload()">
+                  <div class="audit-panel-label">Your Evidence</div>
+                  <div class="audit-panel-icon">📷</div>
+                  <div class="audit-panel-action">Tap to upload your own site photo for comparison</div>
+                </div>
+              </div>
+            </div>
+            <div class="milestone-actions" id="milestoneActions">
+              <button class="btn btn-danger" style="font-size:12px" onclick="openRejectFlow()">
+                ✗ Reject Milestone
+              </button>
+              <button class="btn btn-primary" id="approveBtn" style="font-size:12px" disabled onclick="openModal('signoffModal')">
+                ✓ Approve &amp; Release £1,500
+              </button>
+              <button class="btn btn-amber" style="font-size:12px;margin-left:auto" onclick="openDisputeWithMilestone('M2-KE-001')">
+                ⚠ Report Issue
+              </button>
+              <span id="photosRequiredHint" style="font-size:11px;color:var(--accent-amber);align-self:center;">
+                View all 4 photos to approve
+              </span>
+            </div>
+          </div>
+
+          <!-- M3: Locked -->
+          <div class="milestone-card" style="opacity:0.6">
+            <div class="milestone-card-header">
+              <div class="milestone-num locked">3</div>
+              <div>
+                <div class="milestone-card-title">Milestone 3 — Second Fix &amp; Finishing</div>
+                <div class="milestone-card-sub">Unlocks after Milestone 2 is approved · £1,000</div>
+              </div>
+              <div class="milestone-status-chip locked">Locked</div>
+            </div>
+          </div>
+
+          <!-- M4: Final 20% gate -->
+          <div class="milestone-card" style="opacity:0.6">
+            <div class="milestone-card-header">
+              <div class="milestone-num locked">4</div>
+              <div>
+                <div class="milestone-card-title">Milestone 4 — Final Sign-off</div>
+                <div class="milestone-card-sub">Final 20% · Requires Completion Certificate preview · £500</div>
+              </div>
+              <div class="milestone-status-chip locked" style="background:rgba(255,167,38,0.08);color:var(--accent-amber);border-color:rgba(255,167,38,0.2)">Cert Required</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ COMPLETED JOBS ══ -->
+      <div>
+        <div class="section-header">
+          <div>
+            <div class="section-title">✅ Completed Projects</div>
+            <div class="section-sub">All milestones paid · Home Passport certificates available</div>
+          </div>
+        </div>
+
+        <!-- Completed Project Card -->
+        <div class="active-job-card job-complete" data-job-status="completed" style="padding:0;overflow:hidden;">
+          <div class="active-job-header" style="background:linear-gradient(135deg,rgba(0,229,160,0.06),transparent);border-bottom:1px solid rgba(0,229,160,0.2);">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <div class="active-job-title" style="margin:0">Fuse Box Replacement</div>
+                <span style="font-family:var(--fm);font-size:9px;background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.25);border-radius:100px;padding:2px 8px;color:var(--neon);text-transform:uppercase;letter-spacing:0.1em;">Complete</span>
+              </div>
+              <div class="active-job-meta">Marcus Reed · NICEIC Electrician · Jan 2026 · £1,240</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-family:var(--ff);font-size:18px;font-weight:900;color:var(--neon);letter-spacing:-0.04em;">£1,240</div>
+              <div style="font-family:var(--fm);font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;">Fully Released</div>
+            </div>
+          </div>
+
+          <div style="padding:14px 16px;">
+            <div class="complete-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;stroke-width:2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+              All 3 milestones approved · NICEIC certified
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">
+              <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:18px;margin-bottom:4px;">✓</div>
+                <div style="font-family:var(--fm);font-size:9px;color:var(--neon);text-transform:uppercase;letter-spacing:0.08em;">M1 Done</div>
+              </div>
+              <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:18px;margin-bottom:4px;">✓</div>
+                <div style="font-family:var(--fm);font-size:9px;color:var(--neon);text-transform:uppercase;letter-spacing:0.08em;">M2 Done</div>
+              </div>
+              <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:18px;margin-bottom:4px;">✓</div>
+                <div style="font-family:var(--fm);font-size:9px;color:var(--neon);text-transform:uppercase;letter-spacing:0.08em;">M3 Done</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="completion-cert-section">
+            <button class="passport-download-btn" onclick="downloadHomePassport('TM-CERT-2026-0112','Fuse Box Replacement')">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+              Download Home Passport (PDF)
+            </button>
+            <div class="cert-stamp">Cert ID: TM-CERT-2026-0112 · NICEIC · Issued 28 Jan 2026</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Vendor Card + Copilot + Alerts -->
+    <div class="dashboard-right">
+
+      <!-- Vendor Profile -->
+      <div class="vendor-profile-card">
+        <div class="vendor-profile-header">
+          <div class="vendor-avatar-large">JD</div>
+          <div class="vendor-name">Jake Donovan</div>
+          <div class="vendor-trade">Master Electrician · 8 yrs experience</div>
+          <div class="vendor-score-row">
+            <div class="vendor-score-big">9.8</div>
+            <div style="color:var(--text-2);font-size:13px">/10</div>
+            <div class="vendor-score-stars">★★★★★</div>
+          </div>
+          <div class="trust-badges">
+            <div class="trust-badge verified"><div class="trust-badge-dot"></div>ID Verified</div>
+            <div class="trust-badge verified"><div class="trust-badge-dot"></div>PLI Active</div>
+            <div class="trust-badge verified"><div class="trust-badge-dot"></div>DBS Clear</div>
+          </div>
+        </div>
+        <div class="vendor-credentials">
+          <div class="credential-row">
+            <div class="credential-icon">🛡️</div>
+            <div class="credential-label">PLI Insurance</div>
+            <div class="credential-value">AXA · £2M · Valid</div>
+          </div>
+          <div class="credential-row">
+            <div class="credential-icon">📋</div>
+            <div class="credential-label">Show-Up Score</div>
+            <div class="credential-value">97% (12mo avg)</div>
+          </div>
+          <div class="credential-row">
+            <div class="credential-icon">⭐</div>
+            <div class="credential-label">Reviews</div>
+            <div class="credential-value">4.92 · 127 jobs</div>
+          </div>
+          <div class="credential-row">
+            <div class="credential-icon">✅</div>
+            <div class="credential-label">Completion Rate</div>
+            <div class="credential-value">99.2%</div>
+          </div>
+        </div>
+        <div class="vendor-actions">
+          <button class="btn btn-blue" style="width:100%;font-size:13px" onclick="showToast('Opening message thread…','info')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
+            Message Jake
+          </button>
+          <button class="btn btn-danger" style="width:100%;font-size:13px" onclick="openModal('disputeRaiseModal')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            Raise a Dispute
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Copilot -->
+      <div class="copilot-card">
+        <div class="copilot-header">
+          <div class="copilot-icon">🤖</div>
+          <div>
+            <div class="copilot-title">AI Copilot</div>
+            <div class="copilot-sub">Your project protection assistant</div>
+          </div>
+          <span class="aeo-ai-badge copilot-online"><span class="aeo-ai-dot"></span>Online</span>
+        </div>
+        <div class="copilot-messages" id="copilotMessages">
+          <div class="copilot-msg amber">
+            🔔 Jake's milestone 2 submission is ready for your review. 4 photos uploaded. I've verified the GPS check-in timestamp matches the site address.
+            <div class="copilot-msg-time">Today · 09:41 AM</div>
+          </div>
+          <div class="copilot-msg good">
+            ✅ Jake's PLI insurance (AXA £2M) was re-verified this morning. Expires 31 Dec 2026 — no action needed.
+            <div class="copilot-msg-time">Today · 08:15 AM</div>
+          </div>
+          <div class="copilot-msg ai">
+            💡 Based on similar kitchen extension projects in SW1, Jake's milestone 2 timeline (day 14) is 2 days ahead of schedule. Good sign.
+            <div class="copilot-msg-time">Yesterday · 4:30 PM</div>
+          </div>
+        </div>
+        <div class="copilot-input-area">
+          <input class="copilot-input" type="text" id="copilotInput" placeholder="Ask about your project…" onkeydown="handleCopilotMsg(event)">
+          <button class="copilot-send-btn" onclick="sendCopilotMsg()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alerts-card">
+        <div class="alerts-card-header">
+          <div class="section-title" style="font-size:14px">🔔 Recent Alerts</div>
+          <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px" onclick="showToast('All marked as read','success')">Mark all read</button>
+        </div>
+        <div class="alerts-list">
+          <div class="alert-row">
+            <div class="alert-dot amber"></div>
+            <div>
+              <div class="alert-text">Milestone 2 awaiting your review · £1,500 held</div>
+              <div class="alert-time">3 min ago</div>
+            </div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-dot green"></div>
+            <div>
+              <div class="alert-text">Jake is 28 mins away — GPS tracking active</div>
+              <div class="alert-time">12 min ago</div>
+            </div>
+          </div>
+          <div class="alert-row">
+            <div class="alert-dot blue"></div>
+            <div>
+              <div class="alert-text">Completion Certificate will be generated on final payment</div>
+              <div class="alert-time">Today · 08:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ════════════════════════════════════════════════════════
+     MODALS
+     ════════════════════════════════════════════════════════ -->
+
+<!-- ESCROW WALLET MODAL -->
+<div class="modal-overlay" id="escrowModal" onclick="handleOverlayClick(event,'escrowModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon blue">🔐</div>
+      <div>
+        <div class="modal-title">Escrow Wallet</div>
+        <div class="modal-subtitle">Your funds are protected by Stripe · TradeMatch Custody</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('escrowModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="stripe-badge" style="margin-bottom:14px;display:inline-flex">
+        <div class="stripe-badge-dot"></div>
+        Stripe Escrow · Custody ID #TM-ESC-4821
+      </div>
+      <div class="escrow-info-box" style="margin-top:0;margin-bottom:16px">
+        <strong>Security Guarantee:</strong> Funds held in secure Stripe Escrow — TradeMatch cannot move these without your milestone approval. Every release is triggered only by you.
+      </div>
+      <div class="info-row"><div class="info-row-label">Total Project Value</div><div class="info-row-value">£4,250</div></div>
+      <div class="info-row"><div class="info-row-label">Released to Vendor</div><div class="info-row-value green">£1,250</div></div>
+      <div class="info-row"><div class="info-row-label">Held in Escrow</div><div class="info-row-value" style="color:var(--accent-blue)">£3,000</div></div>
+      <div class="info-row"><div class="info-row-label">Pending Review (M2)</div><div class="info-row-value amber">£1,500</div></div>
+      <div class="info-row"><div class="info-row-label">Remaining Locked</div><div class="info-row-value">£1,500</div></div>
+      <div class="divider"></div>
+      <button class="btn btn-primary" style="width:100%" onclick="closeModal('escrowModal');openModal('fundModal')">
+        Fund Next Milestone
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FUND MILESTONE MODAL -->
+<div class="modal-overlay" id="fundModal" onclick="handleOverlayClick(event,'fundModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon green">💷</div>
+      <div>
+        <div class="modal-title">Fund a Milestone</div>
+        <div class="modal-subtitle">Choose which stage to fund next into escrow</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('fundModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="fund-milestone-stages">
+        <div class="fund-stage selected" onclick="selectFundStage(this)">
+          <div class="fund-stage-radio"></div>
+          <div class="fund-stage-info">
+            <div class="fund-stage-name">Milestone 3 — Second Fix &amp; Finishing</div>
+            <div class="fund-stage-desc">Expected completion: ~15 March 2026</div>
+          </div>
+          <div class="fund-stage-amount">£1,000</div>
+        </div>
+        <div class="fund-stage" onclick="selectFundStage(this)" style="opacity:0.5;cursor:not-allowed">
+          <div class="fund-stage-radio"></div>
+          <div class="fund-stage-info">
+            <div class="fund-stage-name">Milestone 4 — Final Sign-off</div>
+            <div class="fund-stage-desc">Unlocks after Milestone 3 approved</div>
+          </div>
+          <div class="fund-stage-amount">£500</div>
+        </div>
+      </div>
+      <div class="escrow-info-box">
+        Your payment goes directly into <span class="stripe-logo-inline">⚡ Stripe Escrow</span> — <strong>not to Jake's bank account.</strong> Funds are only released when you approve each milestone photo submission.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('fundModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('fundModal');showToast('£1,000 sent to Stripe Escrow for Milestone 3','success')">
+        Fund £1,000 into Escrow
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MILESTONE SIGN-OFF MODAL -->
+<div class="modal-overlay" id="signoffModal" onclick="handleOverlayClick(event,'signoffModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon amber">🔍</div>
+      <div>
+        <div class="modal-title">Milestone 2 Review</div>
+        <div class="modal-subtitle">Review all 4 photos before releasing £1,500</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('signoffModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="signoff-photos-required" id="signoffRequired">
+        ⚠️ You must view all 4 photos before the Release Funds button becomes active.
+      </div>
+      <div class="signoff-viewed-count" id="viewedCount">
+        <span id="viewedNum">0</span> of 4 photos viewed
+      </div>
+      <div class="signoff-photo-grid">
+        <div class="signoff-photo" id="sp1" onclick="markSignoffPhoto('sp1',1)">🔧<div class="signoff-photo-check">✓</div></div>
+        <div class="signoff-photo" id="sp2" onclick="markSignoffPhoto('sp2',2)">⚡<div class="signoff-photo-check">✓</div></div>
+        <div class="signoff-photo" id="sp3" onclick="markSignoffPhoto('sp3',3)">🏗️<div class="signoff-photo-check">✓</div></div>
+        <div class="signoff-photo" id="sp4" onclick="markSignoffPhoto('sp4',4)">📐<div class="signoff-photo-check">✓</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="info-row"><div class="info-row-label">Milestone</div><div class="info-row-value">M2 — First Fix &amp; Framework</div></div>
+      <div class="info-row"><div class="info-row-label">Submitted by</div><div class="info-row-value">Jake Donovan</div></div>
+      <div class="info-row"><div class="info-row-label">Release amount</div><div class="info-row-value green">£1,500</div></div>
+      <div class="info-row"><div class="info-row-label">Remaining in escrow after</div><div class="info-row-value">£1,500</div></div>
+
+      <!-- 3 · GATED APPROVAL — confirmation gate before release -->
+      <div class="divider"></div>
+      <div class="release-confirm-block" onclick="toggleReleaseConfirm()">
+        <input type="checkbox" id="releaseConfirmCb" />
+        <label class="release-confirm-label" for="releaseConfirmCb">
+          I confirm I have reviewed all <strong id="viewedNumConfirm">0</strong> of 4 milestone photos and am satisfied with the quality of work.
+          Releasing <strong>£1,500</strong> from escrow to Jake Donovan is <strong>irreversible</strong> and creates a permanent audit record (Ref: <span style="font-family:var(--fm);font-size:11px;color:var(--neon)">TM-REL-<span id="auditRefNum">XXXXXX</span></span>).
+        </label>
+      </div>
+
+      <!-- Reject flow -->
+      <div class="reject-upload-zone" id="rejectUploadZone" onclick="showToast('Photo upload opened','info')">
+        <div class="reject-upload-icon">📷</div>
+        <div class="reject-upload-text">Upload your own site photo as evidence</div>
+        <div class="reject-upload-sub">This dual-sided evidence is reviewed by our Trust &amp; Safety team within 48 hours</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="openRejectFlowModal()">✗ Reject &amp; Freeze</button>
+      <button class="btn btn-primary" id="releaseFundsBtn" disabled onclick="releaseFunds()">
+        🔒 Confirm Inspection First
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL PAYMENT GATE — Completion Certificate Required -->
+<div class="modal-overlay" id="finalPaymentModal" onclick="handleOverlayClick(event,'finalPaymentModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon green">🏆</div>
+      <div>
+        <div class="modal-title">Final Payment — Milestone 4</div>
+        <div class="modal-subtitle">Last 20% · Completion Certificate required</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('finalPaymentModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="completion-gate-notice">
+        <strong>🔒 Security Gate Active</strong><br>
+        The final £500 cannot be released until you have previewed the Completion Certificate. This certificate is your permanent record of verified work — review it carefully before approving.
+      </div>
+      <div class="completion-cert-preview" id="certPreviewCard" onclick="previewCert()">
+        <div class="cert-icon">📜</div>
+        <div>
+          <div class="cert-preview-title">Digital Completion Certificate</div>
+          <div class="cert-preview-sub">Kitchen Extension · 147 Abingdon Rd · Jake Donovan · £4,250</div>
+        </div>
+        <div class="cert-preview-badge" id="certBadge">Preview Required</div>
+      </div>
+      <div class="divider"></div>
+      <button class="btn btn-primary" style="width:100%" id="finalReleaseBtn" disabled onclick="finalRelease()">
+        Release Final £500 →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DISPUTE RAISE MODAL -->
+<div class="modal-overlay" id="disputeRaiseModal" onclick="handleOverlayClick(event,'disputeRaiseModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon danger">⚖️</div>
+      <div>
+        <div class="modal-title">Raise a Dispute</div>
+        <div class="modal-subtitle">Escrow will be frozen. We resolve in 48 hours.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('disputeRaiseModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <!-- Milestone ID (auto-populated, triggers 48h SLA clock) -->
+      <div id="disputeMilestoneRow" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(255,167,38,0.07);border:1px solid rgba(255,167,38,0.2);border-radius:10px;font-size:12.5px;color:var(--accent-amber)">
+        ⚠ Dispute linked to Milestone <strong id="disputeMilestoneId">—</strong> · 48-hour SLA clock starts on submission · Escrow frozen immediately
+      </div>
+      <div class="dispute-type-grid">
+        <div class="dispute-type-card selected" onclick="selectDisputeType(this)">
+          <div class="dispute-type-icon">🚫</div>
+          <div class="dispute-type-label">Work Not Done</div>
+          <div class="dispute-type-sub">Milestone incomplete or absent</div>
+        </div>
+        <div class="dispute-type-card" onclick="selectDisputeType(this)">
+          <div class="dispute-type-icon">⚠️</div>
+          <div class="dispute-type-label">Poor Quality</div>
+          <div class="dispute-type-sub">Work below agreed standard</div>
+        </div>
+        <div class="dispute-type-card" onclick="selectDisputeType(this)">
+          <div class="dispute-type-icon">❌</div>
+          <div class="dispute-type-label">No-Show</div>
+          <div class="dispute-type-sub">Vendor didn't arrive</div>
+        </div>
+        <div class="dispute-type-card" onclick="selectDisputeType(this)">
+          <div class="dispute-type-icon">💬</div>
+          <div class="dispute-type-label">Communication</div>
+          <div class="dispute-type-sub">Unresponsive or misleading</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Describe the issue</div>
+        <textarea class="dispute-textarea" rows="3" placeholder="What has gone wrong? Be specific about what was agreed vs. what happened…"></textarea>
+      </div>
+
+      <div class="dispute-evidence-checklist">
+        <div class="evidence-check-row">
+          <div class="evidence-check-icon">📸</div>
+          <div class="evidence-check-label">Milestone photos (auto-captured from Jake's submission)</div>
+          <div class="evidence-check-status auto">✓ Auto-attached</div>
+        </div>
+        <div class="evidence-check-row">
+          <div class="evidence-check-icon">📍</div>
+          <div class="evidence-check-label">GPS check-in logs (TradeMatch Live data)</div>
+          <div class="evidence-check-status auto">✓ Auto-attached</div>
+        </div>
+        <div class="evidence-check-row">
+          <div class="evidence-check-icon">💬</div>
+          <div class="evidence-check-label">Message thread (all communication is logged)</div>
+          <div class="evidence-check-status auto">✓ Auto-attached</div>
+        </div>
+        <div class="evidence-check-row">
+          <div class="evidence-check-icon">📷</div>
+          <div class="evidence-check-label">Your own site photos (optional but recommended)</div>
+          <div class="evidence-check-status manual" onclick="showToast('Upload opened','info')" style="cursor:pointer">+ Upload</div>
+        </div>
+      </div>
+
+      <div class="dispute-sla-badge">
+        <div class="dispute-sla-badge-icon">⏱️</div>
+        <div class="dispute-sla-text"><strong>48-Hour SLA Guarantee</strong> — Our Trust &amp; Safety team will review your case and provide a resolution or mediation plan within 48 hours. Escrow is frozen immediately on submission.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('disputeRaiseModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="submitDispute()">🔒 Freeze Escrow &amp; Submit Dispute</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENT VAULT MODAL -->
+<div class="modal-overlay" id="docVaultModal" onclick="handleOverlayClick(event,'docVaultModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon blue">📁</div>
+      <div>
+        <div class="modal-title">Document Vault</div>
+        <div class="modal-subtitle">Kitchen Extension · Jake Donovan</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('docVaultModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body" style="padding:12px">
+      <div class="doc-list">
+        <div class="doc-row" onclick="showToast('Opening quote PDF…','success')">
+          <div class="doc-icon">📋</div>
+          <div><div class="doc-name">Accepted Quote #Q-2026-0442</div><div class="doc-meta">PDF · 14 Feb 2026 · £4,250</div></div>
+          <div class="doc-status"><span class="doc-status-chip ready">Ready</span></div>
+        </div>
+        <div class="doc-row" onclick="showToast('Opening PLI certificate…','success')">
+          <div class="doc-icon">🛡️</div>
+          <div><div class="doc-name">Jake's PLI Insurance Certificate</div><div class="doc-meta">AXA · £2M · Expires Dec 2026</div></div>
+          <div class="doc-status"><span class="doc-status-chip ready">Verified</span></div>
+        </div>
+        <div class="doc-row" onclick="showToast('Opening milestone 1 record…','success')">
+          <div class="doc-icon">✅</div>
+          <div><div class="doc-name">Milestone 1 — Payment Record</div><div class="doc-meta">£1,250 released · 22 Feb 2026</div></div>
+          <div class="doc-status"><span class="doc-status-chip ready">Signed</span></div>
+        </div>
+        <div class="doc-row locked">
+          <div class="doc-icon">📜</div>
+          <div><div class="doc-name">Digital Completion Certificate</div><div class="doc-meta">Generated on final payment approval</div></div>
+          <div class="doc-status"><span class="doc-status-chip locked">🔒 Locked</span></div>
+        </div>
+      </div>
+      <div style="padding:12px 4px">
+        <div class="escrow-info-box" style="margin:0">
+          💡 Your <strong>Digital Completion Certificate</strong> (Home Passport) is generated automatically when the final 20% payment is released. It includes all milestone photos, vendor credentials, and payment history.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POST A JOB MODAL -->
+<div class="modal-overlay" id="postJobModal" onclick="handleOverlayClick(event,'postJobModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon green">🏠</div>
+      <div>
+        <div class="modal-title">Post a New Job</div>
+        <div class="modal-subtitle">AI will match you with verified tradespeople</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('postJobModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <div class="field-label">What kind of work do you need?</div>
+        <input class="field-input" type="text" placeholder="e.g. Bathroom renovation, boiler installation…">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Postcode</div>
+        <input class="field-input" type="text" placeholder="SW1A 1AA" value="SW1A">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Minimum Trust Score</div>
+        <input class="field-input" type="range" min="7" max="10" value="9" step="0.1" oninput="document.getElementById('trustScoreVal').textContent=this.value" style="padding:8px 0">
+        <div style="text-align:right;font-family:var(--fm);font-size:12px;color:var(--neon);margin-top:4px"><span id="trustScoreVal">9.0</span>/10</div>
+      </div>
+      <div class="aeo-ai-badge" style="margin-bottom:16px">
+        <span class="aeo-ai-dot"></span>
+        AI will only match vendors with "AI Visible" toggle active
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('postJobModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('postJobModal');showToast('Job posted! Matching AI-visible vendors…','success')">Post &amp; Find Matches →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ETA MAP MODAL (2 · Live Tracking HUD) -->
+<div class="modal-overlay" id="etaMapModal" onclick="handleOverlayClick(event,'etaMapModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon green">📍</div>
+      <div>
+        <div class="modal-title">Live ETA — Jake Donovan</div>
+        <div class="modal-subtitle">GPS tracking active · Kitchen Extension</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('etaMapModal')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="eta-map-mock">
+        <div class="eta-map-icon">📍</div>
+        <div class="eta-map-label">Jake is ~2.3 miles away</div>
+        <div class="eta-map-sub">Google Maps / Mapbox integration point in production</div>
+      </div>
+      <div class="eta-stats-row">
+        <div class="eta-stat-block">
+          <div class="eta-stat-val green">28 min</div>
+          <div class="eta-stat-lbl">ETA</div>
+        </div>
+        <div class="eta-stat-block">
+          <div class="eta-stat-val blue">2.3 mi</div>
+          <div class="eta-stat-lbl">Distance</div>
+        </div>
+        <div class="eta-stat-block">
+          <div class="eta-stat-val amber">10:14</div>
+          <div class="eta-stat-lbl">Arrival at</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('etaMapModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+/* ════════════════════════════════
+   STATE
+   ════════════════════════════════ */
+let sidebarCollapsed = false;
+let gpsActive = false;
+let signoffPhotosViewed = new Set();
+let signoffModalPhotosViewed = new Set();
+let certPreviewed = false;
+
+/* ════════════════════════════════
+   INIT
+   ════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  // Show pending release alert (simulate vendor submitted M2)
+  document.getElementById('releaseAlert').classList.add('visible');
+  document.getElementById('walletNavBadge').style.display = 'flex';
+  // Apply pending style to escrow custody card
+  document.getElementById('escrowCustodyCard').classList.add('pending-release');
+  document.getElementById('escrowTopPill').classList.add('pending-release');
+  document.getElementById('escrowTopPill').querySelector('.escrow-pill-label').textContent = 'Review Needed';
+  // Show quality audit
+  document.getElementById('qualityAudit').classList.add('visible');
+  // 2 · Activate En Route HUD (vendor is live — in production this is driven by data-vendor-live attr)
+  document.getElementById('enRouteHud').classList.add('active');
+  document.body.classList.add('hud-active');
+  // 3 · Generate audit reference number for the gated release
+  document.getElementById('auditRefNum').textContent = Math.floor(100000 + Math.random() * 900000);
+  // Show photos required hint
+  document.getElementById('photosRequiredHint').style.display = 'flex';
+});
+
+/* ════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════ */
+function toggleSidebar() {
+  sidebarCollapsed = !sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('topnav').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('main').classList.toggle('collapsed', sidebarCollapsed);
+}
+
+/* ════════════════════════════════
+   THEME
+   ════════════════════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const icon = document.getElementById('themeIcon');
+  if (isDark) {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';
+  } else {
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>';
+  }
+}
+
+/* ════════════════════════════════
+   GPS TOGGLE
+   ════════════════════════════════ */
+function toggleGps() {
+  gpsActive = !gpsActive;
+  const vendorPin = document.getElementById('vendorPin');
+  const etaChip = document.getElementById('etaChip');
+  const liveBadge = document.getElementById('liveBadge');
+  const gpsOffline = document.getElementById('gpsOffline');
+  const label = document.getElementById('gpsToggleLabel');
+
+  if (gpsActive) {
+    vendorPin.style.display = 'flex';
+    etaChip.style.display = 'block';
+    liveBadge.style.display = 'flex';
+    gpsOffline.style.display = 'none';
+    label.textContent = 'GPS Active';
+    showToast('GPS tracking enabled — Jake is 28 min away', 'success');
+  } else {
+    vendorPin.style.display = 'none';
+    etaChip.style.display = 'none';
+    liveBadge.style.display = 'none';
+    gpsOffline.style.display = 'flex';
+    label.textContent = 'Track Arrival';
+    showToast('GPS tracking disabled', 'warning');
+  }
+}
+
+/* ════════════════════════════════
+   AEO SEARCH
+   ════════════════════════════════ */
+function focusAeo() {
+  document.getElementById('aeoInput').focus();
+}
+function showAeoResults() {
+  document.getElementById('aeoResults').classList.add('open');
+}
+function hideAeoResults() {
+  document.getElementById('aeoResults').classList.remove('open');
+}
+function handleAeoKey(e) {
+  if (e.key === 'Escape') hideAeoResults();
+  if (e.key === 'Enter') {
+    const query = document.getElementById('aeoInput').value.trim();
+    if (!query) return;
+    hideAeoResults();
+    triggerAeoSearchOverlay(query);
+  }
+}
+
+function triggerAeoSearchOverlay(query) {
+  const overlay = document.getElementById('aeoSearchOverlay');
+  const display = document.getElementById('aeoSearchQueryDisplay');
+  if (display) display.textContent = '"' + query + '"';
+  // Reset animation by replacing the progress fill
+  const fill = document.getElementById('aeoProgressFill');
+  if (fill) {
+    fill.style.animation = 'none';
+    fill.offsetHeight; // reflow
+    fill.style.animation = '';
+  }
+  overlay.classList.add('active');
+  // Auto-dismiss after 2.4s and show results
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    document.getElementById('aeoInput').value = '';
+    showAeoResults();
+    showToast('✅ 3 AI-matched verified tradespeople found for your query', 'success');
+  }, 2400);
+}
+
+/* ════════════════════════════════
+   HOME PASSPORT DOWNLOAD
+   ════════════════════════════════ */
+function downloadHomePassport(certId, jobName) {
+  showToast('📄 Downloading ' + certId + '.pdf — ' + jobName + ' · NICEIC Certified', 'success');
+}
+
+/* ════════════════════════════════
+   MILESTONE PHOTO VIEWED (inline feed)
+   ════════════════════════════════ */
+function markViewed(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('viewed');
+    signoffPhotosViewed.add(id);
+    checkInlineMilestoneReady();
+  }
+}
+
+function checkInlineMilestoneReady() {
+  const allPhotos = ['photo1','photo2','photo3','photo4'];
+  const allViewed = allPhotos.every(id => signoffPhotosViewed.has(id));
+  document.getElementById('approveBtn').disabled = !allViewed;
+  document.getElementById('photosRequiredHint').style.display = allViewed ? 'none' : 'block';
+}
+
+/* ════════════════════════════════
+   REJECT FLOW (inline)
+   ════════════════════════════════ */
+function openRejectFlow() {
+  document.getElementById('qualityAudit').classList.add('visible');
+  showToast('Upload your own photo as evidence before submitting', 'warning');
+}
+
+function triggerRejectUpload() {
+  showToast('Camera/file upload opened for evidence photo', 'info');
+}
+
+/* ════════════════════════════════
+   SIGNOFF MODAL PHOTOS
+   ════════════════════════════════ */
+const signoffPhotoMap = { sp1: false, sp2: false, sp3: false, sp4: false };
+function markSignoffPhoto(id, num) {
+  signoffPhotoMap[id] = true;
+  document.getElementById(id).classList.add('viewed');
+  const viewed = Object.values(signoffPhotoMap).filter(Boolean).length;
+  document.getElementById('viewedNum').textContent = viewed;
+  // 3 · Sync the confirmation label counter
+  const confirmCounter = document.getElementById('viewedNumConfirm');
+  if (confirmCounter) confirmCounter.textContent = viewed;
+  if (viewed >= 4) {
+    // Unlock the confirmation checkbox
+    document.getElementById('signoffRequired').style.display = 'none';
+  }
+}
+
+function releaseFunds() {
+  closeModal('signoffModal');
+  // Clear pending state
+  document.getElementById('releaseAlert').classList.remove('visible');
+  document.getElementById('escrowCustodyCard').classList.remove('pending-release');
+  document.getElementById('escrowTopPill').classList.remove('pending-release');
+  document.getElementById('escrowTopPill').querySelector('.escrow-pill-label').textContent = 'In Escrow';
+  document.getElementById('escrowTopPill').querySelector('.escrow-pill-amount').textContent = '£1,500';
+  document.getElementById('walletNavBadge').style.display = 'none';
+  // 1 · Update the three-state escrow wallet to reflect the release
+  const cells = document.querySelectorAll('.est-amount');
+  if (cells.length >= 3) {
+    cells[1].textContent = '£1,500'; // In Escrow reduced
+    cells[2].textContent = '£2,750'; // Released increased
+  }
+  showToast('✓ £1,500 released to Jake Donovan via Stripe · Ref: TM-REL-' + Date.now().toString().slice(-6), 'success');
+}
+
+function openRejectFlowModal() {
+  document.getElementById('rejectUploadZone').classList.add('visible');
+  document.getElementById('releaseFundsBtn').disabled = true;
+  showToast('Escrow frozen — upload evidence to proceed with dispute', 'warning');
+}
+
+/* ════════════════════════════════
+   FINAL 20% GATE (Cert required)
+   ════════════════════════════════ */
+function previewCert() {
+  certPreviewed = true;
+  document.getElementById('certBadge').textContent = '✓ Previewed';
+  document.getElementById('certBadge').style.background = 'var(--neon-dim)';
+  document.getElementById('certBadge').style.color = 'var(--neon)';
+  document.getElementById('certBadge').style.borderColor = 'var(--border-neon)';
+  document.getElementById('finalReleaseBtn').disabled = false;
+  showToast('Certificate previewed — you can now release the final payment', 'success');
+}
+
+function finalRelease() {
+  closeModal('finalPaymentModal');
+  showToast('🏆 Final £500 released. Project complete! Certificate generated.', 'success');
+}
+
+/* ════════════════════════════════
+   DISPUTE
+   ════════════════════════════════ */
+function openDisputeWithMilestone(milestoneId) {
+  // 4 · Pre-populate milestone_id and activate 48h SLA trigger
+  const row = document.getElementById('disputeMilestoneRow');
+  const idEl = document.getElementById('disputeMilestoneId');
+  if (row && idEl) {
+    idEl.textContent = milestoneId;
+    row.style.display = 'block';
+  }
+  openModal('disputeRaiseModal');
+}
+
+function selectDisputeType(el) {
+  document.querySelectorAll('.dispute-type-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function submitDispute() {
+  const milestoneId = document.getElementById('disputeMilestoneId').textContent;
+  const caseRef = 'TM-2026-' + Math.floor(10000 + Math.random() * 90000);
+  closeModal('disputeRaiseModal');
+  showToast('🔒 Escrow frozen · Case #' + caseRef + ' opened · SLA clock: 48h · Milestone: ' + milestoneId, 'warning');
+}
+
+/* ════════════════════════════════
+   GATED RELEASE CONFIRM TOGGLE
+   ════════════════════════════════ */
+function toggleReleaseConfirm() {
+  const cb = document.getElementById('releaseConfirmCb');
+  cb.checked = !cb.checked;
+  const btn = document.getElementById('releaseFundsBtn');
+  const allViewed = Object.values(signoffPhotoMap).every(Boolean);
+  if (cb.checked && allViewed) {
+    btn.disabled = false;
+    btn.textContent = '✓ Release £1,500 to Jake Donovan';
+  } else if (cb.checked && !allViewed) {
+    showToast('Please view all 4 milestone photos first', 'warning');
+    cb.checked = false;
+  } else {
+    btn.disabled = true;
+    btn.textContent = '🔒 Confirm Inspection First';
+  }
+}
+
+/* ════════════════════════════════
+   FUND STAGE SELECT
+   ════════════════════════════════ */
+function selectFundStage(el) {
+  if (el.style.opacity === '0.5') return;
+  document.querySelectorAll('.fund-stage').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ════════════════════════════════
+   AI COPILOT
+   ════════════════════════════════ */
+const copilotResponses = [
+  "Based on Jake's GPS data and the milestone timeline, work is progressing 2 days ahead of schedule. No concerns flagged.",
+  "Your PLI insurance verification was auto-renewed this morning. Jake's AXA £2M policy is valid until Dec 2026.",
+  "I've reviewed the milestone 2 photos. The first-fix electrical work appears consistent with the scope agreed in your quote.",
+  "If you're unsure about the quality, use the Quality Audit toggle to upload a comparison photo — this auto-attaches to the escrow record.",
+];
+let copilotIdx = 0;
+
+function sendCopilotMsg() {
+  const input = document.getElementById('copilotInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const messages = document.getElementById('copilotMessages');
+  // Add user msg
+  const userDiv = document.createElement('div');
+  userDiv.className = 'copilot-msg ai';
+  userDiv.style.background = 'rgba(66,165,245,0.08)';
+  userDiv.style.borderColor = 'rgba(66,165,245,0.15)';
+  userDiv.innerHTML = msg + '<div class="copilot-msg-time">Just now</div>';
+  messages.appendChild(userDiv);
+  // AI response
+  setTimeout(() => {
+    const aiDiv = document.createElement('div');
+    aiDiv.className = 'copilot-msg ai';
+    aiDiv.innerHTML = '🤖 ' + copilotResponses[copilotIdx % copilotResponses.length] + '<div class="copilot-msg-time">Just now</div>';
+    messages.appendChild(aiDiv);
+    copilotIdx++;
+    messages.scrollTop = messages.scrollHeight;
+  }, 800);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function handleCopilotMsg(e) {
+  if (e.key === 'Enter') sendCopilotMsg();
+}
+
+/* ════════════════════════════════
+   MODALS
+   ════════════════════════════════ */
+function openModal(id) {
+  const overlay = document.getElementById(id);
+  if (overlay) {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeModal(id) {
+  const overlay = document.getElementById(id);
+  if (overlay) {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function handleOverlayClick(e, id) {
+  if (e.target === e.currentTarget) closeModal(id);
+}
+
+/* ════════════════════════════════
+   PROFILE DROPDOWN
+   ════════════════════════════════ */
+function toggleProfileDropdown() {
+  document.getElementById('profileDropdown').classList.toggle('open');
+}
+function closeProfileDropdown() {
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#profileDropdown') && !e.target.closest('.profile-btn')) {
+    closeProfileDropdown();
+  }
+});
+
+/* ════════════════════════════════
+   TOAST
+   ════════════════════════════════ */
+function showToast(msg, type = 'success') {
+  const icons = { success: '✅', warning: '⚠️', info: 'ℹ️' };
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]}</span>${msg}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(20px)'; setTimeout(() => toast.remove(), 300); }, 3500);
+}
+
+/* Keyboard shortcuts */
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    focusAeo();
+  }
+  if (e.key === 'Escape') {
+    hideAeoResults();
+    document.getElementById('aeoSearchOverlay').classList.remove('active');
+  }
+});
+</script>
+
+</body>
+</html>

@@ -124,7 +124,7 @@ interface StatusBadgeProps extends Omit<BadgeProps, 'variant'> {
 
 const StatusBadge = React.forwardRef<HTMLSpanElement, StatusBadgeProps>(
   ({ status, ...props }, ref) => {
-    const statusConfig = {
+    const statusMap: Record<string, { variant: BadgeProps['variant']; dot: boolean; dotColor?: BadgeProps['dotColor'] }> = {
       active: { variant: 'neon' as const, dot: true, dotColor: 'neon' as const },
       pending: { variant: 'amber' as const, dot: true, dotColor: 'amber' as const },
       completed: { variant: 'blue' as const, dot: true, dotColor: 'blue' as const },
@@ -133,7 +133,8 @@ const StatusBadge = React.forwardRef<HTMLSpanElement, StatusBadgeProps>(
       warning: { variant: 'amber' as const, dot: true, dotColor: 'amber' as const },
       info: { variant: 'blue' as const, dot: true, dotColor: 'blue' as const },
       neutral: { variant: 'grey' as const, dot: false },
-    }[status];
+    };
+    const statusConfig = statusMap[status] || statusMap.neutral;
 
     return (
       <Badge 

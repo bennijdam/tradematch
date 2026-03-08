@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics & Intelligence — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:        #07090F;
+  --bg2:       #0C1018;
+  --bg3:       #111827;
+  --bg4:       #161F30;
+  --card:      #0F1623;
+  --card2:     #141E2E;
+  --neon:      #00E5A0;
+  --neon-d:    rgba(0,229,160,.09);
+  --neon-glow: 0 0 32px rgba(0,229,160,.38);
+  --neon-sm:   0 0 16px rgba(0,229,160,.22);
+  --blue:      #3B82F6;
+  --blue-d:    rgba(59,130,246,.10);
+  --amber:     #F59E0B;
+  --amber-d:   rgba(245,158,11,.10);
+  --danger:    #EF4444;
+  --danger-d:  rgba(239,68,68,.10);
+  --purple:    #A855F7;
+  --purple-d:  rgba(168,85,247,.10);
+  --cyan:      #06B6D4;
+  --gold:      #F59E0B;
+  --text1:     #EDF2FF;
+  --text2:     #8892A4;
+  --text3:     #3D4A5C;
+  --bdr:       rgba(255,255,255,.06);
+  --bdr2:      rgba(255,255,255,.11);
+  --bdr-n:     rgba(0,229,160,.22);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sw: 268px;
+  --nh: 72px;
+}
+[data-theme="light"] {
+  --bg:#F1F5F9; --bg2:#FFFFFF; --bg3:#F8FAFC; --bg4:#EFF6FF;
+  --card:#FFFFFF; --card2:#F0F9FF;
+  --neon:#059669; --neon-d:rgba(5,150,105,.08);
+  --neon-glow:0 0 32px rgba(5,150,105,.28); --neon-sm:0 0 16px rgba(5,150,105,.18);
+  --blue:#2563EB; --blue-d:rgba(37,99,235,.08);
+  --amber:#D97706; --amber-d:rgba(217,119,6,.08);
+  --danger:#DC2626; --danger-d:rgba(220,38,38,.08);
+  --purple:#7C3AED; --purple-d:rgba(124,58,237,.08);
+  --text1:#0F172A; --text2:#475569; --text3:#94A3B8;
+  --bdr:rgba(0,0,0,.06); --bdr2:rgba(0,0,0,.12); --bdr-n:rgba(5,150,105,.22);
+}
+
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--fb);background:var(--bg);color:var(--text1);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 100% 60% at 10% 20%,rgba(0,229,160,.035) 0%,transparent 55%),radial-gradient(ellipse 70% 80% at 90% 80%,rgba(59,130,246,.035) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 55% 50%,rgba(168,85,247,.02) 0%,transparent 50%);pointer-events:none;z-index:0}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:100px}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sb{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:200;transition:width .3s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.sb.c{width:72px}
+.sl{display:flex;align-items:center;gap:12px;padding:22px 20px;border-bottom:1px solid var(--bdr);min-height:var(--nh);flex-shrink:0}
+.li{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#065f46,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--neon-sm)}
+.li svg{width:18px;height:18px;color:#fff;stroke-width:2.5}
+.lt{font-family:var(--ff);font-size:.95rem;font-weight:800;letter-spacing:-.04em;color:var(--text1);white-space:nowrap;transition:opacity .2s}
+.lt em{color:var(--neon);font-style:normal}
+.sb.c .lt{opacity:0;width:0}
+.snav{flex:1;padding:14px 12px;overflow-y:auto;overflow-x:hidden}
+.ss{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);padding:8px 8px 5px;white-space:nowrap;transition:opacity .2s}
+.sb.c .ss{opacity:0}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;white-space:nowrap;margin-bottom:2px;position:relative;text-decoration:none;transition:background .15s,color .15s}
+.ni:hover{background:var(--neon-d);color:var(--text1)}
+.ni.on{background:var(--neon-d);color:var(--neon);font-weight:600}
+.ni.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--neon);border-radius:0 3px 3px 0;box-shadow:var(--neon-sm)}
+.ni-i{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ni-i svg{width:17px;height:17px;stroke-width:1.8}
+.nl{transition:opacity .2s,width .3s}
+.sb.c .nl{opacity:0;width:0}
+.nb{margin-left:auto;background:var(--neon);color:#000;font-family:var(--fm);font-size:9px;padding:2px 6px;border-radius:100px;flex-shrink:0;transition:opacity .2s}
+.sb.c .nb{opacity:0}
+.np{width:6px;height:6px;border-radius:50%;background:var(--neon);flex-shrink:0;animation:pd 2s infinite;margin-left:auto;transition:opacity .2s}
+.sb.c .np{opacity:0}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+.sf{padding:14px 12px;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;transition:background .15s}
+.sf:hover{background:var(--neon-d)}
+.av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#3B82F6);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.ai{transition:opacity .2s}
+.sb.c .ai{opacity:0;width:0}
+.an{font-size:13px;font-weight:600;color:var(--text1);white-space:nowrap}
+.ar{font-size:11px;color:var(--text2);white-space:nowrap}
+
+/* ═══════════════════════════════════════
+   TOPNAV
+═══════════════════════════════════════ */
+.tn{position:fixed;top:0;left:var(--sw);right:0;height:var(--nh);background:var(--bg2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 28px;z-index:100;gap:14px;transition:left .3s cubic-bezier(.4,0,.2,1)}
+.tn.c{left:72px}
+.hb{width:36px;height:36px;border-radius:8px;border:1px solid var(--bdr);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;flex-shrink:0}
+.hb:hover{background:var(--neon-d);color:var(--neon);border-color:var(--bdr-n)}
+.hb svg{width:15px;height:15px;stroke-width:2}
+.bc{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2)}
+.bcc{font-family:var(--ff);font-weight:700;color:var(--text1);font-size:14px}
+.tr{margin-left:auto;display:flex;align-items:center;gap:10px}
+.ib{width:36px;height:36px;border-radius:9px;border:1px solid var(--bdr);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all .2s;position:relative}
+.ib:hover{background:var(--neon-d);color:var(--neon);border-color:var(--bdr-n)}
+.ib svg{width:16px;height:16px;stroke-width:1.8}
+.nd{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--danger);border:2px solid var(--bg2)}
+.tg{width:50px;height:27px;border-radius:100px;background:var(--bg3);border:1px solid var(--bdr2);cursor:pointer;position:relative;transition:all .3s;display:flex;align-items:center;padding:0 3px}
+.tk{width:19px;height:19px;border-radius:50%;background:var(--neon);position:absolute;left:3px;transition:all .3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+[data-theme="light"] .tk{left:24px}
+.tk svg{width:10px;height:10px;color:#fff;stroke-width:2.5}
+
+/* Period selector */
+.period-sel{display:flex;gap:3px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:3px}
+.ps-btn{font-family:var(--fm);font-size:10px;letter-spacing:.06em;padding:5px 12px;border-radius:7px;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s}
+.ps-btn.on{background:var(--bg2);color:var(--text1);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.ps-btn:hover:not(.on){color:var(--text1)}
+
+/* ═══════════════════════════════════════
+   MAIN
+═══════════════════════════════════════ */
+.main{margin-left:var(--sw);margin-top:var(--nh);padding:28px 32px;position:relative;z-index:1;transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+.main.c{margin-left:72px}
+
+/* ═══════════════════════════════════════
+   CHURN WARNING ALERT BANNER
+═══════════════════════════════════════ */
+.churn-alert{display:none} /* hidden by default — shown via JS toggle demo */
+.churn-alert.show{
+  display:flex;align-items:center;gap:16px;
+  background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.08));
+  border:1px solid rgba(239,68,68,.3);border-radius:14px;padding:14px 18px;
+  margin-bottom:20px;animation:alert-slide .4s ease;
+}
+@keyframes alert-slide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.ca-icon{width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ca-icon svg{width:20px;height:20px;color:var(--danger)}
+.ca-body{flex:1;min-width:0}
+.ca-title{font-family:var(--ff);font-size:14px;font-weight:700;color:var(--danger);margin-bottom:2px}
+.ca-sub{font-size:12px;color:var(--text2);line-height:1.4}
+.ca-action{display:flex;gap:8px;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════ */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:20px}
+.ph-eye{font-family:var(--fm);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--neon);opacity:.8;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.ph-eye::before{content:'';width:16px;height:1px;background:var(--neon);opacity:.5}
+.ph-title{font-family:var(--ff);font-size:1.85rem;font-weight:900;letter-spacing:-.05em;line-height:1;color:var(--text1)}
+.ph-sub{font-size:13px;color:var(--text2);margin-top:5px}
+.ph-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   ROI HERO STRIP
+═══════════════════════════════════════ */
+.roi-hero{
+  display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;
+  background:var(--card);border:1px solid var(--bdr);border-radius:18px;
+  overflow:hidden;margin-bottom:22px;
+  position:relative;
+}
+.roi-hero::before{
+  content:'';position:absolute;inset:0;border-radius:18px;
+  background:linear-gradient(135deg,rgba(0,229,160,.04) 0%,transparent 40%);
+  pointer-events:none;
+}
+.roi-divider{background:var(--bdr);width:1px;align-self:stretch}
+.roi-stat{padding:22px 24px;position:relative;transition:background .2s}
+.roi-stat:hover{background:var(--card2)}
+.roi-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.roi-eyebrow svg{width:10px;height:10px}
+.roi-val{font-family:var(--ff);font-size:1.9rem;font-weight:900;letter-spacing:-.05em;line-height:1;margin-bottom:4px}
+.roi-label{font-size:12px;color:var(--text2)}
+.roi-delta{font-family:var(--fm);font-size:10px;margin-top:5px;display:flex;align-items:center;gap:4px}
+.roi-delta svg{width:10px;height:10px}
+.delta-up{color:var(--neon)}
+.delta-dn{color:var(--danger)}
+
+/* ═══════════════════════════════════════
+   MAIN 3-COLUMN GRID
+═══════════════════════════════════════ */
+.main-grid{display:grid;grid-template-columns:1fr 1fr 340px;gap:18px;align-items:start}
+
+/* ═══════════════════════════════════════
+   CARD BASE
+═══════════════════════════════════════ */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:var(--bdr2)}
+.card-hdr{padding:16px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:var(--text1);display:flex;align-items:center;gap:7px}
+.card-title svg{width:13px;height:13px}
+.card-body{padding:16px 18px}
+.card-sub{font-size:11px;color:var(--text2)}
+
+/* Full-width card wrapper */
+.full-row{grid-column:1/-1}
+.two-col{grid-column:span 2}
+
+/* ═══════════════════════════════════════
+   FUNNEL CHART
+═══════════════════════════════════════ */
+.funnel-wrap{display:flex;flex-direction:column;gap:8px;padding:4px 0}
+.funnel-stage{position:relative}
+.funnel-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.funnel-label{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.funnel-label-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.funnel-nums{display:flex;align-items:center;gap:8px}
+.funnel-count{font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text1)}
+.funnel-pct{font-family:var(--fm);font-size:10px;color:var(--text3)}
+.funnel-bar{height:28px;border-radius:6px;overflow:hidden;background:var(--bg3);position:relative}
+.funnel-fill{height:100%;border-radius:6px;transition:width 1s cubic-bezier(.4,0,.2,1);position:relative}
+.funnel-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 80%,rgba(255,255,255,.08));border-radius:6px}
+.funnel-connector{display:flex;justify-content:center;margin:3px 0}
+.funnel-connector svg{width:14px;height:14px;color:var(--text3)}
+.conversion-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;letter-spacing:.06em;padding:2px 8px;border-radius:100px;margin-top:8px}
+
+/* ═══════════════════════════════════════
+   CANVAS CHART (SVG-based)
+═══════════════════════════════════════ */
+.chart-container{position:relative;width:100%;overflow:hidden}
+.chart-svg{width:100%;display:block}
+.chart-y-labels{position:absolute;left:0;top:0;bottom:20px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--text3)}
+.chart-x-labels{display:flex;justify-content:space-between;padding:0 0 0 32px;margin-top:4px;font-family:var(--fm);font-size:9px;color:var(--text3)}
+
+/* Sparkline mini chart */
+.spark-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)}
+.spark-row:last-child{border-bottom:none;padding-bottom:0}
+.spark-label{font-size:12px;color:var(--text2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spark-svg{width:60px;height:22px;flex-shrink:0}
+.spark-val{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--text1);flex-shrink:0;width:36px;text-align:right}
+
+/* ═══════════════════════════════════════
+   HEATMAP GRID
+═══════════════════════════════════════ */
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
+.hm-cell{height:28px;border-radius:5px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative}
+.hm-cell:hover{transform:scale(1.1);z-index:1;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.hm-label{font-family:var(--fm);font-size:8.5px;color:var(--text3);text-align:center;margin-bottom:3px}
+.hm-row-label{display:flex;gap:4px;margin-bottom:2px}
+.hm-day-label{flex:1;text-align:center;font-family:var(--fm);font-size:8px;color:var(--text3)}
+.hm-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--bdr2);border-radius:7px;padding:5px 9px;font-family:var(--fm);font-size:10px;white-space:nowrap;z-index:10;pointer-events:none;opacity:0;transition:opacity .15s}
+.hm-cell:hover .hm-tooltip{opacity:1}
+
+/* ═══════════════════════════════════════
+   PRICING BENCHMARK
+═══════════════════════════════════════ */
+.bench-item{padding:11px 0;border-bottom:1px solid var(--bdr);position:relative}
+.bench-item:last-child{border-bottom:none;padding-bottom:0}
+.bench-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.bench-label{font-size:12px;font-weight:600;color:var(--text1)}
+.bench-range{font-family:var(--fm);font-size:10px;color:var(--text3)}
+.bench-track{height:6px;background:var(--bg3);border-radius:100px;position:relative;overflow:visible}
+.bench-range-fill{height:100%;border-radius:100px;position:absolute}
+.bench-your-marker{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);z-index:2;transform:translateX(-50%)}
+.bench-your-label{position:absolute;top:-22px;font-family:var(--fm);font-size:8.5px;transform:translateX(-50%);white-space:nowrap}
+.bench-win-marker{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--bg);z-index:2;transform:translateX(-50%)}
+
+/* ═══════════════════════════════════════
+   LOST JOB POST-MORTEM
+═══════════════════════════════════════ */
+.mortem-item{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.mortem-item:last-child{margin-bottom:0}
+.mortem-item:hover{border-color:var(--bdr2);background:var(--card2)}
+.mortem-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mortem-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mortem-info{flex:1;min-width:0}
+.mortem-job{font-size:13px;font-weight:600;color:var(--text1)}
+.mortem-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.mortem-outcome{font-family:var(--fm);font-size:9px;padding:3px 8px;border-radius:100px;flex-shrink:0}
+.mortem-gaps{display:flex;gap:6px;flex-wrap:wrap}
+.gap-chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;letter-spacing:.06em;padding:3px 8px;border-radius:100px;border:1px solid}
+.gap-price{color:var(--amber);background:var(--amber-d);border-color:rgba(245,158,11,.2)}
+.gap-speed{color:var(--blue);background:var(--blue-d);border-color:rgba(59,130,246,.2)}
+.gap-vault{color:var(--purple);background:var(--purple-d);border-color:rgba(168,85,247,.2)}
+.gap-review{color:var(--neon);background:var(--neon-d);border-color:var(--bdr-n)}
+
+/* ═══════════════════════════════════════
+   PEER BENCHMARKING
+═══════════════════════════════════════ */
+.peer-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.peer-row:last-child{border-bottom:none;padding-bottom:0}
+.peer-metric{font-size:12px;color:var(--text2);width:100px;flex-shrink:0}
+.peer-track{flex:1;height:5px;background:var(--bg3);border-radius:100px;overflow:hidden;position:relative}
+.peer-fill-bg{height:100%;border-radius:100px;background:var(--bg4);position:absolute;inset:0}
+.peer-fill-you{height:100%;border-radius:100px;position:absolute;top:0;transition:width .8s ease}
+.peer-pctile{font-family:var(--fm);font-size:10px;color:var(--text1);width:32px;text-align:right;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   FORECAST CARD
+═══════════════════════════════════════ */
+.forecast-hero{text-align:center;padding:16px 0 8px}
+.fc-label{font-family:var(--fm);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.fc-val{font-family:var(--ff);font-size:2.4rem;font-weight:900;letter-spacing:-.06em;color:var(--neon);line-height:1;margin-bottom:4px;position:relative;display:inline-block}
+.fc-val::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--neon);opacity:.3;border-radius:1px}
+.fc-range{font-family:var(--fm);font-size:10px;color:var(--text3);margin-top:4px}
+.fc-confidence{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;padding:3px 10px;border-radius:100px;background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n);margin-top:8px}
+.forecast-bars{display:flex;align-items:flex-end;gap:4px;height:60px;margin:14px 0 6px}
+.fc-bar{flex:1;border-radius:4px 4px 0 0;transition:height .8s ease;position:relative;cursor:pointer}
+.fc-bar:hover{filter:brightness(1.2)}
+.fc-bar-label{text-align:center;font-family:var(--fm);font-size:7.5px;color:var(--text3);margin-top:4px}
+
+/* ═══════════════════════════════════════
+   SEASONALITY
+═══════════════════════════════════════ */
+.season-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.season-item:last-child{border-bottom:none;padding-bottom:0}
+.si-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.si-info{flex:1;min-width:0}
+.si-label{font-size:12px;font-weight:600;color:var(--text1)}
+.si-timing{font-size:11px;color:var(--text2);margin-top:2px}
+.si-spike{font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   PROFILE STRENGTH CORRELATION
+═══════════════════════════════════════ */
+.correlation-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.correlation-row:last-child{border-bottom:none;padding-bottom:0}
+.corr-action{font-size:12px;color:var(--text1);flex:1;font-weight:500}
+.corr-impact{font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:100px;flex-shrink:0}
+.corr-status{width:16px;height:16px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.corr-status svg{width:9px;height:9px;stroke-width:3}
+.ci-done{background:var(--neon-d);border:1px solid var(--bdr-n)}
+.ci-done svg{color:var(--neon)}
+.ci-todo{background:var(--amber-d);border:1px solid rgba(245,158,11,.2)}
+.ci-todo svg{color:var(--amber)}
+
+/* ═══════════════════════════════════════
+   RESPONSE VELOCITY
+═══════════════════════════════════════ */
+.velocity-display{display:flex;align-items:center;justify-content:space-around;padding:12px 0}
+.vel-item{text-align:center}
+.vel-val{font-family:var(--ff);font-size:1.6rem;font-weight:900;letter-spacing:-.04em;line-height:1}
+.vel-label{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-top:4px}
+.vel-divider{width:1px;height:48px;background:var(--bdr)}
+.velocity-bar{display:flex;align-items:center;gap:8px;margin-top:12px}
+.vb-label{font-size:11px;color:var(--text2);width:70px;flex-shrink:0}
+.vb-track{flex:1;height:4px;background:var(--bg3);border-radius:100px;overflow:hidden}
+.vb-fill{height:100%;border-radius:100px}
+.vb-val{font-family:var(--fm);font-size:10px;width:40px;text-align:right;flex-shrink:0}
+
+/* ═══════════════════════════════════════
+   PREMIUM UPSELL OVERLAY
+═══════════════════════════════════════ */
+.premium-overlay{position:relative}
+.premium-blur{filter:blur(3px);pointer-events:none;user-select:none;opacity:.4}
+.premium-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:10;padding:20px}
+.pg-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:100px;background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.3);margin-bottom:10px}
+.pg-title{font-family:var(--ff);font-size:14px;font-weight:800;letter-spacing:-.03em;color:var(--text1);margin-bottom:4px}
+.pg-sub{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5}
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff);font-size:12px;font-weight:700;letter-spacing:-.01em;border-radius:9px;padding:8px 16px;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.btn svg{width:13px;height:13px;stroke-width:2}
+.btn-primary{background:linear-gradient(135deg,#065f46,var(--neon));color:#fff;box-shadow:var(--neon-sm)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.btn-secondary{background:var(--bg3);color:var(--text1);border:1px solid var(--bdr2);font-size:11px;padding:6px 12px}
+.btn-secondary:hover{border-color:var(--bdr-n);color:var(--neon)}
+.btn-danger{background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.3);font-size:11px;padding:6px 12px}
+.btn-amber{background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.3);font-size:11px;padding:6px 12px}
+.btn-amber:hover{background:rgba(245,158,11,.18)}
+
+/* ═══════════════════════════════════════
+   MODALS
+═══════════════════════════════════════ */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
+.mo.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);border:1px solid var(--bdr2);border-radius:20px;width:92%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 28px 80px rgba(0,0,0,.6);transform:translateY(14px) scale(.97);transition:transform .25s}
+.mo.open .modal{transform:translateY(0) scale(1)}
+.mh{padding:22px 22px 14px;border-bottom:1px solid var(--bdr);display:flex;align-items:flex-start;justify-content:space-between}
+.mt{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.03em;color:var(--text1)}
+.ms{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5}
+.mc{width:30px;height:30px;border-radius:7px;border:1px solid var(--bdr2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0;transition:all .2s}
+.mc:hover{color:var(--text1);border-color:var(--bdr-n)}
+.mc svg{width:13px;height:13px;stroke-width:2}
+.mb{padding:18px 22px}
+.mf{padding:14px 22px;border-top:1px solid var(--bdr);display:flex;gap:8px;justify-content:flex-end}
+.mbtn{padding:9px 20px;border-radius:9px;font-family:var(--ff);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.mbtn-p{background:linear-gradient(135deg,#065f46,var(--neon));color:#fff;box-shadow:var(--neon-sm)}
+.mbtn-p:hover{box-shadow:var(--neon-glow)}
+.mbtn-s{background:var(--bg3);color:var(--text1);border:1px solid var(--bdr2)}
+.mbtn-s:hover{border-color:var(--bdr-n);color:var(--neon)}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1280px){.main-grid{grid-template-columns:1fr 1fr};.two-col{grid-column:span 1}}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr};.roi-hero{grid-template-columns:1fr 1fr};.roi-divider:nth-child(4){display:none}}
+@media(max-width:900px){.sb{transform:translateX(-100%)}.tn,.main{left:0!important;margin-left:0!important}.main{padding:18px 20px}.roi-hero{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.roi-hero{grid-template-columns:1fr}}
+
+/* Anim */
+.fade-in{animation:fi .5s ease forwards;opacity:0}
+.fade-in:nth-child(1){animation-delay:.05s}
+.fade-in:nth-child(2){animation-delay:.12s}
+.fade-in:nth-child(3){animation-delay:.19s}
+.fade-in:nth-child(4){animation-delay:.26s}
+.fade-in:nth-child(5){animation-delay:.33s}
+.fade-in:nth-child(6){animation-delay:.40s}
+.fade-in:nth-child(7){animation-delay:.47s}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- ══════ SIDEBAR ══════ -->
+<aside class="sb" id="sb">
+  <div class="sl">
+    <div class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+    <span class="lt">Trade<em>Match</em></span>
+  </div>
+  <nav class="snav">
+    <div class="ss">Main</div>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="nl">Dashboard</span></a>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span><span class="nl">Live Leads</span><span class="nb">14</span></a>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span class="nl">Active Jobs</span><span class="np"></span></a>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><span class="nl">Messages</span><span class="nb">5</span></a>
+    <div class="ss" style="margin-top:10px">Business</div>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="nl">Reviews</span><span class="nb">47</span></a>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="nl">Credentials Vault</span></a>
+    <a class="ni on" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><span class="nl">Analytics</span></a>
+    <a class="ni" href="#"><span class="ni-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span><span class="nl">Payments</span></a>
+  </nav>
+  <div class="sf">
+    <div class="av">MH</div>
+    <div class="ai"><div class="an">Mike Harrison</div><div class="ar">Pro Plumber · Manchester</div></div>
+  </div>
+</aside>
+
+<!-- ══════ TOPNAV ══════ -->
+<header class="tn" id="tn">
+  <button class="hb" onclick="tgSb()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="bc">
+    <span>Vendor Portal</span>
+    <span style="color:var(--text3)">/</span>
+    <span class="bcc">Analytics & Intelligence</span>
+  </div>
+  <div class="tr">
+    <div class="period-sel">
+      <button class="ps-btn" onclick="setPeriod(this,'7d')">7D</button>
+      <button class="ps-btn on" onclick="setPeriod(this,'30d')">30D</button>
+      <button class="ps-btn" onclick="setPeriod(this,'90d')">90D</button>
+      <button class="ps-btn" onclick="setPeriod(this,'1y')">1Y</button>
+    </div>
+    <button class="btn btn-primary" onclick="openStratModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+      AI Strategy Session
+    </button>
+    <button class="ib"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="nd"></span></button>
+    <button class="tg" onclick="tgTheme()"><div class="tk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div></button>
+  </div>
+</header>
+
+<!-- ══════ MAIN ══════ -->
+<main class="main" id="mn">
+
+  <!-- CHURN WARNING (demo toggle) -->
+  <div class="churn-alert" id="churn-alert">
+    <div class="ca-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+    <div class="ca-body">
+      <div class="ca-title">Negative ROI Alert — Account Strategy Triggered</div>
+      <div class="ca-sub">You've spent £200 on leads this week with 0 conversions. This isn't normal. Our AI has identified 3 likely causes and is offering a credit adjustment. Unlike Bark, we don't just keep taking your money.</div>
+    </div>
+    <div class="ca-action">
+      <button class="btn btn-amber" onclick="openStratModal()">View Strategy</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('churn-alert').classList.remove('show')">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="ph">
+    <div>
+      <div class="ph-eye">Yield Management</div>
+      <h1 class="ph-title">Performance Intelligence</h1>
+      <p class="ph-sub">Every £1 you spend on TradeMatch, tracked to the pound. Your competitive position, your market, your revenue.</p>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-secondary" onclick="document.getElementById('churn-alert').classList.toggle('show')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Demo: Churn Alert
+      </button>
+    </div>
+  </div>
+
+  <!-- ROI HERO STRIP -->
+  <div class="roi-hero fade-in">
+    <div class="roi-stat">
+      <div class="roi-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Revenue this period</div>
+      <div class="roi-val" style="color:var(--neon)">£6,840</div>
+      <div class="roi-label">from 4 won jobs</div>
+      <div class="roi-delta delta-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>+18% vs last period</div>
+    </div>
+    <div class="roi-divider"></div>
+    <div class="roi-stat">
+      <div class="roi-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Lead spend</div>
+      <div class="roi-val" style="color:var(--text1)">£570</div>
+      <div class="roi-label">12 leads purchased</div>
+      <div class="roi-delta delta-dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 9 12 15 6 9"/></svg>-3 vs last period</div>
+    </div>
+    <div class="roi-divider"></div>
+    <div class="roi-stat">
+      <div class="roi-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>Return on spend</div>
+      <div class="roi-val" style="color:var(--neon)">12.0x</div>
+      <div class="roi-label">ROI per £ spent</div>
+      <div class="roi-delta delta-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>Top 8% of platform</div>
+    </div>
+    <div class="roi-divider"></div>
+    <div class="roi-stat">
+      <div class="roi-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Win rate</div>
+      <div class="roi-val" style="color:var(--neon)">33%</div>
+      <div class="roi-label">4 wins / 12 leads</div>
+      <div class="roi-delta delta-up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"/></svg>Platform avg: 22%</div>
+    </div>
+  </div>
+
+  <!-- MAIN 3-COLUMN GRID -->
+  <div class="main-grid">
+
+    <!-- ── LEAD CONVERSION FUNNEL ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--neon)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          ROI Attribution Funnel
+        </div>
+        <span class="card-sub">30 days</span>
+      </div>
+      <div class="card-body">
+        <div class="funnel-wrap">
+          <div class="funnel-stage">
+            <div class="funnel-label-row">
+              <div class="funnel-label"><span class="funnel-label-dot" style="background:var(--blue)"></span>Leads purchased</div>
+              <div class="funnel-nums"><span class="funnel-count">12</span><span class="funnel-pct">£570 spent</span></div>
+            </div>
+            <div class="funnel-bar"><div class="funnel-fill" style="width:100%;background:linear-gradient(90deg,#1D4ED8,var(--blue))"></div></div>
+          </div>
+          <div class="funnel-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="funnel-stage">
+            <div class="funnel-label-row">
+              <div class="funnel-label"><span class="funnel-label-dot" style="background:var(--purple)"></span>Responded within 4h</div>
+              <div class="funnel-nums"><span class="funnel-count">10</span><span class="funnel-pct">83%</span></div>
+            </div>
+            <div class="funnel-bar"><div class="funnel-fill" style="width:83%;background:linear-gradient(90deg,#6D28D9,var(--purple))"></div></div>
+          </div>
+          <div class="funnel-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="funnel-stage">
+            <div class="funnel-label-row">
+              <div class="funnel-label"><span class="funnel-label-dot" style="background:var(--amber)"></span>Quote submitted</div>
+              <div class="funnel-nums"><span class="funnel-count">9</span><span class="funnel-pct">75%</span></div>
+            </div>
+            <div class="funnel-bar"><div class="funnel-fill" style="width:75%;background:linear-gradient(90deg,#B45309,var(--amber))"></div></div>
+          </div>
+          <div class="funnel-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="funnel-stage">
+            <div class="funnel-label-row">
+              <div class="funnel-label"><span class="funnel-label-dot" style="background:#F97316"></span>In Escrow</div>
+              <div class="funnel-nums"><span class="funnel-count">5</span><span class="funnel-pct">42%</span></div>
+            </div>
+            <div class="funnel-bar"><div class="funnel-fill" style="width:42%;background:linear-gradient(90deg,#C2410C,#F97316)"></div></div>
+          </div>
+          <div class="funnel-connector"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="funnel-stage">
+            <div class="funnel-label-row">
+              <div class="funnel-label"><span class="funnel-label-dot" style="background:var(--neon)"></span>Paid & complete</div>
+              <div class="funnel-nums"><span class="funnel-count">4</span><span class="funnel-pct" style="color:var(--neon)">33% win rate</span></div>
+            </div>
+            <div class="funnel-bar"><div class="funnel-fill" style="width:33%;background:linear-gradient(90deg,#065f46,var(--neon));box-shadow:0 0 12px rgba(0,229,160,.3)"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:10px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--neon);margin-bottom:3px">CPA Analysis</div>
+          <div style="font-size:12px;color:var(--text1)">Cost Per Acquisition: <strong style="color:var(--neon)">£142.50</strong> per won job · £1,710 revenue per acquired customer on avg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REVENUE CHART ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--blue)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          Revenue vs Spend
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;color:var(--neon)"><span style="width:8px;height:2px;background:var(--neon);border-radius:1px;display:inline-block"></span>Revenue</span>
+          <span style="display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;color:var(--amber)"><span style="width:8px;height:2px;background:var(--amber);border-radius:1px;display:inline-block"></span>Spend</span>
+        </div>
+      </div>
+      <div class="card-body" style="padding-bottom:8px">
+        <div class="chart-container" style="height:160px">
+          <svg class="chart-svg" viewBox="0 0 400 160" preserveAspectRatio="none">
+            <!-- Grid lines -->
+            <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="80" x2="400" y2="80" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="120" x2="400" y2="120" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <!-- Revenue area -->
+            <defs>
+              <linearGradient id="rev-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(0,229,160,.25)"/>
+                <stop offset="100%" stop-color="rgba(0,229,160,.0)"/>
+              </linearGradient>
+              <linearGradient id="spend-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(245,158,11,.18)"/>
+                <stop offset="100%" stop-color="rgba(245,158,11,.0)"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,140 C20,130 40,110 65,95 C90,80 110,105 140,88 C165,73 185,50 210,55 C235,60 255,70 280,52 C305,35 330,45 360,30 C375,22 390,20 400,18 L400,160 L0,160 Z" fill="url(#rev-grad)"/>
+            <path d="M0,140 C20,130 40,110 65,95 C90,80 110,105 140,88 C165,73 185,50 210,55 C235,60 255,70 280,52 C305,35 330,45 360,30 C375,22 390,20 400,18" fill="none" stroke="var(--neon)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Spend area -->
+            <path d="M0,148 C20,145 40,144 65,142 C90,140 110,145 140,140 C165,135 185,142 210,138 C235,134 255,136 280,132 C305,128 330,134 360,128 C375,124 390,122 400,120 L400,160 L0,160 Z" fill="url(#spend-grad)"/>
+            <path d="M0,148 C20,145 40,144 65,142 C90,140 110,145 140,140 C165,135 185,142 210,138 C235,134 255,136 280,132 C305,128 330,134 360,128 C375,124 390,122 400,120" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,2"/>
+            <!-- Today marker -->
+            <line x1="380" y1="0" x2="380" y2="160" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="372" y="10" font-family="JetBrains Mono" font-size="7" fill="rgba(255,255,255,.3)">Today</text>
+          </svg>
+        </div>
+        <div class="chart-x-labels" style="padding:0">
+          <span>3 Feb</span><span>10 Feb</span><span>17 Feb</span><span>24 Feb</span><span>1 Mar</span>
+        </div>
+        <!-- Job event markers -->
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:100px;background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">● Bathroom £3,400 · 14 Feb</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:100px;background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">● Boiler £1,850 · 20 Feb</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:100px;background:var(--blue-d);color:var(--blue);border:1px solid rgba(59,130,246,.2)">● Radiators £980 · 26 Feb</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN: FORECAST ── -->
+    <div class="card fade-in" style="grid-row:span 2">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--cyan)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          30-Day Revenue Forecast
+        </div>
+        <span style="font-family:var(--fm);font-size:9px;color:var(--text3)">AI model</span>
+      </div>
+      <div class="card-body">
+        <div class="forecast-hero">
+          <div class="fc-label">Predicted earnings · March 2026</div>
+          <div class="fc-val" id="fc-val">£8,400</div>
+          <div class="fc-range">Range: £6,200 – £11,800</div>
+          <div class="fc-confidence">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:10px;height:10px"><polyline points="20 6 9 17 4 12"/></svg>
+            78% confidence
+          </div>
+        </div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin:4px 0 6px">Weekly projection</div>
+        <div class="forecast-bars" id="fc-bars">
+          <!-- Rendered by JS -->
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:14px">
+          <div style="text-align:center;font-family:var(--fm);font-size:8px;color:var(--text3)">Wk 1</div>
+          <div style="text-align:center;font-family:var(--fm);font-size:8px;color:var(--text3)">Wk 2</div>
+          <div style="text-align:center;font-family:var(--fm);font-size:8px;color:var(--text3)">Wk 3</div>
+          <div style="text-align:center;font-family:var(--fm);font-size:8px;color:var(--text3)">Wk 4</div>
+        </div>
+
+        <div style="border-top:1px solid var(--bdr);padding-top:12px;margin-top:4px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Forecast drivers</div>
+          <div class="spark-row">
+            <span class="spark-label">Lead volume in market</span>
+            <svg class="spark-svg" viewBox="0 0 60 22"><polyline points="0,18 10,14 20,16 30,10 40,8 50,5 60,3" fill="none" stroke="var(--neon)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="spark-val" style="color:var(--neon)">↑ 23%</span>
+          </div>
+          <div class="spark-row">
+            <span class="spark-label">Your win rate trend</span>
+            <svg class="spark-svg" viewBox="0 0 60 22"><polyline points="0,16 10,14 20,12 30,14 40,10 50,8 60,6" fill="none" stroke="var(--neon)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="spark-val" style="color:var(--neon)">↑ 4pp</span>
+          </div>
+          <div class="spark-row">
+            <span class="spark-label">Response speed</span>
+            <svg class="spark-svg" viewBox="0 0 60 22"><polyline points="0,10 10,12 20,9 30,7 40,8 50,6 60,4" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="spark-val" style="color:var(--blue)">↑ 12%</span>
+          </div>
+          <div class="spark-row">
+            <span class="spark-label">Seasonality</span>
+            <svg class="spark-svg" viewBox="0 0 60 22"><polyline points="0,14 10,12 20,14 30,10 40,8 50,10 60,8" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span class="spark-val" style="color:var(--amber)">Spring ↑</span>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.22);border-radius:10px">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px">🌡 Seasonality Alert</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.5">Boiler service demand spikes <strong style="color:var(--amber)">+40%</strong> in the next 2 weeks as March cold snaps hit. Top up lead credits now to capture the rush.</div>
+          <button class="btn btn-amber" style="margin-top:8px;width:100%;justify-content:center;font-size:11px" onclick="openTopUpModal()">Top Up Credits → Capture the Spike</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RESPONSE VELOCITY ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--blue)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Response Velocity
+        </div>
+        <span class="card-sub">vs local avg</span>
+      </div>
+      <div class="card-body">
+        <div class="velocity-display">
+          <div class="vel-item">
+            <div class="vel-val" style="color:var(--neon)">38<span style="font-size:1rem">m</span></div>
+            <div class="vel-label">Your avg</div>
+          </div>
+          <div class="vel-divider"></div>
+          <div class="vel-item">
+            <div class="vel-val" style="color:var(--text2)">2.4<span style="font-size:1rem">h</span></div>
+            <div class="vel-label">Market avg</div>
+          </div>
+          <div class="vel-divider"></div>
+          <div class="vel-item">
+            <div class="vel-val" style="color:var(--neon)">+8%</div>
+            <div class="vel-label">Win uplift</div>
+          </div>
+        </div>
+        <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Time-to-response breakdown</div>
+        <div class="velocity-bar">
+          <span class="vb-label">Under 30m</span>
+          <div class="vb-track"><div class="vb-fill" style="width:55%;background:var(--neon)"></div></div>
+          <span class="vb-val" style="color:var(--neon)">55%</span>
+        </div>
+        <div class="velocity-bar">
+          <span class="vb-label">30m – 2h</span>
+          <div class="vb-track"><div class="vb-fill" style="width:30%;background:var(--blue)"></div></div>
+          <span class="vb-val" style="color:var(--blue)">30%</span>
+        </div>
+        <div class="velocity-bar">
+          <span class="vb-label">2h – 24h</span>
+          <div class="vb-track"><div class="vb-fill" style="width:12%;background:var(--amber)"></div></div>
+          <span class="vb-val" style="color:var(--amber)">12%</span>
+        </div>
+        <div class="velocity-bar">
+          <span class="vb-label">Over 24h</span>
+          <div class="vb-track"><div class="vb-fill" style="width:3%;background:var(--danger)"></div></div>
+          <span class="vb-val" style="color:var(--danger)">3%</span>
+        </div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:9px;font-size:11px;color:var(--text2)">
+          Responding in under 30 minutes makes you <strong style="color:var(--neon)">3.2× more likely</strong> to win the job. You're already in the top tier. Speed score feeds directly into your TradeMatch Score.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DEMAND HEATMAP ── -->
+    <div class="card fade-in premium-overlay">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--amber)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Demand Heatmap · Manchester
+        </div>
+        <span style="font-family:var(--fm);font-size:8.5px;background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:2px 7px;border-radius:100px">Pro</span>
+      </div>
+      <div class="premium-blur">
+        <div class="card-body">
+          <div class="hm-row-label">
+            <div class="hm-day-label">M20</div><div class="hm-day-label">M21</div><div class="hm-day-label">M22</div>
+            <div class="hm-day-label">M13</div><div class="hm-day-label">M14</div><div class="hm-day-label">M15</div><div class="hm-day-label">M16</div>
+          </div>
+          <div id="heatmap-plumbing" style="margin-bottom:10px"></div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--text3);margin-bottom:6px">ELECTRICIANS active in same postcodes: <strong style="color:var(--amber)">14 vendors</strong></div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--text3)">Highest demand: M20 (Didsbury) — 3.2× avg job volume vs competitor density</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+            <span style="font-family:var(--fm);font-size:8px;color:var(--text3)">Low</span>
+            <div style="display:flex;gap:2px;flex:1">
+              <div style="flex:1;height:6px;border-radius:2px;background:rgba(245,158,11,.1)"></div>
+              <div style="flex:1;height:6px;border-radius:2px;background:rgba(245,158,11,.25)"></div>
+              <div style="flex:1;height:6px;border-radius:2px;background:rgba(245,158,11,.5)"></div>
+              <div style="flex:1;height:6px;border-radius:2px;background:rgba(245,158,11,.75)"></div>
+              <div style="flex:1;height:6px;border-radius:2px;background:var(--amber)"></div>
+            </div>
+            <span style="font-family:var(--fm);font-size:8px;color:var(--text3)">High</span>
+          </div>
+        </div>
+      </div>
+      <div class="premium-gate">
+        <div class="pg-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:10px;height:10px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Pro Feature</div>
+        <div class="pg-title">Local Demand Intelligence</div>
+        <div class="pg-sub">See job volume vs competitor density in every postcode in your area. Find where demand outstrips supply.</div>
+        <button class="btn btn-primary" onclick="openProModal()">Unlock with Pro</button>
+      </div>
+    </div>
+
+    <!-- ── PRICING BENCHMARKS ── -->
+    <div class="card fade-in premium-overlay" style="grid-column:span 1">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--purple)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Pricing Benchmarks · Manchester
+        </div>
+        <span style="font-family:var(--fm);font-size:8.5px;background:var(--purple-d);color:var(--purple);border:1px solid rgba(168,85,247,.25);padding:2px 7px;border-radius:100px">Pro</span>
+      </div>
+      <div class="premium-blur">
+        <div class="card-body">
+          <div class="bench-item">
+            <div class="bench-header"><span class="bench-label">Full bathroom refit</span><span class="bench-range">£2,800 – £4,800</span></div>
+            <div class="bench-track" style="height:8px">
+              <div class="bench-range-fill" style="left:10%;width:70%;background:linear-gradient(90deg,rgba(168,85,247,.2),rgba(168,85,247,.5));height:8px;border-radius:100px"></div>
+              <div class="bench-your-marker" style="left:71%;background:var(--neon)"><span class="bench-your-label" style="color:var(--neon)">You £3,400</span></div>
+              <div class="bench-win-marker" style="left:58%;background:var(--amber)"><span class="bench-your-label" style="color:var(--amber)">Win avg £3,100</span></div>
+            </div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-header"><span class="bench-label">Boiler replacement</span><span class="bench-range">£1,400 – £2,600</span></div>
+            <div class="bench-track" style="height:8px">
+              <div class="bench-range-fill" style="left:8%;width:74%;background:linear-gradient(90deg,rgba(168,85,247,.2),rgba(168,85,247,.5));height:8px;border-radius:100px"></div>
+              <div class="bench-your-marker" style="left:64%;background:var(--neon)"><span class="bench-your-label" style="color:var(--neon)">You £1,850</span></div>
+              <div class="bench-win-marker" style="left:50%;background:var(--amber)"><span class="bench-your-label" style="color:var(--amber)">Win avg £1,720</span></div>
+            </div>
+          </div>
+          <div class="bench-item">
+            <div class="bench-header"><span class="bench-label">Radiator installation</span><span class="bench-range">£600 – £1,400</span></div>
+            <div class="bench-track" style="height:8px">
+              <div class="bench-range-fill" style="left:12%;width:66%;background:linear-gradient(90deg,rgba(168,85,247,.2),rgba(168,85,247,.5));height:8px;border-radius:100px"></div>
+              <div class="bench-your-marker" style="left:55%;background:var(--neon)"><span class="bench-your-label" style="color:var(--neon)">You £980</span></div>
+              <div class="bench-win-marker" style="left:45%;background:var(--amber)"><span class="bench-your-label" style="color:var(--amber)">Win avg £920</span></div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding:8px 10px;background:var(--purple-d);border:1px solid rgba(168,85,247,.2);border-radius:9px;font-size:11px;color:var(--text2)">
+            <strong style="color:var(--purple)">AI Pricing Copilot:</strong> Your bathroom quotes are 10% above the local win average. Consider adjusting to £3,100–£3,200 to improve close rate.
+          </div>
+        </div>
+      </div>
+      <div class="premium-gate">
+        <div class="pg-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:10px;height:10px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Pro Feature</div>
+        <div class="pg-title">AI Pricing Copilot</div>
+        <div class="pg-sub">See the exact price range that wins jobs in your area — by trade category and postcode.</div>
+        <button class="btn btn-primary" onclick="openProModal()">Unlock with Pro</button>
+      </div>
+    </div>
+
+    <!-- ── LOST JOB POST-MORTEM ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--danger)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Lost Job Gap Analysis
+        </div>
+        <button class="btn btn-secondary" onclick="openMortemModal()">Full report</button>
+      </div>
+      <div class="card-body">
+        <div class="mortem-item" onclick="openMortemModal()">
+          <div class="mortem-top">
+            <div class="mortem-icon" style="background:var(--amber-d)">🛁</div>
+            <div class="mortem-info">
+              <div class="mortem-job">Bathroom refit · Chorlton M21</div>
+              <div class="mortem-meta">Lost 22 Feb · £3,800 · 3 competitors</div>
+            </div>
+            <span class="mortem-outcome" style="background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.25)">Lost</span>
+          </div>
+          <div class="mortem-gaps">
+            <span class="gap-chip gap-price">↑ Price gap: +£340</span>
+            <span class="gap-chip gap-vault">Vault: winner had more certs</span>
+          </div>
+        </div>
+        <div class="mortem-item" onclick="openMortemModal()">
+          <div class="mortem-top">
+            <div class="mortem-icon" style="background:var(--blue-d)">🔥</div>
+            <div class="mortem-info">
+              <div class="mortem-job">Boiler service · Salford M5</div>
+              <div class="mortem-meta">Lost 19 Feb · £180 · 4 competitors</div>
+            </div>
+            <span class="mortem-outcome" style="background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.25)">Lost</span>
+          </div>
+          <div class="mortem-gaps">
+            <span class="gap-chip gap-speed">⚡ Response: 2h 40m vs winner 18m</span>
+          </div>
+        </div>
+        <div class="mortem-item" onclick="openMortemModal()">
+          <div class="mortem-top">
+            <div class="mortem-icon" style="background:var(--purple-d)">🔧</div>
+            <div class="mortem-info">
+              <div class="mortem-job">Full replumb · Didsbury M20</div>
+              <div class="mortem-meta">Lost 12 Feb · £4,200 · 5 competitors</div>
+            </div>
+            <span class="mortem-outcome" style="background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.25)">Lost</span>
+          </div>
+          <div class="mortem-gaps">
+            <span class="gap-chip gap-review">⭐ Reviews: winner had 12 more</span>
+            <span class="gap-chip gap-price">↑ Price gap: +£180</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PEER BENCHMARKING ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Peer Benchmarking
+        </div>
+        <span class="card-sub">Plumbers · Manchester</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;padding:8px 10px;background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:9px">
+          <strong style="color:var(--neon)">You are in the top 10%</strong> for Trust Score, but <strong style="color:var(--amber)">bottom 30%</strong> for response time percentile. Fixing response time is your highest-leverage action.
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Trust Score</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:90%;background:linear-gradient(90deg,#065f46,var(--neon))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--neon)">Top 10%</span>
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Win Rate</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:75%;background:linear-gradient(90deg,#065f46,var(--neon))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--neon)">Top 25%</span>
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Review Score</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:88%;background:linear-gradient(90deg,#065f46,var(--neon))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--neon)">Top 12%</span>
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Craft Score</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:93%;background:linear-gradient(90deg,#065f46,var(--neon))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--neon)">Top 7%</span>
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Response Time</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:28%;background:linear-gradient(90deg,#92400E,var(--amber))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--amber)">Bot 28%</span>
+        </div>
+        <div class="peer-row">
+          <span class="peer-metric">Quote Volume</span>
+          <div class="peer-track">
+            <div class="peer-fill-you" style="width:60%;background:linear-gradient(90deg,#1D4ED8,var(--blue))"></div>
+          </div>
+          <span class="peer-pctile" style="color:var(--blue)">40th %ile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFILE STRENGTH ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--purple)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Profile Strength Correlation
+        </div>
+        <span class="card-sub">Win rate impact</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5">These actions directly correlate to higher win rates on TradeMatch. Completed items show the lift you've already captured.</div>
+        <div class="correlation-row">
+          <div class="corr-status ci-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="corr-action">Gas Safe registered in Vault</span>
+          <span class="corr-impact" style="background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">+14% win rate</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="corr-action">20+ verified reviews</span>
+          <span class="corr-impact" style="background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">+11% win rate</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="corr-action">DBS Safe Trader badge</span>
+          <span class="corr-impact" style="background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">+8% win rate</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="corr-action">20+ portfolio photos</span>
+          <span class="corr-impact" style="background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">+7% win rate</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
+          <span class="corr-action">Renew PLI before expiry</span>
+          <span class="corr-impact" style="background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.2)">Risk −15%</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <span class="corr-action">Add 10 more portfolio photos</span>
+          <span class="corr-impact" style="background:var(--purple-d);color:var(--purple);border:1px solid rgba(168,85,247,.2)">+5% potential</span>
+        </div>
+        <div class="correlation-row">
+          <div class="corr-status ci-todo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+          <span class="corr-action">Respond in under 20 minutes avg</span>
+          <span class="corr-impact" style="background:var(--purple-d);color:var(--purple);border:1px solid rgba(168,85,247,.2)">+9% potential</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SEASONALITY ── -->
+    <div class="card fade-in">
+      <div class="card-hdr">
+        <div class="card-title" style="color:var(--amber)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Seasonality Predictor
+        </div>
+        <span class="card-sub">Next 90 days</span>
+      </div>
+      <div class="card-body">
+        <div class="season-item">
+          <div class="si-icon" style="background:rgba(239,68,68,.1)">🔥</div>
+          <div class="si-info">
+            <div class="si-label">Boiler servicing & repair</div>
+            <div class="si-timing">Spikes in 2 weeks · Mid-March cold snap forecast</div>
+          </div>
+          <span class="si-spike" style="background:rgba(239,68,68,.1);color:var(--danger);border:1px solid rgba(239,68,68,.25)">+40% demand</span>
+        </div>
+        <div class="season-item">
+          <div class="si-icon" style="background:var(--neon-d)">🛁</div>
+          <div class="si-info">
+            <div class="si-label">Bathroom refits</div>
+            <div class="si-timing">Spring peak begins early April · Pre-summer remodel rush</div>
+          </div>
+          <span class="si-spike" style="background:var(--neon-d);color:var(--neon);border:1px solid var(--bdr-n)">+28% demand</span>
+        </div>
+        <div class="season-item">
+          <div class="si-icon" style="background:var(--blue-d)">🌊</div>
+          <div class="si-info">
+            <div class="si-label">Outdoor water features</div>
+            <div class="si-timing">Garden season · April onwards</div>
+          </div>
+          <span class="si-spike" style="background:var(--blue-d);color:var(--blue);border:1px solid rgba(59,130,246,.25)">+65% demand</span>
+        </div>
+        <div class="season-item">
+          <div class="si-icon" style="background:var(--amber-d)">🔧</div>
+          <div class="si-info">
+            <div class="si-label">General plumbing repairs</div>
+            <div class="si-timing">Steady through March · No spike</div>
+          </div>
+          <span class="si-spike" style="background:var(--bg3);color:var(--text3);border:1px solid var(--bdr)">Stable</span>
+        </div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--amber-d);border:1px solid rgba(245,158,11,.22);border-radius:9px;font-size:11px;color:var(--text2)">
+          Based on 3 years of TradeMatch platform data + UK Met Office seasonal patterns.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+</main><!-- /main -->
+
+<!-- ══════ MODAL: STRATEGY SESSION ══════ -->
+<div class="mo" id="strat-modal">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mt">AI Account Strategy Session</div><div class="ms">Based on your last 30 days of data, here's exactly what to do to improve your ROI — and why TradeMatch isn't like other platforms.</div></div>
+      <button class="mc" onclick="closeM('strat-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mb">
+      <div style="background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-family:var(--ff);font-size:14px;font-weight:800;color:var(--neon);margin-bottom:6px">Your ROI is 12x — here's how to reach 18x</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">You're already outperforming 92% of vendors on the platform. Three specific changes will push your win rate from 33% to an estimated 48%.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--danger-d);border:1px solid rgba(239,68,68,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;font-weight:700;color:var(--danger);flex-shrink:0">1</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text1)">Cut your response time by 60 minutes</div>
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;padding-left:32px">Your avg response is 38 minutes — already good. But reducing to under 20m would put you in the top 5% of responders. Data shows this alone lifts win rate by +9%. Enable push notifications on the app.</div>
+          <div style="padding-left:32px;margin-top:6px"><span style="font-family:var(--fm);font-size:9px;background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.25);padding:2px 8px;border-radius:100px">Expected impact: +£780/month</span></div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--amber-d);border:1px solid rgba(245,158,11,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;font-weight:700;color:var(--amber);flex-shrink:0">2</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text1)">Adjust bathroom refit pricing to £3,100</div>
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;padding-left:32px">The local winning average for bathroom refits is £3,100. You're quoting £3,400. You lost the Chorlton job on price by £340. Dropping to £3,100–3,200 on competitive bids (4–5 vendors) while holding £3,400 on 2-3 vendor leads is the optimal strategy.</div>
+          <div style="padding-left:32px;margin-top:6px"><span style="font-family:var(--fm);font-size:9px;background:var(--amber-d);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:2px 8px;border-radius:100px">Expected impact: 1 extra win/month (+£3,100)</span></div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:11px;padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--purple-d);border:1px solid rgba(168,85,247,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;font-weight:700;color:var(--purple);flex-shrink:0">3</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text1)">Renew your PLI before 3 April</div>
+          </div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.5;padding-left:32px">If your insurance lapses, your profile greys out and you lose lead access immediately. £312 renewal protects £6,840+ monthly revenue. Your Trust Score would also drop which affects lead matching priority.</div>
+          <div style="padding-left:32px;margin-top:6px"><span style="font-family:var(--fm);font-size:9px;background:var(--purple-d);color:var(--purple);border:1px solid rgba(168,85,247,.25);padding:2px 8px;border-radius:100px">Risk prevention: protects entire revenue stream</span></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:10px 12px;background:var(--danger-d);border:1px solid rgba(239,68,68,.2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.5">
+        <strong style="color:var(--danger)">TradeMatch Difference</strong> — Unlike Bark.com, we don't keep charging you when ROI is poor. If spend exceeds £150 with 0 wins in any 7-day period, you receive this strategy session automatically and are offered a credit adjustment.
+      </div>
+    </div>
+    <div class="mf">
+      <button class="mbtn mbtn-s" onclick="closeM('strat-modal')">Close</button>
+      <button class="mbtn mbtn-p" onclick="closeM('strat-modal');alert('Insurance renewal flow opened. In production: inline Zurich partner portal.')">Renew Insurance Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL: LOST JOB MORTEM ══════ -->
+<div class="mo" id="mortem-modal">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mt">Lost Job Gap Analysis</div><div class="ms">AI cross-referenced your bids against the winning vendor's profile across 6 dimensions.</div></div>
+      <button class="mc" onclick="closeM('mortem-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mb">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:12px;background:var(--danger-d);border:1px solid rgba(239,68,68,.2);border-radius:10px">
+        <div><div style="font-size:13px;font-weight:700;color:var(--text1)">Bathroom refit · Chorlton M21</div><div style="font-size:11px;color:var(--text2);margin-top:2px">22 Feb 2026 · 3 competing vendors · £3,800 job value</div></div>
+        <span style="font-family:var(--fm);font-size:9px;background:var(--danger-d);color:var(--danger);border:1px solid rgba(239,68,68,.3);padding:3px 9px;border-radius:100px">You lost</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg3);border-radius:10px;border:1px solid var(--bdr)">
+          <div style="font-size:12px;color:var(--text2);width:120px;flex-shrink:0">Your quote</div>
+          <div style="flex:1;height:5px;background:var(--bg4);border-radius:100px;overflow:hidden;position:relative">
+            <div style="width:85%;height:100%;background:var(--blue);border-radius:100px"></div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--text1);width:50px;text-align:right">£3,400</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--neon-d);border-radius:10px;border:1px solid var(--bdr-n)">
+          <div style="font-size:12px;color:var(--neon);width:120px;flex-shrink:0">Winning quote</div>
+          <div style="flex:1;height:5px;background:var(--bg4);border-radius:100px;overflow:hidden;position:relative">
+            <div style="width:76%;height:100%;background:var(--neon);border-radius:100px"></div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--neon);width:50px;text-align:right">£3,060</div>
+        </div>
+      </div>
+      <div style="margin:14px 0;font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)">Profile comparison — anonymised winner</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Your Vault tier</div>
+          <div style="font-size:12px;font-weight:700;color:var(--neon)">Gold</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Winner's Vault tier</div>
+          <div style="font-size:12px;font-weight:700;color:var(--neon)">Gold</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Your reviews</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text1)">47 · 4.9★</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Winner's reviews</div>
+          <div style="font-size:12px;font-weight:700;color:var(--amber)">59 · 4.8★</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Your response time</div>
+          <div style="font-size:12px;font-weight:700;color:var(--neon)">38 minutes</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:9px;padding:10px">
+          <div style="font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Winner's response</div>
+          <div style="font-size:12px;font-weight:700;color:var(--blue)">22 minutes</div>
+        </div>
+      </div>
+      <div style="background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:10px;padding:12px;font-size:12px;color:var(--text2);line-height:1.6">
+        <strong style="color:var(--neon)">AI Verdict</strong> — You lost primarily on price (£340 gap). The winner had 12 more reviews but a similar Trust tier. Dropping your bathroom quote to £3,100–£3,200 on competitive jobs would have won this bid with high probability. Response time was close — you were 16 minutes slower.
+      </div>
+    </div>
+    <div class="mf">
+      <button class="mbtn mbtn-s" onclick="closeM('mortem-modal')">Close</button>
+      <button class="mbtn mbtn-p" onclick="closeM('mortem-modal')">Apply Pricing Suggestion</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL: PRO UPGRADE ══════ -->
+<div class="mo" id="pro-modal">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mt">Unlock Pro Intelligence</div><div class="ms">The Market Intelligence tier gives you the data that makes incumbents look blind.</div></div>
+      <button class="mc" onclick="closeM('pro-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="padding:12px;background:var(--amber-d);border:1px solid rgba(245,158,11,.25);border-radius:10px">
+          <div style="font-size:18px;margin-bottom:6px">🗺️</div><div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:3px">Demand Heatmaps</div>
+          <div style="font-size:11px;color:var(--text2)">See job volume vs competitor density by postcode</div>
+        </div>
+        <div style="padding:12px;background:var(--purple-d);border:1px solid rgba(168,85,247,.25);border-radius:10px">
+          <div style="font-size:18px;margin-bottom:6px">💰</div><div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:3px">AI Pricing Copilot</div>
+          <div style="font-size:11px;color:var(--text2)">Winning quote benchmarks for every job type</div>
+        </div>
+        <div style="padding:12px;background:var(--blue-d);border:1px solid rgba(59,130,246,.25);border-radius:10px">
+          <div style="font-size:18px;margin-bottom:6px">👻</div><div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:3px">Competitor Ghost</div>
+          <div style="font-size:11px;color:var(--text2)">See how many vendors are viewing the same lead</div>
+        </div>
+        <div style="padding:12px;background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:10px">
+          <div style="font-size:18px;margin-bottom:6px">📈</div><div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:3px">Deep Loss Analysis</div>
+          <div style="font-size:11px;color:var(--text2)">Full competitor profile on every lost bid</div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:12px">
+        <div style="font-family:var(--ff);font-size:1.6rem;font-weight:900;color:var(--text1);letter-spacing:-.04em">£29 <span style="font-size:1rem;color:var(--text2);font-weight:400">/month</span></div>
+        <div style="font-size:12px;color:var(--text2);margin:4px 0 12px">Average Pro vendor earns an extra £1,200/month. ROI: 40×.</div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px" onclick="closeM('pro-modal');alert('Pro subscription flow — in production: Stripe Checkout inline. Unlocks immediately on payment.')">Upgrade to Pro — £29/month</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL: TOP UP ══════ -->
+<div class="mo" id="topup-modal">
+  <div class="modal">
+    <div class="mh">
+      <div><div class="mt">Top Up Lead Credits</div><div class="ms">Boiler service demand spikes +40% in 2 weeks. Pre-load credits now to capture the rush automatically.</div></div>
+      <button class="mc" onclick="closeM('topup-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="mb">
+      <div style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.5">
+        <strong style="color:var(--amber)">🌡 Seasonal window: 14–28 March</strong> — Platform data shows boiler service leads triple in this period. Vendors with pre-loaded credits auto-claim leads as they post. Vendors without credits miss the window.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="padding:12px 14px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;cursor:pointer;transition:all .2s" onclick="selectTopUp(this,'£50')">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:700;color:var(--text1)">£50 · 3 boiler leads</span><span style="font-family:var(--fm);font-size:10px;color:var(--text2)">~£600 revenue potential</span></div>
+        </div>
+        <div style="padding:12px 14px;background:var(--neon-d);border:1px solid var(--bdr-n);border-radius:10px;cursor:pointer" onclick="selectTopUp(this,'£100')">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:700;color:var(--neon)">£100 · 7 leads · Best value ⭐</span><span style="font-family:var(--fm);font-size:10px;color:var(--neon)">~£1,400 revenue potential</span></div>
+        </div>
+        <div style="padding:12px 14px;background:var(--bg3);border:1px solid var(--bdr2);border-radius:10px;cursor:pointer;transition:all .2s" onclick="selectTopUp(this,'£200')">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;font-weight:700;color:var(--text1)">£200 · 15 leads · Sprint pack</span><span style="font-family:var(--fm);font-size:10px;color:var(--text2)">~£3,000 revenue potential</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="mbtn mbtn-s" onclick="closeM('topup-modal')">Cancel</button>
+      <button class="mbtn mbtn-p" onclick="closeM('topup-modal');alert('Credits topped up!\n\nIn production: Stripe payment flow, credits added immediately. You will auto-receive boiler service leads during the March spike window.')">Top Up Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Layout ── */
+function tgSb(){['sb','tn','mn'].forEach(id=>document.getElementById(id).classList.toggle('c'))}
+function tgTheme(){const h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light')}
+
+/* ── Period selector ── */
+function setPeriod(el,period){
+  document.querySelectorAll('.ps-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  const vals = {'7d':'£1,840','30d':'£6,840','90d':'£21,200','1y':'£78,400'};
+  const fc = {'7d':'£2,100','30d':'£8,400','90d':'£24,000','1y':'£88,000'};
+  document.querySelector('.roi-val').textContent = vals[period] || '£6,840';
+  document.getElementById('fc-val').textContent = fc[period] || '£8,400';
+  renderForecastBars();
+}
+
+/* ── Forecast bars ── */
+function renderForecastBars(){
+  const container = document.getElementById('fc-bars');
+  const heights = [35,55,48,72];
+  const colors = ['rgba(0,229,160,.4)','rgba(0,229,160,.6)','rgba(0,229,160,.5)','rgba(0,229,160,.85)'];
+  container.innerHTML = heights.map((h,i)=>`
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px">
+      <div style="width:100%;height:${h}px;border-radius:5px 5px 0 0;background:${colors[i]};cursor:pointer;transition:all .2s;position:relative"
+        onmouseover="this.style.filter='brightness(1.3)'"
+        onmouseout="this.style.filter=''"
+        title="Week ${i+1}: £${[1800,2800,2400,3600][i]}"
+      ></div>
+    </div>
+  `).join('');
+}
+renderForecastBars();
+
+/* ── Modals ── */
+function openM(id){document.getElementById(id).classList.add('open')}
+function closeM(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mo').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)closeM(m.id)})});
+function openStratModal(){openM('strat-modal')}
+function openMortemModal(){openM('mortem-modal')}
+function openProModal(){openM('pro-modal')}
+function openTopUpModal(){openM('topup-modal')}
+
+/* ── Top-up selector ── */
+function selectTopUp(el,val){
+  document.querySelectorAll('#topup-modal [style*="padding:12px 14px"]').forEach(d=>{
+    d.style.background='var(--bg3)';d.style.borderColor='var(--bdr2)';
+  });
+  el.style.background='var(--neon-d)';el.style.borderColor='var(--bdr-n)';
+}
+</script>
+</body>
+</html>

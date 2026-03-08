@@ -7,6 +7,133 @@
 
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
+
+const SITE_URL = 'https://www.tradematch.uk';
+const SITEMAP_CHUNK_SIZE = 50000;
+const SEO_PUBLIC_DIR = 'seo-pages/public';
+const SEO_BATCH_DIR = path.join(SEO_PUBLIC_DIR, '.batch');
+const URL_MANIFEST_FILE = path.join(SEO_BATCH_DIR, 'generated-urls-manifest.txt');
+const generatedUrls = [];
+const CORE_URLS = [
+    '/',
+    '/about',
+    '/contact',
+    '/help',
+    '/how-it-works',
+    '/find-tradespeople',
+    '/register',
+    '/login',
+    '/quote-engine',
+    '/privacy',
+    '/terms',
+    '/cookies'
+];
+
+function toPublicUrl(fileName) {
+    const normalized = fileName.replace(/\\/g, '/');
+    const marker = `${SEO_PUBLIC_DIR}/`;
+    const idx = normalized.indexOf(marker);
+    if (idx === -1) {
+        return null;
+    }
+
+    const rel = normalized.slice(idx + marker.length);
+    if (!rel) {
+        return null;
+    }
+
+    if (rel === 'index.html') {
+        return '/';
+    }
+    if (rel.endsWith('/index.html')) {
+        return `/${rel.slice(0, -'/index.html'.length)}/`;
+    }
+    if (rel.endsWith('.html')) {
+        return `/${rel.slice(0, -'.html'.length)}`;
+    }
+    return `/${rel}`;
+}
+
+function trackGeneratedUrl(fileName) {
+    const url = toPublicUrl(fileName);
+    if (url) {
+        generatedUrls.push(url);
+        fs.mkdirSync(SEO_BATCH_DIR, { recursive: true });
+        fs.appendFileSync(URL_MANIFEST_FILE, `${url}\n`, 'utf8');
+    }
+}
+
+function resetManifest() {
+    fs.mkdirSync(SEO_BATCH_DIR, { recursive: true });
+    fs.writeFileSync(URL_MANIFEST_FILE, '', 'utf8');
+}
+
+function loadManifestUrls() {
+    if (!fs.existsSync(URL_MANIFEST_FILE)) {
+        return [];
+    }
+    const text = fs.readFileSync(URL_MANIFEST_FILE, 'utf8');
+    return text
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+}
+
+function buildUrlsetXml(urls) {
+    const lastmod = new Date().toISOString().split('T')[0];
+    const entries = urls
+        .map((url) => `  <url><loc>${SITE_URL}${url}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`)
+        .join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>`;
+}
+
+function generateChunkedSitemaps() {
+    const manifestUrls = loadManifestUrls();
+    const locationUrls = Array.from(new Set(manifestUrls));
+    const mainUrls = Array.from(new Set(CORE_URLS));
+    if (!locationUrls.length && !mainUrls.length) {
+        console.log('⚠️ No URLs tracked for sitemap generation.');
+        return 0;
+    }
+
+    const sitemapDir = path.join(SEO_PUBLIC_DIR, 'sitemaps');
+    fs.mkdirSync(sitemapDir, { recursive: true });
+    const stale = fs.readdirSync(sitemapDir).filter((name) => /\.xml\.gz$/i.test(name));
+    stale.forEach((name) => {
+        fs.unlinkSync(path.join(sitemapDir, name));
+    });
+
+    const chunkFiles = [];
+
+    const mainXml = buildUrlsetXml(mainUrls);
+    const mainGz = zlib.gzipSync(Buffer.from(mainXml, 'utf8'));
+    const mainFile = 'sitemap-main.xml.gz';
+    fs.writeFileSync(path.join(sitemapDir, mainFile), mainGz);
+    chunkFiles.push(mainFile);
+
+    for (let i = 0; i < locationUrls.length; i += SITEMAP_CHUNK_SIZE) {
+        const chunk = locationUrls.slice(i, i + SITEMAP_CHUNK_SIZE);
+        const chunkIndex = Math.floor(i / SITEMAP_CHUNK_SIZE) + 1;
+        const xml = buildUrlsetXml(chunk);
+        const gz = zlib.gzipSync(Buffer.from(xml, 'utf8'));
+        const chunkFile = `sitemap-locations-${chunkIndex}.xml.gz`;
+        fs.writeFileSync(path.join(sitemapDir, chunkFile), gz);
+        chunkFiles.push(chunkFile);
+    }
+
+    const lastmod = new Date().toISOString().split('T')[0];
+    const indexEntries = chunkFiles
+        .map((name) => `  <sitemap><loc>${SITE_URL}/sitemaps/${name}</loc><lastmod>${lastmod}</lastmod></sitemap>`)
+        .join('\n');
+    const indexXml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexEntries}\n</sitemapindex>`;
+    fs.writeFileSync(path.join(SEO_PUBLIC_DIR, 'sitemap-index.xml'), indexXml, 'utf8');
+
+    const totalUrls = mainUrls.length + locationUrls.length;
+    console.log(`🗺️ Generated ${chunkFiles.length} gzip sitemap file(s) for ${totalUrls} URLs (${mainUrls.length} main + ${locationUrls.length} generated)`);
+    return totalUrls;
+}
 
 // Service type configurations with SEO data
 const services = {
@@ -526,6 +653,7 @@ function generateServicePages() {
         if (html) {
             const fileName = `${service}.html`;
             fs.writeFileSync(fileName, html, 'utf8');
+            trackGeneratedUrl(fileName);
             console.log(`✅ Generated: ${fileName}`);
         }
     });
@@ -548,6 +676,7 @@ function generateLocationPages() {
                 }
                 
                 fs.writeFileSync(fileName, html, 'utf8');
+                trackGeneratedUrl(fileName);
                 console.log(`✅ Generated: ${fileName}`);
             }
         });
@@ -570,6 +699,7 @@ function generateMainPages() {
             }
             
             fs.writeFileSync(fileName, html, 'utf8');
+            trackGeneratedUrl(fileName);
             console.log(`✅ Generated: ${fileName}`);
         }
     });
@@ -602,18 +732,24 @@ const command = args[0];
 
 switch (command) {
     case 'main-pages':
+        resetManifest();
         generateMainPages();
+        generateChunkedSitemaps();
         break;
     case 'location-pages':
+        resetManifest();
         generateLocationPages();
+        generateChunkedSitemaps();
         break;
     case 'all-pages':
+        resetManifest();
         generateMainPages();
         generateLocationPages();
+        generateChunkedSitemaps();
         break;
     default:
         console.log(`Unknown command: ${command}`);
         process.exit(1);
 }
 
-console.log(`✅ Page generation complete! Total pages generated: ${Object.keys(services).length}`);
+console.log(`✅ Page generation complete! Total tracked URLs: ${generatedUrls.length}`);

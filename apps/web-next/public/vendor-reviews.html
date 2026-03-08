@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust & Reviews Engine — TradeMatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   TRADEMATCH DESIGN TOKENS
+═══════════════════════════════════════════════════ */
+:root {
+  --bg-primary:    #080C12;
+  --bg-secondary:  #0E1420;
+  --bg-tertiary:   #141B28;
+  --bg-card:       #111827;
+  --bg-card-hover: #182030;
+  --neon:          #00E5A0;
+  --neon-dim:      rgba(0,229,160,0.10);
+  --neon-glow:     0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm:  0 0 14px rgba(0,229,160,0.22);
+  --accent-blue:   #42A5F5;
+  --accent-amber:  #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-gold:   #FFD700;
+  --text-1:        #F0F4FF;
+  --text-2:        #8B95AA;
+  --text-3:        #4A5568;
+  --border:        rgba(255,255,255,0.07);
+  --border-2:      rgba(255,255,255,0.12);
+  --border-neon:   rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+  --sidebar-w: 268px;
+  --topnav-h:  72px;
+}
+[data-theme="light"] {
+  --bg-primary:#F0F4F8; --bg-secondary:#FFFFFF; --bg-tertiary:#F7F9FC;
+  --bg-card:#FFFFFF; --bg-card-hover:#F0F7F4;
+  --neon:#16A34A; --neon-dim:rgba(22,163,74,0.08);
+  --neon-glow:0 0 28px rgba(22,163,74,0.25); --neon-glow-sm:0 0 14px rgba(22,163,74,0.18);
+  --accent-blue:#2563EB; --accent-amber:#D97706; --accent-danger:#DC2626; --accent-purple:#7C3AED;
+  --text-1:#0F172A; --text-2:#475569; --text-3:#94A3B8;
+  --border:rgba(0,0,0,0.07); --border-2:rgba(0,0,0,0.13); --border-neon:rgba(22,163,74,0.25);
+}
+
+/* ═══════════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:var(--fb);background:var(--bg-primary);
+  color:var(--text-1);overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  transition:background .3s,color .3s;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 15% 40%,rgba(0,229,160,.04) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 80% at 85% 70%,rgba(66,165,245,.04) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:100px}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:var(--bg-secondary);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:200;
+  transition:width .3s cubic-bezier(.4,0,.2,1),background .3s;overflow:hidden;
+}
+.sidebar.collapsed{width:72px}
+.sidebar-logo{
+  display:flex;align-items:center;gap:12px;padding:24px 20px 20px;
+  border-bottom:1px solid var(--border);min-height:var(--topnav-h);flex-shrink:0;
+}
+.logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#007a3d,var(--neon));
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--neon-glow-sm);
+}
+.logo-icon svg{width:18px;height:18px;color:#fff;stroke-width:2.5}
+.logo-text{font-family:var(--ff);font-size:1rem;font-weight:800;letter-spacing:-.04em;color:var(--text-1);white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .2s}
+.logo-text span{color:var(--neon)}
+.sidebar.collapsed .logo-text{opacity:0;width:0}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;overflow-x:hidden}
+.nav-section-label{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);padding:8px 8px 6px;white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .2s}
+.sidebar.collapsed .nav-section-label{opacity:0}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:10px;cursor:pointer;
+  transition:background .18s,color .18s;text-decoration:none;color:var(--text-2);
+  font-size:14px;font-weight:500;white-space:nowrap;margin-bottom:2px;position:relative;
+}
+.nav-item:hover{background:var(--neon-dim);color:var(--text-1)}
+.nav-item.active{background:var(--neon-dim);color:var(--neon);font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--neon);border-radius:0 3px 3px 0;box-shadow:var(--neon-glow-sm)}
+.nav-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px;stroke-width:1.8}
+.nav-label{overflow:hidden;transition:opacity .2s,width .3s}
+.sidebar.collapsed .nav-label{opacity:0;width:0}
+.nav-badge{margin-left:auto;background:var(--neon);color:#000;font-family:var(--fm);font-size:10px;font-weight:500;padding:2px 7px;border-radius:100px;flex-shrink:0;transition:opacity .2s}
+.sidebar.collapsed .nav-badge{opacity:0}
+.nav-pulse{width:7px;height:7px;border-radius:50%;background:var(--neon);flex-shrink:0;animation:pulse-dot 2s infinite;margin-left:auto;transition:opacity .2s}
+.sidebar.collapsed .nav-pulse{opacity:0}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.6)}}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.sidebar-footer:hover{background:var(--neon-dim)}
+.avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#42A5F5);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.avatar-info{overflow:hidden;transition:opacity .2s}
+.sidebar.collapsed .avatar-info{opacity:0;width:0}
+.avatar-name{font-size:13px;font-weight:600;color:var(--text-1);white-space:nowrap}
+.avatar-role{font-size:11px;color:var(--text-2);white-space:nowrap}
+
+/* ═══════════════════════════════════════════════════
+   TOPNAV
+═══════════════════════════════════════════════════ */
+.topnav{
+  position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--topnav-h);
+  background:var(--bg-secondary);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 32px;z-index:100;gap:16px;
+  transition:left .3s cubic-bezier(.4,0,.2,1),background .3s;
+}
+.topnav.collapsed{left:72px}
+.hamburger{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .2s;flex-shrink:0}
+.hamburger:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.hamburger svg{width:16px;height:16px;stroke-width:2}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-2)}
+.breadcrumb-sep{color:var(--text-3)}
+.breadcrumb-current{font-family:var(--ff);font-weight:700;color:var(--text-1);font-size:15px}
+.topnav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .2s;position:relative}
+.icon-btn:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.icon-btn svg{width:17px;height:17px;stroke-width:1.8}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--accent-danger);border:2px solid var(--bg-secondary)}
+.theme-toggle-btn{width:52px;height:28px;border-radius:100px;background:var(--bg-tertiary);border:1px solid var(--border-2);cursor:pointer;position:relative;transition:all .3s;display:flex;align-items:center;padding:0 4px}
+.toggle-knob{width:20px;height:20px;border-radius:50%;background:var(--neon);position:absolute;left:4px;transition:all .3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+[data-theme="light"] .toggle-knob{left:26px}
+.toggle-knob svg{width:11px;height:11px;color:#fff;stroke-width:2.5}
+
+/* ═══════════════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════════════ */
+.main{
+  margin-left:var(--sidebar-w);margin-top:var(--topnav-h);
+  padding:32px;position:relative;z-index:1;
+  transition:margin-left .3s cubic-bezier(.4,0,.2,1);
+  min-height:calc(100vh - var(--topnav-h));
+}
+.main.collapsed{margin-left:72px}
+
+/* ═══════════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;border-radius:10px;padding:9px 18px;cursor:pointer;border:none;transition:all .22s;white-space:nowrap}
+.btn svg{width:15px;height:15px;stroke-width:2}
+.btn-primary{background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;box-shadow:var(--neon-glow-sm)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text-1);border:1px solid var(--border-2)}
+.btn-secondary:hover{background:var(--bg-card-hover);border-color:var(--border-neon);color:var(--neon)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border);padding:8px 14px}
+.btn-ghost:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+
+/* ═══════════════════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════════════════ */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:20px}
+.page-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--neon);opacity:.8;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.page-eyebrow::before{content:'';width:18px;height:1px;background:var(--neon);opacity:.5}
+.page-title{font-family:var(--ff);font-size:1.9rem;font-weight:800;letter-spacing:-.04em;color:var(--text-1);line-height:1.1}
+.page-sub{font-size:14px;color:var(--text-2);margin-top:6px}
+.page-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+
+/* ═══════════════════════════════════════════════════
+   TRUST STATS BAR
+═══════════════════════════════════════════════════ */
+.trust-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
+.tstat{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:14px;padding:16px 18px;
+  position:relative;overflow:hidden;transition:all .22s;
+}
+.tstat:hover{border-color:var(--border-2);transform:translateY(-1px)}
+.tstat-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.tstat-icon svg{width:15px;height:15px;stroke-width:2}
+.tstat-val{font-family:var(--ff);font-size:1.55rem;font-weight:900;letter-spacing:-.04em;color:var(--text-1);line-height:1}
+.tstat-label{font-size:11.5px;color:var(--text-2);margin-top:4px}
+.tstat-delta{font-family:var(--fm);font-size:10px;margin-top:5px;color:var(--neon)}
+
+/* ═══════════════════════════════════════════════════
+   MAIN GRID (reviews left, sidebar right)
+═══════════════════════════════════════════════════ */
+.content-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+
+/* ═══════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════ */
+.tabs{display:flex;gap:4px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:4px;width:fit-content;margin-bottom:20px}
+.tab{font-family:var(--ff);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;color:var(--text-2);transition:all .2s;border:none;background:transparent;display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--text-1)}
+.tab.active{background:var(--bg-secondary);color:var(--text-1);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.tab-count{font-size:10px;font-family:var(--fm);background:var(--neon-dim);color:var(--neon);padding:1px 6px;border-radius:100px;border:1px solid var(--border-neon)}
+
+/* ═══════════════════════════════════════════════════
+   FILTER ROW
+═══════════════════════════════════════════════════ */
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.filter-select{background:var(--bg-card);border:1px solid var(--border-2);border-radius:9px;padding:7px 12px;color:var(--text-1);font-family:var(--fb);font-size:13px;cursor:pointer;outline:none;transition:all .2s}
+.filter-select:hover,.filter-select:focus{border-color:var(--border-neon)}
+.filter-label{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.filter-divider{width:1px;height:24px;background:var(--border-2)}
+
+/* ═══════════════════════════════════════════════════
+   REVIEW CARD
+═══════════════════════════════════════════════════ */
+.reviews-feed{display:flex;flex-direction:column;gap:14px}
+
+.review-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;position:relative;
+  transition:all .25s;
+  animation:card-in .4s ease forwards;opacity:0;
+}
+@keyframes card-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.review-card:nth-child(1){animation-delay:.05s}
+.review-card:nth-child(2){animation-delay:.12s}
+.review-card:nth-child(3){animation-delay:.19s}
+.review-card:nth-child(4){animation-delay:.26s}
+.review-card:hover{border-color:var(--border-2);box-shadow:0 8px 32px rgba(0,0,0,.2);transform:translateY(-1px)}
+
+/* authenticity bar at top */
+.review-card.auth-high::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--neon);box-shadow:0 0 10px rgba(0,229,160,.4)}
+.review-card.auth-medium::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-amber)}
+.review-card.auth-flag::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-danger);animation:flag-pulse 2s infinite}
+@keyframes flag-pulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(255,71,87,.4)}}
+.review-card.imported::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-purple)}
+
+.review-top{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid var(--border)}
+.reviewer-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:15px;font-weight:700;color:#fff;flex-shrink:0;position:relative}
+.reviewer-info{flex:1;min-width:0}
+.reviewer-name-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.reviewer-name{font-family:var(--ff);font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--text-1)}
+.stars-row{display:flex;align-items:center;gap:2px}
+.star{color:var(--accent-gold);font-size:14px;line-height:1}
+.star.empty{color:var(--text-3)}
+.review-date{font-family:var(--fm);font-size:10px;color:var(--text-3);margin-left:auto;flex-shrink:0}
+
+/* trust badge strip */
+.trust-badge-strip{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.tbadge{display:inline-flex;align-items:center;gap:4px;font-family:var(--fm);font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:100px;font-weight:500}
+.tbadge svg{width:9px;height:9px;stroke-width:2.5}
+.tb-verified{background:rgba(0,229,160,.1);color:var(--neon);border:1px solid var(--border-neon)}
+.tb-escrow{background:rgba(66,165,245,.1);color:var(--accent-blue);border:1px solid rgba(66,165,245,.25)}
+.tb-photo{background:rgba(156,95,233,.1);color:var(--accent-purple);border:1px solid rgba(156,95,233,.25)}
+.tb-imported{background:rgba(255,167,38,.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,.25)}
+.tb-flagged{background:rgba(255,71,87,.1);color:var(--accent-danger);border:1px solid rgba(255,71,87,.25);animation:flag-glow 2s infinite}
+@keyframes flag-glow{0%,100%{box-shadow:none}50%{box-shadow:0 0 8px rgba(255,71,87,.3)}}
+.tb-mediation{background:rgba(255,167,38,.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,.25)}
+
+/* AI authenticity score */
+.auth-score-wrap{flex-shrink:0;text-align:center}
+.auth-ring{width:52px;height:52px;position:relative;display:flex;align-items:center;justify-content:center}
+.auth-ring svg.ring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bg-tertiary);stroke-width:3.5}
+.ring-fill{fill:none;stroke-width:3.5;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.auth-pct{position:relative;z-index:1;font-family:var(--ff);font-size:12px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.auth-label{font-family:var(--fm);font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-top:2px}
+
+/* review body */
+.review-body{padding:16px 20px}
+.review-text{font-size:14px;color:var(--text-1);line-height:1.65;margin-bottom:14px}
+.review-text.truncated{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.read-more{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--neon);cursor:pointer;text-decoration:none;text-transform:uppercase;margin-top:-8px;display:inline-block;margin-bottom:12px}
+
+/* photo proof grid */
+.photo-proof{margin-bottom:14px}
+.photo-proof-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.photo-proof-label svg{width:10px;height:10px;color:var(--accent-purple)}
+.photo-grid{display:flex;gap:6px;flex-wrap:wrap}
+.photo-thumb{width:64px;height:64px;border-radius:8px;background:var(--bg-tertiary);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.photo-thumb:hover{border-color:var(--border-neon);transform:scale(1.04)}
+.photo-thumb svg{width:20px;height:20px;color:var(--text-3)}
+.photo-verified-badge{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:50%;background:var(--neon);display:flex;align-items:center;justify-content:center}
+.photo-verified-badge svg{width:8px;height:8px;color:#000;stroke-width:3}
+
+/* job details chips */
+.job-detail-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.job-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text-2);background:var(--bg-tertiary);border:1px solid var(--border);border-radius:7px;padding:4px 10px}
+.job-chip svg{width:11px;height:11px;opacity:.6}
+.job-value-chip{color:var(--neon);background:var(--neon-dim);border-color:var(--border-neon)}
+
+/* semantic match */
+.semantic-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  background:var(--bg-tertiary);
+  border:1px solid var(--border);
+  border-radius:10px;margin-bottom:12px;
+}
+.semantic-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);white-space:nowrap}
+.semantic-bar{flex:1;height:4px;background:var(--bg-card);border-radius:100px;overflow:hidden}
+.semantic-fill{height:100%;border-radius:100px;transition:width .8s ease}
+.semantic-val{font-family:var(--ff);font-size:12px;font-weight:700;color:var(--text-1);white-space:nowrap}
+
+/* vendor reply */
+.vendor-reply{
+  background:rgba(0,229,160,.04);
+  border:1px solid var(--border-neon);
+  border-radius:12px;padding:12px 14px;
+  margin-top:2px;
+}
+.vendor-reply-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.reply-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#42A5F5);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.reply-name{font-size:12px;font-weight:700;color:var(--text-1)}
+.reply-chip{font-family:var(--fm);font-size:8.5px;padding:2px 7px;border-radius:100px;background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon);margin-left:auto}
+.reply-text{font-size:13px;color:var(--text-2);line-height:1.55}
+
+/* review footer */
+.review-footer{
+  padding:11px 20px;background:var(--bg-secondary);border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.helpful-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--text-2);background:none;border:1px solid var(--border);border-radius:7px;padding:5px 10px;cursor:pointer;transition:all .2s;font-family:var(--fb)}
+.helpful-btn:hover{border-color:var(--border-neon);color:var(--neon)}
+.helpful-btn svg{width:12px;height:12px}
+.flag-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--text-3);background:none;border:none;cursor:pointer;transition:all .2s;font-family:var(--fm);letter-spacing:.06em;text-transform:uppercase;margin-left:auto;padding:5px 0}
+.flag-btn:hover{color:var(--accent-danger)}
+.flag-btn svg{width:11px;height:11px}
+
+/* dispute badge on footer */
+.dispute-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:100px;background:rgba(255,167,38,.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,.25)}
+.dispute-badge svg{width:9px;height:9px}
+
+/* ═══════════════════════════════════════════════════
+   RIGHT SIDEBAR — TRUST ARCHITECTURE PANEL
+═══════════════════════════════════════════════════ */
+.sidebar-panel{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(var(--topnav-h) + 32px)}
+
+.panel-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.panel-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;color:var(--text-1);display:flex;align-items:center;gap:8px}
+.panel-title svg{width:14px;height:14px}
+.panel-body{padding:14px 16px}
+
+/* Trust Score card */
+.trust-score-hero{text-align:center;padding:20px 16px 14px;position:relative}
+.ts-ring-wrap{width:110px;height:110px;margin:0 auto 12px;position:relative;display:flex;align-items:center;justify-content:center}
+.ts-ring-wrap svg.big-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ts-ring-bg{fill:none;stroke:var(--bg-tertiary);stroke-width:6}
+.ts-ring-fill{fill:none;stroke:var(--neon);stroke-width:6;stroke-linecap:round;stroke-dasharray:314;stroke-dashoffset:47;transition:stroke-dashoffset 1.5s ease;filter:drop-shadow(0 0 8px rgba(0,229,160,.4))}
+.ts-center{position:relative;z-index:1;text-align:center}
+.ts-val{font-family:var(--ff);font-size:2rem;font-weight:900;letter-spacing:-.05em;color:var(--neon);line-height:1}
+.ts-denom{font-family:var(--fm);font-size:11px;color:var(--text-3)}
+.ts-label{font-family:var(--ff);font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:3px}
+.ts-sub{font-size:12px;color:var(--text-2)}
+.ts-tier-chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-top:8px;background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.ts-tier-chip::before{content:'⭐';font-size:11px}
+
+/* breakdown bars */
+.breakdown-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.breakdown-row:last-child{border-bottom:none;padding-bottom:0}
+.breakdown-label{font-size:12px;color:var(--text-2);width:90px;flex-shrink:0}
+.breakdown-bar{flex:1;height:5px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.breakdown-fill{height:100%;border-radius:100px;transition:width .8s ease}
+.breakdown-val{font-family:var(--fm);font-size:11px;font-weight:500;color:var(--text-1);width:32px;text-align:right;flex-shrink:0}
+
+/* tier comparison */
+.tier-compare{display:flex;flex-direction:column;gap:6px}
+.tier-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg-tertiary)}
+.tier-row.current-tier{border-color:var(--border-neon);background:var(--neon-dim)}
+.tier-icon{font-size:16px;flex-shrink:0;width:24px;text-align:center}
+.tier-info{flex:1;min-width:0}
+.tier-name{font-size:12px;font-weight:700;color:var(--text-1)}
+.tier-sub{font-size:11px;color:var(--text-2);margin-top:1px}
+.tier-chip{font-family:var(--fm);font-size:8px;padding:2px 7px;border-radius:100px;flex-shrink:0}
+.tier-chip-active{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.tier-chip-upcoming{background:var(--bg-card);color:var(--text-3);border:1px solid var(--border)}
+
+/* import module */
+.import-source{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-tertiary);border:1px solid var(--border-2);border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.import-source:hover{border-color:var(--border-neon)}
+.import-source-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.import-source-info{flex:1;min-width:0}
+.import-source-name{font-size:12px;font-weight:700;color:var(--text-1)}
+.import-source-sub{font-size:11px;color:var(--text-2);margin-top:1px}
+.import-action{font-family:var(--fm);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:7px;border:1px solid var(--border-2);background:transparent;color:var(--text-2);cursor:pointer;transition:all .2s;flex-shrink:0}
+.import-action:hover{border-color:var(--border-neon);color:var(--neon)}
+.import-action.active{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+
+/* proof of completion gate */
+.poc-gate{
+  background:rgba(156,95,233,.06);border:1px solid rgba(156,95,233,.2);
+  border-radius:12px;padding:12px 14px;
+}
+.poc-icon{width:32px;height:32px;border-radius:9px;background:rgba(156,95,233,.12);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.poc-icon svg{width:15px;height:15px;color:var(--accent-purple);stroke-width:2}
+.poc-title{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:4px}
+.poc-desc{font-size:12px;color:var(--text-2);line-height:1.5}
+.poc-progress{margin-top:10px}
+.poc-prog-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.poc-track{height:6px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.poc-fill{height:100%;background:linear-gradient(90deg,var(--accent-purple),var(--neon));border-radius:100px;transition:width 1s ease}
+
+/* zero suppression badge */
+.zero-suppression-badge{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  background:rgba(0,229,160,.04);
+  border:1px solid var(--border-neon);
+  border-radius:12px;
+}
+.zsb-icon{width:32px;height:32px;border-radius:9px;background:var(--neon-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.zsb-icon svg{width:15px;height:15px;color:var(--neon)}
+.zsb-info{flex:1;min-width:0}
+.zsb-title{font-size:12px;font-weight:700;color:var(--neon)}
+.zsb-sub{font-size:11px;color:var(--text-2);margin-top:2px;line-height:1.4}
+
+/* ═══════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg-card);border:1px solid var(--border-2);border-radius:20px;width:92%;max-width:560px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.5);transform:translateY(16px) scale(.97);transition:transform .25s}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-header{padding:24px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:var(--ff);font-size:1.1rem;font-weight:800;letter-spacing:-.03em;color:var(--text-1)}
+.modal-sub{font-size:13px;color:var(--text-2);margin-top:4px;line-height:1.5}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border-2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .2s;flex-shrink:0}
+.modal-close:hover{color:var(--text-1);border-color:var(--border-neon)}
+.modal-close svg{width:14px;height:14px;stroke-width:2}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.modal-btn{padding:10px 22px;border-radius:10px;font-family:var(--ff);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.modal-btn-primary{background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;box-shadow:var(--neon-glow-sm)}
+.modal-btn-primary:hover{box-shadow:var(--neon-glow)}
+.modal-btn-secondary{background:var(--bg-tertiary);color:var(--text-1);border:1px solid var(--border-2)}
+.modal-btn-secondary:hover{border-color:var(--border-neon);color:var(--neon)}
+.modal-btn-danger{background:rgba(255,71,87,.1);color:var(--accent-danger);border:1px solid rgba(255,71,87,.3)}
+.modal-btn-danger:hover{background:rgba(255,71,87,.2)}
+
+/* form elements */
+.form-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px}
+.form-input{width:100%;background:var(--bg-tertiary);border:1px solid var(--border-2);border-radius:9px;padding:9px 12px;font-family:var(--fb);font-size:13px;color:var(--text-1);outline:none;transition:border-color .2s;margin-bottom:12px}
+.form-input:focus{border-color:var(--border-neon)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Review write form */
+.star-picker{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.star-pick{font-size:24px;cursor:pointer;transition:transform .15s;color:var(--text-3)}
+.star-pick:hover,.star-pick.selected{color:var(--accent-gold);transform:scale(1.15)}
+.upload-zone{border:2px dashed var(--border-2);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:12px}
+.upload-zone:hover{border-color:var(--border-neon);background:var(--neon-dim)}
+.upload-zone svg{width:28px;height:28px;color:var(--text-3);margin:0 auto 8px;display:block}
+.upload-zone-label{font-size:13px;color:var(--text-2)}
+.upload-zone-sub{font-size:11px;color:var(--text-3);margin-top:3px}
+.upload-zone.locked{background:rgba(156,95,233,.04);border-color:rgba(156,95,233,.25)}
+.upload-zone.locked svg{color:var(--accent-purple)}
+.poc-required-notice{display:flex;align-items:flex-start;gap:8px;background:rgba(156,95,233,.07);border:1px solid rgba(156,95,233,.2);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--accent-purple);line-height:1.5}
+.poc-required-notice svg{width:14px;height:14px;flex-shrink:0;margin-top:1px}
+
+/* auth detail */
+.auth-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.auth-detail-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:9px;padding:10px}
+.auth-detail-label{font-family:var(--fm);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+.auth-detail-val{font-size:13px;font-weight:600;color:var(--text-1)}
+.auth-detail-val.pass{color:var(--neon)}
+.auth-detail-val.fail{color:var(--accent-danger)}
+.auth-detail-val.warn{color:var(--accent-amber)}
+.semantic-detail{background:var(--bg-tertiary);border:1px solid var(--border-2);border-radius:10px;padding:12px;margin-bottom:14px}
+.sem-row-modal{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sem-row-modal:last-child{margin-bottom:0}
+.sem-label-modal{font-size:12px;color:var(--text-2);width:120px;flex-shrink:0}
+.sem-bar-modal{flex:1;height:5px;background:var(--bg-card);border-radius:100px;overflow:hidden}
+.sem-fill-modal{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent-blue),var(--neon));transition:width .8s ease}
+.sem-val-modal{font-family:var(--fm);font-size:11px;font-weight:600;color:var(--text-1);width:35px;text-align:right}
+
+/* Responsive */
+@media(max-width:1280px){.content-grid{grid-template-columns:1fr 320px}}
+@media(max-width:1100px){.content-grid{grid-template-columns:1fr};.sidebar-panel{position:static;max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:14px}}
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}.topnav{left:0!important}.main{margin-left:0!important;padding:20px}
+  .trust-stats{grid-template-columns:repeat(3,1fr)}
+  .content-grid{grid-template-columns:1fr}
+  .sidebar-panel{display:grid;grid-template-columns:1fr}
+}
+@media(max-width:600px){.trust-stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    </div>
+    <span class="logo-text">Trade<span>Match</span></span>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+      <span class="nav-label">Live Leads</span>
+      <span class="nav-badge">14</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      <span class="nav-label">Active Jobs</span>
+      <span class="nav-pulse"></span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+      <span class="nav-label">Messages</span>
+      <span class="nav-badge">5</span>
+    </a>
+    <div class="nav-section-label" style="margin-top:12px">Business</div>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+      <span class="nav-label">Payments</span>
+    </a>
+    <a href="#" class="nav-item active">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+      <span class="nav-label">Reviews</span>
+      <span class="nav-badge">47</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+      <span class="nav-label">Analytics</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="avatar">MH</div>
+    <div class="avatar-info">
+      <div class="avatar-name">Mike Harrison</div>
+      <div class="avatar-role">Pro Plumber · Manchester</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════
+     TOPNAV
+═══════════════════════════════════════════════════ -->
+<header class="topnav" id="topnav">
+  <button class="hamburger" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="breadcrumb">
+    <span>Vendor Portal</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Trust & Reviews Engine</span>
+  </div>
+  <div class="topnav-right">
+    <button class="btn btn-primary" onclick="openWriteReview()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Request Review
+    </button>
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-dot"></span>
+    </button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+      <div class="toggle-knob">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════════ -->
+<main class="main" id="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-eyebrow">Trust Architecture</div>
+      <h1 class="page-title">Reviews Engine</h1>
+      <p class="page-sub">Every review is escrow-linked, AI-authenticated, and semantically verified. Zero suppression. Instant publish.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-secondary" onclick="openImportModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        Import Legacy Reviews
+      </button>
+    </div>
+  </div>
+
+  <!-- TRUST STATS -->
+  <div class="trust-stats">
+    <div class="tstat">
+      <div class="tstat-icon" style="background:var(--neon-dim)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--neon)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="tstat-val">4.9</div>
+      <div class="tstat-label">Average rating</div>
+      <div class="tstat-delta">↑ +0.1 this month</div>
+    </div>
+    <div class="tstat">
+      <div class="tstat-icon" style="background:rgba(66,165,245,.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--accent-blue)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="tstat-val">47</div>
+      <div class="tstat-label">Verified reviews</div>
+      <div class="tstat-delta" style="color:var(--accent-blue)">All escrow-linked</div>
+    </div>
+    <div class="tstat">
+      <div class="tstat-icon" style="background:rgba(156,95,233,.1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--accent-purple)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div class="tstat-val">112</div>
+      <div class="tstat-label">Photo proofs</div>
+      <div class="tstat-delta" style="color:var(--accent-purple)">GPS-tagged + vaulted</div>
+    </div>
+    <div class="tstat">
+      <div class="tstat-icon" style="background:rgba(255,215,0,.08)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--accent-gold)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div class="tstat-val">96.2%</div>
+      <div class="tstat-label">AI Auth score avg</div>
+      <div class="tstat-delta" style="color:var(--accent-gold)">Top 3% platform-wide</div>
+    </div>
+    <div class="tstat">
+      <div class="tstat-icon" style="background:rgba(255,71,87,.08)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--accent-danger)"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+      </div>
+      <div class="tstat-val">0</div>
+      <div class="tstat-label">Suppressed reviews</div>
+      <div class="tstat-delta" style="color:var(--neon)">Zero suppression policy ✓</div>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid">
+
+    <!-- REVIEWS COLUMN -->
+    <div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab(this,'all')">All Reviews <span class="tab-count">47</span></button>
+        <button class="tab" onclick="switchTab(this,'native')">TM Native <span class="tab-count">38</span></button>
+        <button class="tab" onclick="switchTab(this,'imported')">Imported <span class="tab-count">9</span></button>
+        <button class="tab" onclick="switchTab(this,'flagged')">Flagged <span class="tab-count">1</span></button>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">Stars</span>
+        <select class="filter-select" onchange="applyFilters()">
+          <option>All ratings</option>
+          <option>5 ★ only</option>
+          <option>4 ★ and above</option>
+          <option>3 ★ and below</option>
+        </select>
+        <div class="filter-divider"></div>
+        <span class="filter-label">Auth Score</span>
+        <select class="filter-select" onchange="applyFilters()">
+          <option>Any score</option>
+          <option>90%+ High</option>
+          <option>70–89% Medium</option>
+          <option>Below 70% Review</option>
+        </select>
+        <div class="filter-divider"></div>
+        <span class="filter-label">Sort</span>
+        <select class="filter-select" onchange="applyFilters()">
+          <option>Newest first</option>
+          <option>Highest rated</option>
+          <option>Highest auth score</option>
+        </select>
+      </div>
+
+      <div class="reviews-feed" id="reviews-feed">
+
+        <!-- ═══ REVIEW 1 — 5★ Native, High Auth ═══ -->
+        <div class="review-card auth-high">
+          <div class="review-top">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,#007a3d,#00E5A0)">SJ</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name-row">
+                <span class="reviewer-name">Sarah Johnson</span>
+                <div class="stars-row">★★★★★</div>
+                <span style="font-family:var(--fm);font-size:9px;color:var(--neon);background:var(--neon-dim);border:1px solid var(--border-neon);padding:2px 7px;border-radius:100px">5.0</span>
+              </div>
+              <div class="trust-badge-strip">
+                <span class="tbadge tb-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>ID Verified</span>
+                <span class="tbadge tb-escrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Escrow-linked</span>
+                <span class="tbadge tb-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Photo proof</span>
+              </div>
+            </div>
+            <div class="auth-score-wrap">
+              <div class="auth-ring" onclick="openAuthModal(98,'SJ')">
+                <svg class="ring-svg" viewBox="0 0 52 52">
+                  <circle class="ring-bg" cx="26" cy="26" r="22"/>
+                  <circle class="ring-fill" cx="26" cy="26" r="22" stroke="var(--neon)" stroke-dasharray="138.2" stroke-dashoffset="2.8"/>
+                </svg>
+                <span class="auth-pct" style="color:var(--neon)">98%</span>
+              </div>
+              <div class="auth-label">AI Auth</div>
+            </div>
+            <div class="review-date">28 Feb 2026</div>
+          </div>
+          <div class="review-body">
+            <div class="job-detail-row">
+              <span class="job-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Bathroom Refit</span>
+              <span class="job-chip job-value-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>£3,400</span>
+              <span class="job-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/></svg>Didsbury, M20</span>
+            </div>
+            <div class="review-text truncated" id="rev1-text">Mike was absolutely brilliant from start to finish. He arrived on the dot at 8am every day, communicated perfectly throughout, and the finished bathroom is honestly better than anything we imagined. The tiling is immaculate, the suite is perfectly fitted, and he even sorted out an unexpected issue with old pipework at no extra cost. I wouldn't hesitate to recommend him to anyone.</div>
+            <a class="read-more" onclick="toggleReadMore('rev1-text',this)">Read more ↓</a>
+            <div class="photo-proof">
+              <div class="photo-proof-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Photo Proof of Completion (6 images · GPS verified)
+              </div>
+              <div class="photo-grid">
+                <div class="photo-thumb" onclick="openPhoto(1)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <div class="photo-verified-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </div>
+                <div class="photo-thumb" onclick="openPhoto(2)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <div class="photo-verified-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </div>
+                <div class="photo-thumb" onclick="openPhoto(3)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <div class="photo-verified-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+                </div>
+                <div class="photo-thumb" onclick="openPhoto(4)" style="background:var(--neon-dim);border-color:var(--border-neon)">
+                  <span style="font-family:var(--ff);font-size:11px;font-weight:700;color:var(--neon)">+3</span>
+                </div>
+              </div>
+            </div>
+            <div class="semantic-row">
+              <span class="semantic-label">Semantic match</span>
+              <div class="semantic-bar">
+                <div class="semantic-fill" style="width:97%;background:linear-gradient(90deg,var(--accent-blue),var(--neon))"></div>
+              </div>
+              <span class="semantic-val" style="color:var(--neon)">97%</span>
+            </div>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="markHelpful(this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>
+              Helpful (12)
+            </button>
+            <button class="helpful-btn" onclick="openAuthModal(98,'SJ')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Auth Report
+            </button>
+            <button class="flag-btn" onclick="openFlagModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+              Report issue
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ REVIEW 2 — 5★ with vendor reply ═══ -->
+        <div class="review-card auth-high">
+          <div class="review-top">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,#2563EB,#42A5F5)">RP</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name-row">
+                <span class="reviewer-name">Robert Patel</span>
+                <div class="stars-row">★★★★★</div>
+                <span style="font-family:var(--fm);font-size:9px;color:var(--neon);background:var(--neon-dim);border:1px solid var(--border-neon);padding:2px 7px;border-radius:100px">5.0</span>
+              </div>
+              <div class="trust-badge-strip">
+                <span class="tbadge tb-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>ID Verified</span>
+                <span class="tbadge tb-escrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Escrow-linked</span>
+                <span class="tbadge tb-photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Photo proof</span>
+              </div>
+            </div>
+            <div class="auth-score-wrap">
+              <div class="auth-ring" onclick="openAuthModal(94,'RP')">
+                <svg class="ring-svg" viewBox="0 0 52 52">
+                  <circle class="ring-bg" cx="26" cy="26" r="22"/>
+                  <circle class="ring-fill" cx="26" cy="26" r="22" stroke="var(--neon)" stroke-dasharray="138.2" stroke-dashoffset="8.3"/>
+                </svg>
+                <span class="auth-pct" style="color:var(--neon)">94%</span>
+              </div>
+              <div class="auth-label">AI Auth</div>
+            </div>
+            <div class="review-date">14 Feb 2026</div>
+          </div>
+          <div class="review-body">
+            <div class="job-detail-row">
+              <span class="job-chip">Boiler Replacement</span>
+              <span class="job-chip job-value-chip">£1,850</span>
+              <span class="job-chip">Salford, M5</span>
+            </div>
+            <div class="review-text">Superb work. Had a boiler replaced in a day — Mike explained everything, was Gas Safe certified, and left the place spotless. The escrow system on TradeMatch gave me real peace of mind. Excellent all round.</div>
+            <div class="semantic-row">
+              <span class="semantic-label">Semantic match</span>
+              <div class="semantic-bar"><div class="semantic-fill" style="width:93%;background:linear-gradient(90deg,var(--accent-blue),var(--neon))"></div></div>
+              <span class="semantic-val" style="color:var(--neon)">93%</span>
+            </div>
+            <div class="vendor-reply">
+              <div class="vendor-reply-header">
+                <div class="reply-avatar">MH</div>
+                <span class="reply-name">Mike Harrison · Vendor response</span>
+                <span class="reply-chip">Verified reply</span>
+              </div>
+              <div class="reply-text">Thank you, Robert! Really enjoyed working on this one — you had great taste in the new boiler model. If you ever need your annual service, I'd be happy to come back. Thanks for taking the time to leave a review.</div>
+            </div>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="markHelpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>Helpful (8)</button>
+            <button class="helpful-btn" onclick="openAuthModal(94,'RP')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Auth Report</button>
+            <button class="flag-btn" onclick="openFlagModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Report issue</button>
+          </div>
+        </div>
+
+        <!-- ═══ REVIEW 3 — 4★ Medium auth, Under mediation ═══ -->
+        <div class="review-card auth-medium">
+          <div class="review-top">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,#7C3AED,#9C5FE9)">EW</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name-row">
+                <span class="reviewer-name">Emma Wilson</span>
+                <div class="stars-row">★★★★<span class="star empty">★</span></div>
+                <span style="font-family:var(--fm);font-size:9px;color:var(--accent-amber);background:rgba(255,167,38,.1);border:1px solid rgba(255,167,38,.25);padding:2px 7px;border-radius:100px">4.0</span>
+              </div>
+              <div class="trust-badge-strip">
+                <span class="tbadge tb-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>ID Verified</span>
+                <span class="tbadge tb-escrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Escrow-linked</span>
+                <span class="tbadge tb-mediation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Under Mediation</span>
+              </div>
+            </div>
+            <div class="auth-score-wrap">
+              <div class="auth-ring" onclick="openAuthModal(81,'EW')">
+                <svg class="ring-svg" viewBox="0 0 52 52">
+                  <circle class="ring-bg" cx="26" cy="26" r="22"/>
+                  <circle class="ring-fill" cx="26" cy="26" r="22" stroke="var(--accent-amber)" stroke-dasharray="138.2" stroke-dashoffset="26.3"/>
+                </svg>
+                <span class="auth-pct" style="color:var(--accent-amber)">81%</span>
+              </div>
+              <div class="auth-label">AI Auth</div>
+            </div>
+            <div class="review-date">3 Feb 2026</div>
+          </div>
+          <div class="review-body">
+            <div class="job-detail-row">
+              <span class="job-chip">Radiator Repair</span>
+              <span class="job-chip job-value-chip">£320</span>
+              <span class="job-chip">Stretford, M32</span>
+            </div>
+            <div class="review-text">Work was good overall but Mike arrived 45 minutes late on the second day without calling ahead. The actual repair work was solid and the radiators all work perfectly now, but punctuality could be better. Would still use again but just be more explicit about timing expectations.</div>
+            <div class="semantic-row">
+              <span class="semantic-label">Semantic match</span>
+              <div class="semantic-bar"><div class="semantic-fill" style="width:81%;background:linear-gradient(90deg,var(--accent-amber),#FFA726)"></div></div>
+              <span class="semantic-val" style="color:var(--accent-amber)">81%</span>
+            </div>
+            <div style="background:rgba(255,167,38,.06);border:1px solid rgba(255,167,38,.2);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--accent-amber);line-height:1.5">
+              <strong>⚖️ Dispute Active — Case TM-2026-0318</strong><br>
+              <span style="color:var(--text-2)">Vendor has raised a response disagreeing with the punctuality claim. Our Trust & Safety team is reviewing both parties' check-in records. Resolution by 5 Mar 2026.</span>
+            </div>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="markHelpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>Helpful (3)</button>
+            <span class="dispute-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Under Active Mediation</span>
+            <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px;margin-left:auto" onclick="openDisputeStatus()">View case</button>
+          </div>
+        </div>
+
+        <!-- ═══ REVIEW 4 — 3★ Flagged for review ═══ -->
+        <div class="review-card auth-flag">
+          <div class="review-top">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,#DC2626,#FF4757)">LM</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name-row">
+                <span class="reviewer-name">Linda Morrison</span>
+                <div class="stars-row">★★★<span class="star empty">★</span><span class="star empty">★</span></div>
+                <span style="font-family:var(--fm);font-size:9px;color:var(--accent-danger);background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);padding:2px 7px;border-radius:100px">3.0</span>
+              </div>
+              <div class="trust-badge-strip">
+                <span class="tbadge tb-flagged"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>AI Flagged</span>
+                <span class="tbadge tb-escrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Escrow-linked</span>
+              </div>
+            </div>
+            <div class="auth-score-wrap">
+              <div class="auth-ring" onclick="openAuthModal(48,'LM')">
+                <svg class="ring-svg" viewBox="0 0 52 52">
+                  <circle class="ring-bg" cx="26" cy="26" r="22"/>
+                  <circle class="ring-fill" cx="26" cy="26" r="22" stroke="var(--accent-danger)" stroke-dasharray="138.2" stroke-dashoffset="71.9"/>
+                </svg>
+                <span class="auth-pct" style="color:var(--accent-danger)">48%</span>
+              </div>
+              <div class="auth-label">AI Auth</div>
+            </div>
+            <div class="review-date">1 Feb 2026</div>
+          </div>
+          <div class="review-body">
+            <div class="job-detail-row">
+              <span class="job-chip">Boiler Service</span>
+              <span class="job-chip job-value-chip">£120</span>
+              <span class="job-chip">Eccles, M30</span>
+            </div>
+            <div class="review-text truncated" id="rev4-text">Wasn't happy with the finish. The work seemed rushed and I felt the price was too high for what was done. I wasn't home when he finished so couldn't check everything. Would not use again.</div>
+            <a class="read-more" onclick="toggleReadMore('rev4-text',this)">Read more ↓</a>
+            <div style="background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.2);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--accent-danger);line-height:1.5">
+              <strong>⚠️ AI Authenticity Flag — Review Under Assessment</strong><br>
+              <span style="color:var(--text-2)">Review sentiment is inconsistent with job communication logs (homeowner rated the visit positively in real-time messages). Semantic correspondence score: 48%. Assigned to Trust & Safety for manual review. <em>Review remains published per Zero Suppression Policy.</em></span>
+            </div>
+            <div class="vendor-reply">
+              <div class="vendor-reply-header">
+                <div class="reply-avatar">MH</div>
+                <span class="reply-name">Mike Harrison · Vendor response</span>
+                <span class="reply-chip">Verified reply</span>
+              </div>
+              <div class="reply-text">I'm sorry to hear you felt this way, Linda. The boiler service was carried out to Gas Safe standards and I have the signed completion form. I'm happy to return and walk through everything at no extra charge. I've also raised this with TradeMatch Trust & Safety as the platform's message records show our conversation was very positive throughout — I hope we can resolve this.</div>
+            </div>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="markHelpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>Helpful (1)</button>
+            <button class="helpful-btn" onclick="openAuthModal(48,'LM')" style="color:var(--accent-danger);border-color:rgba(255,71,87,.3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>Auth Alert</button>
+            <span class="dispute-badge" style="background:rgba(255,71,87,.1);color:var(--accent-danger);border-color:rgba(255,71,87,.25)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>AI Review Flagged</span>
+          </div>
+        </div>
+
+        <!-- ═══ REVIEW 5 — 5★ Imported (Google) ═══ -->
+        <div class="review-card imported">
+          <div class="review-top">
+            <div class="reviewer-avatar" style="background:linear-gradient(135deg,#D97706,#FFA726)">DT</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name-row">
+                <span class="reviewer-name">David Thompson</span>
+                <div class="stars-row">★★★★★</div>
+                <span style="font-family:var(--fm);font-size:9px;color:var(--accent-amber);background:rgba(255,167,38,.1);border:1px solid rgba(255,167,38,.25);padding:2px 7px;border-radius:100px">5.0</span>
+              </div>
+              <div class="trust-badge-strip">
+                <span class="tbadge tb-imported"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Third-Party · Google</span>
+                <span style="font-family:var(--fm);font-size:9px;padding:2px 8px;border-radius:100px;background:var(--bg-tertiary);color:var(--text-3);border:1px solid var(--border)">Not escrow-linked</span>
+              </div>
+            </div>
+            <div class="auth-score-wrap">
+              <div style="width:52px;height:52px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center">
+                <span style="font-family:var(--fm);font-size:9px;color:var(--text-3);text-align:center;line-height:1.2">N/A<br>3rd party</span>
+              </div>
+              <div class="auth-label">AI Auth</div>
+            </div>
+            <div class="review-date">Dec 2025 · Google</div>
+          </div>
+          <div class="review-body">
+            <div class="job-detail-row">
+              <span class="job-chip">Central Heating</span>
+              <span class="job-chip tb-imported" style="border-radius:7px">Imported from Google Business</span>
+            </div>
+            <div class="review-text">Mike fitted our entire central heating system in a new build last year. Exceptional work, very tidy, great communication. Highly recommend for any plumbing or heating work in Manchester.</div>
+            <div style="background:rgba(255,167,38,.06);border:1px solid rgba(255,167,38,.2);border-radius:10px;padding:10px 12px;margin-bottom:4px;font-size:12px;color:var(--text-2);line-height:1.5">
+              <span style="color:var(--accent-amber);font-weight:600">ⓘ Third-Party Import</span> — This review was imported from Google Business and is clearly marked as such. It counts toward your career portfolio but is weighted differently from TradeMatch-native verified reviews. <a href="#" style="color:var(--neon);text-decoration:none">Why we separate these →</a>
+            </div>
+          </div>
+          <div class="review-footer">
+            <button class="helpful-btn" onclick="markHelpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg>Helpful (5)</button>
+            <span style="font-family:var(--fm);font-size:9px;color:var(--text-3);margin-left:auto">Source: Google Business · Imported 1 Mar 2026</span>
+          </div>
+        </div>
+
+      </div><!-- /reviews-feed -->
+    </div><!-- /reviews col -->
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="sidebar-panel">
+
+      <!-- Trust Score Card -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title" style="color:var(--neon)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            TradeMatch Trust Score
+          </div>
+          <span style="font-family:var(--fm);font-size:9px;color:var(--text-3);letter-spacing:.1em">LIVE</span>
+        </div>
+        <div class="trust-score-hero">
+          <div class="ts-ring-wrap">
+            <svg class="big-ring" viewBox="0 0 110 110">
+              <circle class="ts-ring-bg" cx="55" cy="55" r="50"/>
+              <circle class="ts-ring-fill" cx="55" cy="55" r="50"/>
+            </svg>
+            <div class="ts-center">
+              <div class="ts-val">9.4</div>
+              <div class="ts-denom">/10</div>
+            </div>
+          </div>
+          <div class="ts-label">Exceptional Reputation</div>
+          <div class="ts-sub">Top 3% of platform vendors</div>
+          <div class="ts-tier-chip">Gold Tier — Elite Vendor</div>
+        </div>
+        <div class="panel-body" style="padding-top:0">
+          <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px">Score Breakdown</div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Review quality</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" style="width:97%;background:var(--neon)"></div></div>
+            <span class="breakdown-val">9.7</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Auth score avg</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" style="width:96%;background:var(--neon)"></div></div>
+            <span class="breakdown-val">9.6</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Photo evidence</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" style="width:94%;background:linear-gradient(90deg,var(--accent-blue),var(--neon))"></div></div>
+            <span class="breakdown-val">9.4</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Show-up score</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" style="width:95%;background:linear-gradient(90deg,var(--accent-blue),var(--neon))"></div></div>
+            <span class="breakdown-val">9.5</span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-label">Response time</span>
+            <div class="breakdown-bar"><div class="breakdown-fill" style="width:88%;background:linear-gradient(90deg,var(--accent-amber),var(--neon))"></div></div>
+            <span class="breakdown-val">8.8</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zero Suppression Badge -->
+      <div class="zero-suppression-badge">
+        <div class="zsb-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="zsb-info">
+          <div class="zsb-title">Zero Suppression Policy Active</div>
+          <div class="zsb-sub">All reviews publish instantly when both parties mark the job complete. No holding window. No removal requests accepted.</div>
+        </div>
+      </div>
+
+      <!-- Proof of Completion Gate -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title" style="color:var(--accent-purple)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Photo Evidence Gate
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="poc-gate">
+            <div class="poc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <div class="poc-title">5★ Gate — Jobs over £500</div>
+            <div class="poc-desc">A 5-star rating can only be submitted if at least 3 job site photos are uploaded to the vault. This eliminates inflated reviews with zero evidence.</div>
+            <div class="poc-progress">
+              <div class="poc-prog-label">
+                <span>This month's compliance</span>
+                <span style="color:var(--accent-purple)">100%</span>
+              </div>
+              <div class="poc-track"><div class="poc-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier comparison -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Review Tiers
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="tier-compare">
+            <div class="tier-row current-tier">
+              <span class="tier-icon">⭐</span>
+              <div class="tier-info">
+                <div class="tier-name">Gold — Elite Vendor</div>
+                <div class="tier-sub">9.0+ score · Verified badge · Priority placement</div>
+              </div>
+              <span class="tier-chip tier-chip-active">Current</span>
+            </div>
+            <div class="tier-row">
+              <span class="tier-icon">🔵</span>
+              <div class="tier-info">
+                <div class="tier-name">Silver — Reliable</div>
+                <div class="tier-sub">7.5–8.9 score</div>
+              </div>
+              <span class="tier-chip tier-chip-upcoming">Below</span>
+            </div>
+            <div class="tier-row">
+              <span class="tier-icon">🟡</span>
+              <div class="tier-info">
+                <div class="tier-name">Bronze — Good</div>
+                <div class="tier-sub">6.0–7.4 score</div>
+              </div>
+              <span class="tier-chip tier-chip-upcoming">Below</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legacy Import -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title" style="color:var(--accent-amber)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+            Legacy Trust Importer
+          </div>
+          <span style="font-family:var(--fm);font-size:8.5px;background:rgba(255,167,38,.1);color:var(--accent-amber);border:1px solid rgba(255,167,38,.25);padding:2px 7px;border-radius:100px">Pro Feature</span>
+        </div>
+        <div class="panel-body">
+          <div style="font-size:12px;color:var(--text-2);margin-bottom:12px;line-height:1.5">Import your review history from other platforms. Imported reviews are clearly marked as Third-Party to protect TradeMatch data integrity.</div>
+          <div class="import-source">
+            <div class="import-source-icon" style="background:rgba(234,67,53,.1)">🔍</div>
+            <div class="import-source-info">
+              <div class="import-source-name">Google Business</div>
+              <div class="import-source-sub">9 reviews imported · Last sync 1 Mar</div>
+            </div>
+            <button class="import-action active">Connected</button>
+          </div>
+          <div class="import-source" onclick="openImportModal()">
+            <div class="import-source-icon" style="background:rgba(0,150,80,.08)">✓</div>
+            <div class="import-source-info">
+              <div class="import-source-name">Checkatrade</div>
+              <div class="import-source-sub">Connect to import your review history</div>
+            </div>
+            <button class="import-action">Connect</button>
+          </div>
+          <div class="import-source" onclick="openImportModal()">
+            <div class="import-source-icon" style="background:rgba(66,165,245,.08)">⭐</div>
+            <div class="import-source-info">
+              <div class="import-source-name">Trustpilot</div>
+              <div class="import-source-sub">Connect to import reviews</div>
+            </div>
+            <button class="import-action">Connect</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar panel -->
+  </div><!-- /content-grid -->
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL: AI AUTHENTICITY REPORT
+═══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">AI Authenticity Report</div>
+        <div class="modal-sub" id="auth-modal-sub">Review by — · Score: —</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('auth-modal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="auth-modal-body">
+      <!-- injected by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('auth-modal')">Close</button>
+      <button class="modal-btn modal-btn-primary" onclick="closeModal('auth-modal')">Mark as Reviewed</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL: WRITE / REQUEST REVIEW
+═══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="write-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Request a Review</div>
+        <div class="modal-sub">Send a review request to a recently completed job. Only unlocked after both parties mark the job complete.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('write-modal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-label">Select completed job</div>
+      <select class="form-input">
+        <option>Sarah Johnson — Bathroom Refit (TM-2026-0284)</option>
+        <option>Robert Patel — Boiler Replacement (TM-2026-0241)</option>
+      </select>
+      <div class="poc-required-notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>This job was over £500 — the homeowner must upload at least 3 photos before a 5-star review is unlocked. This is the TradeMatch Photo Evidence Gate.</span>
+      </div>
+      <div class="form-label">Message to homeowner (optional)</div>
+      <textarea class="form-input" rows="3" style="resize:none" placeholder="e.g. Hi Sarah, it was a pleasure working on your bathroom. If you're happy with the finished result, I'd really appreciate a review on TradeMatch!"></textarea>
+      <div style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px">Review will be published instantly when submitted</div>
+      <div class="zero-suppression-badge">
+        <div class="zsb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="zsb-info">
+          <div class="zsb-title">Zero Suppression</div>
+          <div class="zsb-sub">Reviews publish the moment the homeowner submits. No delays, no holding periods.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('write-modal')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="sendReviewRequest()">Send Review Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL: IMPORT REVIEWS
+═══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Legacy Trust Importer</div>
+        <div class="modal-sub">Import your verified review history from other platforms. All imported reviews are clearly marked as Third-Party to protect TradeMatch data integrity.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('import-modal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(255,167,38,.06);border:1px solid rgba(255,167,38,.2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--text-2);line-height:1.6">
+        <strong style="color:var(--accent-amber)">Solving the cold-start problem</strong> — If you've built a reputation on Checkatrade or Google over the years, it shouldn't disappear when you switch platforms. Import your career history to TradeMatch, and we'll display it transparently alongside your native verified reviews.
+      </div>
+      <div class="form-label">Platform to import from</div>
+      <select class="form-input">
+        <option>Checkatrade</option>
+        <option>Google Business Profile</option>
+        <option>Trustpilot</option>
+        <option>RatedPeople</option>
+      </select>
+      <div class="form-label">Your profile URL on that platform</div>
+      <input class="form-input" type="url" placeholder="https://www.checkatrade.com/trades/yourbusiness">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+        <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--text-1);margin-bottom:4px">Native TM Review</div>
+          <div style="font-size:11px;color:var(--text-2);line-height:1.5">Escrow-linked · AI scored · Photo gated · Full weight in Trust Score</div>
+        </div>
+        <div style="background:rgba(255,167,38,.05);border:1px solid rgba(255,167,38,.2);border-radius:10px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--accent-amber);margin-bottom:4px">⚐ Third-Party Import</div>
+          <div style="font-size:11px;color:var(--text-2);line-height:1.5">Clearly marked · Career history · Reduced Trust Score weight</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('import-modal')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="runImport()">Import Reviews</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     MODAL: FLAG REVIEW
+═══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="flag-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Report a Review Issue</div>
+        <div class="modal-sub">If you believe this review contains factual errors or violates platform policy, our Trust & Safety team will investigate within 48 hours. The review will remain published during review per our Zero Suppression Policy.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('flag-modal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-label">Reason for flagging</div>
+      <select class="form-input">
+        <option>Review contains factually incorrect statements</option>
+        <option>Reviewer was never my customer on TradeMatch</option>
+        <option>Review sentiment inconsistent with on-platform communications</option>
+        <option>Suspected competitor or fabricated review</option>
+      </select>
+      <div class="form-label">Supporting details (min 20 characters)</div>
+      <textarea class="form-input" rows="4" style="resize:none" placeholder="Please explain the specific factual error or policy violation…"></textarea>
+      <div style="background:rgba(0,229,160,.04);border:1px solid var(--border-neon);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text-2);line-height:1.5">
+        <strong style="color:var(--neon)">What happens next:</strong> Our Trust & Safety team will cross-reference your flag against platform records (message logs, escrow records, check-in data). Legitimate factual errors will be noted on the review. <em>TradeMatch does not remove reviews solely because a vendor finds them uncomfortable.</em>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal('flag-modal')">Cancel</button>
+      <button class="modal-btn modal-btn-danger" onclick="submitFlag()">Submit for Investigation</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Layout ── */
+function toggleSidebar(){
+  ['sidebar','topnav','main'].forEach(id => document.getElementById(id).classList.toggle('collapsed'));
+}
+function toggleTheme(){
+  const h = document.documentElement;
+  h.setAttribute('data-theme', h.getAttribute('data-theme')==='light' ? 'dark' : 'light');
+}
+
+/* ── Tabs / Filters ── */
+function switchTab(el,tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+function applyFilters(){ /* filter logic placeholder */ }
+
+/* ── Read more toggle ── */
+function toggleReadMore(id, link){
+  const el = document.getElementById(id);
+  const expanded = !el.classList.contains('truncated');
+  el.classList.toggle('truncated', expanded);
+  link.textContent = expanded ? 'Read more ↓' : 'Read less ↑';
+}
+
+/* ── Helpful counter ── */
+function markHelpful(btn){
+  const m = btn.textContent.match(/\((\d+)\)/);
+  if(m){
+    const n = parseInt(m[1]) + 1;
+    btn.innerHTML = btn.innerHTML.replace(/\(\d+\)/,`(${n})`);
+    btn.style.color = 'var(--neon)';
+    btn.style.borderColor = 'var(--border-neon)';
+  }
+}
+
+/* ── Modals ── */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) closeModal(m.id); });
+});
+
+function openWriteReview(){ openModal('write-modal'); }
+function openImportModal(){ openModal('import-modal'); }
+function openFlagModal(){ openModal('flag-modal'); }
+function openDisputeStatus(){ alert('Case TM-2026-0318\n\nStatus: Under Active Mediation\nFirst response: Within 4 hours\nExpected resolution: 5 Mar 2026\n\nTrust & Safety is reviewing check-in timestamps against the punctuality claim. Both parties will receive a binding decision within 48 hours.'); }
+
+/* ── Auth Report Modal ── */
+const authData = {
+  98: {
+    verdict: 'High — Authentic',
+    color: 'var(--neon)',
+    checks: [
+      { label: 'IP geolocation match', val: 'Pass — M20 postcode', cls: 'pass' },
+      { label: 'Device fingerprint', val: 'First-time reviewer (clean)', cls: 'pass' },
+      { label: 'Behavioral pattern', val: 'Organic submission timing', cls: 'pass' },
+      { label: 'Review history', val: '1 review — normal', cls: 'pass' },
+      { label: 'Escrow record', val: 'Confirmed — £3,400 paid', cls: 'pass' },
+      { label: 'Job completion', val: 'Both parties confirmed', cls: 'pass' },
+    ],
+    semantics: [
+      { label: 'Sentiment vs job logs', val: 95 },
+      { label: 'Timeline accuracy', val: 98 },
+      { label: 'Language authenticity', val: 97 },
+      { label: 'Claim vs evidence', val: 98 },
+    ]
+  },
+  94: {
+    verdict: 'High — Authentic',
+    color: 'var(--neon)',
+    checks: [
+      { label: 'IP geolocation match', val: 'Pass — M5 postcode', cls: 'pass' },
+      { label: 'Device fingerprint', val: 'Returning user (trusted)', cls: 'pass' },
+      { label: 'Behavioral pattern', val: 'Organic submission', cls: 'pass' },
+      { label: 'Review history', val: '3 reviews — consistent', cls: 'pass' },
+      { label: 'Escrow record', val: 'Confirmed — £1,850 paid', cls: 'pass' },
+      { label: 'Job completion', val: 'Both parties confirmed', cls: 'pass' },
+    ],
+    semantics: [
+      { label: 'Sentiment vs job logs', val: 93 },
+      { label: 'Timeline accuracy', val: 96 },
+      { label: 'Language authenticity', val: 94 },
+      { label: 'Claim vs evidence', val: 91 },
+    ]
+  },
+  81: {
+    verdict: 'Medium — Under Review',
+    color: 'var(--accent-amber)',
+    checks: [
+      { label: 'IP geolocation match', val: 'Pass — M32 postcode', cls: 'pass' },
+      { label: 'Device fingerprint', val: 'First-time reviewer', cls: 'pass' },
+      { label: 'Behavioral pattern', val: 'Submitted 3am — flagged', cls: 'warn' },
+      { label: 'Review history', val: '1 review — normal', cls: 'pass' },
+      { label: 'Escrow record', val: 'Confirmed — £320 paid', cls: 'pass' },
+      { label: 'Sentiment vs comms', val: 'Partial mismatch — reviewing', cls: 'warn' },
+    ],
+    semantics: [
+      { label: 'Sentiment vs job logs', val: 78 },
+      { label: 'Timeline accuracy', val: 88 },
+      { label: 'Language authenticity', val: 84 },
+      { label: 'Claim vs evidence', val: 72 },
+    ]
+  },
+  48: {
+    verdict: 'Low — AI Flagged',
+    color: 'var(--accent-danger)',
+    checks: [
+      { label: 'IP geolocation match', val: 'Pass — M30 postcode', cls: 'pass' },
+      { label: 'Device fingerprint', val: 'Previously flagged device', cls: 'fail' },
+      { label: 'Behavioral pattern', val: 'Rapid submission (8 min after job)', cls: 'fail' },
+      { label: 'Review history', val: '6 negative reviews — pattern', cls: 'fail' },
+      { label: 'Escrow record', val: 'Confirmed — £120 paid', cls: 'pass' },
+      { label: 'Sentiment vs comms', val: 'Major mismatch — positive in-chat', cls: 'fail' },
+    ],
+    semantics: [
+      { label: 'Sentiment vs job logs', val: 44 },
+      { label: 'Timeline accuracy', val: 62 },
+      { label: 'Language authenticity', val: 51 },
+      { label: 'Claim vs evidence', val: 36 },
+    ]
+  }
+};
+
+function openAuthModal(score, initials){
+  const d = authData[score];
+  document.getElementById('auth-modal-sub').textContent = `Reviewer: ${initials} · AI Authenticity Score: ${score}% — ${d.verdict}`;
+  const body = document.getElementById('auth-modal-body');
+
+  const verdictColor = d.color;
+  const ringStroke = (score / 100) * 138.2;
+  const offset = 138.2 - ringStroke;
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;padding:14px;background:var(--bg-tertiary);border-radius:12px;border:1px solid var(--border-2)">
+      <div style="position:relative;width:72px;height:72px;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+        <svg style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)" viewBox="0 0 72 72">
+          <circle fill="none" stroke="var(--bg-card)" stroke-width="5" cx="36" cy="36" r="31"/>
+          <circle fill="none" stroke="${verdictColor}" stroke-width="5" stroke-linecap="round" cx="36" cy="36" r="31"
+            stroke-dasharray="194.8" stroke-dashoffset="${194.8 - (score/100)*194.8}" style="transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <div style="position:relative;z-index:1;text-align:center">
+          <div style="font-family:var(--ff);font-size:1.2rem;font-weight:900;color:${verdictColor};line-height:1">${score}%</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--ff);font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:4px">${d.verdict}</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.5">Based on cross-referencing user metadata, behavioral patterns, semantic correspondence, and escrow validation.</div>
+      </div>
+    </div>
+
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px">Validation Checks</div>
+    <div class="auth-detail-grid">
+      ${d.checks.map(c=>`
+        <div class="auth-detail-item">
+          <div class="auth-detail-label">${c.label}</div>
+          <div class="auth-detail-val ${c.cls}">${c.val}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px">Semantic Correspondence Analysis</div>
+    <div class="semantic-detail">
+      ${d.semantics.map(s=>`
+        <div class="sem-row-modal">
+          <span class="sem-label-modal">${s.label}</span>
+          <div class="sem-bar-modal"><div class="sem-fill-modal" style="width:${s.val}%;background:${s.val>=80?'linear-gradient(90deg,var(--accent-blue),var(--neon))':s.val>=60?'linear-gradient(90deg,var(--accent-amber),#FFA726)':'linear-gradient(90deg,var(--accent-danger),#FF6B6B)'}"></div></div>
+          <span class="sem-val-modal" style="color:${s.val>=80?'var(--neon)':s.val>=60?'var(--accent-amber)':'var(--accent-danger)'}">${s.val}%</span>
+        </div>
+      `).join('')}
+    </div>
+    ${score < 70 ? `<div style="background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.2);border-radius:10px;padding:12px;font-size:12px;color:var(--accent-danger);line-height:1.5"><strong>⚠️ Auto-referred to Trust & Safety</strong> — This review has been flagged for manual investigation. It remains published per our Zero Suppression Policy. Case ref: TM-2026-0341</div>` : ''}
+  `;
+  openModal('auth-modal');
+}
+
+/* ── Actions ── */
+function sendReviewRequest(){
+  closeModal('write-modal');
+  setTimeout(()=>alert('Review request sent to Sarah Johnson!\n\nShe will receive an email and push notification. Once she submits, the review will publish instantly.\n\nFor jobs over £500, she must upload 3+ photos before a 5-star rating is unlocked.'),300);
+}
+
+function runImport(){
+  closeModal('import-modal');
+  setTimeout(()=>alert('Import job queued!\n\nWe are fetching your Checkatrade review history. This takes 2–5 minutes. All imported reviews will be marked with a "Third-Party" flag.\n\nImported reviews will appear in your "Imported" tab once processing is complete.'),300);
+}
+
+function submitFlag(){
+  closeModal('flag-modal');
+  setTimeout(()=>alert('Report submitted.\n\nCase ref: TM-2026-0341\n\nOur Trust & Safety team will investigate within 48 hours. The review remains published during review.\n\nIf our investigation finds a verifiable factual inaccuracy, we will add a platform note to the review.'),300);
+}
+
+function openPhoto(n){
+  alert(`Opening vault photo ${n}…\n\nIn production: full-screen immutable viewer with GPS coordinates, timestamp, and SHA-256 hash verifying the image has not been altered.`);
+}
+</script>
+</body>
+</html>

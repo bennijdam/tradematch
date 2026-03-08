@@ -20,15 +20,26 @@ interface ClockState {
  * - Font: JetBrains Mono, neon color
  */
 export function useClock(refreshInterval: number = 1000): ClockState {
-  const [now, setNow] = useState<Date>(new Date());
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Initialize on client to avoid server/client timestamp mismatch during hydration.
+    setNow(new Date());
+
     const interval = setInterval(() => {
       setNow(new Date());
     }, refreshInterval);
 
     return () => clearInterval(interval);
   }, [refreshInterval]);
+
+  if (!now) {
+    return {
+      time: '--:--:--',
+      date: '-- --- ----',
+      isoString: '',
+    };
+  }
 
   // Format time as HH:MM:SS (matching legacy format)
   const time = now.toLocaleTimeString('en-GB', {
