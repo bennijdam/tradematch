@@ -26,10 +26,6 @@ import {
   ArrowDownRight,
 } from 'lucide-react';
 
-interface VendorDashboardProps {
-  tenantId?: string;
-}
-
 // Mock stats data
 const STATS = [
   {
@@ -143,7 +139,7 @@ const WEEKLY_DATA = [
   { day: 'Sun', value: 40 },
 ];
 
-export default function VendorDashboard({ tenantId }: VendorDashboardProps) {
+export default function VendorDashboard() {
   const [filterTab, setFilterTab] = useState('week');
 
   const renderStatusBadge = (status: string) => {

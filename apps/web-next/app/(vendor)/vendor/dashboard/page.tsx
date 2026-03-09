@@ -28,9 +28,9 @@ function shouldUseNative(testNative: string | string[] | undefined) {
 export default async function VendorDashboardPage({
   searchParams,
 }: {
-  searchParams?: DashboardSearchParams | Promise<DashboardSearchParams>;
+  searchParams?: Promise<DashboardSearchParams>;
 }) {
-  const params = await Promise.resolve(searchParams);
+  const params: DashboardSearchParams = searchParams ? await searchParams : {};
   const nativeMode = shouldUseNative(params?.['test-native']);
 
   if (nativeMode) {

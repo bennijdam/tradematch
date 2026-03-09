@@ -12,9 +12,9 @@ function normalizeViewId(view: string | string[] | undefined): 'infra-health' | 
 export default async function SuperAdminDashboardPage({
   searchParams,
 }: {
-  searchParams?: DashboardSearchParams | Promise<DashboardSearchParams>;
+  searchParams?: Promise<DashboardSearchParams>;
 }) {
-  const params = await Promise.resolve(searchParams);
+  const params: DashboardSearchParams = searchParams ? await searchParams : {};
   const viewId = normalizeViewId(params?.view);
 
   return <SuperAdminDashboardApp viewId={viewId} />;

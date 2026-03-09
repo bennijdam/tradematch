@@ -21,12 +21,16 @@ function shouldUseNative(testNative: string | string[] | undefined) {
   return testNative === 'true' || testNative === '1';
 }
 
+type CustomerDashboardSearchParams = {
+  'test-native'?: string | string[];
+};
+
 export default async function CustomerDashboardPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ 'test-native'?: string | string[] }>;
+  searchParams?: Promise<CustomerDashboardSearchParams>;
 }) {
-  const params = await (searchParams ?? Promise.resolve({}));
+  const params = searchParams ? await searchParams : {};
   const testNative = params?.['test-native'];
   
   const nativeMode = shouldUseNative(testNative);

@@ -190,7 +190,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
   -webkit-mask-image:radial-gradient(ellipse 80% 70% at 30% 50%,black 10%,transparent 72%)}
 
 .hiw-hero .wrap{position:relative;z-index:2}
-.hiw-hero-layout{padding:148px 0 100px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hiw-hero-layout{padding:104px 0 100px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .hiw-hero-left{}
 .hiw-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(0,229,130,.7);background:rgba(0,194,104,.08);border:1px solid rgba(0,194,104,.2);border-radius:var(--r5);padding:6px 14px;margin-bottom:24px;animation:fadeIn .8s .1s both}
 .hiw-eyebrow-dot{width:5px;height:5px;border-radius:50%;background:#00e582;box-shadow:0 0 8px #00e582;animation:pulse 2s infinite}
@@ -242,6 +242,12 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 </style>
 </head>
 <body>
+
+
+<!-- SOCIAL PROOF TICKER -->
+<div class="sp-ticker" aria-hidden="true">
+  <div class="sp-ticker-track" id="spTickerTrack"></div>
+</div>
 
 <!-- â•â• NAV â•â• -->
 <nav class="nav" id="nav">
@@ -2685,6 +2691,15 @@ function handleHeroSearch(e) {
   .footer-grid{grid-template-columns:1fr}
 }
 
+/* SOCIAL PROOF TICKER */
+.sp-ticker{background:#0d1117;border-bottom:1px solid rgba(255,255,255,.08);padding:.45rem 0;overflow:hidden;margin-top:88px}
+.sp-ticker-track{display:flex;gap:2.5rem;animation:spTickerScroll 36s linear infinite;width:max-content}
+.sp-ticker-track:hover{animation-play-state:paused}
+@keyframes spTickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.sp-ticker-item{display:flex;align-items:center;gap:.5rem;white-space:nowrap;color:rgba(255,255,255,.6);font-size:.78rem;font-weight:500;font-family:var(--fb)}
+.sp-ticker-item .sp-dot{width:5px;height:5px;background:#4ade80;border-radius:50%;flex-shrink:0;box-shadow:0 0 5px #4ade80}
+.sp-ticker-sep{color:rgba(255,255,255,.12);font-size:1rem;margin:0 .25rem}
+@media(max-width:768px){.sp-ticker{display:none}}
 </style>
 <!-- Lucide removed: no data-lucide icons on this page (all icons are inline SVGs) -->
 <script>

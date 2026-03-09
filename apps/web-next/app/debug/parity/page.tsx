@@ -17,26 +17,33 @@
 import { useState, useRef, useCallback } from 'react';
 
 // Dashboard variants to test
-const DASHBOARD_VARIANTS = [
-  { 
-    id: 'super-admin', 
+interface DashboardVariant {
+  id: string;
+  name: string;
+  legacyPath: string;
+  description: string;
+}
+
+const DASHBOARD_VARIANTS: DashboardVariant[] = [
+  {
+    id: 'super-admin',
     name: 'Super Admin Dashboard',
     legacyPath: '/super-admin-dashboard.html',
     description: 'God View, Dispute Centre, Verification Queue'
   },
-  { 
-    id: 'user', 
+  {
+    id: 'user',
     name: 'User Dashboard',
     legacyPath: '/user-dashboard.html',
     description: 'My Projects, Escrow, Milestones'
   },
-  { 
-    id: 'vendor', 
+  {
+    id: 'vendor',
     name: 'Vendor Dashboard',
     legacyPath: '/vendor-dashboard.html',
     description: 'Active Jobs, Analytics, Coverage Map'
   },
-] as const;
+];
 
 // Opacity levels for comparison
 const OPACITY_LEVELS = [

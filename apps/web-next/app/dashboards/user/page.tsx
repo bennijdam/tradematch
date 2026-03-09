@@ -20,11 +20,8 @@ import {
   MoreHorizontal,
   Send,
   Bot,
+  Award,
 } from 'lucide-react';
-
-interface UserDashboardProps {
-  tenantId?: string;
-}
 
 // Mock data for active job
 const ACTIVE_JOB = {
@@ -82,7 +79,7 @@ const NOTIFICATIONS = [
   { id: 3, text: 'Reminder: Site visit tomorrow at 9am', type: 'warning', time: '4h ago' },
 ];
 
-export default function UserDashboard({ tenantId }: UserDashboardProps) {
+export default function UserDashboard() {
   const [sidebarCollapsed] = useState(false);
   const [copilotInput, setCopilotInput] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);

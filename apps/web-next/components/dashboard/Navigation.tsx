@@ -110,7 +110,7 @@ function NavigationItem({ item, isActive, onClick }: NavItemProps) {
         isActive && 'bg-neon-dim text-neon border-l-neon'
       )}
     >
-      <Icon className="w-[13px] h-[13px] flex-shrink-0" />
+      <Icon className="w-[13px] h-[13px] flex-shrink-0" strokeWidth={2} />
       <span className="flex-1 truncate">{item.label}</span>
       {item.badge && (
         <span
@@ -151,7 +151,7 @@ export function Sidebar() {
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="lg:hidden fixed top-4 left-4 z-[200] p-2 bg-bg-2 border border-border rounded-md"
       >
-        {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        {isMobileMenuOpen ? <X className="w-5 h-5" strokeWidth={2} /> : <Menu className="w-5 h-5" strokeWidth={2} />}
       </button>
 
       {/* Sidebar */}
@@ -221,7 +221,7 @@ export function Sidebar() {
             onClick={logout}
             className="mt-2 w-full flex items-center gap-2 px-[14px] py-2 text-t3 text-[12px] hover:text-danger transition-colors"
           >
-            <LogOut className="w-[13px] h-[13px]" />
+            <LogOut className="w-[13px] h-[13px]" strokeWidth={2} />
             <span>Logout</span>
           </button>
         </div>

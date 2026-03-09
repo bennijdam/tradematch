@@ -2578,7 +2578,7 @@
               QE_PHRASE_MAP[phrase].forEach(id => { scores[id] = (scores[id] || 0) + boost * 2; });
             }
           });
-          const tokens = q.split(/s+/).filter(t => t.length > 1);
+          const tokens = q.split(/\s+/).filter(t => t.length > 1);
           tokens.forEach(tok => {
             HERO_SERVICES.forEach(svc => {
               if (svc.id.includes(tok) || svc.name.toLowerCase().includes(tok))
@@ -3990,7 +3990,15 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
             // â”€â”€ Country selector â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             window.gmToggleCountryDrop = function(){
-                document.getElementById('gmCountryDrop').classList.toggle('open');
+                const drop = document.getElementById('gmCountryDrop');
+                const isOpening = !drop.classList.contains('open');
+                drop.classList.toggle('open');
+                if (isOpening) {
+                    const btn = document.getElementById('gmCountrySelector');
+                    const rect = btn.getBoundingClientRect();
+                    drop.style.top = (rect.bottom + 4) + 'px';
+                    drop.style.left = rect.left + 'px';
+                }
             };
             window.gmSelectCountry = function(e, flag, code){
                 e.stopPropagation();
@@ -4679,12 +4687,26 @@ I'm happy to discuss the project in more detail and answer any questions to help
         .auth-dismiss-hint a:hover { color:rgba(139,149,170,1); }
 
         /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• FOOTER (matches index-light) â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-        footer {
-            background: var(--void);
-            border-top: 1px solid var(--border);
-            color: var(--t3);
-            padding: 2rem; text-align: center; margin-top: 3rem;
-        }
+        /* FOOTER */
+        .footer{background:#0d1117;border-top:1px solid rgba(255,255,255,.05);padding:72px 0 36px}
+        .footer .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+        .footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1fr 1fr;gap:28px;margin-bottom:52px}
+        .footer-brand-name{font-family:var(--ff);font-size:1.25rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff;margin-bottom:10px;display:block}
+        .footer-brand-name span{background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .footer-brand p{font-size:13px;color:#5a6478;line-height:1.8;font-weight:300;max-width:240px;margin-bottom:20px}
+        .footer-socials{display:flex;gap:8px}
+        .fsoc{width:36px;height:36px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#5a6478;text-decoration:none;transition:all .25s}
+        .fsoc:hover{background:rgba(0,194,104,.1);border-color:rgba(0,194,104,.3);color:#00c268;transform:translateY(-2px)}
+        .fsoc svg{width:15px;height:15px}
+        .footer-col h4{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#5a6478;margin-bottom:14px}
+        .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+        .footer-col a{font-size:13px;color:#8b95aa;text-decoration:none;font-weight:300;transition:color .2s}
+        .footer-col a:hover{color:#00c268}
+        .footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+        .footer-bottom p{font-family:var(--fm);font-size:10px;color:#5a6478;letter-spacing:.04em}
+        .footer-legal{display:flex;gap:20px}
+        .footer-legal a{font-family:var(--fm);font-size:10px;color:#5a6478;text-decoration:none;transition:color .2s}
+        .footer-legal a:hover{color:#00c268}
 
         /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• RESPONSIVE â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
         @media (max-width: 768px) {
@@ -4840,7 +4862,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
         .gm-phone-caret{width:10px;height:10px;color:#5a6478}
         .gm-phone-num{flex:1}
         .gm-phone-num .gm-field-input{padding-left:13px}
-        .gm-country-drop{position:absolute;top:calc(100% + 6px);left:0;z-index:50;background:#161c28;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:6px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none}
+        .gm-country-drop{position:fixed;top:0;left:0;z-index:10050;background:#161c28;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:6px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none}
         .gm-country-drop.open{display:block}
         .gm-country-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s;font-size:12.5px;color:#8b95aa}
         .gm-country-opt:hover{background:rgba(255,255,255,.06);color:#f0f4ff}

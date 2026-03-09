@@ -32,11 +32,17 @@ interface SidebarProps {
   tenantId?: string;
 }
 
+type IconComponent = React.ComponentType<{
+  className?: string;
+  size?: number | string;
+  strokeWidth?: number;
+}>;
+
 interface NavItem {
   id: string;
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
+  icon: IconComponent;
   badge?: string | number;
   badgeType?: 'neon' | 'amber' | 'danger';
   pulse?: boolean;

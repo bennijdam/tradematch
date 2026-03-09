@@ -21,7 +21,7 @@ const sora = Sora({
   subsets: ['latin'],
   variable: '--font-sora',
   display: 'swap',
-  weight: ['300', '400', '600', '700', '800', '900'],
+  weight: ['300', '400', '600', '700', '800'],
 });
 
 const dmSans = DM_Sans({
