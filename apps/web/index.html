@@ -135,6 +135,14 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .trust-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:#8b95aa;font-weight:400;flex-shrink:0}
 .trust-badge-icon{width:20px;height:20px;border-radius:5px;background:rgba(0,194,104,.1);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .trust-badge-icon svg{width:11px;height:11px;color:var(--neon)}
+/* â”€â”€ LIVE SOCIAL FEED â”€â”€ */
+.live-feed{position:fixed;bottom:24px;left:24px;z-index:900;width:320px;pointer-events:none}
+.feed-toast{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,.1);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);transform:translateY(20px);opacity:0;transition:all .5s cubic-bezier(.22,1,.36,1);pointer-events:auto}
+.feed-toast.show{transform:none;opacity:1}
+.feed-pip{width:8px;height:8px;border-radius:50%;background:#00c268;box-shadow:0 2px 14px rgba(0,194,104,.22);flex-shrink:0;animation:pulse 1.5s infinite}
+.feed-text{font-size:12px;color:#3d5060;line-height:1.5}
+.feed-text b{color:#0f1923;font-weight:600}
+.feed-text em{font-style:normal;color:#007a3d;font-weight:500}
 /* â”€â”€ TRADE AUTOCOMPLETE DROPDOWN â”€â”€ */
 .postcode-suggestions-hero{position:fixed;z-index:99999;background:rgba(13,17,28,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);border-top:1px solid rgba(255,255,255,.08);border-radius:0 0 14px 14px;box-shadow:0 18px 48px rgba(0,0,0,.6),0 0 0 1px rgba(0,194,104,.06);max-height:280px;overflow-y:auto;display:none;margin-top:-2px}
 .postcode-suggestions-hero.open{display:block}
@@ -2296,6 +2304,34 @@ function handleHeroSearch(e) {
   const qs = params.toString();
   window.location.href = 'quote-engine.html' + (qs ? '?' + qs : '');
 }
+
+// Live social feed
+(function(){
+  const feeds=[
+    {text:'<b>Emma K.</b> — Homeowner in <em>London</em> · Hired verified plumber · Deposit in escrow'},
+    {text:'<b>Rachel T.</b> — Gas Safe engineer checked in <em>Manchester</em> · Registration confirmed'},
+    {text:'<b>David M.</b> — Dispute resolved in 31 hours in <em>Edinburgh</em> · Escrow released'},
+    {text:'<b>Priya S.</b> — Insurance auto-checked in <em>Birmingham</em> · Vendor badge active'},
+    {text:'<b>Mark B.</b> — 5★ tamper-proof review left in <em>Bristol</em> · Job complete'},
+    {text:'<b>Sarah W.</b> — Background check passed in <em>Leeds</em> · Now TradeMatch Verified'},
+    {text:'<b>James R.</b> — ID verified in <em>Manchester</em> · Trade quiz passed · Badge issued'},
+  ];
+  let fi=0;
+  const toast=document.getElementById('live-toast');
+  const liveText=document.getElementById('live-text');
+  function showFeed(){
+    if(!toast||!liveText) return;
+    toast.classList.remove('show');
+    setTimeout(()=>{
+      liveText.innerHTML=feeds[fi%feeds.length].text;
+      toast.classList.add('show');
+      fi++;
+      setTimeout(()=>toast.classList.remove('show'),4200);
+    },400);
+  }
+  setTimeout(showFeed, 1800);
+  setInterval(showFeed, 6000);
+})();
 </script>
 <!-- Non-critical CSS (below-fold styles) — non-blocking -->
 <style id="nc-styles">
@@ -2787,5 +2823,13 @@ function handleHeroSearch(e) {
 <!-- Hero search dropdowns — must live at body level to escape backdrop-filter stacking context -->
 <div id="heroTradeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Service suggestions"></div>
 <div id="heroPostcodeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Postcode suggestions"></div>
+
+<!-- Live social feed -->
+<div class="live-feed">
+  <div class="feed-toast" id="live-toast">
+    <div class="feed-pip"></div>
+    <div class="feed-text" id="live-text"><b>Loading…</b></div>
+  </div>
+</div>
 </body>
 </html>
