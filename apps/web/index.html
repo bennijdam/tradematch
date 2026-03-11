@@ -136,7 +136,7 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
 .trust-badge-icon{width:20px;height:20px;border-radius:5px;background:rgba(0,194,104,.1);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .trust-badge-icon svg{width:11px;height:11px;color:var(--neon)}
 /* â”€â”€ TRADE AUTOCOMPLETE DROPDOWN â”€â”€ */
-.postcode-suggestions-hero{position:fixed;z-index:10000;background:#161c28;border:1px solid rgba(255,255,255,.14);border-radius:12px;box-shadow:0 14px 28px rgba(0,0,0,.45);max-height:270px;overflow-y:auto;display:none}
+.postcode-suggestions-hero{position:fixed;z-index:99999;background:rgba(13,17,28,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);border-top:1px solid rgba(255,255,255,.08);border-radius:0 0 14px 14px;box-shadow:0 18px 48px rgba(0,0,0,.6),0 0 0 1px rgba(0,194,104,.06);max-height:280px;overflow-y:auto;display:none;margin-top:-2px}
 .postcode-suggestions-hero.open{display:block}
 .trade-suggestion-hero,.postcode-suggestion-hero{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.08);background:transparent;padding:10px 14px;text-align:left;cursor:pointer;color:#f0f4ff;font-family:var(--fb)}
 .trade-suggestion-hero:last-child,.postcode-suggestion-hero:last-child{border-bottom:0}
@@ -343,12 +343,10 @@ body{font-family:'DM Sans',sans-serif;background:#0d1117;color:#0f1923;overflow-
           <div class="search-field">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <input type="text" id="heroTradeInput" placeholder="What do you need? e.g. boiler repair, tiler&hellip;" autocomplete="off" aria-autocomplete="list" aria-controls="heroTradeSuggestions" aria-expanded="false">
-            <div id="heroTradeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Service suggestions"></div>
           </div>
           <div class="search-field">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <input type="text" id="heroPostcode" placeholder="Postcode, e.g. SW1A 1AA" autocomplete="off" aria-autocomplete="list" aria-controls="heroPostcodeSuggestions">
-            <div id="heroPostcodeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Postcode suggestions"></div>
           </div>
           <button type="submit" class="search-btn">Get Free Quotes &rarr;</button>
         </form>
@@ -2106,8 +2104,9 @@ function selectHeroTradeService(svc) {
 
 function positionHeroTradeDropdown() {
   if(!heroTradeSuggestions?.classList.contains('open') || !heroTradeInput) return;
-  const rect = heroTradeInput.getBoundingClientRect();
-  heroTradeSuggestions.style.top = (rect.bottom + 4) + 'px';
+  const field = heroTradeInput.closest('.search-field') || heroTradeInput;
+  const rect = field.getBoundingClientRect();
+  heroTradeSuggestions.style.top = rect.bottom + 'px';
   heroTradeSuggestions.style.left = rect.left + 'px';
   heroTradeSuggestions.style.width = rect.width + 'px';
 }
@@ -2155,6 +2154,8 @@ document.addEventListener('click', e => {
 
 window.addEventListener('scroll', positionHeroTradeDropdown, { passive: true });
 window.addEventListener('resize', positionHeroTradeDropdown, { passive: true });
+window.addEventListener('scroll', positionHeroPostcodeDropdown, { passive: true });
+window.addEventListener('resize', positionHeroPostcodeDropdown, { passive: true });
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // POSTCODE AUTOCOMPLETE — postcodes.io + backend proxy
@@ -2182,6 +2183,24 @@ function selectHeroPostcodeSuggestion(item) {
   closeHeroPostcodeSuggestions();
 }
 
+function positionHeroPostcodeDropdown() {
+  if(!heroPostcodeSuggestions?.classList.contains('open') || !heroPostcodeInput) return;
+  const field = heroPostcodeInput.closest('.search-field') || heroPostcodeInput;
+  const rect = field.getBoundingClientRect();
+  heroPostcodeSuggestions.style.top = rect.bottom + 'px';
+  heroPostcodeSuggestions.style.left = rect.left + 'px';
+  heroPostcodeSuggestions.style.width = rect.width + 'px';
+}
+
+function formatUKPostcode(raw) {
+  const s = raw.toUpperCase().replace(/\s+/g,'');
+  // Insert space before last 3 chars if looks like a full postcode
+  if(/^[A-Z]{1,2}[0-9][0-9A-Z]?[0-9][A-Z]{2}$/.test(s)) {
+    return s.slice(0,-3) + ' ' + s.slice(-3);
+  }
+  return s;
+}
+
 function renderHeroPostcodeSuggestions(suggestions) {
   if(!heroPostcodeSuggestions) return;
   if(!Array.isArray(suggestions) || !suggestions.length) { closeHeroPostcodeSuggestions(); return; }
@@ -2191,11 +2210,8 @@ function renderHeroPostcodeSuggestions(suggestions) {
     const details = [item.admin_district || item.parliamentary_constituency || item.district, item.region || item.country].filter(Boolean).join(', ') || 'UK';
     return `<button type="button" class="postcode-suggestion-hero" data-index="${i}" role="option"><span class="postcode-suggestion-code-hero">${item.postcode || ''}</span><span class="postcode-suggestion-meta-hero">${details}</span></button>`;
   }).join('');
-  const rect = heroPostcodeInput.getBoundingClientRect();
-  heroPostcodeSuggestions.style.top = (rect.bottom + 6) + 'px';
-  heroPostcodeSuggestions.style.left = rect.left + 'px';
-  heroPostcodeSuggestions.style.width = rect.width + 'px';
   heroPostcodeSuggestions.classList.add('open');
+  requestAnimationFrame(positionHeroPostcodeDropdown);
 }
 
 async function fetchHeroPostcodeSuggestions(raw) {
@@ -2207,8 +2223,17 @@ async function fetchHeroPostcodeSuggestions(raw) {
     const d = await r.json().catch(() => null);
     if(currentRequestId !== heroPostcodeRequestId) return;
     const suggestions = (d?.status === 200 && Array.isArray(d.result)) ? d.result : [];
-    renderHeroPostcodeSuggestions(suggestions);
-  } catch(e) { closeHeroPostcodeSuggestions(); }
+    if(suggestions.length) { renderHeroPostcodeSuggestions(suggestions); return; }
+    // Fallback: format the typed postcode and show as a suggestion
+    const formatted = formatUKPostcode(query);
+    if(formatted.length >= 5) renderHeroPostcodeSuggestions([{postcode: formatted, admin_district:'', region:'United Kingdom'}]);
+    else closeHeroPostcodeSuggestions();
+  } catch(e) {
+    if(currentRequestId !== heroPostcodeRequestId) return;
+    const formatted = formatUKPostcode(query);
+    if(formatted.length >= 5) renderHeroPostcodeSuggestions([{postcode: formatted, admin_district:'', region:'United Kingdom'}]);
+    else closeHeroPostcodeSuggestions();
+  }
 }
 
 heroPostcodeInput?.addEventListener('input', e => {
@@ -2759,5 +2784,8 @@ function handleHeroSearch(e) {
   }
 })();
 </script>
+<!-- Hero search dropdowns — must live at body level to escape backdrop-filter stacking context -->
+<div id="heroTradeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Service suggestions"></div>
+<div id="heroPostcodeSuggestions" class="postcode-suggestions-hero" role="listbox" aria-label="Postcode suggestions"></div>
 </body>
 </html>

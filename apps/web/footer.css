@@ -1,0 +1,43 @@
+/* ─── TradeMatch shared footer styles ─── */
+/* Fixes missing .fsoc / .footer-brand / .footer-col styles in pages
+   that have the footer HTML but lack the corresponding CSS.
+   Loaded via <link> in affected pages. */
+
+.footer-brand-name{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:-.04em;color:#f0f4ff;margin-bottom:12px;display:block}
+.footer-brand-name span{background:linear-gradient(135deg,#00e582,#00c268);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-brand>p{font-size:12.5px;color:#5a6478;line-height:1.7;font-weight:300;margin-bottom:18px;max-width:240px}
+
+/* Social icons — constrained to 34×34 so SVGs don't render huge */
+.footer-socials{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fsoc{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:#5a6478;transition:all .2s;text-decoration:none;flex-shrink:0}
+.fsoc:hover{background:rgba(0,194,104,.12);border-color:rgba(0,194,104,.3);color:#00c268;transform:translateY(-2px)}
+.fsoc svg{width:15px;height:15px;flex-shrink:0;pointer-events:none}
+
+/* Grid — brand col + 5 link cols */
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+
+/* Column headings & links */
+.footer-col h4{font-family:'Sora',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:-.01em;color:#f0f4ff;margin-bottom:14px}
+.footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.footer-col ul li a{font-size:12.5px;color:#5a6478;text-decoration:none;transition:color .2s}
+.footer-col ul li a:hover{color:#00c268}
+
+/* Bottom bar */
+.footer-bottom{padding-top:28px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-bottom>p{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#5a6478}
+.footer-legal{display:flex;gap:20px;flex-wrap:wrap}
+.footer-legal a{font-size:11px;color:#5a6478;text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:#8b95aa}
+
+/* Responsive */
+@media(max-width:1100px){
+  .footer-grid{grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px}
+  .footer-brand{grid-column:1 / -1}
+}
+@media(max-width:700px){
+  .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .footer-brand{grid-column:1 / -1}
+}
+@media(max-width:440px){
+  .footer-grid{grid-template-columns:1fr}
+}
