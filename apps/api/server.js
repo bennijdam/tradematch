@@ -222,6 +222,15 @@ try {
     console.warn('⚠️ Email service not available:', e && e.message ? e.message : e);
 }
 
+// Job application route (sends to support@tradematch.uk)
+try {
+    const applyRouter = require('./routes/apply');
+    app.use('/api/apply', applyRouter);
+    console.log('📝 Apply route mounted at /api/apply');
+} catch (e) {
+    console.warn('⚠️ Apply route not available:', e && e.message ? e.message : e);
+}
+
 // Lead system routes
 try {
     const quotesRouter = require('./routes/quotes');
