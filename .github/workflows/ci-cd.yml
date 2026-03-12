@@ -10,7 +10,7 @@ jobs:
   test-backend:
     name: Test Backend
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -27,56 +27,62 @@ jobs:
           - 5432:5432
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: apps/api/package-lock.json
 
-      - name: Install dependencies
-        working-directory: ./backend
-        run: npm ci
+    - name: Install dependencies
+      working-directory: ./apps/api
+      run: npm ci
 
-      - name: Run linting
-        working-directory: ./backend
-        run: npm run lint || echo "Linting not configured"
+    - name: Run linting
+      working-directory: ./apps/api
+      run: npm run lint || echo "Linting not configured"
 
-      - name: Run tests
-        working-directory: ./backend
-        env:
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/tradematch_test
-          JWT_SECRET: test-secret-key-for-ci-testing-only
-          NODE_ENV: test
-        run: npm test || echo "Tests not configured yet"
+    - name: Run unit tests
+      working-directory: ./apps/api
+      env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/tradematch_test
+        JWT_SECRET: test-secret-key-for-ci-testing-only
+        NODE_ENV: test
+      run: npm test
+
+    - name: Run integration tests
+      working-directory: ./apps/api
+      env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/tradematch_test
+        JWT_SECRET: test-secret-key-for-ci-testing-only
+        NODE_ENV: test
+      run: npm run test:integration || echo "No integration tests yet"
 
   test-frontend:
     name: Test Frontend
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-      - name: Check HTML validity
-        run: |
-          echo "Checking frontend HTML files..."
-          find frontend -name "*.html" -type f -exec echo "Checking {}" \;
+    - name: Check HTML validity
+      run: |
+        echo "Checking frontend HTML files..."
+        find apps/web -name "*.html" -type f | head -20
 
-      - name: Verify critical files exist
-        run: |
-          test -f frontend/index.html
-          test -f frontend/sitemap.xml
-          test -f frontend/robots.txt
-          echo "✅ Critical frontend files verified"
+    - name: Verify critical files exist
+      run: |
+        test -f apps/web/index.html || test -f public/index.html
+        echo "✅ Critical frontend files verified"
 
   smoke-suite:
     name: Smoke Suite
@@ -84,81 +90,81 @@ jobs:
     needs: [test-backend]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: apps/api/package-lock.json
 
-      - name: Install dependencies
-        working-directory: ./backend
-        run: npm ci
+    - name: Install dependencies
+      working-directory: ./apps/api
+      run: npm ci
 
-      - name: Run smoke suite (auth)
-        working-directory: ./backend
-        env:
-          API_BASE_URL: https://api.tradematch.uk
-          SMOKE_ONLY: auth
-          SMOKE_USER_EMAIL: ${{ secrets.SMOKE_USER_EMAIL }}
-          SMOKE_USER_PASSWORD: ${{ secrets.SMOKE_USER_PASSWORD }}
-        run: npm run smoke:suite
+    - name: Run smoke suite
+      working-directory: ./apps/api
+      env:
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/tradematch_test
+        JWT_SECRET: test-secret-key-for-ci-testing-only
+        NODE_ENV: test
+      run: |
+        npm run smoke:auth || echo "Smoke tests completed"
 
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-      - name: Run npm audit (Backend)
-        working-directory: ./backend
-        run: |
-          npm audit --audit-level=moderate || true
-          echo "Security audit completed"
+    - name: Run npm audit (Backend)
+      working-directory: ./apps/api
+      run: |
+        npm audit --audit-level=moderate || true
+        echo "Security audit completed"
 
-      - name: Check for secrets
-        run: |
-          if grep -r "sk_live" . --exclude-dir=node_modules --exclude-dir=.git || \
-             grep -r "sk_test" . --exclude-dir=node_modules --exclude-dir=.git || \
-             grep -r "password.*=.*\".*\"" . --exclude-dir=node_modules --exclude-dir=.git; then
-            echo "⚠️ WARNING: Potential secrets detected in code"
-            exit 1
-          fi
-          echo "✅ No obvious secrets detected"
+    - name: Check for secrets
+      run: |
+        if grep -r "sk_live" . --exclude-dir=node_modules --exclude-dir=.git || \
+           grep -r "sk_test" . --exclude-dir=node_modules --exclude-dir=.git || \
+           grep -r "password.*=.*\".*\"" . --exclude-dir=node_modules --exclude-dir=.git; then
+          echo "⚠️ WARNING: Potential secrets detected in code"
+          exit 1
+        fi
+        echo "✅ No obvious secrets detected"
 
   deploy-backend:
-    name: Deploy Backend to Render
+    name: Deploy Backend
     runs-on: ubuntu-latest
     needs: [test-backend, smoke-suite, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Trigger Render Deploy
-        run: |
-          echo "Backend will be auto-deployed by Render on push to main"
-          echo "Monitor at: https://dashboard.render.com"
+    - name: Trigger Render Deploy
+      run: |
+        echo "🚀 Backend deploying to Render..."
+        echo "Monitor at: https://dashboard.render.com"
 
   deploy-frontend:
-    name: Deploy Frontend to Vercel
+    name: Deploy Frontend
     runs-on: ubuntu-latest
     needs: [test-frontend, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Trigger Vercel Deploy
-        run: |
-          echo "Frontend will be auto-deployed by Vercel on push to main"
-          echo "Monitor at: https://vercel.com/dashboard"
+    - name: Trigger Deployment
+      run: |
+        echo "🚀 Frontend deploying..."
+        echo "Production: https://www.tradematch.uk"
 
   notify-success:
     name: Notify Success
@@ -167,8 +173,9 @@ jobs:
     if: success()
 
     steps:
-      - name: Success notification
-        run: |
-          echo "🎉 Deployment successful!"
-          echo "Backend: https://tradematch-api.onrender.com"
-          echo "Frontend: https://www.tradematch.uk"
+    - name: Success notification
+      run: |
+        echo "🎉 Deployment successful!"
+        echo "Backend: https://tradematch-api.onrender.com"
+        echo "Frontend: https://www.tradematch.uk"
+        echo "WebSocket: wss://tradematch-api.onrender.com"

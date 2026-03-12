@@ -16,6 +16,10 @@ This index provides the canonical entry points for TradeMatch documentation.
 - CONNECTION-LAYER-TESTING.md
 - CONNECTION-LAYER-MANIFEST.md
 
+## Admin Documentation
+
+- docs/ADMIN-API-DOCUMENTATION.md (Complete admin API reference with all endpoints)
+
 ## Dashboards and UX
 
 - CUSTOMER-DASHBOARD-SPEC.md
