@@ -7,6 +7,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
 
+<!-- Auth Guard - Protects dashboard from unauthorized access -->
+<script src="/js/auth-guard.js"></script>
+
 :root {
   --bg-0:#050709; --bg-1:#0a0d14; --bg-2:#0f1219; --bg-3:#141720;
   --bg-4:#191d28; --bg-5:#1e2330;
@@ -1687,3 +1690,45 @@ function toggleKS(el,onMsg,offMsg){
 </script>
 </body>
 </html>
+
+<!-- TRADEMATCH LIVE DATA INJECTION - SUPER ADMIN DASHBOARD -->
+<script>
+async function fetchAdminData() {
+  try {
+    const response = await fetch('/api/super-admin/stats');
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      const data = result.data;
+      
+      // Update platform stats
+      const totalUsersEl = document.getElementById('totalUsers');
+      if (totalUsersEl) totalUsersEl.textContent = data.totalUsers?.toLocaleString() || '0';
+      
+      const totalVendorsEl = document.getElementById('totalVendors');
+      if (totalVendorsEl) totalVendorsEl.textContent = data.totalVendors?.toLocaleString() || '0';
+      
+      const activeJobsEl = document.getElementById('activeJobs');
+      if (activeJobsEl) activeJobsEl.textContent = data.activeJobs?.toLocaleString() || '0';
+      
+      const escrowVolumeEl = document.getElementById('escrowVolume');
+      if (escrowVolumeEl) escrowVolumeEl.textContent = '£' + (data.escrowVolume || 0).toLocaleString();
+      
+      const disputesTodayEl = document.getElementById('disputesToday');
+      if (disputesTodayEl) disputesTodayEl.textContent = data.disputesToday || '0';
+      
+      console.log('TradeMatch Admin: Live data loaded', data);
+    }
+  } catch (error) {
+    console.log('TradeMatch Admin: Using fallback data', error);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', fetchAdminData);
+} else {
+  fetchAdminData();
+}
+
+setInterval(fetchAdminData, 30000);
+</script>

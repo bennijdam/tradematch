@@ -3096,3 +3096,49 @@ document.addEventListener('keydown', (e) => {
 
 </body>
 </html>
+
+<!-- TRADEMATCH LIVE DATA INJECTION - USER DASHBOARD -->
+<script>
+async function fetchUserData() {
+  try {
+    const response = await fetch('/api/user/stats');
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      const data = result.data;
+      
+      // Update job stats
+      const activeJobsEl = document.getElementById('activeJobs');
+      if (activeJobsEl) activeJobsEl.textContent = data.activeJobs || '0';
+      
+      const pendingQuotesEl = document.getElementById('pendingQuotes');
+      if (pendingQuotesEl) pendingQuotesEl.textContent = data.pendingQuotes || '0';
+      
+      // Update messages
+      const unreadMessagesEl = document.getElementById('unreadMessages');
+      if (unreadMessagesEl) unreadMessagesEl.textContent = data.unreadMessages || '0';
+      
+      // Update verification status
+      const verificationBadge = document.querySelector('.verification-badge');
+      if (verificationBadge && data.isVerified) {
+        verificationBadge.classList.add('verified');
+        verificationBadge.textContent = 'Verified';
+      }
+      
+      console.log('TradeMatch User: Live data loaded', data);
+    }
+  } catch (error) {
+    console.log('TradeMatch User: Using fallback data', error);
+  }
+}
+
+// Load data on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', fetchUserData);
+} else {
+  fetchUserData();
+}
+
+// Refresh every 30 seconds
+setInterval(fetchUserData, 30000);
+</script>

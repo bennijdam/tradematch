@@ -5237,3 +5237,62 @@ function initNetworkAnimations() {
 document.addEventListener('DOMContentLoaded', initNetworkAnimations);
 
 </script>
+
+// ── TRADEMATCH LIVE DATA INJECTION ──
+// This script fetches live data and updates the dashboard
+
+async function fetchLiveData() {
+  try {
+    // Fetch from Next.js API
+    const response = await fetch('/api/vendor/stats?vendorId=demo-vendor');
+    const result = await response.json();
+    
+    if (result.success && result.data) {
+      const data = result.data;
+      
+      // Update stat values
+      const activeJobsEl = document.getElementById('activeJobs');
+      if (activeJobsEl) activeJobsEl.textContent = data.activeJobs || '0';
+      
+      const newLeadsEl = document.getElementById('newLeads');
+      if (newLeadsEl) newLeadsEl.textContent = data.newLeads || '0';
+      
+      const leadsBadgeEl = document.querySelector('.nav-badge');
+      if (leadsBadgeEl) leadsBadgeEl.textContent = data.newLeads || '0';
+      
+      // Update escrow balance
+      const balanceWidget = document.querySelector('.balance-amount');
+      if (balanceWidget) {
+        balanceWidget.textContent = '£' + (data.escrowBalance || 0).toLocaleString();
+      }
+      
+      // Update vault score
+      const vaultScoreEl = document.getElementById('vaultScore');
+      if (vaultScoreEl) {
+        vaultScoreEl.textContent = (data.vaultScore || 0).toFixed(1);
+      }
+      
+      // Update elite progress bar
+      const eliteProgressEl = document.getElementById('eliteProgress');
+      if (eliteProgressEl) {
+        eliteProgressEl.style.width = (data.eliteProgress || 0) + '%';
+        eliteProgressEl.setAttribute('data-width', (data.eliteProgress || 0) + '%');
+      }
+      
+      console.log('TradeMatch: Live data loaded', data);
+    }
+  } catch (error) {
+    console.log('TradeMatch: Using fallback data', error);
+  }
+}
+
+// Load data on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', fetchLiveData);
+} else {
+  fetchLiveData();
+}
+
+// Refresh every 30 seconds
+setInterval(fetchLiveData, 30000);
+
