@@ -14,6 +14,7 @@ const { apiLimiter, emailLimiter, quoteLimiter, paymentLimiter, uploadLimiter } 
 const { startCreditExpiryJob } = require('./services/credit-expiry-job');
 const { startVendorScoreRecoveryJob } = require('./services/vendor-score-recovery');
 const { startVettingExpiryMonitor } = require('./services/vetting-expiry-monitor');
+const WebSocketService = require('./services/websocket.service');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -500,10 +501,10 @@ Sentry.setupExpressErrorHandler(app);
 
 // Error handler
 app.use((err, req, res, next) => {
-    console.error('Server error:', err);
-    res.status(err.status || 500).json({
-        error: err.message || 'Internal server error'
-    });
+  console.error('Server error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal server error'
+  });
 });
 
 // Prevent premature exit
@@ -511,26 +512,34 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3001;
 
-try {
-    const server = app.listen(PORT, '0.0.0.0', () => {
-        console.log('🚀 TradeMatch API Server Started');
-        console.log(`📍 Port: ${PORT}`);
-        console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
-        console.log('🔗 Database: Connected');
-        console.log('🔐 OAuth: Google & Microsoft ready');
-        console.log('');
-    });
+let wsService;
 
-    server.on('error', (err) => {
-        console.error('❌ Server error:', err.message, err.code);
-        if (err.code === 'EADDRINUSE') {
-            console.error(`Port ${PORT} is already in use`);
-        }
-        process.exit(1);
-    });
-} catch (err) {
-    console.error('❌ Fatal server error:', err);
+try {
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log('🚀 TradeMatch API Server Started');
+    console.log(`📍 Port: ${PORT}`);
+    console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+    console.log('🔗 Database: Connected');
+    console.log('🔐 OAuth: Google & Microsoft ready');
+    console.log('');
+  });
+
+  // Initialize WebSocket service
+  wsService = new WebSocketService(server, pool);
+  
+  // Make wsService available globally for other routes
+  app.set('wsService', wsService);
+
+  server.on('error', (err) => {
+    console.error('❌ Server error:', err.message, err.code);
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use`);
+    }
     process.exit(1);
+  });
+} catch (err) {
+  console.error('❌ Fatal server error:', err);
+  process.exit(1);
 }
 
 module.exports = app;

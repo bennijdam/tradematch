@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, requireVendor } = require('../middleware/auth');
+const { validate } = require('../middleware/validation');
 const StripeService = require('../services/stripe.service');
 
 let pool;
@@ -488,7 +489,7 @@ router.get('/reviews', async (req, res) => {
  * PUT /api/vendor/profile
  * Update vendor profile
  */
-router.put('/profile', async (req, res) => {
+router.put('/profile', validate.vendorProfile, async (req, res) => {
   try {
     const vendorId = req.user.userId;
     const { 

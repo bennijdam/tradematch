@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 const EmailService = require('../services/email.service');
 const axios = require('axios');
 const router = express.Router();
+const { validate } = require('../middleware/validation');
 
 let pool;
 let emailTransporter;
@@ -46,65 +47,43 @@ const authenticate = (req, res, next) => {
 };
 
 // Create bid
-router.post('/', authenticate, async (req, res) => {
-    const { quoteId, price, message, estimatedDuration, availability } = req.body;
-    const vendorId = req.user.userId;
-    
-    try {
-        const errors = [];
-        const normalizedQuoteId = typeof quoteId === 'string' ? quoteId.trim() : '';
-        const normalizedMessage = typeof message === 'string' ? message.trim() : '';
-        const normalizedDuration = typeof estimatedDuration === 'string' ? estimatedDuration.trim() : '';
-        const normalizedAvailability = typeof availability === 'string' ? availability.trim() : '';
-        const numericPrice = Number(price);
+router.post('/', authenticate, validate.bidSubmission, async (req, res) => {
+  const { quoteId, price, message, estimatedDuration, availability } = req.body;
+  const vendorId = req.user.userId;
 
-        if (!normalizedQuoteId) {
-            errors.push('quoteId is required.');
-        }
+  try {
+    // Validate quoteId format
+    const normalizedQuoteId = typeof quoteId === 'string' ? quoteId.trim() : '';
+    if (!normalizedQuoteId) {
+      return res.status(400).json({ error: 'Invalid quoteId' });
+    }
 
-        if (Number.isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 100000) {
-            errors.push('price must be a valid amount.');
-        }
+    // Business logic validation
+    const quoteCheck = await pool.query(
+      'SELECT id, status FROM quotes WHERE id = $1',
+      [normalizedQuoteId]
+    );
 
-        if (normalizedMessage && normalizedMessage.length > 2000) {
-            errors.push('message is too long.');
-        }
+    if (!quoteCheck.rows.length) {
+      return res.status(404).json({ error: 'Quote not found' });
+    }
 
-        if (normalizedDuration && normalizedDuration.length > 120) {
-            errors.push('estimatedDuration is too long.');
-        }
+    if (quoteCheck.rows[0].status !== 'open') {
+      return res.status(409).json({ error: 'Quote is not open for bids' });
+    }
 
-        if (normalizedAvailability && normalizedAvailability.length > 120) {
-            errors.push('availability is too long.');
-        }
+    const existingBid = await pool.query(
+      'SELECT 1 FROM bids WHERE quote_id = $1 AND vendor_id = $2',
+      [normalizedQuoteId, vendorId]
+    );
 
-        if (errors.length) {
-            return res.status(400).json({ error: 'Invalid bid data', details: errors });
-        }
+    if (existingBid.rows.length) {
+      return res.status(409).json({ error: 'Bid already submitted for this quote' });
+    }
 
-        const quoteCheck = await pool.query(
-            'SELECT id, status FROM quotes WHERE id = $1',
-            [normalizedQuoteId]
-        );
-
-        if (!quoteCheck.rows.length) {
-            return res.status(404).json({ error: 'Quote not found' });
-        }
-
-        if (quoteCheck.rows[0].status !== 'open') {
-            return res.status(409).json({ error: 'Quote is not open for bids' });
-        }
-
-        const existingBid = await pool.query(
-            'SELECT 1 FROM bids WHERE quote_id = $1 AND vendor_id = $2',
-            [normalizedQuoteId, vendorId]
-        );
-
-        if (existingBid.rows.length) {
-            return res.status(409).json({ error: 'Bid already submitted for this quote' });
-        }
-
-        const bidId = `bid_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Insert bid
+    const bidId = `bid_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const numericPrice = Number(price);
         
         await pool.query(
             `INSERT INTO bids (id, quote_id, vendor_id, price, message, estimated_duration, availability, status)

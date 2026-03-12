@@ -15,6 +15,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { emailLimiter, paymentLimiter, quoteLimiter } = require('./middleware/rate-limit');
 const { TradeMatchEventBroker, NotificationDispatcher } = require('./services/event-broker.service');
+const WebSocketService = require('./services/websocket.service');
 const connectionLayerRouter = require('./routes/connection-layer');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
@@ -452,19 +453,29 @@ app.use((err, req, res, next) => {
 });
 
 // Graceful shutdown
+let wsService;
+
 const gracefulShutdown = async () => {
-    logger.info('Shutting down gracefully...');
-    try {
-        if (notificationDispatcher && typeof notificationDispatcher.stopProcessing === 'function') {
-            notificationDispatcher.stopProcessing();
-        }
-        await pool.end();
-        logger.info('Database connections closed');
-        process.exit(0);
-    } catch (err) {
-        logger.error('Error during shutdown', { error: err.message });
-        process.exit(1);
+  logger.info('Shutting down gracefully...');
+  try {
+    if (notificationDispatcher && typeof notificationDispatcher.stopProcessing === 'function') {
+      notificationDispatcher.stopProcessing();
     }
+    
+    // Close WebSocket server
+    if (wsService && wsService.wss) {
+      wsService.wss.close(() => {
+        logger.info('WebSocket server closed');
+      });
+    }
+    
+    await pool.end();
+    logger.info('Database connections closed');
+    process.exit(0);
+  } catch (err) {
+    logger.error('Error during shutdown', { error: err.message });
+    process.exit(1);
+  }
 };
 
 process.on('SIGTERM', gracefulShutdown);
@@ -473,16 +484,25 @@ process.on('SIGINT', gracefulShutdown);
 // Start server
 const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
-    logger.info('TradeMatch API Server Started', {
-        port: PORT,
-        environment: process.env.NODE_ENV || 'development',
-        nodeVersion: process.version
-    });
-    console.log('🚀 TradeMatch API Server Started (Production)');
-    console.log(`📍 Port: ${PORT}`);
-    console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+  logger.info('TradeMatch API Server Started', {
+    port: PORT,
+    environment: process.env.NODE_ENV || 'development',
+    nodeVersion: process.version
+  });
+  console.log('🚀 TradeMatch API Server Started (Production)');
+  console.log(`📍 Port: ${PORT}`);
+  console.log(`🔗 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
 });
+
+// Initialize WebSocket service
+try {
+  wsService = new WebSocketService(server, pool);
+  app.set('wsService', wsService);
+  logger.info('WebSocket server initialized');
+} catch (err) {
+  logger.error('Failed to initialize WebSocket server', { error: err.message });
+}
 
 // Attempt migrations in the background (non-blocking)
 // Disabled by default to avoid spawn errors on constrained environments.

@@ -2768,58 +2768,130 @@ app.patch("/api/bids/:bidId/reject", authenticateToken, async (req, res) => {
 // Search for vendors by service and location
 app.get("/api/vendors/search", async (req, res) => {
   try {
-    const { service, postcode, radius = 10 } = req.query;
-    
-    if (!service || !postcode) {
-      return res.status(400).json({ 
-        error: 'Service and postcode are required' 
-      });
+    const { service, postcode, radius = 10, minRating, page = 1, limit = 20 } = req.query;
+
+    // Build WHERE clauses dynamically
+    const conditions = ['u.user_type = $1 OR u.role = $1'];
+    const params = ['vendor'];
+    let paramIndex = 2;
+
+    // Filter by service if provided
+    if (service && service.trim()) {
+      conditions.push(`(
+        v.services::text ILIKE $${paramIndex} 
+        OR v.primary_trade ILIKE $${paramIndex}
+        OR v.company_name ILIKE $${paramIndex}
+      )`);
+      params.push(`%${service.trim()}%`);
+      paramIndex++;
     }
 
-    // Get all vendors who offer this service
-    // In a production system, you'd calculate actual distances using postcodes
-    // For now, we'll do a simple query for vendors with this service
-    const vendorsResult = await pool.query(
-      `SELECT DISTINCT u.id, u.name, u.email, u.phone, u.created_at,
-              COUNT(DISTINCT b.id) as bids_submitted,
-              COUNT(DISTINCT CASE WHEN b.status = 'accepted' THEN b.id END) as jobs_completed,
-              ROUND(AVG(CASE WHEN r.rating IS NOT NULL THEN r.rating ELSE NULL END), 1) as average_rating,
-              COUNT(DISTINCT r.id) as total_reviews
-       FROM users u
-       LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted')
-       LEFT JOIN reviews r ON u.id = r.vendor_id
-      WHERE u.user_type = 'vendor' OR u.role = 'vendor'
-       GROUP BY u.id, u.name, u.email, u.phone, u.created_at
-       ORDER BY average_rating DESC, jobs_completed DESC
-       LIMIT 20`
-    );
+    // Filter by minimum rating
+    if (minRating && !isNaN(minRating)) {
+      conditions.push(`COALESCE(vm.avg_customer_rating, 0) >= $${paramIndex}`);
+      params.push(parseFloat(minRating));
+      paramIndex++;
+    }
+
+    // Build the query with proper joins to vendors table
+    const query = `
+      SELECT DISTINCT 
+        u.id, 
+        v.company_name,
+        u.name, 
+        u.email, 
+        u.phone, 
+        u.postcode,
+        u.created_at,
+        v.services,
+        v.primary_trade,
+        v.years_experience,
+        v.description,
+        COUNT(DISTINCT b.id) as bids_submitted, 
+        COUNT(DISTINCT CASE WHEN b.status = 'accepted' THEN b.id END) as jobs_completed,
+        ROUND(AVG(CASE WHEN r.rating IS NOT NULL THEN r.rating ELSE NULL END), 1) as average_rating,
+        COUNT(DISTINCT r.id) as total_reviews,
+        COALESCE(vm.reputation_score, 0) as reputation_score,
+        COALESCE(vm.win_rate, 0) as win_rate,
+        COALESCE(vm.avg_customer_rating, 0) as avg_customer_rating,
+        COALESCE(vm.avg_response_time_hours, 0) as avg_response_time_hours
+      FROM users u
+      INNER JOIN vendors v ON u.id = v.user_id
+      LEFT JOIN vendor_performance_metrics vm ON u.id = vm.vendor_id
+      LEFT JOIN bids b ON u.id = b.vendor_id AND b.status IN ('accepted', 'pending')
+      LEFT JOIN reviews r ON u.id = r.vendor_id
+      WHERE ${conditions.join(' AND ')}
+      GROUP BY u.id, u.name, u.email, u.phone, u.postcode, u.created_at,
+               v.company_name, v.services, v.primary_trade, v.years_experience, v.description,
+               vm.reputation_score, vm.win_rate, vm.avg_customer_rating, vm.avg_response_time_hours
+      ORDER BY 
+        COALESCE(vm.reputation_score, 0) DESC, 
+        COALESCE(vm.win_rate, 0) DESC,
+        COALESCE(vm.avg_customer_rating, 0) DESC
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+    `;
+
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    params.push(parseInt(limit), offset);
+
+    const vendorsResult = await pool.query(query, params);
+
+    // Get total count for pagination
+    const countQuery = `
+      SELECT COUNT(DISTINCT u.id) as total
+      FROM users u
+      INNER JOIN vendors v ON u.id = v.user_id
+      LEFT JOIN vendor_performance_metrics vm ON u.id = vm.vendor_id
+      WHERE ${conditions.join(' AND ').replace(/\$\d+/g, () => `$${paramIndex++}`)}
+    `;
+    const countResult = await pool.query(countQuery, params.slice(0, paramIndex - 3));
+    const total = parseInt(countResult.rows[0]?.total || 0);
 
     const vendors = vendorsResult.rows.map(vendor => ({
       id: vendor.id,
+      companyName: vendor.company_name || vendor.name,
       name: vendor.name,
       email: vendor.email,
       phone: vendor.phone,
-      bids_submitted: parseInt(vendor.bids_submitted),
-      jobs_completed: parseInt(vendor.jobs_completed),
-      average_rating: vendor.average_rating ? parseFloat(vendor.average_rating) : null,
-      total_reviews: parseInt(vendor.total_reviews),
-      member_since: new Date(vendor.created_at).toLocaleDateString('en-GB', { 
-        year: 'numeric', 
-        month: 'short' 
+      postcode: vendor.postcode,
+      services: vendor.services || [],
+      primaryTrade: vendor.primary_trade,
+      yearsExperience: vendor.years_experience,
+      description: vendor.description,
+      bidsSubmitted: parseInt(vendor.bids_submitted) || 0,
+      jobsCompleted: parseInt(vendor.jobs_completed) || 0,
+      averageRating: vendor.average_rating ? parseFloat(vendor.average_rating) : null,
+      totalReviews: parseInt(vendor.total_reviews) || 0,
+      reputationScore: parseFloat(vendor.reputation_score) || 0,
+      winRate: parseFloat(vendor.win_rate) || 0,
+      avgResponseTime: parseFloat(vendor.avg_response_time_hours) || 0,
+      memberSince: new Date(vendor.created_at).toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'short'
       })
     }));
 
-    console.log(`✅ Found ${vendors.length} vendors for service: ${service}`);
+    console.log(`✅ Found ${vendors.length} vendors (page ${page}, total: ${total})`);
 
     return res.json({
       success: true,
-      data: vendors
+      data: vendors,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        totalPages: Math.ceil(total / parseInt(limit))
+      },
+      filters: {
+        service: service || null,
+        minRating: minRating ? parseFloat(minRating) : null
+      }
     });
 
   } catch (error) {
     console.error('❌ Vendor search error:', error);
-    res.status(500).json({ 
-      error: 'Failed to search vendors: ' + error.message 
+    res.status(500).json({
+      error: 'Failed to search vendors: ' + error.message
     });
   }
 });

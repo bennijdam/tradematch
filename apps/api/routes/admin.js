@@ -13,6 +13,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, requireAdmin, requireAdminRole } = require('../middleware/auth');
 const { adminAudit } = require('../middleware/admin-audit');
+const { validate } = require('../middleware/validation');
 
 let pool, eventBroker;
 
@@ -568,17 +569,22 @@ router.get('/users/:userId/messages', async (req, res) => {
  * Update user status (suspend, activate, ban)
  */
 router.patch(
-    '/users/:userId/status',
-    requireAdminRole(SUPPORT_ROLES),
-    adminAudit({
-        action: 'user_status_change',
-        targetType: 'user',
-        getTargetId: (req) => req.params.userId,
-        getDetails: (req) => ({
-            status: req.body.status,
-            reason: req.body.reason || null
-        })
-    }),
+  '/users/:userId/status',
+  requireAdminRole(SUPPORT_ROLES),
+  validate.idParam('userId'),
+  validate.custom([
+    body('status').isIn(['active', 'suspended', 'banned', 'pending']).withMessage('Invalid status'),
+    body('reason').optional().trim().isLength({ max: 500 })
+  ]),
+  adminAudit({
+    action: 'user_status_change',
+    targetType: 'user',
+    getTargetId: (req) => req.params.userId,
+    getDetails: (req) => ({
+      status: req.body.status,
+      reason: req.body.reason || null
+    })
+  }),
     async (req, res) => {
     try {
         const { userId } = req.params;

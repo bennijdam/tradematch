@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const { validate } = require('../middleware/validation');
 
 let pool;
 router.setPool = (p) => { pool = p; };
@@ -40,7 +41,7 @@ const getVendorsColumns = async () => {
  * Create Review
  * POST /api/reviews
  */
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticate, validate.reviewSubmission, async (req, res) => {
     const {
         quoteId,
         vendorId,

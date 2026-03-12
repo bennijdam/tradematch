@@ -386,18 +386,53 @@ class TradeMatchEventBroker extends EventEmitter {
 // ============================================================
 
 class NotificationDispatcher {
-    constructor(pool, emailService, options = {}) {
-        this.pool = pool;
-        this.emailService = emailService;
-        this.timer = null;
-        this.stopping = false;
-        this.stopped = false;
+  constructor(pool, emailService, wsService = null, options = {}) {
+    this.pool = pool;
+    this.emailService = emailService;
+    this.wsService = wsService; // WebSocket service for real-time notifications
+    this.timer = null;
+    this.stopping = false;
+    this.stopped = false;
 
-        // Retry configuration
-        this.maxAttempts = options.maxAttempts || 5;
-        this.baseBackoffMs = options.baseBackoffMs || 2000; // exponential backoff base
-        this.maxBackoffMs = options.maxBackoffMs || 5 * 60 * 1000; // cap at 5 minutes
+    // Retry configuration
+    this.maxAttempts = options.maxAttempts || 5;
+    this.baseBackoffMs = options.baseBackoffMs || 2000; // exponential backoff base
+    this.maxBackoffMs = options.maxBackoffMs || 5 * 60 * 1000; // cap at 5 minutes
+  }
+
+  /**
+   * Set WebSocket service (can be called after construction)
+   */
+  setWebSocketService(wsService) {
+    this.wsService = wsService;
+  }
+
+  /**
+   * Send real-time notification via WebSocket
+   */
+  sendWebSocketNotification(userId, notification) {
+    if (!this.wsService) return false;
+    
+    try {
+      this.wsService.notifyUser(userId, {
+        type: 'notification',
+        notification: {
+          id: notification.id,
+          type: notification.notification_type,
+          title: notification.title,
+          message: notification.body,
+          referenceId: notification.reference_id,
+          referenceType: notification.reference_type,
+          createdAt: notification.created_at
+        },
+        timestamp: new Date().toISOString()
+      });
+      return true;
+    } catch (error) {
+      console.error('[NOTIFICATIONS] WebSocket send failed:', error);
+      return false;
     }
+  }
 
     /**
      * Start periodic processing with configurable interval
@@ -510,18 +545,27 @@ class NotificationDispatcher {
                 }
             }
             
-            // Send push (stub - implement with Firebase, etc.)
-            if (preferences.push_enabled) {
-                console.log(`[NOTIFICATION] Push: ${notification.recipient_id} - ${notification.title}`);
-            }
-            
-            // Mark as sent
-            await this.pool.query(
-                `UPDATE notification_queue
-                 SET status = 'sent', sent_at = CURRENT_TIMESTAMP, last_error = NULL
-                 WHERE id = $1`,
-                [notification.id]
-            );
+      // Send push (stub - implement with Firebase, etc.)
+      if (preferences.push_enabled) {
+        console.log(`[NOTIFICATION] Push: ${notification.recipient_id} - ${notification.title}`);
+      }
+
+      // Send WebSocket notification (real-time)
+      const wsSent = this.sendWebSocketNotification(notification.recipient_id, notification);
+      if (wsSent) {
+        await this.pool.query(
+          `UPDATE notification_queue SET ws_sent = true WHERE id = $1`,
+          [notification.id]
+        );
+      }
+
+      // Mark as sent
+      await this.pool.query(
+        `UPDATE notification_queue 
+         SET status = 'sent', sent_at = CURRENT_TIMESTAMP, last_error = NULL 
+         WHERE id = $1`,
+        [notification.id]
+      );
             
         } catch (error) {
             console.error('[NOTIFICATION] Send error:', error);

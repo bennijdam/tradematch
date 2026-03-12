@@ -3,6 +3,7 @@ const router = express.Router();
 const EmailService = require('../services/email.service');
 // Import auth middlewares for protected customer routes
 const { authenticate, requireCustomer } = require('../middleware/auth');
+const { validate } = require('../middleware/validation');
 
 let pool;
 router.setPool = (p) => { pool = p; };
@@ -564,7 +565,7 @@ router.delete('/saved-trades/:id', async (req, res) => {
  * PUT /api/customer/profile
  * Update customer profile
  */
-router.put('/profile', async (req, res) => {
+router.put('/profile', validate.customerProfile, async (req, res) => {
   try {
     const customerId = req.user.userId;
     const { name, phone, address, postcode } = req.body;

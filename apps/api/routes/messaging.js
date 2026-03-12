@@ -1,6 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { authenticate, requireAdmin, requireSuperAdmin, requireFinanceAdmin } = require('../middleware/auth');
+const { validate } = require('../middleware/validation');
 
 const router = express.Router();
 let pool;
@@ -342,7 +343,7 @@ router.get('/conversations/:conversationId/messages', authenticate, async (req, 
     }
 });
 
-router.post('/conversations/:conversationId/messages', authenticate, async (req, res) => {
+router.post('/conversations/:conversationId/messages', authenticate, validate.idParam('conversationId'), validate.messageSend, async (req, res) => {
     const client = await pool.connect();
     try {
         const { conversationId } = req.params;
