@@ -1988,18 +1988,21 @@ function handleFileUpload(input) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('User Dashboard initialized');
-    initializeThemeToggle();
-    initializeSmoothScroll(document.getElementById('mainContent') || document);
-    initializeSpaNavigation();
-    initializeInvoiceDownloads();
+  console.log('User Dashboard initialized');
+  initializeThemeToggle();
+  initializeSmoothScroll(document.getElementById('mainContent') || document);
+  initializeSpaNavigation();
+  initializeInvoiceDownloads();
 
-    // Initialize modals
-    initializeNotificationModal();
-    initializeProfileModal();
+  // Initialize modals
+  initializeNotificationModal();
+  initializeProfileModal();
 
-    // Job page bindings
-    initializePageHandlers();
+  // Job page bindings
+  initializePageHandlers();
+  
+  // Initialize WebSocket for real-time updates
+  initCustomerWebSocket();
 });
 
 // Notification Modal
@@ -2104,7 +2107,103 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 window.addEventListener('popstate', () => {
-    closeAllModals();
+  closeAllModals();
+});
+
+// Initialize WebSocket for real-time customer dashboard updates
+function initCustomerWebSocket() {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (!token || token === 'demo_token') return;
+  
+  // Check if TradeMatchWebSocket class exists
+  if (typeof TradeMatchWebSocket === 'undefined') {
+    console.log('[WS] WebSocket client not loaded, using polling fallback');
+    return;
+  }
+  
+  // Initialize WebSocket client
+  window.customerWsClient = new TradeMatchWebSocket();
+  window.customerWsClient.connect(token);
+  
+  // Handle real-time stats updates
+  window.customerWsClient.on('statsUpdate', (data) => {
+    if (data.dashboard === 'customer' && data.stats) {
+      console.log('[WS] Received customer stats update:', data.stats);
+      
+      // Update stats display
+      const activeJobsEl = document.querySelector('[data-stat="active-jobs"]');
+      const totalQuotesEl = document.querySelector('[data-stat="total-quotes"]');
+      const pendingBidsEl = document.querySelector('[data-stat="pending-bids"]');
+      
+      if (activeJobsEl) activeJobsEl.textContent = data.stats.activeJobs || 0;
+      if (totalQuotesEl) totalQuotesEl.textContent = data.stats.totalQuotes || 0;
+      if (pendingBidsEl) pendingBidsEl.textContent = data.stats.pendingBids || 0;
+      
+      // Update notification badge
+      if (data.stats.unreadNotifications > 0) {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+          badge.textContent = data.stats.unreadNotifications;
+          badge.style.display = 'flex';
+        }
+      }
+    }
+  });
+  
+  // Handle new bids on quotes
+  window.customerWsClient.on('bidUpdate', (bid) => {
+    console.log('[WS] New bid received:', bid);
+    
+    // Show toast notification
+    if (typeof CustomConfirm !== 'undefined') {
+      CustomConfirm.toast('New Bid Received', `A vendor has submitted a bid for £${bid.amount}`, 'info');
+    }
+    
+    // Refresh dashboard
+    window.dispatchEvent(new CustomEvent('dashboard-refresh'));
+  });
+  
+  // Handle quote updates
+  window.customerWsClient.on('quoteUpdate', (quote) => {
+    console.log('[WS] Quote update:', quote);
+    
+    if (quote.status === 'completed') {
+      if (typeof CustomConfirm !== 'undefined') {
+        CustomConfirm.toast('Job Completed', 'Your job has been marked as complete!', 'success');
+      }
+    }
+    
+    window.dispatchEvent(new CustomEvent('dashboard-refresh'));
+  });
+  
+  // Handle notifications
+  window.customerWsClient.on('notification', (notification) => {
+    if (typeof CustomConfirm !== 'undefined') {
+      CustomConfirm.toast(notification.title, notification.message, 'info');
+    }
+    
+    // Update notification badge
+    const badge = document.querySelector('.notification-badge');
+    if (badge) {
+      const count = parseInt(badge.textContent || '0') + 1;
+      badge.textContent = count;
+      badge.style.display = 'flex';
+    }
+  });
+  
+  // Handle connection events
+  window.customerWsClient.on('connected', () => {
+    console.log('[WS] Customer dashboard connected to real-time updates');
+  });
+  
+  window.customerWsClient.on('disconnected', () => {
+    console.log('[WS] Customer dashboard disconnected, falling back to polling');
+  });
+}
+
+// Call WebSocket initialization
+document.addEventListener('DOMContentLoaded', () => {
+  initCustomerWebSocket();
 });
 
 // ── Global error boundary ─────────────────────────────────────────────────

@@ -1272,22 +1272,25 @@ function initVendorDashboardObserver() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    (async () => {
-        const sessionOk = await enforceVendorSession();
-        if (!sessionOk) return;
-        await checkVendorOnboarding();
-    })();
-    hydrateVendorDashboard();
-    hydrateVendorSignals();
-    hydrateVendorMessagesPage();
-    hydrateBillingPage();
-    hydrateVendorLeadsPage();
-    (async () => {
-        const data = await getImpressionsData();
-        if (data) updateImpressionsPageUI(data);
-    })();
-    initVendorDashboardObserver();
-    initSettingsTabs();
+  (async () => {
+    const sessionOk = await enforceVendorSession();
+    if (!sessionOk) return;
+    await checkVendorOnboarding();
+  })();
+  hydrateVendorDashboard();
+  hydrateVendorSignals();
+  hydrateVendorMessagesPage();
+  hydrateBillingPage();
+  hydrateVendorLeadsPage();
+  (async () => {
+    const data = await getImpressionsData();
+    if (data) updateImpressionsPageUI(data);
+  })();
+  initVendorDashboardObserver();
+  initSettingsTabs();
+  
+  // Initialize WebSocket for real-time updates
+  initVendorWebSocket();
 });
 
 window.markAllNotificationsRead = async function markAllNotificationsRead() {
@@ -1319,24 +1322,116 @@ function switchTab(tabName, button) {
 window.switchTab = switchTab;
 
 function initSettingsTabs() {
-    const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
-    if (!tabButtons.length) return;
+  const tabButtons = Array.from(document.querySelectorAll('.tab-button'));
+  if (!tabButtons.length) return;
 
-    tabButtons.forEach(button => {
-        if (!button.dataset.tabTarget) {
-            const inline = button.getAttribute('onclick') || '';
-            const match = inline.match(/switchTab\('([^']+)'/);
-            if (match) {
-                button.dataset.tabTarget = match[1];
-            }
-        }
+  tabButtons.forEach(button => {
+    if (!button.dataset.tabTarget) {
+      const inline = button.getAttribute('onclick') || '';
+      const match = inline.match(/switchTab\('([^']+)'/);
+      if (match) {
+        button.dataset.tabTarget = match[1];
+      }
+    }
 
-        button.addEventListener('click', () => {
-            const target = button.dataset.tabTarget;
-            if (!target) return;
-            switchTab(target, button);
-        });
+    button.addEventListener('click', () => {
+      const target = button.dataset.tabTarget;
+      if (!target) return;
+      switchTab(target, button);
     });
+  });
+}
+
+// Initialize WebSocket for real-time vendor dashboard updates
+function initVendorWebSocket() {
+  const token = getAuthToken();
+  if (!token || isDemoToken(token)) return;
+  
+  // Check if TradeMatchWebSocket class exists
+  if (typeof TradeMatchWebSocket === 'undefined') {
+    console.log('[WS] WebSocket client not loaded, using polling fallback');
+    return;
+  }
+  
+  // Initialize WebSocket client
+  window.vendorWsClient = new TradeMatchWebSocket();
+  window.vendorWsClient.connect(token);
+  
+  // Handle real-time stats updates
+  window.vendorWsClient.on('statsUpdate', (data) => {
+    if (data.dashboard === 'vendor' && data.stats) {
+      console.log('[WS] Received stats update:', data.stats);
+      
+      // Update stats display
+      updateText(document.querySelector('[data-vendor-stat="newLeads"]'), data.stats.newLeads);
+      updateText(document.querySelector('[data-vendor-stat="activeQuotes"]'), data.stats.activeQuotes);
+      updateText(document.querySelector('[data-vendor-stat="wonJobs"]'), data.stats.wonJobs);
+      
+      // Update credits
+      if (data.stats.credits !== undefined) {
+        updateText(document.querySelector('[data-vendor-profile="balance"]'), Number(data.stats.credits).toFixed(2));
+      }
+      
+      // Update notification badge
+      if (data.stats.unreadNotifications > 0) {
+        const badge = document.querySelector('[data-vendor-stat="notifications"]');
+        if (badge) {
+          badge.textContent = data.stats.unreadNotifications;
+          badge.style.display = 'flex';
+        }
+      }
+    }
+  });
+  
+  // Handle new leads
+  window.vendorWsClient.on('newLead', (lead) => {
+    console.log('[WS] New lead received:', lead);
+    
+    // Show toast notification
+    showVendorToast(`New lead available: ${lead.serviceType} in ${lead.location}`, 'info');
+    
+    // Play notification sound if available
+    if (window.playNotificationSound) {
+      window.playNotificationSound();
+    }
+    
+    // Refresh dashboard data
+    hydrateVendorDashboard();
+    hydrateVendorLeadsPage();
+  });
+  
+  // Handle quote updates
+  window.vendorWsClient.on('quoteUpdate', (quote) => {
+    console.log('[WS] Quote update received:', quote);
+    showVendorToast('A quote status has been updated', 'info');
+    hydrateVendorDashboard();
+  });
+  
+  // Handle bid updates (when customer accepts/rejects)
+  window.vendorWsClient.on('bidUpdate', (bid) => {
+    console.log('[WS] Bid update received:', bid);
+    if (bid.status === 'accepted') {
+      showVendorToast('🎉 Your bid was accepted!', 'success');
+    } else if (bid.status === 'rejected') {
+      showVendorToast('Your bid was not selected', 'info');
+    }
+    hydrateVendorDashboard();
+  });
+  
+  // Handle notifications
+  window.vendorWsClient.on('notification', (notification) => {
+    showVendorToast(notification.title, notification.message, 'info');
+    hydrateNotifications();
+  });
+  
+  // Handle connection events
+  window.vendorWsClient.on('connected', () => {
+    console.log('[WS] Vendor dashboard connected to real-time updates');
+  });
+  
+  window.vendorWsClient.on('disconnected', () => {
+    console.log('[WS] Vendor dashboard disconnected, falling back to polling');
+  });
 }
 
 // ── Global error boundary ─────────────────────────────────────────────────
