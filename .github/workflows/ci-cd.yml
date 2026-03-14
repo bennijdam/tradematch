@@ -38,7 +38,7 @@ jobs:
 
     - name: Install dependencies
       working-directory: ./apps/api
-      run: npm ci
+      run: npm install --no-audit --no-fund
 
     - name: Run linting
       working-directory: ./apps/api
@@ -101,7 +101,7 @@ jobs:
 
     - name: Install dependencies
       working-directory: ./apps/api
-      run: npm ci
+      run: npm install --no-audit --no-fund
 
     - name: Run smoke suite
       working-directory: ./apps/api
