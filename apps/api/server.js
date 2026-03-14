@@ -414,12 +414,22 @@ try {
 
 // Admin Quiz routes
 try {
-    const adminQuizRouter = require('./routes/admin-quiz');
-    if (typeof adminQuizRouter.setPool === 'function') adminQuizRouter.setPool(pool);
-    app.use('/api/admin/quiz', adminQuizRouter);
-    console.log('🎓 Admin Quiz routes mounted at /api/admin/quiz');
+  const adminQuizRouter = require('./routes/admin-quiz');
+  if (typeof adminQuizRouter.setPool === 'function') adminQuizRouter.setPool(pool);
+  app.use('/api/admin/quiz', adminQuizRouter);
+  console.log('🎓 Admin Quiz routes mounted at /api/admin/quiz');
 } catch (e) {
-    console.warn('⚠️ Admin Quiz routes not available:', e && e.message ? e.message : e);
+  console.warn('⚠️ Admin Quiz routes not available:', e && e.message ? e.message : e);
+}
+
+// Sentry webhook routes
+try {
+  const sentryRouter = require('./routes/sentry');
+  app.use('/sentry', sentryRouter);
+  console.log('📨 Sentry webhook routes mounted at /sentry/webhook');
+  console.log('🧪 Sentry test endpoint at /sentry/test-error');
+} catch (e) {
+  console.warn('⚠️ Sentry routes not available:', e && e.message ? e.message : e);
 }
 
 // Debug endpoint
