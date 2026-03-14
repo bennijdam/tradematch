@@ -144,6 +144,13 @@ const pool = new Pool({
 const adminAudit = require('./middleware/admin-audit');
 adminAudit.setPool(pool);
 
+// Initialize error logger for admin dashboard
+const { initErrorLogger, errorLoggerMiddleware, requestLoggerMiddleware } = require('./middleware/error-logger');
+initErrorLogger(pool);
+
+// Request logger middleware (logs slow requests)
+app.use(requestLoggerMiddleware);
+
 // Avoid closing the pool in development (prevents "Cannot use a pool after calling end")
 const originalPoolEnd = pool.end.bind(pool);
 pool.end = async () => {
@@ -509,7 +516,11 @@ app.use((req, res) => {
 // Sentry error handler (register before any other error middleware)
 Sentry.setupExpressErrorHandler(app);
 
-// Error handler
+// Error logger middleware (captures all errors for admin dashboard)
+const { errorLoggerMiddleware } = require('./middleware/error-logger');
+app.use(errorLoggerMiddleware);
+
+// Final error handler
 app.use((err, req, res, next) => {
   console.error('Server error:', err);
   res.status(err.status || 500).json({

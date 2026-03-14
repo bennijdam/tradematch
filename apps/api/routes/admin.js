@@ -1462,12 +1462,250 @@ router.post(
             ? undefined
             : (error && error.message ? error.message : String(error));
 
-        res.status(500).json({
-            error: 'Failed to change password',
-            ...(details ? { details } : {})
-        });
-    }
+  res.status(500).json({
+    error: 'Failed to change password',
+    ...(details ? { details } : {})
+  });
+}
 });
+
+/**
+ * ============================================
+ * ERROR LOGGING ENDPOINTS (Admin Only)
+ * ============================================
+ * Allows admins to view, filter, and manage backend errors
+ */
+
+// Import Error Logger Service
+const ErrorLoggerService = require('../services/error-logger.service');
+
+// Initialize error logger (set pool when available)
+let errorLogger = null;
+
+function getErrorLogger() {
+  if (!errorLogger && pool) {
+    errorLogger = new ErrorLoggerService(pool);
+  }
+  return errorLogger;
+}
+
+/**
+ * GET /api/admin/errors
+ * Get paginated list of errors with filters
+ */
+router.get('/errors', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
+  try {
+    const logger = getErrorLogger();
+    if (!logger) {
+      return res.status(503).json({ error: 'Error logging service not initialized' });
+    }
+
+    const filters = {
+      page: parseInt(req.query.page) || 1,
+      limit: Math.min(parseInt(req.query.limit) || 50, 100),
+      level: req.query.level,
+      resolved: req.query.resolved !== undefined ? req.query.resolved === 'true' : undefined,
+      errorType: req.query.errorType,
+      source: req.query.source,
+      startDate: req.query.startDate,
+      endDate: req.query.endDate,
+      search: req.query.search
+    };
+
+    const result = await logger.getErrors(filters);
+    res.json({
+      success: true,
+      ...result
+    });
+  } catch (error) {
+    console.error('Error fetching error logs:', error);
+    res.status(500).json({ error: 'Failed to fetch error logs' });
+  }
+});
+
+/**
+ * GET /api/admin/errors/stats
+ * Get error statistics summary
+ */
+router.get('/errors/stats', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
+  try {
+    const logger = getErrorLogger();
+    if (!logger) {
+      return res.status(503).json({ error: 'Error logging service not initialized' });
+    }
+
+    const timeRange = req.query.timeRange || '24h';
+    const stats = await logger.getErrorStats(timeRange);
+    
+    res.json({
+      success: true,
+      timeRange,
+      stats
+    });
+  } catch (error) {
+    console.error('Error fetching error stats:', error);
+    res.status(500).json({ error: 'Failed to fetch error statistics' });
+  }
+});
+
+/**
+ * GET /api/admin/errors/trends
+ * Get error trends over time
+ */
+router.get('/errors/trends', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
+  try {
+    const logger = getErrorLogger();
+    if (!logger) {
+      return res.status(503).json({ error: 'Error logging service not initialized' });
+    }
+
+    const timeRange = req.query.timeRange || '7d';
+    const trends = await logger.getErrorTrends(timeRange);
+    
+    res.json({
+      success: true,
+      timeRange,
+      trends
+    });
+  } catch (error) {
+    console.error('Error fetching error trends:', error);
+    res.status(500).json({ error: 'Failed to fetch error trends' });
+  }
+});
+
+/**
+ * GET /api/admin/errors/top
+ * Get top recurring errors
+ */
+router.get('/errors/top', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
+  try {
+    const logger = getErrorLogger();
+    if (!logger) {
+      return res.status(503).json({ error: 'Error logging service not initialized' });
+    }
+
+    const limit = Math.min(parseInt(req.query.limit) || 10, 50);
+    const topErrors = await logger.getTopErrors(limit);
+    
+    res.json({
+      success: true,
+      limit,
+      errors: topErrors
+    });
+  } catch (error) {
+    console.error('Error fetching top errors:', error);
+    res.status(500).json({ error: 'Failed to fetch top errors' });
+  }
+});
+
+/**
+ * GET /api/admin/errors/:errorId
+ * Get detailed information about a specific error
+ */
+router.get('/errors/:errorId', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
+  try {
+    const logger = getErrorLogger();
+    if (!logger) {
+      return res.status(503).json({ error: 'Error logging service not initialized' });
+    }
+
+    const error = await logger.getErrorById(req.params.errorId);
+    if (!error) {
+      return res.status(404).json({ error: 'Error not found' });
+    }
+    
+    res.json({
+      success: true,
+      error
+    });
+  } catch (error) {
+    console.error('Error fetching error details:', error);
+    res.status(500).json({ error: 'Failed to fetch error details' });
+  }
+});
+
+/**
+ * PATCH /api/admin/errors/:errorId/resolve
+ * Mark an error as resolved
+ */
+router.patch('/errors/:errorId/resolve', 
+  requireAdminRole(SUPPORT_ROLES),
+  adminAudit({
+    action: 'error_resolved',
+    targetType: 'error',
+    getTargetId: (req) => req.params.errorId,
+    getDetails: (req) => ({ notes: req.body.notes })
+  }),
+  async (req, res) => {
+    try {
+      const logger = getErrorLogger();
+      if (!logger) {
+        return res.status(503).json({ error: 'Error logging service not initialized' });
+      }
+
+      const { notes } = req.body || {};
+      const resolved = await logger.resolveError(
+        req.params.errorId,
+        req.user.userId,
+        notes
+      );
+      
+      if (!resolved) {
+        return res.status(404).json({ error: 'Error not found' });
+      }
+      
+      res.json({
+        success: true,
+        message: 'Error marked as resolved',
+        error: resolved
+      });
+    } catch (error) {
+      console.error('Error resolving error:', error);
+      res.status(500).json({ error: 'Failed to resolve error' });
+    }
+  }
+);
+
+/**
+ * POST /api/admin/errors/batch-resolve
+ * Mark multiple errors as resolved
+ */
+router.post('/errors/batch-resolve',
+  requireAdminRole(SUPPORT_ROLES),
+  adminAudit({
+    action: 'errors_batch_resolved',
+    targetType: 'errors',
+    getDetails: (req) => ({ count: req.body.errorIds?.length })
+  }),
+  async (req, res) => {
+    try {
+      const logger = getErrorLogger();
+      if (!logger) {
+        return res.status(503).json({ error: 'Error logging service not initialized' });
+      }
+
+      const { errorIds, notes } = req.body;
+      if (!Array.isArray(errorIds) || errorIds.length === 0) {
+        return res.status(400).json({ error: 'errorIds array required' });
+      }
+
+      const resolved = await logger.resolveMultipleErrors(
+        errorIds,
+        req.user.userId,
+        notes
+      );
+      
+      res.json({
+        success: true,
+        message: `${resolved.length} errors marked as resolved`,
+        resolved: resolved.length
+      });
+    } catch (error) {
+      console.error('Error batch resolving errors:', error);
+      res.status(500).json({ error: 'Failed to resolve errors' });
+    }
+  }
+);
 
 module.exports = router;
 
