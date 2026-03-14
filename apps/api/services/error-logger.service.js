@@ -10,8 +10,9 @@ class ErrorLoggerService {
   constructor(pool) {
     this.pool = pool;
     this.errorQueue = [];
-    this.batchSize = 10;
-    this.flushInterval = 5000; // 5 seconds
+    // Read from environment variables with defaults
+    this.batchSize = parseInt(process.env.ERROR_LOG_BATCH_SIZE) || 10;
+    this.flushInterval = parseInt(process.env.ERROR_LOG_FLUSH_INTERVAL_MS) || 5000;
     this.startFlushTimer();
   }
 

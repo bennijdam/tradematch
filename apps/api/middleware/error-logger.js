@@ -36,6 +36,25 @@ function errorLoggerMiddleware(err, req, res, next) {
     return next(err);
   }
 
+  // Skip logging authentication errors to prevent log loops
+  // These are expected behaviors, not system errors
+  const skipStatuses = [401, 403];
+  const skipPaths = ['/api/admin/errors', '/api/auth'];
+  
+  if (skipStatuses.includes(err.statusCode) || skipStatuses.includes(err.status)) {
+    // Still log to console but don't store in database
+    console.warn(`[AUTH] ${err.statusCode || err.status}: ${err.message} - ${req.path}`);
+    return next(err);
+  }
+  
+  // Skip if this is the admin errors endpoint itself (prevents recursion)
+  if (skipPaths.some(path => req.path.startsWith(path))) {
+    // Only skip if it's an expected auth error, not a system error
+    if (err.statusCode < 500) {
+      return next(err);
+    }
+  }
+
   // Determine error level
   const level = err.statusCode >= 500 ? 'error' : 
                 err.statusCode >= 400 ? 'warn' : 'info';
