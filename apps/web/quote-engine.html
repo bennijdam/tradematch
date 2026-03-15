@@ -5152,7 +5152,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
                             email:     gmGuestData.email,
                             name:      gmGuestData.firstName + ' ' + gmGuestData.lastName
                         });
-                        document.getElementById('guestStepTrack').style.display='none';
+                        const gmStepTrack = document.getElementById('gmStepTrack');
+                        if (gmStepTrack) gmStepTrack.style.display = 'none';
                         document.getElementById('gmPanel3').classList.remove('active');
                         gmShow('gmSuccess');
                         await submitGuest(mergedData);
@@ -5186,7 +5187,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 }
                 // Reset to step 1
                 gmSetStep(1);
-                document.getElementById('guestStepTrack').style.display='';
+                const gmStepTrack = document.getElementById('gmStepTrack');
+                if (gmStepTrack) gmStepTrack.style.display = '';
                 document.getElementById('gmSuccess').classList.remove('show');
                 ['gm-first','gm-last','gm-phone','gm-email'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('error'); } });
                 gmHide('gmErrPhone'); gmHide('gmErrEmail');
@@ -5338,7 +5340,11 @@ I'm happy to discuss the project in more detail and answer any questions to help
 
             // ── Social ───────────────────────────────────────────────
             window.lmHandleSocial = function(provider){
-                const url=provider==='Google'?API_BASE+'/api/auth/google':API_BASE+'/api/auth/apple';
+                // Backend exposes OAuth routes without the /api prefix.
+                // Microsoft is used as the non-Google social fallback.
+                const url = provider === 'Google'
+                    ? API_BASE + '/auth/google'
+                    : API_BASE + '/auth/microsoft';
                 window.location.href=url;
             };
 
