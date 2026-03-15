@@ -184,7 +184,7 @@
     };
 
     const LOCAL_FALLBACK_ADMIN = {
-        email: "admin@tradematch.com",
+        email: "admin@tradematch.ukm",
         password: "TM-SuperAdmin!2026#Q9v",
         role: "super_admin",
         name: "Super Admin"

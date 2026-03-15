@@ -210,7 +210,7 @@ async function migrate() {
 
         // 8. Create super admin user
         const superAdminExists = await client.query(`
-            SELECT id FROM users WHERE email = 'admin@tradematch.com'
+            SELECT id FROM users WHERE email = 'admin@tradematch.ukm'
         `);
         
         if (superAdminExists.rows.length === 0) {
@@ -219,7 +219,7 @@ async function migrate() {
                 VALUES (
                     gen_random_uuid(),
                     'Super Admin',
-                    'admin@tradematch.com',
+                    'admin@tradematch.ukm',
                     '$2b$10$8K1p/a0dL3LKllfdeR7ZAO4w8O6U4f0cE.GJ3hK6qL.QKX5q8LQXK',
                     'Super Admin',
                     'super_admin',
@@ -236,7 +236,7 @@ async function migrate() {
 
         console.log('\n🎉 Migration completed successfully!\n');
         console.log('🔐 Super Admin Login:');
-        console.log('   Email: admin@tradematch.com');
+        console.log('   Email: admin@tradematch.ukm');
         console.log('   Password: ChangeMe123!');
         console.log('\n⚠️  IMPORTANT: Change the password immediately after first login!\n');
 

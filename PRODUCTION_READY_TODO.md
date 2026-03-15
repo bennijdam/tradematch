@@ -331,7 +331,7 @@ class WebSocketLoadTester {
   }
 }
 
-// Usage: node websocket-load-test.js --clients=50 --url=wss://api.tradematch.co
+// Usage: node websocket-load-test.js --clients=50 --url=wss://api.tradematch.uk
 module.exports = { WebSocketLoadTester };
 ```
 
@@ -644,7 +644,7 @@ app.use('/public', express.static('public', {
 **5.1 WebSocket Authentication Security**
 ```javascript
 // Current: Token in query params (vulnerable to log exposure)
-// wss://api.tradematch.co?token=SECRET_JWT
+// wss://api.tradematch.uk?token=SECRET_JWT
 
 // Better: Use initial HTTP handshake auth
 class SecureWebSocketServer {

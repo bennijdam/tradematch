@@ -286,7 +286,7 @@ terser script.js -o script.min.js
 # Nginx example
 server {
     listen 80;
-    server_name dashboard.tradematch.com;
+    server_name dashboard.tradematch.ukm;
     root /var/www/user-dashboard;
     
     location / {
@@ -302,8 +302,8 @@ server {
 ```javascript
 // Create config.js
 const CONFIG = {
-    API_BASE_URL: process.env.API_URL || 'https://api.tradematch.com',
-    WS_URL: process.env.WS_URL || 'wss://api.tradematch.com/ws',
+    API_BASE_URL: process.env.API_URL || 'https://api.tradematch.ukm',
+    WS_URL: process.env.WS_URL || 'wss://api.tradematch.ukm/ws',
     STRIPE_KEY: process.env.STRIPE_PUBLIC_KEY
 };
 ```
@@ -336,9 +336,9 @@ const CONFIG = {
 
 ### Contact
 For technical support or questions:
-- Email: dev@tradematch.com
+- Email: dev@tradematch.ukm
 - Slack: #dashboard-support
-- Docs: https://docs.tradematch.com
+- Docs: https://docs.tradematch.ukm
 
 ## License
 Proprietary - TradeMatch Platform © 2024

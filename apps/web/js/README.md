@@ -71,7 +71,7 @@ REDIS_URL=redis://localhost:6379
 SMTP_HOST=smtp.mailgun.org
 SMTP_USER=your-email
 SMTP_PASS=your-password
-EMAIL_FROM=quotes@tradematch.co
+EMAIL_FROM=quotes@tradematch.uk
 
 # App
 JWT_SECRET=your-32-character-secret

@@ -171,7 +171,7 @@ function apiError(res, status, error, code, details) {
 - ✅ Explicit consent captured
 - ✅ Right to erasure supported (via user dashboard)
 - ✅ Data retention policies documented
-- ✅ Contact: privacy@tradematch.co.uk
+- ✅ Contact: privacy@tradematch.uk.uk
 
 ### 4.5 Server-Side Benefits
 

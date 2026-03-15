@@ -22,7 +22,7 @@ All CRUD operations for the Super Admin Panel have been **fully implemented, cod
 - **Admin Login:** https://tradematch.onrender.com/admin-login.html
 - **Dashboard:** https://tradematch.onrender.com/admin-dashboard.html
 - **Test Credentials:**
-  - Email: `admin@tradematch.com`
+  - Email: `admin@tradematch.ukm`
   - Password: `ChangeMe123!`
 
 ---
@@ -235,7 +235,7 @@ Run the manual testing guide at [MANUAL-TESTING-GUIDE.md](MANUAL-TESTING-GUIDE.m
 
 Steps:
 1. Open https://tradematch.onrender.com/admin-login.html
-2. Log in with admin@tradematch.com / ChangeMe123!
+2. Log in with admin@tradematch.ukm / ChangeMe123!
 3. Follow test procedures for each section
 4. Check that all operations work as described
 5. Verify audit log entries appear
@@ -308,7 +308,7 @@ This would test all CRUD endpoints directly via API (if script exists).
 
 **Issue: "Login failed" error**
 - Solution: Check admin credentials in database
-- Verify: user email=admin@tradematch.com, role=super_admin
+- Verify: user email=admin@tradematch.ukm, role=super_admin
 
 **Issue: API calls return 404**
 - Solution: Verify Render deployment succeeded

@@ -19,7 +19,7 @@ const sendEmailNotification = async (to, subject, html, text) => {
 
   try {
     await emailTransporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@tradematch.co.uk',
+      from: process.env.EMAIL_FROM || 'noreply@tradematch.uk.uk',
       to,
       subject,
       html,

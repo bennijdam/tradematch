@@ -54,7 +54,7 @@ tradematch-super-admin-panel/
 
 ### Default Login Credentials
 
-**Email:** `admin@tradematch.com`  
+**Email:** `admin@tradematch.ukm`  
 **Password:** `ChangeMe123!`
 
 ⚠️ **IMPORTANT:** Change the default password immediately after first login!
@@ -103,7 +103,7 @@ Open `tradematch-super-admin-panel/admin-login.html` in your browser
    ```javascript
    const API_BASE = 'https://your-production-api.com';
    ```
-3. Access via your domain: `https://admin.tradematch.com/admin-login.html`
+3. Access via your domain: `https://admin.tradematch.ukm/admin-login.html`
 
 ## 📡 API Endpoints
 

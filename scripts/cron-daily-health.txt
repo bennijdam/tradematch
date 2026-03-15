@@ -1,0 +1,5 @@
+# TradeMatch Daily Health Check - Runs at 2 AM UTC
+0 2 * * * cd /home/user/tradematch-fixed && ./scripts/health-check-daily.sh >> logs/cron.log 2>&1
+
+# Bi-weekly performance review (every 2 weeks, Monday 9am)
+0 9 1,15 * 1 /home/user/tradematch-fixed/scripts/performance-review-biweekly.sh >> logs/performance-review-$(date +%Y%m%d).log 2>&1

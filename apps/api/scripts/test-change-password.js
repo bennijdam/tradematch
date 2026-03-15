@@ -4,7 +4,7 @@ async function run() {
     const loginRes = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@tradematch.com', password: 'ChangeMe123!' })
+        body: JSON.stringify({ email: 'admin@tradematch.ukm', password: 'ChangeMe123!' })
     });
     const loginData = await loginRes.json();
     if (!loginRes.ok) {

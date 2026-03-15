@@ -810,7 +810,7 @@ Content-Type: application/json
     {
       "id": "admin-uuid",
       "full_name": "Super Admin",
-      "email": "admin@tradematch.com",
+      "email": "admin@tradematch.ukm",
       "role": "super_admin",
       "status": "active",
       "created_at": "2024-01-01T00:00:00Z"
@@ -829,7 +829,7 @@ Content-Type: application/json
 ```json
 {
   "full_name": "New Admin",
-  "email": "newadmin@tradematch.com",
+  "email": "newadmin@tradematch.ukm",
   "temporary_password": "TempPass123!"
 }
 ```
@@ -1236,7 +1236,7 @@ Content-Type: application/json
         "notes": "All documents verified"
       },
       "created_at": "2024-01-15T10:30:00Z",
-      "admin_email": "admin@tradematch.com"
+      "admin_email": "admin@tradematch.ukm"
     }
   ],
   "total": 500,

@@ -9,7 +9,7 @@ const { Client } = require('pg');
 
     await client.connect();
     const res = await client.query(
-        "SELECT id, email, password_hash, length(password_hash) AS hash_len FROM users WHERE email = 'admin@tradematch.com'"
+        "SELECT id, email, password_hash, length(password_hash) AS hash_len FROM users WHERE email = 'admin@tradematch.ukm'"
     );
     console.log(res.rows[0]);
     await client.end();

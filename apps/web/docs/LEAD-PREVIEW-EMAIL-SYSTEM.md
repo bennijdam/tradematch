@@ -74,7 +74,7 @@ Professional email template with:
 **Features**:
 - Validates all required fields (vendorId, email, quoteId, leadPrice, preview)
 - Fetches vendor name from database
-- Sends via Resend API with "leads@tradematch.co.uk" sender
+- Sends via Resend API with "leads@tradematch.uk.uk" sender
 - Logs notification to `lead_acceptance_log` table with action='preview_email_sent'
 - Returns emailId for tracking
 - Error handling with detailed logging

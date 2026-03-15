@@ -16,7 +16,7 @@ const sendContactEmail = async (to, subject, html, text) => {
 
   try {
     await emailTransporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@tradematch.co.uk',
+      from: process.env.EMAIL_FROM || 'noreply@tradematch.uk.uk',
       to,
       subject,
       html,
@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
     `;
 
     await sendContactEmail(
-      'admin@tradematch.co.uk',
+      'admin@tradematch.uk.uk',
       subjectLine,
       htmlContent,
       textContent

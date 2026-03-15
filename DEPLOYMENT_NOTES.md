@@ -176,7 +176,7 @@ git push origin main
 
 ## Support Contacts
 
-- **DevOps**: devops@tradematch.co.uk
+- **DevOps**: devops@tradematch.uk.uk
 - **Emergency**: +44 20 7946 0958
 
 ---

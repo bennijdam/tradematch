@@ -1039,7 +1039,7 @@ class QuoteWizard {
           recipients: [
             { type: 'customer', email: quote.contact_email, name: quote.contact_name },
             { type: 'vendor', email: 'vendor-matching-notification', id: quote.id },
-            { type: 'admin', email: 'superadmin@tradematch.co' }
+            { type: 'admin', email: 'superadmin@tradematch.uk' }
           ],
           data: quote
         })

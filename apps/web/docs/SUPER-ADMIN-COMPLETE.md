@@ -45,7 +45,7 @@ Complete admin API with:
   - Added `moderated_at` timestamp
   - Added `moderated_by` admin reference
 - **Default Super Admin User**:
-  - Email: admin@tradematch.com
+  - Email: admin@tradematch.ukm
   - Password: ChangeMe123! (bcrypt hashed)
   - Role: super_admin
   - Status: active
@@ -132,7 +132,7 @@ Expected output:
 ✅ Created super admin user
 
 🔐 Super Admin Login:
-   Email: admin@tradematch.com
+   Email: admin@tradematch.ukm
    Password: ChangeMe123!
 ```
 

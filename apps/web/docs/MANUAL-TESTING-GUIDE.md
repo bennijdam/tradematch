@@ -6,7 +6,7 @@
 - **Dashboard:** https://tradematch.onrender.com/admin-dashboard.html
 
 ## Test Credentials
-- **Email:** admin@tradematch.com
+- **Email:** admin@tradematch.ukm
 - **Password:** ChangeMe123!
 
 ---
@@ -15,7 +15,7 @@
 
 ### Step 1: Login to Admin Panel
 1. Navigate to https://tradematch.onrender.com/admin-login.html
-2. Enter email: `admin@tradematch.com`
+2. Enter email: `admin@tradematch.ukm`
 3. Enter password: `ChangeMe123!`
 4. Click "Sign In"
 5. You should be redirected to the admin dashboard
@@ -133,7 +133,7 @@ This is critical - all actions should be logged!
 **Check Each Entry:**
 - ✅ **Action Column** shows correct action name
 - ✅ **Target Column** shows correct user/vendor/review ID
-- ✅ **Admin Column** shows "admin@tradematch.com"
+- ✅ **Admin Column** shows "admin@tradematch.ukm"
 - ✅ **Details Column** shows reason/notes you provided
 - ✅ **Timestamp Column** shows recent time
 
@@ -180,7 +180,7 @@ This is critical - all actions should be logged!
 ## Troubleshooting
 
 ### "Login failed" error
-- Check credentials: `admin@tradematch.com` / `ChangeMe123!`
+- Check credentials: `admin@tradematch.ukm` / `ChangeMe123!`
 - Check if admin user exists in database
 - Open browser console (F12) to see API response
 

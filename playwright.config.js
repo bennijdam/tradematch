@@ -12,7 +12,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'npm --prefix apps/web-next run dev -- --port 8080 --hostname 127.0.0.1',
     url: baseURL,
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 120000
   },
   use: {

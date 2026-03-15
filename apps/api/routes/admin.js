@@ -14,6 +14,7 @@ const router = express.Router();
 const { authenticate, requireAdmin, requireAdminRole } = require('../middleware/auth');
 const { adminAudit } = require('../middleware/admin-audit');
 const { validate } = require('../middleware/validation');
+const { body } = require('express-validator');
 
 let pool, eventBroker;
 
@@ -89,12 +90,12 @@ router.use(requireAdmin);
 router.get('/stats', async (req, res) => {
     try {
         const { period = '30d' } = req.query;
-        
+
         // Calculate date range
         const daysAgo = period === '7d' ? 7 : period === '90d' ? 90 : period === '1y' ? 365 : 30;
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - daysAgo);
-        
+
         // Total users
         const usersResult = await pool.query(
             `SELECT COUNT(*) as total,
@@ -102,7 +103,7 @@ router.get('/stats', async (req, res) => {
              FROM users`,
             [startDate]
         );
-        
+
         // Active vendors
         const vendorsResult = await pool.query(
             `SELECT COUNT(*) as total,
@@ -111,7 +112,7 @@ router.get('/stats', async (req, res) => {
              WHERE role = 'vendor' AND status = 'active'`,
             [startDate]
         );
-        
+
         // Total jobs/quotes
         const jobsResult = await pool.query(
             `SELECT COUNT(*) as total,
@@ -119,7 +120,7 @@ router.get('/stats', async (req, res) => {
              FROM jobs`,
             [startDate]
         );
-        
+
         // Revenue (from payments)
         const revenueResult = await pool.query(
             `SELECT COALESCE(SUM(amount), 0) as total,
@@ -128,14 +129,14 @@ router.get('/stats', async (req, res) => {
              WHERE status = 'paid'`,
             [startDate]
         );
-        
+
         // Calculate growth percentages
         const calculateGrowth = (current, total) => {
             const previous = total - current;
             if (previous === 0) return 0;
             return ((current / previous) * 100 - 100).toFixed(1);
         };
-        
+
         const stats = {
             totalUsers: {
                 count: parseInt(usersResult.rows[0].total),
@@ -168,9 +169,9 @@ router.get('/stats', async (req, res) => {
             },
             period: period
         };
-        
+
         res.json({ success: true, stats });
-        
+
     } catch (error) {
         console.error('Admin stats error:', error);
         res.status(500).json({ error: 'Failed to fetch stats' });
@@ -184,7 +185,7 @@ router.get('/stats', async (req, res) => {
 router.get('/activity', async (req, res) => {
     try {
         const { limit = 20 } = req.query;
-        
+
         const result = await pool.query(
             `SELECT 
                 event_type,
@@ -199,9 +200,9 @@ router.get('/activity', async (req, res) => {
              LIMIT $1`,
             [limit]
         );
-        
+
         res.json({ success: true, activity: result.rows });
-        
+
     } catch (error) {
         console.error('Activity fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch activity' });
@@ -351,16 +352,16 @@ router.get('/charts', async (req, res) => {
  */
 router.get('/users', async (req, res) => {
     try {
-        const { 
+        const {
             search = '',
             role = '',
             status = '',
             page = 1,
             limit = 50
         } = req.query;
-        
+
         const offset = (page - 1) * limit;
-        
+
         const roleExpression = `CASE
             WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role
             ELSE COALESCE(user_type, role)
@@ -375,7 +376,7 @@ router.get('/users', async (req, res) => {
         `;
         const params = [];
         let paramCount = 1;
-        
+
         if (search) {
             query += ` AND (
                 email ILIKE $${paramCount} OR 
@@ -385,29 +386,29 @@ router.get('/users', async (req, res) => {
             params.push(`%${search}%`);
             paramCount++;
         }
-        
+
         if (role) {
             query += ` AND ${roleExpression} = $${paramCount}`;
             params.push(role);
             paramCount++;
         }
-        
+
         if (status) {
             query += ` AND status = $${paramCount}`;
             params.push(status);
             paramCount++;
         }
-        
+
         query += ` ORDER BY created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
         params.push(limit, offset);
-        
+
         const result = await pool.query(query, params);
-        
+
         // Get total count
         let countQuery = 'SELECT COUNT(*) as total FROM users WHERE 1=1';
         const countParams = [];
         let countParamNum = 1;
-        
+
         if (search) {
             countQuery += ` AND (email ILIKE $${countParamNum} OR full_name ILIKE $${countParamNum} OR id ILIKE $${countParamNum})`;
             countParams.push(`%${search}%`);
@@ -422,9 +423,9 @@ router.get('/users', async (req, res) => {
             countQuery += ` AND status = $${countParamNum}`;
             countParams.push(status);
         }
-        
+
         const countResult = await pool.query(countQuery, countParams);
-        
+
         res.json({
             success: true,
             users: result.rows,
@@ -432,7 +433,7 @@ router.get('/users', async (req, res) => {
             page: parseInt(page),
             limit: parseInt(limit)
         });
-        
+
     } catch (error) {
         console.error('Users fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch users' });
@@ -446,18 +447,18 @@ router.get('/users', async (req, res) => {
 router.get('/users/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        
+
         const userResult = await pool.query(
             'SELECT * FROM users WHERE id = $1',
             [userId]
         );
-        
+
         if (userResult.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
+
         const user = userResult.rows[0];
-        
+
         // Get job history
         const jobsResult = await pool.query(
             `SELECT id, title, status, created_at
@@ -467,7 +468,7 @@ router.get('/users/:userId', async (req, res) => {
              LIMIT 10`,
             [userId]
         );
-        
+
         // Get payment history
         const paymentsResult = await pool.query(
             `SELECT id, amount, status, created_at
@@ -477,7 +478,7 @@ router.get('/users/:userId', async (req, res) => {
              LIMIT 10`,
             [userId]
         );
-        
+
         // Get reviews (if vendor)
         let reviews = [];
         const userRole = user.role || user.user_type;
@@ -492,7 +493,7 @@ router.get('/users/:userId', async (req, res) => {
             );
             reviews = reviewsResult.rows;
         }
-        
+
         res.json({
             success: true,
             user,
@@ -500,7 +501,7 @@ router.get('/users/:userId', async (req, res) => {
             payments: paymentsResult.rows,
             reviews
         });
-        
+
     } catch (error) {
         console.error('User detail fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch user details' });
@@ -569,45 +570,45 @@ router.get('/users/:userId/messages', async (req, res) => {
  * Update user status (suspend, activate, ban)
  */
 router.patch(
-  '/users/:userId/status',
-  requireAdminRole(SUPPORT_ROLES),
-  validate.idParam('userId'),
-  validate.custom([
-    body('status').isIn(['active', 'suspended', 'banned', 'pending']).withMessage('Invalid status'),
-    body('reason').optional().trim().isLength({ max: 500 })
-  ]),
-  adminAudit({
-    action: 'user_status_change',
-    targetType: 'user',
-    getTargetId: (req) => req.params.userId,
-    getDetails: (req) => ({
-      status: req.body.status,
-      reason: req.body.reason || null
-    })
-  }),
+    '/users/:userId/status',
+    requireAdminRole(SUPPORT_ROLES),
+    validate.idParam('userId'),
+    validate.custom([
+        body('status').isIn(['active', 'suspended', 'banned', 'pending']).withMessage('Invalid status'),
+        body('reason').optional().trim().isLength({ max: 500 })
+    ]),
+    adminAudit({
+        action: 'user_status_change',
+        targetType: 'user',
+        getTargetId: (req) => req.params.userId,
+        getDetails: (req) => ({
+            status: req.body.status,
+            reason: req.body.reason || null
+        })
+    }),
     async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { status, reason } = req.body;
-        
-        const validStatuses = ['active', 'suspended', 'banned', 'pending'];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({ error: 'Invalid status' });
-        }
-        
-        await pool.query(
-            `UPDATE users SET status = $1, updated_at = NOW()
+        try {
+            const { userId } = req.params;
+            const { status, reason } = req.body;
+
+            const validStatuses = ['active', 'suspended', 'banned', 'pending'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({ error: 'Invalid status' });
+            }
+
+            await pool.query(
+                `UPDATE users SET status = $1, updated_at = NOW()
              WHERE id = $2`,
-            [status, userId]
-        );
-        
-        res.json({ success: true, message: `User ${status}` });
-        
-    } catch (error) {
-        console.error('User status update error:', error);
-        res.status(500).json({ error: 'Failed to update user status' });
-    }
-});
+                [status, userId]
+            );
+
+            res.json({ success: true, message: `User ${status}` });
+
+        } catch (error) {
+            console.error('User status update error:', error);
+            res.status(500).json({ error: 'Failed to update user status' });
+        }
+    });
 
 // ============================================================
 // VENDOR MANAGEMENT
@@ -773,18 +774,18 @@ router.post(
  */
 router.get('/vendors/pending', async (req, res) => {
     try {
-                const result = await pool.query(
-                        `SELECT 
+        const result = await pool.query(
+            `SELECT 
                                 u.id, u.email, u.full_name, u.phone, u.created_at,
                                 u.metadata
                          FROM users u
                          WHERE (CASE WHEN u.role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN u.role ELSE COALESCE(u.user_type, u.role) END) = 'vendor'
                              AND u.status = 'pending'
                          ORDER BY u.created_at ASC`
-                );
-        
+        );
+
         res.json({ success: true, vendors: result.rows });
-        
+
     } catch (error) {
         console.error('Pending vendors fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch pending vendors' });
@@ -805,26 +806,26 @@ router.post(
         getDetails: (req) => ({ notes: req.body.notes || null })
     }),
     async (req, res) => {
-    try {
-        const { vendorId } = req.params;
-        const { notes } = req.body;
-        
-        await pool.query(
-            `UPDATE users 
+        try {
+            const { vendorId } = req.params;
+            const { notes } = req.body;
+
+            await pool.query(
+                `UPDATE users 
              SET status = 'active', updated_at = NOW()
              WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
-            [vendorId]
-        );
-        
-        // TODO: Send approval email to vendor
-        
-        res.json({ success: true, message: 'Vendor approved' });
-        
-    } catch (error) {
-        console.error('Vendor approval error:', error);
-        res.status(500).json({ error: 'Failed to approve vendor' });
-    }
-});
+                [vendorId]
+            );
+
+            // TODO: Send approval email to vendor
+
+            res.json({ success: true, message: 'Vendor approved' });
+
+        } catch (error) {
+            console.error('Vendor approval error:', error);
+            res.status(500).json({ error: 'Failed to approve vendor' });
+        }
+    });
 
 /**
  * POST /api/admin/vendors/:vendorId/reject
@@ -840,26 +841,26 @@ router.post(
         getDetails: (req) => ({ reason: req.body.reason || null })
     }),
     async (req, res) => {
-    try {
-        const { vendorId } = req.params;
-        const { reason } = req.body;
-        
-        await pool.query(
-            `UPDATE users 
+        try {
+            const { vendorId } = req.params;
+            const { reason } = req.body;
+
+            await pool.query(
+                `UPDATE users 
              SET status = 'rejected', updated_at = NOW()
              WHERE id = $1 AND (CASE WHEN role IN ('admin', 'super_admin', 'finance_admin', 'trust_safety_admin', 'support_admin', 'read_only_admin') THEN role ELSE COALESCE(user_type, role) END) = 'vendor'`,
-            [vendorId]
-        );
-        
-        // TODO: Send rejection email to vendor
-        
-        res.json({ success: true, message: 'Vendor rejected' });
-        
-    } catch (error) {
-        console.error('Vendor rejection error:', error);
-        res.status(500).json({ error: 'Failed to reject vendor' });
-    }
-});
+                [vendorId]
+            );
+
+            // TODO: Send rejection email to vendor
+
+            res.json({ success: true, message: 'Vendor rejected' });
+
+        } catch (error) {
+            console.error('Vendor rejection error:', error);
+            res.status(500).json({ error: 'Failed to reject vendor' });
+        }
+    });
 
 // ============================================================
 // REVIEW MODERATION
@@ -898,9 +899,9 @@ router.get('/reviews/pending', async (req, res) => {
              WHERE ${moderationFilter}
              ORDER BY r.created_at ASC`
         );
-        
+
         res.json({ success: true, reviews: result.rows });
-        
+
     } catch (error) {
         console.error('Pending reviews fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch pending reviews' });
@@ -924,47 +925,47 @@ router.patch(
         })
     }),
     async (req, res) => {
-    try {
-        const { reviewId } = req.params;
-        const { action, reason } = req.body; // action: 'approve', 'hide', 'remove'
-        
-        const validActions = ['approve', 'hide', 'remove'];
-        if (!validActions.includes(action)) {
-            return res.status(400).json({ error: 'Invalid action' });
-        }
-        
-        const columnsResult = await pool.query(
-            `SELECT column_name
+        try {
+            const { reviewId } = req.params;
+            const { action, reason } = req.body; // action: 'approve', 'hide', 'remove'
+
+            const validActions = ['approve', 'hide', 'remove'];
+            if (!validActions.includes(action)) {
+                return res.status(400).json({ error: 'Invalid action' });
+            }
+
+            const columnsResult = await pool.query(
+                `SELECT column_name
              FROM information_schema.columns
              WHERE table_name = 'job_reviews'`
-        );
-        const columnSet = new Set(columnsResult.rows.map(row => row.column_name));
+            );
+            const columnSet = new Set(columnsResult.rows.map(row => row.column_name));
 
-        if (columnSet.has('moderation_status')) {
-            const moderationStatus = action === 'approve' ? 'approved' : action === 'hide' ? 'hidden' : 'removed';
-            await pool.query(
-                `UPDATE job_reviews 
+            if (columnSet.has('moderation_status')) {
+                const moderationStatus = action === 'approve' ? 'approved' : action === 'hide' ? 'hidden' : 'removed';
+                await pool.query(
+                    `UPDATE job_reviews 
                  SET moderation_status = $1, moderated_at = NOW(), moderated_by = $2
                  WHERE id = $3`,
-                [moderationStatus, req.user.userId, reviewId]
-            );
-        } else {
-            const isApproved = action === 'approve';
-            await pool.query(
-                `UPDATE job_reviews 
+                    [moderationStatus, req.user.userId, reviewId]
+                );
+            } else {
+                const isApproved = action === 'approve';
+                await pool.query(
+                    `UPDATE job_reviews 
                  SET is_moderated = true, is_approved = $1, moderation_reason = $2
                  WHERE id = $3`,
-                [isApproved, reason || null, reviewId]
-            );
+                    [isApproved, reason || null, reviewId]
+                );
+            }
+
+            res.json({ success: true, message: `Review ${action}d` });
+
+        } catch (error) {
+            console.error('Review moderation error:', error);
+            res.status(500).json({ error: 'Failed to moderate review' });
         }
-        
-        res.json({ success: true, message: `Review ${action}d` });
-        
-    } catch (error) {
-        console.error('Review moderation error:', error);
-        res.status(500).json({ error: 'Failed to moderate review' });
-    }
-});
+    });
 
 // ============================================================
 // BIDS
@@ -1247,50 +1248,50 @@ router.put(
 router.get('/audit', async (req, res) => {
     try {
         const { days = 30, action, target_type, page = 1, limit = 20 } = req.query;
-        
+
         const offset = (page - 1) * limit;
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - parseInt(days));
-        
+
         let query = `SELECT a.*, u.email as admin_email 
                      FROM admin_audit_log a
                      LEFT JOIN users u ON a.admin_id = u.id
                      WHERE a.created_at >= $1`;
         const params = [startDate];
-        
+
         let paramIndex = 2;
-        
+
         if (action) {
             query += ` AND a.action = $${paramIndex}`;
             params.push(action);
             paramIndex++;
         }
-        
+
         if (target_type) {
             query += ` AND a.target_type = $${paramIndex}`;
             params.push(target_type);
             paramIndex++;
         }
-        
+
         query += ` ORDER BY a.created_at DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
         params.push(limit, offset);
-        
+
         const result = await pool.query(query, params);
-        
+
         const countResult = await pool.query(
             `SELECT COUNT(*) as total FROM admin_audit_log 
              WHERE created_at >= $1${action ? ` AND action = $2` : ''}${target_type ? ` AND target_type = $${action ? 3 : 2}` : ''}`,
             action ? (target_type ? [startDate, action, target_type] : [startDate, action]) : [startDate]
         );
-        
-        res.json({ 
-            success: true, 
+
+        res.json({
+            success: true,
             logs: result.rows,
             total: parseInt(countResult.rows[0].total),
             page: parseInt(page),
             limit: parseInt(limit)
         });
-        
+
     } catch (error) {
         console.error('Audit log fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch audit log' });
@@ -1313,9 +1314,9 @@ router.get('/admins', async (req, res) => {
              WHERE role IN ('admin', 'super_admin')
              ORDER BY created_at DESC`
         );
-        
+
         res.json({ success: true, admins: result.rows });
-        
+
     } catch (error) {
         console.error('Fetch admins error:', error);
         res.status(500).json({ error: 'Failed to fetch admins' });
@@ -1336,37 +1337,37 @@ router.post(
         getDetails: (req) => ({ full_name: req.body.full_name, email: req.body.email })
     }),
     async (req, res) => {
-    try {
-        const { full_name, email, temporary_password } = req.body;
-        
-        if (!full_name || !email || !temporary_password) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-        
-        // Check if email already exists
-        const existingUser = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-        if (existingUser.rows.length > 0) {
-            return res.status(400).json({ error: 'Email already in use' });
-        }
-        
-        const bcrypt = require('bcrypt');
-        const hashedPassword = await bcrypt.hash(temporary_password, 10);
-        const userId = require('crypto').randomUUID();
-        
-        await pool.query(
-            `INSERT INTO users (id, full_name, email, password_hash, role, user_type, status, email_verified, created_at)
+        try {
+            const { full_name, email, temporary_password } = req.body;
+
+            if (!full_name || !email || !temporary_password) {
+                return res.status(400).json({ error: 'Missing required fields' });
+            }
+
+            // Check if email already exists
+            const existingUser = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+            if (existingUser.rows.length > 0) {
+                return res.status(400).json({ error: 'Email already in use' });
+            }
+
+            const bcrypt = require('bcrypt');
+            const hashedPassword = await bcrypt.hash(temporary_password, 10);
+            const userId = require('crypto').randomUUID();
+
+            await pool.query(
+                `INSERT INTO users (id, full_name, email, password_hash, role, user_type, status, email_verified, created_at)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())`,
-            [userId, full_name, email, hashedPassword, 'admin', 'admin', 'active', true]
-        );
-        
-        res.locals.createdAdminId = userId;
-        res.json({ success: true, message: 'Admin account created successfully', admin_id: userId });
-        
-    } catch (error) {
-        console.error('Create admin error:', error);
-        res.status(500).json({ error: 'Failed to create admin account' });
-    }
-});
+                [userId, full_name, email, hashedPassword, 'admin', 'admin', 'active', true]
+            );
+
+            res.locals.createdAdminId = userId;
+            res.json({ success: true, message: 'Admin account created successfully', admin_id: userId });
+
+        } catch (error) {
+            console.error('Create admin error:', error);
+            res.status(500).json({ error: 'Failed to create admin account' });
+        }
+    });
 
 /**
  * DELETE /api/admin/admins/:adminId
@@ -1382,27 +1383,27 @@ router.delete(
         getDetails: (req) => ({ removed_by: req.user.userId })
     }),
     async (req, res) => {
-    try {
-        const { adminId } = req.params;
-        
-        // Prevent removing yourself
-        if (adminId === req.user.userId) {
-            return res.status(400).json({ error: 'Cannot remove your own admin account' });
+        try {
+            const { adminId } = req.params;
+
+            // Prevent removing yourself
+            if (adminId === req.user.userId) {
+                return res.status(400).json({ error: 'Cannot remove your own admin account' });
+            }
+
+            // Update user to remove admin role
+            await pool.query(
+                `UPDATE users SET role = 'customer', user_type = 'customer' WHERE id = $1`,
+                [adminId]
+            );
+
+            res.json({ success: true, message: 'Admin account removed successfully' });
+
+        } catch (error) {
+            console.error('Remove admin error:', error);
+            res.status(500).json({ error: 'Failed to remove admin account' });
         }
-        
-        // Update user to remove admin role
-        await pool.query(
-            `UPDATE users SET role = 'customer', user_type = 'customer' WHERE id = $1`,
-            [adminId]
-        );
-        
-        res.json({ success: true, message: 'Admin account removed successfully' });
-        
-    } catch (error) {
-        console.error('Remove admin error:', error);
-        res.status(500).json({ error: 'Failed to remove admin account' });
-    }
-});
+    });
 
 // ============================================================
 // ADMIN PASSWORD CHANGE
@@ -1421,53 +1422,53 @@ router.post(
         getDetails: () => ({ changed_at: new Date().toISOString() })
     }),
     async (req, res) => {
-    try {
-        const { current_password, new_password } = req.body;
-        
-        if (!current_password || !new_password) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
-        
-        if (new_password.length < 8) {
-            return res.status(400).json({ error: 'Password must be at least 8 characters' });
-        }
-        
-        // Get current user
-        const userResult = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.userId]);
-        if (userResult.rows.length === 0) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        
-        // Verify current password
-        const bcrypt = require('bcrypt');
-        const isValidPassword = await bcrypt.compare(current_password, userResult.rows[0].password_hash);
-        if (!isValidPassword) {
-            return res.status(401).json({ error: 'Current password is incorrect' });
-        }
-        
-        // Hash new password
-        const hashedPassword = await bcrypt.hash(new_password, 10);
-        
-        // Update password
-        await pool.query(
-            'UPDATE users SET password_hash = $1 WHERE id = $2',
-            [hashedPassword, req.user.userId]
-        );
-        
-        res.json({ success: true, message: 'Password changed successfully' });
-        
-    } catch (error) {
-        console.error('Password change error:', error);
-        const details = process.env.NODE_ENV === 'production'
-            ? undefined
-            : (error && error.message ? error.message : String(error));
+        try {
+            const { current_password, new_password } = req.body;
 
-  res.status(500).json({
-    error: 'Failed to change password',
-    ...(details ? { details } : {})
-  });
-}
-});
+            if (!current_password || !new_password) {
+                return res.status(400).json({ error: 'Missing required fields' });
+            }
+
+            if (new_password.length < 8) {
+                return res.status(400).json({ error: 'Password must be at least 8 characters' });
+            }
+
+            // Get current user
+            const userResult = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.userId]);
+            if (userResult.rows.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            // Verify current password
+            const bcrypt = require('bcrypt');
+            const isValidPassword = await bcrypt.compare(current_password, userResult.rows[0].password_hash);
+            if (!isValidPassword) {
+                return res.status(401).json({ error: 'Current password is incorrect' });
+            }
+
+            // Hash new password
+            const hashedPassword = await bcrypt.hash(new_password, 10);
+
+            // Update password
+            await pool.query(
+                'UPDATE users SET password_hash = $1 WHERE id = $2',
+                [hashedPassword, req.user.userId]
+            );
+
+            res.json({ success: true, message: 'Password changed successfully' });
+
+        } catch (error) {
+            console.error('Password change error:', error);
+            const details = process.env.NODE_ENV === 'production'
+                ? undefined
+                : (error && error.message ? error.message : String(error));
+
+            res.status(500).json({
+                error: 'Failed to change password',
+                ...(details ? { details } : {})
+            });
+        }
+    });
 
 /**
  * ============================================
@@ -1483,10 +1484,10 @@ const ErrorLoggerService = require('../services/error-logger.service');
 let errorLogger = null;
 
 function getErrorLogger() {
-  if (!errorLogger && pool) {
-    errorLogger = new ErrorLoggerService(pool);
-  }
-  return errorLogger;
+    if (!errorLogger && pool) {
+        errorLogger = new ErrorLoggerService(pool);
+    }
+    return errorLogger;
 }
 
 /**
@@ -1494,33 +1495,33 @@ function getErrorLogger() {
  * Get paginated list of errors with filters
  */
 router.get('/errors', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
-  try {
-    const logger = getErrorLogger();
-    if (!logger) {
-      return res.status(503).json({ error: 'Error logging service not initialized' });
+    try {
+        const logger = getErrorLogger();
+        if (!logger) {
+            return res.status(503).json({ error: 'Error logging service not initialized' });
+        }
+
+        const filters = {
+            page: parseInt(req.query.page) || 1,
+            limit: Math.min(parseInt(req.query.limit) || 50, 100),
+            level: req.query.level,
+            resolved: req.query.resolved !== undefined ? req.query.resolved === 'true' : undefined,
+            errorType: req.query.errorType,
+            source: req.query.source,
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
+            search: req.query.search
+        };
+
+        const result = await logger.getErrors(filters);
+        res.json({
+            success: true,
+            ...result
+        });
+    } catch (error) {
+        console.error('Error fetching error logs:', error);
+        res.status(500).json({ error: 'Failed to fetch error logs' });
     }
-
-    const filters = {
-      page: parseInt(req.query.page) || 1,
-      limit: Math.min(parseInt(req.query.limit) || 50, 100),
-      level: req.query.level,
-      resolved: req.query.resolved !== undefined ? req.query.resolved === 'true' : undefined,
-      errorType: req.query.errorType,
-      source: req.query.source,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate,
-      search: req.query.search
-    };
-
-    const result = await logger.getErrors(filters);
-    res.json({
-      success: true,
-      ...result
-    });
-  } catch (error) {
-    console.error('Error fetching error logs:', error);
-    res.status(500).json({ error: 'Failed to fetch error logs' });
-  }
 });
 
 /**
@@ -1528,24 +1529,24 @@ router.get('/errors', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
  * Get error statistics summary
  */
 router.get('/errors/stats', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
-  try {
-    const logger = getErrorLogger();
-    if (!logger) {
-      return res.status(503).json({ error: 'Error logging service not initialized' });
-    }
+    try {
+        const logger = getErrorLogger();
+        if (!logger) {
+            return res.status(503).json({ error: 'Error logging service not initialized' });
+        }
 
-    const timeRange = req.query.timeRange || '24h';
-    const stats = await logger.getErrorStats(timeRange);
-    
-    res.json({
-      success: true,
-      timeRange,
-      stats
-    });
-  } catch (error) {
-    console.error('Error fetching error stats:', error);
-    res.status(500).json({ error: 'Failed to fetch error statistics' });
-  }
+        const timeRange = req.query.timeRange || '24h';
+        const stats = await logger.getErrorStats(timeRange);
+
+        res.json({
+            success: true,
+            timeRange,
+            stats
+        });
+    } catch (error) {
+        console.error('Error fetching error stats:', error);
+        res.status(500).json({ error: 'Failed to fetch error statistics' });
+    }
 });
 
 /**
@@ -1553,24 +1554,24 @@ router.get('/errors/stats', requireAdminRole(ADMIN_READ_ROLES), async (req, res)
  * Get error trends over time
  */
 router.get('/errors/trends', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
-  try {
-    const logger = getErrorLogger();
-    if (!logger) {
-      return res.status(503).json({ error: 'Error logging service not initialized' });
-    }
+    try {
+        const logger = getErrorLogger();
+        if (!logger) {
+            return res.status(503).json({ error: 'Error logging service not initialized' });
+        }
 
-    const timeRange = req.query.timeRange || '7d';
-    const trends = await logger.getErrorTrends(timeRange);
-    
-    res.json({
-      success: true,
-      timeRange,
-      trends
-    });
-  } catch (error) {
-    console.error('Error fetching error trends:', error);
-    res.status(500).json({ error: 'Failed to fetch error trends' });
-  }
+        const timeRange = req.query.timeRange || '7d';
+        const trends = await logger.getErrorTrends(timeRange);
+
+        res.json({
+            success: true,
+            timeRange,
+            trends
+        });
+    } catch (error) {
+        console.error('Error fetching error trends:', error);
+        res.status(500).json({ error: 'Failed to fetch error trends' });
+    }
 });
 
 /**
@@ -1578,24 +1579,24 @@ router.get('/errors/trends', requireAdminRole(ADMIN_READ_ROLES), async (req, res
  * Get top recurring errors
  */
 router.get('/errors/top', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
-  try {
-    const logger = getErrorLogger();
-    if (!logger) {
-      return res.status(503).json({ error: 'Error logging service not initialized' });
-    }
+    try {
+        const logger = getErrorLogger();
+        if (!logger) {
+            return res.status(503).json({ error: 'Error logging service not initialized' });
+        }
 
-    const limit = Math.min(parseInt(req.query.limit) || 10, 50);
-    const topErrors = await logger.getTopErrors(limit);
-    
-    res.json({
-      success: true,
-      limit,
-      errors: topErrors
-    });
-  } catch (error) {
-    console.error('Error fetching top errors:', error);
-    res.status(500).json({ error: 'Failed to fetch top errors' });
-  }
+        const limit = Math.min(parseInt(req.query.limit) || 10, 50);
+        const topErrors = await logger.getTopErrors(limit);
+
+        res.json({
+            success: true,
+            limit,
+            errors: topErrors
+        });
+    } catch (error) {
+        console.error('Error fetching top errors:', error);
+        res.status(500).json({ error: 'Failed to fetch top errors' });
+    }
 });
 
 /**
@@ -1603,67 +1604,67 @@ router.get('/errors/top', requireAdminRole(ADMIN_READ_ROLES), async (req, res) =
  * Get detailed information about a specific error
  */
 router.get('/errors/:errorId', requireAdminRole(ADMIN_READ_ROLES), async (req, res) => {
-  try {
-    const logger = getErrorLogger();
-    if (!logger) {
-      return res.status(503).json({ error: 'Error logging service not initialized' });
-    }
+    try {
+        const logger = getErrorLogger();
+        if (!logger) {
+            return res.status(503).json({ error: 'Error logging service not initialized' });
+        }
 
-    const error = await logger.getErrorById(req.params.errorId);
-    if (!error) {
-      return res.status(404).json({ error: 'Error not found' });
+        const error = await logger.getErrorById(req.params.errorId);
+        if (!error) {
+            return res.status(404).json({ error: 'Error not found' });
+        }
+
+        res.json({
+            success: true,
+            error
+        });
+    } catch (error) {
+        console.error('Error fetching error details:', error);
+        res.status(500).json({ error: 'Failed to fetch error details' });
     }
-    
-    res.json({
-      success: true,
-      error
-    });
-  } catch (error) {
-    console.error('Error fetching error details:', error);
-    res.status(500).json({ error: 'Failed to fetch error details' });
-  }
 });
 
 /**
  * PATCH /api/admin/errors/:errorId/resolve
  * Mark an error as resolved
  */
-router.patch('/errors/:errorId/resolve', 
-  requireAdminRole(SUPPORT_ROLES),
-  adminAudit({
-    action: 'error_resolved',
-    targetType: 'error',
-    getTargetId: (req) => req.params.errorId,
-    getDetails: (req) => ({ notes: req.body.notes })
-  }),
-  async (req, res) => {
-    try {
-      const logger = getErrorLogger();
-      if (!logger) {
-        return res.status(503).json({ error: 'Error logging service not initialized' });
-      }
+router.patch('/errors/:errorId/resolve',
+    requireAdminRole(SUPPORT_ROLES),
+    adminAudit({
+        action: 'error_resolved',
+        targetType: 'error',
+        getTargetId: (req) => req.params.errorId,
+        getDetails: (req) => ({ notes: req.body.notes })
+    }),
+    async (req, res) => {
+        try {
+            const logger = getErrorLogger();
+            if (!logger) {
+                return res.status(503).json({ error: 'Error logging service not initialized' });
+            }
 
-      const { notes } = req.body || {};
-      const resolved = await logger.resolveError(
-        req.params.errorId,
-        req.user.userId,
-        notes
-      );
-      
-      if (!resolved) {
-        return res.status(404).json({ error: 'Error not found' });
-      }
-      
-      res.json({
-        success: true,
-        message: 'Error marked as resolved',
-        error: resolved
-      });
-    } catch (error) {
-      console.error('Error resolving error:', error);
-      res.status(500).json({ error: 'Failed to resolve error' });
+            const { notes } = req.body || {};
+            const resolved = await logger.resolveError(
+                req.params.errorId,
+                req.user.userId,
+                notes
+            );
+
+            if (!resolved) {
+                return res.status(404).json({ error: 'Error not found' });
+            }
+
+            res.json({
+                success: true,
+                message: 'Error marked as resolved',
+                error: resolved
+            });
+        } catch (error) {
+            console.error('Error resolving error:', error);
+            res.status(500).json({ error: 'Failed to resolve error' });
+        }
     }
-  }
 );
 
 /**
@@ -1671,40 +1672,40 @@ router.patch('/errors/:errorId/resolve',
  * Mark multiple errors as resolved
  */
 router.post('/errors/batch-resolve',
-  requireAdminRole(SUPPORT_ROLES),
-  adminAudit({
-    action: 'errors_batch_resolved',
-    targetType: 'errors',
-    getDetails: (req) => ({ count: req.body.errorIds?.length })
-  }),
-  async (req, res) => {
-    try {
-      const logger = getErrorLogger();
-      if (!logger) {
-        return res.status(503).json({ error: 'Error logging service not initialized' });
-      }
+    requireAdminRole(SUPPORT_ROLES),
+    adminAudit({
+        action: 'errors_batch_resolved',
+        targetType: 'errors',
+        getDetails: (req) => ({ count: req.body.errorIds?.length })
+    }),
+    async (req, res) => {
+        try {
+            const logger = getErrorLogger();
+            if (!logger) {
+                return res.status(503).json({ error: 'Error logging service not initialized' });
+            }
 
-      const { errorIds, notes } = req.body;
-      if (!Array.isArray(errorIds) || errorIds.length === 0) {
-        return res.status(400).json({ error: 'errorIds array required' });
-      }
+            const { errorIds, notes } = req.body;
+            if (!Array.isArray(errorIds) || errorIds.length === 0) {
+                return res.status(400).json({ error: 'errorIds array required' });
+            }
 
-      const resolved = await logger.resolveMultipleErrors(
-        errorIds,
-        req.user.userId,
-        notes
-      );
-      
-      res.json({
-        success: true,
-        message: `${resolved.length} errors marked as resolved`,
-        resolved: resolved.length
-      });
-    } catch (error) {
-      console.error('Error batch resolving errors:', error);
-      res.status(500).json({ error: 'Failed to resolve errors' });
+            const resolved = await logger.resolveMultipleErrors(
+                errorIds,
+                req.user.userId,
+                notes
+            );
+
+            res.json({
+                success: true,
+                message: `${resolved.length} errors marked as resolved`,
+                resolved: resolved.length
+            });
+        } catch (error) {
+            console.error('Error batch resolving errors:', error);
+            res.status(500).json({ error: 'Failed to resolve errors' });
+        }
     }
-  }
 );
 
 module.exports = router;

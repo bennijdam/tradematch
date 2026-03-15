@@ -49,7 +49,7 @@
 
 ### Quick Start
 1. **Login:** https://tradematch.onrender.com/admin-login.html
-   - Email: `admin@tradematch.com`
+   - Email: `admin@tradematch.ukm`
    - Password: `ChangeMe123!`
 
 2. **Follow Test Guide:** [MANUAL-TESTING-GUIDE.md](MANUAL-TESTING-GUIDE.md)
@@ -178,7 +178,7 @@
 
 ### To Get Started:
 1. Open: https://tradematch.onrender.com/admin-login.html
-2. Login: admin@tradematch.com / ChangeMe123!
+2. Login: admin@tradematch.ukm / ChangeMe123!
 3. Follow: [MANUAL-TESTING-GUIDE.md](MANUAL-TESTING-GUIDE.md)
 
 ### Time Investment:

@@ -30,7 +30,7 @@
 - Social media links
 - Success message animation
 - Form fields: First Name, Last Name, Email, Phone, Subject, Message
-- Email: hello@tradematch.co.uk
+- Email: hello@tradematch.uk.uk
 - Phone: 020 1234 5678
 - Mobile responsive
 

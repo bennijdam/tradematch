@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-const email = process.argv[2] || process.env.ADMIN_EMAIL || 'admin@tradematch.com';
+const email = process.argv[2] || process.env.ADMIN_EMAIL || 'admin@tradematch.ukm';
 
 if (!process.env.DATABASE_URL) {
   console.error('DATABASE_URL is not set.');

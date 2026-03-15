@@ -15,7 +15,7 @@ const newPassword = process.env.ADMIN_PASSWORD || 'ChangeMe123!'; // Change this
     
     const result = await pool.query(
       "UPDATE users SET password_hash = $1 WHERE email = $2 RETURNING email, full_name",
-      [hashedPassword, 'admin@tradematch.com']
+      [hashedPassword, 'admin@tradematch.ukm']
     );
     
     if (result.rows.length === 0) {
@@ -24,7 +24,7 @@ const newPassword = process.env.ADMIN_PASSWORD || 'ChangeMe123!'; // Change this
       console.log('✓ Password updated successfully');
       console.log('Account:', result.rows[0]);
       console.log('\nNew credentials:');
-      console.log('Email:', 'admin@tradematch.com');
+      console.log('Email:', 'admin@tradematch.ukm');
       console.log('Password:', newPassword);
     }
     

@@ -304,8 +304,8 @@ const fee3 = calculateLeadFee(750, 1); // £18.00 (£12 base × 1.5 scarcity)
 ```json
 {
   "amount": 50.00,
-  "success_url": "https://app.tradematch.co.uk/billing?topup=success",
-  "cancel_url": "https://app.tradematch.co.uk/billing?topup=cancelled"
+  "success_url": "https://app.tradematch.uk.uk/billing?topup=success",
+  "cancel_url": "https://app.tradematch.uk.uk/billing?topup=cancelled"
 }
 ```
 

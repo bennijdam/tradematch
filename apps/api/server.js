@@ -154,11 +154,11 @@ app.use(requestLoggerMiddleware);
 // Avoid closing the pool in development (prevents "Cannot use a pool after calling end")
 const originalPoolEnd = pool.end.bind(pool);
 pool.end = async () => {
-        if (process.env.NODE_ENV !== 'production') {
-                console.warn('⚠️  pool.end() ignored in development mode');
-                return;
-        }
-        return originalPoolEnd();
+    if (process.env.NODE_ENV !== 'production') {
+        console.warn('⚠️  pool.end() ignored in development mode');
+        return;
+    }
+    return originalPoolEnd();
 };
 
 // Pool error handler (prevents crash on dropped connections)
@@ -421,22 +421,22 @@ try {
 
 // Admin Quiz routes
 try {
-  const adminQuizRouter = require('./routes/admin-quiz');
-  if (typeof adminQuizRouter.setPool === 'function') adminQuizRouter.setPool(pool);
-  app.use('/api/admin/quiz', adminQuizRouter);
-  console.log('🎓 Admin Quiz routes mounted at /api/admin/quiz');
+    const adminQuizRouter = require('./routes/admin-quiz');
+    if (typeof adminQuizRouter.setPool === 'function') adminQuizRouter.setPool(pool);
+    app.use('/api/admin/quiz', adminQuizRouter);
+    console.log('🎓 Admin Quiz routes mounted at /api/admin/quiz');
 } catch (e) {
-  console.warn('⚠️ Admin Quiz routes not available:', e && e.message ? e.message : e);
+    console.warn('⚠️ Admin Quiz routes not available:', e && e.message ? e.message : e);
 }
 
 // Sentry webhook routes
 try {
-  const sentryRouter = require('./routes/sentry');
-  app.use('/sentry', sentryRouter);
-  console.log('📨 Sentry webhook routes mounted at /sentry/webhook');
-  console.log('🧪 Sentry test endpoint at /sentry/test-error');
+    const sentryRouter = require('./routes/sentry');
+    app.use('/sentry', sentryRouter);
+    console.log('📨 Sentry webhook routes mounted at /sentry/webhook');
+    console.log('🧪 Sentry test endpoint at /sentry/test-error');
 } catch (e) {
-  console.warn('⚠️ Sentry routes not available:', e && e.message ? e.message : e);
+    console.warn('⚠️ Sentry routes not available:', e && e.message ? e.message : e);
 }
 
 // Debug endpoint
@@ -517,15 +517,14 @@ app.use((req, res) => {
 Sentry.setupExpressErrorHandler(app);
 
 // Error logger middleware (captures all errors for admin dashboard)
-const { errorLoggerMiddleware } = require('./middleware/error-logger');
 app.use(errorLoggerMiddleware);
 
 // Final error handler
 app.use((err, req, res, next) => {
-  console.error('Server error:', err);
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal server error'
-  });
+    console.error('Server error:', err);
+    res.status(err.status || 500).json({
+        error: err.message || 'Internal server error'
+    });
 });
 
 // Prevent premature exit
@@ -536,46 +535,46 @@ const PORT = process.env.PORT || 3001;
 let wsService;
 
 try {
-  const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log('🚀 TradeMatch API Server Started');
-    console.log(`📍 Port: ${PORT}`);
-    console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
-    console.log('🔗 Database: Connected');
-    console.log('🔐 OAuth: Google & Microsoft ready');
-    console.log('');
-  });
-
-  // Add rate limiting to WebSocket upgrade requests
-  server.on('upgrade', (request, socket, head) => {
-    // Apply WebSocket rate limiting
-    websocketLimiter(request, {}, (err) => {
-      if (err) {
-        socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n');
-        socket.destroy();
-        return;
-      }
-      
-      // Allow the WebSocket upgrade to proceed normally
-      // The WebSocket service will handle the actual upgrade
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log('🚀 TradeMatch API Server Started');
+        console.log(`📍 Port: ${PORT}`);
+        console.log(`❤️ Health: http://localhost:${PORT}/api/health`);
+        console.log('🔗 Database: Connected');
+        console.log('🔐 OAuth: Google & Microsoft ready');
+        console.log('');
     });
-  });
 
-  // Initialize WebSocket service
-  wsService = new WebSocketService(server, pool);
-  
-  // Make wsService available globally for other routes
-  app.set('wsService', wsService);
+    // Add rate limiting to WebSocket upgrade requests
+    server.on('upgrade', (request, socket, head) => {
+        // Apply WebSocket rate limiting
+        websocketLimiter(request, {}, (err) => {
+            if (err) {
+                socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n');
+                socket.destroy();
+                return;
+            }
 
-  server.on('error', (err) => {
-    console.error('❌ Server error:', err.message, err.code);
-    if (err.code === 'EADDRINUSE') {
-      console.error(`Port ${PORT} is already in use`);
-    }
-    process.exit(1);
-  });
+            // Allow the WebSocket upgrade to proceed normally
+            // The WebSocket service will handle the actual upgrade
+        });
+    });
+
+    // Initialize WebSocket service
+    wsService = new WebSocketService(server, pool);
+
+    // Make wsService available globally for other routes
+    app.set('wsService', wsService);
+
+    server.on('error', (err) => {
+        console.error('❌ Server error:', err.message, err.code);
+        if (err.code === 'EADDRINUSE') {
+            console.error(`Port ${PORT} is already in use`);
+        }
+        process.exit(1);
+    });
 } catch (err) {
-  console.error('❌ Fatal server error:', err);
-  process.exit(1);
+    console.error('❌ Fatal server error:', err);
+    process.exit(1);
 }
 
 module.exports = app;
