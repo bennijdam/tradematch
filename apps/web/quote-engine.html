@@ -5177,6 +5177,48 @@ I'm happy to discuss the project in more detail and answer any questions to help
             // ── Open / close guest modal ─────────────────────────────
             window.startGuestOtpFlow = function(){
                 if(!pendingSubmissionData){ alert('Please complete the form first.'); return; }
+
+                function parseNameParts(fullName) {
+                    const clean = String(fullName || '').trim();
+                    if (!clean) return { first: '', last: '' };
+                    const parts = clean.split(/\s+/).filter(Boolean);
+                    return {
+                        first: parts[0] || '',
+                        last: parts.slice(1).join(' ') || ''
+                    };
+                }
+
+                function selectGuestCountryByCode(code) {
+                    const codeToFlag = {
+                        '+44': '🇬🇧',
+                        '+353': '🇮🇪',
+                        '+1': '🇺🇸',
+                        '+61': '🇦🇺'
+                    };
+                    const resolved = codeToFlag[code] ? code : '+44';
+                    gmSelectedCountryCode = resolved;
+                    const flagEl = document.getElementById('gmSelFlag');
+                    const codeEl = document.getElementById('gmSelCode');
+                    if (flagEl) flagEl.textContent = codeToFlag[resolved];
+                    if (codeEl) codeEl.textContent = resolved;
+                }
+
+                function splitPhoneForGuest(rawPhone) {
+                    const raw = String(rawPhone || '').trim();
+                    if (!raw) return { code: '+44', local: '' };
+                    const compact = raw.replace(/\s+/g, '');
+                    const knownCodes = ['+353', '+61', '+44', '+1'];
+                    const matchedCode = knownCodes.find(c => compact.startsWith(c));
+                    if (matchedCode) {
+                        return {
+                            code: matchedCode,
+                            local: compact.slice(matchedCode.length)
+                        };
+                    }
+                    // Preserve local UK-like numbers entered without country code.
+                    return { code: '+44', local: compact.replace(/^0+/, '') || compact };
+                }
+
                 closeAuthModal();
                 // Populate context banner
                 const ctxText = document.getElementById('gmCtxText');
@@ -5190,7 +5232,25 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 const gmStepTrack = document.getElementById('gmStepTrack');
                 if (gmStepTrack) gmStepTrack.style.display = '';
                 document.getElementById('gmSuccess').classList.remove('show');
-                ['gm-first','gm-last','gm-phone','gm-email'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.value=''; el.classList.remove('error'); } });
+
+                const firstEl = document.getElementById('gm-first');
+                const lastEl = document.getElementById('gm-last');
+                const phoneEl = document.getElementById('gm-phone');
+                const emailEl = document.getElementById('gm-email');
+
+                const nameParts = parseNameParts(pendingSubmissionData.name);
+                const prefillFirst = pendingSubmissionData.firstName || nameParts.first;
+                const prefillLast = pendingSubmissionData.lastName || nameParts.last;
+                const prefillEmail = pendingSubmissionData.email || '';
+                const splitPhone = splitPhoneForGuest(pendingSubmissionData.phone || '');
+
+                selectGuestCountryByCode(splitPhone.code);
+
+                if (firstEl) { firstEl.value = prefillFirst; firstEl.classList.remove('error'); }
+                if (lastEl) { lastEl.value = prefillLast; lastEl.classList.remove('error'); }
+                if (phoneEl) { phoneEl.value = splitPhone.local; phoneEl.classList.remove('error'); }
+                if (emailEl) { emailEl.value = prefillEmail; emailEl.classList.remove('error'); }
+
                 gmHide('gmErrPhone'); gmHide('gmErrEmail');
                 document.getElementById('guestModalOverlay').classList.add('active');
             };
@@ -5817,7 +5877,8 @@ I'm happy to discuss the project in more detail and answer any questions to help
         .gm-phone-code{letter-spacing:.04em}
         .gm-phone-caret{width:10px;height:10px;color:#5a6478}
         .gm-phone-num{flex:1}
-        .gm-phone-num .gm-field-input{padding-left:13px}
+        .gm-phone-num .gm-field-icon{display:none}
+        .gm-phone-num .gm-field-input{padding-left:14px;padding-right:14px}
         .gm-country-drop{position:fixed;top:0;left:0;z-index:10050;background:#161c28;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:6px;min-width:210px;box-shadow:0 16px 40px rgba(0,0,0,.6);display:none}
         .gm-country-drop.open{display:block}
         .gm-country-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .15s;font-size:12.5px;color:#8b95aa}
