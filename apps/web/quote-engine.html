@@ -1734,6 +1734,58 @@
         
         // Also attach direct click handlers as fallback
         const serviceOptions = document.querySelectorAll('.service-option');
+
+        function normalizeServiceValue(value) {
+            return String(value || '')
+                .toLowerCase()
+                .trim()
+                .replace(/&/g, ' and ')
+                .replace(/\([^)]*\)/g, ' ')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+        }
+
+        function findServiceOptionFromRaw(rawService) {
+            const normalizedService = normalizeServiceValue(rawService);
+            const serviceAliases = {
+                extension: 'extensions',
+                extensions: 'extensions',
+                kitchen: 'kitchen-fitting',
+                bathroom: 'bathroom-fitting',
+                roofing: 'roofing-pitched',
+                roof: 'roofing-pitched',
+                windows: 'windows-doors-upvc',
+                'windows-doors': 'windows-doors-upvc',
+                'windows-and-doors': 'windows-doors-upvc',
+                'timber-windows-and-doors': 'windows-doors-wooden',
+                'wooden-windows-and-doors': 'windows-doors-wooden',
+                'windows-doors-wooden': 'windows-doors-wooden',
+                'windows-doors-timber': 'windows-doors-wooden'
+            };
+            const resolvedService = serviceAliases[normalizedService] || normalizedService;
+
+            let targetOption = document.querySelector(`[data-service="${resolvedService}"]`);
+            if (!targetOption) {
+                targetOption = Array.from(document.querySelectorAll('.service-option'))
+                    .find(option => option.dataset.service.includes(resolvedService));
+            }
+            if (!targetOption) {
+                const normalizedRaw = decodeURIComponent(rawService || '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, ' ')
+                    .trim();
+                targetOption = Array.from(document.querySelectorAll('.service-option')).find(option => {
+                    const byId = option.dataset.service.toLowerCase().replace(/-/g, ' ');
+                    const byName = (option.querySelector('.service-name')?.textContent || '')
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, ' ')
+                        .trim();
+                    return byId.includes(normalizedRaw) || byName.includes(normalizedRaw) || normalizedRaw.includes(byName);
+                });
+            }
+            return targetOption;
+        }
         
         serviceOptions.forEach((option, index) => {
             option.style.cursor = 'pointer';
@@ -1770,54 +1822,23 @@
         
         // Auto-select service from homepage and fill postcode
         if (preSelectedService) {
-            const normalizedService = decodeURIComponent(preSelectedService)
-                .toLowerCase()
-                .trim()
-                .replace(/&/g, ' and ')
-                .replace(/\([^)]*\)/g, ' ')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-|-$/g, '');
-            const serviceAliases = {
-                extension: 'extensions',
-                extensions: 'extensions',
-                kitchen: 'kitchen-fitting',
-                bathroom: 'bathroom-fitting',
-                roofing: 'roofing-pitched',
-                roof: 'roofing-pitched',
-                windows: 'windows-doors-upvc',
-                'windows-doors': 'windows-doors-upvc',
-                'windows-and-doors': 'windows-doors-upvc',
-                'timber-windows-and-doors': 'windows-doors-wooden',
-                'wooden-windows-and-doors': 'windows-doors-wooden',
-                'windows-doors-wooden': 'windows-doors-wooden',
-                'windows-doors-timber': 'windows-doors-wooden'
-            };
-            const resolvedService = serviceAliases[normalizedService] || normalizedService;
-            let targetOption = document.querySelector(`[data-service="${resolvedService}"]`);
-            if (!targetOption) {
-                targetOption = Array.from(document.querySelectorAll('.service-option'))
-                    .find(option => option.dataset.service.includes(resolvedService));
-            }
-            if (!targetOption) {
-                const normalizedRaw = decodeURIComponent(preSelectedService)
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, ' ')
-                    .trim();
-                targetOption = Array.from(document.querySelectorAll('.service-option')).find(option => {
-                    const byId = option.dataset.service.toLowerCase().replace(/-/g, ' ');
-                    const byName = (option.querySelector('.service-name')?.textContent || '')
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, ' ')
-                        .trim();
-                    return byId.includes(normalizedRaw) || byName.includes(normalizedRaw) || normalizedRaw.includes(byName);
-                });
-            }
+            let targetOption = findServiceOptionFromRaw(preSelectedService);
             if (targetOption) {
-                // Mark as auto-select so click handler doesn't trigger auto-advance
-                targetOption._isAutoSelect = true;
-                targetOption.click();
-                targetOption._isAutoSelect = false;
+                // Apply selection directly so prefill does not depend on synthetic click behavior.
+                document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                targetOption.classList.add('selected');
+                formData.service = targetOption.dataset.service;
+                formData.serviceName = targetOption.querySelector('.service-name')?.textContent || '';
+                const serviceInput = document.getElementById('serviceInput');
+                if (serviceInput) {
+                    serviceInput.value = targetOption.dataset.service;
+                }
+                try {
+                    updateQuickPrompts(formData.service);
+                    updateResponseTime(formData.service);
+                    updateBudgetContextHint(parseInt(document.getElementById('budgetSlider')?.value || 7500));
+                } catch (err) { /* vars may not be initialised yet */ }
+                trackEvent('service_prefilled', { service: formData.service, source: 'url' });
                 // Always auto-advance to step 2 when coming from homepage
                 setTimeout(() => {
                     if (formData.service) {
@@ -1827,6 +1848,20 @@
                     }
                 }, 50);
             }
+            // Retry once after layout/async scripts settle in case initial lookup raced.
+            setTimeout(() => {
+                if (formData.service) return;
+                const retryOption = findServiceOptionFromRaw(preSelectedService);
+                if (!retryOption) return;
+                document.querySelectorAll('.service-option').forEach(o => o.classList.remove('selected'));
+                retryOption.classList.add('selected');
+                formData.service = retryOption.dataset.service;
+                formData.serviceName = retryOption.querySelector('.service-name')?.textContent || '';
+                const serviceInput = document.getElementById('serviceInput');
+                if (serviceInput) serviceInput.value = retryOption.dataset.service;
+                currentStep = 2;
+                updateStep();
+            }, 220);
         }
         
         // ========================================
@@ -3857,6 +3892,17 @@ I'm happy to discuss the project in more detail and answer any questions to help
         function validateStep(step) {
             switch(step) {
                 case 1:
+                    if (!formData.service) {
+                        const selectedOption = document.querySelector('.service-option.selected');
+                        if (selectedOption) {
+                            formData.service = selectedOption.dataset.service;
+                            formData.serviceName = selectedOption.querySelector('.service-name')?.textContent || '';
+                            const serviceInput = document.getElementById('serviceInput');
+                            if (serviceInput) {
+                                serviceInput.value = selectedOption.dataset.service;
+                            }
+                        }
+                    }
                     if (!formData.service) {
                         alert('Please select a service');
                         return false;

@@ -2143,6 +2143,13 @@ heroTradeInput?.addEventListener('input', e => {
   heroTradeDebounce = setTimeout(() => renderHeroTradeSuggestions(scoreHeroServices(v)), 80);
 });
 
+heroTradeInput?.addEventListener('focus', e => {
+  const v = e.target.value || '';
+  if(v.trim().length >= 2) {
+    renderHeroTradeSuggestions(scoreHeroServices(v));
+  }
+});
+
 heroTradeInput?.addEventListener('keydown', e => {
   if(!heroTradeSuggestions?.classList.contains('open')) return;
   if(e.key === 'ArrowDown') { e.preventDefault(); heroTradeActiveIndex = Math.min(heroTradeActiveIndex + 1, heroTradeItems.length - 1); heroTradeSuggestions.querySelectorAll('.trade-suggestion-hero').forEach((n,i) => n.classList.toggle('active', i === heroTradeActiveIndex)); }
@@ -2152,6 +2159,15 @@ heroTradeInput?.addEventListener('keydown', e => {
 });
 
 document.addEventListener('pointerdown', e => {
+  const item = e.target.closest('.trade-suggestion-hero');
+  if(!item) return;
+  if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
+  if(!heroTradeSuggestions || !heroTradeSuggestions.contains(item)) return;
+  e.preventDefault();
+  selectHeroTradeService(heroTradeItems[Number(item.dataset.index)]);
+});
+
+document.addEventListener('click', e => {
   const item = e.target.closest('.trade-suggestion-hero');
   if(!item) return;
   if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
@@ -2257,6 +2273,13 @@ heroPostcodeInput?.addEventListener('input', e => {
   heroPostcodeDebounceTimer = setTimeout(() => fetchHeroPostcodeSuggestions(e.target.value), 50);
 });
 
+heroPostcodeInput?.addEventListener('focus', e => {
+  const v = e.target.value || '';
+  if(v.trim().length >= 2) {
+    fetchHeroPostcodeSuggestions(v);
+  }
+});
+
 heroPostcodeInput?.addEventListener('keydown', e => {
   if(!heroPostcodeSuggestions?.classList.contains('open')) return;
   const nodes = heroPostcodeSuggestions.querySelectorAll('.postcode-suggestion-hero');
@@ -2273,6 +2296,14 @@ function handleHeroPostcodeSelect(e) {
   selectHeroPostcodeSuggestion(heroPostcodeItems[Number(item.dataset.index)]);
 }
 document.addEventListener('pointerdown', e => {
+  const item = e.target.closest('.postcode-suggestion-hero');
+  if(!item) return;
+  if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
+  if(!heroPostcodeSuggestions || !heroPostcodeSuggestions.contains(item)) return;
+  handleHeroPostcodeSelect(e);
+});
+
+document.addEventListener('click', e => {
   const item = e.target.closest('.postcode-suggestion-hero');
   if(!item) return;
   if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
