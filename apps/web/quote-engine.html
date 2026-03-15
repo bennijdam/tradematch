@@ -4083,6 +4083,20 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 const data = await response.json();
                 
                 if (!response.ok) {
+                    const authLikeError =
+                        response.status === 401 ||
+                        response.status === 403 ||
+                        /invalid|expired|token|unauthorized|forbidden/i.test(String(data.error || ''));
+
+                    if (authLikeError) {
+                        // Stale token in browser storage; clear and force re-auth flow.
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('user');
+                        openAuthModal();
+                        throw new Error('Your session expired. Please log in again to post your job.');
+                    }
+
                     throw new Error(data.error || 'Failed to submit quote');
                 }
 
@@ -4090,7 +4104,11 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 localStorage.removeItem('quoteProgress');
             } catch (error) {
                 console.error('Quote submission error:', error);
-                alert(error.message || 'Failed to submit quote request. Please try again.');
+                // If auth modal is now open, avoid a second blocking alert.
+                const authOpen = document.getElementById('authModalOverlay')?.classList.contains('active');
+                if (!authOpen) {
+                    alert(error.message || 'Failed to submit quote request. Please try again.');
+                }
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Quote Request';
