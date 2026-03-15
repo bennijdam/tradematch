@@ -1601,9 +1601,51 @@
         const preSelectedPostcode = urlParams.get('postcode');
         const preSelectedDistrict = urlParams.get('district');
         const preSelectedRegion = urlParams.get('region');
+        const hasUrlPrefill = Boolean(preSelectedService || preSelectedPostcode || preSelectedDistrict || preSelectedRegion);
+        const isPrefillDebugMode =
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1' ||
+            urlParams.get('debugPrefill') === '1';
+
+        if (hasUrlPrefill) {
+            localStorage.removeItem('quoteProgress');
+            localStorage.removeItem('quoteAutoSubmit');
+        }
+
         const savedProgress = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
 
+        function showPrefillDebugBadge() {
+            if (!isPrefillDebugMode) return;
+            const source = hasUrlPrefill
+                ? 'URL params'
+                : (savedProgress && savedProgress.formData ? 'Saved progress' : 'None');
+            const summaryParts = [
+                preSelectedService ? `service=${decodeURIComponent(preSelectedService)}` : null,
+                preSelectedPostcode ? `postcode=${decodeURIComponent(preSelectedPostcode)}` : null
+            ].filter(Boolean);
+            const summary = summaryParts.length ? summaryParts.join(' | ') : 'no query params';
+
+            const badge = document.createElement('div');
+            badge.id = 'prefillDebugBadge';
+            badge.textContent = `Prefill source: ${source} (${summary})`;
+            badge.style.cssText = [
+                'position:fixed',
+                'right:12px',
+                'bottom:12px',
+                'z-index:2147483647',
+                'padding:8px 10px',
+                'border-radius:10px',
+                'border:1px solid rgba(0,122,61,0.35)',
+                'background:rgba(12,24,18,0.92)',
+                'color:#d9ffe8',
+                'font:600 12px/1.35 monospace',
+                'box-shadow:0 8px 24px rgba(0,0,0,0.25)'
+            ].join(';');
+            document.body.appendChild(badge);
+        }
+
         function restoreProgress() {
+            if (hasUrlPrefill) return;
             if (!savedProgress.formData) return;
             const data = savedProgress.formData;
 
@@ -1731,20 +1773,45 @@
             const normalizedService = decodeURIComponent(preSelectedService)
                 .toLowerCase()
                 .trim()
-                .replace(/\s+/g, '-');
+                .replace(/&/g, ' and ')
+                .replace(/\([^)]*\)/g, ' ')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
             const serviceAliases = {
                 extension: 'extensions',
                 extensions: 'extensions',
                 kitchen: 'kitchen-fitting',
                 bathroom: 'bathroom-fitting',
                 roofing: 'roofing-pitched',
-                roof: 'roofing-pitched'
+                roof: 'roofing-pitched',
+                windows: 'windows-doors-upvc',
+                'windows-doors': 'windows-doors-upvc',
+                'windows-and-doors': 'windows-doors-upvc',
+                'timber-windows-and-doors': 'windows-doors-wooden',
+                'wooden-windows-and-doors': 'windows-doors-wooden',
+                'windows-doors-wooden': 'windows-doors-wooden',
+                'windows-doors-timber': 'windows-doors-wooden'
             };
             const resolvedService = serviceAliases[normalizedService] || normalizedService;
             let targetOption = document.querySelector(`[data-service="${resolvedService}"]`);
             if (!targetOption) {
                 targetOption = Array.from(document.querySelectorAll('.service-option'))
                     .find(option => option.dataset.service.includes(resolvedService));
+            }
+            if (!targetOption) {
+                const normalizedRaw = decodeURIComponent(preSelectedService)
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, ' ')
+                    .trim();
+                targetOption = Array.from(document.querySelectorAll('.service-option')).find(option => {
+                    const byId = option.dataset.service.toLowerCase().replace(/-/g, ' ');
+                    const byName = (option.querySelector('.service-name')?.textContent || '')
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, ' ')
+                        .trim();
+                    return byId.includes(normalizedRaw) || byName.includes(normalizedRaw) || normalizedRaw.includes(byName);
+                });
             }
             if (targetOption) {
                 // Mark as auto-select so click handler doesn't trigger auto-advance
@@ -4204,6 +4271,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
         const stepNames = ['', 'Service Selection', 'Project Details', 'Timeline', 'Review'];
 
         function checkSessionRecovery() {
+            if (hasUrlPrefill) return;
             const saved = JSON.parse(localStorage.getItem('quoteProgress') || '{}');
             if (saved.step && saved.step > 1 && saved.formData && saved.formData.service) {
                 const age = Date.now() - (saved.timestamp || 0);
@@ -4758,6 +4826,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
         // ============================================================
         // Initialize
         // ============================================================
+        showPrefillDebugBadge();
         checkSessionRecovery();
         restoreProgress();
         updateStep();

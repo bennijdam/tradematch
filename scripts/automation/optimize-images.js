@@ -6,8 +6,8 @@ const inputDir = path.resolve(__dirname, "../../apps/web/public/images");
 const outputDir = path.resolve(inputDir, "optimized");
 
 if (!fs.existsSync(inputDir)) {
-    console.error(`Input directory not found: ${inputDir}`);
-    process.exit(1);
+    console.log(`Skipping image optimization: input directory not found (${inputDir})`);
+    process.exit(0);
 }
 
 if (!fs.existsSync(outputDir)) {

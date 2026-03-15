@@ -2089,12 +2089,13 @@ function scoreHeroServices(raw) {
 
 // â”€â”€ Trade input wiring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const heroTradeInput = document.getElementById('heroTradeInput');
-const heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
+let heroTradeSuggestions = null;
 let heroTradeDebounce = null;
 let heroTradeActiveIndex = -1;
 let heroTradeItems = [];
 
 function closeHeroTradeSuggestions() {
+  if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
   if(!heroTradeSuggestions) return;
   heroTradeSuggestions.classList.remove('open');
   heroTradeSuggestions.innerHTML = '';
@@ -2111,6 +2112,7 @@ function selectHeroTradeService(svc) {
 }
 
 function positionHeroTradeDropdown() {
+  if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
   if(!heroTradeSuggestions?.classList.contains('open') || !heroTradeInput) return;
   const field = heroTradeInput.closest('.search-field') || heroTradeInput;
   const rect = field.getBoundingClientRect();
@@ -2120,6 +2122,7 @@ function positionHeroTradeDropdown() {
 }
 
 function renderHeroTradeSuggestions(results) {
+  if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
   if(!heroTradeSuggestions) return;
   if(!results.length) { closeHeroTradeSuggestions(); return; }
   heroTradeItems = results;
@@ -2148,9 +2151,11 @@ heroTradeInput?.addEventListener('keydown', e => {
   else if(e.key === 'Escape') closeHeroTradeSuggestions();
 });
 
-heroTradeSuggestions?.addEventListener('pointerdown', e => {
+document.addEventListener('pointerdown', e => {
   const item = e.target.closest('.trade-suggestion-hero');
   if(!item) return;
+  if(!heroTradeSuggestions) heroTradeSuggestions = document.getElementById('heroTradeSuggestions');
+  if(!heroTradeSuggestions || !heroTradeSuggestions.contains(item)) return;
   e.preventDefault();
   selectHeroTradeService(heroTradeItems[Number(item.dataset.index)]);
 });
@@ -2169,7 +2174,7 @@ window.addEventListener('resize', positionHeroPostcodeDropdown, { passive: true 
 // POSTCODE AUTOCOMPLETE — postcodes.io + backend proxy
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const heroPostcodeInput = document.getElementById('heroPostcode');
-const heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
+let heroPostcodeSuggestions = null;
 let heroPostcodeDebounceTimer = null;
 let heroPostcodeRequestId = 0;
 let heroPostcodeActiveIndex = -1;
@@ -2178,6 +2183,7 @@ const isLocalApiHome = window.location.protocol === 'file:' || window.location.h
 const HOME_API_BASE = isLocalApiHome ? (localStorage.getItem('apiBase') || 'http://localhost:3001') : 'https://api.tradematch.uk';
 
 function closeHeroPostcodeSuggestions() {
+  if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
   if(!heroPostcodeSuggestions) return;
   heroPostcodeSuggestions.classList.remove('open');
   heroPostcodeSuggestions.innerHTML = '';
@@ -2192,6 +2198,7 @@ function selectHeroPostcodeSuggestion(item) {
 }
 
 function positionHeroPostcodeDropdown() {
+  if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
   if(!heroPostcodeSuggestions?.classList.contains('open') || !heroPostcodeInput) return;
   const field = heroPostcodeInput.closest('.search-field') || heroPostcodeInput;
   const rect = field.getBoundingClientRect();
@@ -2210,6 +2217,7 @@ function formatUKPostcode(raw) {
 }
 
 function renderHeroPostcodeSuggestions(suggestions) {
+  if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
   if(!heroPostcodeSuggestions) return;
   if(!Array.isArray(suggestions) || !suggestions.length) { closeHeroPostcodeSuggestions(); return; }
   heroPostcodeItems = suggestions;
@@ -2264,7 +2272,13 @@ function handleHeroPostcodeSelect(e) {
   e.preventDefault();
   selectHeroPostcodeSuggestion(heroPostcodeItems[Number(item.dataset.index)]);
 }
-heroPostcodeSuggestions?.addEventListener('pointerdown', handleHeroPostcodeSelect);
+document.addEventListener('pointerdown', e => {
+  const item = e.target.closest('.postcode-suggestion-hero');
+  if(!item) return;
+  if(!heroPostcodeSuggestions) heroPostcodeSuggestions = document.getElementById('heroPostcodeSuggestions');
+  if(!heroPostcodeSuggestions || !heroPostcodeSuggestions.contains(item)) return;
+  handleHeroPostcodeSelect(e);
+});
 
 document.addEventListener('click', e => {
   if(!heroPostcodeInput || !heroPostcodeSuggestions) return;
