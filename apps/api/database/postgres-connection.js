@@ -32,13 +32,58 @@ function resolveSslConfig(connectionString) {
 
 const sanitizedConnectionString = sanitizeDatabaseUrl(process.env.DATABASE_URL);
 
-const pool = new Pool({
+// HTTP Connection Pool - for REST API endpoints
+const httpPool = new Pool({
   connectionString: sanitizedConnectionString,
   ssl: resolveSslConfig(sanitizedConnectionString),
-  max: 20, // Maximum number of connections
-  idleTimeoutMillis: 60000, // How long a client is allowed to remain idle
-  connectionTimeoutMillis: 15000, // How long to wait when establishing a connection
+  max: 15, // Reserved for HTTP API (75% of total capacity)
+  idleTimeoutMillis: 60000,
+  connectionTimeoutMillis: 15000,
   keepAlive: true
 });
 
-module.exports = pool;
+// WebSocket Connection Pool - for real-time connections
+const wsPool = new Pool({
+  connectionString: sanitizedConnectionString,
+  ssl: resolveSslConfig(sanitizedConnectionString),
+  max: 30, // Reserved for WebSocket operations (can fluctuate)
+  idleTimeoutMillis: 30000, // Shorter idle time for WebSocket (more transient)
+  connectionTimeoutMillis: 5000, // Faster timeout for real-time
+  keepAlive: true,
+  // WebSocket-specific configuration
+  allowExitOnIdle: false // Important for persistent WebSocket connections
+});
+
+// Combined Pool - for general operations (backward compatibility)
+const pool = new Pool({
+  connectionString: sanitizedConnectionString,
+  ssl: resolveSslConfig(sanitizedConnectionString),
+  max: 20,
+  idleTimeoutMillis: 60000,
+  connectionTimeoutMillis: 15000,
+  keepAlive: true
+});
+
+// Add error handling to all pools
+[httpPool, wsPool, pool].forEach((poolInstance, index) => {
+  poolInstance.on('error', (err) => {
+    console.error(`[POSTGRES] Pool error (${['http', 'ws', 'combined'][index]}):`, err);
+  });
+  
+  poolInstance.on('connect', () => {
+    console.log(`[POSTGRES] Pool connected (${['http', 'ws', 'combined'][index]} max: ${poolInstance.options.max})`);
+  });
+  
+  poolInstance.on('remove', (err) => {
+    if (err) {
+      console.error(`[POSTGRES] Client removed with error (${['http', 'ws', 'combined'][index]}):`, err);
+    }
+  });
+});
+
+module.exports = {
+  pool, // Legacy combined pool for backward compatibility
+  httpPool, // HTTP API requests - use: const { httpPool } = require('./postgres-connection')
+  wsPool,   // WebSocket operations - use: const { wsPool } = require('./postgres-connection')
+  httpPoolOrPool: httpPool || pool // Safe fallback
+};

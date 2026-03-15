@@ -1,0 +1,23 @@
+/**
+ * Vendor Dashboard Page
+ * Uses SacredVendorDashboard for 100% visual parity
+ * Wires to live API data
+ */
+
+import { Suspense } from 'react';
+import { SacredVendorDashboardWrapper } from './SacredVendorDashboardWrapper';
+import { DashboardSkeleton } from '@/components/ui/DashboardSkeleton';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Vendor Dashboard | TradeMatch',
+  description: 'Manage your jobs, leads, and payments in one place.',
+};
+
+export default function VendorDashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <SacredVendorDashboardWrapper />
+    </Suspense>
+  );
+}

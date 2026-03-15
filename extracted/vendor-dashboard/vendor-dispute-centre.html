@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dispute Centre — TradeMatch Trust & Safety</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary:#080C12;--bg-secondary:#0E1420;--bg-tertiary:#141B28;--bg-card:#111827;--bg-card-hover:#182030;
+  --neon:#00E5A0;--neon-dim:rgba(0,229,160,0.1);--neon-glow:0 0 28px rgba(0,229,160,0.35);--neon-glow-sm:0 0 14px rgba(0,229,160,0.22);
+  --blue:#42A5F5;--amber:#FFA726;--danger:#FF4757;--purple:#9C5FE9;--gold:#F59E0B;
+  --text-1:#F0F4FF;--text-2:#8B95AA;--text-3:#4A5568;
+  --border:rgba(255,255,255,0.07);--border-2:rgba(255,255,255,0.12);--border-neon:rgba(0,229,160,0.25);
+  --ff:'Sora',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --sw:268px;--nh:72px;
+}
+[data-theme="light"]{
+  --bg-primary:#F0F4F8;--bg-secondary:#FFFFFF;--bg-tertiary:#F7F9FC;--bg-card:#FFFFFF;--bg-card-hover:#F0F7F4;
+  --neon:#16A34A;--neon-dim:rgba(22,163,74,0.08);--neon-glow:0 0 28px rgba(22,163,74,0.25);--neon-glow-sm:0 0 14px rgba(22,163,74,0.18);
+  --blue:#2563EB;--amber:#D97706;--danger:#DC2626;--purple:#7C3AED;--gold:#D97706;
+  --text-1:#0F172A;--text-2:#475569;--text-3:#94A3B8;
+  --border:rgba(0,0,0,0.07);--border-2:rgba(0,0,0,0.13);--border-neon:rgba(22,163,74,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--fb);background:var(--bg-primary);color:var(--text-1);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 700px 400px at 20% 10%,rgba(255,71,87,0.03) 0%,transparent 70%),radial-gradient(ellipse 500px 400px at 80% 80%,rgba(66,165,245,0.03) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ─── SIDEBAR ─── */
+.sb{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--bg-secondary);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;transition:width .3s cubic-bezier(.4,0,.2,1)}
+.sb.col{width:72px}
+.sb-logo{height:var(--nh);display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--border);gap:12px;flex-shrink:0}
+.logo-m{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-m svg{width:20px;height:20px;color:#fff;stroke-width:2.5}
+.logo-t{font-family:var(--ff);font-weight:800;font-size:1.05rem;letter-spacing:-.04em;color:var(--text-1);white-space:nowrap;overflow:hidden}
+.logo-t span{color:var(--neon)}
+.sb.col .logo-t,.sb.col .nl,.sb.col .nsl,.sb.col .sbf,.sb.col .nbd,.sb.col .nbw,.sb.col .edot{display:none}
+.sb-nav{flex:1;overflow-y:auto;padding:16px 12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.nsl{font-family:var(--fm);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3);padding:6px 12px;margin-bottom:4px}
+.ni{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .18s;color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;margin-bottom:2px}
+.ni:hover{background:var(--bg-tertiary);color:var(--text-1)}
+.ni.active{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.ni-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ni-icon svg{width:18px;height:18px;stroke-width:1.8}
+.nl{white-space:nowrap;overflow:hidden;flex:1}
+.nbd{background:var(--neon-dim);color:var(--neon);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid var(--border-neon);margin-left:auto}
+.nbw{background:rgba(255,71,87,.12);color:var(--danger);font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:auto}
+.edot{width:7px;height:7px;border-radius:50%;background:var(--amber);margin-left:auto;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.sbf{padding:12px;border-top:1px solid var(--border);flex-shrink:0}
+.pb{width:100%;display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:var(--bg-tertiary);border:1px solid var(--border);cursor:pointer;text-align:left}
+.pbav{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+
+/* ─── TOPNAV ─── */
+.tn{position:fixed;top:0;left:var(--sw);right:0;height:var(--nh);background:rgba(8,12,18,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:90;transition:left .3s cubic-bezier(.4,0,.2,1)}
+[data-theme="light"] .tn{background:rgba(240,244,248,.93)}
+.tn.col{left:72px}
+.hbg{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all .2s;flex-shrink:0}
+.hbg:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.hbg svg{width:16px;height:16px;stroke-width:2}
+.bc{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-2)}
+.bc-cur{font-family:var(--ff);font-weight:700;color:var(--text-1);font-size:15px}
+.bc-sep{color:var(--text-3)}
+.tn-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.np{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-tertiary);cursor:pointer;transition:all .2s;color:var(--text-2);font-size:13px;font-weight:500}
+.np:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.np-pos{position:relative;display:flex}
+.np-pos svg{width:16px;height:16px;stroke-width:1.8}
+.np-dot{position:absolute;top:-5px;right:-6px;width:16px;height:16px;border-radius:50%;background:var(--danger);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-secondary)}
+.bal{display:flex;align-items:center;gap:10px;padding:7px 14px;border-radius:10px;background:var(--neon-dim);border:1px solid var(--border-neon);cursor:pointer;transition:all .2s}
+.bal:hover{background:rgba(0,229,160,.15);box-shadow:var(--neon-glow-sm)}
+.bal-l{font-family:var(--fm);font-size:10px;color:var(--neon);opacity:.7;text-transform:uppercase;letter-spacing:.08em}
+.bal-a{font-family:var(--ff);font-size:15px;font-weight:800;color:var(--neon);letter-spacing:-.03em}
+.ttg{width:52px;height:28px;border-radius:100px;background:#1e293b;border:1px solid var(--border-2);cursor:pointer;position:relative;transition:all .3s;display:flex;align-items:center;padding:0 4px;flex-shrink:0}
+[data-theme="light"] .ttg{background:#e0f2fe;border-color:#bae6fd}
+.tk{width:20px;height:20px;border-radius:50%;background:#334155;position:absolute;left:4px;transition:all .3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+[data-theme="light"] .tk{left:26px;background:#f59e0b;box-shadow:0 0 10px rgba(245,158,11,.5)}
+.tk svg{width:11px;height:11px;color:#fff;stroke-width:2.5}
+
+/* ─── LAYOUT ─── */
+.main{margin-left:var(--sw);margin-top:var(--nh);position:relative;z-index:1;transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+.main.col{margin-left:72px}
+
+/* ─── HERO ─── */
+.hero{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:32px 40px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,71,87,.04) 0%,rgba(66,165,245,.02) 60%,transparent 100%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,71,87,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,71,87,.02) 1px,transparent 1px);background-size:52px 52px;pointer-events:none}
+.hero-inner{display:flex;align-items:center;gap:24px;position:relative;flex-wrap:wrap}
+.hero-icon{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,rgba(255,71,87,.1),rgba(255,167,38,.06));border:1px solid rgba(255,71,87,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-icon svg{width:36px;height:36px;color:var(--danger);stroke-width:1.5}
+.hero-text{flex:1;min-width:280px}
+.hero-ey{font-family:var(--fm);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.hero-ey-dot{width:6px;height:6px;border-radius:50%;background:var(--danger);animation:blink 1.4s infinite}
+.hero-h1{font-family:var(--ff);font-size:1.9rem;font-weight:900;letter-spacing:-.05em;color:var(--text-1);line-height:1;margin-bottom:6px}
+.hero-sub{font-size:14px;color:var(--text-2);line-height:1.5;max-width:540px}
+.hero-badges{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.hb{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.04em}
+.hb-neon{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.hb-red{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.25)}
+.hb-blue{background:rgba(66,165,245,.1);color:var(--blue);border:1px solid rgba(66,165,245,.2)}
+.hb-amber{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.25)}
+/* Headline stats */
+.hero-stats{display:flex;gap:0;flex-shrink:0}
+.hs-item{padding:0 20px;border-right:1px solid var(--border);text-align:center}
+.hs-item:first-child{padding-left:0}
+.hs-item:last-child{border-right:none}
+.hs-val{font-family:var(--ff);font-size:1.4rem;font-weight:900;letter-spacing:-.04em;margin-bottom:2px}
+.hs-val.green{color:var(--neon)}
+.hs-val.red{color:var(--danger)}
+.hs-val.blue{color:var(--blue)}
+.hs-label{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+
+/* ─── STATUS BAR ─── */
+.sbar{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:stretch;gap:0;position:relative}
+.sbar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--danger) 0%,var(--amber) 40%,var(--neon) 80%,rgba(0,229,160,.1))}
+.sbar-tab{padding:14px 20px;font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-3);border-bottom:2px solid transparent;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;white-space:nowrap;border:none;background:transparent}
+.sbar-tab.active{color:var(--danger);border-bottom-color:var(--danger)}
+.sbar-tab:hover:not(.active){color:var(--text-2)}
+.sbar-count{font-family:var(--fm);font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
+.sbar-count.red{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2)}
+.sbar-count.amber{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.2)}
+.sbar-count.neon{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.sbar-count.grey{background:var(--bg-tertiary);color:var(--text-3);border:1px solid var(--border)}
+
+/* ─── CONTENT ─── */
+.content{padding:28px 40px;max-width:1320px}
+.two-col{display:grid;grid-template-columns:1fr 380px;gap:24px}
+
+/* ─── CARDS ─── */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.card:last-child{margin-bottom:0}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.card-ey{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--danger);margin-bottom:4px}
+.card-ey.neon{color:var(--neon)}
+.card-ey.blue{color:var(--blue)}
+.card-ey.amber{color:var(--amber)}
+.card-h{font-family:var(--ff);font-size:1rem;font-weight:700;letter-spacing:-.03em;color:var(--text-1)}
+.card-s{font-size:12px;color:var(--text-2);margin-top:2px}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff);font-size:13px;font-weight:700;letter-spacing:-.02em;border-radius:10px;padding:9px 18px;cursor:pointer;border:none;transition:all .22s;white-space:nowrap}
+.btn svg{width:14px;height:14px;stroke-width:2;flex-shrink:0}
+.btn-primary{background:linear-gradient(135deg,#007a3d,var(--neon));color:#fff;box-shadow:var(--neon-glow-sm)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:var(--neon-glow)}
+.btn-danger{background:linear-gradient(135deg,#a00,var(--danger));color:#fff;box-shadow:0 0 14px rgba(255,71,87,.25)}
+.btn-danger:hover{transform:translateY(-1px);box-shadow:0 0 24px rgba(255,71,87,.4)}
+.btn-secondary{background:var(--bg-tertiary);color:var(--text-1);border:1px solid var(--border-2)}
+.btn-secondary:hover{background:var(--bg-card-hover);border-color:var(--border-neon);color:var(--neon)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+.btn-amber{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.25)}
+.btn-amber:hover{background:rgba(255,167,38,.18)}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:8px}
+.btn-xs{padding:5px 10px;font-size:11px;border-radius:7px}
+
+/* ─── DISPUTE ITEMS ─── */
+.dispute-list{display:flex;flex-direction:column;gap:12px}
+.dispute-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:16px 18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.dispute-item:hover{border-color:var(--border-2);background:var(--bg-card-hover)}
+.dispute-item.active-dispute{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.04)}
+.dispute-item.pending-d{border-color:rgba(255,167,38,.3);background:rgba(255,167,38,.03)}
+.dispute-item.resolved-d{border-color:rgba(0,229,160,.2);background:rgba(0,229,160,.03)}
+.dispute-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px}
+.dispute-item.active-dispute::before{background:var(--danger)}
+.dispute-item.pending-d::before{background:var(--amber)}
+.dispute-item.resolved-d::before{background:var(--neon)}
+.di-row1{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.di-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.di-icon.red{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.2)}
+.di-icon.amber{background:rgba(255,167,38,.1);border:1px solid rgba(255,167,38,.2)}
+.di-icon.neon{background:var(--neon-dim);border:1px solid var(--border-neon)}
+.di-title{font-size:14px;font-weight:700;color:var(--text-1);flex:1}
+.di-status{font-family:var(--fm);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.ds-active{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2)}
+.ds-pending{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.2)}
+.ds-resolved{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.ds-review{background:rgba(66,165,245,.1);color:var(--blue);border:1px solid rgba(66,165,245,.2)}
+.di-row2{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.di-meta{font-size:12px;color:var(--text-2)}
+.di-meta strong{color:var(--text-1)}
+.di-escrow{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:10px;color:var(--danger);background:rgba(255,71,87,.08);padding:3px 9px;border-radius:20px;border:1px solid rgba(255,71,87,.15)}
+.di-escrow svg{width:11px;height:11px;stroke-width:2.5}
+.di-escrow.released{color:var(--neon);background:var(--neon-dim);border-color:var(--border-neon)}
+.di-escrow.released svg{color:var(--neon)}
+
+/* ─── ACTIVE DISPUTE DETAIL ─── */
+.dispute-detail{background:var(--bg-card);border:1px solid rgba(255,71,87,.25);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.dd-header{background:linear-gradient(135deg,rgba(255,71,87,.08),rgba(255,167,38,.04));border-bottom:1px solid rgba(255,71,87,.15);padding:20px 24px;display:flex;align-items:flex-start;gap:16px}
+.dd-header-icon{width:46px;height:46px;border-radius:12px;background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dd-header-info{flex:1}
+.dd-header-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--danger);margin-bottom:4px}
+.dd-header-title{font-family:var(--ff);font-size:1.05rem;font-weight:800;letter-spacing:-.03em;color:var(--text-1);margin-bottom:6px}
+.dd-header-meta{display:flex;gap:10px;flex-wrap:wrap}
+.dd-meta-pill{font-size:11px;color:var(--text-2);display:flex;align-items:center;gap:4px}
+.dd-meta-pill svg{width:12px;height:12px;stroke-width:2;color:var(--text-3)}
+
+/* ─── SLA TIMER ─── */
+.sla-bar{background:linear-gradient(135deg,rgba(255,71,87,.07),rgba(255,167,38,.04));border-bottom:1px solid rgba(255,71,87,.15);padding:16px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.sla-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--danger)}
+.sla-clock{display:flex;align-items:center;gap:6px}
+.sla-seg{background:var(--bg-secondary);border:1px solid rgba(255,71,87,.3);border-radius:8px;padding:8px 12px;text-align:center;min-width:52px}
+.sla-seg-val{font-family:var(--fm);font-size:1.3rem;font-weight:700;color:var(--danger);letter-spacing:.05em;line-height:1}
+.sla-seg-label{font-family:var(--fm);font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-top:2px}
+.sla-colon{font-family:var(--fm);font-size:1.2rem;color:rgba(255,71,87,.5);font-weight:700;animation:blink 1s infinite}
+.sla-track-wrap{flex:1;min-width:200px}
+.sla-track-top{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-bottom:5px}
+.sla-track{height:6px;background:var(--bg-tertiary);border-radius:100px;overflow:hidden}
+.sla-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--danger),var(--amber));transition:width .5s}
+.sla-info{font-size:12px;color:var(--text-2)}
+.sla-info strong{color:var(--text-1)}
+
+/* ─── EVIDENCE LOCKER ─── */
+.evid-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.evid-item{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s}
+.evid-item:hover{border-color:var(--border-2)}
+.evid-item.auto{border-color:rgba(66,165,245,.25);background:rgba(66,165,245,.04)}
+.evid-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.evid-icon{font-size:18px}
+.evid-source{font-family:var(--fm);font-size:8px;padding:2px 6px;border-radius:20px}
+.evid-source.auto-tag{background:rgba(66,165,245,.1);color:var(--blue);border:1px solid rgba(66,165,245,.2)}
+.evid-source.upload{background:var(--bg-secondary);color:var(--text-3);border:1px solid var(--border)}
+.evid-name{font-size:12px;font-weight:600;color:var(--text-1);margin-bottom:2px}
+.evid-meta{font-size:10px;color:var(--text-3)}
+.evid-add{background:var(--bg-secondary);border:1px dashed var(--border-2);border-radius:10px;padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text-3)}
+.evid-add:hover{border-color:var(--border-neon);color:var(--neon)}
+.evid-add svg{width:16px;height:16px;stroke-width:1.5}
+
+/* ─── AI ASSESSMENT ─── */
+.ai-assess{background:linear-gradient(135deg,rgba(66,165,245,.07),rgba(0,229,160,.04));border:1px solid rgba(66,165,245,.25);border-radius:14px;padding:20px;margin-bottom:16px}
+.ai-assess-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ai-assess-label svg{width:13px;height:13px;stroke-width:2}
+.ai-assess-title{font-family:var(--ff);font-size:14px;font-weight:800;color:var(--text-1);margin-bottom:6px}
+.ai-assess-text{font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:14px}
+/* Settlement slider */
+.settlement-wrap{background:rgba(0,0,0,.15);border-radius:10px;padding:14px;margin-bottom:10px}
+[data-theme="light"] .settlement-wrap{background:rgba(255,255,255,.6)}
+.settlement-label{font-family:var(--fm);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px}
+.settlement-bars{display:flex;gap:0;border-radius:8px;overflow:hidden;height:32px;margin-bottom:8px}
+.sb-vendor{background:linear-gradient(90deg,#007a3d,var(--neon));display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;color:#000;transition:width .5s;min-width:0;overflow:hidden}
+.sb-owner{background:linear-gradient(90deg,rgba(255,71,87,.6),rgba(255,71,87,.3));display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;transition:width .5s;min-width:0;overflow:hidden}
+.settlement-legend{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2)}
+.settlement-btns{display:flex;gap:6px;flex-wrap:wrap}
+.s-btn{font-family:var(--fm);font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border-2);background:var(--bg-secondary);color:var(--text-2);cursor:pointer;transition:all .15s}
+.s-btn:hover{border-color:var(--border-neon);color:var(--neon)}
+.s-btn.active-s{background:var(--neon-dim);color:var(--neon);border-color:var(--border-neon)}
+
+/* ─── COOLING OFF ─── */
+.cooling-off{background:linear-gradient(135deg,rgba(0,229,160,.06),rgba(66,165,245,.04));border:1px solid var(--border-neon);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.co-icon{width:40px;height:40px;border-radius:10px;background:var(--neon-dim);border:1px solid var(--border-neon);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.co-icon svg{width:20px;height:20px;color:var(--neon);stroke-width:2}
+.co-text{flex:1}
+.co-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--neon);margin-bottom:3px}
+.co-title{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:2px}
+.co-sub{font-size:11px;color:var(--text-2)}
+
+/* ─── ESCROW PANEL ─── */
+.escrow-panel{background:linear-gradient(135deg,rgba(255,71,87,.07),rgba(255,167,38,.04));border:1px solid rgba(255,71,87,.25);border-radius:14px;padding:18px;margin-bottom:16px}
+.ep-label{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--danger);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ep-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--danger);animation:blink 1.2s infinite}
+.ep-amount{font-family:var(--ff);font-size:2rem;font-weight:900;letter-spacing:-.05em;color:var(--text-1);margin-bottom:4px}
+.ep-amount span{color:var(--danger)}
+.ep-sub{font-size:12px;color:var(--text-2);margin-bottom:14px}
+.ep-milestones{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.ep-ms{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--border)}
+.ep-ms.frozen{border-color:rgba(255,71,87,.2);background:rgba(255,71,87,.04)}
+.ep-ms.released{border-color:rgba(0,229,160,.2);background:rgba(0,229,160,.03)}
+.ep-ms-name{font-size:12px;color:var(--text-2);flex:1}
+.ep-ms-amount{font-family:var(--ff);font-size:13px;font-weight:800;color:var(--text-1)}
+.ep-ms-status{font-family:var(--fm);font-size:9px;padding:2px 7px;border-radius:20px}
+.ep-ms-status.frozen{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2)}
+.ep-ms-status.released{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+.ep-ms-status.pending{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.2)}
+/* Partial release slider */
+.partial-wrap{background:rgba(0,0,0,.12);border-radius:10px;padding:12px}
+[data-theme="light"] .partial-wrap{background:rgba(255,255,255,.5)}
+.partial-label{font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px}
+.partial-vals{display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-bottom:6px}
+.partial-slider{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--neon) 70%,rgba(255,71,87,.5) 70%);outline:none;cursor:pointer;margin-bottom:6px}
+.partial-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--neon);border:2px solid var(--bg-secondary);box-shadow:0 0 8px rgba(0,229,160,.4);cursor:pointer}
+
+/* ─── AUDIT TRAIL ─── */
+.audit-trail{display:flex;flex-direction:column;gap:0}
+.at-item{display:flex;gap:14px;position:relative;padding-bottom:16px}
+.at-item:last-child{padding-bottom:0}
+.at-line{position:absolute;left:15px;top:30px;bottom:0;width:1px;background:var(--border)}
+.at-item:last-child .at-line{display:none}
+.at-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;border:2px solid var(--border-2);background:var(--bg-secondary);z-index:1;position:relative}
+.at-dot.system{border-color:rgba(66,165,245,.3);background:rgba(66,165,245,.08)}
+.at-dot.ai{border-color:var(--border-neon);background:var(--neon-dim)}
+.at-dot.human{border-color:rgba(255,167,38,.3);background:rgba(255,167,38,.08)}
+.at-dot.auto{border-color:rgba(156,95,233,.3);background:rgba(156,95,233,.08)}
+.at-content{flex:1;padding-top:4px}
+.at-who{font-size:12px;font-weight:700;color:var(--text-1);margin-bottom:2px}
+.at-desc{font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:4px}
+.at-time{font-family:var(--fm);font-size:10px;color:var(--text-3)}
+
+/* ─── SCORE IMPACT ─── */
+.score-impact{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.si-row{display:flex;align-items:center;gap:10px}
+.si-name{font-size:12px;color:var(--text-2);flex:1}
+.si-track{width:80px;height:5px;background:var(--bg-secondary);border-radius:100px;overflow:hidden;flex-shrink:0}
+.si-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#007a3d,var(--neon));transition:width 1s ease}
+.si-val{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--neon);width:32px;text-align:right;flex-shrink:0}
+.si-delta{font-family:var(--fm);font-size:10px;padding:2px 6px;border-radius:20px;flex-shrink:0}
+.si-delta.drop{background:rgba(255,71,87,.1);color:var(--danger);border:1px solid rgba(255,71,87,.2)}
+.si-delta.up{background:var(--neon-dim);color:var(--neon);border:1px solid var(--border-neon)}
+
+/* ─── SIDE CARDS ─── */
+.sc{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px}
+.sc:last-child{margin-bottom:0}
+.sc-h{font-family:var(--ff);font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--text-1);margin-bottom:3px}
+.sc-s{font-size:11px;color:var(--text-2);margin-bottom:16px}
+.sc-ey{font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--neon);margin-bottom:4px}
+
+/* Appeals */
+.appeals-timer{display:flex;align-items:center;gap:10px;background:rgba(156,95,233,.07);border:1px solid rgba(156,95,233,.2);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.appeals-timer-icon{font-size:20px}
+.appeals-timer-val{font-family:var(--ff);font-size:1.2rem;font-weight:900;color:var(--purple)}
+.appeals-timer-sub{font-size:11px;color:var(--text-2)}
+
+/* Competitor note */
+.comp-note{background:linear-gradient(135deg,rgba(255,71,87,.06),rgba(255,167,38,.04));border:1px solid rgba(255,71,87,.2);border-radius:10px;padding:12px 14px}
+.cn-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;color:var(--text-2)}
+.cn-row:last-child{margin-bottom:0}
+.cn-row span{font-weight:700}
+.cn-row.bad{color:var(--danger)}
+.cn-row.good{color:var(--neon)}
+.cn-row svg{width:14px;height:14px;stroke-width:2;flex-shrink:0}
+
+/* Lead Credit Protection */
+.lcp-card{background:linear-gradient(135deg,rgba(0,229,160,.07),rgba(66,165,245,.04));border:1px solid var(--border-neon);border-radius:12px;padding:14px}
+.lcp-label{font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--neon);margin-bottom:4px}
+.lcp-title{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:4px}
+.lcp-text{font-size:11px;color:var(--text-2);line-height:1.5}
+.lcp-stat{font-family:var(--ff);font-size:1.3rem;font-weight:900;color:var(--neon);margin:6px 0}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.a1{animation:fadeUp .5s ease both}
+.a2{animation:fadeUp .5s .08s ease both}
+.a3{animation:fadeUp .5s .16s ease both}
+
+@media(max-width:1100px){.two-col{grid-template-columns:1fr}.evid-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ════ SIDEBAR ════ -->
+<aside class="sb" id="sb">
+  <div class="sb-logo">
+    <div class="logo-m"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"/></svg></div>
+    <div class="logo-t">Trade<span>Match</span></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="nsl">Workspace</div>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div><span class="nl">Dashboard</span></a>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58"/></svg></div><span class="nl">Leads</span><span class="nbd">3 New</span></a>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg></div><span class="nl">Messages</span><span class="nbw">2</span></a>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg></div><span class="nl">Quotes & Proposals</span></a>
+    <div class="nsl" style="margin-top:14px">Analytics</div>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg></div><span class="nl">Analytics</span></a>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg></div><span class="nl">Coverage Map</span></a>
+    <div class="nsl" style="margin-top:14px">Account</div>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div><span class="nl">My Profile</span></a>
+    <a class="ni" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg></div><span class="nl">Credentials Vault</span><div class="edot"></div></a>
+    <a class="ni active" href="#"><div class="ni-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div><span class="nl">Dispute Centre</span><span class="nbw">1</span></a>
+  </nav>
+  <div class="sbf">
+    <div class="pb">
+      <div class="pbav">JD</div>
+      <div style="flex:1;min-width:0"><div style="font-family:var(--ff);font-size:13px;font-weight:700;color:var(--text-1)">Jake Donovan</div><div style="font-size:11px;color:var(--text-2)">Electrician · Pro Plan</div></div>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;color:var(--text-3);flex-shrink:0"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"/></svg>
+    </div>
+  </div>
+</aside>
+
+<!-- ════ TOPNAV ════ -->
+<header class="tn" id="tn">
+  <button class="hbg" onclick="toggleSB()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg></button>
+  <div class="bc">
+    <span>TradeMatch</span><span class="bc-sep">›</span><span>Trust & Safety</span><span class="bc-sep">›</span>
+    <span class="bc-cur">Dispute Centre</span>
+  </div>
+  <div class="tn-r">
+    <button class="np">
+      <div class="np-pos"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg><span class="np-dot">1</span></div>
+      <span>Disputes</span>
+    </button>
+    <button class="bal">
+      <span style="font-size:16px">💳</span>
+      <div><div class="bal-l">Balance</div><div class="bal-a">£47.50</div></div>
+    </button>
+    <button class="ttg" onclick="toggleTheme()">
+      <div class="tk" id="tk"><svg xmlns="http://www.w3.org/2000/svg" id="themeIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></div>
+    </button>
+  </div>
+</header>
+
+<!-- ════ MAIN ════ -->
+<div class="main" id="main">
+
+  <!-- ─── HERO ─── -->
+  <div class="hero a1">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div class="hero-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg></div>
+      <div class="hero-text">
+        <div class="hero-ey"><div class="hero-ey-dot"></div>Trust & Safety · Judicial Branch</div>
+        <h1 class="hero-h1">Dispute Centre</h1>
+        <p class="hero-sub">The contractual 48-hour resolution guarantee. While Bark (1.3★) and MyBuilder (1.5★) leave users to settle conflicts alone, TradeMatch operates a data-driven, time-bound resolution engine backed by the Escrow Interlock and TradeMatch Score accountability.</p>
+        <div class="hero-badges">
+          <span class="hb hb-red">⏱ 48hr SLA Guarantee</span>
+          <span class="hb hb-neon">🔒 Escrow Interlock Active</span>
+          <span class="hb hb-blue">🤖 AI Pre-Assessment</span>
+          <span class="hb hb-amber">📋 Full Audit Trail</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item"><div class="hs-val green">94%</div><div class="hs-label">Resolution Rate</div></div>
+        <div class="hs-item"><div class="hs-val blue">31h</div><div class="hs-label">Avg Resolve Time</div></div>
+        <div class="hs-item"><div class="hs-val red">1</div><div class="hs-label">Active Now</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── STATUS TABS ─── -->
+  <div class="sbar a2">
+    <button class="sbar-tab active" onclick="switchTab(this)">All Disputes <span class="sbar-count grey">4</span></button>
+    <button class="sbar-tab" onclick="switchTab(this)">Active <span class="sbar-count red">1</span></button>
+    <button class="sbar-tab" onclick="switchTab(this)">Under Review <span class="sbar-count amber">1</span></button>
+    <button class="sbar-tab" onclick="switchTab(this)">Resolved <span class="sbar-count neon">2</span></button>
+    <button class="sbar-tab" onclick="switchTab(this)">Appeals</button>
+  </div>
+
+  <!-- ─── CONTENT ─── -->
+  <div class="content a3">
+    <div class="two-col">
+
+      <!-- ════ LEFT ════ -->
+      <div>
+
+        <!-- Cooling Off Prompt -->
+        <div class="cooling-off">
+          <div class="co-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg></div>
+          <div class="co-text">
+            <div class="co-label">Cooling-Off Prompt · Before Filing</div>
+            <div class="co-title">Try Direct Resolution First — 68% of disputes resolve this way</div>
+            <div class="co-sub">Send a private message before filing a formal dispute. TradeMatch notifies the other party of the pending dispute to encourage a faster settlement.</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-primary btn-sm">Send Message First</button>
+            <button class="btn btn-ghost btn-sm">File Formal Dispute</button>
+          </div>
+        </div>
+
+        <!-- Active Dispute Detail -->
+        <div class="dispute-detail">
+          <div class="dd-header">
+            <div class="dd-header-icon">🔌</div>
+            <div class="dd-header-info">
+              <div class="dd-header-label">Active Dispute · Escrow Frozen · Dispute #D-2847</div>
+              <div class="dd-header-title">Consumer Unit Upgrade — Hackney E8 · Job #T48101</div>
+              <div class="dd-header-meta">
+                <div class="dd-meta-pill"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>Homeowner: Sarah R. · Hackney E8</div>
+                <div class="dd-meta-pill"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375"/></svg>Vendor: Jake Donovan · NICEIC #EL-7842</div>
+                <div class="dd-meta-pill"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Filed: 28 Feb 2026 · 14:32</div>
+                <div class="dd-meta-pill"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75"/></svg>Category: Escrow Release Dispute</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0">
+              <span class="ds-active" style="font-family:var(--fm);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap">● Active</span>
+            </div>
+          </div>
+
+          <!-- SLA Timer -->
+          <div class="sla-bar">
+            <div>
+              <div class="sla-label">48h SLA Countdown</div>
+              <div class="sla-clock">
+                <div class="sla-seg"><div class="sla-seg-val" id="hh">16</div><div class="sla-seg-label">Hours</div></div>
+                <div class="sla-colon">:</div>
+                <div class="sla-seg"><div class="sla-seg-val" id="mm">44</div><div class="sla-seg-label">Mins</div></div>
+                <div class="sla-colon">:</div>
+                <div class="sla-seg"><div class="sla-seg-val" id="ss">18</div><div class="sla-seg-label">Secs</div></div>
+              </div>
+            </div>
+            <div class="sla-track-wrap">
+              <div class="sla-track-top"><span>Filed 14:32 · 28 Feb</span><span>SLA Deadline 14:32 · 2 Mar</span></div>
+              <div class="sla-track"><div class="sla-fill" id="sla-prog" style="width:65%"></div></div>
+            </div>
+            <div class="sla-info"><strong>Resolver assigned:</strong> Priya M., Senior Trust & Safety</div>
+          </div>
+
+          <!-- Body: Evidence + AI -->
+          <div style="padding:20px 24px">
+
+            <!-- Dispute summary -->
+            <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px">
+              <div style="font-family:var(--fm);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px">Homeowner's Statement</div>
+              <div style="font-size:13px;color:var(--text-2);line-height:1.6">"The consumer unit was installed but a trip fault developed 3 days later causing power loss to the kitchen circuit. Vendor acknowledged the issue but has not returned to remediate. I am requesting a partial refund for the remediation cost."</div>
+            </div>
+
+            <!-- Evidence Locker -->
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:13px;height:13px;stroke-width:2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+              Evidence Locker — Auto-pulled from TradeMatch Live + Uploaded
+            </div>
+            <div class="evid-grid">
+              <div class="evid-item auto">
+                <div class="evid-top"><span class="evid-icon">📍</span><span class="evid-source auto-tag">Auto-pulled</span></div>
+                <div class="evid-name">GPS Check-in Log</div>
+                <div class="evid-meta">Site arrival 08:42 · departure 17:14 · 24 Feb</div>
+              </div>
+              <div class="evid-item auto">
+                <div class="evid-top"><span class="evid-icon">🏁</span><span class="evid-source auto-tag">Auto-pulled</span></div>
+                <div class="evid-name">Milestone 1 Completion</div>
+                <div class="evid-meta">Installation phase signed off · 24 Feb</div>
+              </div>
+              <div class="evid-item auto">
+                <div class="evid-top"><span class="evid-icon">💬</span><span class="evid-source auto-tag">Auto-pulled</span></div>
+                <div class="evid-name">Message Log Extract</div>
+                <div class="evid-meta">48 messages · 20–28 Feb · Full thread</div>
+              </div>
+              <div class="evid-item">
+                <div class="evid-top"><span class="evid-icon">📸</span><span class="evid-source upload">Uploaded</span></div>
+                <div class="evid-name">Fault Photo (Kitchen Trip)</div>
+                <div class="evid-meta">Uploaded by homeowner · 28 Feb 15:04</div>
+              </div>
+              <div class="evid-item">
+                <div class="evid-top"><span class="evid-icon">📄</span><span class="evid-source upload">Uploaded</span></div>
+                <div class="evid-name">Original Quote Scope</div>
+                <div class="evid-meta">Job description · £1,850 total</div>
+              </div>
+              <div class="evid-add" onclick="this.innerHTML='<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z\'/></svg><span style=\'color:var(--neon)\'>Added</span>'">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                <span>Add Evidence</span>
+              </div>
+            </div>
+
+            <!-- AI Pre-Assessment -->
+            <div class="ai-assess" style="margin-top:16px">
+              <div class="ai-assess-label">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
+                AI Pre-Assessment · Analyzed 5 evidence items against job scope
+              </div>
+              <div class="ai-assess-title">Fair Settlement Suggestion: 70% Vendor / 30% Homeowner Refund</div>
+              <div class="ai-assess-text">
+                <strong>Vendor position:</strong> GPS logs confirm full-day attendance. Milestone 1 was completed and signed off. The fault (trip on kitchen circuit) is consistent with a wiring issue at the sub-circuit level, which may not be directly related to the consumer unit swap.<br><br>
+                <strong>Homeowner position:</strong> Fault occurred 3 days post-completion. Vendor has not responded to remediation request within a reasonable timeframe (72hrs). Original quote scope included "full circuit testing."<br><br>
+                <strong>AI assessment:</strong> Partial liability suggested. Work was substantially completed. Recommend <strong style="color:var(--text-1)">releasing £1,295 (70%) to vendor</strong> and <strong style="color:var(--danger)">refunding £555 (30%) to homeowner</strong> for remediation cost.
+              </div>
+              <div class="settlement-wrap">
+                <div class="settlement-label">Proposed Settlement Split</div>
+                <div class="settlement-bars" id="settleBars">
+                  <div class="sb-vendor" style="width:70%">Jake D. · £1,295</div>
+                  <div class="sb-owner" style="width:30%">Sarah R. · £555</div>
+                </div>
+                <div class="settlement-legend"><span style="color:var(--neon)">▪ Vendor payout</span><span style="color:var(--danger)">▪ Homeowner refund</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <div style="font-size:12px;color:var(--text-2);margin-right:6px">Adjust split:</div>
+                <div class="settlement-btns">
+                  <span class="s-btn" onclick="setSplit(this,'100/0')">100/0</span>
+                  <span class="s-btn" onclick="setSplit(this,'80/20')">80/20</span>
+                  <span class="s-btn active-s" onclick="setSplit(this,'70/30')">70/30 (AI)</span>
+                  <span class="s-btn" onclick="setSplit(this,'50/50')">50/50</span>
+                  <span class="s-btn" onclick="setSplit(this,'0/100')">Full Refund</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+              <button class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Accept AI Settlement (70/30)
+              </button>
+              <button class="btn btn-secondary">Request Human Resolver</button>
+              <button class="btn btn-ghost btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+                Export Evidence Package
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Trail -->
+        <div class="card">
+          <div class="card-top">
+            <div>
+              <div class="card-ey blue">Full Audit Trail · Dispute #D-2847</div>
+              <div class="card-h">Every Action Logged — Immutable Record</div>
+              <div class="card-s">Exported as signed PDF at resolution. 7-day appeals window post-resolution.</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+              Draft PDF
+            </button>
+          </div>
+          <div class="audit-trail">
+            <div class="at-item">
+              <div class="at-dot system">⚡</div>
+              <div class="at-line"></div>
+              <div class="at-content">
+                <div class="at-who">Escrow Engine — Automatic</div>
+                <div class="at-desc">Funds freeze triggered. £1,850 milestone 2 locked in escrow. Vendor withdrawal blocked pending resolution. Homeowner notified of fund protection.</div>
+                <div class="at-time">28 Feb 2026 · 14:33:07 · System Automated</div>
+              </div>
+            </div>
+            <div class="at-item">
+              <div class="at-dot ai">🤖</div>
+              <div class="at-line"></div>
+              <div class="at-content">
+                <div class="at-who">AI Triage Engine</div>
+                <div class="at-desc">Evidence analysis complete. 5 items processed: GPS logs, milestone data, message thread, fault photo, quote scope. Dispute category confirmed: Escrow Release — Quality Defect. Suggested resolver: Senior Trust & Safety.</div>
+                <div class="at-time">28 Feb 2026 · 14:35:42 · AI Automated</div>
+              </div>
+            </div>
+            <div class="at-item">
+              <div class="at-dot human">👩</div>
+              <div class="at-line"></div>
+              <div class="at-content">
+                <div class="at-who">Priya M. — Senior Trust & Safety Resolver</div>
+                <div class="at-desc">Dispute accepted and assigned. Both parties notified via email and in-app. SLA clock running: 48hr deadline 2 Mar 14:32. Reviewing AI pre-assessment and evidence package.</div>
+                <div class="at-time">28 Feb 2026 · 15:10:00 · Human Resolver</div>
+              </div>
+            </div>
+            <div class="at-item">
+              <div class="at-dot ai">🤖</div>
+              <div class="at-line"></div>
+              <div class="at-content">
+                <div class="at-who">AI Pre-Assessment — Complete</div>
+                <div class="at-desc">Fair settlement suggestion generated: 70% vendor (£1,295) / 30% homeowner refund (£555). Confidence: 78%. Based on: GPS-confirmed full-day attendance, signed milestone, 72hr remediation non-response, partial circuit testing scope ambiguity.</div>
+                <div class="at-time">28 Feb 2026 · 15:12:14 · AI Analysis</div>
+              </div>
+            </div>
+            <div class="at-item">
+              <div class="at-dot auto">⏳</div>
+              <div class="at-content">
+                <div class="at-who">Resolution Pending</div>
+                <div class="at-desc">Awaiting vendor and homeowner response to AI settlement proposal. If no response within 6 hours, Priya M. will proceed with binding resolver decision.</div>
+                <div class="at-time">Now · Ongoing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other Disputes List -->
+        <div class="card" style="margin-top:20px">
+          <div class="card-top">
+            <div>
+              <div class="card-ey neon">Dispute History</div>
+              <div class="card-h">Previous Cases</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">View All</button>
+          </div>
+          <div class="dispute-list">
+            <div class="dispute-item pending-d">
+              <div class="di-row1">
+                <div class="di-icon amber">📋</div>
+                <div class="di-title">Lead Quality Dispute — No-Show Lead · Romford</div>
+                <span class="di-status ds-review">Under Review</span>
+              </div>
+              <div class="di-row2">
+                <div class="di-meta">Job #T48044 · Lead Credit Claimed · <strong>£35 credit</strong></div>
+                <div class="di-escrow released"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Auto Lead Credit</div>
+                <div class="di-meta" style="color:var(--text-3)">Filed 24 Feb · 22hrs remaining</div>
+              </div>
+            </div>
+            <div class="dispute-item resolved-d">
+              <div class="di-row1">
+                <div class="di-icon neon">✅</div>
+                <div class="di-title">Escrow Release Dispute — Shoreditch Rewire</div>
+                <span class="di-status ds-resolved">Resolved · Vendor Won</span>
+              </div>
+              <div class="di-row2">
+                <div class="di-meta">Job #T47891 · 100% escrow released to vendor · <strong>£4,200</strong></div>
+                <div class="di-escrow released"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Funds Released</div>
+                <div class="di-meta" style="color:var(--text-3)">Resolved 12 Feb · 31hrs · GPS evidence conclusive</div>
+              </div>
+            </div>
+            <div class="dispute-item resolved-d">
+              <div class="di-row1">
+                <div class="di-icon neon">⭐</div>
+                <div class="di-title">Review Integrity Dispute — Alleged Fake Review</div>
+                <span class="di-status ds-resolved">Resolved · Review Authentic</span>
+              </div>
+              <div class="di-row2">
+                <div class="di-meta">Review #R-2241 · AI sentiment analysis confirmed authenticity</div>
+                <div class="di-meta" style="color:var(--text-3)">Resolved 5 Jan · 8hrs · AI-only resolution</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /left col -->
+
+      <!-- ════ RIGHT ════ -->
+      <div>
+
+        <!-- Escrow Interlock -->
+        <div class="sc">
+          <div class="sc-ey">Escrow Interlock · Active</div>
+          <div class="sc-h">Frozen Funds</div>
+          <div class="sc-s">Funds frozen the moment dispute #D-2847 was filed</div>
+          <div class="escrow-panel">
+            <div class="ep-label">Funds Locked — Dispute Active</div>
+            <div class="ep-amount">£<span>1,850</span></div>
+            <div class="ep-sub">Milestone 2 of Job #T48101 · Cannot be withdrawn by either party until resolution</div>
+            <div class="ep-milestones">
+              <div class="ep-ms released">
+                <div class="ep-ms-name">Milestone 1 · Deposit</div>
+                <div class="ep-ms-amount">£555</div>
+                <span class="ep-ms-status released">Released</span>
+              </div>
+              <div class="ep-ms frozen">
+                <div class="ep-ms-name">Milestone 2 · Mid-Point</div>
+                <div class="ep-ms-amount">£1,850</div>
+                <span class="ep-ms-status frozen">🔒 Frozen</span>
+              </div>
+              <div class="ep-ms">
+                <div class="ep-ms-name">Milestone 3 · Final</div>
+                <div class="ep-ms-amount">£—</div>
+                <span class="ep-ms-status pending">Pending</span>
+              </div>
+            </div>
+            <div class="partial-wrap">
+              <div class="partial-label">Resolver: Partial Release Tool</div>
+              <div class="partial-vals">
+                <span style="color:var(--neon)">Vendor: <strong id="vPct">70%</strong> = £<strong id="vAmt">1,295</strong></span>
+                <span style="color:var(--danger)">Refund: <strong id="hPct">30%</strong> = £<strong id="hAmt">555</strong></span>
+              </div>
+              <input type="range" class="partial-slider" min="0" max="100" value="70" oninput="updateSplit(this.value)" id="partialSlider">
+              <div style="font-size:11px;color:var(--text-3)">Slide to set partial payout. Requires resolver authorization.</div>
+            </div>
+          </div>
+          <button class="btn btn-danger" style="width:100%;justify-content:center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Execute Partial Release (70/30)
+          </button>
+        </div>
+
+        <!-- Score Impact -->
+        <div class="sc">
+          <div class="sc-ey">TradeMatch Score · Accountability</div>
+          <div class="sc-h">Dispute Score Impact</div>
+          <div class="sc-s">Outcome feeds automatically into both parties' scores</div>
+          <div style="background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.2);border-radius:10px;padding:12px;margin-bottom:12px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--danger);margin-bottom:6px">If Vendor Found at Fault</div>
+            <div class="score-impact" style="margin-bottom:6px">
+              <div class="si-row">
+                <div class="si-name">Jake's Reliability Score</div>
+                <div class="si-track"><div class="si-fill" id="sf1" style="width:0%"></div></div>
+                <div class="si-val">91%</div>
+                <div class="si-delta drop">−8pts</div>
+              </div>
+            </div>
+            <div class="score-impact" style="margin-bottom:6px">
+              <div class="si-row">
+                <div class="si-name">Lead Tier Access</div>
+                <div class="si-track"><div class="si-fill" style="width:80%;background:var(--amber)"></div></div>
+                <div class="si-val" style="color:var(--amber)">£8k</div>
+                <div class="si-delta drop">↓ to £5k</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-3)">No-show or quality fault disputes trigger immediate score adjustment, affecting high-value lead visibility within 24hrs.</div>
+          </div>
+          <div style="background:var(--neon-dim);border:1px solid var(--border-neon);border-radius:10px;padding:12px">
+            <div style="font-family:var(--fm);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--neon);margin-bottom:6px">If Vendor Vindicated</div>
+            <div class="score-impact" style="margin-bottom:0">
+              <div class="si-row">
+                <div class="si-name">Jake's Reliability Score</div>
+                <div class="si-track"><div class="si-fill" style="width:91%"></div></div>
+                <div class="si-val">91%</div>
+                <div class="si-delta up">Maintained</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text-3);margin-top:6px">Score impact neutralized. Dispute noted as "Vendor Vindicated" in public profile audit history.</div>
+          </div>
+        </div>
+
+        <!-- Appeals Window -->
+        <div class="sc">
+          <div class="sc-h">Appeals & Post-Resolution</div>
+          <div class="sc-s">7-day window after resolution to submit new material evidence</div>
+          <div class="appeals-timer">
+            <div class="appeals-timer-icon">⚖️</div>
+            <div>
+              <div class="appeals-timer-val">7 days</div>
+              <div class="appeals-timer-sub">Post-resolution appeals window · Head of Trust review</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:12px">
+            After a resolution is issued, both parties have <strong style="color:var(--text-1)">7 days</strong> to submit new material evidence to the Head of Trust. Appeals are not re-hearings — they require genuinely new information not available at the time of resolution.
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+            Download Final Resolution Report PDF
+          </button>
+        </div>
+
+        <!-- Lead Credit Protection (Premium) -->
+        <div class="sc">
+          <div class="sc-h">Lead Credit Protection <span style="font-family:var(--fm);font-size:9px;background:var(--neon-dim);color:var(--neon);padding:2px 7px;border-radius:20px;border:1px solid var(--border-neon);margin-left:6px">Pro</span></div>
+          <div class="sc-s">Instant no-questions-asked refund for qualifying vendors</div>
+          <div class="lcp-card">
+            <div class="lcp-label">✓ Active — Your Show-Up Score qualifies</div>
+            <div class="lcp-title">Instant Lead Credit Refunds</div>
+            <div class="lcp-stat">98% Show-Up Score</div>
+            <div class="lcp-text">With a 98% GPS-verified show-up rate (threshold: 95%), any no-show lead or ghost homeowner triggers an <strong>automatic lead credit refund</strong> within 2 hours. No dispute filing required. No questions asked.</div>
+          </div>
+          <div style="margin-top:12px">
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+              Claim Lead Credit — Job #T48044
+            </button>
+          </div>
+        </div>
+
+        <!-- Vs Competitors -->
+        <div class="sc">
+          <div class="sc-h">Why TradeMatch Wins</div>
+          <div class="sc-s">The dispute moat competitors cannot replicate</div>
+          <div class="comp-note">
+            <div class="cn-row bad"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg><span>Bark.com</span> — 1.3★ · No dispute process. Users self-resolve.</div>
+            <div class="cn-row bad"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg><span>MyBuilder</span> — 1.5★ · "Contact vendor directly." No SLA.</div>
+            <div class="cn-row bad"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg><span>Checkatrade</span> — No escrow. No funds protection.</div>
+            <div class="cn-row bad"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg><span>RatedPeople</span> — No audit trail. No score impact.</div>
+            <div class="cn-row good" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>TradeMatch</span> — 48hr SLA, Escrow Interlock, AI Assessment, Score Accountability, PDF Audit.</div>
+          </div>
+        </div>
+
+      </div><!-- /right col -->
+    </div>
+  </div>
+</div>
+
+<script>
+// Sidebar
+function toggleSB(){
+  document.getElementById('sb').classList.toggle('col');
+  document.getElementById('main').classList.toggle('col');
+  document.getElementById('tn').classList.toggle('col');
+}
+// Theme
+function toggleTheme(){
+  const html=document.documentElement;
+  const light=html.getAttribute('data-theme')==='light';
+  html.setAttribute('data-theme',light?'dark':'light');
+  const icon=document.getElementById('themeIcon');
+  icon.innerHTML=light
+    ?'<path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>'
+    :'<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>';
+}
+// Tabs
+function switchTab(el){
+  document.querySelectorAll('.sbar-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Live SLA countdown
+let totalSecs = 16*3600+44*60+18;
+function tick(){
+  if(totalSecs<=0) return;
+  totalSecs--;
+  const h=Math.floor(totalSecs/3600);
+  const m=Math.floor((totalSecs%3600)/60);
+  const s=totalSecs%60;
+  const hh=document.getElementById('hh');
+  const mm=document.getElementById('mm');
+  const ss=document.getElementById('ss');
+  if(hh) hh.textContent=String(h).padStart(2,'0');
+  if(mm) mm.textContent=String(m).padStart(2,'0');
+  if(ss) ss.textContent=String(s).padStart(2,'0');
+  // progress bar (48hrs = 172800s; elapsed = 172800 - totalSecs)
+  const pct = ((172800-totalSecs)/172800*100).toFixed(1);
+  const prog=document.getElementById('sla-prog');
+  if(prog) prog.style.width=pct+'%';
+}
+setInterval(tick,1000);
+
+// Settlement split buttons
+function setSplit(el, ratio){
+  document.querySelectorAll('.s-btn').forEach(b=>b.classList.remove('active-s'));
+  el.classList.add('active-s');
+  const [vp,hp]=ratio.split('/').map(Number);
+  const total=1850;
+  const vAmt=Math.round(total*vp/100);
+  const hAmt=total-vAmt;
+  const bars=document.getElementById('settleBars');
+  if(bars){
+    bars.querySelector('.sb-vendor').style.width=vp+'%';
+    bars.querySelector('.sb-vendor').textContent=vp>8?'Jake D. · £'+vAmt:'';
+    bars.querySelector('.sb-owner').style.width=hp+'%';
+    bars.querySelector('.sb-owner').textContent=hp>8?'Sarah R. · £'+hAmt:'';
+  }
+  // sync slider
+  const sl=document.getElementById('partialSlider');
+  if(sl){sl.value=vp;updateSplit(vp);}
+}
+
+// Partial release slider
+function updateSplit(val){
+  const v=parseInt(val);
+  const h=100-v;
+  const total=1850;
+  const vAmt=Math.round(total*v/100);
+  const hAmt=total-vAmt;
+  const vp=document.getElementById('vPct');if(vp)vp.textContent=v+'%';
+  const va=document.getElementById('vAmt');if(va)va.textContent=vAmt.toLocaleString();
+  const hp=document.getElementById('hPct');if(hp)hp.textContent=h+'%';
+  const ha=document.getElementById('hAmt');if(ha)ha.textContent=hAmt.toLocaleString();
+  // Update slider gradient
+  const sl=document.getElementById('partialSlider');
+  if(sl)sl.style.background=`linear-gradient(90deg,var(--neon) ${v}%,rgba(255,71,87,.5) ${v}%)`;
+  // Sync settlement bars
+  const bars=document.getElementById('settleBars');
+  if(bars){
+    bars.querySelector('.sb-vendor').style.width=v+'%';
+    bars.querySelector('.sb-vendor').textContent=v>8?'Jake D. · £'+vAmt:'';
+    bars.querySelector('.sb-owner').style.width=h+'%';
+    bars.querySelector('.sb-owner').textContent=h>8?'Sarah R. · £'+hAmt:'';
+  }
+}
+
+// Animate score bars on load
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const sf1=document.getElementById('sf1');if(sf1)sf1.style.width='91%';
+  },600);
+});
+</script>
+</body>
+</html>

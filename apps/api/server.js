@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const passport = require('passport');
 const path = require('path');
 const crypto = require('crypto');
-const { apiLimiter, emailLimiter, quoteLimiter, paymentLimiter, uploadLimiter } = require('./middleware/rate-limit');
+const { apiLimiter, emailLimiter, quoteLimiter, paymentLimiter, uploadLimiter, websocketLimiter } = require('./middleware/rate-limit');
 const { startCreditExpiryJob } = require('./services/credit-expiry-job');
 const { startVendorScoreRecoveryJob } = require('./services/vendor-score-recovery');
 const { startVettingExpiryMonitor } = require('./services/vetting-expiry-monitor');
@@ -543,6 +543,21 @@ try {
     console.log('🔗 Database: Connected');
     console.log('🔐 OAuth: Google & Microsoft ready');
     console.log('');
+  });
+
+  // Add rate limiting to WebSocket upgrade requests
+  server.on('upgrade', (request, socket, head) => {
+    // Apply WebSocket rate limiting
+    websocketLimiter(request, {}, (err) => {
+      if (err) {
+        socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+      
+      // Allow the WebSocket upgrade to proceed normally
+      // The WebSocket service will handle the actual upgrade
+    });
   });
 
   // Initialize WebSocket service

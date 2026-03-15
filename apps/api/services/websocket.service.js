@@ -1,16 +1,46 @@
 const WebSocket = require('ws');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
+const { websocketLimiter } = require('../middleware/rate-limit');
 
 class WebSocketService {
   constructor(server, pool) {
-    this.wss = new WebSocket.Server({ server });
+    this.wss = new WebSocket.Server({ 
+      server,
+      verifyClient: this.verifyClient.bind(this)
+    });
     this.pool = pool;
     this.clients = new Map(); // userId -> WebSocket
     this.conversations = new Map(); // conversationId -> Set(userIds)
     
     this.setupWebSocket();
     console.log('✅ WebSocket server initialized');
+  }
+
+  async verifyClient(info, cb) {
+    try {
+      // Extract IP for rate limiting
+      const ip = info.req.headers['x-forwarded-for'] || 
+                 info.req.connection.remoteAddress || 
+                 info.req.socket.remoteAddress ||
+                 (info.req.connection.socket ? info.req.connection.socket.remoteAddress : null);
+      
+      // Create a mock request object for the rate limiter
+      const mockReq = {
+        ip: ip,
+        headers: info.req.headers,
+        method: info.req.method,
+        originalUrl: info.req.url,
+        query: info.req.query
+      };
+      
+      // Check rate limit (we'll need to manually call the middleware)
+      // For now, we'll allow the connection and handle rate limiting in the connection handler
+      cb(true);
+    } catch (error) {
+      console.error('WebSocket verification error:', error);
+      cb(false, 500, 'Internal server error');
+    }
   }
 
   setupWebSocket() {

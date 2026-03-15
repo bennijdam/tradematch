@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeMatch — Super Admin v2 + Sentinel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg-0:#050709;--bg-1:#0a0d14;--bg-2:#0f1219;--bg-3:#141720;--bg-4:#191d28;--bg-5:#1e2330;
+  --border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.09);
+  --neon:#00E5A0;--neon-dim:rgba(0,229,160,0.07);--neon-glow:0 0 18px rgba(0,229,160,0.28);
+  --danger:#FF4757;--danger-dim:rgba(255,71,87,0.08);
+  --amber:#FFA726;--amber-dim:rgba(255,167,38,0.08);
+  --blue:#42A5F5;--blue-dim:rgba(66,165,245,0.08);
+  --purple:#B39DDB;--purple-dim:rgba(179,157,219,0.08);
+  --gold:#FFD700;
+  --sentinel:#7C3AED;--sentinel-light:#A78BFA;--sentinel-dim:rgba(124,58,237,0.09);
+  --t1:#fff;--t2:rgba(255,255,255,0.68);--t3:rgba(255,255,255,0.38);--t4:rgba(255,255,255,0.2);
+  --ff:'Syne',sans-serif;--fm:'JetBrains Mono',monospace;--fb:'DM Sans',sans-serif;
+  --sw:218px;--th:54px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg-0);color:var(--t1);font-family:var(--fb);font-size:13px;overflow:hidden;}
+.shell{display:flex;height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:var(--bg-1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:100;}
+.sb-logo{padding:16px 14px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.sb-badge{width:28px;height:28px;border-radius:7px;background:var(--neon);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:12px;font-weight:800;color:#000;flex-shrink:0;}
+.sb-name{font-family:var(--ff);font-size:13px;font-weight:700;}
+.sb-role{font-family:var(--fm);font-size:7.5px;color:var(--neon);letter-spacing:.14em;text-transform:uppercase;margin-top:1px;}
+.sb-section{font-family:var(--fm);font-size:7.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--t4);padding:14px 14px 5px;}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;color:var(--t3);font-size:12px;font-weight:500;transition:all .15s;border-left:2px solid transparent;}
+.ni:hover{background:var(--neon-dim);color:var(--t2);}
+.ni.active{background:var(--neon-dim);color:var(--neon);border-left-color:var(--neon);}
+.ni.d-active{background:var(--danger-dim);color:var(--danger);border-left-color:var(--danger);}
+.ni.a-active{background:var(--amber-dim);color:var(--amber);border-left-color:var(--amber);}
+.ni.s-active{background:var(--sentinel-dim);color:var(--sentinel-light);border-left-color:var(--sentinel);}
+.ni svg{width:13px;height:13px;flex-shrink:0;}
+.nb{margin-left:auto;font-family:var(--fm);font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:100px;}
+.nb-r{background:var(--danger);color:#fff;}
+.nb-a{background:var(--amber);color:#000;}
+.nb-s{background:var(--sentinel);color:#fff;}
+.sb-scroll{overflow-y:auto;flex:1;}
+.sb-scroll::-webkit-scrollbar{width:0;}
+.sb-footer{margin-top:auto;padding:10px 14px;border-top:1px solid var(--border);}
+.admin-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-3);border-radius:8px;border:1px solid var(--border);}
+.admin-av{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.admin-nm{font-size:11px;font-weight:600;}
+.admin-rl{font-family:var(--fm);font-size:7.5px;color:var(--neon);}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.topbar{height:var(--th);background:var(--bg-1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;flex-shrink:0;z-index:10;}
+.tb-title{font-family:var(--ff);font-size:14px;font-weight:700;}
+.tb-sub{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.07em;margin-top:2px;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.pulse-wrap{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:8.5px;color:var(--neon);}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:var(--neon-glow);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+.tb-btn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--border-2);background:var(--bg-3);color:var(--t3);font-family:var(--fb);}
+.tb-btn:hover{background:var(--bg-4);color:var(--t2);}
+.tb-btn.primary{background:var(--neon);color:#000;border-color:var(--neon);font-weight:600;}
+.live-time{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--neon);}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:18px 22px 30px;}
+.content::-webkit-scrollbar{width:3px;}
+.content::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+.view{display:none;animation:fadeIn .2s ease;}
+.view.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;}}
+
+/* COMMON COMPONENTS */
+.st{font-family:var(--ff);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.st::after{content:'';flex:1;height:1px;background:var(--border);}
+.ms{display:grid;gap:9px;margin-bottom:14px;}
+.ms-6{grid-template-columns:repeat(6,1fr);}
+.ms-4{grid-template-columns:repeat(4,1fr);}
+.ms-3{grid-template-columns:repeat(3,1fr);}
+.mc{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:13px 13px 11px;}
+.mc.danger{border-color:rgba(255,71,87,.22);background:rgba(255,71,87,.03);}
+.mc.amber{border-color:rgba(255,167,38,.22);background:rgba(255,167,38,.03);}
+.mc.neon{border-color:rgba(0,229,160,.22);background:rgba(0,229,160,.03);}
+.mc-label{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.13em;text-transform:uppercase;margin-bottom:7px;}
+.mc-val{font-family:var(--ff);font-size:21px;font-weight:800;line-height:1;}
+.mc-val.danger{color:var(--danger);}
+.mc-val.amber{color:var(--amber);}
+.mc-val.neon{color:var(--neon);}
+.mc-delta{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-top:5px;}
+.delta-up{color:var(--neon);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.g-main{display:grid;grid-template-columns:1fr 320px;gap:12px;margin-bottom:12px;}
+.panel{background:var(--bg-2);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:12px;}
+.ph{padding:12px 15px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.ph-title{font-family:var(--ff);font-size:11.5px;font-weight:700;}
+.ph-sub{font-size:9.5px;color:var(--t4);margin-top:1px;}
+.ph-right{margin-left:auto;display:flex;align-items:center;gap:6px;}
+.pb{padding:13px 15px;}
+.pb-sm{padding:10px 15px;}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:1.5px 7px;border-radius:100px;font-family:var(--fm);font-size:8.5px;font-weight:600;}
+.b-neon{background:rgba(0,229,160,.1);color:var(--neon);border:1px solid rgba(0,229,160,.18);}
+.b-danger{background:var(--danger-dim);color:var(--danger);border:1px solid rgba(255,71,87,.18);}
+.b-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,167,38,.18);}
+.b-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(66,165,245,.18);}
+.b-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(179,157,219,.18);}
+.b-grey{background:var(--bg-5);color:var(--t4);border:1px solid var(--border);}
+.b-sentinel{background:var(--sentinel-dim);color:var(--sentinel-light);border:1px solid rgba(124,58,237,.2);}
+.b-gold{background:rgba(255,215,0,.08);color:var(--gold);border:1px solid rgba(255,215,0,.18);}
+.dt{width:100%;border-collapse:collapse;}
+.dt th{font-family:var(--fm);font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--t4);padding:0 11px 7px;text-align:left;border-bottom:1px solid var(--border);}
+.dt td{padding:9px 11px;border-bottom:1px solid var(--border);font-size:11.5px;color:var(--t2);vertical-align:middle;}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr:hover td{background:rgba(255,255,255,.015);}
+.td-name{font-weight:600;color:var(--t1);}
+.td-mono{font-family:var(--fm);font-size:9.5px;color:var(--t4);}
+.pbtn{padding:3.5px 9px;border-radius:5px;font-size:9.5px;font-weight:600;cursor:pointer;border:1px solid var(--border-2);background:var(--bg-4);color:var(--t3);font-family:var(--fb);transition:all .15s;white-space:nowrap;}
+.pbtn:hover{color:var(--t1);}
+.pbtn.neon{color:var(--neon);border-color:rgba(0,229,160,.28);}
+.pbtn.danger{color:var(--danger);border-color:rgba(255,71,87,.28);background:var(--danger-dim);}
+.pbtn.amber{color:var(--amber);border-color:rgba(255,167,38,.28);}
+.pbtn.blue{color:var(--blue);border-color:rgba(66,165,245,.28);}
+.bar-wrap{margin-bottom:9px;}
+.bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-size:10.5px;color:var(--t3);}
+.bar{height:3px;background:var(--bg-5);border-radius:100px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:100px;}
+.dr{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .15s;}
+.dr:last-child{border-bottom:none;}
+.dr:hover{background:rgba(255,255,255,.015);}
+.dr.urgent{border-left:3px solid var(--danger);}
+.dr.review{border-left:3px solid var(--amber);}
+.dr.sla-critical{border-left:3px solid var(--danger);animation:sla-pulse 1.5s infinite;}
+@keyframes sla-pulse{0%,100%{background:transparent;}50%{background:rgba(255,71,87,.04);}}
+.dr-ico{width:34px;height:34px;border-radius:8px;background:var(--bg-4);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.dr-body{flex:1;}
+.dr-title{font-weight:600;font-size:11.5px;margin-bottom:2px;}
+.dr-meta{font-size:10.5px;color:var(--t3);}
+.dr-amount{font-family:var(--ff);font-size:13px;font-weight:800;color:var(--danger);margin-left:auto;flex-shrink:0;text-align:right;}
+.dr-timer{font-family:var(--fm);font-size:8.5px;color:var(--amber);margin-top:2px;}
+.feed-item{padding:8px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--t3);}
+.feed-item:last-child{border-bottom:none;}
+.fdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.fdot-n{background:var(--neon);}
+.fdot-d{background:var(--danger);}
+.fdot-a{background:var(--amber);}
+.fdot-b{background:var(--blue);}
+.fdot-s{background:var(--sentinel-light);}
+.ftime{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-left:auto;flex-shrink:0;}
+.fstrong{color:var(--t2);font-weight:600;}
+.svc-card{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.svc-card.ok{border-color:rgba(0,229,160,.2);}
+.svc-card.warn{border-color:rgba(255,167,38,.25);}
+.svc-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.svc-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.svc-name{font-family:var(--ff);font-size:12px;font-weight:700;}
+.svc-role{font-size:9.5px;color:var(--t4);}
+.svc-status{margin-left:auto;}
+.svc-metric{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);margin-bottom:5px;}
+.svc-metric-val{font-family:var(--fm);font-size:10px;font-weight:600;}
+.svc-indicator{width:8px;height:8px;border-radius:50%;}
+.si-ok{background:var(--neon);box-shadow:0 0 6px rgba(0,229,160,.5);}
+.si-warn{background:var(--amber);}
+.lc-wrap{display:flex;align-items:center;padding:14px 15px;overflow-x:auto;}
+.lc-wrap::-webkit-scrollbar{height:0;}
+.lc-node{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:82px;}
+.lc-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;}
+.ld-done{background:rgba(0,229,160,.12);border:2px solid var(--neon);}
+.ld-active{background:rgba(66,165,245,.12);border:2px solid var(--blue);}
+.ld-warn{background:var(--amber-dim);border:2px solid var(--amber);}
+.ld-crit{background:var(--danger-dim);border:2px solid var(--danger);animation:dp 2s infinite;}
+@keyframes dp{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 5px rgba(255,71,87,0);}}
+.lc-lbl{font-family:var(--fm);font-size:7.5px;color:var(--t4);text-align:center;line-height:1.3;}
+.lc-arrow{width:20px;height:1px;background:var(--border-2);flex-shrink:0;position:relative;}
+.lc-arrow::after{content:'▶';position:absolute;right:-4px;top:-4px;font-size:6px;color:var(--border-2);}
+.ks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.ks-item{background:var(--bg-3);border:1px solid var(--border);border-radius:9px;padding:11px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:all .15s;}
+.ks-item:hover{border-color:rgba(255,71,87,.28);}
+.ks-ico{font-size:18px;flex-shrink:0;}
+.ks-lbl{font-size:11px;font-weight:600;}
+.ks-desc{font-size:9px;color:var(--t4);margin-top:1px;}
+.ks-toggle{margin-left:auto;width:30px;height:16px;border-radius:8px;background:var(--bg-5);border:1px solid var(--border-2);position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;}
+.ks-toggle.on{background:var(--danger);border-color:var(--danger);}
+.ks-toggle::after{content:'';position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:var(--t4);transition:all .2s;}
+.ks-toggle.on::after{left:16px;background:#fff;}
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pillar{background:var(--bg-4);border:1px solid var(--border);border-radius:7px;padding:9px 11px;}
+.p-label{font-family:var(--fm);font-size:7.5px;color:var(--t4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.p-bar-row{display:flex;align-items:center;gap:7px;}
+.p-bar{flex:1;height:3px;background:var(--bg-0);border-radius:100px;overflow:hidden;}
+.p-bar-fill{height:100%;border-radius:100px;}
+.p-val{font-family:var(--fm);font-size:9.5px;font-weight:600;flex-shrink:0;}
+.ep{display:flex;align-items:center;gap:9px;padding:8px 15px;border-bottom:1px solid var(--border);}
+.ep:last-child{border-bottom:none;}
+.ep-m{font-family:var(--fm);font-size:8px;font-weight:700;padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.ep-get{background:var(--blue-dim);color:var(--blue);}
+.ep-post{background:rgba(0,229,160,.09);color:var(--neon);}
+.ep-patch{background:var(--amber-dim);color:var(--amber);}
+.ep-path{font-family:var(--fm);font-size:9.5px;color:var(--t2);flex:1;}
+.ep-desc{font-size:9.5px;color:var(--t4);text-align:right;}
+.code-block{background:var(--bg-0);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--fm);font-size:9.5px;color:var(--neon);line-height:1.7;overflow-x:auto;}
+.c-key{color:var(--blue);}.c-str{color:var(--amber);}.c-val{color:var(--neon);}.c-cmt{color:var(--t4);}
+.r-btn{padding:9px 11px;border-radius:7px;cursor:pointer;border:1px solid var(--border);background:var(--bg-3);text-align:left;transition:all .18s;}
+.r-btn:hover{transform:translateY(-1px);}
+.r-btn.rn:hover{border-color:rgba(0,229,160,.35);background:rgba(0,229,160,.04);}
+.r-btn.rd:hover{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.04);}
+.r-btn.ra:hover{border-color:rgba(255,167,38,.35);background:rgba(255,167,38,.04);}
+.r-ico{font-size:16px;margin-bottom:4px;}
+.r-label{font-size:10.5px;font-weight:600;}
+.r-desc{font-size:9px;color:var(--t4);margin-top:1px;}
+.resolver-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.audit-row{display:flex;align-items:center;gap:9px;padding:8px 15px;border-bottom:1px solid var(--border);font-size:10.5px;}
+.audit-row:last-child{border-bottom:none;}
+.audit-level{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.al-high{background:var(--danger);}
+.al-med{background:var(--amber);}
+.al-low{background:var(--blue);}
+.al-sentinel{background:var(--sentinel-light);}
+.audit-who{font-weight:600;color:var(--t2);flex-shrink:0;}
+.audit-action{color:var(--t3);flex:1;}
+.audit-time{font-family:var(--fm);font-size:8.5px;color:var(--t4);flex-shrink:0;}
+.audit-ip{font-family:var(--fm);font-size:8px;color:var(--t4);}
+.mh{background:linear-gradient(135deg,rgba(0,229,160,.04),rgba(66,165,245,.03));border:1px solid rgba(0,229,160,.1);border-radius:11px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.mh-ico{font-size:26px;}
+.mh-title{font-family:var(--ff);font-size:15px;font-weight:800;letter-spacing:-.02em;}
+.mh-sub{font-size:10.5px;color:var(--t3);margin-top:2px;}
+.mh-right{margin-left:auto;text-align:right;}
+.sep{height:1px;background:var(--border);margin:12px 0;}
+.chart-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.chart-bar-label{font-size:10.5px;color:var(--t3);width:80px;flex-shrink:0;text-align:right;}
+.chart-bar-track{flex:1;height:14px;background:var(--bg-4);border-radius:3px;overflow:hidden;}
+.chart-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;}
+.chart-bar-val{font-family:var(--fm);font-size:8.5px;font-weight:600;color:rgba(0,0,0,.7);}
+.chart-bar-val-out{font-family:var(--fm);font-size:8.5px;color:var(--t4);margin-left:6px;}
+.vq-item{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+.vq-item:last-child{border-bottom:none;}
+.vq-av{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;flex-shrink:0;}
+.vq-name{font-weight:600;font-size:11.5px;}
+.vq-trade{font-size:9.5px;color:var(--t4);margin-top:1px;}
+.vq-actions{display:flex;gap:4px;margin-left:auto;}
+.vq-btn{padding:3px 8px;border-radius:4px;font-size:9.5px;font-weight:600;cursor:pointer;border:none;font-family:var(--fb);transition:all .15s;}
+.vqb-ok{background:rgba(0,229,160,.1);color:var(--neon);}
+.vqb-rev{background:var(--amber-dim);color:var(--amber);}
+.vqb-no{background:var(--danger-dim);color:var(--danger);}
+.imp-row{display:flex;align-items:center;gap:9px;padding:9px 15px;border-bottom:1px solid var(--border);}
+.imp-row:last-child{border-bottom:none;}
+.imp-av{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--ff);font-size:10px;font-weight:700;flex-shrink:0;}
+.imp-name{font-weight:600;font-size:11.5px;}
+.imp-role{font-size:9.5px;color:var(--t4);}
+.imp-actions{margin-left:auto;display:flex;gap:5px;}
+.token-meter{background:var(--bg-4);border-radius:6px;padding:10px 12px;border:1px solid var(--border);margin-bottom:8px;}
+.token-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:10.5px;color:var(--t3);}
+.token-val{font-family:var(--fm);font-size:10px;font-weight:600;}
+.schema-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;}
+.schema-scroll::-webkit-scrollbar{height:3px;}
+.schema-scroll::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+.sch-tbl{background:var(--bg-3);border:1px solid var(--border);border-radius:7px;min-width:148px;flex-shrink:0;}
+.sch-h{padding:7px 11px;border-bottom:1px solid var(--border);font-family:var(--ff);font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:5px;}
+.sch-f{padding:4px 11px;border-bottom:1px solid var(--border);font-family:var(--fm);font-size:8.5px;color:var(--t3);display:flex;justify-content:space-between;gap:6px;}
+.sch-f:last-child{border-bottom:none;}
+.sf-pk{color:var(--amber);}.sf-fk{color:var(--blue);}.sf-t{color:var(--t4);}
+
+/* TOAST */
+#toast{position:fixed;bottom:18px;right:18px;z-index:9999;padding:9px 15px;border-radius:8px;font-size:11.5px;background:var(--bg-5);border:1px solid var(--border-2);transform:translateY(16px);opacity:0;transition:all .28s;pointer-events:none;max-width:280px;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{border-color:rgba(0,229,160,.35);background:rgba(0,229,160,.07);color:var(--neon);}
+#toast.warning{border-color:rgba(255,167,38,.35);background:rgba(255,167,38,.07);color:var(--amber);}
+#toast.error{border-color:rgba(255,71,87,.35);background:rgba(255,71,87,.07);color:var(--danger);}
+
+/* ══════════════════════════
+   SENTINEL CHAT OVERLAY
+══════════════════════════ */
+#sentinel-overlay{
+  position:fixed;bottom:24px;right:24px;z-index:9998;
+  display:flex;flex-direction:column;align-items:flex-end;gap:12px;
+}
+
+/* FAB button */
+.sentinel-fab{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sentinel),#5B21B6);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:22px;box-shadow:0 4px 20px rgba(124,58,237,.5);
+  transition:all .2s;flex-shrink:0;
+}
+.sentinel-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(124,58,237,.65);}
+.sentinel-fab .fab-badge{
+  position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;
+  background:var(--danger);border:2px solid var(--bg-0);
+  font-family:var(--fm);font-size:7px;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.fab-wrap{position:relative;}
+
+/* Chat panel */
+.sentinel-panel{
+  width:400px;
+  background:var(--bg-1);
+  border:1px solid rgba(124,58,237,.3);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 16px 60px rgba(0,0,0,.6),0 0 0 1px rgba(124,58,237,.15);
+  display:flex;flex-direction:column;
+  max-height:560px;
+  animation:panelIn .25s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes panelIn{from{opacity:0;transform:scale(.92) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.panel-hidden{display:none !important;}
+
+/* Panel header */
+.sp-header{
+  padding:13px 15px 11px;
+  background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(91,33,182,.08));
+  border-bottom:1px solid rgba(124,58,237,.2);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.sp-av{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--sentinel),#5B21B6);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 0 12px rgba(124,58,237,.4);}
+.sp-title{font-family:var(--ff);font-size:13px;font-weight:800;letter-spacing:-.01em;}
+.sp-title span{color:var(--sentinel-light);}
+.sp-status{font-family:var(--fm);font-size:8px;color:var(--sentinel-light);margin-top:1px;display:flex;align-items:center;gap:4px;}
+.sp-dot{width:5px;height:5px;border-radius:50%;background:var(--neon);animation:pulse 2s infinite;flex-shrink:0;}
+.sp-actions{margin-left:auto;display:flex;gap:6px;}
+.sp-btn{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;}
+.sp-btn:hover{background:rgba(255,255,255,.12);}
+
+/* Phase strip */
+.sp-phase{display:flex;gap:4px;padding:8px 12px;background:var(--bg-2);border-bottom:1px solid var(--border);flex-shrink:0;}
+.sp-phase-btn{flex:1;padding:4px;border-radius:5px;font-family:var(--fm);font-size:7px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--bg-3);color:var(--t4);transition:all .15s;text-align:center;line-height:1.4;}
+.sp-phase-btn.active{background:var(--sentinel-dim);color:var(--sentinel-light);border-color:rgba(124,58,237,.3);}
+
+/* Messages */
+.sp-msgs{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:9px;min-height:0;}
+.sp-msgs::-webkit-scrollbar{width:3px;}
+.sp-msgs::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+.smsg{display:flex;gap:8px;align-items:flex-start;animation:fadeIn .2s ease;}
+.smsg.suser{flex-direction:row-reverse;}
+.sav{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;}
+.sav-ai{background:linear-gradient(135deg,var(--sentinel),#5B21B6);box-shadow:0 0 8px rgba(124,58,237,.3);}
+.sav-user{background:linear-gradient(135deg,#667eea,#764ba2);}
+.sav-tool{background:var(--bg-4);border:1px solid var(--border-2);}
+.sbubble{padding:9px 12px;border-radius:10px;font-size:11.5px;line-height:1.6;color:var(--t2);max-width:300px;}
+.sb-ai{background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(91,33,182,.06));border:1px solid rgba(124,58,237,.2);border-bottom-left-radius:3px;position:relative;overflow:hidden;}
+.sb-ai::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,.5),transparent);}
+.sb-user{background:var(--bg-3);border:1px solid var(--border-2);border-bottom-right-radius:3px;}
+.sb-tool{background:rgba(0,229,160,.03);border:1px solid rgba(0,229,160,.1);border-radius:8px;font-family:var(--fm);font-size:9.5px;max-width:340px;}
+.sb-err{background:rgba(255,71,87,.04);border:1px solid rgba(255,71,87,.12);border-radius:8px;}
+.smeta{font-family:var(--fm);font-size:7.5px;color:var(--t4);margin-top:3px;display:flex;align-items:center;gap:4px;}
+.smsg.suser .smeta{justify-content:flex-end;}
+
+/* Tool call */
+.tc-hdr{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:8.5px;color:var(--neon);margin-bottom:5px;font-weight:700;}
+.tc-pre{background:var(--bg-0);border:1px solid var(--border);border-radius:4px;padding:6px 9px;font-family:var(--fm);font-size:8px;line-height:1.6;white-space:pre-wrap;}
+.tc-res{background:rgba(0,229,160,.03);border:1px solid rgba(0,229,160,.1);border-radius:4px;padding:6px 9px;font-family:var(--fm);font-size:8px;margin-top:4px;line-height:1.6;white-space:pre-wrap;color:var(--neon);}
+.ck{color:var(--blue);}.cs{color:var(--amber);}.cv{color:var(--neon);}
+
+/* Confirm */
+.confirm-row{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;}
+.btn-c{padding:5px 11px;border-radius:6px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:var(--fb);border:none;transition:all .15s;}
+.btn-yes{background:var(--neon);color:#000;}
+.btn-yes:hover{opacity:.85;}
+.btn-no{background:var(--bg-5);color:var(--t3);border:1px solid var(--border-2);}
+.btn-mod{background:rgba(255,167,38,.1);color:var(--amber);border:1px solid rgba(255,167,38,.25);}
+
+/* Thinking */
+.thinking-bubble{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--sentinel-dim);border:1px solid rgba(124,58,237,.2);border-radius:10px;border-bottom-left-radius:3px;}
+.td-dots span{display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--sentinel-light);margin:0 1.5px;animation:td .7s infinite;}
+.td-dots span:nth-child(2){animation-delay:.15s;}
+.td-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes td{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1.2);}}
+
+/* Quick hints */
+.sp-hints{padding:6px 12px;background:var(--bg-2);border-top:1px solid var(--border);display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;}
+.hint{font-family:var(--fm);font-size:7.5px;color:var(--t4);background:var(--bg-3);border:1px solid var(--border);padding:2.5px 7px;border-radius:100px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.hint:hover{color:var(--sentinel-light);border-color:rgba(124,58,237,.3);background:var(--sentinel-dim);}
+
+/* Input */
+.sp-input{padding:10px 12px 12px;background:var(--bg-1);border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0;}
+.sp-textarea{flex:1;background:var(--bg-3);border:1px solid var(--border-2);border-radius:9px;padding:8px 11px;color:var(--t1);font-family:var(--fb);font-size:12px;resize:none;line-height:1.5;min-height:36px;max-height:90px;outline:none;transition:border-color .2s;}
+.sp-textarea:focus{border-color:rgba(124,58,237,.4);}
+.sp-textarea::placeholder{color:var(--t4);}
+.sp-send{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--sentinel),#5B21B6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;box-shadow:0 0 10px rgba(124,58,237,.25);}
+.sp-send:hover{transform:scale(1.07);}
+.sp-send:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.sp-send svg{width:14px;height:14px;color:#fff;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-badge">TM</div>
+    <div><div class="sb-name">TradeMatch</div><div class="sb-role">Super Admin v2</div></div>
+  </div>
+  <div class="sb-scroll">
+    <div class="sb-section">Command</div>
+    <div class="ni active" onclick="nav('god','God View','REAL-TIME ECOSYSTEM OVERVIEW',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3"/></svg>
+      God View
+    </div>
+    <div class="ni" onclick="nav('dispute','Dispute Centre','48-HOUR DIGITAL COURTROOM · SLA ENGINE',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+      Dispute Centre <span class="nb nb-r">3</span>
+    </div>
+    <div class="ni" onclick="nav('verify','Verification Queue','VENDOR AUDIT · INSURANCE MONITORING',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+      Verification Queue <span class="nb nb-a">7</span>
+    </div>
+    <div class="ni" onclick="nav('escrow','Escrow Monitor','FUNDS MANAGEMENT · MILESTONE TRACKING',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375"/></svg>
+      Escrow Monitor
+    </div>
+    <div class="ni" onclick="nav('pin','Arrival PIN Monitor','SITE SAFETY · IMPERSONATION DETECTION',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+      Arrival PIN Monitor
+    </div>
+    <div class="sb-section">Infrastructure</div>
+    <div class="ni" onclick="nav('infra','Infrastructure Health','3RD-PARTY API VITALS · SERVICE MONITOR',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+      Infra Health <span class="nb nb-a">1</span>
+    </div>
+    <div class="ni" onclick="nav('ai','AI Governance','MODEL VERSIONING · TOKEN USAGE · HITL',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+      AI Governance
+    </div>
+    <div class="ni" onclick="nav('reports','Reports & Analytics','BUSINESS INTELLIGENCE · INVESTOR-READY',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+      Reports & Analytics
+    </div>
+    <div class="sb-section">Controls</div>
+    <div class="ni d-active" onclick="nav('kill','Kill Switches','PLATFORM CONTROLS · EMERGENCY OVERRIDES',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
+      Kill Switches
+    </div>
+    <div class="ni" onclick="nav('audit','Audit Trail','ADMIN ACTIVITY LOG · SECURITY EVENTS',this)">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+      Audit Trail
+    </div>
+  </div>
+  <div class="sb-footer">
+    <div class="admin-chip">
+      <div class="admin-av">JD</div>
+      <div><div class="admin-nm">James D.</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--neon);">Super Admin · L5</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="tb-title" id="tb-title">Global Trust Monitor</div>
+      <div class="tb-sub" id="tb-sub">REAL-TIME ECOSYSTEM OVERVIEW</div>
+    </div>
+    <div class="tb-right">
+      <div class="pulse-wrap"><div class="pulse-dot"></div>LIVE</div>
+      <div class="live-time" id="clock">--:--:--</div>
+      <button class="tb-btn" onclick="toast('Generating PDF report…','success')">📄 Export</button>
+      <button class="tb-btn primary" onclick="toast('All systems nominal — Stripe ✓ Resend ✓ S3 ✓','success')">⚡ System OK</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- GOD VIEW -->
+    <div class="view active" id="v-god">
+      <div class="mh">
+        <div class="mh-ico">🌐</div>
+        <div><div class="mh-title">Global Trust Monitor</div><div class="mh-sub">Complete ecosystem oversight — escrow, disputes, verifications, arrivals, and 3rd-party health</div></div>
+        <div class="mh-right" style="font-family:var(--fm);font-size:9px;color:var(--t4)">03 MARCH 2026<br><span style="color:var(--neon);font-size:11px;">£124,890</span> under management</div>
+      </div>
+      <div class="ms ms-6">
+        <div class="mc danger"><div class="mc-label">Escrow at Risk</div><div class="mc-val danger">£18,450</div><div class="mc-delta" style="color:var(--danger)">↑ 3 active disputes</div></div>
+        <div class="mc amber"><div class="mc-label">Verification Queue</div><div class="mc-val amber">7</div><div class="mc-delta">⏱ Oldest: 14hrs</div></div>
+        <div class="mc"><div class="mc-label">Total Escrow Held</div><div class="mc-val">£124,890</div><div class="mc-delta delta-up">↑ £8.2k today</div></div>
+        <div class="mc neon"><div class="mc-label">Arrival PIN Rate</div><div class="mc-val neon">94.2%</div><div class="mc-delta">48h rolling</div></div>
+        <div class="mc"><div class="mc-label">Active Jobs</div><div class="mc-val">312</div><div class="mc-delta delta-up">↑ 23 today</div></div>
+        <div class="mc neon"><div class="mc-label">Avg Show-Up Score</div><div class="mc-val neon">91.4%</div><div class="mc-delta delta-up">↑ 1.2% this week</div></div>
+      </div>
+      <div class="ms ms-4" style="margin-bottom:14px;">
+        <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;"><span style="font-size:16px;">💳</span><div><div class="mc-label" style="margin-bottom:2px;">Stripe</div><div style="font-family:var(--fm);font-size:10px;color:var(--neon);font-weight:600;">Operational</div></div><div class="svc-indicator si-ok" style="margin-left:auto;"></div></div>
+        <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;"><span style="font-size:16px;">📧</span><div><div class="mc-label" style="margin-bottom:2px;">Resend</div><div style="font-family:var(--fm);font-size:10px;color:var(--neon);font-weight:600;">99.1% delivery</div></div><div class="svc-indicator si-ok" style="margin-left:auto;"></div></div>
+        <div class="mc amber" style="display:flex;align-items:center;gap:8px;padding:9px 12px;"><span style="font-size:16px;">☁️</span><div><div class="mc-label" style="margin-bottom:2px;">AWS S3</div><div style="font-family:var(--fm);font-size:10px;color:var(--amber);font-weight:600;">82% capacity</div></div><div class="svc-indicator si-warn" style="margin-left:auto;"></div></div>
+        <div class="mc neon" style="display:flex;align-items:center;gap:8px;padding:9px 12px;"><span style="font-size:16px;">🤖</span><div><div class="mc-label" style="margin-bottom:2px;">Sentinel AI</div><div style="font-family:var(--fm);font-size:10px;color:var(--sentinel-light);font-weight:600;">Online · Phase 1</div></div><div class="svc-indicator" style="background:var(--sentinel-light);margin-left:auto;" onclick="toggleSentinel()"></div></div>
+      </div>
+      <div class="st">Job Lifecycle — Live State Distribution</div>
+      <div class="panel">
+        <div class="lc-wrap">
+          <div style="display:flex;align-items:center;gap:0;">
+            <div class="lc-node"><div class="lc-dot ld-done">📋</div><div class="lc-lbl">REQUESTED<br><span style="color:var(--neon)">84</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-done">💬</div><div class="lc-lbl">QUOTED<br><span style="color:var(--neon)">61</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-done">🔒</div><div class="lc-lbl">ESCROW FUNDED<br><span style="color:var(--neon)">47</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-active">📍</div><div class="lc-lbl">PIN VERIFIED<br><span style="color:var(--blue)">38</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-active">🔨</div><div class="lc-lbl">IN PROGRESS<br><span style="color:var(--blue)">312</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-done">✅</div><div class="lc-lbl">COMPLETED<br><span style="color:var(--neon)">1,841</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-warn">⚖️</div><div class="lc-lbl">DISPUTED<br><span style="color:var(--amber)">3</span></div></div><div class="lc-arrow"></div>
+            <div class="lc-node"><div class="lc-dot ld-crit">🔴</div><div class="lc-lbl">FROZEN<br><span style="color:var(--danger)">1</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="g-main">
+        <div>
+          <div class="st">Active Disputes — SLA Critical First</div>
+          <div class="panel">
+            <div class="dr sla-critical"><div class="dr-ico">⚡</div><div class="dr-body"><div class="dr-title">Consumer Unit Upgrade — Hackney E8 · #T48101</div><div class="dr-meta"><span class="badge b-danger">⚠ 1h 48m REMAINING</span> James Harlow vs ElectroFix Pro</div><div class="dr-timer">⏱ Step 6 Senior Review · SLA expires 18:42</div></div><div><div class="dr-amount">£1,200</div><div style="font-family:var(--fm);font-size:7.5px;color:var(--t4);text-align:right">FROZEN</div></div></div>
+            <div class="dr review"><div class="dr-ico">🔧</div><div class="dr-body"><div class="dr-title">Boiler Replacement — Islington N1 · #T48089</div><div class="dr-meta"><span class="badge b-amber">UNDER REVIEW · 19h</span> Patricia Osei vs HeatPro Services</div><div class="dr-timer">⏱ Evidence collection · Step 3 · 29h remaining</div></div><div><div class="dr-amount">£3,800</div></div></div>
+            <div class="dr"><div class="dr-ico">🏗️</div><div class="dr-body"><div class="dr-title">Extension Foundation — Croydon CR0 · #T47990</div><div class="dr-meta"><span class="badge b-blue">STEP 5 · 31h</span> Marcus Webb vs SouthBuild Ltd</div></div><div><div class="dr-amount">£13,450</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="st">Live Activity Feed</div>
+          <div class="panel">
+            <div class="feed-item"><div class="fdot fdot-s"></div><span><span class="fstrong">Sentinel</span> alert: S3 at 82%</span><span class="ftime">1m</span></div>
+            <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #8841</span> verified — Plumber on site</span><span class="ftime">2m</span></div>
+            <div class="feed-item"><div class="fdot fdot-b"></div><span>Escrow <span class="fstrong">£2,000</span> released — #T48051</span><span class="ftime">7m</span></div>
+            <div class="feed-item"><div class="fdot fdot-a"></div><span>Insurance expiring — <span class="fstrong">TM-4821</span></span><span class="ftime">12m</span></div>
+            <div class="feed-item"><div class="fdot fdot-d"></div><span><span class="fstrong">Dispute opened</span> — Job #T48101</span><span class="ftime">18m</span></div>
+            <div class="feed-item"><div class="fdot fdot-n"></div><span>Vendor <span class="fstrong">GreenLeaf</span> verified ✓</span><span class="ftime">24m</span></div>
+            <div class="feed-item"><div class="fdot fdot-d"></div><span><span class="fstrong">PIN failure</span> × 3 — Job #T48066</span><span class="ftime">45m</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="g3">
+        <div><div class="st">Escrow Health</div><div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Safe</span><strong style="color:var(--neon)">£98,440</strong></div><div class="bar"><div class="bar-fill" style="width:79%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Disputed</span><strong style="color:var(--amber)">£18,450</strong></div><div class="bar"><div class="bar-fill" style="width:15%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Frozen</span><strong style="color:var(--danger)">£1,200</strong></div><div class="bar"><div class="bar-fill" style="width:1%;background:var(--danger)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4)"><span>Total GMV</span><strong style="color:var(--t1)">£124,890</strong></div>
+        </div></div></div>
+        <div><div class="st">SLA Compliance</div><div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>First Response &lt;4h</span><strong style="color:var(--neon)">100%</strong></div><div class="bar"><div class="bar-fill" style="width:100%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Simple &lt;24h</span><strong style="color:var(--amber)">88.1%</strong></div><div class="bar"><div class="bar-fill" style="width:88%;background:var(--amber)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Complex &lt;48h</span><strong style="color:var(--amber)">91.7%</strong></div><div class="bar"><div class="bar-fill" style="width:92%;background:var(--amber)"></div></div></div>
+        </div></div></div>
+        <div><div class="st">Trust Score Distribution</div><div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Elite 9.4+</span><strong style="color:var(--neon)">312</strong></div><div class="bar"><div class="bar-fill" style="width:17%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Gold 8.5–9.3</span><strong style="color:var(--blue)">704</strong></div><div class="bar"><div class="bar-fill" style="width:39%;background:var(--blue)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Bronze &lt;7.0</span><strong style="color:var(--danger)">266</strong></div><div class="bar"><div class="bar-fill" style="width:15%;background:var(--danger)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9.5px;color:var(--t4)"><span>Platform avg</span><strong style="color:var(--neon)">8.43 / 10</strong></div>
+        </div></div></div>
+      </div>
+    </div>
+
+    <!-- DISPUTE -->
+    <div class="view" id="v-dispute">
+      <div class="ms ms-4">
+        <div class="mc danger"><div class="mc-label">Active Disputes</div><div class="mc-val danger">3</div><div class="mc-delta">£18,450 at risk</div></div>
+        <div class="mc amber"><div class="mc-label">Avg Resolution</div><div class="mc-val amber">31h</div></div>
+        <div class="mc neon"><div class="mc-label">AI Accuracy</div><div class="mc-val neon">87%</div></div>
+        <div class="mc"><div class="mc-label">Resolved (Month)</div><div class="mc-val">28</div></div>
+      </div>
+      <div class="g-main">
+        <div>
+          <div class="st">Case #T48101 — ⚠ 1h 48m Remaining</div>
+          <div class="panel">
+            <div class="ph"><div><div class="ph-title">Consumer Unit Upgrade — Hackney E8</div><div class="ph-sub">James Harlow vs. ElectroFix Pro Ltd (TM-VND-4821)</div></div><div class="ph-right"><span class="badge b-danger">STEP 6</span></div></div>
+            <div class="pb-sm">
+              <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.12);border-radius:7px;padding:9px 12px;margin-bottom:10px;font-size:10.5px;line-height:1.5;">🤖 <strong style="color:var(--neon)">AI:</strong> Partial 70/30 homeowner favour. Conduit incomplete, £180 overcharge. Confidence: 84%.</div>
+              <div class="resolver-grid">
+                <div class="r-btn rn" onclick="toast('£1,200 released to ElectroFix Pro','success')"><div class="r-ico">💸</div><div class="r-label">Release in Full</div></div>
+                <div class="r-btn rd" onclick="toast('Full £1,200 refund to homeowner','error')"><div class="r-ico">↩️</div><div class="r-label">Full Refund</div></div>
+                <div class="r-btn ra" onclick="toast('70/30 split applied','warning')"><div class="r-ico">⚖️</div><div class="r-label">Apply AI Split (70/30)</div></div>
+                <div class="r-btn rb" onclick="toast('Evidence request sent','warning')"><div class="r-ico">📎</div><div class="r-label">Request Evidence</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="st">Vendor Impact</div>
+          <div class="panel"><div class="pb">
+            <div class="pillar-grid">
+              <div class="pillar"><div class="p-label">Show-Up Score</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:87%;background:var(--neon)"></div></div><div class="p-val" style="color:var(--neon)">87%</div></div></div>
+              <div class="pillar"><div class="p-label">Reliability</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:82%;background:var(--blue)"></div></div><div class="p-val" style="color:var(--blue)">8.2</div></div></div>
+              <div class="pillar"><div class="p-label">Dispute Rate</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:25%;background:var(--amber)"></div></div><div class="p-val" style="color:var(--amber)">2.5%</div></div></div>
+              <div class="pillar"><div class="p-label">Vetting</div><div class="p-bar-row"><div class="p-bar"><div class="p-bar-fill" style="width:91%;background:var(--neon)"></div></div><div class="p-val" style="color:var(--neon)">9.1</div></div></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VERIFY -->
+    <div class="view" id="v-verify">
+      <div class="ms ms-4">
+        <div class="mc amber"><div class="mc-label">Awaiting Review</div><div class="mc-val amber">7</div></div>
+        <div class="mc danger"><div class="mc-label">Insurance Expiring</div><div class="mc-val danger">4</div></div>
+        <div class="mc neon"><div class="mc-label">Verified This Week</div><div class="mc-val neon">23</div></div>
+        <div class="mc"><div class="mc-label">Auto-Suspended</div><div class="mc-val">2</div></div>
+      </div>
+      <div class="panel">
+        <div class="vq-item"><div class="vq-av" style="background:linear-gradient(135deg,#1565c0,#1976d2)">RK</div><div><div class="vq-name">Raj Kapoor · PlumbRight Ltd</div><div class="vq-trade">Plumbing · 3 docs pending · 14hrs ago</div></div><div class="vq-actions"><button class="vq-btn vqb-ok" onclick="toast('Kapoor approved ✓','success')">Approve</button><button class="vq-btn vqb-rev" onclick="toast('Flagged','warning')">Flag</button><button class="vq-btn vqb-no" onclick="toast('Rejected','error')">Reject</button></div></div>
+        <div class="vq-item"><div class="vq-av" style="background:linear-gradient(135deg,#b71c1c,#c62828)">SB</div><div><div class="vq-name">Steve Blake · QuickFix Electrical</div><div class="vq-trade">Electrical · <strong style="color:var(--danger)">Insurance EXPIRED 28 Feb</strong></div></div><div class="vq-actions"><button class="vq-btn vqb-no" onclick="toast('Blake suspended','error')">Suspend</button></div></div>
+        <div class="vq-item"><div class="vq-av" style="background:linear-gradient(135deg,#004d40,#00695c)">MW</div><div><div class="vq-name">Mike Williams · GreenScape UK</div><div class="vq-trade">Landscaping · 2 docs · 6hrs ago</div></div><div class="vq-actions"><button class="vq-btn vqb-ok" onclick="toast('Williams verified ✓','success')">Approve</button><button class="vq-btn vqb-rev">Flag</button></div></div>
+      </div>
+    </div>
+
+    <!-- ESCROW -->
+    <div class="view" id="v-escrow">
+      <div class="ms ms-4">
+        <div class="mc neon"><div class="mc-label">Total Under Mgmt</div><div class="mc-val neon">£124,890</div></div>
+        <div class="mc danger"><div class="mc-label">At Risk</div><div class="mc-val danger">£18,450</div></div>
+        <div class="mc amber"><div class="mc-label">Clearing (48h)</div><div class="mc-val amber">£6,800</div></div>
+        <div class="mc"><div class="mc-label">Released Today</div><div class="mc-val">£12,100</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Active Escrow Transactions</div></div>
+        <table class="dt"><thead><tr><th>Job ID</th><th>Homeowner</th><th>Vendor</th><th>Escrow</th><th>Status</th><th>Action</th></tr></thead><tbody>
+          <tr><td class="td-mono">#T48101</td><td class="td-name">James Harlow</td><td>ElectroFix Pro</td><td><strong style="color:var(--danger)">£1,200</strong></td><td><span class="badge b-danger">FROZEN</span></td><td><button class="pbtn danger">Frozen</button></td></tr>
+          <tr><td class="td-mono">#T48089</td><td class="td-name">Patricia Osei</td><td>HeatPro Services</td><td><strong style="color:var(--amber)">£3,800</strong></td><td><span class="badge b-amber">PROTECTED</span></td><td><button class="pbtn" onclick="toast('Viewing log','success')">View</button></td></tr>
+          <tr><td class="td-mono">#T48051</td><td class="td-name">Sarah Mitchell</td><td>DrainClear UK</td><td><strong style="color:var(--neon)">£8,500</strong></td><td><span class="badge b-neon">ACTIVE</span></td><td><button class="pbtn neon" onclick="toast('£2,000 release initiated','success')">Release £2k</button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- PIN -->
+    <div class="view" id="v-pin">
+      <div class="ms ms-4">
+        <div class="mc neon"><div class="mc-label">Success Rate (48h)</div><div class="mc-val neon">94.2%</div></div>
+        <div class="mc danger"><div class="mc-label">Failures</div><div class="mc-val danger">10</div></div>
+        <div class="mc amber"><div class="mc-label">Flagged (3+ attempts)</div><div class="mc-val amber">2</div></div>
+        <div class="mc"><div class="mc-label">Opted Out</div><div class="mc-val">24</div></div>
+      </div>
+      <div class="g2">
+        <div><div class="st">Recent PIN Events</div><div class="panel">
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #8841 VERIFIED</span> · Plumber on site</span><span class="ftime">2m</span></div>
+          <div class="feed-item"><div class="fdot fdot-d"></div><span><span class="fstrong">PIN #6619 — 3 FAILURES</span> · FLAGGED</span><span class="ftime">45m</span></div>
+          <div class="feed-item"><div class="fdot fdot-n"></div><span><span class="fstrong">PIN #5512 VERIFIED</span> · Roofer</span><span class="ftime">1h</span></div>
+        </div></div>
+        <div><div class="st">Flagged — Job #T48066</div><div class="panel">
+          <div class="ph"><div class="ph-title">⚠️ Potential Impersonation</div><span class="badge b-danger" style="margin-left:auto;">3 FAILURES</span></div>
+          <div class="pb">
+            <table class="dt" style="margin-bottom:10px;"><tbody>
+              <tr><td>Vendor</td><td class="td-mono">TM-VND-3847 · FastBuild UK</td></tr>
+              <tr><td>Attempts</td><td><span class="badge b-danger">3 × rapid succession</span></td></tr>
+            </tbody></table>
+            <button class="tb-btn" style="background:var(--danger-dim);color:var(--danger);border-color:rgba(255,71,87,.3);width:100%;font-size:10.5px;" onclick="toast('Job frozen — homeowner notified','error')">🔴 Freeze Job & Alert Homeowner</button>
+          </div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- INFRA -->
+    <div class="view" id="v-infra">
+      <div style="background:rgba(255,167,38,.05);border:1px solid rgba(255,167,38,.2);border-radius:9px;padding:10px 14px;margin-bottom:14px;font-size:10.5px;color:var(--amber);">⚠ AWS S3 at 82% — approaching warning threshold.</div>
+      <div class="g2">
+        <div class="svc-card ok"><div class="svc-header"><div class="svc-logo" style="background:#635BFF22;">💳</div><div><div class="svc-name">Stripe</div><div class="svc-role">Escrow · Payments</div></div><div class="svc-status"><span class="badge b-neon">● Operational</span></div></div><div class="svc-metric"><span>Webhook latency</span><span class="svc-metric-val" style="color:var(--neon)">320ms</span></div><div class="svc-metric"><span>Success rate</span><span class="svc-metric-val" style="color:var(--neon)">99.7%</span></div><div class="sep"></div><button class="pbtn neon" onclick="toast('Force reconciling…','success')">Force Reconcile</button></div>
+        <div class="svc-card warn"><div class="svc-header"><div class="svc-logo" style="background:#FF990022;">☁️</div><div><div class="svc-name">AWS S3</div><div class="svc-role">Document Vault</div></div><div class="svc-status"><span class="badge b-amber">⚠ Warning</span></div></div><div class="svc-metric"><span>Capacity</span><span class="svc-metric-val" style="color:var(--amber)">82%</span></div><div class="svc-metric"><span>Purgeable</span><span class="svc-metric-val" style="color:var(--amber)">2.8 GB</span></div><div class="sep"></div><button class="pbtn danger" onclick="toast('Purging 2.8GB…','success')">Purge Temp Cache</button></div>
+      </div>
+    </div>
+
+    <!-- AI GOV -->
+    <div class="view" id="v-ai">
+      <div class="ms ms-4">
+        <div class="mc"><div class="mc-label">Model</div><div class="mc-val" style="font-size:12px;color:var(--purple)">claude-sonnet-4-6</div></div>
+        <div class="mc"><div class="mc-label">Tokens Today</div><div class="mc-val">284.1K</div></div>
+        <div class="mc amber"><div class="mc-label">Est. Daily Cost</div><div class="mc-val amber">£4.26</div></div>
+        <div class="mc neon"><div class="mc-label">AI Accuracy</div><div class="mc-val neon">87%</div></div>
+      </div>
+      <div class="g2">
+        <div><div class="st">HITL Controls</div><div class="panel"><div class="pb">
+          <div style="background:var(--bg-4);border-radius:8px;padding:11px 13px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;"><div><div style="font-size:11px;font-weight:600;">Auto AI Resolution</div><div style="font-size:9.5px;color:var(--t4);">AI handles disputes under £500. 87% accuracy.</div></div><div class="ks-toggle" onclick="toggleKS(this,'HITL ON','AI re-enabled')"></div></div>
+        </div></div></div>
+        <div><div class="st">Token Usage</div><div class="panel"><div class="pb">
+          <div class="token-meter"><div class="token-row"><span>Dispute Assessment</span><span class="token-val" style="color:var(--amber)">141,200</span></div><div class="bar"><div class="bar-fill" style="width:50%;background:var(--amber)"></div></div></div>
+          <div class="token-meter"><div class="token-row"><span>Sentinel Operative</span><span class="token-val" style="color:var(--sentinel-light)">62,800</span></div><div class="bar"><div class="bar-fill" style="width:22%;background:var(--sentinel-light)"></div></div></div>
+          <div class="token-meter"><div class="token-row"><span>Review Sentiment</span><span class="token-val" style="color:var(--blue)">85,600</span></div><div class="bar"><div class="bar-fill" style="width:30%;background:var(--blue)"></div></div></div>
+        </div></div></div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="view" id="v-reports">
+      <div class="ms ms-4">
+        <div class="mc neon"><div class="mc-label">Revenue (MTD)</div><div class="mc-val neon">£38,420</div><div class="mc-delta delta-up">↑ 18%</div></div>
+        <div class="mc"><div class="mc-label">Total GMV</div><div class="mc-val">£2.1M</div></div>
+        <div class="mc amber"><div class="mc-label">Avg Vendor LTV</div><div class="mc-val amber">£1,240</div></div>
+        <div class="mc"><div class="mc-label">Job Liquidity</div><div class="mc-val">3.4x</div></div>
+      </div>
+      <div class="g2">
+        <div><div class="st">Liquidity By Trade</div><div class="panel"><div class="pb">
+          <div class="chart-bar-row"><div class="chart-bar-label">Plumbing</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:85%;background:var(--neon)"><span class="chart-bar-val">4.3x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Electrical</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:72%;background:var(--neon)"><span class="chart-bar-val">3.6x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Roofing</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:44%;background:var(--amber)"><span class="chart-bar-val">2.2x</span></div></div></div>
+          <div class="chart-bar-row"><div class="chart-bar-label">Surveying</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:28%;background:var(--danger)"><span class="chart-bar-val">1.4x</span></div><span class="chart-bar-val-out">⚠ Low</span></div></div>
+        </div></div></div>
+        <div><div class="st">Net Margin</div><div class="panel"><div class="pb">
+          <div class="bar-wrap"><div class="bar-lbl"><span>Gross Revenue</span><strong style="color:var(--neon)">£38,420</strong></div><div class="bar"><div class="bar-fill" style="width:100%;background:var(--neon)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>Stripe Fees</span><strong style="color:var(--danger)">-£1,190</strong></div><div class="bar"><div class="bar-fill" style="width:3%;background:var(--danger)"></div></div></div>
+          <div class="bar-wrap"><div class="bar-lbl"><span>AI + S3 + Email</span><strong style="color:var(--amber)">-£242</strong></div><div class="bar"><div class="bar-fill" style="width:1%;background:var(--amber)"></div></div></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--t4)"><span>Net</span><strong style="color:var(--neon)">£36,988 (96.3%)</strong></div>
+        </div></div></div>
+      </div>
+    </div>
+
+    <!-- KILL SWITCHES -->
+    <div class="view" id="v-kill">
+      <div style="background:rgba(255,71,87,.04);border:1px solid rgba(255,71,87,.2);border-radius:9px;padding:10px 14px;margin-bottom:13px;font-size:10.5px;color:var(--danger);">⚠ All kill switch actions are irreversible within the session. Logged with admin ID, IP, and timestamp.</div>
+      <div class="ks-grid">
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Escrow freeze active','Escrow releases restored')"><div class="ks-ico">🔒</div><div><div class="ks-lbl">Freeze All Escrow</div><div class="ks-desc">Block all releases</div></div><div class="ks-toggle"></div></div>
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Job posting suspended','Job posting restored')"><div class="ks-ico">🛑</div><div><div class="ks-lbl">Pause Job Posting</div><div class="ks-desc">Halt new submissions</div></div><div class="ks-toggle"></div></div>
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Lead distribution paused','Leads restored')"><div class="ks-ico">📤</div><div><div class="ks-lbl">Pause Lead Distrib.</div><div class="ks-desc">Stop sending leads</div></div><div class="ks-toggle"></div></div>
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Maintenance mode ON','Maintenance mode OFF')"><div class="ks-ico">⚙️</div><div><div class="ks-lbl">Maintenance Mode</div><div class="ks-desc">Redirect to static page</div></div><div class="ks-toggle"></div></div>
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'AI disabled','AI restored')"><div class="ks-ico">🤖</div><div><div class="ks-lbl">Disable AI Assessment</div><div class="ks-desc">Force manual review</div></div><div class="ks-toggle"></div></div>
+        <div class="ks-item" onclick="toggleKS(this.querySelector('.ks-toggle'),'Sentinel suspended','Sentinel restored')"><div class="ks-ico">🛡️</div><div><div class="ks-lbl">Suspend Sentinel</div><div class="ks-desc">Halt agent actions</div></div><div class="ks-toggle"></div></div>
+      </div>
+    </div>
+
+    <!-- AUDIT -->
+    <div class="view" id="v-audit">
+      <div class="ms ms-4">
+        <div class="mc danger"><div class="mc-label">High-Risk Events</div><div class="mc-val danger">8</div></div>
+        <div class="mc amber"><div class="mc-label">Manual Interventions</div><div class="mc-val amber">31</div></div>
+        <div class="mc"><div class="mc-label">Total Entries</div><div class="mc-val">2,847</div></div>
+        <div class="mc neon"><div class="mc-label">Active Admins</div><div class="mc-val neon">4</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Activity Log</div><div class="ph-right"><button class="pbtn neon" onclick="toast('Exporting CSV…','success')">Export CSV</button></div></div>
+        <div class="audit-row"><div class="audit-level al-sentinel"></div><div class="audit-who">[SENTINEL_AI]</div><div class="audit-action">Proactive alert: S3 at 83% · purge recommendation issued</div><div class="audit-time">14:23 today</div></div>
+        <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">James D.</div><div class="audit-action">Impersonation session — Vendor TM-VND-4821</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">14:21 today</div></div>
+        <div class="audit-row"><div class="audit-level" style="background:var(--amber);width:5px;height:5px;border-radius:50%;flex-shrink:0;"></div><div class="audit-who">James D.</div><div class="audit-action">Dispute 70/30 applied — #D-8841</div><div class="audit-ip">82.44.12.98</div><div class="audit-time">13:55 today</div></div>
+        <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">Sarah K.</div><div class="audit-action">Manual refund £850 — fraud #T48044</div><div class="audit-ip">91.22.44.11</div><div class="audit-time">10:14 today</div></div>
+        <div class="audit-row"><div class="audit-level al-high"></div><div class="audit-who">James D.</div><div class="audit-action">IP 82.34.111.220 blocked — 5 bot farm accounts</div><div class="audit-time">02/03 16:22</div></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ══════════════════════════
+     SENTINEL FLOATING CHATBOT
+══════════════════════════ -->
+<div id="sentinel-overlay">
+  <!-- Chat Panel (hidden by default) -->
+  <div class="sentinel-panel panel-hidden" id="sentinel-panel">
+
+    <!-- Header -->
+    <div class="sp-header">
+      <div class="sp-av">🤖</div>
+      <div>
+        <div class="sp-title">Trade<span>Match</span> Sentinel</div>
+        <div class="sp-status"><div class="sp-dot"></div>OPERATIVE ONLINE · <span id="sp-phase-lbl">Phase 1 · Observer</span></div>
+      </div>
+      <div class="sp-actions">
+        <div class="sp-btn" onclick="clearChat()" title="Clear chat">🗑</div>
+        <div class="sp-btn" onclick="toggleSentinel()" title="Close">✕</div>
+      </div>
+    </div>
+
+    <!-- Phase strip -->
+    <div class="sp-phase">
+      <div class="sp-phase-btn active" id="pp1" onclick="setPhase(1)">Phase 1<br>Observer</div>
+      <div class="sp-phase-btn" id="pp2" onclick="setPhase(2)">Phase 2<br>Assistant</div>
+      <div class="sp-phase-btn" id="pp3" onclick="setPhase(3)">Phase 3<br>Agent</div>
+    </div>
+
+    <!-- Messages -->
+    <div class="sp-msgs" id="sp-msgs">
+      <!-- Injected by JS on open -->
+    </div>
+
+    <!-- Quick hints -->
+    <div class="sp-hints">
+      <div class="hint" onclick="qi('Full platform status report')">status</div>
+      <div class="hint" onclick="qi('Summarise dispute #T48101 and recommend split')">dispute #T48101</div>
+      <div class="hint" onclick="qi('Revenue breakdown this month with net margin')">revenue MTD</div>
+      <div class="hint" onclick="qi('Vendors with expired or expiring insurance')">insurance</div>
+      <div class="hint" onclick="qi('Purge S3 temp files — show storage impact')">purge S3</div>
+      <div class="hint" onclick="qi('Desert zones — low liquidity trades in London')">desert zones</div>
+    </div>
+
+    <!-- Input -->
+    <div class="sp-input">
+      <textarea class="sp-textarea" id="sinp" placeholder="Ask Sentinel anything…" rows="1" onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+      <button class="sp-send" id="sbtn" onclick="send()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <div class="fab-wrap">
+    <button class="sentinel-fab" id="sentinel-fab" onclick="toggleSentinel()" title="Open Sentinel AI">🤖</button>
+    <div class="fab-badge" id="fab-badge">1</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CLOCK ──
+function tick(){const e=document.getElementById('clock');if(e)e.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false});}
+tick();setInterval(tick,1000);
+
+// ── TOAST ──
+let tt;
+function toast(msg,type=''){
+  const e=document.getElementById('toast');
+  e.textContent=msg;e.className='show '+(type||'');
+  clearTimeout(tt);tt=setTimeout(()=>{e.className='';},3200);
+}
+
+// ── KILL SWITCH ──
+function toggleKS(el,onMsg,offMsg){
+  if(!el)return;
+  const on=el.classList.toggle('on');
+  toast(on?onMsg:offMsg,on?'error':'success');
+}
+
+// ── STANDARD NAV ──
+function nav(id,title,sub,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const v=document.getElementById('v-'+id);
+  if(v)v.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active','d-active','a-active'));
+  if(el){
+    const cls=id==='kill'?'d-active':id==='infra'?'a-active':'active';
+    el.classList.add(cls);
+  }
+  document.getElementById('tb-title').textContent=title;
+  document.getElementById('tb-sub').textContent=sub;
+}
+
+// ── SENTINEL TOGGLE ──
+let panelOpen=false;
+function toggleSentinel(){
+  panelOpen=!panelOpen;
+  const panel=document.getElementById('sentinel-panel');
+  const fab=document.getElementById('sentinel-fab');
+  const badge=document.getElementById('fab-badge');
+
+  if(panelOpen){
+    panel.classList.remove('panel-hidden');
+    fab.style.background='linear-gradient(135deg,#5B21B6,#4C1D95)';
+    badge.style.display='none';
+    // Show welcome message if first open
+    if(!welcomed){
+      welcomed=true;
+      setTimeout(()=>showWelcome(),300);
+    }
+  } else {
+    panel.classList.add('panel-hidden');
+    fab.style.background='linear-gradient(135deg,var(--sentinel),#5B21B6)';
+  }
+}
+
+let welcomed=false;
+function showWelcome(){
+  appendMsg('ai',
+    `<strong style="color:var(--sentinel-light);">👋 Sentinel online.</strong> Here's your platform at a glance:
+    <div style="height:6px;"></div>
+    <div style="background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.14);border-radius:7px;padding:8px 11px;margin-bottom:6px;font-size:11px;line-height:1.5;">⚠️ <strong style="color:var(--danger);">Critical SLA:</strong> Dispute <span style="font-family:var(--fm);color:var(--amber);">#T48101</span> — <strong style="color:var(--danger);">1h 48m left.</strong> £1,200 frozen. AI suggests 70/30.</div>
+    <div style="background:rgba(255,167,38,.05);border:1px solid rgba(255,167,38,.14);border-radius:7px;padding:8px 11px;margin-bottom:6px;font-size:11px;line-height:1.5;">⚠️ <strong style="color:var(--amber);">AWS S3 at 82%</strong> — 2.8GB purgeable. I can clean this on your command.</div>
+    <div style="background:rgba(0,229,160,.04);border:1px solid rgba(0,229,160,.12);border-radius:7px;padding:8px 11px;font-size:11px;line-height:1.5;">✅ Stripe & Resend operational. Revenue MTD: <span style="font-family:var(--fm);color:var(--neon);">£38,420</span> · Net margin: <span style="font-family:var(--neon);font-family:var(--fm);">96.3%</span></div>
+    <div style="height:6px;"></div>
+    Use the hints below or type any command.`,
+    `<span class="badge b-sentinel">SENTINEL · AUTO-BRIEF</span>`
+  );
+}
+
+// ── PHASE ──
+let phase=1;
+function setPhase(n){
+  phase=n;
+  ['pp1','pp2','pp3'].forEach((id,i)=>document.getElementById(id).classList.toggle('active',i===n-1));
+  const labels=['Phase 1 · Observer','Phase 2 · Assistant','Phase 3 · Agent'];
+  document.getElementById('sp-phase-lbl').textContent=labels[n-1];
+  toast(`Sentinel → ${labels[n-1]}`,n===3?'warning':n===2?'':'success');
+}
+
+// ── CHAT HELPERS ──
+let busy=false, history=[], msgs=0;
+function qi(t){
+  if(!panelOpen) toggleSentinel();
+  setTimeout(()=>{
+    document.getElementById('sinp').value=t;
+    resize(document.getElementById('sinp'));
+    document.getElementById('sinp').focus();
+  },panelOpen?0:350);
+}
+function onKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function resize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function ts(){return new Date().toLocaleTimeString('en-GB',{hour12:false});}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function appendMsg(role,html,meta){
+  const c=document.getElementById('sp-msgs');
+  const d=document.createElement('div');
+  d.className='smsg'+(role==='user'?' suser':'');
+  const avCls=role==='user'?'sav-user':role==='tool'?'sav-tool':'sav-ai';
+  const ico=role==='user'?'👤':role==='tool'?'⚙️':'🤖';
+  const bCls=role==='user'?'sb-user':role==='tool'?'sb-tool':role==='err'?'sb-err':'sb-ai';
+  const mr=role==='user'?'justify-content:flex-end;':'';
+  d.innerHTML=`<div class="sav ${avCls}">${ico}</div>
+    <div>
+      <div class="sbubble ${bCls}">${html}</div>
+      <div class="smeta" style="${mr}">${meta||''}<span>${ts()}</span></div>
+    </div>`;
+  c.appendChild(d);
+  c.scrollTop=99999;
+  msgs++;
+}
+
+function showThinking(){
+  const c=document.getElementById('sp-msgs');
+  const d=document.createElement('div');
+  d.className='smsg';d.id='sthink';
+  d.innerHTML=`<div class="sav sav-ai">🤖</div>
+    <div class="thinking-bubble">
+      <span style="font-family:var(--fm);font-size:9px;color:var(--sentinel-light);">Processing</span>
+      <span class="td-dots"><span></span><span></span><span></span></span>
+    </div>`;
+  c.appendChild(d);c.scrollTop=99999;
+}
+function hideThinking(){document.getElementById('sthink')?.remove();}
+
+function clearChat(){
+  document.getElementById('sp-msgs').innerHTML='';
+  history=[];msgs=0;
+  welcomed=false;
+  showWelcome();
+}
+
+// ── TOOL CALL DISPLAY ──
+const TOOL_MAP=[
+  [/revenue|profit|margin|lead fee|gold sub/i,'get_revenue_report',{start_date:'2026-03-01',end_date:'2026-03-03',breakdown:'by_type'},{gross:45080,lead_fees:38420,gold_subs:4200,escrow_fees:1840,stripe_costs:1190,ai_costs:127,net_margin:'96.8%'}],
+  [/liquidity|desert zone|quote per job/i,'get_marketplace_metrics',{metric_type:'liquidity',time_range:'30d'},{plumbing:'4.3x',electrical:'3.6x',roofing:'2.2x',surveying:'1.4x ⚠ CRITICAL',plastering:'1.2x ⚠ CRITICAL'}],
+  [/insurance|expir/i,'manage_user_state',{action:'flag',target_id:'BULK_4_VENDORS',reason:'Insurance expiring <30 days'},{matched:4,flagged:4,suspended:1,status:'staged_for_confirm'}],
+  [/s3|purge|storage|cache/i,'purge_storage',{target:'temp_files',older_than:'30d'},{purgeable_gb:2.8,files:847,projected_capacity:'79%',status:'staged_for_confirm'}],
+  [/T48101|dispute|evidence|split/i,'get_dispute_evidence',{dispute_id:'D-8841',job_id:'T48101'},{ai_split:'70/30',confidence:'84%',evidence_items:6,sla_remaining:'1h 48m',escrow:'£1,200 FROZEN',recommendation:'Partial award homeowner'}],
+  [/suspend|ban|flag.*vendor/i,'manage_user_state',{action:'suspend',target_id:'TM-VND-4821',reason:'Active dispute + frozen escrow'},{status:'staged_for_confirm',current_state:'active'}],
+  [/audit|maintenance.*who|who.*maintenance/i,'query_audit_log',{query:'maintenance_mode',time_range:'30d'},{events:1,admin:'Sarah K.',timestamp:'25/02 03:12',reason:'Stripe degradation',duration:'14min'}],
+  [/pin|impersonat/i,'query_audit_log',{query:'pin_failures_48h'},{top_offender:'TM-VND-3847 FastBuild UK',failures:3,job:'#T48066',flag:'IMPERSONATION_RISK'}],
+  [/status|overview|platform/i,'get_platform_overview',{time_range:'live'},{disputes:3,escrow_at_risk:'£18,450',pin_success:'94.2%',verify_queue:7,revenue_mtd:'£38,420',s3_capacity:'82%'}],
+];
+
+function showTC(fn,params,result){
+  const fmt=o=>JSON.stringify(o,null,2).replace(/"([^"]+)":/g,'<span class="ck">"$1"</span>:').replace(/: "([^"]+)"/g,': <span class="cs">"$1"</span>').replace(/: (\d[^,\n]*)/g,': <span class="cv">$1</span>');
+  appendMsg('tool',`<div class="tc-hdr">⚙️ ${fn}</div><div class="tc-pre">${fmt(params)}</div><div class="tc-res">→ ${fmt(result)}</div>`);
+}
+
+function handleConfirm(yes,btn){
+  btn.closest('.confirm-row').replaceWith((() => {
+    const n=document.createElement('div');
+    n.style.cssText='margin-top:8px;padding:7px 10px;border-radius:6px;font-size:10.5px;';
+    if(yes){
+      if(phase<3){n.style.cssText+='background:rgba(255,167,38,.06);border:1px solid rgba(255,167,38,.2);color:var(--amber);';n.textContent='⚠ Action staged. Enable Phase 3 (Agent) above to grant write access.';}
+      else{n.style.cssText+='background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.2);color:var(--neon);';n.textContent='✓ Executed via Phase 3. See Audit Trail for full log.';}
+    } else {n.style.cssText+='color:var(--t4);';n.textContent='Action cancelled.';}
+    return n;
+  })());
+}
+
+// ── FORMAT RESPONSE ──
+function fmt(t){
+  let h=t
+    .replace(/\*\*(.*?)\*\*/g,'<strong style="color:var(--t1)">$1</strong>')
+    .replace(/`([^`\n]+)`/g,'<code style="font-family:var(--fm);font-size:9px;color:var(--neon);background:rgba(0,229,160,.08);padding:1px 4px;border-radius:3px;">$1</code>')
+    .replace(/^### (.+)$/gm,'<div style="font-family:var(--ff);font-size:11px;font-weight:700;color:var(--t1);margin:7px 0 3px;">$1</div>')
+    .replace(/^## (.+)$/gm,'<div style="font-family:var(--ff);font-size:12px;font-weight:800;color:var(--t1);margin:8px 0 4px;padding-bottom:4px;border-bottom:1px solid var(--border);">$1</div>')
+    .replace(/^[-•] (.+)$/gm,'<div style="display:flex;gap:5px;margin:2px 0;font-size:11.5px;"><span style="color:var(--sentinel-light);flex-shrink:0;">›</span><span>$1</span></div>')
+    .replace(/\n\n/g,'<div style="height:5px;"></div>')
+    .replace(/\n/g,'<br>');
+  h=h.replace(/£[\d,]+(\.\d{2})?/g,'<span style="font-family:var(--fm);color:var(--neon);font-weight:600;">$&</span>');
+  h=h.replace(/\b(TM-VND-\d+|#T\d+|#D-\d+)\b/g,'<span style="font-family:var(--fm);font-size:9px;color:var(--amber);">$&</span>');
+  h=h.replace(/(\d+\.?\d*)%/g,'<span style="font-family:var(--fm);color:var(--blue);">$&</span>');
+  return h;
+}
+
+// ── SYSTEM PROMPT ──
+const SYS=`You are "Sentinel," the Autonomous AI Operative embedded in the TradeMatch Super Admin v2 dashboard — a UK verified trades marketplace.
+
+LIVE PLATFORM CONTEXT (as of 03 March 2026):
+- Stripe: 320ms webhook latency | 99.7% success | Operational
+- Resend: 99.1% delivery | 98.4% PIN delivery
+- AWS S3: 82% capacity (WARNING — threshold 80%) | 2.8GB purgeable temp files
+- Claude API: claude-sonnet-4-6 | 284K tokens today | £4.26/day | HITL: OFF
+
+METRICS:
+- GMV: £124,890 | Disputes: 3 | Escrow at risk: £18,450
+- Verification queue: 7 (oldest 14hrs) | PIN success: 94.2% | Active jobs: 312
+
+DISPUTES:
+- #T48101: ElectroFix Pro (TM-VND-4821) vs James Harlow | £1,200 FROZEN | Hackney E8 | Workmanship + £180 overcharge | Step 6 | 1h 48m SLA remaining | AI: 70/30 homeowner (84% confidence) | PIN verified ✓
+- #T48089: HeatPro (TM-VND-5109) vs Patricia Osei | £3,800 | Step 3 | 29h left
+- #T47990: SouthBuild (TM-VND-4990) vs Marcus Webb | £13,450 | Step 5 | 17h left
+
+FLAGGED VENDORS:
+- TM-VND-5502 (QuickFix): Insurance EXPIRED 28 Feb → auto-suspended
+- TM-VND-4821 (ElectroFix Pro): Dispute active, £1,200 frozen
+- TM-VND-3847 (FastBuild): 3× PIN failures on #T48066 — impersonation flag
+
+MARKETPLACE LIQUIDITY (quotes per job): Plumbing 4.3x ✓ | Electrical 3.6x ✓ | Roofing 2.2x ⚠ | Surveying 1.4x ✗ | Plastering 1.2x ✗
+
+REVENUE MTD: Lead fees £38,420 | Gold subs £4,200 | Escrow fees £1,840 | Placements £620 | Gross £45,080 | Net £43,648 (96.8% margin)
+
+SECURITY: IP 82.34.111.220 blocked (bot farm × 5). Sarah K. issued £850 refund (#T48044 fraud). Maintenance Mode 25/02 by Sarah K. — Stripe degradation — 14min.
+
+AVAILABLE TOOLS: get_marketplace_metrics, manage_user_state, trigger_system_killswitch, get_revenue_report, query_audit_log, purge_storage, bulk_flag_vendors, get_dispute_evidence
+
+RULES:
+1. Always use structured bullet points or tables — never plain walls of text
+2. For ANY destructive action (suspend, ban, kill switch, bulk flag, refund, purge): state the exact impact and end with "Shall I proceed?" to request admin confirmation
+3. All your actions are logged as [SENTINEL_AI] in the Audit Trail
+4. Show which tool you are calling before showing results
+5. Be concise, technical, and precise — use exact IDs, amounts, percentages
+6. Phase 1 = read-only; Phase 2 = can stage actions; Phase 3 = write access granted`;
+
+// ── MAIN SEND ──
+async function send(){
+  const inp=document.getElementById('sinp');
+  const text=inp.value.trim();
+  if(!text||busy)return;
+  busy=true;
+  document.getElementById('sbtn').disabled=true;
+  inp.value='';inp.style.height='auto';
+
+  appendMsg('user',esc(text));
+  history.push({role:'user',content:text});
+
+  // Find matching tool call
+  const needsTool=/revenue|liquidity|dispute|vendor|insurance|s3|purge|suspend|flag|audit|who|maintenance|desert|pin|status|platform|overview/i.test(text);
+  if(needsTool){
+    showThinking();
+    await sleep(500);
+    hideThinking();
+    for(const [re,fn,params,result] of TOOL_MAP){
+      if(re.test(text)){showTC(fn,params,result);await sleep(250);break;}
+    }
+  } else {
+    showThinking();
+  }
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        system:SYS,
+        messages:history
+      })
+    });
+    const data=await res.json();
+    hideThinking();
+
+    if(data.error){
+      appendMsg('err',`<strong>API Error:</strong> ${data.error.message||'Connection failed.'}. Check the API key configuration.`);
+      busy=false;document.getElementById('sbtn').disabled=false;return;
+    }
+
+    const raw=data.content?.map(c=>c.text||'').join('')||'';
+    history.push({role:'assistant',content:raw});
+
+    const isConfirm=/shall i proceed|please confirm|do you want me/i.test(raw);
+    let html=fmt(raw);
+    if(isConfirm){
+      html+=`<div class="confirm-row">
+        <button class="btn-c btn-yes" onclick="handleConfirm(true,this)">✓ Confirm</button>
+        <button class="btn-c btn-no" onclick="handleConfirm(false,this)">✗ Cancel</button>
+        <button class="btn-c btn-mod" onclick="document.getElementById('sinp').value='Modify: ';document.getElementById('sinp').focus();">✎ Modify</button>
+      </div>`;
+    }
+    appendMsg('ai',html,`<span class="badge b-sentinel">SENTINEL</span>`);
+
+  } catch(e){
+    hideThinking();
+    appendMsg('err',`<strong>Connection Error:</strong> ${e.message}`);
+  }
+  busy=false;document.getElementById('sbtn').disabled=false;
+}
+</script>
+</body>
+</html>

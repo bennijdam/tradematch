@@ -1,0 +1,851 @@
+/**
+ * TradeMatch Responsive Dashboard CSS
+ * Fixes all fixed-width layouts for mobile responsiveness
+ * Replaces pixel-based widths with fluid, responsive units
+ */
+
+/* ==========================================================================
+   1. Base Responsive Variables
+   ========================================================================== */
+
+ :root {
+  /* Fluid scale using clamp() for responsive sizing */
+  --sidebar-width: clamp(240px, 25vw, 320px);
+  --sidebar-collapsed-width: clamp(60px, 10vw, 80px);
+  --sidebar-mobile-width: 80vw; /* 80% of viewport on mobile */
+  
+  /* Fluid container widths */
+  --search-max-width: min(480px, 90vw);
+  --content-max-width: min(1200px, 95vw);
+  --card-max-width: min(100vw, 800px);
+  
+  /* Responsive touch targets (WCAG >= 44px) */
+  --touch-target-min: 44px;
+  --touch-target-optimal: clamp(44px, 12vw, 56px);
+  --touch-target-small: clamp(32px, 8vw, 36px);
+  --touch-target-tiny: clamp(20px, 5vw, 24px);
+  
+  /* Fluid spacing */
+  --space-xs: clamp(4px, 1vw, 8px);
+  --space-sm: clamp(8px, 2vw, 12px);
+  --space-md: clamp(16px, 4vw, 24px);
+  --space-lg: clamp(24px, 6vw, 32px);
+}
+
+/* ==========================================================================
+   2. Sidebar - Main Mobile Fix
+   ========================================================================== */
+
+/* Desktop/Tablet: Fixed sidebar with fluid width */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width); /* Clamped between 240px and 320px */
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* Mobile: Hidden sidebar, off-canvas */
+@media (max-width: 768px) {
+  .sidebar {
+    width: var(--sidebar-mobile-width);
+    max-width: 320px; /* Max width on mobile */
+    transform: translateX(-100%);
+    will-change: transform; /* Performance optimization */
+  }
+  
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* Prevent body scroll when sidebar is open */
+  body.sidebar-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+}
+
+/* Sidebar backdrop for mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ==========================================================================
+   3. Top Navigation - Responsive Behavior
+   ========================================================================== */
+
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: clamp(64px, 10vh, 72px);
+  background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+.top-nav.sidebar-collapsed {
+  left: var(--sidebar-collapsed-width);
+}
+
+@media (max-width: 768px) {
+  .top-nav {
+    left: 0;
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+    height: clamp(56px, 8vh, 64px);
+  }
+}
+
+/* ==========================================================================
+   4. Search Container - Fluid Width
+   ========================================================================== */
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: var(--search-max-width); /* Uses min(480px, 90vw) */
+  flex-shrink: 1;
+}
+
+.search-input {
+  width: 100%;
+  height: clamp(40px, 6vh, 44px);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding-left: clamp(40px, 6vw, 48px);
+  padding-right: var(--space-sm);
+  font-size: clamp(14px, 2.5vw, 16px);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--border-hover);
+  background: var(--bg-secondary);
+}
+
+.search-icon {
+  position: absolute;
+  left: clamp(12px, 2vw, 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--touch-target-tiny);
+  height: var(--touch-target-tiny);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    max-width: 100%; /* Full width on mobile */
+  }
+}</thinking>
+
+Now let me continue creating the comprehensive responsive CSS file:
+
+<function=write>
+<parameter=filePath>C:\Users\ASUS\Desktop\tradematch-fixed\apps\web\shared\styles\responsive-dashboard.css</parameter>
+<parameter=content>/**
+ * TradeMatch Responsive Dashboard CSS
+ * Fixes all fixed-width layouts for mobile responsiveness
+ */
+
+/* ==========================================================================
+   5. Icon Buttons - Responsive Touch Targets
+   ========================================================================== */
+
+.icon-button {
+  width: var(--touch-target-optimal); /* Clamped 44px-56px */
+  height: var(--touch-target-optimal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  min-width: var(--touch-target-min); /* WCAG compliance */
+  min-height: var(--touch-target-min);
+}
+
+.icon-button svg {
+  width: var(--touch-target-tiny);
+  height: var(--touch-target-tiny);
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.icon-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-hover);
+}
+
+.icon-button:hover svg {
+  color: var(--text-primary);
+}
+
+/* Notification badge positioning */
+.notification-badge {
+  position: absolute;
+  top: clamp(4px, 1vw, 8px);
+  right: clamp(4px, 1vw, 8px);
+  width: clamp(6px, 1.5vw, 8px);
+  height: clamp(6px, 1.5vw, 8px);
+  background: var(--accent-danger);
+  border-radius: 50%;
+  border: 2px solid var(--bg-secondary);
+}
+
+/* ==========================================================================
+   6. Theme Toggle - Responsive Switch
+   ========================================================================== */
+
+.theme-toggle {
+  position: relative;
+  width: var(--touch-target-small); /* 36px → responsive */
+  height: clamp(24px, 5vw, 28px);
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.theme-toggle-slider {
+  width: clamp(16px, 4vw, 20px);
+  height: clamp(16px, 4vw, 20px);
+  background: var(--accent-primary);
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="light"] .theme-toggle-slider {
+  transform: translateX(var(--space-sm));
+}
+
+.theme-toggle-icon {
+  width: clamp(10px, 3vw, 12px);
+  height: clamp(10px, 3vw, 12px);
+  color: white;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-hover);
+}
+
+/* ==========================================================================
+   7. Sidebar Navigation Items
+   ========================================================================== */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  color: var(--text-secondary);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: 10px;
+  margin: 0 var(--space-xs);
+  min-height: var(--touch-target-min);
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: var(--space-md) 0;
+  margin: 0;
+}
+
+.nav-icon {
+  width: var(--touch-target-tiny);
+  height: var(--touch-target-tiny);
+  color: var(--text-muted);
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.nav-label {
+  font-size: clamp(14px, 2.5vw, 15px);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .nav-label {
+  opacity: 0;
+  position: absolute;
+}
+
+.nav-item.active {
+  color: var(--accent-primary);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.nav-item.active .nav-icon {
+  color: var(--accent-primary);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 50%;
+  background: var(--accent-primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent-danger);
+  color: white;
+  font-size: clamp(11px, 2vw, 12px);
+  font-weight: 600;
+  padding: clamp(2px, 0.5vw, 4px) clamp(6px, 1.5vw, 8px);
+  border-radius: 100px;
+  min-width: var(--touch-target-tiny);
+  text-align: center;
+}
+
+.sidebar.collapsed .nav-badge {
+  position: absolute;
+  top: 50%;
+  right: var(--space-xs);
+  transform: translateY(-50%);
+}
+
+/* ==========================================================================
+   8. Main Content Area
+   ========================================================================== */
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: clamp(64px, 10vh, 72px);
+  padding: var(--space-lg);
+  min-height: calc(100vh - clamp(64px, 10vh, 72px));
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-collapsed {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    margin-top: clamp(56px, 8vh, 64px);
+    padding: var(--space-md);
+  }
+}</thinking>
+
+Now let me continue creating the responsive CSS file with the remaining sections:
+
+<function=write>
+<parameter=filePath>C:\Users\ASUS\Desktop\tradematch-fixed\apps\web\shared\styles\responsive-dashboard.css</parameter>
+<parameter=content>  
+</thinking>
+
+Let me create the remaining CSS file sections:
+
+<function=write>
+<parameter=filePath>C:\Users\ASUS\Desktop\tradematch-fixed\apps\web\shared\styles\responsive-dashboard.css</parameter>
+<parameter=content>  
+  
+/* ==========================================================================
+   9. Hamburger Menu (Mobile Only)
+   ========================================================================== */
+
+.hamburger {
+  display: none; /* Hidden on desktop */
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--touch-target-small);
+  height: var(--touch-target-small);
+  padding: var(--space-xs);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex; /* Show only on mobile */
+    margin-right: var(--space-sm);
+  }
+}
+
+/* ==========================================================================
+   10. Stat Cards
+   ========================================================================== */
+
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: clamp(80px, 12vh, 100px);
+}
+
+.stat-card:active {
+  transform: translateY(1px);
+}
+
+.stat-icon {
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.12);
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .stat-icon {
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.stat-icon svg {
+  width: clamp(22px, 5vw, 24px);
+  height: clamp(22px, 5vw, 24px);
+  color: var(--accent-primary);
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: clamp(22px, 4vw, 26px);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.stat-label {
+  font-size: clamp(13px, 2.5vw, 14px);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: clamp(12px, 2vw, 13px);
+  font-weight: 600;
+  margin-top: var(--space-xs);
+}
+
+.stat-trend.positive {
+  color: var(--accent-positive);
+}
+
+.stat-trend.negative {
+  color: var(--accent-danger);
+}
+
+/* ==========================================================================
+   11. Alert/Notification Components
+   ========================================================================== */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 10px;
+  margin-bottom: var(--space-lg);
+}
+
+.alert-icon {
+  width: clamp(20px, 5vw, 24px);
+  height: clamp(20px, 5vw, 24px);
+  color: var(--accent-warning);
+  flex-shrink: 0;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-size: clamp(15px, 2.5vw, 16px);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.alert-text {
+  font-size: clamp(13px, 2vw, 14px);
+  line-height: 1.5;
+}
+
+.alert-action {
+  white-space: nowrap;
+  font-size: clamp(14px, 2.5vw, 15px);
+  font-weight: 600;
+  color: var(--accent-primary);
+  cursor: pointer;
+}
+
+[data-theme="light"] .alert-action:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   12. Tables with Horizontal Scroll
+   ========================================================================== */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: var(--space-lg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.table {
+  min-width: 600px; /* Forces horizontal scroll without breaking layout */
+  width: 100%;
+  background: var(--bg-secondary);
+}
+
+.table th,
+.table td {
+  padding: var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: clamp(13px, 2vw, 14px);
+}
+
+.table th {
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.table tbody tr:hover {
+  background: var(--bg-tertiary);
+}
+
+/* ==========================================================================
+   13. Buttons and Interactive Elements
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: clamp(10px, 2vw, 12px) var(--space-md);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: clamp(14px, 2.5vw, 15px);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: var(--touch-target-optimal);
+  min-width: clamp(120px, 25vw, 160px);
+}
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-hover);
+}
+
+.btn-icon {
+  width: var(--touch-target-tiny);
+  height: var(--touch-target-tiny);
+}
+
+/* ==========================================================================
+   14. Forms and Inputs
+   ========================================================================== */
+
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.form-label {
+  display: block;
+  font-size: clamp(14px, 2.5vw, 15px);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  min-height: var(--touch-target-optimal); /* WCAG touch target compliance */
+  padding: 12px var(--space-md);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: clamp(16px, 2.5vw, 16px); /* iOS minimum 16px to prevent zoom */
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+  -webkit-appearance: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: var(--bg-secondary);
+}
+
+.form-textarea {
+  min-height: clamp(100px, 20vh, 150px);
+  resize: vertical;
+}
+
+/* ==========================================================================
+   15. Mobile Menu JavaScript Control
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .profile-dropdown {
+    /* Full width dropdown on mobile */
+    min-width: calc(100vw - var(--space-lg));
+    position: fixed;
+    right: var(--space-md);
+    left: var(--space-md);
+    top: clamp(64px, 8vh, 72px);
+  }
+  
+  .profile-dropdown::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+  }
+}
+
+/* ==========================================================================
+   16. Print and Accessibility
+   ========================================================================== */
+
+@media print {
+  .sidebar,
+  .top-nav,
+  .icon-button {
+    display: none !important;
+  }
+  
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #000;
+    --text-primary: #000;
+    --text-secondary: #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   17. JavaScript helpers class
+   ========================================================================== */
+
+.js-mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .js-mobile-only {
+    display: block !important;
+  }
+  
+  .js-mobile-only.flex {
+    display: flex !important;
+  }
+}
+
+.js-desktop-only {
+  display: block !important;
+}
+
+@media (max-width: 768px) {
+  .js-desktop-only {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   18. Utility Classes
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  }
+  
+/* ==========================================================================
+   19. Loading States for Mobile
+   ========================================================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--border) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==========================================================================
+   20. Dark mode toggling for responsive
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  /* System dark mode preference */
+  :root[data-theme="auto"] {
+    color-scheme: dark;
+  }
+}
+
+/* ==========================================================================
+   End of Responsive Dashboard Styles
+   ========================================================================== */

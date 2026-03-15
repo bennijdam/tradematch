@@ -164,6 +164,24 @@ const uploadLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+/**
+ * WebSocket connection rate limiter
+ */
+const websocketLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 30, // Limit to 30 WebSocket connections per IP per 15 minutes
+    keyGenerator,
+    message: {
+        error: 'Too many WebSocket connection attempts',
+        code: 'WEBSOCKET_RATE_LIMIT_EXCEEDED',
+        retryAfter: '15 minutes'
+    },
+    skipSuccessfulRequests: true,
+    skipFailedRequests: false,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 module.exports = {
     apiLimiter,
     authLimiter,
@@ -172,5 +190,6 @@ module.exports = {
     aiLimiter,
     paymentLimiter,
     emailLimiter,
-    uploadLimiter
+    uploadLimiter,
+    websocketLimiter
 };

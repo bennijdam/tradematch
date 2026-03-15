@@ -1,0 +1,94 @@
+/**
+ * SACRED GLOBALS - CSS Reset for Sacred Shell
+ * 
+ * This file ensures the Sacred HTML has 100% viewport control
+ * with zero interference from Next.js defaults.
+ */
+
+/* Reset everything */
+html,
+body,
+#root,
+#__next {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Sacred root container */
+.sacred-root {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Override any Next.js defaults */
+.sacred-root > div {
+  width: 100vw;
+  min-height: 100vh;
+}
+
+/* Ensure the sacred shell takes full control */
+.sacred-container,
+#sacredVendorDashboard,
+#sacredCredentialsVault,
+#sacredDisputeCentre {
+  width: 100vw !important;
+  min-height: 100vh !important;
+  position: relative !important;
+  left: 0 !important;
+  top: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Override any sidebar offset from parent layout */
+.sacred-root .sidebar,
+.sacred-root [class*="sidebar"] {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+}
+
+/* Override any topnav offset */
+.sacred-root .topnav,
+.sacred-root [class*="topnav"] {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100vw !important;
+}
+
+/* Main content takes full width */
+.sacred-root .main,
+.sacred-root [class*="main"] {
+  margin-left: 268px !important; /* Match original --sidebar-w */
+  width: calc(100vw - 268px) !important;
+  min-height: 100vh !important;
+}
+
+/* Remove any inherited padding */
+.sacred-root * {
+  box-sizing: border-box;
+}
+
+/* Ensure background fills screen */
+body {
+  background: #080C12;
+}
+
+/* Override max-width constraints */
+.sacred-root [style*="max-width"],
+.sacred-root [class*="max-w"] {
+  max-width: none !important;
+}
+
+/* Override container padding */
+.sacred-root [class*="container"],
+.sacred-root [class*="Container"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

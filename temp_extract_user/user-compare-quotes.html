@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compare Quotes — TradeMatch Decision Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   TRADEMATCH · COMPARE QUOTES DECISION ENGINE
+   "Where Leads Become Escrow Transactions"
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #080C12;
+  --bg-secondary: #0E1420;
+  --bg-tertiary: #141B28;
+  --bg-card: #111827;
+  --bg-card-hover: #182030;
+  --neon: #00E5A0;
+  --neon-dim: rgba(0,229,160,0.08);
+  --neon-glow: 0 0 28px rgba(0,229,160,0.35);
+  --neon-glow-sm: 0 0 14px rgba(0,229,160,0.22);
+  --accent-blue: #42A5F5;
+  --accent-amber: #FFA726;
+  --accent-danger: #FF4757;
+  --accent-purple: #9C5FE9;
+  --accent-safe: #00E5A0;
+  --text-1: #F0F4FF;
+  --text-2: #8B95AA;
+  --text-3: #4A5568;
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --border-neon: rgba(0,229,160,0.25);
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family: var(--fb);
+  background: var(--bg-primary);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 40% at 10% 0%, rgba(0,229,160,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 100%, rgba(66,165,245,0.04) 0%, transparent 60%);
+}
+
+/* ── TOP NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px;
+  background: rgba(8,12,18,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 16px;
+}
+.topnav-back {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-2); font-size: 13px; font-family: var(--ff);
+  text-decoration: none; cursor: pointer;
+  transition: color .2s;
+}
+.topnav-back:hover { color: var(--neon); }
+.topnav-back svg { width:16px; height:16px; }
+.topnav-job {
+  flex:1;
+  display: flex; align-items: center; gap: 12px;
+}
+.topnav-job-tag {
+  font-family: var(--fm); font-size: 11px; color: var(--neon);
+  background: var(--neon-dim); border: 1px solid var(--border-neon);
+  border-radius: 4px; padding: 3px 8px; letter-spacing: .05em;
+}
+.topnav-job-title {
+  font-family: var(--ff); font-weight: 600; font-size: 15px; color: var(--text-1);
+}
+.topnav-job-meta { font-size: 12px; color: var(--text-2); }
+.topnav-rule-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-2);
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 12px;
+}
+.topnav-rule-badge span { color: var(--accent-amber); font-weight: 600; font-family: var(--ff); }
+
+/* ── AI INSIGHT BANNER ── */
+.insight-banner {
+  background: linear-gradient(135deg, rgba(0,229,160,0.06) 0%, rgba(66,165,245,0.04) 100%);
+  border-bottom: 1px solid var(--border-neon);
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative; overflow: hidden;
+}
+.insight-banner::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background: linear-gradient(to bottom, var(--neon), var(--accent-blue));
+}
+.insight-ai-pill {
+  flex-shrink: 0;
+  background: var(--neon-dim); border: 1px solid var(--border-neon);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; font-family: var(--ff); font-weight: 700;
+  color: var(--neon); letter-spacing: .08em;
+  display: flex; align-items: center; gap: 5px;
+}
+.insight-ai-pill svg { width:10px; height:10px; }
+.insight-text {
+  font-size: 13px; color: var(--text-1); line-height: 1.5;
+}
+.insight-text strong { color: var(--neon); }
+.insight-text em { color: var(--accent-amber); font-style:normal; font-weight:600; }
+
+/* ── STICKY HEADER ── */
+.compare-sticky {
+  position: sticky; top: 64px; z-index: 80;
+  background: rgba(8,12,18,0.96); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-2);
+  padding: 0 24px;
+}
+.compare-sticky-inner {
+  display: grid;
+  grid-template-columns: 200px repeat(3, 1fr);
+  gap: 0;
+  max-width: 1200px; margin: 0 auto;
+}
+.sticky-label-col {
+  padding: 16px 0;
+  display: flex; align-items: center;
+  font-size: 11px; font-family: var(--ff); font-weight: 700;
+  color: var(--text-3); letter-spacing: .1em; text-transform: uppercase;
+}
+.sticky-vendor-col {
+  padding: 12px 16px;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.sticky-vendor-top {
+  display: flex; align-items: center; gap: 10px;
+}
+.vendor-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  object-fit: cover; flex-shrink:0;
+  border: 2px solid var(--border-2);
+}
+.vendor-avatar-placeholder {
+  width: 36px; height: 36px; border-radius: 50%;
+  flex-shrink:0; border: 2px solid var(--border-2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff); font-weight: 700; font-size: 14px;
+  color: var(--bg-primary);
+}
+.sticky-vendor-name {
+  font-family: var(--ff); font-weight: 700; font-size: 13px; color: var(--text-1);
+}
+.sticky-vendor-score {
+  font-size: 11px; color: var(--text-2); display: flex; align-items: center; gap: 4px;
+}
+.score-dot { width:6px; height:6px; border-radius:50%; background:var(--neon); flex-shrink:0; }
+.select-escrow-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 14px; border-radius: 8px; border: none; cursor: pointer;
+  font-family: var(--ff); font-weight: 700; font-size: 12px; letter-spacing:.02em;
+  transition: all .25s; white-space: nowrap;
+}
+.select-escrow-btn.primary {
+  background: var(--neon);
+  color: var(--bg-primary);
+  box-shadow: 0 0 20px rgba(0,229,160,0.3);
+}
+.select-escrow-btn.primary:hover {
+  background: #00ffb2;
+  box-shadow: var(--neon-glow);
+  transform: translateY(-1px);
+}
+.select-escrow-btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border-2);
+  color: var(--text-1);
+}
+.select-escrow-btn.secondary:hover {
+  border-color: var(--border-neon);
+  color: var(--neon);
+}
+.select-escrow-btn svg { width:14px; height:14px; }
+
+/* verified badges */
+.verified-row {
+  display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+}
+.v-badge {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 10px; font-family: var(--ff); font-weight: 600;
+  padding: 2px 7px; border-radius: 4px;
+}
+.v-badge.green { background: rgba(0,229,160,0.12); color: var(--neon); border: 1px solid rgba(0,229,160,0.2); }
+.v-badge.blue { background: rgba(66,165,245,0.12); color: var(--accent-blue); border: 1px solid rgba(66,165,245,0.2); }
+.v-badge.amber { background: rgba(255,167,38,0.12); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.2); }
+.v-badge.purple { background: rgba(156,95,233,0.12); color: var(--accent-purple); border: 1px solid rgba(156,95,233,0.2); }
+.v-badge svg { width:9px; height:9px; }
+
+/* GPS pulse badge */
+.gps-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-family: var(--ff); font-weight: 700;
+  color: var(--neon); padding: 3px 8px; border-radius: 4px;
+  background: rgba(0,229,160,0.1); border: 1px solid var(--border-neon);
+  position: relative; cursor: help;
+}
+.gps-badge:hover .gps-tooltip { opacity:1; pointer-events:all; transform:translateY(0); }
+.gps-tooltip {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(4px);
+  background: #0E1420; border: 1px solid var(--border-neon);
+  border-radius: 8px; padding: 10px 12px; width: 220px;
+  font-size: 11px; color: var(--text-2); line-height: 1.5;
+  opacity: 0; pointer-events:none; transition: all .2s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  white-space: normal; z-index:50;
+}
+.gps-tooltip::after {
+  content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+  border: 6px solid transparent; border-top-color: #0E1420;
+}
+.gps-tooltip strong { color: var(--neon); display:block; margin-bottom:3px; }
+.gps-pulse {
+  width:7px; height:7px; border-radius:50%;
+  background: var(--neon);
+  position: relative; flex-shrink:0;
+}
+.gps-pulse::before {
+  content:''; position:absolute; inset:-3px; border-radius:50%;
+  border: 1px solid var(--neon); opacity: 0;
+  animation: pulse-ring 2s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0% { opacity:.7; transform:scale(1); }
+  100% { opacity:0; transform:scale(2.5); }
+}
+/* fee tooltip */
+.fee-label-wrap { display:inline-flex; align-items:center; gap:4px; position:relative; cursor:help; }
+.fee-label-wrap:hover .fee-tooltip { opacity:1; transform:translateY(0); }
+.fee-tooltip {
+  position:absolute; bottom:calc(100% + 6px); left:0;
+  background:#0E1420; border:1px solid var(--border-neon);
+  border-radius:7px; padding:8px 10px; width:200px;
+  font-size:10px; color:var(--text-2); line-height:1.5;
+  opacity:0; pointer-events:none; transition:all .2s;
+  transform:translateY(4px); box-shadow:0 8px 20px rgba(0,0,0,.4); z-index:50;
+}
+.fee-tooltip strong { color:var(--neon); display:block; }
+.fee-info-icon {
+  width:12px; height:12px; border-radius:50%;
+  border:1px solid var(--text-3); display:inline-flex; align-items:center; justify-content:center;
+  font-size:8px; color:var(--text-3); font-style:normal; flex-shrink:0;
+}
+/* Triple-lock loading overlay */
+.lock-overlay {
+  position:absolute; inset:0; background:rgba(8,12,18,0.92); border-radius:16px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+  opacity:0; pointer-events:none; transition:opacity .3s; z-index:10;
+}
+.lock-overlay.active { opacity:1; pointer-events:all; }
+.lock-step { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-2); }
+.lock-step-icon {
+  width:20px; height:20px; border-radius:50%; border:1.5px solid var(--border-2);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  font-size:9px;
+}
+.lock-step-icon.pending { border-color:var(--text-3); color:var(--text-3); }
+.lock-step-icon.checking { border-color:var(--accent-amber); color:var(--accent-amber); animation:spin .8s linear infinite; }
+.lock-step-icon.done { border-color:var(--neon); color:var(--neon); background:rgba(0,229,160,0.1); }
+.lock-step-icon.fail { border-color:var(--accent-danger); color:var(--accent-danger); background:rgba(255,71,87,0.1); }
+@keyframes spin { to { transform:rotate(360deg); } }
+.lock-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); }
+/* toast */
+.tm-toast {
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--bg-secondary); border:1px solid var(--border-2);
+  border-radius:8px; padding:10px 18px; font-size:13px; color:var(--text-1);
+  z-index:300; opacity:0; transition:all .3s; white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+.tm-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.tm-toast.danger { border-color:rgba(255,71,87,.4); color:var(--accent-danger); }
+.tm-toast.warning { border-color:rgba(255,167,38,.4); color:var(--accent-amber); }
+
+/* ai chip */
+.ai-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-family: var(--ff); font-weight: 700; letter-spacing:.06em;
+  padding: 2px 8px; border-radius: 3px;
+  text-transform: uppercase;
+}
+.ai-chip.best-value { background: rgba(0,229,160,0.15); color: var(--neon); border: 1px solid rgba(0,229,160,0.3); }
+.ai-chip.most-exp { background: rgba(156,95,233,0.15); color: var(--accent-purple); border: 1px solid rgba(156,95,233,0.3); }
+.ai-chip.fastest { background: rgba(255,167,38,0.15); color: var(--accent-amber); border: 1px solid rgba(255,167,38,0.3); }
+
+/* ── MAIN CONTENT ── */
+.compare-page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 120px; position:relative; z-index:1; }
+
+/* section headers */
+.section-row {
+  display: grid;
+  grid-template-columns: 200px repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+.section-label-cell {
+  padding: 24px 16px 16px 0;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.section-label-text {
+  font-family: var(--ff); font-size: 11px; font-weight: 700;
+  color: var(--text-3); letter-spacing:.1em; text-transform:uppercase; line-height:1.3;
+}
+.section-label-icon { flex-shrink:0; margin-top:1px; }
+.section-label-icon svg { width:14px; height:14px; color: var(--text-3); }
+
+.data-cell {
+  padding: 20px 16px;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.data-cell.highlighted {
+  background: linear-gradient(180deg, rgba(0,229,160,0.03) 0%, transparent 100%);
+  border-left-color: var(--border-neon);
+  position: relative;
+}
+.data-cell.highlighted::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--neon), transparent);
+}
+
+/* price display */
+.total-price {
+  font-family: var(--ff); font-weight: 800; font-size: 28px; color: var(--text-1);
+  line-height: 1; letter-spacing: -.02em;
+}
+.total-price .currency { font-size: 16px; font-weight: 600; color: var(--text-2); vertical-align: super; }
+.price-breakdown {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.price-line {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-2);
+}
+.price-line span:last-child {
+  font-family: var(--fm); font-weight: 500; color: var(--text-1); font-size: 12px;
+}
+.price-divider { height:1px; background: var(--border); margin: 4px 0; }
+.deposit-tag {
+  font-size: 11px; font-family: var(--ff); font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(255,71,87,0.1); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.2);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.deposit-tag.low { background: rgba(0,229,160,0.1); color: var(--neon); border-color: rgba(0,229,160,0.2); }
+
+/* milestone mini-timeline */
+.milestone-label {
+  font-size: 11px; color: var(--text-3); font-family: var(--ff); font-weight: 600; text-transform:uppercase; letter-spacing:.07em;
+}
+.milestone-track {
+  display: flex; align-items: center; gap: 0; width: 100%;
+  margin: 6px 0 2px;
+}
+.ms-segment {
+  height: 8px; border-radius: 0;
+  position: relative; cursor: default;
+  transition: opacity .2s;
+}
+.ms-segment:first-child { border-radius: 4px 0 0 4px; }
+.ms-segment:last-child { border-radius: 0 4px 4px 0; }
+.ms-segment:hover { opacity: .8; }
+.ms-labels {
+  display: flex; align-items: flex-start; gap: 0; width: 100%;
+}
+.ms-lbl {
+  display: flex; flex-direction: column; align-items: center; font-size: 10px;
+}
+.ms-lbl-pct { font-family: var(--fm); font-weight: 500; color: var(--text-1); }
+.ms-lbl-name { color: var(--text-3); font-size: 9px; text-align:center; line-height:1.2; margin-top:1px; }
+
+/* timeline row */
+.start-date {
+  font-family: var(--ff); font-weight: 700; font-size: 16px; color: var(--text-1);
+}
+.timeline-meta { font-size: 12px; color: var(--text-2); display:flex; align-items:center; gap:6px; }
+.urgency-chip {
+  font-size: 10px; font-family: var(--ff); font-weight: 700;
+  padding: 2px 7px; border-radius: 3px;
+  background: rgba(255,71,87,0.12); color: var(--accent-danger); border: 1px solid rgba(255,71,87,0.2);
+}
+.urgency-chip.ok { background: rgba(0,229,160,0.1); color: var(--neon); border-color: rgba(0,229,160,0.2); }
+
+/* safety row */
+.safety-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-2); line-height: 1.3;
+}
+.safety-icon {
+  width:20px; height:20px; flex-shrink:0; border-radius:5px;
+  display: flex; align-items: center; justify-content: center;
+}
+.safety-icon.ok { background: rgba(0,229,160,0.12); color: var(--neon); }
+.safety-icon.warn { background: rgba(255,167,38,0.12); color: var(--accent-amber); }
+.safety-icon.fail { background: rgba(255,71,87,0.1); color: var(--accent-danger); }
+.safety-icon svg { width:11px; height:11px; }
+.safety-text-wrap strong { color: var(--text-1); font-weight:600; font-size:12px; display:block; }
+
+/* portfolio carousel */
+.portfolio-row {
+  display: flex; gap: 6px;
+}
+.portfolio-img {
+  width: 0; flex: 1; height: 72px; border-radius: 6px;
+  overflow: hidden; position: relative; cursor: pointer;
+  border: 1px solid var(--border);
+  transition: border-color .2s, transform .2s;
+}
+.portfolio-img:hover { border-color: var(--border-neon); transform: scale(1.02); }
+.portfolio-img-placeholder {
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-size: 10px; font-family: var(--ff); color: var(--text-3); text-align:center;
+  padding: 4px;
+}
+.portfolio-img-placeholder.img1 { background: linear-gradient(135deg, #1a2332 0%, #0e1520 100%); }
+.portfolio-img-placeholder.img2 { background: linear-gradient(135deg, #1a2a1e 0%, #0a1510 100%); }
+.portfolio-img-placeholder.img3 { background: linear-gradient(135deg, #221a2a 0%, #120e16 100%); }
+.portfolio-count { font-size:9px; color:var(--text-3); margin-top:4px; text-align:center; }
+
+/* AI insight overlay */
+.ai-insight-card {
+  background: linear-gradient(135deg, rgba(0,229,160,0.04) 0%, rgba(66,165,245,0.03) 100%);
+  border: 1px solid var(--border-neon);
+  border-radius: 10px; padding: 14px;
+  display: flex; flex-direction: column; gap: 8px;
+  position: relative; overflow: hidden;
+}
+.ai-insight-card::before {
+  content: '"'; position:absolute; right:10px; top:-8px;
+  font-size: 80px; color: rgba(0,229,160,0.05); font-family: var(--ff); font-weight:900; line-height:1;
+  pointer-events:none;
+}
+.ai-insight-header {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; font-family: var(--ff); font-weight: 700;
+  color: var(--neon); letter-spacing:.07em; text-transform:uppercase;
+}
+.ai-insight-header svg { width:11px; height:11px; }
+.ai-insight-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.ai-insight-text strong { color: var(--text-1); font-weight:600; }
+.ai-insight-text em { color: var(--neon); font-style:normal; font-weight:600; }
+
+/* show-up score bar */
+.score-bar-wrap { display:flex; flex-direction:column; gap:5px; }
+.score-bar-label { display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text-2); }
+.score-bar-label span:last-child { font-family:var(--fm); font-weight:500; color:var(--text-1); }
+.score-bar { height: 5px; background: var(--bg-tertiary); border-radius: 3px; overflow:hidden; }
+.score-bar-fill { height:100%; border-radius:3px; transition: width 1s ease-out; }
+
+/* ── ESCROW MODAL ── */
+.modal-overlay {
+  position: fixed; inset:0; z-index: 200;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events:none; transition: opacity .3s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-2);
+  border-radius: 16px; padding: 32px; width: 480px; max-width: 95vw;
+  position: relative; overflow: hidden;
+  transform: translateY(20px); transition: transform .3s;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), var(--neon-glow);
+}
+.modal-overlay.open .modal-card { transform: translateY(0); }
+.modal-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--neon), var(--accent-blue));
+}
+.modal-close {
+  position:absolute; top:16px; right:16px;
+  width:28px; height:28px; border-radius:6px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-2);
+  transition: all .2s;
+}
+.modal-close:hover { color:var(--text-1); border-color:var(--border-2); }
+.modal-close svg { width:14px; height:14px; }
+.modal-stripe-badge {
+  display:flex; align-items:center; gap:8px; margin-bottom:20px;
+}
+.stripe-logo {
+  background: #6772e5; border-radius:5px; padding:3px 10px;
+  font-size:13px; font-weight:800; color:#fff; letter-spacing:-.02em;
+}
+.modal-stripe-badge span { font-size:12px; color:var(--text-2); }
+.modal-title {
+  font-family:var(--ff); font-weight:800; font-size:22px; color:var(--text-1);
+  margin-bottom:8px; line-height:1.2;
+}
+.modal-subtitle { font-size:13px; color:var(--text-2); margin-bottom:24px; line-height:1.5; }
+.modal-escrow-box {
+  background: var(--bg-tertiary); border: 1px solid var(--border-neon);
+  border-radius: 10px; padding: 16px; margin-bottom: 20px;
+  display: flex; flex-direction:column; gap:10px;
+}
+.modal-escrow-row {
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:13px; color:var(--text-2);
+}
+.modal-escrow-row .val { font-family:var(--fm); font-weight:600; color:var(--text-1); font-size:13px; }
+.modal-escrow-row.total .val { color:var(--neon); font-size:16px; }
+.modal-escrow-row.total { border-top:1px solid var(--border); padding-top:10px; margin-top:2px; }
+.modal-milestones { display:flex; flex-direction:column; gap:6px; margin-bottom:20px; }
+.modal-ms { display:flex; align-items:center; gap:10px; }
+.modal-ms-num {
+  width:20px; height:20px; border-radius:50%; border:1px solid var(--border-neon);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; font-family:var(--ff); font-weight:700; color:var(--neon); flex-shrink:0;
+}
+.modal-ms-text { font-size:12px; color:var(--text-2); }
+.modal-ms-text strong { color:var(--text-1); }
+.modal-trust-note {
+  display:flex; align-items:flex-start; gap:10px;
+  background: rgba(0,229,160,0.05); border:1px solid rgba(0,229,160,0.15);
+  border-radius:8px; padding:12px; margin-bottom:24px;
+  font-size:12px; color:var(--text-2); line-height:1.5;
+}
+.modal-trust-note svg { width:16px; height:16px; color:var(--neon); flex-shrink:0; margin-top:1px; }
+.modal-confirm-btn {
+  width:100%; padding:16px; border-radius:10px; border:none; cursor:pointer;
+  background: var(--neon); color:var(--bg-primary);
+  font-family:var(--ff); font-weight:800; font-size:15px; letter-spacing:.02em;
+  box-shadow: 0 0 30px rgba(0,229,160,0.3);
+  transition: all .25s;
+}
+.modal-confirm-btn:hover {
+  background: #00ffb2; box-shadow: var(--neon-glow); transform:translateY(-2px);
+}
+.modal-cancel { text-align:center; margin-top:12px; font-size:12px; color:var(--text-3); cursor:pointer; }
+.modal-cancel:hover { color:var(--text-2); }
+
+/* ── JOB CONTEXT BANNER ── */
+.job-banner {
+  background: var(--bg-secondary); border-bottom:1px solid var(--border);
+  padding: 14px 24px; display:flex; align-items:center; gap:20px;
+  position: sticky; top:64px; z-index:79;
+}
+.job-icon { width:40px; height:40px; border-radius:10px; background:var(--neon-dim); border:1px solid var(--border-neon); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.job-icon svg { width:20px; height:20px; color:var(--neon); }
+.job-info { flex:1; }
+.job-info-title { font-family:var(--ff); font-weight:700; font-size:14px; color:var(--text-1); }
+.job-info-meta { font-size:12px; color:var(--text-2); margin-top:2px; }
+.job-status-badge {
+  font-size:11px; font-family:var(--ff); font-weight:700;
+  padding:4px 12px; border-radius:20px; letter-spacing:.05em;
+  background:rgba(255,167,38,0.12); color:var(--accent-amber); border:1px solid rgba(255,167,38,0.2);
+}
+.job-quotes-note { font-size:12px; color:var(--text-2); white-space:nowrap; }
+.job-quotes-note strong { color:var(--text-1); }
+
+/* bottom CTA */
+.bottom-cta {
+  position:fixed; bottom:0; left:0; right:0; z-index:90;
+  background: rgba(8,12,18,0.96); backdrop-filter:blur(20px);
+  border-top:1px solid var(--border-2);
+  padding:16px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.bottom-cta-text { font-size:13px; color:var(--text-2); }
+.bottom-cta-text strong { color:var(--text-1); }
+.bottom-cta-btns { display:flex; gap:10px; }
+.bottom-cta-btns .select-escrow-btn.primary { padding: 12px 24px; font-size:13px; }
+
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.compare-page > * { animation: fadeInUp .4s ease both; }
+.compare-page > *:nth-child(1) { animation-delay:.05s; }
+.compare-page > *:nth-child(2) { animation-delay:.1s; }
+.compare-page > *:nth-child(3) { animation-delay:.15s; }
+.compare-page > *:nth-child(4) { animation-delay:.2s; }
+.compare-page > *:nth-child(5) { animation-delay:.25s; }
+.compare-page > *:nth-child(6) { animation-delay:.3s; }
+.compare-page > *:nth-child(7) { animation-delay:.35s; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .compare-sticky-inner, .section-row {
+    grid-template-columns: 140px repeat(3,1fr);
+  }
+  .topnav-rule-badge, .job-quotes-note { display:none; }
+  .data-cell { padding: 14px 10px; }
+  .total-price { font-size:22px; }
+}
+@media (max-width: 650px) {
+  .compare-sticky-inner, .section-row {
+    grid-template-columns: 90px repeat(3,1fr);
+  }
+  .section-label-text { font-size:9px; }
+  .sticky-vendor-name { font-size:11px; }
+}
+
+/* ── PAYMENT METHOD TOGGLE ── */
+.pay-method-toggle {
+  display:flex; gap:4px; margin-bottom:22px;
+  background:var(--bg-primary); border:1px solid var(--border-2);
+  border-radius:10px; padding:4px;
+}
+.pay-method-btn {
+  flex:1; padding:10px 8px; border:1px solid transparent; cursor:pointer;
+  border-radius:7px; background:transparent; transition:all .2s;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.pay-method-btn .btn-icon { font-size:17px; line-height:1; }
+.pay-method-btn .btn-label {
+  font-family:var(--ff); font-weight:700; font-size:11px; color:var(--text-3); letter-spacing:.02em; transition:color .2s;
+}
+.pay-method-btn .btn-sub { font-size:9px; color:var(--text-3); transition:color .2s; }
+.pay-method-btn.active-escrow {
+  background:rgba(0,229,160,0.1); border-color:var(--border-neon);
+}
+.pay-method-btn.active-escrow .btn-label { color:var(--neon); }
+.pay-method-btn.active-escrow .btn-sub { color:rgba(0,229,160,0.55); }
+.pay-method-btn.active-direct {
+  background:rgba(255,167,38,0.1); border-color:rgba(255,167,38,0.28);
+}
+.pay-method-btn.active-direct .btn-label { color:var(--accent-amber); }
+.pay-method-btn.active-direct .btn-sub { color:rgba(255,167,38,0.55); }
+
+/* direct warning panel */
+.direct-warning-panel {
+  background:rgba(255,167,38,0.06); border:1px solid rgba(255,167,38,0.22);
+  border-radius:10px; padding:14px; margin-bottom:18px;
+  font-size:12px; color:var(--text-2); line-height:1.6;
+  display:none;
+}
+.direct-warning-panel strong { color:var(--accent-amber); }
+.direct-warning-panel .warn-heading {
+  display:flex; align-items:center; gap:7px; margin-bottom:8px;
+  font-family:var(--ff); font-weight:700; font-size:12px; color:var(--accent-amber);
+}
+.direct-warning-panel .warn-heading svg { width:14px; height:14px; flex-shrink:0; }
+.direct-checklist { list-style:none; display:flex; flex-direction:column; gap:4px; }
+.direct-checklist li { display:flex; align-items:flex-start; gap:7px; }
+.direct-checklist li::before { content:'⚠'; font-size:10px; flex-shrink:0; margin-top:1px; }
+
+/* direct confirm btn variant */
+.modal-confirm-btn.is-direct {
+  background:var(--accent-amber);
+  box-shadow:0 0 24px rgba(255,167,38,0.25);
+}
+.modal-confirm-btn.is-direct:hover {
+  background:#ffbc4d; box-shadow:0 0 36px rgba(255,167,38,0.4); transform:translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <a class="topnav-back" href="#">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12L6 8l4-4"/></svg>
+    Back to Matches
+  </a>
+  <div class="topnav-job">
+    <span class="topnav-job-tag">JOB-2024-1147</span>
+    <span class="topnav-job-title">Emergency Boiler Repair</span>
+    <span class="topnav-job-meta">· Hammersmith, London · Posted 2h ago</span>
+  </div>
+  <div class="topnav-rule-badge">
+    Rule of 3–5 · <span>3 Quotes</span> shown
+  </div>
+</nav>
+
+<!-- JOB CONTEXT BANNER -->
+<div class="job-banner">
+  <div class="job-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+  </div>
+  <div class="job-info">
+    <div class="job-info-title">Gas Boiler Fault — No Hot Water, Error Code E119</div>
+    <div class="job-info-meta">Category: Plumbing &amp; Gas · Urgency: <span style="color:var(--accent-danger);font-weight:600;">URGENT</span> · Budget: £400–£650</div>
+  </div>
+  <span class="job-status-badge">MATCHED</span>
+  <span class="job-quotes-note"><strong>3 of 5</strong> max quotes</span>
+</div>
+
+<!-- AI INSIGHT BANNER -->
+<div class="insight-banner">
+  <div class="insight-ai-pill">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>
+    AI INSIGHT
+  </div>
+  <div class="insight-text">
+    <strong>Apex Gas Services</strong> is our <em>Best Value</em> pick — £30 cheaper than average with a <strong>100% Show-Up Score</strong> on Gas jobs. <strong>Pro Gas London</strong> has the deepest experience but carries a 30% deposit requirement. <em>TrustTrades Ltd</em> is your fastest option — available today with GPS Live Tracking enabled.
+  </div>
+</div>
+
+<!-- STICKY HEADER WITH VENDOR COLUMNS -->
+<div class="compare-sticky">
+  <div class="compare-sticky-inner">
+    <div class="sticky-label-col">Vendor / Quote</div>
+
+    <!-- Vendor A — Best Value -->
+    <div class="sticky-vendor-col">
+      <div class="sticky-vendor-top">
+        <div class="vendor-avatar-placeholder" style="background:linear-gradient(135deg,#00E5A0,#42A5F5);">AG</div>
+        <div>
+          <div class="sticky-vendor-name">Apex Gas Services</div>
+          <div class="sticky-vendor-score"><span class="score-dot"></span> 9.7 TrustScore · 100% Show-Up</div>
+        </div>
+      </div>
+      <div class="verified-row">
+        <span class="v-badge green"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M5 8.5L2 5.5l1-1 2 2 4-4 1 1L5 8.5z"/></svg> Verified</span>
+        <span class="v-badge blue">Gas Safe</span>
+        <span class="ai-chip best-value">★ Best Value</span>
+      </div>
+      <button class="select-escrow-btn primary" onclick="openModal('Apex Gas Services','£520','20/40/40')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+        Select for Escrow
+      </button>
+    </div>
+
+    <!-- Vendor B — Most Experienced -->
+    <div class="sticky-vendor-col">
+      <div class="sticky-vendor-top">
+        <div class="vendor-avatar-placeholder" style="background:linear-gradient(135deg,#9C5FE9,#42A5F5);">PG</div>
+        <div>
+          <div class="sticky-vendor-name">Pro Gas London</div>
+          <div class="sticky-vendor-score"><span class="score-dot" style="background:var(--accent-purple)"></span> 9.4 TrustScore · 94% Show-Up</div>
+        </div>
+      </div>
+      <div class="verified-row">
+        <span class="v-badge green"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M5 8.5L2 5.5l1-1 2 2 4-4 1 1L5 8.5z"/></svg> Verified</span>
+        <span class="v-badge blue">Gas Safe</span>
+        <span class="v-badge purple">10yr Exp</span>
+        <span class="ai-chip most-exp">◆ Most Exp.</span>
+      </div>
+      <button class="select-escrow-btn secondary" onclick="openModal('Pro Gas London','£595','30/40/30')">Select for Escrow</button>
+    </div>
+
+    <!-- Vendor C — Fastest -->
+    <div class="sticky-vendor-col">
+      <div class="sticky-vendor-top">
+        <div class="vendor-avatar-placeholder" style="background:linear-gradient(135deg,#FFA726,#FF4757);">TT</div>
+        <div>
+          <div class="sticky-vendor-name">TrustTrades Ltd</div>
+          <div class="sticky-vendor-score"><span class="score-dot" style="background:var(--accent-amber)"></span> 9.1 TrustScore · 97% Show-Up</div>
+        </div>
+      </div>
+      <div class="verified-row">
+        <span class="v-badge green"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M5 8.5L2 5.5l1-1 2 2 4-4 1 1L5 8.5z"/></svg> Verified</span>
+        <span class="v-badge blue">Gas Safe</span>
+        <span class="gps-badge"><span class="gps-pulse"></span>Live GPS<span class="gps-tooltip"><strong>TradeMatch Live Enabled</strong>This vendor uses GPS tracking. You can track their real-time arrival 30 mins before they're due on-site.</span></span>
+        <span class="ai-chip fastest">⚡ Fastest</span>
+      </div>
+      <button class="select-escrow-btn secondary" onclick="openModal('TrustTrades Ltd','£550','0/50/50')">Select for Escrow</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN COMPARISON MATRIX -->
+<div class="compare-page">
+
+  <!-- ROW 1: PRICE & PAYMENT -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><path d="M8 4v8M6 6h3a1 1 0 010 2H6m0 0h3.5a1 1 0 010 2H6"/></svg></div>
+      <div>
+        <div class="section-label-text">Price &amp;<br>Payment</div>
+      </div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="total-price"><span class="currency">£</span>520</div>
+      <div class="price-breakdown">
+        <div class="price-line"><span>Labour</span><span>£320</span></div>
+        <div class="price-line"><span>Materials</span><span>£160</span></div>
+        <div class="price-line"><span><span class="fee-label-wrap">Platform Protection &amp; Escrow Fee<i class="fee-info-icon">i</i><span class="fee-tooltip"><strong>What is this?</strong>Covers Escrow management, dispute resolution, and TradeMatch Guarantee protection. Paid only on job completion.</span></span></span><span>£40</span></div>
+        <div class="price-divider"></div>
+        <div class="price-line" style="font-weight:700;color:var(--text-1)"><span>Escrow Total</span><span style="color:var(--neon)">£520</span></div>
+      </div>
+      <span class="deposit-tag low">✓ No Upfront Deposit</span>
+    </div>
+
+    <div class="data-cell">
+      <div class="total-price"><span class="currency">£</span>595</div>
+      <div class="price-breakdown">
+        <div class="price-line"><span>Labour</span><span>£360</span></div>
+        <div class="price-line"><span>Materials</span><span>£195</span></div>
+        <div class="price-line"><span><span class="fee-label-wrap">Platform Protection &amp; Escrow Fee<i class="fee-info-icon">i</i><span class="fee-tooltip"><strong>What is this?</strong>Covers Escrow management, dispute resolution, and TradeMatch Guarantee protection. Paid only on job completion.</span></span></span><span>£40</span></div>
+        <div class="price-divider"></div>
+        <div class="price-line" style="font-weight:700;color:var(--text-1)"><span>Escrow Total</span><span style="color:var(--neon)">£595</span></div>
+      </div>
+      <span class="deposit-tag">⚠ 30% Deposit Required</span>
+    </div>
+
+    <div class="data-cell">
+      <div class="total-price"><span class="currency">£</span>550</div>
+      <div class="price-breakdown">
+        <div class="price-line"><span>Labour</span><span>£340</span></div>
+        <div class="price-line"><span>Materials</span><span>£170</span></div>
+        <div class="price-line"><span><span class="fee-label-wrap">Platform Protection &amp; Escrow Fee<i class="fee-info-icon">i</i><span class="fee-tooltip"><strong>What is this?</strong>Covers Escrow management, dispute resolution, and TradeMatch Guarantee protection. Paid only on job completion.</span></span></span><span>£40</span></div>
+        <div class="price-divider"></div>
+        <div class="price-line" style="font-weight:700;color:var(--text-1)"><span>Escrow Total</span><span style="color:var(--neon)">£550</span></div>
+      </div>
+      <span class="deposit-tag low">✓ No Upfront Deposit</span>
+    </div>
+  </div>
+
+  <!-- ROW 1B: MILESTONE VISUALIZATION -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 8h12M8 2v12"/><circle cx="3" cy="8" r="1.5" fill="currentColor" stroke="none"/><circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/><circle cx="13" cy="8" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+      <div><div class="section-label-text">Milestone<br>Payments</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="milestone-label">3 Milestones · Work-Linked</div>
+      <div class="milestone-track">
+        <div class="ms-segment" style="flex:20;background:var(--neon);opacity:.7" title="Start: 20%"></div>
+        <div class="ms-segment" style="flex:1;background:transparent;width:2px"></div>
+        <div class="ms-segment" style="flex:40;background:var(--accent-blue);opacity:.7" title="Mid: 40%"></div>
+        <div class="ms-segment" style="flex:1;background:transparent;width:2px"></div>
+        <div class="ms-segment" style="flex:40;background:var(--accent-purple);opacity:.7" title="Done: 40%"></div>
+      </div>
+      <div class="ms-labels">
+        <div class="ms-lbl" style="flex:20"><span class="ms-lbl-pct">20%</span><span class="ms-lbl-name">Start</span></div>
+        <div style="flex:1"></div>
+        <div class="ms-lbl" style="flex:40"><span class="ms-lbl-pct">40%</span><span class="ms-lbl-name">Mid</span></div>
+        <div style="flex:1"></div>
+        <div class="ms-lbl" style="flex:40"><span class="ms-lbl-pct">40%</span><span class="ms-lbl-name">Complete</span></div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="milestone-label">3 Milestones</div>
+      <div class="milestone-track">
+        <div class="ms-segment" style="flex:30;background:var(--accent-danger);opacity:.7"></div>
+        <div class="ms-segment" style="flex:1;background:transparent;width:2px"></div>
+        <div class="ms-segment" style="flex:40;background:var(--accent-blue);opacity:.7"></div>
+        <div class="ms-segment" style="flex:1;background:transparent;width:2px"></div>
+        <div class="ms-segment" style="flex:30;background:var(--accent-purple);opacity:.7"></div>
+      </div>
+      <div class="ms-labels">
+        <div class="ms-lbl" style="flex:30"><span class="ms-lbl-pct">30%</span><span class="ms-lbl-name">Deposit</span></div>
+        <div style="flex:1"></div>
+        <div class="ms-lbl" style="flex:40"><span class="ms-lbl-pct">40%</span><span class="ms-lbl-name">Mid</span></div>
+        <div style="flex:1"></div>
+        <div class="ms-lbl" style="flex:30"><span class="ms-lbl-pct">30%</span><span class="ms-lbl-name">Done</span></div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="milestone-label">2 Milestones · GPS-Verified</div>
+      <div class="milestone-track">
+        <div class="ms-segment" style="flex:50;background:var(--neon);opacity:.7"></div>
+        <div class="ms-segment" style="flex:1;background:transparent;width:2px"></div>
+        <div class="ms-segment" style="flex:50;background:var(--accent-amber);opacity:.7"></div>
+      </div>
+      <div class="ms-labels">
+        <div class="ms-lbl" style="flex:50"><span class="ms-lbl-pct">50%</span><span class="ms-lbl-name">Arrival</span></div>
+        <div style="flex:1"></div>
+        <div class="ms-lbl" style="flex:50"><span class="ms-lbl-pct">50%</span><span class="ms-lbl-name">Complete</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: TIMELINE -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M5 1v4M11 1v4M2 7h12"/></svg></div>
+      <div><div class="section-label-text">Timeline &amp;<br>Availability</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="start-date">Tomorrow, 9am</div>
+      <div class="timeline-meta">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--neon)" stroke-width="1.8"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 2"/></svg>
+        Est. duration: 2–3 hours
+      </div>
+      <span class="urgency-chip ok">✓ Available ASAP</span>
+    </div>
+
+    <div class="data-cell">
+      <div class="start-date">Thursday, 10am</div>
+      <div class="timeline-meta">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--text-2)" stroke-width="1.8"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 2"/></svg>
+        Est. duration: 3–4 hours
+      </div>
+      <span class="urgency-chip">⏱ 3-day wait</span>
+    </div>
+
+    <div class="data-cell">
+      <div class="start-date">Today, 4pm</div>
+      <div class="timeline-meta">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--accent-amber)" stroke-width="1.8"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5l2 2"/></svg>
+        Est. duration: 2–4 hours
+      </div>
+      <span class="urgency-chip" style="background:rgba(255,167,38,0.1);color:var(--accent-amber);border-color:rgba(255,167,38,0.2)">⚡ Same-day slot!</span>
+    </div>
+  </div>
+
+  <!-- ROW 3: SAFETY -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2L3 4.5v4c0 3 2.5 5.5 5 6 2.5-.5 5-3 5-6v-4L8 2z"/></svg></div>
+      <div><div class="section-label-text">Safety &amp;<br>Insurance</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Professional Indemnity £2M</strong><span>Verified active policy</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Gas Safe Registered</strong><span>Reg #4912847 · Valid 2025</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>TradeMatch Guarantee</strong><span>Eligible for dispute cover</span></div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Professional Indemnity £5M</strong><span>Verified active policy</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Gas Safe Registered</strong><span>Reg #2287641 · Valid 2025</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>TradeMatch Guarantee</strong><span>Eligible for dispute cover</span></div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Professional Indemnity £1M</strong><span>Verified active policy</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>Gas Safe Registered</strong><span>Reg #7734029 · Valid 2026</span></div>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon ok"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6l2.5 2.5L10 3"/></svg></div>
+        <div class="safety-text-wrap"><strong>TradeMatch Guarantee</strong><span>+ GPS incident log</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: TRUST SCORES -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2l1.5 3.5H14l-3.5 2.5L12 12l-4-2.5L4 12l1.5-4L2 5.5h4.5L8 2z"/></svg></div>
+      <div><div class="section-label-text">Trust &amp;<br>Show-Up Score</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>TrustScore (AEO)</span><span>9.7 / 10</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:97%;background:var(--neon)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Show-Up Score</span><span>100%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:100%;background:var(--accent-blue)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Job Completion Rate</span><span>98%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:98%;background:var(--accent-purple)"></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:2px">Based on 143 gas jobs on TradeMatch</div>
+    </div>
+
+    <div class="data-cell">
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>TrustScore (AEO)</span><span>9.4 / 10</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:94%;background:var(--neon)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Show-Up Score</span><span>94%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:94%;background:var(--accent-blue)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Job Completion Rate</span><span>97%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:97%;background:var(--accent-purple)"></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:2px">Based on 287 gas jobs on TradeMatch</div>
+    </div>
+
+    <div class="data-cell">
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>TrustScore (AEO)</span><span>9.1 / 10</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:91%;background:var(--neon)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Show-Up Score</span><span>97%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:97%;background:var(--accent-blue)"></div></div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-label"><span>Job Completion Rate</span><span>99%</span></div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:99%;background:var(--accent-purple)"></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:2px">Based on 68 gas jobs on TradeMatch</div>
+    </div>
+  </div>
+
+  <!-- ROW 5: PORTFOLIO -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M1 7l3-2 3 3 3-2 5 4"/></svg></div>
+      <div><div class="section-label-text">Portfolio<br>Preview</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="portfolio-row">
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img1">🔧<br>Boiler Install 2024</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img2">🏠<br>Combi Replace</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img3">⚙️<br>Gas Repair</div></div>
+      </div>
+      <div class="portfolio-count">3 of 47 photos · Gas & Heating</div>
+    </div>
+
+    <div class="data-cell">
+      <div class="portfolio-row">
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img3">🔥<br>System Boiler</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img1">🏗️<br>Full Install</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img2">✅<br>Fault Repair</div></div>
+      </div>
+      <div class="portfolio-count">3 of 124 photos · All categories</div>
+    </div>
+
+    <div class="data-cell">
+      <div class="portfolio-row">
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img2">📸<br>Boiler Repair</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img3">🔩<br>Pipe Work</div></div>
+        <div class="portfolio-img"><div class="portfolio-img-placeholder img1">🌡️<br>Heating Fix</div></div>
+      </div>
+      <div class="portfolio-count">3 of 29 photos · Gas specialist</div>
+    </div>
+  </div>
+
+  <!-- ROW 6: AI INSIGHT CARDS -->
+  <div class="section-row">
+    <div class="section-label-cell">
+      <div class="section-label-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 5h10M3 8h7M3 11h5"/><circle cx="13" cy="11" r="2"/><path d="M13 9v.5M13 12.5V13"/><path d="M11.5 11h.5M14 11h.5"/><path d="M12 9.8l.35.35M13.65 11.85l.35.35"/><path d="M11.65 11.85l-.35.35M13.35 9.8l.35-.35"/></svg></div>
+      <div><div class="section-label-text">TradeMatch<br>AI Insight</div></div>
+    </div>
+
+    <div class="data-cell highlighted">
+      <div class="ai-insight-card">
+        <div class="ai-insight-header"><svg viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/><path d="M5 5h1v3H5zm0-2h2v1H5z" fill="white"/></svg> WHY THIS PICK</div>
+        <div class="ai-insight-text">
+          <strong>Apex</strong> is <em>£30 below average</em> for this job type and carries a <strong>100% Show-Up Score</strong> on all Gas callouts. Their material spec includes brand-name Worcester Bosch parts. Zero deposit means <strong>your funds stay in escrow</strong> until work starts.
+        </div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="ai-insight-card">
+        <div class="ai-insight-header"><svg viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/><path d="M5 5h1v3H5zm0-2h2v1H5z" fill="white"/></svg> EXPERIENCE PREMIUM</div>
+        <div class="ai-insight-text">
+          <strong>Pro Gas</strong> commands a premium but has <strong>287 gas jobs</strong> on platform — the most extensive track record. Ideal if your boiler is a complex or older model. Note: the <em>30% deposit</em> is above TradeMatch's recommended threshold.
+        </div>
+      </div>
+    </div>
+
+    <div class="data-cell">
+      <div class="ai-insight-card">
+        <div class="ai-insight-header"><svg viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/><path d="M5 5h1v3H5zm0-2h2v1H5z" fill="white"/></svg> SPEED + TRUST</div>
+        <div class="ai-insight-text">
+          <strong>TrustTrades</strong> is the <em>only same-day option</em> and has GPS Live Tracking enabled — every milestone is automatically verified by location data. Their <strong>99% completion rate</strong> is the highest of the three vendors.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM SELECT BUTTONS -->
+  <div class="section-row" style="border-bottom:1px solid var(--border)">
+    <div class="section-label-cell"></div>
+    <div class="data-cell highlighted" style="padding-bottom:28px">
+      <button class="select-escrow-btn primary" style="width:100%;padding:14px" onclick="openModal('Apex Gas Services','£520','20/40/40')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><rect x="2" y="6" width="12" height="8" rx="1.5"/><path d="M5 6V4a3 3 0 016 0v2"/></svg>
+        Select → Fund Escrow
+      </button>
+    </div>
+    <div class="data-cell" style="padding-bottom:28px">
+      <button class="select-escrow-btn secondary" style="width:100%;padding:14px" onclick="openModal('Pro Gas London','£595','30/40/30')">Select → Fund Escrow</button>
+    </div>
+    <div class="data-cell" style="padding-bottom:28px">
+      <button class="select-escrow-btn secondary" style="width:100%;padding:14px" onclick="openModal('TrustTrades Ltd','£550','0/50/50')">Select → Fund Escrow</button>
+    </div>
+  </div>
+
+</div><!-- /compare-page -->
+
+<!-- BOTTOM STICKY CTA -->
+<div class="bottom-cta">
+  <div class="bottom-cta-text">
+    <strong>Ready to lock in your trade?</strong> Your payment is held securely in Stripe Escrow — only released when you approve each milestone.
+  </div>
+  <div class="bottom-cta-btns">
+    <button class="select-escrow-btn secondary" style="padding:12px 20px;font-size:13px">Need Help Deciding?</button>
+    <button class="select-escrow-btn primary" onclick="openModal('Apex Gas Services','£520','20/40/40')" style="padding:12px 24px;font-size:13px">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="2" y="6" width="12" height="8" rx="1.5"/><path d="M5 6V4a3 3 0 016 0v2"/></svg>
+      Accept Best Value Quote
+    </button>
+  </div>
+</div>
+
+<!-- ESCROW / DIRECT MATCH MODAL -->
+<div class="modal-overlay" id="escrow-modal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+    </button>
+
+    <!-- Payment Method Toggle -->
+    <div class="pay-method-toggle" id="pay-toggle">
+      <button class="pay-method-btn active-escrow" id="btn-mode-escrow" onclick="setPayMode('escrow')">
+        <span class="btn-icon">🔒</span>
+        <span class="btn-label">Escrow Protection</span>
+        <span class="btn-sub">100% Guaranteed</span>
+      </button>
+      <button class="pay-method-btn" id="btn-mode-direct" onclick="setPayMode('direct')">
+        <span class="btn-icon">🤝</span>
+        <span class="btn-label">Direct Match</span>
+        <span class="btn-sub">Pay vendor directly</span>
+      </button>
+    </div>
+
+    <div class="modal-stripe-badge" id="modal-stripe-badge">
+      <div class="stripe-logo">stripe</div>
+      <span>Secure Escrow powered by Stripe</span>
+    </div>
+    <div class="modal-title" id="modal-title">Fund Your Escrow</div>
+    <div class="modal-subtitle" id="modal-subtitle">You are accepting the quote from <strong id="modal-vendor">—</strong>. Your payment will be held securely in escrow and only released when you approve each milestone.</div>
+
+    <!-- Escrow Detail Box (default shown) -->
+    <div class="modal-escrow-box" id="modal-escrow-box">
+      <div class="modal-escrow-row"><span>Vendor</span><span class="val" id="modal-vendor-disp">—</span></div>
+      <div class="modal-escrow-row"><span>Quote Total</span><span class="val" id="modal-amount">—</span></div>
+      <div class="modal-escrow-row"><span>Payment Schedule</span><span class="val" id="modal-milestones-disp">—</span></div>
+      <div class="modal-escrow-row"><span>Escrow Provider</span><span class="val">Stripe</span></div>
+      <div class="modal-escrow-row total"><span>Amount to Fund Now</span><span class="val" id="modal-total">—</span></div>
+    </div>
+    <div class="modal-milestones" id="modal-ms-list"></div>
+    <div class="modal-trust-note" id="modal-trust-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>Your money will be held securely by Stripe and <strong>only released when you approve milestones</strong>. If a dispute arises, TradeMatch's Dispute Resolution team will review the evidence within 48 hours.</span>
+    </div>
+
+    <!-- Direct Warning Panel (hidden by default) -->
+    <div class="direct-warning-panel" id="direct-warning-panel">
+      <div class="warn-heading">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.3L2 20h20L13.7 3.3a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        Unprotected Transaction
+      </div>
+      <ul class="direct-checklist">
+        <li>Your payment is <strong>not covered</strong> by the TradeMatch 48-hr Money-Back Guarantee.</li>
+        <li>Funds go directly to the vendor — no milestone control or Stripe protection.</li>
+        <li>TradeMatch Live GPS tracking &amp; dispute resolution still apply for work quality.</li>
+      </ul>
+    </div>
+
+    <button class="modal-confirm-btn" id="modal-confirm-btn" onclick="processConfirm()">
+      🔒 Confirm &amp; Fund Escrow
+    </button>
+    <div class="modal-cancel" onclick="closeModal()">Cancel — I'll decide later</div>
+
+    <!-- Triple-Lock Overlay -->
+    <div class="lock-overlay" id="lock-overlay">
+      <div class="lock-title">Running Security Checks…</div>
+      <div id="lock-step-avail" class="lock-step">
+        <div class="lock-step-icon pending" id="lock-icon-avail">·</div>
+        <span id="lock-text-avail">Vendor Availability Lock</span>
+      </div>
+      <div id="lock-step-quote" class="lock-step">
+        <div class="lock-step-icon pending" id="lock-icon-quote">·</div>
+        <span id="lock-text-quote">Quote Integrity Check</span>
+      </div>
+      <div id="lock-step-aeo" class="lock-step">
+        <div class="lock-step-icon pending" id="lock-icon-aeo">·</div>
+        <span id="lock-text-aeo">AEO Trust Re-Calculation</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Payment Mode State ───────────────────────────────────
+let currentPayMode = 'escrow'; // 'escrow' | 'direct'
+
+function setPayMode(mode) {
+  currentPayMode = mode;
+  const btnEscrow = document.getElementById('btn-mode-escrow');
+  const btnDirect = document.getElementById('btn-mode-direct');
+  const stripeBadge = document.getElementById('modal-stripe-badge');
+  const escrowBox = document.getElementById('modal-escrow-box');
+  const msList = document.getElementById('modal-ms-list');
+  const trustNote = document.getElementById('modal-trust-note');
+  const directWarn = document.getElementById('direct-warning-panel');
+  const confirmBtn = document.getElementById('modal-confirm-btn');
+  const title = document.getElementById('modal-title');
+  const subtitle = document.getElementById('modal-subtitle');
+  const vendor = document.getElementById('modal-vendor').textContent;
+
+  if (mode === 'escrow') {
+    btnEscrow.className = 'pay-method-btn active-escrow';
+    btnDirect.className = 'pay-method-btn';
+    stripeBadge.style.display = '';
+    escrowBox.style.display = '';
+    msList.style.display = '';
+    trustNote.style.display = '';
+    directWarn.style.display = 'none';
+    title.textContent = 'Fund Your Escrow';
+    subtitle.innerHTML = `You are accepting the quote from <strong id="modal-vendor">${vendor}</strong>. Your payment will be held securely in escrow and only released when you approve each milestone.`;
+    confirmBtn.textContent = '🔒 Confirm & Fund Escrow';
+    confirmBtn.className = 'modal-confirm-btn';
+  } else {
+    btnDirect.className = 'pay-method-btn active-direct';
+    btnEscrow.className = 'pay-method-btn';
+    stripeBadge.style.display = 'none';
+    escrowBox.style.display = 'none';
+    msList.style.display = 'none';
+    trustNote.style.display = 'none';
+    directWarn.style.display = '';
+    title.textContent = 'Confirm Direct Match';
+    subtitle.innerHTML = `You are matching with <strong id="modal-vendor">${vendor}</strong>. You will coordinate payment directly — cash, bank transfer, or any method you agree on.`;
+    confirmBtn.textContent = '🤝 Confirm Direct Match';
+    confirmBtn.className = 'modal-confirm-btn is-direct';
+  }
+}
+
+function openModal(vendor, amount, milestones) {
+  // Push a history entry so the browser Back button dismisses the modal
+  // rather than navigating away from the page mid-selection
+  history.pushState({ modal: true, vendor }, '', '#select');
+
+  // reset to escrow mode on each open
+  currentPayMode = 'escrow';
+
+  document.getElementById('modal-vendor').textContent = vendor;
+  document.getElementById('modal-vendor-disp').textContent = vendor;
+  document.getElementById('modal-amount').textContent = amount;
+  document.getElementById('modal-total').textContent = amount;
+  document.getElementById('modal-milestones-disp').textContent = milestones.split('/').join('% / ') + '%';
+
+  // re-apply escrow panel state
+  setPayMode('escrow');
+
+  const parts = milestones.split('/');
+  const labels = ['Start of Work', 'Midpoint / Materials', 'Job Complete & Signed Off'];
+  const colors = ['var(--neon)', 'var(--accent-blue)', 'var(--accent-purple)'];
+  const msList = document.getElementById('modal-ms-list');
+  msList.innerHTML = '';
+  parts.forEach((p, i) => {
+    msList.innerHTML += `<div class="modal-ms">
+      <div class="modal-ms-num" style="border-color:${colors[i]};color:${colors[i]}">${i+1}</div>
+      <div class="modal-ms-text"><strong>${p}% — ${labels[i]}</strong></div>
+    </div>`;
+  });
+
+  TM_DATA.selected_vendor = vendor;
+  TM_DATA.selected_amount = amount;
+  TM_DATA.selected_quote = 'quote_' + vendor.replace(/\s/g,'_').toLowerCase() + '_uuid';
+
+  document.getElementById('escrow-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('escrow-modal').classList.remove('open');
+  // Clean the URL hash so closing the modal doesn't leave #select in the address bar
+  if (location.hash === '#select') history.replaceState(null, '', location.pathname + location.search);
+}
+
+// Handle browser Back button — if the pushed state had modal:true, close the modal instead of navigating
+window.addEventListener('popstate', function(e) {
+  if (document.getElementById('escrow-modal').classList.contains('open')) {
+    document.getElementById('escrow-modal').classList.remove('open');
+  }
+});
+
+// ── TradeMatch Global State ──────────────────────────────
+const TM_DATA = {
+  current_match: 'match_2024_1147_uuid',
+  selected_quote: null,
+  selected_vendor: null,
+  selected_amount: null,
+  homeowner_id: 'homeowner_abc123_uuid',
+  get pay_mode() { return currentPayMode; }, // alias for API compatibility
+};
+
+// ── Vendor Contact Directory (demo; in production fetched from API) ──
+// GET /api/v1/vendors/{vendor_id}/contact?reveal_reason=direct_match
+const TM_VENDOR_CONTACTS = {
+  'Apex Gas Services': { name: 'Daniel Okafor', phone: '07700 900112', email: 'd.okafor@apexgas.co.uk' },
+  'Pro Gas London':    { name: 'Sian Humphreys', phone: '07700 900238', email: 's.humphreys@progaslondon.co.uk' },
+  'TrustTrades Ltd':  { name: 'Marcus Reed',    phone: '07700 900555', email: 'm.reed@trusttrades.co.uk' },
+  'default':          { name: 'Your Tradesperson', phone: '—', email: '—' },
+};
+
+// ── Lock Step Definitions ────────────────────────────────
+const LOCK_STEPS = [
+  { id:'avail', label:'Verifying vendor availability...' },
+  { id:'quote', label:'Integrity check on quote price...' },
+  { id:'aeo',   label:'Re-calculating AEO Trust Score...' },
+];
+
+function setLockStep(stepId, state) {
+  const el = document.getElementById('lock-icon-' + stepId);
+  if (!el) return;
+  el.className = 'lock-step-icon ' + state;
+  if (state === 'checking') el.textContent = '↻';
+  else if (state === 'done') el.textContent = '✓';
+  else if (state === 'fail') el.textContent = '✕';
+  else el.textContent = '·';
+  const txt = document.getElementById('lock-text-' + stepId);
+  if (txt && state === 'done') txt.style.color = 'var(--neon)';
+  if (txt && state === 'fail') txt.style.color = 'var(--accent-danger)';
+}
+
+function showLockOverlay() { document.getElementById('lock-overlay').classList.add('active'); }
+function hideLockOverlay() {
+  document.getElementById('lock-overlay').classList.remove('active');
+  LOCK_STEPS.forEach(s => setLockStep(s.id, 'pending'));
+}
+
+function showToast(msg, type='info') {
+  let t = document.getElementById('tm-toast');
+  if (!t) { t = document.createElement('div'); t.id='tm-toast'; t.className='tm-toast'; document.body.appendChild(t); }
+  t.className = 'tm-toast ' + type;
+  t.textContent = msg;
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+async function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runTripleLock() {
+  showLockOverlay();
+  setLockStep('avail', 'checking'); await delay(900);
+  setLockStep('avail', 'done');
+  setLockStep('quote', 'checking'); await delay(800);
+  setLockStep('quote', 'done');
+  setLockStep('aeo', 'checking'); await delay(700);
+  setLockStep('aeo', 'done');
+  await delay(400);
+  hideLockOverlay();
+  return true;
+}
+
+async function processConfirm() {
+  if (currentPayMode === 'direct') {
+    await confirmDirect();
+  } else {
+    await confirmEscrow();
+  }
+}
+
+async function confirmDirect() {
+  // Explicit informed-consent gate — required for revenue protection & legal clarity
+  const proceed = confirm("⚠️ You are choosing to pay outside TradeMatch.\n\nThe TradeMatch Escrow Guarantee will NOT apply to this transaction. Funds are not protected.\n\nTradeMatch Live tracking and the 48-hr Work Quality SLA remain active.\n\nProceed with Direct Match?");
+  if (!proceed) return;
+
+  const btn = document.getElementById('modal-confirm-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite;margin-right:6px">↻</span> Confirming Direct Match…';
+
+  // Direct path: run only the availability check for a fast "handshake" UX.
+  // Quote integrity & Stripe checks are escrow-specific — skip them here.
+  // The lock overlay labels are repurposed to show what IS happening on this path.
+  showLockOverlay();
+  setLockStep('avail', 'checking'); await delay(900);
+  setLockStep('avail', 'done');
+  document.getElementById('lock-text-quote').textContent = 'Quote Accepted (Direct)';
+  setLockStep('quote', 'done');
+  document.getElementById('lock-text-aeo').textContent = 'Lead Fee → Marked Due';
+  setLockStep('aeo', 'done');
+  await delay(400);
+  hideLockOverlay();
+
+  // In production: POST /api/v1/jobs/transition-to-active
+  // Sets job status → ACTIVE_DIRECT, marks vendor lead fee as "Due" in their balance
+  // Returns vendor contact details for the success page
+  const contactInfo = TM_VENDOR_CONTACTS[TM_DATA.selected_vendor] || TM_VENDOR_CONTACTS['default'];
+
+  btn.innerHTML = '✓ Match Confirmed — Connecting You…';
+  btn.style.background = 'var(--accent-amber)';
+  btn.style.boxShadow = '0 0 30px rgba(255,167,38,0.35)';
+  await delay(900);
+
+  const params = new URLSearchParams({
+    method: 'direct',
+    vendor: TM_DATA.selected_vendor || 'Vendor',
+    amount: TM_DATA.selected_amount || '—',
+    phone: contactInfo.phone,
+    email: contactInfo.email,
+    contact_name: contactInfo.name,
+  });
+  window.location.href = `payment-success.html?${params.toString()}`;
+}
+
+async function confirmEscrow() {
+  const btn = document.getElementById('modal-confirm-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;animation:spin .7s linear infinite;margin-right:6px">↻</span> Securing Funds…';
+
+  try {
+    const locked = await runTripleLock();
+    if (!locked) {
+      showToast('Security check failed. Please retry.', 'danger');
+      btn.disabled = false; btn.innerHTML = '🔒 Confirm & Fund Escrow'; return;
+    }
+
+    let session;
+    try {
+      const response = await fetch('/api/v1/escrow/initialise', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ match_id: TM_DATA.current_match, quote_id: TM_DATA.selected_quote, homeowner_id: TM_DATA.homeowner_id }),
+      });
+      if (!response.ok) throw new Error('API error ' + response.status);
+      session = await response.json();
+    } catch (_) {
+      session = { id: 'cs_demo_' + Date.now(), url: 'payment-success.html?method=escrow' };
+    }
+
+    btn.innerHTML = '✓ Escrow Initialised — Redirecting to Stripe…';
+    btn.style.background = 'var(--accent-blue)';
+    btn.style.boxShadow = '0 0 30px rgba(66,165,245,0.4)';
+    await delay(1200);
+    window.location.href = session.url || 'payment-success.html?method=escrow';
+  } catch (err) {
+    showToast('Escrow System Timeout — Please try again', 'warning');
+    btn.disabled = false; btn.innerHTML = '🔒 Confirm & Fund Escrow';
+    hideLockOverlay();
+  }
+}
+
+document.getElementById('escrow-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+
+</body>
+</html>

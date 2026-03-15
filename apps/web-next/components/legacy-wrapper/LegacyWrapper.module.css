@@ -1,0 +1,220 @@
+/**
+ * LegacyWrapper Styles
+ * Preserves original TradeMatch neon aesthetics
+ */
+
+/* Wrapper Container */
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Content Area */
+.content {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.content.hydrated {
+  opacity: 1;
+}
+
+/* Loading States */
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 18, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(0, 229, 160, 0.2);
+  border-top-color: #00E5A0;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00E5A0;
+  letter-spacing: 0.05em;
+}
+
+/* Error State */
+.errorOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 12, 18, 0.98);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1000;
+  padding: 40px;
+  text-align: center;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.errorOverlay h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #F0F4FF;
+  margin: 0;
+}
+
+.errorOverlay p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #8B95AA;
+  margin: 0;
+  max-width: 400px;
+}
+
+.retryBtn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #007a3d, #00E5A0);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 14px rgba(0, 229, 160, 0.22);
+}
+
+.retryBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 28px rgba(0, 229, 160, 0.35);
+}
+
+/* Hydration Badge (Dev Only) */
+.hydrationBadge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background: rgba(0, 229, 160, 0.15);
+  border: 1px solid rgba(0, 229, 160, 0.25);
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: #00E5A0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Credential Status Classes */
+.active {
+  color: #00E5A0 !important;
+}
+
+.expiring {
+  color: #FFA726 !important;
+  animation: pulse-amber 2s infinite;
+}
+
+.pending {
+  color: #42A5F5 !important;
+}
+
+.expired {
+  color: #FF4757 !important;
+}
+
+/* Animations */
+@keyframes pulse-amber {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.pulse {
+  animation: pulse-amber 2s infinite;
+}
+
+/* Milestone Indicators */
+.milestoneReached {
+  background: #00E5A0 !important;
+  box-shadow: 0 0 6px rgba(0, 229, 160, 0.6) !important;
+}
+
+/* SLA Urgency States */
+.sla-urgent {
+  color: #FF4757 !important;
+  animation: blink 1s infinite;
+}
+
+.sla-warning {
+  color: #FFA726 !important;
+}
+
+.sla-ok {
+  color: #00E5A0 !important;
+}
+
+/* Neon Glow Effects */
+.neon-glow {
+  box-shadow: 0 0 28px rgba(0, 229, 160, 0.35) !important;
+}
+
+.neon-glow-sm {
+  box-shadow: 0 0 14px rgba(0, 229, 160, 0.22) !important;
+}
+
+/* Data Update Transitions */
+.data-updating {
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Interactive Elements */
+[data-action] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-action]:hover {
+  opacity: 0.9;
+}
+
+[data-action]:active {
+  transform: scale(0.98);
+}
+
+/* Ensure Proper Z-Indexing */
+.content > * {
+  position: relative;
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+.content > style {
+  display: none;
+}
