@@ -684,7 +684,7 @@
 
                         <!-- Quick Prompts -->
                         <div class="quick-prompts">
-                            <button type="button" class="quick-prompt" data-prompt="Complete bathroom renovation with new suite">đź› Full Bathroom Renovation</button>
+                            <button type="button" class="quick-prompt" data-prompt="Complete bathroom renovation with new suite">🛁 Full Bathroom Renovation</button>
                             <button type="button" class="quick-prompt" data-prompt="New kitchen installation with units and appliances">🍳 Kitchen Installation</button>
                             <button type="button" class="quick-prompt" data-prompt="Single storey rear extension">🏠 House Extension</button>
                             <button type="button" class="quick-prompt" data-prompt="Loft conversion into bedroom">🏚️ Loft Conversion</button>
@@ -718,7 +718,10 @@
                                 </span>
                                 <div class="ai-output-actions">
                                     <button type="button" class="btn-icon" id="copyBtn" title="Copy to clipboard">
-                                        đź“‹
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;display:block;">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
                                     </button>
                                     <button type="button" class="btn-icon" id="useBtn" title="Use this description">
                                         ✓
@@ -3794,10 +3797,10 @@ I'm happy to discuss the project in more detail and answer any questions to help
         copyBtn.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(aiOutputText.textContent);
-                const originalText = copyBtn.textContent;
+                const originalContent = copyBtn.innerHTML;
                 copyBtn.textContent = '✓';
                 setTimeout(() => {
-                    copyBtn.textContent = originalText;
+                    copyBtn.innerHTML = originalContent;
                 }, 2000);
             } catch (error) {
                 alert('Failed to copy to clipboard');
