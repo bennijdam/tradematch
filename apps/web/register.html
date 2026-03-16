@@ -694,7 +694,7 @@ function renderStep() {
           <div style="display:flex;gap:8px;align-items:flex-start">
             <div class="form-input-wrap" style="flex:1">
               <div class="form-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.1 6.1l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17.21z"/></svg></div>
-              <input type="tel" class="form-input" id="phone" placeholder="+44 7700 900000" autocomplete="tel" required>
+              <input type="tel" class="form-input" id="phone" placeholder="+44 7700 900000 or +1 415 555 2671" autocomplete="tel" required>
             </div>
             <button type="button" id="btnSendCode" onclick="sendVerifyCode()" style="white-space:nowrap;flex-shrink:0;font-family:var(--ff);font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--neon3),var(--neon));border:none;border-radius:10px;padding:0 16px;height:46px;cursor:pointer;box-shadow:var(--neon-glow-sm);transition:all .25s;position:relative;overflow:hidden">
               <span id="btnSendCodeText">Send Code</span>
@@ -705,7 +705,7 @@ function renderStep() {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             Phone verified âś“
           </div>
-          <div class="field-error" id="errPhone">Please enter a valid UK phone number.</div>
+          <div class="field-error" id="errPhone">Please enter a valid phone number.</div>
           <div class="field-error" id="errPhoneNotVerified" style="display:none">Please verify your phone number before continuing.</div>
         </div>
 
@@ -1238,11 +1238,11 @@ async function sendVerifyCode() {
 
     if (data.success) {
       otpSent = true;
-      verifiedPhone = data.to || raw;
+      verifiedPhone = data.phone || data.to || raw;
 
       // Show OTP input box
       otpWrap.style.display = 'block';
-      sentTo.textContent = `Sent to ${verifiedPhone.replace(/(\+44)(\d{4})(\d{3})(\d{3})/, '$1 $2 $3 $4')}`;
+      sentTo.textContent = `Sent to ${verifiedPhone}`;
       statusMsg.textContent = 'Enter the 6-digit code below';
       statusMsg.style.color = '#9fb0bc';
 

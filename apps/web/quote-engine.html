@@ -1023,8 +1023,8 @@
                     <div class="form-group">
                         <label for="phone">Your Phone *</label>
                         <input type="tel" id="phone" name="phone" class="form-control" placeholder="07700 900000" required autocomplete="tel">
-                        <div class="field-valid-hint" id="phoneHint"><span>✓</span><span>Valid UK number</span></div>
-                        <div class="field-error-msg" id="phoneError">Please enter a valid UK phone number (e.g. 07700 900000)</div>
+                        <div class="field-valid-hint" id="phoneHint"><span>✓</span><span>Valid phone number</span></div>
+                        <div class="field-error-msg" id="phoneError">Please enter a valid phone number (e.g. +44 7700 900000)</div>
                     </div>
 
                     <p style="color: var(--slate-600); font-size: 0.875rem; margin-top: 1.5rem;">
@@ -4506,8 +4506,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
         /* ─── Contact field micro-interaction validators ─── */
 
         const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-        // UK landline + mobile: 07xxx, 01xxx, 02xxx, 03xxx, +44 variants
-        const UK_PHONE_RE = /^(\+44\s?|0)(7\d{3}[\s-]?\d{3}[\s-]?\d{3}|[1-9]\d[\s-]?\d{4}[\s-]?\d{4}|\d{9,10})$/;
+        const INTERNATIONAL_PHONE_RE = /^(?:\+|00)?[1-9][\d\s\-()]{7,19}$|^0[\d\s\-()]{8,18}$/;
 
         function setContactState(inputEl, hintEl, errorEl, state, errorMsg) {
             inputEl.classList.toggle('field-valid', state === 'valid');
@@ -4572,15 +4571,19 @@ I'm happy to discuss the project in more detail and answer any questions to help
         function validatePhone(val) {
             const v = val.trim().replace(/\s+/g, ' ');
             if (!v) { clearContactState(phoneInput, phoneHint, phoneErrEl); return; }
-            const digits = v.replace(/[\s\-\(\)]/g, '');
-            if (digits.length < 10) {
-                setContactState(phoneInput, phoneHint, phoneErrEl, 'invalid', 'Number too short — UK numbers have at least 10 digits');
+            const digits = v.replace(/\D/g, '');
+            if (digits.length < 8) {
+                setContactState(phoneInput, phoneHint, phoneErrEl, 'invalid', 'Number too short');
                 return;
             }
-            if (UK_PHONE_RE.test(v)) {
+            if (digits.length > 15) {
+                setContactState(phoneInput, phoneHint, phoneErrEl, 'invalid', 'Number too long');
+                return;
+            }
+            if (INTERNATIONAL_PHONE_RE.test(v)) {
                 setContactState(phoneInput, phoneHint, phoneErrEl, 'valid', null);
             } else {
-                setContactState(phoneInput, phoneHint, phoneErrEl, 'invalid', 'Please enter a valid UK phone number (e.g. 07700 900000)');
+                setContactState(phoneInput, phoneHint, phoneErrEl, 'invalid', 'Please enter a valid phone number (e.g. +44 7700 900000)');
             }
         }
 

@@ -68,24 +68,25 @@ const emailCheckLimiter = rateLimit({
   }
 });
 
-function normalizeUkPhone(input) {
+function normalizePhone(input) {
   const raw = String(input || '').trim();
   if (!raw) return null;
 
   const compact = raw.replace(/[\s()-]/g, '');
 
   let normalized = compact;
-  if (normalized.startsWith('+44')) {
-    // already in E.164 UK format
-  } else if (normalized.startsWith('0044')) {
-    normalized = `+44${normalized.slice(4)}`;
-  } else if (normalized.startsWith('44')) {
-    normalized = `+${normalized}`;
+  if (normalized.startsWith('+')) {
+    // already in international format
+  } else if (normalized.startsWith('00')) {
+    normalized = `+${normalized.slice(2)}`;
   } else if (normalized.startsWith('0')) {
+    // Backwards compatibility for legacy UK local input.
     normalized = `+44${normalized.slice(1)}`;
+  } else if (/^\d{8,15}$/.test(normalized)) {
+    normalized = `+${normalized}`;
   }
 
-  if (!/^\+44\d{9,10}$/.test(normalized)) {
+  if (!/^\+[1-9]\d{7,14}$/.test(normalized)) {
     return null;
   }
 
@@ -117,7 +118,7 @@ function mapTwilioError(error, fallbackMessage) {
       status: 400,
       payload: {
         success: false,
-        error: 'Please enter a valid UK mobile number.',
+        error: 'Please enter a valid mobile number in international format.',
         code: 'INVALID_PHONE'
       }
     };
@@ -156,12 +157,12 @@ function mapTwilioError(error, fallbackMessage) {
 }
 
 router.post('/send', sendLimiter, async (req, res) => {
-  const normalizedPhone = normalizeUkPhone(req.body?.phone);
+  const normalizedPhone = normalizePhone(req.body?.phone);
 
   if (!normalizedPhone) {
     return res.status(400).json({
       success: false,
-      error: 'Please enter a valid UK phone number.',
+      error: 'Please enter a valid phone number in international format.',
       code: 'INVALID_PHONE'
     });
   }
@@ -194,13 +195,13 @@ router.post('/send', sendLimiter, async (req, res) => {
 });
 
 router.post('/check', checkLimiter, async (req, res) => {
-  const normalizedPhone = normalizeUkPhone(req.body?.phone);
+  const normalizedPhone = normalizePhone(req.body?.phone);
   const code = String(req.body?.code || '').trim();
 
   if (!normalizedPhone) {
     return res.status(400).json({
       success: false,
-      error: 'Please enter a valid UK phone number.',
+      error: 'Please enter a valid phone number in international format.',
       code: 'INVALID_PHONE'
     });
   }
