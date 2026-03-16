@@ -1278,10 +1278,7 @@
                 <span class="gm-phone-code" id="gmSelCode">+44</span>
                 <svg class="gm-phone-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                 <div class="gm-country-drop" id="gmCountryDrop">
-                  <div class="gm-country-opt selected" onclick="gmSelectCountry(event,'&#127468;&#127463;','+44')">&#127468;&#127463; United Kingdom <span class="gm-country-opt-code">+44</span></div>
-                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127470;&#127466;','+353')">&#127470;&#127466; Ireland <span class="gm-country-opt-code">+353</span></div>
-                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127482;&#127480;','+1')">&#127482;&#127480; United States <span class="gm-country-opt-code">+1</span></div>
-                  <div class="gm-country-opt" onclick="gmSelectCountry(event,'&#127462;&#127482;','+61')">&#127462;&#127482; Australia <span class="gm-country-opt-code">+61</span></div>
+                                    <div class="gm-country-opt selected" data-code="+44" data-iso="GB" onclick="gmSelectCountry(event,'+44','GB')">&#127468;&#127463; United Kingdom <span class="gm-country-opt-code">+44</span></div>
                 </div>
               </div>
               <div class="gm-phone-num gm-field-wrap">
@@ -4920,7 +4917,246 @@ I'm happy to discuss the project in more detail and answer any questions to help
         (function(){
             // ── State ────────────────────────────────────────────────
             let gmSelectedCountryCode = '+44';
+            let gmSelectedCountryIso = 'GB';
             let gmGuestData = {};  // filled in step 1
+
+            const GM_COUNTRIES = [
+                { iso: 'AF', name: 'Afghanistan', code: '+93' },
+                { iso: 'AL', name: 'Albania', code: '+355' },
+                { iso: 'DZ', name: 'Algeria', code: '+213' },
+                { iso: 'AD', name: 'Andorra', code: '+376' },
+                { iso: 'AO', name: 'Angola', code: '+244' },
+                { iso: 'AG', name: 'Antigua and Barbuda', code: '+1' },
+                { iso: 'AR', name: 'Argentina', code: '+54' },
+                { iso: 'AM', name: 'Armenia', code: '+374' },
+                { iso: 'AU', name: 'Australia', code: '+61' },
+                { iso: 'AT', name: 'Austria', code: '+43' },
+                { iso: 'AZ', name: 'Azerbaijan', code: '+994' },
+                { iso: 'BS', name: 'Bahamas', code: '+1' },
+                { iso: 'BH', name: 'Bahrain', code: '+973' },
+                { iso: 'BD', name: 'Bangladesh', code: '+880' },
+                { iso: 'BB', name: 'Barbados', code: '+1' },
+                { iso: 'BY', name: 'Belarus', code: '+375' },
+                { iso: 'BE', name: 'Belgium', code: '+32' },
+                { iso: 'BZ', name: 'Belize', code: '+501' },
+                { iso: 'BJ', name: 'Benin', code: '+229' },
+                { iso: 'BT', name: 'Bhutan', code: '+975' },
+                { iso: 'BO', name: 'Bolivia', code: '+591' },
+                { iso: 'BA', name: 'Bosnia and Herzegovina', code: '+387' },
+                { iso: 'BW', name: 'Botswana', code: '+267' },
+                { iso: 'BR', name: 'Brazil', code: '+55' },
+                { iso: 'BN', name: 'Brunei', code: '+673' },
+                { iso: 'BG', name: 'Bulgaria', code: '+359' },
+                { iso: 'BF', name: 'Burkina Faso', code: '+226' },
+                { iso: 'BI', name: 'Burundi', code: '+257' },
+                { iso: 'CV', name: 'Cabo Verde', code: '+238' },
+                { iso: 'KH', name: 'Cambodia', code: '+855' },
+                { iso: 'CM', name: 'Cameroon', code: '+237' },
+                { iso: 'CA', name: 'Canada', code: '+1' },
+                { iso: 'CF', name: 'Central African Republic', code: '+236' },
+                { iso: 'TD', name: 'Chad', code: '+235' },
+                { iso: 'CL', name: 'Chile', code: '+56' },
+                { iso: 'CN', name: 'China', code: '+86' },
+                { iso: 'CO', name: 'Colombia', code: '+57' },
+                { iso: 'KM', name: 'Comoros', code: '+269' },
+                { iso: 'CG', name: 'Congo', code: '+242' },
+                { iso: 'CD', name: 'Congo (DRC)', code: '+243' },
+                { iso: 'CR', name: 'Costa Rica', code: '+506' },
+                { iso: 'CI', name: 'Cote d\'Ivoire', code: '+225' },
+                { iso: 'HR', name: 'Croatia', code: '+385' },
+                { iso: 'CU', name: 'Cuba', code: '+53' },
+                { iso: 'CY', name: 'Cyprus', code: '+357' },
+                { iso: 'CZ', name: 'Czechia', code: '+420' },
+                { iso: 'DK', name: 'Denmark', code: '+45' },
+                { iso: 'DJ', name: 'Djibouti', code: '+253' },
+                { iso: 'DM', name: 'Dominica', code: '+1' },
+                { iso: 'DO', name: 'Dominican Republic', code: '+1' },
+                { iso: 'EC', name: 'Ecuador', code: '+593' },
+                { iso: 'EG', name: 'Egypt', code: '+20' },
+                { iso: 'SV', name: 'El Salvador', code: '+503' },
+                { iso: 'GQ', name: 'Equatorial Guinea', code: '+240' },
+                { iso: 'ER', name: 'Eritrea', code: '+291' },
+                { iso: 'EE', name: 'Estonia', code: '+372' },
+                { iso: 'SZ', name: 'Eswatini', code: '+268' },
+                { iso: 'ET', name: 'Ethiopia', code: '+251' },
+                { iso: 'FJ', name: 'Fiji', code: '+679' },
+                { iso: 'FI', name: 'Finland', code: '+358' },
+                { iso: 'FR', name: 'France', code: '+33' },
+                { iso: 'GA', name: 'Gabon', code: '+241' },
+                { iso: 'GM', name: 'Gambia', code: '+220' },
+                { iso: 'GE', name: 'Georgia', code: '+995' },
+                { iso: 'DE', name: 'Germany', code: '+49' },
+                { iso: 'GH', name: 'Ghana', code: '+233' },
+                { iso: 'GR', name: 'Greece', code: '+30' },
+                { iso: 'GD', name: 'Grenada', code: '+1' },
+                { iso: 'GT', name: 'Guatemala', code: '+502' },
+                { iso: 'GN', name: 'Guinea', code: '+224' },
+                { iso: 'GW', name: 'Guinea-Bissau', code: '+245' },
+                { iso: 'GY', name: 'Guyana', code: '+592' },
+                { iso: 'HT', name: 'Haiti', code: '+509' },
+                { iso: 'HN', name: 'Honduras', code: '+504' },
+                { iso: 'HU', name: 'Hungary', code: '+36' },
+                { iso: 'IS', name: 'Iceland', code: '+354' },
+                { iso: 'IN', name: 'India', code: '+91' },
+                { iso: 'ID', name: 'Indonesia', code: '+62' },
+                { iso: 'IR', name: 'Iran', code: '+98' },
+                { iso: 'IQ', name: 'Iraq', code: '+964' },
+                { iso: 'IE', name: 'Ireland', code: '+353' },
+                { iso: 'IL', name: 'Israel', code: '+972' },
+                { iso: 'IT', name: 'Italy', code: '+39' },
+                { iso: 'JM', name: 'Jamaica', code: '+1' },
+                { iso: 'JP', name: 'Japan', code: '+81' },
+                { iso: 'JO', name: 'Jordan', code: '+962' },
+                { iso: 'KZ', name: 'Kazakhstan', code: '+7' },
+                { iso: 'KE', name: 'Kenya', code: '+254' },
+                { iso: 'KI', name: 'Kiribati', code: '+686' },
+                { iso: 'KW', name: 'Kuwait', code: '+965' },
+                { iso: 'KG', name: 'Kyrgyzstan', code: '+996' },
+                { iso: 'LA', name: 'Laos', code: '+856' },
+                { iso: 'LV', name: 'Latvia', code: '+371' },
+                { iso: 'LB', name: 'Lebanon', code: '+961' },
+                { iso: 'LS', name: 'Lesotho', code: '+266' },
+                { iso: 'LR', name: 'Liberia', code: '+231' },
+                { iso: 'LY', name: 'Libya', code: '+218' },
+                { iso: 'LI', name: 'Liechtenstein', code: '+423' },
+                { iso: 'LT', name: 'Lithuania', code: '+370' },
+                { iso: 'LU', name: 'Luxembourg', code: '+352' },
+                { iso: 'MG', name: 'Madagascar', code: '+261' },
+                { iso: 'MW', name: 'Malawi', code: '+265' },
+                { iso: 'MY', name: 'Malaysia', code: '+60' },
+                { iso: 'MV', name: 'Maldives', code: '+960' },
+                { iso: 'ML', name: 'Mali', code: '+223' },
+                { iso: 'MT', name: 'Malta', code: '+356' },
+                { iso: 'MH', name: 'Marshall Islands', code: '+692' },
+                { iso: 'MR', name: 'Mauritania', code: '+222' },
+                { iso: 'MU', name: 'Mauritius', code: '+230' },
+                { iso: 'MX', name: 'Mexico', code: '+52' },
+                { iso: 'FM', name: 'Micronesia', code: '+691' },
+                { iso: 'MD', name: 'Moldova', code: '+373' },
+                { iso: 'MC', name: 'Monaco', code: '+377' },
+                { iso: 'MN', name: 'Mongolia', code: '+976' },
+                { iso: 'ME', name: 'Montenegro', code: '+382' },
+                { iso: 'MA', name: 'Morocco', code: '+212' },
+                { iso: 'MZ', name: 'Mozambique', code: '+258' },
+                { iso: 'MM', name: 'Myanmar', code: '+95' },
+                { iso: 'NA', name: 'Namibia', code: '+264' },
+                { iso: 'NR', name: 'Nauru', code: '+674' },
+                { iso: 'NP', name: 'Nepal', code: '+977' },
+                { iso: 'NL', name: 'Netherlands', code: '+31' },
+                { iso: 'NZ', name: 'New Zealand', code: '+64' },
+                { iso: 'NI', name: 'Nicaragua', code: '+505' },
+                { iso: 'NE', name: 'Niger', code: '+227' },
+                { iso: 'NG', name: 'Nigeria', code: '+234' },
+                { iso: 'KP', name: 'North Korea', code: '+850' },
+                { iso: 'MK', name: 'North Macedonia', code: '+389' },
+                { iso: 'NO', name: 'Norway', code: '+47' },
+                { iso: 'OM', name: 'Oman', code: '+968' },
+                { iso: 'PK', name: 'Pakistan', code: '+92' },
+                { iso: 'PW', name: 'Palau', code: '+680' },
+                { iso: 'PS', name: 'Palestine', code: '+970' },
+                { iso: 'PA', name: 'Panama', code: '+507' },
+                { iso: 'PG', name: 'Papua New Guinea', code: '+675' },
+                { iso: 'PY', name: 'Paraguay', code: '+595' },
+                { iso: 'PE', name: 'Peru', code: '+51' },
+                { iso: 'PH', name: 'Philippines', code: '+63' },
+                { iso: 'PL', name: 'Poland', code: '+48' },
+                { iso: 'PT', name: 'Portugal', code: '+351' },
+                { iso: 'QA', name: 'Qatar', code: '+974' },
+                { iso: 'RO', name: 'Romania', code: '+40' },
+                { iso: 'RU', name: 'Russia', code: '+7' },
+                { iso: 'RW', name: 'Rwanda', code: '+250' },
+                { iso: 'KN', name: 'Saint Kitts and Nevis', code: '+1' },
+                { iso: 'LC', name: 'Saint Lucia', code: '+1' },
+                { iso: 'VC', name: 'Saint Vincent and the Grenadines', code: '+1' },
+                { iso: 'WS', name: 'Samoa', code: '+685' },
+                { iso: 'SM', name: 'San Marino', code: '+378' },
+                { iso: 'ST', name: 'Sao Tome and Principe', code: '+239' },
+                { iso: 'SA', name: 'Saudi Arabia', code: '+966' },
+                { iso: 'SN', name: 'Senegal', code: '+221' },
+                { iso: 'RS', name: 'Serbia', code: '+381' },
+                { iso: 'SC', name: 'Seychelles', code: '+248' },
+                { iso: 'SL', name: 'Sierra Leone', code: '+232' },
+                { iso: 'SG', name: 'Singapore', code: '+65' },
+                { iso: 'SK', name: 'Slovakia', code: '+421' },
+                { iso: 'SI', name: 'Slovenia', code: '+386' },
+                { iso: 'SB', name: 'Solomon Islands', code: '+677' },
+                { iso: 'SO', name: 'Somalia', code: '+252' },
+                { iso: 'ZA', name: 'South Africa', code: '+27' },
+                { iso: 'KR', name: 'South Korea', code: '+82' },
+                { iso: 'SS', name: 'South Sudan', code: '+211' },
+                { iso: 'ES', name: 'Spain', code: '+34' },
+                { iso: 'LK', name: 'Sri Lanka', code: '+94' },
+                { iso: 'SD', name: 'Sudan', code: '+249' },
+                { iso: 'SR', name: 'Suriname', code: '+597' },
+                { iso: 'SE', name: 'Sweden', code: '+46' },
+                { iso: 'CH', name: 'Switzerland', code: '+41' },
+                { iso: 'SY', name: 'Syria', code: '+963' },
+                { iso: 'TW', name: 'Taiwan', code: '+886' },
+                { iso: 'TJ', name: 'Tajikistan', code: '+992' },
+                { iso: 'TZ', name: 'Tanzania', code: '+255' },
+                { iso: 'TH', name: 'Thailand', code: '+66' },
+                { iso: 'TL', name: 'Timor-Leste', code: '+670' },
+                { iso: 'TG', name: 'Togo', code: '+228' },
+                { iso: 'TO', name: 'Tonga', code: '+676' },
+                { iso: 'TT', name: 'Trinidad and Tobago', code: '+1' },
+                { iso: 'TN', name: 'Tunisia', code: '+216' },
+                { iso: 'TR', name: 'Turkey', code: '+90' },
+                { iso: 'TM', name: 'Turkmenistan', code: '+993' },
+                { iso: 'TV', name: 'Tuvalu', code: '+688' },
+                { iso: 'UG', name: 'Uganda', code: '+256' },
+                { iso: 'UA', name: 'Ukraine', code: '+380' },
+                { iso: 'AE', name: 'United Arab Emirates', code: '+971' },
+                { iso: 'GB', name: 'United Kingdom', code: '+44' },
+                { iso: 'US', name: 'United States', code: '+1' },
+                { iso: 'UY', name: 'Uruguay', code: '+598' },
+                { iso: 'UZ', name: 'Uzbekistan', code: '+998' },
+                { iso: 'VU', name: 'Vanuatu', code: '+678' },
+                { iso: 'VA', name: 'Vatican City', code: '+379' },
+                { iso: 'VE', name: 'Venezuela', code: '+58' },
+                { iso: 'VN', name: 'Vietnam', code: '+84' },
+                { iso: 'YE', name: 'Yemen', code: '+967' },
+                { iso: 'ZM', name: 'Zambia', code: '+260' },
+                { iso: 'ZW', name: 'Zimbabwe', code: '+263' }
+            ];
+
+            const GM_SORTED_CODES = [...new Set(GM_COUNTRIES.map(c => c.code))]
+                .sort((a, b) => b.length - a.length);
+
+            function gmIsoToFlag(iso) {
+                return String(iso || 'GB')
+                    .toUpperCase()
+                    .replace(/[^A-Z]/g, '')
+                    .slice(0, 2)
+                    .split('')
+                    .map(ch => String.fromCodePoint(127397 + ch.charCodeAt(0)))
+                    .join('') || '🇬🇧';
+            }
+
+            function gmFindCountryByCode(code) {
+                if (code === '+1') {
+                    return GM_COUNTRIES.find(country => country.iso === 'US') || null;
+                }
+                return GM_COUNTRIES.find(country => country.code === code) || null;
+            }
+
+            function gmRenderCountryOptions() {
+                const drop = document.getElementById('gmCountryDrop');
+                if (!drop || drop.dataset.ready === '1') return;
+                const sortedCountries = [...GM_COUNTRIES].sort((a, b) =>
+                    a.name.localeCompare(b.name)
+                );
+                drop.innerHTML = sortedCountries.map(country => {
+                    const selectedClass = (country.code === gmSelectedCountryCode && country.iso === gmSelectedCountryIso)
+                        ? ' selected'
+                        : '';
+                    const flag = gmIsoToFlag(country.iso);
+                    return '<div class="gm-country-opt' + selectedClass + '" data-code="' + country.code +
+                        '" data-iso="' + country.iso + '" onclick="gmSelectCountry(event,\'' + country.code +
+                        '\',\'' + country.iso + '\')">' + flag + ' ' + country.name +
+                        ' <span class="gm-country-opt-code">' + country.code + '</span></div>';
+                }).join('');
+                drop.dataset.ready = '1';
+            }
 
             // ── Helpers ──────────────────────────────────────────────
             function gmShow(id){ const el=document.getElementById(id); if(el) el.classList.add('show'); }
@@ -4940,6 +5176,7 @@ I'm happy to discuss the project in more detail and answer any questions to help
             // ── Country selector ─────────────────────────────────────
             window.gmToggleCountryDrop = function(){
                 const drop = document.getElementById('gmCountryDrop');
+                gmRenderCountryOptions();
                 const isOpening = !drop.classList.contains('open');
                 drop.classList.toggle('open');
                 if (isOpening) {
@@ -4949,10 +5186,12 @@ I'm happy to discuss the project in more detail and answer any questions to help
                     drop.style.left = rect.left + 'px';
                 }
             };
-            window.gmSelectCountry = function(e, flag, code){
+            window.gmSelectCountry = function(e, code, iso){
                 e.stopPropagation();
+                const country = gmFindCountryByCode(code);
                 gmSelectedCountryCode = code;
-                document.getElementById('gmSelFlag').textContent = flag;
+                gmSelectedCountryIso = iso || (country && country.iso) || 'GB';
+                document.getElementById('gmSelFlag').textContent = gmIsoToFlag(gmSelectedCountryIso);
                 document.getElementById('gmSelCode').textContent = code;
                 document.querySelectorAll('.gm-country-opt').forEach(o=>o.classList.remove('selected'));
                 e.currentTarget.classList.add('selected');
@@ -5189,34 +5428,39 @@ I'm happy to discuss the project in more detail and answer any questions to help
                 }
 
                 function selectGuestCountryByCode(code) {
-                    const codeToFlag = {
-                        '+44': '🇬🇧',
-                        '+353': '🇮🇪',
-                        '+1': '🇺🇸',
-                        '+61': '🇦🇺'
-                    };
-                    const resolved = codeToFlag[code] ? code : '+44';
+                    gmRenderCountryOptions();
+                    const country = gmFindCountryByCode(code) || gmFindCountryByCode('+44');
+                    const resolved = country ? country.code : '+44';
                     gmSelectedCountryCode = resolved;
+                    gmSelectedCountryIso = country && country.iso ? country.iso : 'GB';
                     const flagEl = document.getElementById('gmSelFlag');
                     const codeEl = document.getElementById('gmSelCode');
-                    if (flagEl) flagEl.textContent = codeToFlag[resolved];
+                    if (flagEl) flagEl.textContent = gmIsoToFlag(gmSelectedCountryIso);
                     if (codeEl) codeEl.textContent = resolved;
+                    document.querySelectorAll('.gm-country-opt').forEach(opt => opt.classList.remove('selected'));
+                    const activeOption = document.querySelector('.gm-country-opt[data-code="' + resolved + '"][data-iso="' + gmSelectedCountryIso + '"]');
+                    if (activeOption) activeOption.classList.add('selected');
                 }
 
                 function splitPhoneForGuest(rawPhone) {
                     const raw = String(rawPhone || '').trim();
                     if (!raw) return { code: '+44', local: '' };
-                    const compact = raw.replace(/\s+/g, '');
-                    const knownCodes = ['+353', '+61', '+44', '+1'];
-                    const matchedCode = knownCodes.find(c => compact.startsWith(c));
+                    const compact = raw.replace(/[\s()-]/g, '');
+                    const asInternational = compact.startsWith('+')
+                        ? compact
+                        : (compact.startsWith('00') ? '+' + compact.slice(2) : '');
+                    const matchedCode = asInternational
+                        ? GM_SORTED_CODES.find(c => asInternational.startsWith(c))
+                        : null;
                     if (matchedCode) {
                         return {
                             code: matchedCode,
-                            local: compact.slice(matchedCode.length)
+                            local: asInternational.slice(matchedCode.length).replace(/\D/g, '')
                         };
                     }
                     // Preserve local UK-like numbers entered without country code.
-                    return { code: '+44', local: compact.replace(/^0+/, '') || compact };
+                    const digits = compact.replace(/\D/g, '');
+                    return { code: '+44', local: digits.replace(/^0+/, '') || digits };
                 }
 
                 closeAuthModal();
