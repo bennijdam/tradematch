@@ -126,11 +126,19 @@ jobs:
         node-version: '20'
         package-manager-cache: false
 
+    - name: Install root dependencies
+      run: npm install --no-audit --no-fund
+
+    - name: Install backend dependencies
+      working-directory: ./apps/api
+      run: npm install --no-audit --no-fund
+
+    - name: Run npm audit (Root)
+      run: npm audit --audit-level=high
+
     - name: Run npm audit (Backend)
       working-directory: ./apps/api
-      run: |
-        npm audit --audit-level=moderate || true
-        echo "Security audit completed"
+      run: npm audit --audit-level=high
 
     - name: Check for high-confidence committed secrets
       run: |
